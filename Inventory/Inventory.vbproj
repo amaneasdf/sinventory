@@ -1,0 +1,345 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AFBC1D44-3099-4B86-A714-DE51BD70A950}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Inventory.My.MyApplication</StartupObject>
+    <RootNamespace>Inventory</RootNamespace>
+    <AssemblyName>Inventory</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>Inventory.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>Inventory.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="MySql.Data">
+      <HintPath>..\..\..\roaming\sht\still ok\sql connector net\v4.0\MySql.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="fr_list_temp.Designer.vb">
+      <DependentUpon>fr_list_temp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="fr_list_temp.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_bank\fr_bank.Designer.vb">
+      <DependentUpon>fr_bank.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_bank\fr_bank.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_bank_detail.Designer.vb">
+      <DependentUpon>fr_bank_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_bank_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_barang_detail.Designer.vb">
+      <DependentUpon>fr_barang_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_barang_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_custo_detail.Designer.vb">
+      <DependentUpon>fr_custo_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_custo_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_giro_detail.Designer.vb">
+      <DependentUpon>fr_giro_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_giro_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="fr_login\fr_login.Designer.vb">
+      <DependentUpon>fr_login.vb</DependentUpon>
+    </Compile>
+    <Compile Include="fr_login\fr_login.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_gudang_detail.Designer.vb">
+      <DependentUpon>fr_gudang_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_gudang_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_neracaawal_detail.Designer.vb">
+      <DependentUpon>fr_neracaawal_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_neracaawal_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_perkiraan_detail.Designer.vb">
+      <DependentUpon>fr_perkiraan_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_perkiraan_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_sales_detail.Designer.vb">
+      <DependentUpon>fr_sales_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_sales_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="main.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="main.Designer.vb">
+      <DependentUpon>main.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_supplier_detail.Designer.vb">
+      <DependentUpon>fr_supplier_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_masterdata\fr_supplier_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_group_detail.Designer.vb">
+      <DependentUpon>fr_group_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_group_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_jenis_barang.Designer.vb">
+      <DependentUpon>fr_jenis_barang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_jenis_barang.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_setup_menu.Designer.vb">
+      <DependentUpon>fr_setup_menu.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_setup_menu.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user_detail.Designer.vb">
+      <DependentUpon>fr_user_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user\fr_user_list.Designer.vb">
+      <DependentUpon>fr_user_list.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user\fr_user_list.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user_password.Designer.vb">
+      <DependentUpon>fr_user_password.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_user_password.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_beli_detail.Designer.vb">
+      <DependentUpon>fr_beli_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_beli_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_beli_retur_detail.Designer.vb">
+      <DependentUpon>fr_beli_retur_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_beli_retur_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_detail.Designer.vb">
+      <DependentUpon>fr_jual_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_retur_detail.Designer.vb">
+      <DependentUpon>fr_jual_retur_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_retur_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="module\connection.vb" />
+    <Compile Include="module\functional.vb" />
+    <Compile Include="module\mdlControl.vb" />
+    <Compile Include="module\mdlParamKodeVar.vb" />
+    <Compile Include="module\mdl_login.vb" />
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="fr_list_temp.resx">
+      <DependentUpon>fr_list_temp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_bank\fr_bank.resx">
+      <DependentUpon>fr_bank.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_bank_detail.resx">
+      <DependentUpon>fr_bank_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_barang_detail.resx">
+      <DependentUpon>fr_barang_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_custo_detail.resx">
+      <DependentUpon>fr_custo_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_giro_detail.resx">
+      <DependentUpon>fr_giro_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="fr_login\fr_login.resx">
+      <DependentUpon>fr_login.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_gudang_detail.resx">
+      <DependentUpon>fr_gudang_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_neracaawal_detail.resx">
+      <DependentUpon>fr_neracaawal_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_perkiraan_detail.resx">
+      <DependentUpon>fr_perkiraan_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_sales_detail.resx">
+      <DependentUpon>fr_sales_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="main.resx">
+      <DependentUpon>main.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_masterdata\fr_supplier_detail.resx">
+      <DependentUpon>fr_supplier_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_group_detail.resx">
+      <DependentUpon>fr_group_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_jenis_barang.resx">
+      <DependentUpon>fr_jenis_barang.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_setup_menu.resx">
+      <DependentUpon>fr_setup_menu.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_user_detail.resx">
+      <DependentUpon>fr_user_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_user\fr_user_list.resx">
+      <DependentUpon>fr_user_list.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
+      <DependentUpon>fr_user_password.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_beli_detail.resx">
+      <DependentUpon>fr_beli_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_beli_retur_detail.resx">
+      <DependentUpon>fr_beli_retur_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_jual_detail.resx">
+      <DependentUpon>fr_jual_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_jual_retur_detail.resx">
+      <DependentUpon>fr_jual_retur_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\show_password.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hide_password.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
