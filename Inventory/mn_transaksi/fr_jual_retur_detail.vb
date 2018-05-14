@@ -49,6 +49,16 @@
 
 
     Private Sub fr_jual_retur_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lbl_gudang.Text = ""
+        lbl_barang.Text = ""
+        lbl_sales.Text = ""
+        lbl_custo.Text = ""
 
+        With cb_status
+            .DataSource = statusBarang()
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = -1
+        End With
     End Sub
 End Class
