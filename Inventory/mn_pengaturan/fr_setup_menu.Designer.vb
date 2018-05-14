@@ -253,6 +253,7 @@ Partial Class fr_setup_menu
         Me.Controls.Add(Me.dgv_menu)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "fr_setup_menu"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Setting Menu"
         CType(Me.dgv_menu, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)

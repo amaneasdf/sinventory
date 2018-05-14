@@ -205,6 +205,7 @@ Partial Class fr_list_temp
         '
         Me.dgv_list.AllowUserToAddRows = False
         Me.dgv_list.AllowUserToDeleteRows = False
+        Me.dgv_list.AllowUserToResizeRows = False
         Me.dgv_list.BackgroundColor = System.Drawing.Color.White
         Me.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_list.Dock = System.Windows.Forms.DockStyle.Fill
@@ -215,6 +216,7 @@ Partial Class fr_list_temp
         Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_list.Size = New System.Drawing.Size(950, 436)
         Me.dgv_list.TabIndex = 6
+        Me.dgv_list.VirtualMode = True
         '
         'bt_export
         '

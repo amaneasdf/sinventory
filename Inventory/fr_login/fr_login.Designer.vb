@@ -40,6 +40,7 @@ Partial Class fr_login
         'bt_close
         '
         Me.bt_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_close.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_close.Location = New System.Drawing.Point(311, 185)
         Me.bt_close.Name = "bt_close"
@@ -173,6 +174,7 @@ Partial Class fr_login
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
+        Me.CancelButton = Me.bt_close
         Me.ClientSize = New System.Drawing.Size(434, 245)
         Me.Controls.Add(Me.out_tglkomp)
         Me.Controls.Add(Me.out_tglserver)

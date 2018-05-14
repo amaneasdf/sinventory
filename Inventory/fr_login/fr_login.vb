@@ -37,4 +37,16 @@
 
         do_login(in_user.Text, in_pass.Text)
     End Sub
+
+    Private Sub in_user_KeyDown(sender As Object, e As KeyEventArgs) Handles in_user.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            in_pass.Focus()
+        End If
+    End Sub
+
+    Private Sub in_pass_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pass.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            bt_login.PerformClick()
+        End If
+    End Sub
 End Class

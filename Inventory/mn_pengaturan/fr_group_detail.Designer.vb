@@ -342,6 +342,7 @@ Partial Class fr_group_detail
         Me.Cursor = System.Windows.Forms.Cursors.Default
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "fr_group_detail"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Detail User Group : "
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
