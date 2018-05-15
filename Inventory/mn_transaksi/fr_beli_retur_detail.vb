@@ -168,7 +168,6 @@
         in_netto.Text = z.ToString("N2", cc)
     End Sub
 
-
     Private Sub numericGotFocus(sender As NumericUpDown)
         If sender.Value = 0 Then
             sender.ResetText()
@@ -390,11 +389,24 @@
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         clearInputBarang()
-        'keyshortenter(in_qty, e)
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = False
-            cb_sat.DroppedDown = True
-            cb_sat.Focus()
+        If e.Alt = True AndAlso e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, trans_qty as qty FROM data_pembelian_trans INNER JOIN data_barang_master ON barang_kode=trans_barang WHERE trans_faktur='" & in_no_faktur.Text & "'"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "barangfaktur"
+                    .ShowDialog()
+                    in_barang.Text = .returnkode
+                End With
+            End Using
+            in_qty.Focus()
+            Exit Sub
+
+        ElseIf e.KeyCode = Keys.Enter Then
+            'e.SuppressKeyPress = False
+            'cb_sat.DroppedDown = True
+            'cb_sat.Focus()
+            keyshortenter(in_qty, e)
         End If
     End Sub
 
@@ -409,7 +421,11 @@
     End Sub
 
     Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
-        keyshortenter(in_harga_retur, e)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = False
+            cb_sat.DroppedDown = True
+            cb_sat.Focus()
+        End If
     End Sub
 
     Private Sub in_harga_retur_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyDown

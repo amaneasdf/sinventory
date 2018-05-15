@@ -76,12 +76,13 @@ Partial Class fr_search_dialog
         Me.dgv_list.AllowUserToAddRows = False
         Me.dgv_list.AllowUserToDeleteRows = False
         Me.dgv_list.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_list.Location = New System.Drawing.Point(0, 86)
+        Me.dgv_list.MultiSelect = False
         Me.dgv_list.Name = "dgv_list"
         Me.dgv_list.ReadOnly = True
+        Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_list.Size = New System.Drawing.Size(559, 393)
-        Me.dgv_list.TabIndex = 185
+        Me.dgv_list.TabIndex = 2
         '
         'bt_ok
         '
@@ -104,6 +105,7 @@ Partial Class fr_search_dialog
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.in_cari)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.KeyPreview = True
         Me.Name = "fr_search_dialog"
         Me.Text = "Cari"
         Me.Panel1.ResumeLayout(False)

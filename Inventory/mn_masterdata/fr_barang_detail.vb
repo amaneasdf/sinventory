@@ -34,21 +34,21 @@
             in_stok_awal.Value = rd.Item("barang_stok_awal")
             in_stok_aktif.Value = rd.Item("barang_stok_minimal")
             in_stok_berat.Value = rd.Item("barang_berat")
-            in_harga_beli.Text = rd.Item("barang_harga_beli")
-            in_harga_jual.Text = rd.Item("barang_harga_jual")
-            in_harga_mt.Text = rd.Item("barang_harga_jual_mt")
-            in_harga_horeka.Text = rd.Item("barang_harga_jual_horeka")
-            in_harga_rita.Text = rd.Item("barang_harga_jual_rita")
-            in_harga_disc.Text = rd.Item("barang_harga_jual_discount")
-            in_beli_d1.Text = rd.Item("Barang_harga_beli_d1")
-            in_beli_d2.Text = rd.Item("Barang_harga_beli_d2")
-            in_beli_d3.Text = rd.Item("Barang_harga_beli_d3")
-            in_beli_klaim.Text = rd.Item("Barang_harga_beli_klaim")
-            in_jual_d1.Text = rd.Item("barang_harga_jual_d1")
-            in_jual_d2.Text = rd.Item("barang_harga_jual_d2")
-            in_jual_d3.Text = rd.Item("barang_harga_jual_d3")
-            in_jual_d4.Text = rd.Item("barang_harga_jual_d4")
-            in_jual_d5.Text = rd.Item("barang_harga_jual_d5")
+            in_harga_beli.Value = rd.Item("barang_harga_beli")
+            in_harga_jual.Value = rd.Item("barang_harga_jual")
+            in_harga_mt.Value = rd.Item("barang_harga_jual_mt")
+            in_harga_horeka.Value = rd.Item("barang_harga_jual_horeka")
+            in_harga_rita.Value = rd.Item("barang_harga_jual_rita")
+            in_harga_disc.Value = rd.Item("barang_harga_jual_discount")
+            in_beli_d1.Value = rd.Item("Barang_harga_beli_d1")
+            in_beli_d2.value = rd.Item("Barang_harga_beli_d2")
+            in_beli_d3.value = rd.Item("Barang_harga_beli_d3")
+            in_beli_klaim.value = rd.Item("Barang_harga_beli_klaim")
+            in_jual_d1.Value = rd.Item("barang_harga_jual_d1")
+            in_jual_d2.value = rd.Item("barang_harga_jual_d2")
+            in_jual_d3.value = rd.Item("barang_harga_jual_d3")
+            in_jual_d4.value = rd.Item("barang_harga_jual_d4")
+            in_jual_d5.value = rd.Item("barang_harga_jual_d5")
             txtRegAlias.Text = rd.Item("barang_reg_alias")
             txtRegdate.Text = rd.Item("barang_reg_date")
             in_kode_status.Text = rd.Item("barang_status")
@@ -79,6 +79,23 @@
         Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
+    End Sub
+
+    Private Sub numericGotFocus(sender As NumericUpDown)
+        If sender.Value = 0 Then
+            sender.ResetText()
+        End If
+    End Sub
+
+    Private Sub numericLostFocus(x As NumericUpDown)
+        x.Controls.Item(1).Text = x.Value
+    End Sub
+
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
     End Sub
 
     Private Sub fr_barang_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -121,24 +138,30 @@
         End If
     End Sub
 
-    Private Sub TextBoxHarga_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_jual.KeyDown, in_harga_beli.KeyDown, in_harga_disc.KeyDown, in_harga_rita.KeyDown, in_harga_horeka.KeyDown, in_harga_mt.KeyDown
-
-    End Sub
-
     Private Sub cb_jenis_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_jenis.SelectionChangeCommitted
         in_kode_jenis.Text = cb_jenis.SelectedValue
+        With cb_sat_kecil
+            .DroppedDown = True
+            .Focus()
+        End With
     End Sub
 
-    Private Sub cb_sat_kecil_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_kecil.TextChanged
-        lbl_satuan1.Text = cb_sat_kecil.Text
+    Private Sub cb_sat_kecil_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_kecil.SelectionChangeCommitted
+        lbl_satuan1.Text = cb_sat_kecil.SelectedValue
+        With cb_sat_tengah
+            .DroppedDown = True
+            .Focus()
+        End With
     End Sub
 
-    Private Sub cb_sat_tengah_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_tengah.TextChanged
-        lbl_satuan2.Text = cb_sat_tengah.Text
+    Private Sub cb_sat_tengah_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_tengah.SelectionChangeCommitted
+        lbl_satuan2.Text = cb_sat_tengah.SelectedValue
+        in_isi_tengah.Focus()
     End Sub
 
-    Private Sub cb_sat_besar_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_besar.TextChanged
-        lbl_satuan4.Text = lbl_satuan3.Text = cb_sat_besar.Text
+    Private Sub cb_sat_besar_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_besar.SelectionChangeCommitted
+        lbl_satuan4.Text = lbl_satuan3.Text = cb_sat_besar.SelectedValue
+        in_isi_besar.Focus()
     End Sub
 
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpanbarang.Click
@@ -171,21 +194,21 @@
             "barang_satuan_besar='" & cb_sat_besar.SelectedValue & "'",
             "barang_satuan_besar_jumlah='" & in_isi_besar.Text & "'",
             "barang_keterangan='" & in_ket.Text & "'",
-            "barang_harga_beli='" & in_harga_beli.Text & "'",
-            "barang_harga_jual='" & in_harga_jual.Text & "'",
-            "barang_harga_beli_d1='" & in_beli_d1.Text & "'",
-            "barang_harga_beli_d2='" & in_beli_d2.Text & "'",
-            "barang_harga_beli_d3='" & in_beli_d3.Text & "'",
-            "barang_harga_beli_klaim='" & in_beli_klaim.Text & "'",
-            "barang_harga_jual_mt='" & in_harga_mt.Text & "'",
-            "barang_harga_jual_rita='" & in_harga_rita.Text & "'",
-            "barang_harga_jual_horeka='" & in_harga_horeka.Text & "'",
-            "barang_harga_jual_discount='" & in_harga_disc.Text & "'",
-            "barang_harga_jual_d1='" & in_jual_d1.Text & "'",
-            "barang_harga_jual_d2='" & in_jual_d2.Text & "'",
-            "barang_harga_jual_d3='" & in_jual_d3.Text & "'",
-            "barang_harga_jual_d4='" & in_jual_d4.Text & "'",
-            "barang_harga_jual_d5='" & in_jual_d5.Text & "'",
+            "barang_harga_beli='" & in_harga_beli.Value & "'",
+            "barang_harga_jual='" & in_harga_jual.Value & "'",
+            "barang_harga_beli_d1='" & in_beli_d1.Value & "'",
+            "barang_harga_beli_d2='" & in_beli_d2.Value & "'",
+            "barang_harga_beli_d3='" & in_beli_d3.Value & "'",
+            "barang_harga_beli_klaim='" & in_beli_klaim.Value & "'",
+            "barang_harga_jual_mt='" & in_harga_mt.Value & "'",
+            "barang_harga_jual_rita='" & in_harga_rita.Value & "'",
+            "barang_harga_jual_horeka='" & in_harga_horeka.Value & "'",
+            "barang_harga_jual_discount='" & in_harga_disc.Value & "'",
+            "barang_harga_jual_d1='" & in_jual_d1.Value & "'",
+            "barang_harga_jual_d2='" & in_jual_d2.Value & "'",
+            "barang_harga_jual_d3='" & in_jual_d3.Value & "'",
+            "barang_harga_jual_d4='" & in_jual_d4.Value & "'",
+            "barang_harga_jual_d5='" & in_jual_d5.Value & "'",
             "barang_stok_awal='" & in_stok_awal.Value & "'",
             "barang_stok_minimal='" & in_stok_aktif.Value & "'",
             "barang_berat='" & in_stok_berat.Value & "'",
@@ -220,10 +243,15 @@
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
         in_kode_status.Text = cb_status.SelectedValue
+        With cb_pajak
+            .DroppedDown = True
+            .Focus()
+        End With
     End Sub
 
     Private Sub cb_pajak_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_pajak.SelectionChangeCommitted
         in_kode_pajak.Text = cb_pajak.SelectedValue
+        in_harga_beli.Focus()
     End Sub
 
     Private Sub bt_batalbarang_Click(sender As Object, e As EventArgs) Handles bt_batalbarang.Click
@@ -242,5 +270,116 @@
 
     Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
         lbl_supplier.Text = ""
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = False
+            cb_jenis.DroppedDown = True
+            cb_jenis.Focus()
+        End If
+    End Sub
+
+    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_stok_berat.Enter, in_stok_awal.Enter, in_stok_aktif.Enter, in_jual_d5.Enter, in_jual_d4.Enter, in_jual_d3.Enter, in_jual_d2.Enter, in_jual_d1.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_disc.Enter, in_harga_beli.Enter, in_beli_klaim.Enter, in_beli_d3.Enter, in_beli_d2.Enter, in_beli_d1.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_stok_berat.Leave, in_stok_awal.Leave, in_stok_aktif.Leave, in_jual_d5.Leave, in_jual_d4.Leave, in_jual_d3.Leave, in_jual_d2.Leave, in_jual_d1.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_disc.Leave, in_harga_beli.Leave, in_beli_klaim.Leave, in_beli_d3.Leave, in_beli_d2.Leave, in_beli_d1.Leave
+        numericLostFocus(sender)
+    End Sub
+
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_nama, e)
+    End Sub
+
+    Private Sub in_nama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nama.KeyDown
+        keyshortenter(in_supplier,e)
+    End Sub
+
+    Private Sub in_isi_tengah_KeyDown(sender As Object, e As KeyEventArgs) Handles in_isi_tengah.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            With cb_sat_besar
+                .DroppedDown = True
+                .Focus()
+            End With
+        End If
+    End Sub
+
+    Private Sub in_isi_besar_KeyDown(sender As Object, e As KeyEventArgs) Handles in_isi_besar.KeyDown
+        keyshortenter(in_stok_awal, e)
+    End Sub
+
+    Private Sub in_stok_awal_KeyDown(sender As Object, e As KeyEventArgs) Handles in_stok_awal.KeyDown
+        keyshortenter(in_stok_aktif, e)
+    End Sub
+
+    Private Sub in_stok_aktif_KeyDown(sender As Object, e As KeyEventArgs) Handles in_stok_aktif.KeyDown
+        keyshortenter(in_stok_berat, e)
+    End Sub
+
+    Private Sub in_stok_berat_KeyDown(sender As Object, e As KeyEventArgs) Handles in_stok_berat.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            With cb_status
+                .DroppedDown = True
+                .Focus()
+            End With
+        End If
+    End Sub
+
+    Private Sub in_harga_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown
+        keyshortenter(in_harga_jual, e)
+    End Sub
+
+    Private Sub in_harga_jual_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_jual.KeyDown
+        keyshortenter(in_harga_mt, e)
+    End Sub
+
+    Private Sub in_harga_mt_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_mt.KeyDown
+        keyshortenter(in_harga_horeka, e)
+    End Sub
+
+    Private Sub in_harga_horeka_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_horeka.KeyDown
+        keyshortenter(in_harga_rita, e)
+    End Sub
+
+    Private Sub in_harga_rita_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_rita.KeyDown
+        keyshortenter(in_harga_disc, e)
+    End Sub
+
+    Private Sub in_harga_disc_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_disc.KeyDown
+        keyshortenter(in_beli_d1, e)
+    End Sub
+
+    Private Sub in_beli_d1_KeyDown(sender As Object, e As KeyEventArgs) Handles in_beli_d1.KeyDown
+        keyshortenter(in_beli_d2, e)
+    End Sub
+
+    Private Sub in_beli_d2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_beli_d2.KeyDown
+        keyshortenter(in_beli_d3, e)
+    End Sub
+
+    Private Sub in_beli_d3_KeyDown(sender As Object, e As KeyEventArgs) Handles in_beli_d3.KeyDown
+        keyshortenter(in_beli_klaim, e)
+    End Sub
+
+    Private Sub in_beli_klaim_KeyDown(sender As Object, e As KeyEventArgs) Handles in_beli_klaim.KeyDown
+        keyshortenter(in_jual_d1, e)
+    End Sub
+
+    Private Sub in_jual_d1_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jual_d1.KeyDown
+        keyshortenter(in_jual_d2, e)
+    End Sub
+
+    Private Sub in_jual_d2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jual_d2.KeyDown
+        keyshortenter(in_jual_d3, e)
+    End Sub
+
+    Private Sub in_jual_d3_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jual_d3.KeyDown
+        keyshortenter(in_jual_d4, e)
+    End Sub
+
+    Private Sub in_jual_d4_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jual_d4.KeyDown
+        keyshortenter(in_jual_d5, e)
+    End Sub
+
+    Private Sub in_jual_d5_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jual_d5.KeyDown
+        keyshortenter(bt_simpanbarang, e)
     End Sub
 End Class

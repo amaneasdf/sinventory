@@ -110,7 +110,7 @@
         End If
         rd.Close()
         loadSatuanBrg(kode)
-        cb_sat.SelectedText = satuan
+        cb_sat.SelectedItem = satuan
     End Sub
 
     Private Sub addRowBarang()
@@ -412,12 +412,15 @@
         If e.Alt = True AndAlso e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
                 With search
-                    .query = "SELECT barang_nama as nama, barang_kode as kode FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode=trans_barang WHERE trans_faktur='" & in_no_faktur.Text & "'"
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, trans_qty as qty FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode=trans_barang WHERE trans_faktur='" & in_no_faktur.Text & "'"
                     .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                     .type = "barangfaktur"
                     .ShowDialog()
+                    in_barang.Text = .returnkode
                 End With
             End Using
+            in_qty.Focus()
+            Exit Sub
         End If
         keyshortenter(in_qty, e)
     End Sub
