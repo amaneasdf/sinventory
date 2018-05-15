@@ -37,8 +37,8 @@ Partial Class fr_jual_retur_detail
         Me.lbl_barang = New System.Windows.Forms.Label()
         Me.in_harga_retur = New System.Windows.Forms.NumericUpDown()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
-        Me.bt_batalreturbeli = New System.Windows.Forms.Button()
-        Me.bt_simpanreturbeli = New System.Windows.Forms.Button()
+        Me.bt_batalreturjual = New System.Windows.Forms.Button()
+        Me.bt_simpanreturjual = New System.Windows.Forms.Button()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.cb_ppn_jenis = New System.Windows.Forms.ComboBox()
         Me.Label20 = New System.Windows.Forms.Label()
@@ -247,25 +247,25 @@ Partial Class fr_jual_retur_detail
         Me.in_qty.TabIndex = 10
         Me.in_qty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'bt_batalreturbeli
+        'bt_batalreturjual
         '
-        Me.bt_batalreturbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalreturbeli.Location = New System.Drawing.Point(755, 507)
-        Me.bt_batalreturbeli.Name = "bt_batalreturbeli"
-        Me.bt_batalreturbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalreturbeli.TabIndex = 257
-        Me.bt_batalreturbeli.Text = "Batal"
-        Me.bt_batalreturbeli.UseVisualStyleBackColor = True
+        Me.bt_batalreturjual.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalreturjual.Location = New System.Drawing.Point(755, 507)
+        Me.bt_batalreturjual.Name = "bt_batalreturjual"
+        Me.bt_batalreturjual.Size = New System.Drawing.Size(96, 30)
+        Me.bt_batalreturjual.TabIndex = 257
+        Me.bt_batalreturjual.Text = "Batal"
+        Me.bt_batalreturjual.UseVisualStyleBackColor = True
         '
-        'bt_simpanreturbeli
+        'bt_simpanreturjual
         '
-        Me.bt_simpanreturbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanreturbeli.Location = New System.Drawing.Point(653, 507)
-        Me.bt_simpanreturbeli.Name = "bt_simpanreturbeli"
-        Me.bt_simpanreturbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpanreturbeli.TabIndex = 256
-        Me.bt_simpanreturbeli.Text = "Simpan"
-        Me.bt_simpanreturbeli.UseVisualStyleBackColor = True
+        Me.bt_simpanreturjual.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanreturjual.Location = New System.Drawing.Point(653, 507)
+        Me.bt_simpanreturjual.Name = "bt_simpanreturjual"
+        Me.bt_simpanreturjual.Size = New System.Drawing.Size(96, 30)
+        Me.bt_simpanreturjual.TabIndex = 256
+        Me.bt_simpanreturjual.Text = "Simpan"
+        Me.bt_simpanreturjual.UseVisualStyleBackColor = True
         '
         'GroupBox3
         '
@@ -335,7 +335,7 @@ Partial Class fr_jual_retur_detail
         '
         Me.in_netto.BackColor = System.Drawing.Color.White
         Me.in_netto.Cursor = System.Windows.Forms.Cursors.Default
-        Me.in_netto.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_netto.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_netto.ForeColor = System.Drawing.Color.Black
         Me.in_netto.Location = New System.Drawing.Point(6, 180)
         Me.in_netto.MaxLength = 20
@@ -749,9 +749,9 @@ Partial Class fr_jual_retur_detail
         Me.ClientSize = New System.Drawing.Size(859, 544)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.bt_batalreturbeli)
+        Me.Controls.Add(Me.bt_batalreturjual)
         Me.Controls.Add(Me.GroupBox4)
-        Me.Controls.Add(Me.bt_simpanreturbeli)
+        Me.Controls.Add(Me.bt_simpanreturjual)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.GroupBox3)
         Me.Controls.Add(Me.Label1)
@@ -816,8 +816,8 @@ Partial Class fr_jual_retur_detail
     Friend WithEvents lbl_barang As System.Windows.Forms.Label
     Friend WithEvents in_harga_retur As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_qty As System.Windows.Forms.NumericUpDown
-    Friend WithEvents bt_batalreturbeli As System.Windows.Forms.Button
-    Friend WithEvents bt_simpanreturbeli As System.Windows.Forms.Button
+    Friend WithEvents bt_batalreturjual As System.Windows.Forms.Button
+    Friend WithEvents bt_simpanreturjual As System.Windows.Forms.Button
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox
     Friend WithEvents cb_ppn_jenis As System.Windows.Forms.ComboBox
     Friend WithEvents Label20 As System.Windows.Forms.Label

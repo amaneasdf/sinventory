@@ -414,7 +414,9 @@
 
     Private Sub in_harga_retur_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyDown
         If e.KeyCode = Keys.Enter Then
-            addRowBarang()
+            If bt_simpanreturbeli.Text = "Simpan" Then
+                addRowBarang()
+            End If
             in_barang.Focus()
         End If
     End Sub
@@ -425,6 +427,10 @@
             cb_ppn_jenis.Focus()
             cb_ppn_jenis.DroppedDown = True
         End If
+    End Sub
+
+    Private Sub in_ppn_persen_Leave(sender As Object, e As EventArgs) Handles in_ppn_persen.Leave
+        countBiaya()
     End Sub
 
     Private Sub cb_ppn_jenis_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_ppn_jenis.SelectionChangeCommitted

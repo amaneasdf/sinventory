@@ -38,6 +38,8 @@
                 fr_beli_retur_detail.Show(main)
             Case "pgpenjualan"
                 fr_jual_detail.Show(main)
+            Case "pgreturjual"
+                fr_jual_retur_detail.Show(main)
             Case "pggroup"
                 fr_group_detail.ShowDialog()
             Case "pguser"
@@ -149,6 +151,14 @@
                         .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)
                     End With
+                Case "pgreturjual"
+                    Dim detail As New fr_jual_retur_detail
+                    With detail
+                        .bt_simpanreturjual.Text = "OK"
+                        .Text += dgv_list.Rows(rowindex).Cells(0).Value
+                        .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        .Show(main)
+                    End With
                 Case "pggroup"
                     Using detail As New fr_group_detail
                         With detail
@@ -215,6 +225,8 @@
                 populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
             Case "pgpenjualan"
                 populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
+            Case "pgreturjual"
+                populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
             Case "pgjenisbarang"
                 populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
             Case "pggroup"
@@ -257,6 +269,8 @@
                     populateDGVUserCon("returbeli", in_cari.Text, frmreturbeli.dgv_list)
                 Case "pgpenjualan"
                     populateDGVUserCon("jual", in_cari.Text, frmpenjualan.dgv_list)
+                Case "pgreturjual"
+                    populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
                 Case "pgjenisbarang"
                     populateDGVUserCon("jenisbarang", in_cari.Text, frmjenisbarang.dgv_list)
                 Case "pggroup"

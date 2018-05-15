@@ -27,6 +27,8 @@
                 createTabPage(pgreturbeli, type, frmreturbeli, "Retur Pembelian")
             Case "jual"
                 createTabPage(pgpenjualan, type, frmpenjualan, "Daftar Penjualan")
+            Case "returjual"
+                createTabPage(pgreturjual, type, frmreturjual, "Retur Penjualan")
             Case "jenisbarang"
                 createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
             Case "group"
@@ -135,6 +137,9 @@
             Case "mn020201"
                 Console.WriteLine("click trans jual")
                 openTab("jual")
+            Case "mn020202"
+                Console.WriteLine("click trans retur jual")
+                openTab("returjual")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()

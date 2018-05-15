@@ -188,3 +188,4 @@ GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
 /.vs/Inventory/v15/Server/sqlite3
+.vs/Inventory/DesignTimeBuild/.dtbcache

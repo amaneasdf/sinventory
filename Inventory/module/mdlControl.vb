@@ -1,4 +1,6 @@
-﻿Module mdlControl
+﻿Imports System.Reflection
+
+Module mdlControl
     '----------barang_list dgv col----------
     Private barang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
@@ -615,6 +617,55 @@
         .ReadOnly = True
     }
 
+    '----------retur_jual_list dgv col-------------------
+    Private retur_jual_bukti = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "bukti",
+        .HeaderText = "No. Bukti",
+        .Name = "bukti",
+        .ReadOnly = True
+    }
+    Private retur_jual_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tanggal",
+        .HeaderText = "Tanggal",
+        .Name = "tanggal",
+        .ReadOnly = True
+    }
+    Private retur_jual_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang",
+        .Name = "gudang",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private retur_jual_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+       .DataPropertyName = "faktur",
+       .HeaderText = "No. Faktur",
+       .Name = "faktur",
+       .ReadOnly = True
+    }
+    Private retur_jual_sales = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "sales",
+        .HeaderText = "Salesman",
+        .Name = "sales",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private retur_jual_custo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "custo",
+        .HeaderText = "Customer",
+        .Name = "custo",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private retur_jual_jml = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "jumlah",
+        .HeaderText = "Jumlah",
+        .Name = "jumlah",
+        .DefaultCellStyle = dgvstyle_currency,
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+
     '----------group_list dgv col----------------------
     Private group_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
@@ -717,33 +768,15 @@
     Public Sub setList(type As String)
         Select Case type
             Case "barang"
-                frmbarang.dgv_list.Columns.Clear()
-                addColtoDGV(type)
-                populateDGVUserCon(type, "", frmbarang.dgv_list)
-                With frmbarang
-                    .lbl_judul.Text = "Daftar Barang"
-                    .setpage(pgbarang)
-                End With
+                setListcodetemp(pgbarang, type, frmbarang, "Daftar Barang")
             Case "supplier"
-                frmsupplier.dgv_list.Columns.Clear()
-                addColtoDGV(type)
-                populateDGVUserCon(type, "", frmsupplier.dgv_list)
-                With frmsupplier
-                    .lbl_judul.Text = "Daftar Supplier"
-                    .setpage(pgsupplier)
-                End With
+                setListcodetemp(pgsupplier, type, frmsupplier, "Daftar Supplier")
             Case "gudang"
                 setListcodetemp(pggudang, type, frmgudang, "Daftar Gudang")
             Case "sales"
                 setListcodetemp(pgsales, type, frmsales, "Daftar Salesman")
             Case "custo"
-                frmcusto.dgv_list.Columns.Clear()
-                addColtoDGV(type)
-                populateDGVUserCon(type, "", frmcusto.dgv_list)
-                With frmcusto
-                    .lbl_judul.Text = "Daftar Customer"
-                    .setpage(pgcusto)
-                End With
+                setListcodetemp(pgcusto, type, frmcusto, "Daftar Customer")
             Case "bank"
                 setListcodetemp(pgbank, type, frmbank, "Daftar Bank")
             Case "giro"
@@ -758,6 +791,8 @@
                 setListcodetemp(pgreturbeli, type, frmreturbeli, "Daftar Data Retur Pembelian")
             Case "jual"
                 setListcodetemp(pgpenjualan, type, frmpenjualan, "Daftar Data Penjualan")
+            Case "returjual"
+                setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -769,6 +804,7 @@
 
     Public Sub setListcodetemp(tbpg As Object, type As String, frm As fr_list_temp, text As String)
         frm.dgv_list.Columns.Clear()
+        setDoubleBuffered(frm.dgv_list, True)
         addColtoDGV(type)
         populateDGVUserCon(type, "", frm.dgv_list)
         Console.WriteLine(tbpg.Name.ToString & "listcode")
@@ -778,6 +814,13 @@
             .setpage(tbpg)
             .in_cari.Focus()
         End With
+    End Sub
+
+    Private Sub setDoubleBuffered(dgv As DataGridView, x As Boolean)
+        Dim type As Type = dgv.[GetType]()
+        Dim PI As PropertyInfo = type.GetProperty("DoubleBuffered", BindingFlags.Instance Or BindingFlags.NonPublic)
+        PI.SetValue(dgv, True, Nothing)
+        Console.WriteLine("SET")
     End Sub
 
     Private Sub addColtoDGV(type As String)
@@ -866,6 +909,13 @@
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
+            Case "returjual"
+                With frmreturjual.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_beli_gudang, retur_beli_jml})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
             Case "group"
                 With frmgroup.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
@@ -921,6 +971,8 @@
                 bs = populateDGVUserConTemp("getReturBeli", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "jual"
                 bs = populateDGVUserConTemp("getJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
+            Case "returjual"
+                bs = populateDGVUserConTemp("getReturJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "group"
                 bs = populateDGVUserConTemp("getUserGroup", "nama LIKE '%" & param & "%'")
             Case "user"
@@ -974,6 +1026,8 @@
                 frm = frmreturbeli
             Case "pgpenjualan"
                 frm = frmpenjualan
+            Case "pgreturjual"
+                frm = frmreturjual
             Case "pgjenisbarang"
                 frm = frmjenisbarang
             Case "pguser"
