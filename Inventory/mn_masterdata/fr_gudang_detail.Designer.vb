@@ -67,6 +67,7 @@ Partial Class fr_gudang_detail
         'bt_batalgudang
         '
         Me.bt_batalgudang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_batalgudang.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalgudang.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batalgudang.Location = New System.Drawing.Point(406, 369)
         Me.bt_batalgudang.Name = "bt_batalgudang"
@@ -339,6 +340,7 @@ Partial Class fr_gudang_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.bt_batalgudang
         Me.ClientSize = New System.Drawing.Size(519, 411)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Panel1)

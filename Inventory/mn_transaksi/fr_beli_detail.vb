@@ -277,7 +277,19 @@
 
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
         lbl_gudang.Text = ""
-
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "gudang"
+                    .ShowDialog()
+                    in_gudang.Text = .returnkode
+                End With
+            End Using
+            in_supplier.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_supplier, e)
     End Sub
 
@@ -287,7 +299,19 @@
 
     Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
         lbl_supplier.Text = ""
-
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT supplier_kode as kode, supplier_nama as nama FROM data_supplier_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "supplier"
+                    .ShowDialog()
+                    in_supplier.Text = .returnkode
+                End With
+            End Using
+            in_term.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_term, e)
     End Sub
 
@@ -305,7 +329,19 @@
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         clearTextBarang()
-
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "barang"
+                    .ShowDialog()
+                    in_barang.Text = .returnkode
+                End With
+            End Using
+            in_qty.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_qty, e)
     End Sub
 

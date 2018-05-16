@@ -22,6 +22,13 @@
         rd.Close()
     End Sub
 
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
     Private Sub fr_gudang_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
         With cb_status
@@ -43,6 +50,7 @@
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
         in_status_kode.Text = cb_status.SelectedValue
+        bt_simpangudang.Focus()
     End Sub
 
     Private Sub bt_simpangudang_Click(sender As Object, e As EventArgs) Handles bt_simpangudang.Click
@@ -98,5 +106,13 @@
 
     Private Sub bt_batalgudang_Click(sender As Object, e As EventArgs) Handles bt_batalgudang.Click
         Me.Dispose()
+    End Sub
+
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_namagudang, e)
+    End Sub
+
+    Private Sub in_namagudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namagudang.KeyDown
+        keyshortenter(in_alamatgudang, e)
     End Sub
 End Class

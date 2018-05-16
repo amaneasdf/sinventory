@@ -107,6 +107,7 @@ Partial Class fr_search_dialog
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
         Me.Name = "fr_search_dialog"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Cari"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

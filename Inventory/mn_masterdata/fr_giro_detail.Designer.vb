@@ -38,11 +38,9 @@ Partial Class fr_giro_detail
         Me.in_bank = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.in_jumlah = New System.Windows.Forms.NumericUpDown()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.date_tgl = New System.Windows.Forms.DateTimePicker()
         Me.date_tgl_bg = New System.Windows.Forms.DateTimePicker()
-        Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -222,24 +220,13 @@ Partial Class fr_giro_detail
         'in_jumlah
         '
         Me.in_jumlah.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_jumlah.Location = New System.Drawing.Point(157, 235)
+        Me.in_jumlah.Location = New System.Drawing.Point(103, 235)
         Me.in_jumlah.Maximum = New Decimal(New Integer() {1874919423, 2328306, 0, 0})
         Me.in_jumlah.Name = "in_jumlah"
-        Me.in_jumlah.Size = New System.Drawing.Size(212, 22)
+        Me.in_jumlah.Size = New System.Drawing.Size(266, 22)
         Me.in_jumlah.TabIndex = 5
         Me.in_jumlah.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_jumlah.ThousandsSeparator = True
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.BackColor = System.Drawing.Color.White
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(122, 237)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(29, 16)
-        Me.Label7.TabIndex = 170
-        Me.Label7.Text = "Rp."
         '
         'Label8
         '
@@ -270,21 +257,6 @@ Partial Class fr_giro_detail
         Me.date_tgl_bg.Name = "date_tgl_bg"
         Me.date_tgl_bg.Size = New System.Drawing.Size(200, 22)
         Me.date_tgl_bg.TabIndex = 6
-        '
-        'TextBox5
-        '
-        Me.TextBox5.BackColor = System.Drawing.Color.White
-        Me.TextBox5.Cursor = System.Windows.Forms.Cursors.Default
-        Me.TextBox5.Enabled = False
-        Me.TextBox5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox5.ForeColor = System.Drawing.Color.Black
-        Me.TextBox5.Location = New System.Drawing.Point(103, 235)
-        Me.TextBox5.MaxLength = 10
-        Me.TextBox5.Name = "TextBox5"
-        Me.TextBox5.ReadOnly = True
-        Me.TextBox5.Size = New System.Drawing.Size(266, 22)
-        Me.TextBox5.TabIndex = 167
-        Me.TextBox5.TabStop = False
         '
         'Label14
         '
@@ -474,9 +446,7 @@ Partial Class fr_giro_detail
         Me.Controls.Add(Me.lbl_custo)
         Me.Controls.Add(Me.lbl_sales)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.TextBox5)
         Me.Controls.Add(Me.in_bank)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.in_nobg)
@@ -510,11 +480,9 @@ Partial Class fr_giro_detail
     Friend WithEvents in_bank As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents in_jumlah As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents date_tgl As System.Windows.Forms.DateTimePicker
     Friend WithEvents date_tgl_bg As System.Windows.Forms.DateTimePicker
-    Friend WithEvents TextBox5 As System.Windows.Forms.TextBox
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox

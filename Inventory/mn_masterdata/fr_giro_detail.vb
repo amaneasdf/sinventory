@@ -75,6 +75,23 @@
         End Try
     End Sub
 
+    Private Sub numericGotFocus(sender As NumericUpDown)
+        If sender.Value = 0 Then
+            sender.ResetText()
+        End If
+    End Sub
+
+    Private Sub numericLostFocus(x As NumericUpDown)
+        x.Controls.Item(1).Text = x.Value
+    End Sub
+
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
     Private Sub fr_giro_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         lbl_sales.Text = ""
         lbl_custo.Text = ""
@@ -179,9 +196,47 @@
 
     Private Sub in_kode_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_sales.KeyDown
         lbl_sales.Text = ""
+        keyshortenter(in_kode_custo, e)
     End Sub
 
     Private Sub in_kode_custo_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_custo.KeyDown
         lbl_custo.Text = ""
+        keyshortenter(in_nobg, e)
+    End Sub
+
+    Private Sub date_tgl_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl.KeyDown
+        keyshortenter(in_kode_sales, e)
+    End Sub
+
+    Private Sub in_nobg_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nobg.KeyDown
+        keyshortenter(in_bank, e)
+    End Sub
+
+    Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank.KeyDown
+        keyshortenter(in_jumlah, e)
+    End Sub
+
+    Private Sub in_jumlah_KeyDown(sender As Object, e As KeyEventArgs) Handles in_jumlah.KeyDown
+        keyshortenter(date_tgl_bg, e)
+    End Sub
+
+    Private Sub date_tgl_bg_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_bg.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_status.DroppedDown = True
+            cb_status.Focus()
+        End If
+    End Sub
+
+    Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
+        bt_simpangiro.Focus()
+    End Sub
+
+    Private Sub in_jumlah_Enter(sender As Object, e As EventArgs) Handles in_jumlah.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_jumlah_Leave(sender As Object, e As EventArgs) Handles in_jumlah.Leave
+        numericLostFocus(sender)
     End Sub
 End Class

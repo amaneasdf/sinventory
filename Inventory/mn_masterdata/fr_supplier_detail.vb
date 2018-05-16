@@ -30,6 +30,23 @@
         rd.Close()
     End Sub
 
+    Private Sub numericGotFocus(sender As NumericUpDown)
+        If sender.Value = 0 Then
+            sender.ResetText()
+        End If
+    End Sub
+
+    Private Sub numericLostFocus(x As NumericUpDown)
+        x.Controls.Item(1).Text = x.Value
+    End Sub
+
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
     Private Sub fr_supplier_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
         With cb_status
@@ -50,6 +67,7 @@
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
         in_status_kode.Text = cb_status.SelectedValue
+        bt_simpansupplier.Focus()
     End Sub
 
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpansupplier.Click
@@ -173,5 +191,61 @@
 
     Private Sub bt_batalsupplier_Click(sender As Object, e As EventArgs) Handles bt_batalsupplier.Click
         Me.Dispose()
+    End Sub
+
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_namasupplier, e)
+    End Sub
+
+    Private Sub in_namasupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasupplier.KeyDown
+        keyshortenter(in_alamatsupplier, e)
+    End Sub
+
+    Private Sub in_telp1supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telp1supplier.KeyDown
+        keyshortenter(in_telp2supplier, e)
+    End Sub
+
+    Private Sub in_telp2supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telp2supplier.KeyDown
+        keyshortenter(in_faxsupplier, e)
+    End Sub
+
+    Private Sub in_faxsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_faxsupplier.KeyDown
+        keyshortenter(in_cp, e)
+    End Sub
+
+    Private Sub in_cp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cp.KeyDown
+        keyshortenter(in_emailsupplier, e)
+    End Sub
+
+    Private Sub in_emailsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_emailsupplier.KeyDown
+        keyshortenter(in_npwpsupplier, e)
+    End Sub
+
+    Private Sub in_npwpsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_npwpsupplier.KeyDown
+        keyshortenter(in_rek_bank, e)
+    End Sub
+
+    Private Sub in_rek_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_bank.KeyDown
+        keyshortenter(in_rek_giro, e)
+    End Sub
+
+    Private Sub in_rek_giro_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_giro.KeyDown
+        keyshortenter(in_ket, e)
+    End Sub
+
+    Private Sub in_term_KeyDown(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_status.DroppedDown = True
+            cb_status.Focus()
+        End If
+    End Sub
+
+    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
+        numericLostFocus(sender)
     End Sub
 End Class

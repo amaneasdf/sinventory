@@ -311,7 +311,7 @@
                 querycheck = commnd("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
             Next
         Else
-            Me.Dispose()
+            Me.Close()
         End If
 
         If querycheck = False Then
@@ -320,12 +320,12 @@
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
     Private Sub bt_bataljual_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub in_no_bukti_KeyDown(sender As Object, e As KeyEventArgs) Handles in_no_bukti.KeyDown

@@ -93,12 +93,12 @@ Partial Class fr_custo_detail
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.in_piutang = New System.Windows.Forms.NumericUpDown()
         Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.cb_harga = New System.Windows.Forms.ComboBox()
         Me.cb_diskon = New System.Windows.Forms.ComboBox()
         Me.in_kode_harga = New System.Windows.Forms.TextBox()
         Me.in_kode_diskon = New System.Windows.Forms.TextBox()
-        Me.in_piutang = New System.Windows.Forms.TextBox()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.in_kunjungan_pola = New System.Windows.Forms.TextBox()
         Me.Label32 = New System.Windows.Forms.Label()
@@ -113,6 +113,7 @@ Partial Class fr_custo_detail
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.TabPage2.SuspendLayout()
+        CType(Me.in_piutang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -242,7 +243,7 @@ Partial Class fr_custo_detail
         Me.in_alamat_kecamatan.ForeColor = System.Drawing.Color.Black
         Me.in_alamat_kecamatan.Location = New System.Drawing.Point(148, 136)
         Me.in_alamat_kecamatan.Name = "in_alamat_kecamatan"
-        Me.in_alamat_kecamatan.Size = New System.Drawing.Size(166, 22)
+        Me.in_alamat_kecamatan.Size = New System.Drawing.Size(210, 22)
         Me.in_alamat_kecamatan.TabIndex = 14
         '
         'in_kode_sales
@@ -263,7 +264,7 @@ Partial Class fr_custo_detail
         Me.in_alamat_kelurahan.ForeColor = System.Drawing.Color.Black
         Me.in_alamat_kelurahan.Location = New System.Drawing.Point(148, 108)
         Me.in_alamat_kelurahan.Name = "in_alamat_kelurahan"
-        Me.in_alamat_kelurahan.Size = New System.Drawing.Size(167, 22)
+        Me.in_alamat_kelurahan.Size = New System.Drawing.Size(211, 22)
         Me.in_alamat_kelurahan.TabIndex = 13
         '
         'Label17
@@ -884,12 +885,12 @@ Partial Class fr_custo_detail
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.in_piutang)
         Me.TabPage2.Controls.Add(Me.in_term)
         Me.TabPage2.Controls.Add(Me.cb_harga)
         Me.TabPage2.Controls.Add(Me.cb_diskon)
         Me.TabPage2.Controls.Add(Me.in_kode_harga)
         Me.TabPage2.Controls.Add(Me.in_kode_diskon)
-        Me.TabPage2.Controls.Add(Me.in_piutang)
         Me.TabPage2.Controls.Add(Me.Label31)
         Me.TabPage2.Controls.Add(Me.in_kunjungan_pola)
         Me.TabPage2.Controls.Add(Me.Label32)
@@ -905,6 +906,19 @@ Partial Class fr_custo_detail
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Detail 2"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'in_piutang
+        '
+        Me.in_piutang.DecimalPlaces = 2
+        Me.in_piutang.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_piutang.ImeMode = System.Windows.Forms.ImeMode.[On]
+        Me.in_piutang.Location = New System.Drawing.Point(128, 70)
+        Me.in_piutang.Maximum = New Decimal(New Integer() {1874919423, 2328306, 0, 0})
+        Me.in_piutang.Name = "in_piutang"
+        Me.in_piutang.Size = New System.Drawing.Size(241, 22)
+        Me.in_piutang.TabIndex = 28
+        Me.in_piutang.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_piutang.ThousandsSeparator = True
         '
         'in_term
         '
@@ -960,17 +974,6 @@ Partial Class fr_custo_detail
         Me.in_kode_diskon.Size = New System.Drawing.Size(66, 22)
         Me.in_kode_diskon.TabIndex = 66
         Me.in_kode_diskon.TabStop = False
-        '
-        'in_piutang
-        '
-        Me.in_piutang.BackColor = System.Drawing.Color.White
-        Me.in_piutang.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_piutang.ForeColor = System.Drawing.Color.Black
-        Me.in_piutang.Location = New System.Drawing.Point(128, 72)
-        Me.in_piutang.MaxLength = 20
-        Me.in_piutang.Name = "in_piutang"
-        Me.in_piutang.Size = New System.Drawing.Size(241, 22)
-        Me.in_piutang.TabIndex = 28
         '
         'Label31
         '
@@ -1101,6 +1104,7 @@ Partial Class fr_custo_detail
         Me.TabPage1.PerformLayout()
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout()
+        CType(Me.in_piutang, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -1182,7 +1186,6 @@ Partial Class fr_custo_detail
     Friend WithEvents cb_diskon As System.Windows.Forms.ComboBox
     Friend WithEvents in_kode_harga As System.Windows.Forms.TextBox
     Friend WithEvents in_kode_diskon As System.Windows.Forms.TextBox
-    Friend WithEvents in_piutang As System.Windows.Forms.TextBox
     Friend WithEvents Label31 As System.Windows.Forms.Label
     Friend WithEvents in_kunjungan_pola As System.Windows.Forms.TextBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
@@ -1191,4 +1194,5 @@ Partial Class fr_custo_detail
     Friend WithEvents Label34 As System.Windows.Forms.Label
     Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents Label36 As System.Windows.Forms.Label
+    Friend WithEvents in_piutang As System.Windows.Forms.NumericUpDown
 End Class

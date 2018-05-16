@@ -180,7 +180,6 @@
         in_netto.Text = z.ToString("N2", cc)
     End Sub
 
-
     Private Sub numericGotFocus(sender As NumericUpDown)
         If sender.Value = 0 Then
             sender.ResetText()
@@ -346,7 +345,6 @@
         Me.Dispose()
     End Sub
 
-
     Private Sub in_no_bukti_KeyDown(sender As Object, e As KeyEventArgs) Handles in_no_bukti.KeyDown
         keyshortenter(date_tgl_trans, e)
     End Sub
@@ -357,6 +355,19 @@
 
     Private Sub in_no_faktur_KeyDown(sender As Object, e As KeyEventArgs) Handles in_no_faktur.KeyDown
         clearDataFaktur()
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT faktur_kode as kode, faktur_tanggal_trans as tgl, gudang_nama as gudang, salesman_nama as sales, customer_nama as custo FROM data_penjualan_faktur inner join data_barang_gudang on gudang_kode=faktur_gudang inner join `data_customer_master` on customer_kode=faktur_customer inner join `data_salesman_master` on salesman_kode=faktur_sales ORDER BY kode DESC;"
+                    .paramquery = "kode LIKE '%{0}%' OR sales LIKE '%{0}%' OR custo LIKE '%{0}%'"
+                    .type = "jual"
+                    .ShowDialog()
+                    in_no_faktur.Text = .returnkode
+                End With
+            End Using
+            in_no_faktur_ex.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_no_faktur_ex, e)
     End Sub
 
@@ -409,7 +420,7 @@
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         clearInputBarang()
-        If e.Alt = True AndAlso e.KeyCode = Keys.F1 Then
+        If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
                 With search
                     .query = "SELECT barang_nama as nama, barang_kode as kode, trans_qty as qty FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode=trans_barang WHERE trans_faktur='" & in_no_faktur.Text & "'"
@@ -433,7 +444,7 @@
 
     Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
         If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = False
+            e.SuppressKeyPress = True
             cb_sat.DroppedDown = True
             cb_sat.Focus()
         End If
@@ -454,7 +465,7 @@
 
     Private Sub in_ppn_persen_KeyDown(sender As Object, e As KeyEventArgs) Handles in_ppn_persen.KeyDown
         If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = False
+            e.SuppressKeyPress = True
             cb_ppn_jenis.DroppedDown = True
             cb_ppn_jenis.Focus()
         End If

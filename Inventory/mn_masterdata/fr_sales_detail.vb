@@ -49,6 +49,13 @@
         rd.Close()
     End Sub
 
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
     Private Sub fr_sales_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
         With cb_status
@@ -74,6 +81,7 @@
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
         in_status_kode.Text = cb_status.SelectedValue
+        bt_simpansales.Focus()
     End Sub
 
     Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpansales.Click
@@ -144,5 +152,62 @@
 
     Private Sub cb_jenis_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_jenis.SelectionChangeCommitted
         in_jenis_kode.Text = cb_jenis.SelectedValue
+        in_lahir_kota.Focus()
+    End Sub
+
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_namasales, e)
+    End Sub
+
+    Private Sub in_namasales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasales.KeyDown
+        keyshortenter(in_alamatsales, e)
+    End Sub
+
+    Private Sub i(sender As Object, e As KeyEventArgs) Handles date_kerja.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_jenis.DroppedDown = True
+            cb_jenis.Focus()
+        End If
+    End Sub
+
+    Private Sub in_lahir_kota_KeyDown(sender As Object, e As KeyEventArgs) Handles in_lahir_kota.KeyDown
+        keyshortenter(date_lahir_tgl, e)
+    End Sub
+
+    Private Sub date_lahir_tgl_KeyDown(sender As Object, e As KeyEventArgs) Handles date_lahir_tgl.KeyDown
+        keyshortenter(in_telpsales, e)
+    End Sub
+
+    Private Sub in_telpsales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telpsales.KeyDown
+        keyshortenter(in_faxsales, e)
+    End Sub
+
+    Private Sub in_faxsales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_faxsales.KeyDown
+        keyshortenter(in_nik, e)
+    End Sub
+
+    Private Sub in_nik_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nik.KeyDown
+        keyshortenter(in_target, e)
+    End Sub
+
+    Private Sub in_target_KeyDown(sender As Object, e As KeyEventArgs) Handles in_target.KeyDown
+        keyshortenter(in_bank_nama, e)
+    End Sub
+
+    Private Sub in_bank_nama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_nama.KeyDown
+        keyshortenter(in_bank_rek, e)
+    End Sub
+
+    Private Sub in_bank_rek_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_rek.KeyDown
+        keyshortenter(in_bank_an, e)
+    End Sub
+
+    Private Sub in_bank_an_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_an.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_status.DroppedDown = True
+            cb_status.Focus()
+        End If
     End Sub
 End Class

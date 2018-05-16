@@ -62,12 +62,13 @@ Partial Class fr_supplier_detail
         Me.in_telp2supplier = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_ket = New System.Windows.Forms.TextBox()
-        Me.in_term = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.in_cp = New System.Windows.Forms.TextBox()
+        Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox1.SuspendLayout()
         CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label14
@@ -502,19 +503,6 @@ Partial Class fr_supplier_detail
         Me.in_ket.Size = New System.Drawing.Size(343, 58)
         Me.in_ket.TabIndex = 11
         '
-        'in_term
-        '
-        Me.in_term.BackColor = System.Drawing.Color.White
-        Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_term.ForeColor = System.Drawing.Color.Black
-        Me.in_term.Location = New System.Drawing.Point(373, 308)
-        Me.in_term.MaxLength = 2
-        Me.in_term.Name = "in_term"
-        Me.in_term.Size = New System.Drawing.Size(160, 22)
-        Me.in_term.TabIndex = 12
-        Me.in_term.TabStop = False
-        Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
         'Label12
         '
         Me.Label12.AutoSize = True
@@ -546,15 +534,26 @@ Partial Class fr_supplier_detail
         Me.in_cp.Size = New System.Drawing.Size(167, 22)
         Me.in_cp.TabIndex = 6
         '
+        'in_term
+        '
+        Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_term.Location = New System.Drawing.Point(373, 308)
+        Me.in_term.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
+        Me.in_term.Name = "in_term"
+        Me.in_term.Size = New System.Drawing.Size(160, 21)
+        Me.in_term.TabIndex = 12
+        Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'fr_supplier_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.bt_batalsupplier
         Me.ClientSize = New System.Drawing.Size(749, 528)
+        Me.Controls.Add(Me.in_term)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.cb_status)
         Me.Controls.Add(Me.Label12)
-        Me.Controls.Add(Me.in_term)
         Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.in_status_kode)
         Me.Controls.Add(Me.pic_supplier)
@@ -594,6 +593,7 @@ Partial Class fr_supplier_detail
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
         CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -638,8 +638,8 @@ Partial Class fr_supplier_detail
     Friend WithEvents in_telp2supplier As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents in_ket As System.Windows.Forms.TextBox
-    Friend WithEvents in_term As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents in_cp As System.Windows.Forms.TextBox
+    Friend WithEvents in_term As System.Windows.Forms.NumericUpDown
 End Class

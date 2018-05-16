@@ -50,7 +50,7 @@
             in_pajak_jabatan.Text = rd.Item("customer_pajak_jabatan")
             in_pajak_alamat.Text = rd.Item("customer_pajak_alamat")
             in_kunjungan_hr.Text = rd.Item("customer_kunjungan_hari")
-            in_piutang.Text = rd.Item("customer_max_piutang")
+            in_piutang.Value = rd.Item("customer_max_piutang")
             in_kode_diskon.Text = rd.Item("Customer_kriteria_discount")
             cb_diskon.SelectedValue = in_kode_diskon.Text
             in_kode_harga.Text = rd.Item("Customer_kriteria_harga_jual")
@@ -83,6 +83,23 @@
         Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
+    End Sub
+
+    Private Sub numericGotFocus(sender As NumericUpDown)
+        If sender.Value = 0 Then
+            sender.ResetText()
+        End If
+    End Sub
+
+    Private Sub numericLostFocus(x As NumericUpDown)
+        x.Controls.Item(1).Text = x.Value
+    End Sub
+
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
     End Sub
 
     Private Sub fr_custo_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -207,7 +224,7 @@
                 "customer_pajak_jabatan='" & in_pajak_jabatan.Text & "'",
                 "customer_pajak_alamat='" & in_pajak_alamat.Text & "'",
                 "customer_kunjungan_hari='" & in_kunjungan_hr.Text & "'",
-                "customer_max_piutang='" & in_piutang.Text & "'",
+                "customer_max_piutang='" & in_piutang.Value & "'",
                 "Customer_kriteria_discount='" & in_kode_diskon.Text & "'",
                 "Customer_kriteria_harga_jual='" & in_kode_harga.Text & "'",
                 "customer_term='" & in_term.Value & "'",
@@ -270,24 +287,32 @@
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
         in_status_kode.Text = cb_status.SelectedValue
+        cb_tipe.DroppedDown = True
+        cb_tipe.Focus()
     End Sub
 
     Private Sub cb_tipe_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_tipe.SelectionChangeCommitted
         in_tipe_kode.Text = cb_tipe.SelectedValue
+        in_telpcusto.Focus()
     End Sub
 
     Private Sub cb_diskon_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_diskon.SelectionChangeCommitted
         in_kode_diskon.Text = cb_diskon.SelectedValue
+        cb_harga.DroppedDown = True
+        cb_harga.Focus()
     End Sub
 
     Private Sub cb_harga_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_harga.SelectionChangeCommitted
         in_kode_harga.Text = cb_harga.SelectedValue
+        in_term.Focus()
     End Sub
 
-    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.GotFocus
-        If in_term.Value = 0 Then
-            in_term.ResetText()
-        End If
+    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_piutang.Enter, in_term.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave, in_piutang.Leave
+        numericLostFocus(sender)
     End Sub
 
     Private Sub fr_custo_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -302,6 +327,123 @@
 
     Private Sub in_kode_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_sales.KeyDown
         lbl_sales.Text = ""
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT salesman_kode as kode, salesman_nama as nama FROM data_salesman_master;"
+                    .paramquery = "kode LIKE '%{0}%' OR nama LIKE '%{0}%'"
+                    .type = "sales"
+                    .ShowDialog()
+                    in_kode_sales.Text = .returnkode
+                End With
+            End Using
+            in_nama_custo.Focus()
+            Exit Sub
+        End If
+        keyshortenter(in_nama_custo, e)
     End Sub
 
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_kode_sales, e)
+    End Sub
+
+    Private Sub in_nama_custo_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nama_custo.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_status.DroppedDown = True
+            cb_status.Focus()
+        End If
+    End Sub
+
+    Private Sub in_telpcusto_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telpcusto.KeyDown
+        keyshortenter(in_faxcusto, e)
+    End Sub
+
+    Private Sub in_faxcusto_KeyDown(sender As Object, e As KeyEventArgs) Handles in_faxcusto.KeyDown
+        keyshortenter(in_cpcusto, e)
+    End Sub
+
+    Private Sub in_cpcusto_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cpcusto.KeyDown
+        keyshortenter(in_alamat_custo, e)
+    End Sub
+
+    Private Sub in_alamat_blok_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_blok.KeyDown
+        keyshortenter(in_alamat_no, e)
+    End Sub
+
+    Private Sub in_alamat_no_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_no.KeyDown
+        keyshortenter(in_alamat_rt, e)
+    End Sub
+
+    Private Sub in_alamat_rt_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_rt.KeyDown
+        keyshortenter(in_alamat_rw, e)
+    End Sub
+
+    Private Sub in_alamat_rw_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_rw.KeyDown
+        keyshortenter(in_alamat_kelurahan, e)
+    End Sub
+
+    Private Sub in_alamat_kelurahan_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_kelurahan.KeyDown
+        keyshortenter(in_alamat_kecamatan, e)
+    End Sub
+
+    Private Sub in_alamat_kecamatan_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_kecamatan.KeyDown
+        keyshortenter(in_alamat_kabupaten, e)
+    End Sub
+
+    Private Sub in_alamat_kabupaten_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_kabupaten.KeyDown
+        keyshortenter(in_alamat_pasar, e)
+    End Sub
+
+    Private Sub in_alamat_pasar_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_pasar.KeyDown
+        keyshortenter(in_alamat_provinsi, e)
+    End Sub
+
+    Private Sub in_alamat_provinsi_KeyDown(sender As Object, e As KeyEventArgs) Handles in_alamat_provinsi.KeyDown
+        keyshortenter(in_kodepos, e)
+    End Sub
+
+    Private Sub in_kodepos_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kodepos.KeyDown
+        keyshortenter(in_nik, e)
+    End Sub
+
+    Private Sub in_nik_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nik.KeyDown
+        keyshortenter(in_npwp, e)
+    End Sub
+
+    Private Sub in_npwp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_npwp.KeyDown
+        keyshortenter(date_tgl_pkp, e)
+    End Sub
+
+    Private Sub date_tgl_pkp_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_pkp.KeyDown
+        keyshortenter(in_pajak_nama, e)
+    End Sub
+
+    Private Sub in_pajak_nama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pajak_nama.KeyDown
+        keyshortenter(in_pajak_jabatan, e)
+    End Sub
+
+    Private Sub in_pajak_jabatan_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pajak_jabatan.KeyDown
+        keyshortenter(in_pajak_alamat, e)
+    End Sub
+
+    Private Sub in_kunjungan_hr_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kunjungan_hr.KeyDown
+        keyshortenter(in_kunjungan_pola, e)
+    End Sub
+
+    Private Sub in_kunjungan_pola_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kunjungan_pola.KeyDown
+        keyshortenter(in_piutang, e)
+    End Sub
+
+    Private Sub in_piutang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_piutang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            cb_diskon.DroppedDown = True
+            cb_diskon.Focus()
+        End If
+    End Sub
+
+    Private Sub in_term_KeyDown(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
+        keyshortenter(bt_simpancusto, e)
+    End Sub
 End Class

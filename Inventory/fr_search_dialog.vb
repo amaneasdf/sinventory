@@ -98,6 +98,42 @@
         .Name = "kode",
         .ReadOnly = True
     }
+
+    '--------jual
+    Private jual_faktur As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kode",
+        .HeaderText = "Faktur",
+        .Name = "kode",
+        .ReadOnly = True
+    }
+    Private jual_tgl As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tgl",
+        .HeaderText = "Tanggal",
+        .Name = "tgl",
+        .ReadOnly = True
+    }
+    Private jual_custo As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "custo",
+        .HeaderText = "Customer",
+        .Name = "custo",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
+    Private jual_sales As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "sales",
+        .HeaderText = "Salesman",
+        .Name = "sales",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
+    Private jual_gudang As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang",
+        .Name = "gudang",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
+
     Private Sub loadData(query As String, paramquery As String)
         Dim bs As New BindingSource
         bs.DataSource = getDataTablefromDB(query)
@@ -128,6 +164,9 @@
                 Case "barangfaktur"
                     lbl_judul.Text += " Barang"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {barang_nama, barang_kode, barang_trans_qty})
+                Case "jual"
+                    lbl_judul.Text += " Penjualan"
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jual_faktur, jual_tgl, jual_sales, jual_custo, jual_gudang})
                 Case Else
                     Exit Sub
             End Select
@@ -144,6 +183,7 @@
 
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
         If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
             bt_search.PerformClick()
         End If
     End Sub
@@ -161,17 +201,20 @@
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
         rowindex = e.RowIndex
         returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub bt_ok_Click(sender As Object, e As EventArgs) Handles bt_ok.Click
         returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub fr_search_dialog_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If e.KeyCode = Keys.Escape Then
-            Me.Dispose()
+            Me.Close()
+        ElseIf e.KeyCode = Keys.Enter AndAlso dgv_list.Focused = True Then
+            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Me.Close()
         End If
     End Sub
 

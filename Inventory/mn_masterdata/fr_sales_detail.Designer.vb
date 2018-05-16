@@ -46,7 +46,6 @@ Partial Class fr_sales_detail
         Me.bt_gambar = New System.Windows.Forms.Button()
         Me.date_lahir_tgl = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.in_target = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_bank_nama = New System.Windows.Forms.TextBox()
         Me.cb_status = New System.Windows.Forms.ComboBox()
@@ -68,6 +67,7 @@ Partial Class fr_sales_detail
         Me.in_jenis_kode = New System.Windows.Forms.TextBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.cb_jenis = New System.Windows.Forms.ComboBox()
+        Me.in_target = New System.Windows.Forms.TextBox()
         CType(Me.pic_sales, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.SuspendLayout()
@@ -326,17 +326,6 @@ Partial Class fr_sales_detail
         Me.Label1.TabIndex = 11
         Me.Label1.Text = "Target"
         '
-        'in_target
-        '
-        Me.in_target.BackColor = System.Drawing.Color.White
-        Me.in_target.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_target.ForeColor = System.Drawing.Color.Black
-        Me.in_target.Location = New System.Drawing.Point(125, 343)
-        Me.in_target.MaxLength = 20
-        Me.in_target.Name = "in_target"
-        Me.in_target.Size = New System.Drawing.Size(211, 22)
-        Me.in_target.TabIndex = 9
-        '
         'Label2
         '
         Me.Label2.AutoSize = True
@@ -564,6 +553,17 @@ Partial Class fr_sales_detail
         Me.cb_jenis.Size = New System.Drawing.Size(175, 23)
         Me.cb_jenis.TabIndex = 13
         '
+        'in_target
+        '
+        Me.in_target.BackColor = System.Drawing.Color.White
+        Me.in_target.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_target.ForeColor = System.Drawing.Color.Black
+        Me.in_target.Location = New System.Drawing.Point(125, 343)
+        Me.in_target.MaxLength = 20
+        Me.in_target.Name = "in_target"
+        Me.in_target.Size = New System.Drawing.Size(211, 22)
+        Me.in_target.TabIndex = 9
+        '
         'fr_sales_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -642,7 +642,6 @@ Partial Class fr_sales_detail
     Friend WithEvents bt_gambar As System.Windows.Forms.Button
     Friend WithEvents date_lahir_tgl As System.Windows.Forms.DateTimePicker
     Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents in_target As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents in_bank_nama As System.Windows.Forms.TextBox
     Friend WithEvents cb_status As System.Windows.Forms.ComboBox
@@ -664,4 +663,5 @@ Partial Class fr_sales_detail
     Friend WithEvents in_jenis_kode As System.Windows.Forms.TextBox
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents cb_jenis As System.Windows.Forms.ComboBox
+    Friend WithEvents in_target As System.Windows.Forms.TextBox
 End Class

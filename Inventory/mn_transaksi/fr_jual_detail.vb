@@ -434,6 +434,19 @@
 
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
         lbl_gudang.Text = ""
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT gudang_nama as nama, gudang_kode as kode FROM data_barang_gudang"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "gudang"
+                    .ShowDialog()
+                    in_gudang.Text = .returnkode
+                End With
+            End Using
+            in_sales.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_sales, e)
     End Sub
 
@@ -443,6 +456,19 @@
 
     Private Sub in_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_sales.KeyDown
         lbl_sales.Text = ""
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT salesman_nama as nama, salesman_kode as kode FROM data_salesman_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "sales"
+                    .ShowDialog()
+                    in_sales.Text = .returnkode
+                End With
+            End Using
+            in_custo.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_custo, e)
     End Sub
 
@@ -452,6 +478,19 @@
 
     Private Sub in_custo_KeyDown(sender As Object, e As KeyEventArgs) Handles in_custo.KeyDown
         lbl_custo.Text = ""
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT customer_nama as nama, customer_kode as kode FROM data_customer_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "custo"
+                    .ShowDialog()
+                    in_custo.Text = .returnkode
+                End With
+            End Using
+            in_term.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_term, e)
     End Sub
 
@@ -469,6 +508,19 @@
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         clearInputBarang()
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_jual as hargajual, barang_harga_beli as hargabeli FROM data_barang_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "barang"
+                    .ShowDialog()
+                    in_barang.Text = .returnkode
+                End With
+            End Using
+            in_qty.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_qty, e)
     End Sub
 
