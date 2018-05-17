@@ -341,6 +341,19 @@
             End Using
             in_qty.Focus()
             Exit Sub
+        ElseIf e.KeyCode = Keys.F2 Then
+            Using addbarang As New fr_barang_detail
+                With addbarang
+                    .in_supplier.Text = in_supplier.Text
+                    If Trim(in_barang.Text) <> Nothing Then
+                        .in_kode.Text = in_barang.Text
+                    End If
+                    .ShowDialog()
+                    in_barang.Text = .in_kode.Text
+                End With
+            End Using
+            in_qty.Focus()
+            Exit Sub
         End If
         keyshortenter(in_qty, e)
     End Sub
@@ -446,6 +459,9 @@
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
             querycheck = commnd("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
+
+            'TODO update stock?
+            'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli=(SELECT stock_beli FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
         Next
 
         If querycheck = False Then

@@ -666,6 +666,82 @@ Module mdlControl
         .ReadOnly = True
     }
 
+    '----------stok_list dgv col-------------------
+    Private stok_id = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kode",
+        .HeaderText = "ID",
+        .Name = "kode",
+        .ReadOnly = True
+    }
+    Private stok_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tanggal",
+        .HeaderText = "Tanggal",
+        .Name = "tanggal",
+        .ReadOnly = True
+    }
+    Private stok_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang",
+        .Name = "gudang",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private stok_barang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "barang",
+        .HeaderText = "Barang",
+        .Name = "barang",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private stok_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hpp",
+        .HeaderText = "HPP",
+        .Name = "hpp",
+        .ReadOnly = True
+    }
+    Private stok_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "awal",
+        .HeaderText = "Stok Awal",
+        .Name = "awal",
+        .ReadOnly = True
+    }
+    Private stok_beli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "beli",
+        .HeaderText = "Beli",
+        .Name = "beli",
+        .ReadOnly = True
+    }
+    Private stok_jual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "jual",
+        .HeaderText = "Jual",
+        .Name = "jual",
+        .ReadOnly = True
+    }
+    Private stok_rbeli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "rbeli",
+        .HeaderText = "Retur jual",
+        .Name = "rjual",
+        .ReadOnly = True
+    }
+    Private stok_rjual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "rjual",
+        .HeaderText = "Retur Jual",
+        .Name = "jual",
+        .ReadOnly = True
+    }
+    Private stok_opname = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "op",
+        .HeaderText = "Opname Fisik",
+        .Name = "op",
+        .ReadOnly = True
+    }
+    Private stok_status = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "status",
+        .HeaderText = "Status",
+        .Name = "status",
+        .ReadOnly = True
+    }
+
     '----------group_list dgv col----------------------
     Private group_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
@@ -764,6 +840,27 @@ Module mdlControl
         .MinimumWidth = 500
     }
 
+    '----------satuanbarang_list dgv col------------
+    Private satuanbarang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kode",
+        .HeaderText = "Kode Satuan",
+        .Name = "kode",
+        .ReadOnly = True
+    }
+    Private satuanbarang_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "nama",
+        .HeaderText = "Nama",
+        .Name = "nama",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
+    Private satuanbarang_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "ket",
+        .HeaderText = "Keterangan",
+        .Name = "ket",
+        .ReadOnly = True,
+        .MinimumWidth = 500
+    }
 
     Public Sub setList(type As String)
         Select Case type
@@ -793,12 +890,16 @@ Module mdlControl
                 setListcodetemp(pgpenjualan, type, frmpenjualan, "Daftar Data Penjualan")
             Case "returjual"
                 setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
+            Case "returjual"
+                setListcodetemp(pgstok, type, frmstok, "Daftar Data Retur Penjualan")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
                 setListcodetemp(pguser, type, frmuser, "Daftar User")
             Case "jenisbarang"
                 setListcodetemp(pgjenisbarang, type, frmjenisbarang, "Referensi/Daftar Jenis Barang")
+            Case "satuanbarang"
+                setListcodetemp(pgsatuanbarang, type, frmsatuanbarang, "Referensi/Daftar Satuan Barang")
         End Select
     End Sub
 
@@ -916,6 +1017,13 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
+            Case "stok"
+                With frmreturjual.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_beli_gudang, retur_beli_jml})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
             Case "group"
                 With frmgroup.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
@@ -933,6 +1041,13 @@ Module mdlControl
             Case "jenisbarang"
                 With frmjenisbarang.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jenisbarang_kode, jenisbarang_nama, jenisbarang_ket})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
+            Case "satuanbarang"
+                With frmsatuanbarang.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {satuanbarang_kode, satuanbarang_nama, satuanbarang_ket})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
@@ -979,6 +1094,8 @@ Module mdlControl
                 bs = populateDGVUserConTemp("getUser", "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
             Case "jenisbarang"
                 bs = populateDGVUserConTemp("getJenisBarang", "nama LIKE '%" & param & "%'")
+            Case "satuanbarang"
+                bs = populateDGVUserConTemp("getSatuanBarang", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case Else
                 Exit Sub
         End Select
@@ -1030,6 +1147,8 @@ Module mdlControl
                 frm = frmreturjual
             Case "pgjenisbarang"
                 frm = frmjenisbarang
+            Case "pgsatuanbarang"
+                frm = frmsatuanbarang
             Case "pguser"
                 frm = frmuser
             Case "pggroup"

@@ -259,9 +259,11 @@
     Public pgreturbeli = New TabPage() With {.Name = "pgreturbeli"}
     Public pgpenjualan = New TabPage() With {.Name = "pgpenjualan"}
     Public pgreturjual = New TabPage() With {.Name = "pgreturjual"}
+    Public pgstok = New TabPage() With {.Name = "pgstok"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
+    Public pgsatuanbarang = New TabPage() With {.Name = "pgsatuanbarang"}
 
     'user con list
     Public frmbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
@@ -277,9 +279,11 @@
     Public frmreturbeli As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmpenjualan As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmstok As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmsatuanbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
 
     'dgv currency style
     Public dgvstyle_currency As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
