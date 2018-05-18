@@ -410,6 +410,7 @@
                 "faktur_reg_date=NOW()",
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
+            commnd("START TRANSACTION")
             querycheck = commnd("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
 
         ElseIf bt_simpanbeli.Text = "Update" Then
@@ -461,12 +462,19 @@
             querycheck = commnd("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
 
             'TODO update stock?
+            '--check?
+            '--insert or update?
             'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli=(SELECT stock_beli FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
+            If querycheck = False Then
+                Exit For
+            End If
         Next
 
         If querycheck = False Then
+            commnd("ROLLBACK")
             Exit Sub
         Else
+            commnd("COMMIT")
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("beli", "", frmpembelian.dgv_list)

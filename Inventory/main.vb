@@ -50,6 +50,7 @@
                 .Show()
                 Console.WriteLine(.Name.ToString)
                 tabcontrol.SelectedTab = tbpg
+                frm.dgv_list.Focus()
             End With
         End If
     End Sub
@@ -206,9 +207,10 @@
     Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
         If Not tabcontrol.SelectedTab Is TabPage1 Then
             If e.KeyCode = Keys.Escape Then
-                tabcontrol.SelectedTab.Dispose()
+                Console.Write(tabcontrol.SelectedTab.Name)
+                keyshortcut("close", tabcontrol.SelectedTab.Name.ToString)
             End If
-            If e.KeyCode = Keys.F2 Or e.KeyCode = Keys.Enter Then
+            If e.KeyCode = Keys.F2 Then
                 Console.WriteLine(tabcontrol.SelectedTab.Name)
                 keyshortcut("edit", tabcontrol.SelectedTab.Name.ToString)
             End If

@@ -306,4 +306,10 @@
             keyshortcut("edit", tabpagename.Name.ToString)
         End If
     End Sub
+
+    Private Sub SplitContainer1_KeyDown(sender As Object, e As KeyEventArgs) Handles SplitContainer1.KeyDown
+        If e.KeyCode = Keys.Enter AndAlso in_cari.Focused = False Then
+            keyshortcut("edit", tabpagename.Name.ToString)
+        End If
+    End Sub
 End Class

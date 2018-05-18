@@ -913,7 +913,6 @@ Module mdlControl
             .bt_export.Visible = False
             .lbl_judul.Text = text
             .setpage(tbpg)
-            .in_cari.Focus()
         End With
     End Sub
 
@@ -1168,6 +1167,8 @@ Module mdlControl
                 keyshortHapus(frm)
             Case "refresh"
                 keyshortRefresh(frm)
+            Case "close"
+                keyshortClose(frm)
             Case Else
                 Exit Sub
         End Select
@@ -1191,5 +1192,9 @@ Module mdlControl
 
     Private Sub keyshortRefresh(frm As fr_list_temp)
         frm.bt_refresh.PerformClick()
+    End Sub
+
+    Private Sub keyshortClose(frm As fr_list_temp)
+        frm.bt_close.PerformClick()
     End Sub
 End Module

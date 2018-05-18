@@ -141,7 +141,7 @@ Partial Class fr_list_temp
         Me.SplitContainer3.Size = New System.Drawing.Size(950, 494)
         Me.SplitContainer3.SplitterDistance = 48
         Me.SplitContainer3.SplitterWidth = 10
-        Me.SplitContainer3.TabIndex = 3
+        Me.SplitContainer3.TabIndex = 0
         '
         'Label2
         '

@@ -194,6 +194,12 @@
     <Compile Include="mn_pengaturan\fr_user_password.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_persediaan\fr_stok_awal.Designer.vb">
+      <DependentUpon>fr_stok_awal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_awal.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_transaksi\fr_beli_detail.Designer.vb">
       <DependentUpon>fr_beli_detail.vb</DependentUpon>
     </Compile>
@@ -299,6 +305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stok_awal.resx">
+      <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_beli_detail.resx">
       <DependentUpon>fr_beli_detail.vb</DependentUpon>
