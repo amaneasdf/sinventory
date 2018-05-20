@@ -70,7 +70,7 @@ Partial Class fr_stok_awal
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(424, 42)
+        Me.Panel1.Size = New System.Drawing.Size(381, 42)
         Me.Panel1.TabIndex = 140
         '
         'Label9
@@ -101,7 +101,7 @@ Partial Class fr_stok_awal
         Me.in_gudang.MaxLength = 15
         Me.in_gudang.Name = "in_gudang"
         Me.in_gudang.Size = New System.Drawing.Size(131, 22)
-        Me.in_gudang.TabIndex = 138
+        Me.in_gudang.TabIndex = 0
         '
         'Label2
         '
@@ -120,7 +120,7 @@ Partial Class fr_stok_awal
         Me.in_barang.MaxLength = 15
         Me.in_barang.Name = "in_barang"
         Me.in_barang.Size = New System.Drawing.Size(131, 22)
-        Me.in_barang.TabIndex = 138
+        Me.in_barang.TabIndex = 1
         '
         'Label4
         '
@@ -168,7 +168,7 @@ Partial Class fr_stok_awal
         Me.in_stok_awal.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_stok_awal.Name = "in_stok_awal"
         Me.in_stok_awal.Size = New System.Drawing.Size(131, 20)
-        Me.in_stok_awal.TabIndex = 141
+        Me.in_stok_awal.TabIndex = 2
         Me.in_stok_awal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_stok_awal.ThousandsSeparator = True
         '
@@ -179,7 +179,7 @@ Partial Class fr_stok_awal
         Me.in_hpp.Maximum = New Decimal(New Integer() {1410065407, 2, 0, 0})
         Me.in_hpp.Name = "in_hpp"
         Me.in_hpp.Size = New System.Drawing.Size(131, 20)
-        Me.in_hpp.TabIndex = 141
+        Me.in_hpp.TabIndex = 3
         Me.in_hpp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_hpp.ThousandsSeparator = True
         '
@@ -188,10 +188,10 @@ Partial Class fr_stok_awal
         Me.bt_batalbarang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalbarang.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbarang.Location = New System.Drawing.Point(316, 301)
+        Me.bt_batalbarang.Location = New System.Drawing.Point(273, 278)
         Me.bt_batalbarang.Name = "bt_batalbarang"
         Me.bt_batalbarang.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalbarang.TabIndex = 143
+        Me.bt_batalbarang.TabIndex = 5
         Me.bt_batalbarang.Text = "Batal"
         Me.bt_batalbarang.UseVisualStyleBackColor = True
         '
@@ -199,10 +199,10 @@ Partial Class fr_stok_awal
         '
         Me.bt_simpanbarang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpanbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbarang.Location = New System.Drawing.Point(316, 266)
+        Me.bt_simpanbarang.Location = New System.Drawing.Point(273, 243)
         Me.bt_simpanbarang.Name = "bt_simpanbarang"
         Me.bt_simpanbarang.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpanbarang.TabIndex = 142
+        Me.bt_simpanbarang.TabIndex = 4
         Me.bt_simpanbarang.Text = "Simpan"
         Me.bt_simpanbarang.UseVisualStyleBackColor = True
         '
@@ -211,7 +211,7 @@ Partial Class fr_stok_awal
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.bt_batalbarang
-        Me.ClientSize = New System.Drawing.Size(424, 343)
+        Me.ClientSize = New System.Drawing.Size(381, 320)
         Me.Controls.Add(Me.bt_batalbarang)
         Me.Controls.Add(Me.bt_simpanbarang)
         Me.Controls.Add(Me.in_hpp)
@@ -229,7 +229,7 @@ Partial Class fr_stok_awal
         Me.Controls.Add(Me.Label3)
         Me.Name = "fr_stok_awal"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "fr_stok_awal"
+        Me.Text = "Setup Stok Awal"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         CType(Me.in_stok_awal, System.ComponentModel.ISupportInitialize).EndInit()

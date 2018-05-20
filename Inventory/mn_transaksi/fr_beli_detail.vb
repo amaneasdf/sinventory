@@ -1,4 +1,5 @@
-﻿Public Class fr_beli_detail
+﻿
+Public Class fr_beli_detail
     Private indexrow As Integer = 0
 
     Private Sub loadDataBeliFaktur(faktur As String)
@@ -289,6 +290,23 @@
             End Using
             in_supplier.Focus()
             Exit Sub
+        ElseIf e.KeyCode = Keys.F2 Then
+            setGudang(Trim(in_gudang.Text))
+            If lbl_gudang.Text = "" Then
+                Using newgud As New fr_gudang_detail
+                    With newgud
+                        If Trim(in_gudang.Text) <> Nothing Then
+                            .in_kode.Text = in_gudang.Text
+                        End If
+                        .ShowDialog()
+                        in_gudang.Text = .in_kode.Text
+                    End With
+                End Using
+                in_supplier.Focus()
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
         keyshortenter(in_supplier, e)
     End Sub
@@ -311,6 +329,24 @@
             End Using
             in_term.Focus()
             Exit Sub
+        ElseIf e.KeyCode = Keys.F2 Then
+            setSupplier(Trim(in_supplier.Text))
+            If lbl_supplier.Text = "" Then
+                Using newsup As New fr_supplier_detail
+                    With newsup
+                        If Trim(in_supplier.Text) <> Nothing Then
+                            .in_kode.Text = in_supplier.Text
+                            .in_namasupplier.Focus()
+                        End If
+                        .ShowDialog()
+                        in_supplier.Text = .in_kode.Text
+                    End With
+                End Using
+                in_term.Focus()
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
         keyshortenter(in_term, e)
     End Sub
@@ -342,18 +378,25 @@
             in_qty.Focus()
             Exit Sub
         ElseIf e.KeyCode = Keys.F2 Then
-            Using addbarang As New fr_barang_detail
-                With addbarang
-                    .in_supplier.Text = in_supplier.Text
-                    If Trim(in_barang.Text) <> Nothing Then
-                        .in_kode.Text = in_barang.Text
-                    End If
-                    .ShowDialog()
-                    in_barang.Text = .in_kode.Text
-                End With
-            End Using
-            in_qty.Focus()
-            Exit Sub
+            setBarang(Trim(in_barang.Text))
+            If lbl_barang.Text = Nothing Then
+                Using addbarang As New fr_barang_detail
+                    With addbarang
+                        .in_supplier.Focus()
+                        .in_supplier.Text = in_supplier.Text
+                        If Trim(in_barang.Text) <> Nothing Then
+                            .in_kode.Text = in_barang.Text
+                        End If
+                        .in_nama.Focus()
+                        .ShowDialog()
+                        in_barang.Text = .in_kode.Text
+                    End With
+                End Using
+                in_qty.Focus()
+                Exit Sub
+            Else
+                Exit Sub
+            End If
         End If
         keyshortenter(in_qty, e)
     End Sub
@@ -380,6 +423,11 @@
         Dim querycheck As Boolean = False
 
         op_con()
+        'TODO begin transaction
+        'commnd("BEGIN;")
+        'Dim transbeli As MySql.Data.MySqlClient.MySqlTransaction
+        'transbeli = getConn().BeginTransaction
+        'setTrans(transbeli)
         If bt_simpanbeli.Text = "Simpan" Then
             'TODO generate kode
             readcommd("SELECT COUNT(faktur_tanggal_trans) FROM data_pembelian_faktur WHERE faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'")
@@ -410,7 +458,6 @@
                 "faktur_reg_date=NOW()",
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
-            commnd("START TRANSACTION")
             querycheck = commnd("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
 
         ElseIf bt_simpanbeli.Text = "Update" Then
@@ -462,23 +509,40 @@
             querycheck = commnd("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
 
             'TODO update stock?
+            'count qty to s sat <- stored procedure/function
+
             '--check?
+            If checkdata("data_barang_stok", "'" & rows.Cells(0).Value & "' AND stock_gudang='" & in_gudang.Text & "'", "stock_barang") = False Then
+                'TODO setup stok awal
+                Using setstock As New fr_stok_awal
+                    With setstock
+                        .in_barang.Text = rows.Cells(0).Value
+                        .setBarang(.in_barang.Text)
+                        .in_gudang.Text = in_gudang.Text
+                        .setGudang(.in_gudang.Text)
+                        .ShowDialog()
+                    End With
+                End Using
+            End If
             '--insert or update?
-            'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli=(SELECT stock_beli FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
+            querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli= getSTokBeli('{0}','{1}')+ countQTYBesarToKecil('{0}','{2}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
             If querycheck = False Then
                 Exit For
             End If
         Next
 
         If querycheck = False Then
-            commnd("ROLLBACK")
+            MessageBox.Show("Data tidak dapat tersimpan")
+            'TODO rollback
+            'transbeli.Rollback()
             Exit Sub
         Else
-            commnd("COMMIT")
+            'TODO commit
+            'transbeli.Commit()
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("beli", "", frmpembelian.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
@@ -489,7 +553,7 @@
     End Sub
 
     Private Sub bt_batalbeli_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_disc1.Enter, in_disc2.Enter, in_disc3.Enter, in_discrp.Enter, in_discount.Enter, in_ppn_persen.Enter, in_klaim.Enter, in_term.Enter

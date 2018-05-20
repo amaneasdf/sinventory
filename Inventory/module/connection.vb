@@ -45,6 +45,12 @@ Module dbproceduralstuff
         End If
     End Sub
 
+    Public Sub setTrans(transact As MySqlTransaction)
+
+        cmd.Transaction = transact
+
+    End Sub
+
     Public Function commnd(ByVal x As String) As Boolean
         Console.WriteLine(x)
         Dim check As Boolean = False

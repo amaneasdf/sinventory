@@ -225,6 +225,9 @@
             End If
 
             querycheck = commnd("INSERT INTO data_barang_master SET " & String.Join(",", data) & ",barang_reg_date=NOW(), barang_reg_alias='" & loggeduser.user_id & "'")
+
+            'TODO set stok awal?
+
         ElseIf bt_simpanbarang.Text = "Update" Then
             data = data.Skip(1).ToArray
 

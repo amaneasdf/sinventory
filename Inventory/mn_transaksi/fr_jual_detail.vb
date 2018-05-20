@@ -340,6 +340,7 @@
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
             'TODO Insert to data_penjualan_faktur
+            commnd("START TRANSACTION")
             querycheck = commnd("INSERT INTO data_penjualan_faktur SET " & String.Join(",", dataFak))
         ElseIf bt_simpanjual.Text = "Update" Then
             dataFak = {
@@ -391,11 +392,16 @@
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
             querycheck = commnd("INSERT INTO data_penjualan_trans SET " & String.Join(",", dataBrg))
+
+            'TODO update stock
+            querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_jual=(SELECT stock_jual FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
         Next
 
         If querycheck = False Then
+            commnd("ROLLBACK")
             Exit Sub
         Else
+            commnd("COMMIT")
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
@@ -490,6 +496,24 @@
             End Using
             in_term.Focus()
             Exit Sub
+        ElseIf e.KeyCode = Keys.F2 Then
+            setCusto(Trim(in_custo.Text))
+            If lbl_custo.Text = "" Then
+                Using newcus As New fr_custo_detail
+                    With newcus
+                        .in_kode.Text = in_custo.Text
+                        .in_kode_sales.Focus()
+                        .in_kode_sales.Text = in_sales.Text
+                        .in_nama_custo.Focus()
+                        .ShowDialog()
+                        in_custo.Text = .in_kode.Text
+                        in_sales.Text = .in_kode_sales.Text
+                        setSales(in_sales.Text)
+                    End With
+                End Using
+                in_term.Focus()
+                Exit Sub
+            End If
         End If
         keyshortenter(in_term, e)
     End Sub
