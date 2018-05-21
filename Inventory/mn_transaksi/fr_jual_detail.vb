@@ -305,6 +305,7 @@
         Dim dataBrg As String()
         Dim dataFak As String()
         Dim querycheck As Boolean = False
+        Dim queryArr As New List(Of String)
 
         op_con()
         If bt_simpanjual.Text = "Simpan" Then
@@ -340,8 +341,8 @@
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
             'TODO Insert to data_penjualan_faktur
-            commnd("START TRANSACTION")
-            querycheck = commnd("INSERT INTO data_penjualan_faktur SET " & String.Join(",", dataFak))
+            'querycheck = commnd("INSERT INTO data_penjualan_faktur SET " & String.Join(",", dataFak))
+            queryArr.Add("INSERT INTO data_penjualan_faktur SET " & String.Join(",", dataFak))
         ElseIf bt_simpanjual.Text = "Update" Then
             dataFak = {
                 "faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
@@ -366,10 +367,12 @@
                 "faktur_upd_alias='" & loggeduser.user_id & "'"
                 }
             'TODO update to data_penjualan_faktur
-            querycheck = commnd("UPDATE data_penjualan_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
+            'querycheck = commnd("UPDATE data_penjualan_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
+            queryArr.Add("UPDATE data_penjualan_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
 
             'TODO delete trans
-            querycheck = commnd("DELETE FROM data_penjualan_trans WHERE trans_faktur='" & in_faktur.Text & "'")
+            'querycheck = commnd("DELETE FROM data_penjualan_trans WHERE trans_faktur='" & in_faktur.Text & "'")
+            queryArr.Add("DELETE FROM data_penjualan_trans WHERE trans_faktur='" & in_faktur.Text & "'")
         End If
 
         'TODO insert / re-insert data trans
@@ -391,26 +394,33 @@
                 "trans_reg_date=NOW()",
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
-            querycheck = commnd("INSERT INTO data_penjualan_trans SET " & String.Join(",", dataBrg))
+            'querycheck = commnd("INSERT INTO data_penjualan_trans SET " & String.Join(",", dataBrg))
+            queryArr.Add("INSERT INTO data_penjualan_trans SET " & String.Join(",", dataBrg))
 
             'TODO update stock
-            querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_jual=(SELECT stock_jual FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
+            'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_jual=(SELECT stock_jual FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} ", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
+            'recognise satuan <-db function
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_jual=getSUMJualPenjualan('{0}','{1}')+(countQTYJual('{0}',{2},'{3}'))WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
         Next
 
+        'begin transaction
+        querycheck = startTrans(queryArr)
+
         If querycheck = False Then
-            commnd("ROLLBACK")
+            MessageBox.Show("Data tidak dapat tersimpan")
+            'commnd("ROLLBACK")
             Exit Sub
         Else
-            commnd("COMMIT")
+            'commnd("COMMIT")
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
     Private Sub bt_batalbeli_Click(sender As Object, e As EventArgs) Handles bt_bataljual.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub date_tgl_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_beli.KeyDown

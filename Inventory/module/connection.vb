@@ -30,7 +30,7 @@ Module dbproceduralstuff
                 '    x += 1
                 'Next
             Catch ex As Exception
-                MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
             End Try
         End If
     End Sub
@@ -45,11 +45,42 @@ Module dbproceduralstuff
         End If
     End Sub
 
-    Public Sub setTrans(transact As MySqlTransaction)
+    Public Function startTrans(queryArr As List(Of String)) As Boolean
+        Dim ctrans As New MySqlCommand
+        Dim transact As MySqlTransaction = conn.BeginTransaction
+        Dim querycheck As Boolean = False
 
-        cmd.Transaction = transact
+        ctrans.Connection = conn
+        ctrans.Transaction = transact
+        For Each query As String In queryArr
+            Try
+                Console.WriteLine(query)
+                ctrans.CommandText = query
+                ctrans.ExecuteNonQuery()
+                querycheck = True
+            Catch ex As Exception
+                Console.WriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                querycheck = False
+                Exit For
+            End Try
+        Next
 
-    End Sub
+        If querycheck = True Then
+            Try
+                transact.Commit()
+            Catch ex As Exception
+                Console.WriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                querycheck = False
+            End Try
+        End If
+
+        If querycheck = False Then
+            MessageBox.Show("transaksi tidak bisa disimpan")
+            transact.Rollback()
+        End If
+
+        Return querycheck
+    End Function
 
     Public Function commnd(ByVal x As String) As Boolean
         Console.WriteLine(x)

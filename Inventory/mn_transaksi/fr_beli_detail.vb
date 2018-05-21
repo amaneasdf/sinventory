@@ -113,7 +113,7 @@ Public Class fr_beli_detail
                 .Cells("nama").Value = lbl_barang.Text
                 .Cells("qty").Value = in_qty.Value
                 .Cells("sat").Value = lbl_sat.Text
-                .Cells("harga").Value = in_harga_beli.Text
+                .Cells("harga").Value = CDbl(in_harga_beli.Text)
                 .Cells("disc1").Value = in_disc1.Value
                 .Cells("disc2").Value = in_disc2.Value
                 .Cells("disc3").Value = in_disc3.Value
@@ -420,14 +420,11 @@ Public Class fr_beli_detail
 
         Dim dataBrg As String()
         Dim dataFak As String()
+        Dim queryArr As New List(Of String)
         Dim querycheck As Boolean = False
 
         op_con()
-        'TODO begin transaction
-        'commnd("BEGIN;")
-        'Dim transbeli As MySql.Data.MySqlClient.MySqlTransaction
-        'transbeli = getConn().BeginTransaction
-        'setTrans(transbeli)
+        
         If bt_simpanbeli.Text = "Simpan" Then
             'TODO generate kode
             readcommd("SELECT COUNT(faktur_tanggal_trans) FROM data_pembelian_faktur WHERE faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'")
@@ -458,7 +455,8 @@ Public Class fr_beli_detail
                 "faktur_reg_date=NOW()",
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
-            querycheck = commnd("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
+            'querycheck = commnd("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
+            queryArr.Add("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
 
         ElseIf bt_simpanbeli.Text = "Update" Then
             'TODO update?
@@ -483,10 +481,12 @@ Public Class fr_beli_detail
                 "faktur_upd_alias='" & loggeduser.user_id & "'"
                 }
             'TODO update faktur
-            querycheck = commnd("UPDATE data_pembelian_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
+            'querycheck = commnd("UPDATE data_pembelian_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
+            queryArr.Add("UPDATE data_pembelian_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
 
             'TODO delete trans
-            querycheck = commnd("DELETE FROM data_pembelian_trans WHERE trans_faktur='" & in_faktur.Text & "'")
+            'querycheck = commnd("DELETE FROM data_pembelian_trans WHERE trans_faktur='" & in_faktur.Text & "'")
+            queryArr.Add("DELETE FROM data_pembelian_trans WHERE trans_faktur='" & in_faktur.Text & "'")
         End If
 
         'TODO insert / re-insert data trans
@@ -506,7 +506,8 @@ Public Class fr_beli_detail
                 "trans_reg_date=NOW()",
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
-            querycheck = commnd("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
+            'querycheck = commnd("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
+            queryArr.Add("INSERT INTO data_pembelian_trans SET " & String.Join(",", dataBrg))
 
             'TODO update stock?
             'count qty to s sat <- stored procedure/function
@@ -514,22 +515,32 @@ Public Class fr_beli_detail
             '--check?
             If checkdata("data_barang_stok", "'" & rows.Cells(0).Value & "' AND stock_gudang='" & in_gudang.Text & "'", "stock_barang") = False Then
                 'TODO setup stok awal
-                Using setstock As New fr_stok_awal
-                    With setstock
-                        .in_barang.Text = rows.Cells(0).Value
-                        .setBarang(.in_barang.Text)
-                        .in_gudang.Text = in_gudang.Text
-                        .setGudang(.in_gudang.Text)
-                        .ShowDialog()
-                    End With
-                End Using
+                'Using setstock As New fr_stok_awal
+                '    With setstock
+                '        .in_barang.Text = rows.Cells(0).Value
+                '        .setBarang(.in_barang.Text)
+                '        .in_gudang.Text = in_gudang.Text
+                '        .setGudang(.in_gudang.Text)
+                '        .ShowDialog()
+                '    End With
+                'End Using
+                queryArr.Add("INSERT INTO data_barang_stok SET stock_barang='" & rows.Cells(0).Value & "', stock_gudang='" & in_gudang.Text & "', stock_reg_date=NOW(), stock_reg_alias='" & loggeduser.user_id & "'")
             End If
             '--insert or update?
-            querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli= getSTokBeli('{0}','{1}')+ countQTYBesarToKecil('{0}','{2}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
-            If querycheck = False Then
-                Exit For
-            End If
+            'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli= getSTokBeli('{0}','{1}')+ countQTYBesarToKecil('{0}','{2}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
+
+            'TODO UPDATE stok beli -> must recognize whether is added or substracted when trans update
+            'select original qty from trans_beli
+            readcommd("SELECT IFNULL(trans_qty,0) as a FROM data_pembelian_trans WHERE trans_barang='" & rows.Cells(0).Value & "' AND trans_faktur='" & in_faktur.Text & "'")
+            'count the diff
+            Dim selisih As Integer = rows.Cells("qty").Value - rd.Item("a")
+            rd.Close()
+
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_beli= getSUMBeliPergudang('{0}','{1}') + (countQTYBesarToKecil('{0}',{2}))  WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, selisih))
         Next
+
+        'begin transaction
+        querycheck = startTrans(queryArr)
 
         If querycheck = False Then
             MessageBox.Show("Data tidak dapat tersimpan")

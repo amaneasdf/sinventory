@@ -264,6 +264,7 @@
         Dim querycheck As Boolean = False
         Dim dataFak As String()
         Dim dataBrg As String()
+        Dim queryArr As New List(Of String)
 
         op_con()
         If bt_simpanreturbeli.Text = "Simpan" Then
@@ -292,8 +293,8 @@
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
             'TODO insert faktur
-            querycheck = commnd("INSERT INTO data_pembelian_retur_faktur SET " & String.Join(",", dataFak))
-
+            'querycheck = commnd("INSERT INTO data_pembelian_retur_faktur SET " & String.Join(",", dataFak))
+            queryArr.Add("INSERT INTO data_pembelian_retur_faktur SET " & String.Join(",", dataFak))
 
             For Each rows As DataGridViewRow In dgv_barang.Rows
                 dataBrg = {
@@ -308,11 +309,18 @@
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
                 'TODO insert brg
-                querycheck = commnd("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
+                'querycheck = commnd("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
+                queryArr.Add("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
+
+                'TODO Update stok
+                'queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_rbeli= +(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
             Next
         Else
             Me.Close()
         End If
+
+        'begin transaction
+        querycheck = startTrans(queryArr)
 
         If querycheck = False Then
             Exit Sub
