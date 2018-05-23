@@ -697,43 +697,71 @@ Module mdlControl
         .DataPropertyName = "hpp",
         .HeaderText = "HPP",
         .Name = "hpp",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_currency
     }
     Private stok_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "awal",
         .HeaderText = "Stok Awal",
         .Name = "awal",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_beli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "beli",
         .HeaderText = "Beli",
         .Name = "beli",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_jual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "jual",
         .HeaderText = "Jual",
         .Name = "jual",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_rbeli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "rbeli",
         .HeaderText = "Retur jual",
         .Name = "rjual",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_rjual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "rjual",
         .HeaderText = "Retur Jual",
         .Name = "jual",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
+    }
+    Private stok_in = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "masuk",
+        .HeaderText = "Masuk",
+        .Name = "in",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
+    }
+    Private stok_out = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "keluar",
+        .HeaderText = "Keluar",
+        .Name = "out",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
+    }
+    Private stok_total = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "total",
+        .HeaderText = "Sisa",
+        .Name = "total",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_opname = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "op",
         .HeaderText = "Opname Fisik",
         .Name = "op",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_commathousand
     }
     Private stok_status = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "status",
@@ -890,16 +918,16 @@ Module mdlControl
                 setListcodetemp(pgpenjualan, type, frmpenjualan, "Daftar Data Penjualan")
             Case "returjual"
                 setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
-            Case "returjual"
-                setListcodetemp(pgstok, type, frmstok, "Daftar Data Retur Penjualan")
+            Case "stok"
+                setListcodetemp(pgstok, type, frmstok, "Daftar Stok Barang")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
                 setListcodetemp(pguser, type, frmuser, "Daftar User")
-            Case "jenisbarang"
-                setListcodetemp(pgjenisbarang, type, frmjenisbarang, "Referensi/Daftar Jenis Barang")
-            Case "satuanbarang"
-                setListcodetemp(pgsatuanbarang, type, frmsatuanbarang, "Referensi/Daftar Satuan Barang")
+                'Case "jenisbarang"
+                '    setListcodetemp(pgjenisbarang, type, frmjenisbarang, "Referensi/Daftar Jenis Barang")
+                'Case "satuanbarang"
+                '    setListcodetemp(pgsatuanbarang, type, frmsatuanbarang, "Referensi/Daftar Satuan Barang")
         End Select
     End Sub
 
@@ -1017,8 +1045,8 @@ Module mdlControl
                     Next
                 End With
             Case "stok"
-                With frmreturjual.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_beli_gudang, retur_beli_jml})
+                With frmstok.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {stok_id, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
@@ -1037,20 +1065,20 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
-            Case "jenisbarang"
-                With frmjenisbarang.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jenisbarang_kode, jenisbarang_nama, jenisbarang_ket})
-                    For i = 0 To .Columns.Count - 1
-                        .Columns(i).DisplayIndex = i
-                    Next
-                End With
-            Case "satuanbarang"
-                With frmsatuanbarang.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {satuanbarang_kode, satuanbarang_nama, satuanbarang_ket})
-                    For i = 0 To .Columns.Count - 1
-                        .Columns(i).DisplayIndex = i
-                    Next
-                End With
+                'Case "jenisbarang"
+                '    With frmjenisbarang.dgv_list
+                '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jenisbarang_kode, jenisbarang_nama, jenisbarang_ket})
+                '        For i = 0 To .Columns.Count - 1
+                '            .Columns(i).DisplayIndex = i
+                '        Next
+                '    End With
+                'Case "satuanbarang"
+                '    With frmsatuanbarang.dgv_list
+                '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {satuanbarang_kode, satuanbarang_nama, satuanbarang_ket})
+                '        For i = 0 To .Columns.Count - 1
+                '            .Columns(i).DisplayIndex = i
+                '        Next
+                '    End With
             Case Else
                 Exit Sub
         End Select
@@ -1087,14 +1115,16 @@ Module mdlControl
                 bs = populateDGVUserConTemp("getJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
             Case "returjual"
                 bs = populateDGVUserConTemp("getReturJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+            Case "stok"
+                bs = populateDGVUserConTemp("getStok", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
             Case "group"
                 bs = populateDGVUserConTemp("getUserGroup", "nama LIKE '%" & param & "%'")
             Case "user"
                 bs = populateDGVUserConTemp("getUser", "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
-            Case "jenisbarang"
-                bs = populateDGVUserConTemp("getJenisBarang", "nama LIKE '%" & param & "%'")
-            Case "satuanbarang"
-                bs = populateDGVUserConTemp("getSatuanBarang", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                'Case "jenisbarang"
+                '    bs = populateDGVUserConTemp("getJenisBarang", "nama LIKE '%" & param & "%'")
+                'Case "satuanbarang"
+                '    bs = populateDGVUserConTemp("getSatuanBarang", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case Else
                 Exit Sub
         End Select
@@ -1144,10 +1174,12 @@ Module mdlControl
                 frm = frmpenjualan
             Case "pgreturjual"
                 frm = frmreturjual
-            Case "pgjenisbarang"
-                frm = frmjenisbarang
-            Case "pgsatuanbarang"
-                frm = frmsatuanbarang
+            Case "pgstok"
+                frm = frmstok
+                'Case "pgjenisbarang"
+                '    frm = frmjenisbarang
+                'Case "pgsatuanbarang"
+                '    frm = frmsatuanbarang
             Case "pguser"
                 frm = frmuser
             Case "pggroup"

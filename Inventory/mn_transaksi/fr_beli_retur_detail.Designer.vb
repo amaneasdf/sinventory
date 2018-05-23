@@ -67,6 +67,7 @@ Partial Class fr_beli_retur_detail
         Me.bt_batalreturbeli = New System.Windows.Forms.Button()
         Me.bt_simpanreturbeli = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.cb_sat = New System.Windows.Forms.ComboBox()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
         Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -78,7 +79,6 @@ Partial Class fr_beli_retur_detail
         Me.lbl_barang = New System.Windows.Forms.Label()
         Me.in_harga_retur = New System.Windows.Forms.NumericUpDown()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
-        Me.cb_sat = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         CType(Me.in_ppn_persen, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -590,6 +590,15 @@ Partial Class fr_beli_retur_detail
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Barang"
         '
+        'cb_sat
+        '
+        Me.cb_sat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_sat.FormattingEnabled = True
+        Me.cb_sat.Location = New System.Drawing.Point(356, 19)
+        Me.cb_sat.Name = "cb_sat"
+        Me.cb_sat.Size = New System.Drawing.Size(62, 23)
+        Me.cb_sat.TabIndex = 11
+        '
         'dgv_barang
         '
         Me.dgv_barang.AllowUserToAddRows = False
@@ -698,15 +707,6 @@ Partial Class fr_beli_retur_detail
         Me.in_qty.TabIndex = 10
         Me.in_qty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
-        'cb_sat
-        '
-        Me.cb_sat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.cb_sat.FormattingEnabled = True
-        Me.cb_sat.Location = New System.Drawing.Point(356, 19)
-        Me.cb_sat.Name = "cb_sat"
-        Me.cb_sat.Size = New System.Drawing.Size(62, 23)
-        Me.cb_sat.TabIndex = 11
-        '
         'fr_beli_retur_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -744,6 +744,7 @@ Partial Class fr_beli_retur_detail
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
         Me.Name = "fr_beli_retur_detail"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Retur Pembelian : "
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

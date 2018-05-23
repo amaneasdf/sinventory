@@ -29,8 +29,10 @@
                 createTabPage(pgpenjualan, type, frmpenjualan, "Daftar Penjualan")
             Case "returjual"
                 createTabPage(pgreturjual, type, frmreturjual, "Retur Penjualan")
-            Case "jenisbarang"
-                createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
+            Case "stok"
+                createTabPage(pgstok, type, frmstok, "Stok Barang")
+                'Case "jenisbarang"
+                '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
             Case "group"
                 createTabPage(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -141,6 +143,9 @@
             Case "mn020202"
                 Console.WriteLine("click trans retur jual")
                 openTab("returjual")
+            Case "mn0301"
+                Console.WriteLine("click stok awal")
+                openTab("stok")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()
@@ -163,8 +168,26 @@
                 '    Exit Sub
                 'End If
             Case "mn0931"
-                Console.WriteLine("click jenis barang")
-                openTab("jenisbarang")
+                With frmjenisbarang
+                    If .Visible = True Then
+                        .Focus()
+                    Else
+                        .setfor = "jenisbarang"
+                        .Show(Me)
+                    End If
+                End With
+
+                '    Console.WriteLine("click jenis barang")
+                '    openTab("jenisbarang")
+            Case "mn0932"
+                With frmsatuanbarang
+                    If .Visible = True Then
+                        .Focus()
+                    Else
+                        .setfor = "satuan"
+                        .Show(Me)
+                    End If
+                End With
             Case "mn0941"
                 Console.WriteLine("click logout")
                 commnd("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'")

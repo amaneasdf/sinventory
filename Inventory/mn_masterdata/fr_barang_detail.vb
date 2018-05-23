@@ -28,10 +28,10 @@
             cb_sat_kecil.SelectedValue = rd.Item("barang_satuan_kecil")
             cb_sat_tengah.SelectedValue = rd.Item("barang_satuan_tengah")
             cb_sat_besar.SelectedValue = rd.Item("barang_satuan_besar")
-            in_isi_tengah.Text = rd.Item("barang_satuan_tengah_jumlah")
-            in_isi_besar.Text = rd.Item("barang_satuan_besar_jumlah")
+            in_isi_tengah.Value = rd.Item("barang_satuan_tengah_jumlah")
+            in_isi_besar.Value = rd.Item("barang_satuan_besar_jumlah")
             in_ket.Text = rd.Item("barang_keterangan")
-            in_stok_awal.Value = rd.Item("barang_stok_awal")
+            'in_stok_awal.Value = rd.Item("barang_stok_awal")
             in_stok_aktif.Value = rd.Item("barang_stok_minimal")
             in_stok_berat.Value = rd.Item("barang_berat")
             in_harga_beli.Value = rd.Item("barang_harga_beli")
@@ -160,7 +160,7 @@
     End Sub
 
     Private Sub cb_sat_besar_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_besar.SelectionChangeCommitted
-        lbl_satuan4.Text = lbl_satuan3.Text = cb_sat_besar.SelectedValue
+        lbl_satuan4.Text = cb_sat_besar.SelectedValue
         in_isi_besar.Focus()
     End Sub
 
@@ -190,9 +190,9 @@
             "barang_jenis='" & in_kode_jenis.Text & "'",
             "barang_satuan_kecil='" & cb_sat_kecil.SelectedValue & "'",
             "barang_satuan_tengah='" & cb_sat_tengah.SelectedValue & "'",
-            "barang_satuan_tengah_jumlah='" & in_isi_tengah.Text & "'",
+            "barang_satuan_tengah_jumlah='" & in_isi_tengah.Value & "'",
             "barang_satuan_besar='" & cb_sat_besar.SelectedValue & "'",
-            "barang_satuan_besar_jumlah='" & in_isi_besar.Text & "'",
+            "barang_satuan_besar_jumlah='" & in_isi_besar.Value & "'",
             "barang_keterangan='" & in_ket.Text & "'",
             "barang_harga_beli='" & in_harga_beli.Value & "'",
             "barang_harga_jual='" & in_harga_jual.Value & "'",
@@ -209,7 +209,6 @@
             "barang_harga_jual_d3='" & in_jual_d3.Value & "'",
             "barang_harga_jual_d4='" & in_jual_d4.Value & "'",
             "barang_harga_jual_d5='" & in_jual_d5.Value & "'",
-            "barang_stok_awal='" & in_stok_awal.Value & "'",
             "barang_stok_minimal='" & in_stok_aktif.Value & "'",
             "barang_berat='" & in_stok_berat.Value & "'",
             "barang_status='" & in_kode_status.Text & "'",
@@ -227,6 +226,14 @@
             querycheck = commnd("INSERT INTO data_barang_master SET " & String.Join(",", data) & ",barang_reg_date=NOW(), barang_reg_alias='" & loggeduser.user_id & "'")
 
             'TODO set stok awal?
+            'Using x As New fr_stok_awal
+            '    With x
+            '        .in_kode.Text = in_kode.Text
+            '        .setBarang(.in_kode.Text)
+            '        .in_gudang.Focus()
+            '        .ShowDialog()
+            '    End With
+            'End Using
 
         ElseIf bt_simpanbarang.Text = "Update" Then
             data = data.Skip(1).ToArray
@@ -240,7 +247,7 @@
             MessageBox.Show("Data tersimpan")
             frmbank.in_cari.Clear()
             populateDGVUserCon("barang", "", frmbarang.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
@@ -258,7 +265,7 @@
     End Sub
 
     Private Sub bt_batalbarang_Click(sender As Object, e As EventArgs) Handles bt_batalbarang.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub fr_barang_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -280,11 +287,11 @@
         End If
     End Sub
 
-    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_stok_berat.Enter, in_stok_awal.Enter, in_stok_aktif.Enter, in_jual_d5.Enter, in_jual_d4.Enter, in_jual_d3.Enter, in_jual_d2.Enter, in_jual_d1.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_disc.Enter, in_harga_beli.Enter, in_beli_klaim.Enter, in_beli_d3.Enter, in_beli_d2.Enter, in_beli_d1.Enter
+    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_stok_berat.Enter, in_stok_aktif.Enter, in_jual_d5.Enter, in_jual_d4.Enter, in_jual_d3.Enter, in_jual_d2.Enter, in_jual_d1.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_disc.Enter, in_harga_beli.Enter, in_beli_klaim.Enter, in_beli_d3.Enter, in_beli_d2.Enter, in_beli_d1.Enter, in_isi_tengah.Enter, in_isi_besar.Enter
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_stok_berat.Leave, in_stok_awal.Leave, in_stok_aktif.Leave, in_jual_d5.Leave, in_jual_d4.Leave, in_jual_d3.Leave, in_jual_d2.Leave, in_jual_d1.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_disc.Leave, in_harga_beli.Leave, in_beli_klaim.Leave, in_beli_d3.Leave, in_beli_d2.Leave, in_beli_d1.Leave
+    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_stok_berat.Leave, in_stok_aktif.Leave, in_jual_d5.Leave, in_jual_d4.Leave, in_jual_d3.Leave, in_jual_d2.Leave, in_jual_d1.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_disc.Leave, in_harga_beli.Leave, in_beli_klaim.Leave, in_beli_d3.Leave, in_beli_d2.Leave, in_beli_d1.Leave, in_isi_tengah.Leave, in_isi_besar.Leave
         numericLostFocus(sender)
     End Sub
 
@@ -306,10 +313,6 @@
     End Sub
 
     Private Sub in_isi_besar_KeyDown(sender As Object, e As KeyEventArgs) Handles in_isi_besar.KeyDown
-        keyshortenter(in_stok_awal, e)
-    End Sub
-
-    Private Sub in_stok_awal_KeyDown(sender As Object, e As KeyEventArgs) Handles in_stok_awal.KeyDown
         keyshortenter(in_stok_aktif, e)
     End Sub
 
@@ -326,7 +329,7 @@
         End If
     End Sub
 
-    Private Sub in_harga_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown
+    Private Sub in_harga_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown, in_isi_tengah.KeyDown, in_isi_besar.KeyDown
         keyshortenter(in_harga_jual, e)
     End Sub
 

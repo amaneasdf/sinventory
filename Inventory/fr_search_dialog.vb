@@ -133,6 +133,33 @@
         .ReadOnly = True,
         .MinimumWidth = 200
     }
+    '--------beli
+    Private beli_faktur As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kode",
+        .HeaderText = "Faktur",
+        .Name = "kode",
+        .ReadOnly = True
+    }
+    Private beli_tgl As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tgl",
+        .HeaderText = "Tanggal",
+        .Name = "tgl",
+        .ReadOnly = True
+    }
+    Private beli_supplier As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "supplier",
+        .HeaderText = "Supplier",
+        .Name = "supplier",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
+    Private beli_gudang As New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang",
+        .Name = "gudang",
+        .ReadOnly = True,
+        .MinimumWidth = 200
+    }
 
     Private Sub loadData(query As String, paramquery As String)
         Dim bs As New BindingSource
@@ -148,7 +175,7 @@
         With dgv_list
             Select Case type
                 Case "sales"
-                    lbl_judul.Text += " Gudang"
+                    lbl_judul.Text += " Salesman"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {sales_nama, sales_kode})
                 Case "custo"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {custo_nama, custo_kode})
@@ -167,6 +194,9 @@
                 Case "jual"
                     lbl_judul.Text += " Penjualan"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jual_faktur, jual_tgl, jual_sales, jual_custo, jual_gudang})
+                Case "beli"
+                    lbl_judul.Text += " Pembelian"
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier, beli_gudang})
                 Case Else
                     Exit Sub
             End Select

@@ -260,6 +260,7 @@
     Public pgpenjualan = New TabPage() With {.Name = "pgpenjualan"}
     Public pgreturjual = New TabPage() With {.Name = "pgreturjual"}
     Public pgstok = New TabPage() With {.Name = "pgstok"}
+    Public pgmutasigudang = New TabPage() With {.Name = "pgmutasigudang"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
@@ -280,14 +281,23 @@
     Public frmpenjualan As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmstok As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmjenisbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmsatuanbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmjenisbarang As New fr_jenis_barang
+    Public frmsatuanbarang As New fr_jenis_barang
 
     'dgv currency style
     Public dgvstyle_currency As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "N2",
+        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
+        .NullValue = "-",
+        .Alignment = DataGridViewContentAlignment.MiddleRight
+    }
+
+    'dgv currency style
+    Public dgvstyle_commathousand As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+        .Format = "N0",
         .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
         .NullValue = "-",
         .Alignment = DataGridViewContentAlignment.MiddleRight

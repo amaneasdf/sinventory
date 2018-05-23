@@ -313,7 +313,8 @@
                 queryArr.Add("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
 
                 'TODO Update stok
-                'queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_rbeli= +(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_return_beli=getSUMReturBeliPerGudang('{0}','{1}') +(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+
             Next
         Else
             Me.Close()
@@ -346,6 +347,21 @@
 
     Private Sub in_no_faktur_KeyDown(sender As Object, e As KeyEventArgs) Handles in_no_faktur.KeyDown
         clearDataFaktur()
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT faktur_kode as kode, faktur_tanggal_trans as tgl, supplier_nama as supplier, gudang_nama as gudang FROM data_pembelian_faktur INNER JOIN data_supplier_master ON supplier_kode=faktur_supplier INNER JOIN data_barang_gudang ON gudang_kode=faktur_gudang ORDEr BY kode DESC"
+                    .paramquery = "supplier LIKE'%{0}%' OR kode LIKE '%{0}%' OR gudang LIKE '%{0}%'"
+                    .type = "beli"
+                    .ShowDialog()
+                    in_no_faktur.Text = .returnkode
+                    in_gudang.ReadOnly = True
+                    in_supplier.ReadOnly = True
+                End With
+            End Using
+            in_no_faktur_ex.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_no_faktur_ex, e)
     End Sub
 
@@ -397,7 +413,7 @@
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         clearInputBarang()
-        If e.Alt = True AndAlso e.KeyCode = Keys.F1 Then
+        If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
                 With search
                     .query = "SELECT barang_nama as nama, barang_kode as kode, trans_qty as qty FROM data_pembelian_trans INNER JOIN data_barang_master ON barang_kode=trans_barang WHERE trans_faktur='" & in_no_faktur.Text & "'"
@@ -419,7 +435,7 @@
     End Sub
 
     Private Sub in_barang_Leave(sender As Object, e As EventArgs) Handles in_barang.Leave
-        If in_no_faktur.Text <> "" Then
+        If in_no_faktur.Text <> "" And Trim(in_barang.Text) <> "" Then
             setBarang(in_barang.Text)
         End If
     End Sub

@@ -40,12 +40,15 @@
                 fr_jual_detail.Show(main)
             Case "pgreturjual"
                 fr_jual_retur_detail.Show(main)
+            Case "pgstok"
+                fr_stok_awal.ShowDialog(main)
             Case "pggroup"
                 fr_group_detail.ShowDialog()
             Case "pguser"
                 fr_user_detail.ShowDialog()
-            Case "pgjenisbarang"
-                fr_jenis_barang.ShowDialog()
+                'Case "pgjenisbarang"
+                '    fr_jenis_barang.setfor = "jenisbarang"
+                '    fr_jenis_barang.ShowDialog()
             Case Else
                 MessageBox.Show("Under Construction")
         End Select
@@ -179,15 +182,16 @@
                             .ShowDialog()
                         End With
                     End Using
-                Case "pgjenisbarang"
-                    Using detail As New fr_jenis_barang
-                        With detail
-                            .bt_simpan_jenis.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                            .ShowDialog()
-                        End With
-                    End Using
+                    'Case "pgjenisbarang"
+                    '    Using detail As New fr_jenis_barang
+                    '        With detail
+                    '            .setfor = "jenisbarang"
+                    '            .bt_simpan_jenis.Text = "Update"
+                    '            .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                    '            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                    '            .ShowDialog()
+                    '        End With
+                    '    End Using
                 Case Else
                     MessageBox.Show("Under Construction")
             End Select
@@ -227,8 +231,10 @@
                 populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
             Case "pgreturjual"
                 populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
-            Case "pgjenisbarang"
-                populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
+            Case "pgstok"
+                populateDGVUserCon("stok", "", frmstok.dgv_list)
+                'Case "pgjenisbarang"
+                '    populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
             Case "pggroup"
                 populateDGVUserCon("group", "", frmgroup.dgv_list)
             Case "pguser"
@@ -270,14 +276,17 @@
                 Case "pgpenjualan"
                     populateDGVUserCon("jual", in_cari.Text, frmpenjualan.dgv_list)
                 Case "pgreturjual"
-                    populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
-                Case "pgjenisbarang"
-                    populateDGVUserCon("jenisbarang", in_cari.Text, frmjenisbarang.dgv_list)
+                    populateDGVUserCon("returjual", in_cari.Text, frmreturjual.dgv_list)
+                Case "pgstok"
+                    populateDGVUserCon("stok", in_cari.Text, frmstok.dgv_list)
+                    'Case "pgjenisbarang"
+                    '    populateDGVUserCon("jenisbarang", in_cari.Text, frmjenisbarang.dgv_list)
                 Case "pggroup"
                     populateDGVUserCon("group", in_cari.Text, frmgroup.dgv_list)
                 Case "pguser"
                     populateDGVUserCon("user", in_cari.Text, frmuser.dgv_list)
             End Select
+            dgv_list.Focus()
         End If
     End Sub
 

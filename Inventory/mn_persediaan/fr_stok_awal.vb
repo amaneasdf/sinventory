@@ -36,8 +36,10 @@
     End Sub
 
     Private Sub fr_stok_awal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'lbl_barang.Text = ""
-        'lbl_gudang.Text = ""
+        If in_barang.Text = "" Then
+            lbl_barang.Text = ""
+            lbl_gudang.Text = ""
+        End If
     End Sub
 
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpanbarang.Click
@@ -88,13 +90,37 @@
 
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
         lbl_gudang.Text = ""
-
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "gudang"
+                    .ShowDialog()
+                    in_gudang.Text = .returnkode
+                End With
+            End Using
+            in_barang.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_barang, e)
     End Sub
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         lbl_barang.Text = ""
-
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "barang"
+                    .ShowDialog()
+                    in_barang.Text = .returnkode
+                End With
+            End Using
+            in_stok_awal.Focus()
+            Exit Sub
+        End If
         keyshortenter(in_stok_awal, e)
     End Sub
 

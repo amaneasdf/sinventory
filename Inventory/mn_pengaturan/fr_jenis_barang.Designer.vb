@@ -41,8 +41,18 @@ Partial Class fr_jenis_barang
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.txtUpdDate = New System.Windows.Forms.TextBox()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.dgv_list = New System.Windows.Forms.DataGridView()
+        Me.in_cari = New System.Windows.Forms.TextBox()
+        Me.bt_cari = New System.Windows.Forms.Button()
+        Me.bt_cancel = New System.Windows.Forms.Button()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.GroupBox2.SuspendLayout()
+        CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -52,7 +62,7 @@ Partial Class fr_jenis_barang
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(369, 42)
+        Me.Panel1.Size = New System.Drawing.Size(784, 42)
         Me.Panel1.TabIndex = 135
         '
         'lbl_judul
@@ -76,7 +86,7 @@ Partial Class fr_jenis_barang
         Me.in_ket_jenis.Multiline = True
         Me.in_ket_jenis.Name = "in_ket_jenis"
         Me.in_ket_jenis.Size = New System.Drawing.Size(252, 86)
-        Me.in_ket_jenis.TabIndex = 1
+        Me.in_ket_jenis.TabIndex = 2
         '
         'in_nama_jenis
         '
@@ -87,7 +97,7 @@ Partial Class fr_jenis_barang
         Me.in_nama_jenis.MaxLength = 5
         Me.in_nama_jenis.Name = "in_nama_jenis"
         Me.in_nama_jenis.Size = New System.Drawing.Size(252, 22)
-        Me.in_nama_jenis.TabIndex = 0
+        Me.in_nama_jenis.TabIndex = 1
         '
         'Label1
         '
@@ -101,15 +111,13 @@ Partial Class fr_jenis_barang
         '
         'in_kode
         '
-        Me.in_kode.BackColor = System.Drawing.Color.Gainsboro
+        Me.in_kode.BackColor = System.Drawing.Color.White
         Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode.ForeColor = System.Drawing.Color.Black
         Me.in_kode.Location = New System.Drawing.Point(100, 48)
         Me.in_kode.Name = "in_kode"
-        Me.in_kode.ReadOnly = True
         Me.in_kode.Size = New System.Drawing.Size(93, 22)
-        Me.in_kode.TabIndex = 141
-        Me.in_kode.TabStop = False
+        Me.in_kode.TabIndex = 0
         Me.in_kode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label3
@@ -118,9 +126,9 @@ Partial Class fr_jenis_barang
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.Location = New System.Drawing.Point(9, 76)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(40, 16)
+        Me.Label3.Size = New System.Drawing.Size(45, 16)
         Me.Label3.TabIndex = 139
-        Me.Label3.Text = "Jenis"
+        Me.Label3.Text = "Nama"
         '
         'Label4
         '
@@ -135,10 +143,10 @@ Partial Class fr_jenis_barang
         'bt_batal_jenis
         '
         Me.bt_batal_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batal_jenis.Location = New System.Drawing.Point(256, 346)
+        Me.bt_batal_jenis.Location = New System.Drawing.Point(673, 508)
         Me.bt_batal_jenis.Name = "bt_batal_jenis"
         Me.bt_batal_jenis.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batal_jenis.TabIndex = 3
+        Me.bt_batal_jenis.TabIndex = 6
         Me.bt_batal_jenis.Text = "Keluar"
         Me.bt_batal_jenis.UseVisualStyleBackColor = True
         '
@@ -148,7 +156,7 @@ Partial Class fr_jenis_barang
         Me.bt_simpan_jenis.Location = New System.Drawing.Point(154, 346)
         Me.bt_simpan_jenis.Name = "bt_simpan_jenis"
         Me.bt_simpan_jenis.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpan_jenis.TabIndex = 2
+        Me.bt_simpan_jenis.TabIndex = 3
         Me.bt_simpan_jenis.Text = "Simpan"
         Me.bt_simpan_jenis.UseVisualStyleBackColor = True
         '
@@ -252,12 +260,101 @@ Partial Class fr_jenis_barang
         Me.txtUpdDate.TabIndex = 115
         Me.txtUpdDate.TabStop = False
         '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.dgv_list)
+        Me.GroupBox2.Controls.Add(Me.in_cari)
+        Me.GroupBox2.Controls.Add(Me.bt_cari)
+        Me.GroupBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GroupBox2.Location = New System.Drawing.Point(360, 52)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(409, 450)
+        Me.GroupBox2.TabIndex = 5
+        Me.GroupBox2.TabStop = False
+        Me.GroupBox2.Text = "Daftar :"
+        '
+        'dgv_list
+        '
+        Me.dgv_list.AllowUserToAddRows = False
+        Me.dgv_list.AllowUserToDeleteRows = False
+        Me.dgv_list.BackgroundColor = System.Drawing.Color.White
+        Me.dgv_list.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_list.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.ket})
+        Me.dgv_list.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.dgv_list.Location = New System.Drawing.Point(3, 52)
+        Me.dgv_list.MultiSelect = False
+        Me.dgv_list.Name = "dgv_list"
+        Me.dgv_list.ReadOnly = True
+        Me.dgv_list.RowHeadersVisible = False
+        Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_list.Size = New System.Drawing.Size(403, 395)
+        Me.dgv_list.TabIndex = 3
+        '
+        'in_cari
+        '
+        Me.in_cari.BackColor = System.Drawing.Color.White
+        Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_cari.ForeColor = System.Drawing.Color.Black
+        Me.in_cari.Location = New System.Drawing.Point(6, 24)
+        Me.in_cari.MaxLength = 5
+        Me.in_cari.Name = "in_cari"
+        Me.in_cari.Size = New System.Drawing.Size(302, 22)
+        Me.in_cari.TabIndex = 1
+        '
+        'bt_cari
+        '
+        Me.bt_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cari.Location = New System.Drawing.Point(310, 22)
+        Me.bt_cari.Name = "bt_cari"
+        Me.bt_cari.Size = New System.Drawing.Size(96, 25)
+        Me.bt_cari.TabIndex = 2
+        Me.bt_cari.Text = "Cari"
+        Me.bt_cari.UseVisualStyleBackColor = True
+        '
+        'bt_cancel
+        '
+        Me.bt_cancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cancel.Location = New System.Drawing.Point(256, 346)
+        Me.bt_cancel.Name = "bt_cancel"
+        Me.bt_cancel.Size = New System.Drawing.Size(96, 30)
+        Me.bt_cancel.TabIndex = 4
+        Me.bt_cancel.Text = "Batal"
+        Me.bt_cancel.UseVisualStyleBackColor = True
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "kode"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "nama"
+        Me.nama.HeaderText = "Nama"
+        Me.nama.MinimumWidth = 150
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 150
+        '
+        'ket
+        '
+        Me.ket.DataPropertyName = "ket"
+        Me.ket.HeaderText = "Keterangan"
+        Me.ket.MinimumWidth = 100
+        Me.ket.Name = "ket"
+        Me.ket.ReadOnly = True
+        Me.ket.Width = 200
+        '
         'fr_jenis_barang
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(369, 390)
+        Me.CancelButton = Me.bt_batal_jenis
+        Me.ClientSize = New System.Drawing.Size(784, 550)
+        Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.GroupBox1)
+        Me.Controls.Add(Me.bt_cancel)
         Me.Controls.Add(Me.bt_batal_jenis)
         Me.Controls.Add(Me.bt_simpan_jenis)
         Me.Controls.Add(Me.in_ket_jenis)
@@ -268,13 +365,17 @@ Partial Class fr_jenis_barang
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.KeyPreview = True
         Me.Name = "fr_jenis_barang"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
-        Me.Text = "Detail Jenis : "
+        Me.Text = "Ref"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
+        CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -298,4 +399,12 @@ Partial Class fr_jenis_barang
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents dgv_list As System.Windows.Forms.DataGridView
+    Friend WithEvents in_cari As System.Windows.Forms.TextBox
+    Friend WithEvents bt_cari As System.Windows.Forms.Button
+    Friend WithEvents bt_cancel As System.Windows.Forms.Button
+    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ket As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class
