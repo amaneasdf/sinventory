@@ -55,12 +55,22 @@ Partial Class fr_stok_mutasi
         Me.in_qty_b = New System.Windows.Forms.NumericUpDown()
         Me.bt_batalreturbeli = New System.Windows.Forms.Button()
         Me.bt_simpanreturbeli = New System.Windows.Forms.Button()
+        Me.GroupBox2 = New System.Windows.Forms.GroupBox()
+        Me.txtRegAlias = New System.Windows.Forms.TextBox()
+        Me.Label27 = New System.Windows.Forms.Label()
+        Me.txtUpdAlias = New System.Windows.Forms.TextBox()
+        Me.txtRegdate = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.txtUpdDate = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty_k, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty_t, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty_b, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.GroupBox2.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -70,7 +80,7 @@ Partial Class fr_stok_mutasi
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(819, 42)
+        Me.Panel1.Size = New System.Drawing.Size(818, 42)
         Me.Panel1.TabIndex = 141
         '
         'Label9
@@ -377,7 +387,7 @@ Partial Class fr_stok_mutasi
         'bt_batalreturbeli
         '
         Me.bt_batalreturbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalreturbeli.Location = New System.Drawing.Point(711, 407)
+        Me.bt_batalreturbeli.Location = New System.Drawing.Point(708, 420)
         Me.bt_batalreturbeli.Name = "bt_batalreturbeli"
         Me.bt_batalreturbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalreturbeli.TabIndex = 194
@@ -387,18 +397,119 @@ Partial Class fr_stok_mutasi
         'bt_simpanreturbeli
         '
         Me.bt_simpanreturbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanreturbeli.Location = New System.Drawing.Point(609, 407)
+        Me.bt_simpanreturbeli.Location = New System.Drawing.Point(606, 420)
         Me.bt_simpanreturbeli.Name = "bt_simpanreturbeli"
         Me.bt_simpanreturbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpanreturbeli.TabIndex = 193
         Me.bt_simpanreturbeli.Text = "Simpan"
         Me.bt_simpanreturbeli.UseVisualStyleBackColor = True
         '
+        'GroupBox2
+        '
+        Me.GroupBox2.Controls.Add(Me.txtRegAlias)
+        Me.GroupBox2.Controls.Add(Me.Label27)
+        Me.GroupBox2.Controls.Add(Me.txtUpdAlias)
+        Me.GroupBox2.Controls.Add(Me.txtRegdate)
+        Me.GroupBox2.Controls.Add(Me.Label28)
+        Me.GroupBox2.Controls.Add(Me.Label29)
+        Me.GroupBox2.Controls.Add(Me.Label30)
+        Me.GroupBox2.Controls.Add(Me.txtUpdDate)
+        Me.GroupBox2.Location = New System.Drawing.Point(13, 404)
+        Me.GroupBox2.Name = "GroupBox2"
+        Me.GroupBox2.Size = New System.Drawing.Size(485, 68)
+        Me.GroupBox2.TabIndex = 239
+        Me.GroupBox2.TabStop = False
+        '
+        'txtRegAlias
+        '
+        Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRegAlias.Location = New System.Drawing.Point(81, 36)
+        Me.txtRegAlias.Name = "txtRegAlias"
+        Me.txtRegAlias.ReadOnly = True
+        Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegAlias.TabIndex = 116
+        Me.txtRegAlias.TabStop = False
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label27.ForeColor = System.Drawing.Color.Black
+        Me.Label27.Location = New System.Drawing.Point(10, 39)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(52, 13)
+        Me.Label27.TabIndex = 119
+        Me.Label27.Text = "Reg Alias"
+        '
+        'txtUpdAlias
+        '
+        Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUpdAlias.Location = New System.Drawing.Point(321, 36)
+        Me.txtUpdAlias.Name = "txtUpdAlias"
+        Me.txtUpdAlias.ReadOnly = True
+        Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdAlias.TabIndex = 122
+        Me.txtUpdAlias.TabStop = False
+        '
+        'txtRegdate
+        '
+        Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRegdate.Location = New System.Drawing.Point(81, 16)
+        Me.txtRegdate.Name = "txtRegdate"
+        Me.txtRegdate.ReadOnly = True
+        Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegdate.TabIndex = 115
+        Me.txtRegdate.TabStop = False
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label28.ForeColor = System.Drawing.Color.Black
+        Me.Label28.Location = New System.Drawing.Point(248, 39)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(52, 13)
+        Me.Label28.TabIndex = 125
+        Me.Label28.Text = "Upd Alias"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.ForeColor = System.Drawing.Color.Black
+        Me.Label29.Location = New System.Drawing.Point(9, 19)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(53, 13)
+        Me.Label29.TabIndex = 118
+        Me.Label29.Text = "Reg Date"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label30.ForeColor = System.Drawing.Color.Black
+        Me.Label30.Location = New System.Drawing.Point(249, 19)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(53, 13)
+        Me.Label30.TabIndex = 124
+        Me.Label30.Text = "Upd Date"
+        '
+        'txtUpdDate
+        '
+        Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUpdDate.Location = New System.Drawing.Point(321, 16)
+        Me.txtUpdDate.Name = "txtUpdDate"
+        Me.txtUpdDate.ReadOnly = True
+        Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdDate.TabIndex = 115
+        Me.txtUpdDate.TabStop = False
+        '
         'fr_stok_mutasi
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(819, 449)
+        Me.ClientSize = New System.Drawing.Size(818, 481)
+        Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.bt_batalreturbeli)
         Me.Controls.Add(Me.bt_simpanreturbeli)
         Me.Controls.Add(Me.GroupBox1)
@@ -424,6 +535,8 @@ Partial Class fr_stok_mutasi
         CType(Me.in_qty_k, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty_t, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty_b, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.GroupBox2.ResumeLayout(False)
+        Me.GroupBox2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -461,4 +574,13 @@ Partial Class fr_stok_mutasi
     Friend WithEvents qty_k As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_k As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_tot As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents GroupBox2 As System.Windows.Forms.GroupBox
+    Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
+    Friend WithEvents Label27 As System.Windows.Forms.Label
+    Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
+    Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
+    Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents Label29 As System.Windows.Forms.Label
+    Friend WithEvents Label30 As System.Windows.Forms.Label
+    Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
 End Class

@@ -770,6 +770,35 @@ Module mdlControl
         .ReadOnly = True
     }
 
+    '----------stok_mutasi dgv col-------------------
+    Private mutasi_id = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kode",
+        .HeaderText = "No. Bukti",
+        .Name = "kode",
+        .ReadOnly = True
+    }
+    Private mutasi_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tanggal",
+        .HeaderText = "Tanggal",
+        .Name = "tanggal",
+        .ReadOnly = True
+    }
+    Private mutasi_gudang_asal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang Asal",
+        .Name = "gudang",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private mutasi_gudang_tujuan = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang2",
+        .HeaderText = "Gudang Tujuan",
+        .Name = "gudang2",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+
+
     '----------group_list dgv col----------------------
     Private group_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
@@ -920,6 +949,8 @@ Module mdlControl
                 setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
             Case "stok"
                 setListcodetemp(pgstok, type, frmstok, "Daftar Stok Barang")
+            Case "mutasigurang"
+                setListcodetemp(pgmutasigudang, type, frmmutasigudang, "Daftar Mutasi Antar Gudang")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -1051,6 +1082,13 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
+            Case "mutasigudang"
+                With frmmutasigudang.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang_asal, mutasi_gudang_tujuan})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
             Case "group"
                 With frmgroup.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
@@ -1117,6 +1155,8 @@ Module mdlControl
                 bs = populateDGVUserConTemp("getReturJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "stok"
                 bs = populateDGVUserConTemp("getStok", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
+            Case "mutasigudang"
+                bs = populateDGVUserConTemp("getMutasi", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
             Case "group"
                 bs = populateDGVUserConTemp("getUserGroup", "nama LIKE '%" & param & "%'")
             Case "user"
@@ -1176,6 +1216,8 @@ Module mdlControl
                 frm = frmreturjual
             Case "pgstok"
                 frm = frmstok
+            Case "pgstok"
+                frm = frmmutasigudang
                 'Case "pgjenisbarang"
                 '    frm = frmjenisbarang
                 'Case "pgsatuanbarang"
