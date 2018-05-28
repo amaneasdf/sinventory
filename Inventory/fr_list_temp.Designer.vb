@@ -146,11 +146,11 @@ Partial Class fr_list_temp
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(13, 15)
+        Me.Label2.Location = New System.Drawing.Point(13, 10)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(61, 13)
+        Me.Label2.Size = New System.Drawing.Size(61, 26)
         Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Pencarian :"
+        Me.Label2.Text = "Pencarian :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(CTRL+F)"
         '
         'bt_edit
         '

@@ -537,6 +537,7 @@ Public Class fr_beli_detail
             rd.Close()
 
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_beli= getSUMBeliPergudang('{0}','{1}') + (countQTYBesarToKecil('{0}',{2}))  WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, selisih))
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
         Next
 
         'begin transaction

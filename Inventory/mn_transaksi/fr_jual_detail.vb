@@ -398,9 +398,12 @@
             queryArr.Add("INSERT INTO data_penjualan_trans SET " & String.Join(",", dataBrg))
 
             'TODO update stock
+            'check data_barang_stok?
+
             'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_jual=(SELECT stock_jual FROM data_barang_stok WHERE stock_barang='{0}' AND stock_gudang='{1}')+{2} ", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
             'recognise satuan <-db function
-            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_jual=getSUMJualPenjualan('{0}','{1}')+(countQTYJual('{0}',{2},'{3}'))WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_jual=getSUMJualPenjualan('{0}','{1}')+(countQTYJual('{0}',{2},'{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
         Next
 
         'begin transaction
@@ -545,7 +548,7 @@
         If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
                 With search
-                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_jual as hargajual, barang_harga_beli as hargabeli FROM data_barang_master"
+                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_jual as hargajual, barang_harga_beli as hargabeli FROM data_barang_master INNER JOIN data_barang_stok ON barang_kode=stock_barang WHERE stock_gudang='" & in_gudang.Text & "'"
                     .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                     .type = "barang"
                     .ShowDialog()

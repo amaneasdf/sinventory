@@ -101,7 +101,7 @@ Partial Class fr_stok_mutasi
         Me.in_gudang2.MaxLength = 15
         Me.in_gudang2.Name = "in_gudang2"
         Me.in_gudang2.Size = New System.Drawing.Size(172, 21)
-        Me.in_gudang2.TabIndex = 143
+        Me.in_gudang2.TabIndex = 2
         '
         'lbl_gudang2
         '
@@ -140,7 +140,7 @@ Partial Class fr_stok_mutasi
         Me.in_gudang.MaxLength = 15
         Me.in_gudang.Name = "in_gudang"
         Me.in_gudang.Size = New System.Drawing.Size(172, 21)
-        Me.in_gudang.TabIndex = 142
+        Me.in_gudang.TabIndex = 1
         '
         'Label1
         '
@@ -158,6 +158,7 @@ Partial Class fr_stok_mutasi
         Me.in_kode.Location = New System.Drawing.Point(114, 52)
         Me.in_kode.MaxLength = 15
         Me.in_kode.Name = "in_kode"
+        Me.in_kode.ReadOnly = True
         Me.in_kode.Size = New System.Drawing.Size(172, 21)
         Me.in_kode.TabIndex = 144
         '
@@ -179,7 +180,7 @@ Partial Class fr_stok_mutasi
         Me.date_tgl_beli.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tgl_beli.Name = "date_tgl_beli"
         Me.date_tgl_beli.Size = New System.Drawing.Size(172, 21)
-        Me.date_tgl_beli.TabIndex = 193
+        Me.date_tgl_beli.TabIndex = 0
         '
         'Label4
         '
@@ -206,7 +207,7 @@ Partial Class fr_stok_mutasi
         Me.GroupBox1.Location = New System.Drawing.Point(13, 160)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(794, 241)
-        Me.GroupBox1.TabIndex = 195
+        Me.GroupBox1.TabIndex = 3
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Barang"
         '
@@ -215,16 +216,16 @@ Partial Class fr_stok_mutasi
         Me.dgv_barang.AllowUserToAddRows = False
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot})
         Me.dgv_barang.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgv_barang.Location = New System.Drawing.Point(3, 47)
+        Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_barang.Size = New System.Drawing.Size(788, 191)
-        Me.dgv_barang.TabIndex = 18
+        Me.dgv_barang.TabIndex = 8
         '
         'kode
         '
@@ -308,7 +309,7 @@ Partial Class fr_stok_mutasi
         Me.in_barang.Location = New System.Drawing.Point(6, 21)
         Me.in_barang.Name = "in_barang"
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
-        Me.in_barang.TabIndex = 9
+        Me.in_barang.TabIndex = 4
         '
         'lbl_sat_kecil
         '
@@ -361,7 +362,7 @@ Partial Class fr_stok_mutasi
         Me.in_qty_k.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty_k.Name = "in_qty_k"
         Me.in_qty_k.Size = New System.Drawing.Size(52, 20)
-        Me.in_qty_k.TabIndex = 10
+        Me.in_qty_k.TabIndex = 7
         Me.in_qty_k.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_qty_t
@@ -371,7 +372,7 @@ Partial Class fr_stok_mutasi
         Me.in_qty_t.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty_t.Name = "in_qty_t"
         Me.in_qty_t.Size = New System.Drawing.Size(52, 20)
-        Me.in_qty_t.TabIndex = 10
+        Me.in_qty_t.TabIndex = 6
         Me.in_qty_t.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_qty_b
@@ -381,7 +382,7 @@ Partial Class fr_stok_mutasi
         Me.in_qty_b.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty_b.Name = "in_qty_b"
         Me.in_qty_b.Size = New System.Drawing.Size(52, 20)
-        Me.in_qty_b.TabIndex = 10
+        Me.in_qty_b.TabIndex = 5
         Me.in_qty_b.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'bt_batalreturbeli
@@ -390,7 +391,7 @@ Partial Class fr_stok_mutasi
         Me.bt_batalreturbeli.Location = New System.Drawing.Point(708, 420)
         Me.bt_batalreturbeli.Name = "bt_batalreturbeli"
         Me.bt_batalreturbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalreturbeli.TabIndex = 194
+        Me.bt_batalreturbeli.TabIndex = 10
         Me.bt_batalreturbeli.Text = "Batal"
         Me.bt_batalreturbeli.UseVisualStyleBackColor = True
         '
@@ -400,7 +401,7 @@ Partial Class fr_stok_mutasi
         Me.bt_simpanreturbeli.Location = New System.Drawing.Point(606, 420)
         Me.bt_simpanreturbeli.Name = "bt_simpanreturbeli"
         Me.bt_simpanreturbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpanreturbeli.TabIndex = 193
+        Me.bt_simpanreturbeli.TabIndex = 9
         Me.bt_simpanreturbeli.Text = "Simpan"
         Me.bt_simpanreturbeli.UseVisualStyleBackColor = True
         '
@@ -508,6 +509,7 @@ Partial Class fr_stok_mutasi
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.bt_batalreturbeli
         Me.ClientSize = New System.Drawing.Size(818, 481)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.bt_batalreturbeli)
@@ -526,7 +528,7 @@ Partial Class fr_stok_mutasi
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "fr_stok_mutasi"
-        Me.Text = "Mutasi Stok"
+        Me.Text = "Mutasi Stok : "
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)

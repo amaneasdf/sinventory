@@ -31,6 +31,8 @@
                 createTabPage(pgreturjual, type, frmreturjual, "Retur Penjualan")
             Case "stok"
                 createTabPage(pgstok, type, frmstok, "Stok Barang")
+            Case "mutasigudang"
+                createTabPage(pgmutasigudang, type, frmmutasigudang, "Mutasi Gudang")
                 'Case "jenisbarang"
                 '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
             Case "group"
@@ -146,6 +148,9 @@
             Case "mn0301"
                 Console.WriteLine("click stok awal")
                 openTab("stok")
+            Case "mn0302"
+                Console.WriteLine("click mutasi gudang")
+                openTab("mutasigudang")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()

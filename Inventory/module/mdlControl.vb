@@ -949,7 +949,7 @@ Module mdlControl
                 setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
             Case "stok"
                 setListcodetemp(pgstok, type, frmstok, "Daftar Stok Barang")
-            Case "mutasigurang"
+            Case "mutasigudang"
                 setListcodetemp(pgmutasigudang, type, frmmutasigudang, "Daftar Mutasi Antar Gudang")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
@@ -1216,7 +1216,7 @@ Module mdlControl
                 frm = frmreturjual
             Case "pgstok"
                 frm = frmstok
-            Case "pgstok"
+            Case "pgmutasigudang"
                 frm = frmmutasigudang
                 'Case "pgjenisbarang"
                 '    frm = frmjenisbarang

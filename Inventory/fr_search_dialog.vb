@@ -191,6 +191,9 @@
                 Case "barangfaktur"
                     lbl_judul.Text += " Barang"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {barang_nama, barang_kode, barang_trans_qty})
+                Case "barangmutasi"
+                    lbl_judul.Text += " Barang"
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {barang_nama, barang_kode, jual_gudang})
                 Case "jual"
                     lbl_judul.Text += " Penjualan"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jual_faktur, jual_tgl, jual_sales, jual_custo, jual_gudang})

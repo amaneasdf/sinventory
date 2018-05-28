@@ -42,6 +42,8 @@
                 fr_jual_retur_detail.Show(main)
             Case "pgstok"
                 fr_stok_awal.ShowDialog(main)
+            Case "pgmutasigudang"
+                fr_stok_mutasi.ShowDialog(main)
             Case "pggroup"
                 fr_group_detail.ShowDialog()
             Case "pguser"
@@ -162,6 +164,14 @@
                         .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)
                     End With
+                Case "pgmutasigudang"
+                    Dim detail As New fr_stok_mutasi
+                    With detail
+                        .bt_simpanreturbeli.Text = "Update"
+                        .Text += dgv_list.Rows(rowindex).Cells(0).Value
+                        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        .Show(main)
+                    End With
                 Case "pggroup"
                     Using detail As New fr_group_detail
                         With detail
@@ -233,6 +243,10 @@
                 populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
             Case "pgstok"
                 populateDGVUserCon("stok", "", frmstok.dgv_list)
+            Case "pgmutasigudang"
+                populateDGVUserCon("mutasigudang", "", frmmutasigudang.dgv_list)
+            Case "pgmutasistok"
+                populateDGVUserCon("mutasistok", "", frmmutasistok.dgv_list)
                 'Case "pgjenisbarang"
                 '    populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
             Case "pggroup"
@@ -279,6 +293,8 @@
                     populateDGVUserCon("returjual", in_cari.Text, frmreturjual.dgv_list)
                 Case "pgstok"
                     populateDGVUserCon("stok", in_cari.Text, frmstok.dgv_list)
+                Case "pgmutasigudang"
+                    populateDGVUserCon("mutasigudang", in_cari.Text, frmmutasigudang.dgv_list)
                     'Case "pgjenisbarang"
                     '    populateDGVUserCon("jenisbarang", in_cari.Text, frmjenisbarang.dgv_list)
                 Case "pggroup"

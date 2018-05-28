@@ -280,6 +280,7 @@
         Dim querycheck As Boolean = False
         Dim dataFak As String()
         Dim dataBrg As String()
+        Dim queryArr As New List(Of String)
 
         op_con()
         If bt_simpanreturjual.Text = "Simpan" Then
@@ -309,7 +310,7 @@
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
             'TODO insert faktur
-            querycheck = commnd("INSERT INTO data_penjualan_retur_faktur SET " & String.Join(",", dataFak))
+            queryArr.Add("INSERT INTO data_penjualan_retur_faktur SET " & String.Join(",", dataFak))
 
 
             For Each rows As DataGridViewRow In dgv_barang.Rows
@@ -325,11 +326,18 @@
                 "trans_reg_alias='" & loggeduser.user_id & "'"
                 }
                 'TODO insert brg
-                querycheck = commnd("INSERT INTO data_penjualan_retur_trans SET " & String.Join(",", dataBrg))
+                queryArr.Add("INSERT INTO data_penjualan_retur_trans SET " & String.Join(",", dataBrg))
+
+                'TODO Update stok
+                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_return_jual=getSUMReturJualPerGudang('{0}','{1}') +(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTok('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
+
             Next
         Else
-            Me.Dispose()
+            Me.Close()
         End If
+
+        querycheck = startTrans(queryArr)
 
         If querycheck = False Then
             Exit Sub
@@ -337,12 +345,12 @@
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
     Private Sub bt_batalreturjual_Click(sender As Object, e As EventArgs) Handles bt_batalreturjual.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub in_no_bukti_KeyDown(sender As Object, e As KeyEventArgs) Handles in_no_bukti.KeyDown
