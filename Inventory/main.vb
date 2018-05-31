@@ -33,6 +33,10 @@
                 createTabPage(pgstok, type, frmstok, "Stok Barang")
             Case "mutasigudang"
                 createTabPage(pgmutasigudang, type, frmmutasigudang, "Mutasi Gudang")
+            Case "mutasistok"
+                createTabPage(pgmutasistok, type, frmmutasistok, "Mutasi Barang")
+            Case "stockop"
+                createTabPage(pgstockop, type, frmstockop, "Stok Opname")
                 'Case "jenisbarang"
                 '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
             Case "group"
@@ -151,6 +155,12 @@
             Case "mn0302"
                 Console.WriteLine("click mutasi gudang")
                 openTab("mutasigudang")
+            Case "mn0303"
+                Console.WriteLine("click mutasi barang")
+                openTab("mutasistok")
+            Case "mn0304"
+                Console.WriteLine("click stock op")
+                openTab("stockop")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()
@@ -178,6 +188,7 @@
                         .Focus()
                     Else
                         .setfor = "jenisbarang"
+                        .Text += " Jenis Barang"
                         .Show(Me)
                     End If
                 End With
@@ -190,6 +201,7 @@
                         .Focus()
                     Else
                         .setfor = "satuan"
+                        .Text += " Satuan"
                         .Show(Me)
                     End If
                 End With

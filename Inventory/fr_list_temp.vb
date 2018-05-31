@@ -44,10 +44,14 @@
                 fr_stok_awal.ShowDialog(main)
             Case "pgmutasigudang"
                 fr_stok_mutasi.ShowDialog(main)
+            Case "pgmutasistok"
+                fr_stok_mutasi_barang.ShowDialog(main)
+            Case "pgstockop"
+                fr_stock_op.ShowDialog(main)
             Case "pggroup"
-                fr_group_detail.ShowDialog()
+                fr_group_detail.ShowDialog(main)
             Case "pguser"
-                fr_user_detail.ShowDialog()
+                fr_user_detail.ShowDialog(main)
                 'Case "pgjenisbarang"
                 '    fr_jenis_barang.setfor = "jenisbarang"
                 '    fr_jenis_barang.ShowDialog()
@@ -172,6 +176,22 @@
                         .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)
                     End With
+                Case "pgmutasistok"
+                    Dim detail As New fr_stok_mutasi_barang
+                    With detail
+                        .bt_simpanreturbeli.Text = "Update"
+                        .Text += dgv_list.Rows(rowindex).Cells(0).Value
+                        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        .Show(main)
+                    End With
+                Case "pgstockop"
+                    Dim detail As New fr_stock_op
+                    With detail
+                        .bt_simpanreturbeli.Text = "Update"
+                        .Text += dgv_list.Rows(rowindex).Cells(0).Value
+                        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        .Show(main)
+                    End With
                 Case "pggroup"
                     Using detail As New fr_group_detail
                         With detail
@@ -247,6 +267,8 @@
                 populateDGVUserCon("mutasigudang", "", frmmutasigudang.dgv_list)
             Case "pgmutasistok"
                 populateDGVUserCon("mutasistok", "", frmmutasistok.dgv_list)
+            Case "pgstockop"
+                populateDGVUserCon("stockop", "", frmstockop.dgv_list)
                 'Case "pgjenisbarang"
                 '    populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
             Case "pggroup"
@@ -295,6 +317,10 @@
                     populateDGVUserCon("stok", in_cari.Text, frmstok.dgv_list)
                 Case "pgmutasigudang"
                     populateDGVUserCon("mutasigudang", in_cari.Text, frmmutasigudang.dgv_list)
+                Case "pgmutasistok"
+                    populateDGVUserCon("mutasistok", in_cari.Text, frmmutasistok.dgv_list)
+                Case "pgstockop"
+                    populateDGVUserCon("stockop", in_cari.Text, frmstockop.dgv_list)
                     'Case "pgjenisbarang"
                     '    populateDGVUserCon("jenisbarang", in_cari.Text, frmjenisbarang.dgv_list)
                 Case "pggroup"

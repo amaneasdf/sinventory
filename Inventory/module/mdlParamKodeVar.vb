@@ -262,6 +262,7 @@
     Public pgstok = New TabPage() With {.Name = "pgstok"}
     Public pgmutasigudang = New TabPage() With {.Name = "pgmutasigudang"}
     Public pgmutasistok = New TabPage() With {.Name = "pgmutasistok"}
+    Public pgstockop = New TabPage() With {.Name = "pgstockop"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
@@ -284,6 +285,7 @@
     Public frmstok As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmmutasistok As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmstockop As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang

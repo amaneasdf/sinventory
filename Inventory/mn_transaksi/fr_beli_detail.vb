@@ -514,29 +514,24 @@ Public Class fr_beli_detail
 
             '--check?
             If checkdata("data_barang_stok", "'" & rows.Cells(0).Value & "' AND stock_gudang='" & in_gudang.Text & "'", "stock_barang") = False Then
-                'TODO setup stok awal
-                'Using setstock As New fr_stok_awal
-                '    With setstock
-                '        .in_barang.Text = rows.Cells(0).Value
-                '        .setBarang(.in_barang.Text)
-                '        .in_gudang.Text = in_gudang.Text
-                '        .setGudang(.in_gudang.Text)
-                '        .ShowDialog()
-                '    End With
-                'End Using
                 queryArr.Add("INSERT INTO data_barang_stok SET stock_barang='" & rows.Cells(0).Value & "', stock_gudang='" & in_gudang.Text & "', stock_reg_date=NOW(), stock_reg_alias='" & loggeduser.user_id & "'")
+                'write log
+                'queryArr.Add("INSERT INTO log_stok SET log_tgl,log_gudang,log_barang,log_trans,log_alias,log_ket") ->setup awal
             End If
             '--insert or update?
             'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli= getSTokBeli('{0}','{1}')+ countQTYBesarToKecil('{0}','{2}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
 
-            'TODO UPDATE stok beli -> must recognize whether is added or substracted when trans update
-            'select original qty from trans_beli
-            readcommd("SELECT IFNULL(trans_qty,0) as a FROM data_pembelian_trans WHERE trans_barang='" & rows.Cells(0).Value & "' AND trans_faktur='" & in_faktur.Text & "'")
-            'count the diff
-            Dim selisih As Integer = rows.Cells("qty").Value - rd.Item("a")
-            rd.Close()
+            Dim selisih As Integer = rows.Cells("qty").Value
+            If bt_simpanbeli.Text = "Update" Then
+                'TODO UPDATE stok beli -> must recognize whether is added or substracted when trans update
+                'select original qty from trans_beli
+                readcommd("SELECT IFNULL(trans_qty,0) as a FROM data_pembelian_trans WHERE trans_barang='" & rows.Cells(0).Value & "' AND trans_faktur='" & in_faktur.Text & "'")
+                'count the diff
+                selisih = rows.Cells("qty").Value - rd.Item("a")
+                rd.Close()
+            End If
 
-            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_beli= getSUMBeliPergudang('{0}','{1}') + (countQTYBesarToKecil('{0}',{2}))  WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, selisih))
+            queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_beli= IFNULL(stock_beli,0) + (countQTYBesarToKecil('{0}',{2}))  WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, selisih))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
         Next
 
@@ -545,12 +540,8 @@ Public Class fr_beli_detail
 
         If querycheck = False Then
             MessageBox.Show("Data tidak dapat tersimpan")
-            'TODO rollback
-            'transbeli.Rollback()
             Exit Sub
         Else
-            'TODO commit
-            'transbeli.Commit()
             MessageBox.Show("Data tersimpan")
             frmpembelian.in_cari.Clear()
             populateDGVUserCon("beli", "", frmpembelian.dgv_list)

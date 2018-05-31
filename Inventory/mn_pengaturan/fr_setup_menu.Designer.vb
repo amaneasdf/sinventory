@@ -87,34 +87,40 @@ Partial Class fr_setup_menu
         '
         'bt_keluar_menu
         '
+        Me.bt_keluar_menu.BackColor = System.Drawing.Color.Orange
+        Me.bt_keluar_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_keluar_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_keluar_menu.Location = New System.Drawing.Point(341, 542)
         Me.bt_keluar_menu.Name = "bt_keluar_menu"
         Me.bt_keluar_menu.Size = New System.Drawing.Size(96, 30)
         Me.bt_keluar_menu.TabIndex = 7
         Me.bt_keluar_menu.Text = "Keluar"
-        Me.bt_keluar_menu.UseVisualStyleBackColor = True
+        Me.bt_keluar_menu.UseVisualStyleBackColor = False
         '
         'bt_hapus_menu
         '
+        Me.bt_hapus_menu.BackColor = System.Drawing.Color.Orange
         Me.bt_hapus_menu.Enabled = False
+        Me.bt_hapus_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_hapus_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_hapus_menu.Location = New System.Drawing.Point(239, 150)
         Me.bt_hapus_menu.Name = "bt_hapus_menu"
         Me.bt_hapus_menu.Size = New System.Drawing.Size(96, 30)
         Me.bt_hapus_menu.TabIndex = 4
         Me.bt_hapus_menu.Text = "Hapus"
-        Me.bt_hapus_menu.UseVisualStyleBackColor = True
+        Me.bt_hapus_menu.UseVisualStyleBackColor = False
         '
         'bt_tambah_menu
         '
+        Me.bt_tambah_menu.BackColor = System.Drawing.Color.Orange
+        Me.bt_tambah_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_tambah_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_tambah_menu.Location = New System.Drawing.Point(137, 150)
         Me.bt_tambah_menu.Name = "bt_tambah_menu"
         Me.bt_tambah_menu.Size = New System.Drawing.Size(96, 30)
         Me.bt_tambah_menu.TabIndex = 3
         Me.bt_tambah_menu.Text = "Tambah"
-        Me.bt_tambah_menu.UseVisualStyleBackColor = True
+        Me.bt_tambah_menu.UseVisualStyleBackColor = False
         '
         'in_menu_nama
         '
@@ -209,9 +215,9 @@ Partial Class fr_setup_menu
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label9.Location = New System.Drawing.Point(9, 9)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(209, 20)
+        Me.Label9.Size = New System.Drawing.Size(183, 20)
         Me.Label9.TabIndex = 133
-        Me.Label9.Text = "Set Daftar Menu Aplikasi"
+        Me.Label9.Text = "Setting Menu Aplikasi"
         '
         'Panel1
         '
@@ -224,18 +230,21 @@ Partial Class fr_setup_menu
         '
         'bt_batal
         '
+        Me.bt_batal.BackColor = System.Drawing.Color.Orange
+        Me.bt_batal.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_batal.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batal.Location = New System.Drawing.Point(341, 150)
         Me.bt_batal.Name = "bt_batal"
         Me.bt_batal.Size = New System.Drawing.Size(96, 30)
         Me.bt_batal.TabIndex = 5
         Me.bt_batal.Text = "Batal"
-        Me.bt_batal.UseVisualStyleBackColor = True
+        Me.bt_batal.UseVisualStyleBackColor = False
         '
         'fr_setup_menu
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(449, 584)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.in_menu_parent)
@@ -251,7 +260,7 @@ Partial Class fr_setup_menu
         Me.Controls.Add(Me.bt_tambah_menu)
         Me.Controls.Add(Me.bt_hapus_menu)
         Me.Controls.Add(Me.dgv_menu)
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_setup_menu"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Setting Menu"

@@ -44,6 +44,10 @@ Partial Class main
         Me.SplitContainer.Name = "SplitContainer"
         Me.SplitContainer.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
+        'SplitContainer.Panel1
+        '
+        Me.SplitContainer.Panel1.BackColor = System.Drawing.Color.White
+        '
         'SplitContainer.Panel2
         '
         Me.SplitContainer.Panel2.Controls.Add(Me.tabcontrol)

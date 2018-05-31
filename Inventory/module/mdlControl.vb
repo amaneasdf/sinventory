@@ -671,6 +671,7 @@ Module mdlControl
         .DataPropertyName = "kode",
         .HeaderText = "ID",
         .Name = "kode",
+        .Width = 40,
         .ReadOnly = True
     }
     Private stok_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -770,7 +771,7 @@ Module mdlControl
         .ReadOnly = True
     }
 
-    '----------stok_mutasi dgv col-------------------
+    '----------gudang_mutasi dgv col-------------------
     Private mutasi_id = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
         .HeaderText = "No. Bukti",
@@ -798,6 +799,20 @@ Module mdlControl
         .ReadOnly = True
     }
 
+    '----------stok_mutasi dgv col-------------------
+    Private mutasi_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "gudang",
+        .HeaderText = "Gudang",
+        .Name = "gudang",
+        .MinimumWidth = 200,
+        .ReadOnly = True
+    }
+    Private mutasi_regby = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "regby",
+        .HeaderText = "RegBy",
+        .Name = "regby",
+        .ReadOnly = True
+    }
 
     '----------group_list dgv col----------------------
     Private group_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -875,49 +890,49 @@ Module mdlControl
         .ReadOnly = True
     }
 
-    '----------jenisbarang_list dgv col------------
-    Private jenisbarang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "kode",
-        .HeaderText = "Kode Jenis",
-        .Name = "kode",
-        .ReadOnly = True
-    }
-    Private jenisbarang_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "nama",
-        .HeaderText = "Jenis",
-        .Name = "nama",
-        .ReadOnly = True,
-        .MinimumWidth = 200
-    }
-    Private jenisbarang_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "ket",
-        .HeaderText = "Keterangan",
-        .Name = "ket",
-        .ReadOnly = True,
-        .MinimumWidth = 500
-    }
+    ''----------jenisbarang_list dgv col------------
+    'Private jenisbarang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "kode",
+    '    .HeaderText = "Kode Jenis",
+    '    .Name = "kode",
+    '    .ReadOnly = True
+    '}
+    'Private jenisbarang_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "nama",
+    '    .HeaderText = "Jenis",
+    '    .Name = "nama",
+    '    .ReadOnly = True,
+    '    .MinimumWidth = 200
+    '}
+    'Private jenisbarang_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "ket",
+    '    .HeaderText = "Keterangan",
+    '    .Name = "ket",
+    '    .ReadOnly = True,
+    '    .MinimumWidth = 500
+    '}
 
-    '----------satuanbarang_list dgv col------------
-    Private satuanbarang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "kode",
-        .HeaderText = "Kode Satuan",
-        .Name = "kode",
-        .ReadOnly = True
-    }
-    Private satuanbarang_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "nama",
-        .HeaderText = "Nama",
-        .Name = "nama",
-        .ReadOnly = True,
-        .MinimumWidth = 200
-    }
-    Private satuanbarang_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "ket",
-        .HeaderText = "Keterangan",
-        .Name = "ket",
-        .ReadOnly = True,
-        .MinimumWidth = 500
-    }
+    ''----------satuanbarang_list dgv col------------
+    'Private satuanbarang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "kode",
+    '    .HeaderText = "Kode Satuan",
+    '    .Name = "kode",
+    '    .ReadOnly = True
+    '}
+    'Private satuanbarang_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "nama",
+    '    .HeaderText = "Nama",
+    '    .Name = "nama",
+    '    .ReadOnly = True,
+    '    .MinimumWidth = 200
+    '}
+    'Private satuanbarang_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '    .DataPropertyName = "ket",
+    '    .HeaderText = "Keterangan",
+    '    .Name = "ket",
+    '    .ReadOnly = True,
+    '    .MinimumWidth = 500
+    '}
 
     Public Sub setList(type As String)
         Select Case type
@@ -951,6 +966,10 @@ Module mdlControl
                 setListcodetemp(pgstok, type, frmstok, "Daftar Stok Barang")
             Case "mutasigudang"
                 setListcodetemp(pgmutasigudang, type, frmmutasigudang, "Daftar Mutasi Antar Gudang")
+            Case "mutasistok"
+                setListcodetemp(pgmutasistok, type, frmmutasistok, "Daftar Mutasi Barang")
+            Case "stockop"
+                setListcodetemp(pgstockop, type, frmstockop, "Daftar Transaksi Stock Opname")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -1089,6 +1108,20 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
+            Case "mutasistok"
+                With frmmutasistok.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
+            Case "stockop"
+                With frmstockop.dgv_list
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
             Case "group"
                 With frmgroup.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
@@ -1103,68 +1136,62 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
-                'Case "jenisbarang"
-                '    With frmjenisbarang.dgv_list
-                '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jenisbarang_kode, jenisbarang_nama, jenisbarang_ket})
-                '        For i = 0 To .Columns.Count - 1
-                '            .Columns(i).DisplayIndex = i
-                '        Next
-                '    End With
-                'Case "satuanbarang"
-                '    With frmsatuanbarang.dgv_list
-                '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {satuanbarang_kode, satuanbarang_nama, satuanbarang_ket})
-                '        For i = 0 To .Columns.Count - 1
-                '            .Columns(i).DisplayIndex = i
-                '        Next
-                '    End With
             Case Else
                 Exit Sub
         End Select
     End Sub
 
+    'Private Sub addColtoDGVTemp(fr As fr_list_temp, x As DataGridViewColumn())
+    '    With fr.dgv_list
+    '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() x.it)
+    '        For i = 0 To .Columns.Count - 1
+    '            .Columns(i).DisplayIndex = i
+    '        Next
+    '    End With
+    'End Sub
+
     Public Sub populateDGVUserCon(type As String, param As String, dgv As DataGridView)
         Dim bs As New BindingSource
         Select Case type
             Case "barang"
-                bs.DataSource = getDataTablefromDB("getBarang")
-                Console.WriteLine("bs" & bs.Count.ToString)
-                bs.Filter = "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR kodesupplier LIKE '%" & param & "%'"
+                bs = populateDGVUserConTemp("getDataMaster('barang')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR kodesupplier LIKE '%" & param & "%'")
+                'bs.DataSource = getDataTablefromDB(")
+                'Console.WriteLine("bs" & bs.Count.ToString)
+                'bs.Filter = "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR kodesupplier LIKE '%" & param & "%'"
             Case "gudang"
-                bs.DataSource = getDataTablefromDB("getGudang")
-                Console.WriteLine("bs" & bs.Count.ToString)
-                bs.Filter = "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'"
+                bs = populateDGVUserConTemp("getDataMaster('gudang')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "supplier"
-                bs = populateDGVUserConTemp("getSupplier", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('supplier')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "sales"
-                bs = populateDGVUserConTemp("getSales", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('sales')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "custo"
-                bs = populateDGVUserConTemp("getCusto", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('custo')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "giro"
-                bs = populateDGVUserConTemp("getGiro", "sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR nobg LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('giro')", "sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR nobg LIKE '%" & param & "%'")
             Case "perkiraan"
-                bs = populateDGVUserConTemp("getPerkiraan", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('perkiraan')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "neracaawal"
-                bs = populateDGVUserConTemp("getNeracaAwal", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('neracaawal')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "beli"
-                bs = populateDGVUserConTemp("getBeli", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('beli')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
             Case "returbeli"
-                bs = populateDGVUserConTemp("getReturBeli", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('returbeli')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "jual"
-                bs = populateDGVUserConTemp("getJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('jual')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
             Case "returjual"
-                bs = populateDGVUserConTemp("getReturJual", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('returjual')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "stok"
-                bs = populateDGVUserConTemp("getStok", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('stok')", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
             Case "mutasigudang"
-                bs = populateDGVUserConTemp("getMutasi", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getMutasi('gudang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
+            Case "mutasistok"
+                bs = populateDGVUserConTemp("getMutasi('barang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+            Case "stockop"
+                bs = populateDGVUserConTemp("getStok('stockop')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "group"
-                bs = populateDGVUserConTemp("getUserGroup", "nama LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('group')", "nama LIKE '%" & param & "%'")
             Case "user"
-                bs = populateDGVUserConTemp("getUser", "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
-                'Case "jenisbarang"
-                '    bs = populateDGVUserConTemp("getJenisBarang", "nama LIKE '%" & param & "%'")
-                'Case "satuanbarang"
-                '    bs = populateDGVUserConTemp("getSatuanBarang", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getDataMaster('user')", "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
             Case Else
                 Exit Sub
         End Select
@@ -1218,6 +1245,9 @@ Module mdlControl
                 frm = frmstok
             Case "pgmutasigudang"
                 frm = frmmutasigudang
+            Case "pgmutasistok"
+                frm = frmmutasistok
+
                 'Case "pgjenisbarang"
                 '    frm = frmjenisbarang
                 'Case "pgsatuanbarang"

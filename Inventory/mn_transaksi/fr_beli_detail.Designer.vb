@@ -41,6 +41,7 @@ Partial Class fr_beli_detail
         Me.date_tgl_beli = New System.Windows.Forms.DateTimePicker()
         Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.in_discrp = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
         Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -95,10 +96,10 @@ Partial Class fr_beli_detail
         Me.cb_status = New System.Windows.Forms.ComboBox()
         Me.in_status_kode = New System.Windows.Forms.TextBox()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.in_discrp = New System.Windows.Forms.NumericUpDown()
         Me.Panel1.SuspendLayout()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.in_discrp, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_disc3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_disc2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -110,7 +111,6 @@ Partial Class fr_beli_detail
         CType(Me.in_discount, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_ppn_persen, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox4.SuspendLayout()
-        CType(Me.in_discrp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lbl_judul
@@ -323,6 +323,19 @@ Partial Class fr_beli_detail
         Me.GroupBox1.TabIndex = 8
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Barang"
+        '
+        'in_discrp
+        '
+        Me.in_discrp.DecimalPlaces = 2
+        Me.in_discrp.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_discrp.Increment = New Decimal(New Integer() {100, 0, 0, 0})
+        Me.in_discrp.Location = New System.Drawing.Point(777, 20)
+        Me.in_discrp.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
+        Me.in_discrp.Name = "in_discrp"
+        Me.in_discrp.Size = New System.Drawing.Size(126, 22)
+        Me.in_discrp.TabIndex = 195
+        Me.in_discrp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_discrp.ThousandsSeparator = True
         '
         'dgv_barang
         '
@@ -691,6 +704,7 @@ Partial Class fr_beli_detail
         Me.cb_ppn_jenis.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_ppn_jenis.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_ppn_jenis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_ppn_jenis.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_ppn_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_ppn_jenis.FormattingEnabled = True
         Me.cb_ppn_jenis.Location = New System.Drawing.Point(6, 214)
@@ -884,6 +898,7 @@ Partial Class fr_beli_detail
         'cb_status
         '
         Me.cb_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_status.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_status.FormattingEnabled = True
         Me.cb_status.Location = New System.Drawing.Point(121, 15)
@@ -912,19 +927,6 @@ Partial Class fr_beli_detail
         Me.Label10.Size = New System.Drawing.Size(45, 16)
         Me.Label10.TabIndex = 242
         Me.Label10.Text = "Status"
-        '
-        'in_discrp
-        '
-        Me.in_discrp.DecimalPlaces = 2
-        Me.in_discrp.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_discrp.Increment = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.in_discrp.Location = New System.Drawing.Point(777, 20)
-        Me.in_discrp.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
-        Me.in_discrp.Name = "in_discrp"
-        Me.in_discrp.Size = New System.Drawing.Size(126, 22)
-        Me.in_discrp.TabIndex = 195
-        Me.in_discrp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.in_discrp.ThousandsSeparator = True
         '
         'fr_beli_detail
         '
@@ -966,6 +968,7 @@ Partial Class fr_beli_detail
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        CType(Me.in_discrp, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_disc3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_disc2, System.ComponentModel.ISupportInitialize).EndInit()
@@ -980,7 +983,6 @@ Partial Class fr_beli_detail
         CType(Me.in_ppn_persen, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox4.ResumeLayout(False)
         Me.GroupBox4.PerformLayout()
-        CType(Me.in_discrp, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

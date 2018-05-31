@@ -9,6 +9,13 @@
         in_passold.Focus()
     End Sub
 
+    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
     Private Sub bt_switch_oldpass_Click(sender As Object, e As EventArgs) Handles bt_switch_oldpass.Click
         With bt_switch_oldpass
             If switchold = True Then
@@ -71,5 +78,13 @@
 
     Private Sub bt_bataluser_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click
         Me.Dispose()
+    End Sub
+
+    Private Sub in_passold_KeyDown(sender As Object, e As KeyEventArgs) Handles in_passold.KeyDown
+        keyshortenter(in_passnew, e)
+    End Sub
+
+    Private Sub in_passnew_KeyDown(sender As Object, e As KeyEventArgs) Handles in_passnew.KeyDown
+        keyshortenter(bt_simpanuser, e)
     End Sub
 End Class

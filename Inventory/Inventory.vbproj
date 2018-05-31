@@ -194,6 +194,12 @@
     <Compile Include="mn_pengaturan\fr_user_password.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_persediaan\fr_stock_op.Designer.vb">
+      <DependentUpon>fr_stock_op.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stock_op.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_persediaan\fr_stok_awal.Designer.vb">
       <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </Compile>
@@ -204,6 +210,12 @@
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_persediaan\fr_stok_mutasi.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasi_barang.Designer.vb">
+      <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasi_barang.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_beli_detail.Designer.vb">
@@ -312,11 +324,17 @@
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stock_op.resx">
+      <DependentUpon>fr_stock_op.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_awal.resx">
       <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi.resx">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi_barang.resx">
+      <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_beli_detail.resx">
       <DependentUpon>fr_beli_detail.vb</DependentUpon>

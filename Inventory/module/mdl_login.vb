@@ -33,14 +33,10 @@
             Console.WriteLine(.user_mac)
         End With
 
-        'commnd("INSERT INTO log_login SET " & _
-        '        "log_tanggal = NOW(), log_reg = CURDATE(), " & _
-        '        " log_user = '" & .user_id & _
-        '        "', log_nama = '" & .user_nama & _
-        '        "', log_ip = '" & .user_ip & _
-        '        "', log_komputer = '" & .user_host & _
-        '        "', log_mac = '" & .user_mac & _
-        '        "', log_versi = '" & .user_ver & "'")
+        With loggeduser
+            commnd("INSERT INTO log_login SET log_tanggal = NOW(), log_reg = CURDATE(), log_user = '" & .user_id & "', log_nama = '" & .user_nama & "', log_ip = '" & .user_ip & "', log_komputer = '" & .user_host & "', log_mac = '" & .user_mac & "', log_versi = '" & .user_ver & "'")
+        End With
+
     End Sub
 
     Private Sub updateUserLogin()

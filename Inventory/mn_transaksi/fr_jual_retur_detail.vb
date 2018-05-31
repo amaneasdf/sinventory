@@ -329,8 +329,8 @@
                 queryArr.Add("INSERT INTO data_penjualan_retur_trans SET " & String.Join(",", dataBrg))
 
                 'TODO Update stok
-                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_return_jual=getSUMReturJualPerGudang('{0}','{1}') +(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
-                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTok('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
+                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_return_jual=IFNULL(stock_return_jual,0)+(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+                queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
 
             Next
         Else
