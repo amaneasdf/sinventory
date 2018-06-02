@@ -63,6 +63,9 @@
             txtUpdAlias.Text = rd.Item("barang_upd_alias")
         End If
         rd.Close()
+        lbl_satuan1.Text = cb_sat_kecil.SelectedValue
+        lbl_satuan2.Text = cb_sat_tengah.SelectedValue
+        lbl_satuan4.Text = lbl_satuan1.Text
         getSupplier(in_supplier.Text)
     End Sub
 

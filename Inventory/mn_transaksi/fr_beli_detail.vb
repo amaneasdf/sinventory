@@ -455,7 +455,6 @@ Public Class fr_beli_detail
                 "faktur_reg_date=NOW()",
                 "faktur_reg_alias='" & loggeduser.user_id & "'"
                 }
-            'querycheck = commnd("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
             queryArr.Add("INSERT INTO data_pembelian_faktur SET " & String.Join(",", dataFak))
 
         ElseIf bt_simpanbeli.Text = "Update" Then
@@ -481,11 +480,9 @@ Public Class fr_beli_detail
                 "faktur_upd_alias='" & loggeduser.user_id & "'"
                 }
             'TODO update faktur
-            'querycheck = commnd("UPDATE data_pembelian_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
             queryArr.Add("UPDATE data_pembelian_faktur SET " & String.Join(",", dataFak) & " WHERE faktur_kode='" & in_faktur.Text & "'")
 
             'TODO delete trans
-            'querycheck = commnd("DELETE FROM data_pembelian_trans WHERE trans_faktur='" & in_faktur.Text & "'")
             queryArr.Add("DELETE FROM data_pembelian_trans WHERE trans_faktur='" & in_faktur.Text & "'")
         End If
 
@@ -516,11 +513,10 @@ Public Class fr_beli_detail
             If checkdata("data_barang_stok", "'" & rows.Cells(0).Value & "' AND stock_gudang='" & in_gudang.Text & "'", "stock_barang") = False Then
                 queryArr.Add("INSERT INTO data_barang_stok SET stock_barang='" & rows.Cells(0).Value & "', stock_gudang='" & in_gudang.Text & "', stock_reg_date=NOW(), stock_reg_alias='" & loggeduser.user_id & "'")
                 'write log
-                'queryArr.Add("INSERT INTO log_stok SET log_tgl,log_gudang,log_barang,log_trans,log_alias,log_ket") ->setup awal
+                queryArr.Add("INSERT INTO log_stock SET log_reg=NOW(), log_user='" & loggeduser.user_id & "', log_barang='" & rows.Cells(0).Value & "', log_gudang='" & in_gudang.Text & "', log_tanggal=NOW(), log_ip='" & loggeduser.user_ip & "', log_komputer='" & loggeduser.user_host & "', log_mac='" & loggeduser.user_mac & "', log_ket='SYSTEM', log_nama='SETUP AWAL STOK'")
             End If
-            '--insert or update?
-            'querycheck = commnd(String.Format("UPDATE data_barang_stok SET stock_beli= getSTokBeli('{0}','{1}')+ countQTYBesarToKecil('{0}','{2}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value))
 
+            '--insert or update?
             Dim selisih As Integer = rows.Cells("qty").Value
             If bt_simpanbeli.Text = "Update" Then
                 'TODO UPDATE stok beli -> must recognize whether is added or substracted when trans update
@@ -533,6 +529,8 @@ Public Class fr_beli_detail
 
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_beli= IFNULL(stock_beli,0) + (countQTYBesarToKecil('{0}',{2}))  WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, selisih))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
+            'write log
+            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='PEMBELIAN {6}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_faktur.Text))
         Next
 
         'begin transaction

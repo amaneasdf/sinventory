@@ -36,7 +36,6 @@
         With loggeduser
             commnd("INSERT INTO log_login SET log_tanggal = NOW(), log_reg = CURDATE(), log_user = '" & .user_id & "', log_nama = '" & .user_nama & "', log_ip = '" & .user_ip & "', log_komputer = '" & .user_host & "', log_mac = '" & .user_mac & "', log_versi = '" & .user_ver & "'")
         End With
-
     End Sub
 
     Private Sub updateUserLogin()
@@ -56,6 +55,8 @@
                 Exit Sub
             End If
         Else
+            'cek ststus user -> setup, aktif, nonaktif/block
+
             readcommd("select user_group,user_nama,user_exp_date from data_pengguna_alias where user_alias='" & id & "'")
 
             Dim cek As Integer = cekuserexpired(rd.Item("user_exp_date"))
@@ -65,6 +66,7 @@
             ElseIf cek = 2 Then
                 MessageBox.Show("Password anda 7 hari lagi expired")
             End If
+
             With loggeduser
                 .user_id = id
                 .user_lev = rd.Item("user_group")

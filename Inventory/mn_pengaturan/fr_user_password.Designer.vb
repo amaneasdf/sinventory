@@ -30,10 +30,11 @@ Partial Class fr_user_password
         Me.bt_simpanuser = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_passold = New System.Windows.Forms.TextBox()
-        Me.bt_switch_newpass = New System.Windows.Forms.Button()
-        Me.bt_switch_oldpass = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label9 = New System.Windows.Forms.Label()
+        Me.bt_cl = New System.Windows.Forms.Button()
+        Me.bt_switch_newpass = New System.Windows.Forms.Button()
+        Me.bt_switch_oldpass = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -131,6 +132,45 @@ Partial Class fr_user_password
         Me.in_passold.Size = New System.Drawing.Size(266, 22)
         Me.in_passold.TabIndex = 0
         '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.Orange
+        Me.Panel1.Controls.Add(Me.Label9)
+        Me.Panel1.Controls.Add(Me.bt_cl)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(321, 42)
+        Me.Panel1.TabIndex = 199
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.BackColor = System.Drawing.Color.Orange
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(9, 9)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(134, 20)
+        Me.Label9.TabIndex = 133
+        Me.Label9.Text = "Ubah Password"
+        '
+        'bt_cl
+        '
+        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
+        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
+        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_cl.FlatAppearance.BorderSize = 0
+        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cl.Location = New System.Drawing.Point(287, 7)
+        Me.bt_cl.Name = "bt_cl"
+        Me.bt_cl.Size = New System.Drawing.Size(25, 25)
+        Me.bt_cl.TabIndex = 3
+        Me.bt_cl.UseVisualStyleBackColor = False
+        '
         'bt_switch_newpass
         '
         Me.bt_switch_newpass.BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
@@ -158,27 +198,6 @@ Partial Class fr_user_password
         Me.bt_switch_oldpass.TabIndex = 18
         Me.bt_switch_oldpass.TabStop = False
         Me.bt_switch_oldpass.UseVisualStyleBackColor = True
-        '
-        'Panel1
-        '
-        Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.Label9)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(321, 42)
-        Me.Panel1.TabIndex = 199
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.BackColor = System.Drawing.Color.Orange
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(9, 9)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(134, 20)
-        Me.Label9.TabIndex = 133
-        Me.Label9.Text = "Ubah Password"
         '
         'fr_user_password
         '
@@ -220,4 +239,5 @@ Partial Class fr_user_password
     Friend WithEvents bt_switch_newpass As System.Windows.Forms.Button
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents bt_cl As System.Windows.Forms.Button
 End Class

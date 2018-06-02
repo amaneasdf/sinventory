@@ -37,6 +37,7 @@ Partial Class main
         '
         'SplitContainer
         '
+        Me.SplitContainer.BackColor = System.Drawing.Color.White
         Me.SplitContainer.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer.FixedPanel = System.Windows.Forms.FixedPanel.Panel1
         Me.SplitContainer.IsSplitterFixed = True
@@ -79,6 +80,7 @@ Partial Class main
         '
         'StatusStrip1
         '
+        Me.StatusStrip1.BackColor = System.Drawing.Color.White
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 659)
         Me.StatusStrip1.Name = "StatusStrip1"

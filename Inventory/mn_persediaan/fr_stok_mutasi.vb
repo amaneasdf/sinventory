@@ -269,6 +269,8 @@
 
             If checkdata("data_barang_stok", "'" & rows.Cells(0).Value & "' AND stock_gudang='" & in_gudang2.Text & "'", "stock_barang") = False Then
                 queryArr.Add("INSERT INTO data_barang_stok SET stock_barang='" & rows.Cells(0).Value & "', stock_gudang='" & in_gudang2.Text & "', stock_reg_date=NOW(), stock_reg_alias='" & loggeduser.user_id & "'")
+                'log
+                queryArr.Add("INSERT INTO log_stock SET log_reg=NOW(), log_user='" & loggeduser.user_id & "', log_barang='" & rows.Cells(0).Value & "', log_gudang='" & in_gudang2.Text & "', log_tanggal=NOW(), log_ip='" & loggeduser.user_ip & "', log_komputer='" & loggeduser.user_host & "', log_mac='" & loggeduser.user_mac & "', log_ket='SYSTEM', log_nama='SETUP AWAL STOK'")
             End If
 
             'TODO UPDATE stok beli -> must recognize whether is added or substracted when trans update
@@ -286,6 +288,10 @@
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_in=IFNULL(stock_in,0)+({2}) WHERE stock_gudang='{0}' AND stock_barang='{1}'", in_gudang2.Text, rows.Cells(0).Value, selisih))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang2.Text))
+
+            'log -> setelah persetujuan? pindah?
+            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='MUTASIGUDANG {6} OUT', log_ket='FR GDG {7}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_kode.Text, in_gudang2.Text))
+            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='MUTASIGUDANG {6} IN', log_ket='FR GDG {7}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang2.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_kode.Text, in_gudang.Text))
         Next
 
         querycheck = startTrans(queryArr)

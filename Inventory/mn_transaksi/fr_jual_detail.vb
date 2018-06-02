@@ -15,6 +15,7 @@
             in_custo.Text = rd.Item("faktur_customer")
             in_term.Value = rd.Item("faktur_term")
             in_catatan.Text = rd.Item("faktur_catatan")
+            'cb_jenis_jual.SelectedValue = rd.Item("")
             in_jumlah.Text = commaThousand(rd.Item("faktur_jumlah"))
             in_discount.Maximum = rd.Item("faktur_jumlah")
             in_discount.Value = rd.Item("faktur_disc_rupiah")
@@ -96,9 +97,11 @@
         rd.Close()
     End Sub
 
-    Private Sub setBarang(kode As String)
+    Private Sub setBarang(kode As String, gudang As String)
+        Dim qtymax As Integer = 0
+        Dim isi As Integer = 1
         op_con()
-        readcommd("SELECT barang_nama, barang_satuan_besar, barang_harga_jual, barang_harga_jual_mt, barang_harga_jual_horeka, barang_harga_jual_rita, barang_harga_jual_d1, barang_harga_jual_d2, barang_harga_jual_d3, barang_harga_jual_d4, barang_harga_jual_d5 FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        readcommd("SELECT barang_nama, barang_satuan_besar, barang_harga_jual, barang_harga_jual_mt, barang_harga_jual_horeka, barang_harga_jual_rita, barang_harga_jual_d1, barang_harga_jual_d2, barang_harga_jual_d3, barang_harga_jual_d4, barang_harga_jual_d5, barang_satuan_besar_jumlah, barang_satuan_tengah_jumlah FROM data_barang_master WHERE barang_kode='" & kode & "'")
         If rd.HasRows Then
             Dim harga As Double = 0
             Select Case jeniscusto
@@ -121,8 +124,16 @@
             in_disc3.Value = rd.Item("barang_harga_jual_d3")
             in_disc4.Value = rd.Item("barang_harga_jual_d4")
             in_disc5.Value = rd.Item("barang_harga_jual_d5")
+            isi = CInt(rd.Item("barang_satuan_besar_jumlah")) * CInt(rd.Item("barang_satuan_tengah_jumlah"))
         End If
         rd.Close()
+        '- limit qty berdasarkan stok
+        readcommd("SELECT stock_sisa FROM data_barang_stok WHERE stock_barang='" & kode & "' AND stock_gudang='" & gudang & "'")
+        If rd.HasRows Then
+            qtymax = rd.Item("stock_sisa")
+        End If
+        rd.Close()
+        in_qty.Maximum = CInt(qtymax / isi)
     End Sub
 
     Private Sub addRowBarang()
@@ -232,6 +243,7 @@
         in_harga_jual.Clear()
         'in_barang.Clear()
         in_qty.Value = 0
+        in_qty.Maximum = 99999
         in_disc1.Value = 0
         in_disc2.Value = 0
         in_disc3.Value = 0
@@ -317,6 +329,7 @@
             Dim fakturkode As String = date_tgl_beli.Value.ToString("yyyyMMdd") & x.ToString("D4")
             in_faktur.Text = fakturkode
 
+            '-> kurang jenis jual
             dataFak = {
                 "faktur_kode='" & in_faktur.Text & "'",
                 "faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
@@ -404,6 +417,9 @@
             'recognise satuan <-db function
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_jual=IFNULL(stock_jual,0)+(countQTYJual('{0}',{2},'{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
+
+            'log
+            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='PENJUALAN {6}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_faktur.Text))
         Next
 
         'begin transaction
@@ -562,7 +578,9 @@
     End Sub
 
     Private Sub in_barang_Leave(sender As Object, e As EventArgs) Handles in_barang.Leave
-        setBarang(in_barang.Text)
+        If Trim(in_barang.Text) <> "" And lbl_gudang.Text <> "" Then
+            setBarang(in_barang.Text, in_gudang.Text)
+        End If
     End Sub
 
     Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown

@@ -256,6 +256,8 @@
 
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_in=IFNULL(stock_in,0)+({2}) WHERE stock_gudang='{0}' AND stock_barang='{1}'", in_gudang.Text, rows.Cells("kode_b").Value, selisih))
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells("kode_b").Value, in_gudang.Text))
+            'log
+            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='MUTASI BARANG {6}'", loggeduser.user_id, rows.Cells("kode_b").Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_kode))
         Next
 
         querycheck = startTrans(queryArr)

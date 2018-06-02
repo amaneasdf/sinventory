@@ -334,7 +334,9 @@ Partial Class fr_beli_retur_detail
         '
         Me.cb_bayar_jenis.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_bayar_jenis.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cb_bayar_jenis.BackColor = System.Drawing.Color.White
         Me.cb_bayar_jenis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_bayar_jenis.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_bayar_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_bayar_jenis.FormattingEnabled = True
         Me.cb_bayar_jenis.Location = New System.Drawing.Point(394, 126)
@@ -365,6 +367,7 @@ Partial Class fr_beli_retur_detail
         Me.cb_ppn_jenis.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_ppn_jenis.BackColor = System.Drawing.Color.White
         Me.cb_ppn_jenis.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_ppn_jenis.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_ppn_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_ppn_jenis.FormattingEnabled = True
         Me.cb_ppn_jenis.Location = New System.Drawing.Point(6, 128)
@@ -480,7 +483,9 @@ Partial Class fr_beli_retur_detail
         '
         'cb_status
         '
+        Me.cb_status.BackColor = System.Drawing.Color.White
         Me.cb_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_status.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_status.FormattingEnabled = True
         Me.cb_status.Location = New System.Drawing.Point(66, 16)
@@ -592,7 +597,9 @@ Partial Class fr_beli_retur_detail
         '
         'cb_sat
         '
+        Me.cb_sat.BackColor = System.Drawing.Color.White
         Me.cb_sat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_sat.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_sat.FormattingEnabled = True
         Me.cb_sat.Location = New System.Drawing.Point(356, 19)
         Me.cb_sat.Name = "cb_sat"

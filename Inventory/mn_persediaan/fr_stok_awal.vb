@@ -74,13 +74,15 @@
 
         querycheck = commnd("INSERT INTO data_barang_stok SET " & String.Join(",", data))
 
+
         If querycheck = False Then
             Exit Sub
         Else
             MessageBox.Show("Data tersimpan")
-            frmpembelian.in_cari.Clear()
-            populateDGVUserCon("beli", "", frmpembelian.dgv_list)
-            Me.Dispose()
+            commnd("INSERT INTO log_stock SET log_reg=NOW(), log_user='" & loggeduser.user_id & "', log_barang='" & in_barang.Text & "', log_gudang='" & in_gudang.Text & "', log_tanggal=NOW(), log_ip='" & loggeduser.user_ip & "', log_komputer='" & loggeduser.user_host & "', log_mac='" & loggeduser.user_mac & "', log_nama='SETUP AWAL STOK'")
+            frmstok.in_cari.Clear()
+            populateDGVUserCon("stok", "", frmstok.dgv_list)
+            Me.Close()
         End If
     End Sub
 

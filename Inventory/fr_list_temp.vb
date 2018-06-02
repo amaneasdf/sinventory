@@ -363,4 +363,16 @@
             keyshortcut("edit", tabpagename.Name.ToString)
         End If
     End Sub
+
+    Private Sub dgv_list_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellContentClick
+
+    End Sub
+
+    Private Sub bt_close_MouseEnter(sender As Object, e As EventArgs) Handles bt_close.MouseEnter
+        lbl_close.Visible = True
+    End Sub
+
+    Private Sub bt_close_MouseLeave(sender As Object, e As EventArgs) Handles bt_close.MouseLeave
+        lbl_close.Visible = False
+    End Sub
 End Class

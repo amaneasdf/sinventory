@@ -76,7 +76,7 @@
         End If
     End Sub
 
-    Private Sub bt_bataluser_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click
+    Private Sub bt_bataluser_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click, bt_cl.Click
         Me.Dispose()
     End Sub
 

@@ -335,7 +335,12 @@
 
     Private Sub bt_proses_Click(sender As Object, e As EventArgs) Handles bt_proses.Click
         'confirm opname
+        'ask verification?
         'UPDATE stok -> stok awal, tgl, reset qty[0]
         'write log -> barang, gudang, tgl, act => opn, by, ip, host, mac, ket
+
+        'For Each rows As DataGridViewRow In dgv_barang.Rows
+        '    commnd("INSERT INTO log_stock SET log_reg=NOW(), log_user='" & loggeduser.user_id & "', log_barang='" & rows.Cells(0).Value & "', log_gudang='" & in_gudang.Text & "', log_tanggal=NOW(), log_ip='" & loggeduser.user_ip & "', log_komputer='" & loggeduser.user_host & "', log_mac='" & loggeduser.user_mac & "', log_nama='OPNAME " & in_kode.Text & "'")
+        'Next
     End Sub
 End Class

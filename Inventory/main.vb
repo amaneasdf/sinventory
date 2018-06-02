@@ -224,8 +224,10 @@
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim x As cnction = loadCon("Connection")
         Me.Visible = False
-        setConn("localhost", "db-inventory", "root", "root")
+        'setConn("localhost", "db-inventory", "root", "root")
+        setConn(x.host, x.db, x.uid, x.pass)
         op_con()
         fr_login.Show()
         'MenuAkses()

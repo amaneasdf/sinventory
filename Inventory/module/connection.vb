@@ -94,7 +94,8 @@ Module dbproceduralstuff
             cmd.Dispose()
             check = True
         Catch ex As Exception
-            MessageBox.Show(String.Format("Error: {0}", ex.Message))
+            Console.WriteLine(String.Format("Error: {0}", ex.Message))
+            'MessageBox.Show(String.Format("Error: {0}", ex.Message))
             check = False
         End Try
         Return check

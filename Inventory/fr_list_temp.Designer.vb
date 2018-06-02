@@ -23,9 +23,10 @@ Partial Class fr_list_temp
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.bt_close = New System.Windows.Forms.Button()
+        Me.lbl_close = New System.Windows.Forms.Label()
         Me.lbl_judul = New System.Windows.Forms.Label()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.bt_close = New System.Windows.Forms.Button()
         Me.SplitContainer3 = New System.Windows.Forms.SplitContainer()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.bt_edit = New System.Windows.Forms.Button()
@@ -62,6 +63,8 @@ Partial Class fr_list_temp
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.Orange
+        Me.SplitContainer1.Panel1.Controls.Add(Me.bt_close)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.lbl_close)
         Me.SplitContainer1.Panel1.Controls.Add(Me.lbl_judul)
         '
         'SplitContainer1.Panel2
@@ -72,11 +75,41 @@ Partial Class fr_list_temp
         Me.SplitContainer1.SplitterWidth = 1
         Me.SplitContainer1.TabIndex = 9
         '
+        'bt_close
+        '
+        Me.bt_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_close.BackColor = System.Drawing.Color.Transparent
+        Me.bt_close.BackgroundImage = Global.Inventory.My.Resources.Resources.close
+        Me.bt_close.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_close.FlatAppearance.BorderSize = 0
+        Me.bt_close.FlatAppearance.MouseDownBackColor = System.Drawing.Color.DarkOrange
+        Me.bt_close.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
+        Me.bt_close.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_close.Location = New System.Drawing.Point(922, 8)
+        Me.bt_close.Name = "bt_close"
+        Me.bt_close.Size = New System.Drawing.Size(15, 15)
+        Me.bt_close.TabIndex = 5
+        Me.bt_close.UseVisualStyleBackColor = False
+        '
+        'lbl_close
+        '
+        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lbl_close.AutoSize = True
+        Me.lbl_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.ForeColor = System.Drawing.Color.White
+        Me.lbl_close.Location = New System.Drawing.Point(869, 7)
+        Me.lbl_close.Name = "lbl_close"
+        Me.lbl_close.Size = New System.Drawing.Size(48, 16)
+        Me.lbl_close.TabIndex = 7
+        Me.lbl_close.Text = "Close"
+        Me.lbl_close.Visible = False
+        '
         'lbl_judul
         '
         Me.lbl_judul.AutoSize = True
         Me.lbl_judul.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_judul.Location = New System.Drawing.Point(12, 10)
+        Me.lbl_judul.Location = New System.Drawing.Point(12, 8)
         Me.lbl_judul.Name = "lbl_judul"
         Me.lbl_judul.Size = New System.Drawing.Size(112, 24)
         Me.lbl_judul.TabIndex = 7
@@ -93,7 +126,6 @@ Partial Class fr_list_temp
         '
         'SplitContainer2.Panel1
         '
-        Me.SplitContainer2.Panel1.Controls.Add(Me.bt_close)
         Me.SplitContainer2.Panel1.Controls.Add(Me.SplitContainer3)
         '
         'SplitContainer2.Panel2
@@ -106,17 +138,6 @@ Partial Class fr_list_temp
         Me.SplitContainer2.SplitterWidth = 1
         Me.SplitContainer2.TabIndex = 2
         '
-        'bt_close
-        '
-        Me.bt_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_close.Location = New System.Drawing.Point(851, 5)
-        Me.bt_close.Name = "bt_close"
-        Me.bt_close.Size = New System.Drawing.Size(96, 30)
-        Me.bt_close.TabIndex = 5
-        Me.bt_close.Text = "Tutup"
-        Me.bt_close.UseVisualStyleBackColor = True
-        '
         'SplitContainer3
         '
         Me.SplitContainer3.Dock = System.Windows.Forms.DockStyle.Fill
@@ -128,6 +149,7 @@ Partial Class fr_list_temp
         '
         'SplitContainer3.Panel1
         '
+        Me.SplitContainer3.Panel1.BackColor = System.Drawing.Color.White
         Me.SplitContainer3.Panel1.Controls.Add(Me.Label2)
         Me.SplitContainer3.Panel1.Controls.Add(Me.bt_edit)
         Me.SplitContainer3.Panel1.Controls.Add(Me.in_cari)
@@ -154,18 +176,20 @@ Partial Class fr_list_temp
         '
         'bt_edit
         '
+        Me.bt_edit.BackColor = System.Drawing.Color.Transparent
+        Me.bt_edit.FlatAppearance.BorderSize = 0
         Me.bt_edit.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_edit.Location = New System.Drawing.Point(441, 5)
+        Me.bt_edit.Location = New System.Drawing.Point(441, 10)
         Me.bt_edit.Name = "bt_edit"
-        Me.bt_edit.Size = New System.Drawing.Size(96, 30)
+        Me.bt_edit.Size = New System.Drawing.Size(96, 25)
         Me.bt_edit.TabIndex = 2
         Me.bt_edit.Text = "Koreksi (F2)"
-        Me.bt_edit.UseVisualStyleBackColor = True
+        Me.bt_edit.UseVisualStyleBackColor = False
         '
         'in_cari
         '
         Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_cari.Location = New System.Drawing.Point(85, 10)
+        Me.in_cari.Location = New System.Drawing.Point(85, 12)
         Me.in_cari.MaxLength = 100
         Me.in_cari.Name = "in_cari"
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
@@ -173,33 +197,39 @@ Partial Class fr_list_temp
         '
         'bt_refresh
         '
+        Me.bt_refresh.BackColor = System.Drawing.Color.Transparent
+        Me.bt_refresh.FlatAppearance.BorderSize = 0
         Me.bt_refresh.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_refresh.Location = New System.Drawing.Point(645, 5)
+        Me.bt_refresh.Location = New System.Drawing.Point(645, 10)
         Me.bt_refresh.Name = "bt_refresh"
-        Me.bt_refresh.Size = New System.Drawing.Size(96, 30)
+        Me.bt_refresh.Size = New System.Drawing.Size(96, 25)
         Me.bt_refresh.TabIndex = 4
         Me.bt_refresh.Text = "Refresh (F5)"
-        Me.bt_refresh.UseVisualStyleBackColor = True
+        Me.bt_refresh.UseVisualStyleBackColor = False
         '
         'bt_tambah
         '
+        Me.bt_tambah.BackColor = System.Drawing.Color.Transparent
+        Me.bt_tambah.FlatAppearance.BorderSize = 0
         Me.bt_tambah.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tambah.Location = New System.Drawing.Point(339, 5)
+        Me.bt_tambah.Location = New System.Drawing.Point(339, 10)
         Me.bt_tambah.Name = "bt_tambah"
-        Me.bt_tambah.Size = New System.Drawing.Size(96, 30)
+        Me.bt_tambah.Size = New System.Drawing.Size(96, 25)
         Me.bt_tambah.TabIndex = 1
         Me.bt_tambah.Text = "Tambah (F1)"
-        Me.bt_tambah.UseVisualStyleBackColor = True
+        Me.bt_tambah.UseVisualStyleBackColor = False
         '
         'bt_hapus
         '
+        Me.bt_hapus.BackColor = System.Drawing.Color.Transparent
+        Me.bt_hapus.FlatAppearance.BorderSize = 0
         Me.bt_hapus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_hapus.Location = New System.Drawing.Point(543, 5)
+        Me.bt_hapus.Location = New System.Drawing.Point(543, 10)
         Me.bt_hapus.Name = "bt_hapus"
-        Me.bt_hapus.Size = New System.Drawing.Size(96, 30)
+        Me.bt_hapus.Size = New System.Drawing.Size(96, 25)
         Me.bt_hapus.TabIndex = 3
         Me.bt_hapus.Text = "Hapus (F3)"
-        Me.bt_hapus.UseVisualStyleBackColor = True
+        Me.bt_hapus.UseVisualStyleBackColor = False
         '
         'dgv_list
         '
@@ -266,5 +296,6 @@ Partial Class fr_list_temp
     Friend WithEvents bt_hapus As System.Windows.Forms.Button
     Friend WithEvents dgv_list As System.Windows.Forms.DataGridView
     Friend WithEvents bt_export As System.Windows.Forms.Button
+    Friend WithEvents lbl_close As System.Windows.Forms.Label
 
 End Class

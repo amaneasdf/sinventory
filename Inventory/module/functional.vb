@@ -1,4 +1,5 @@
-﻿Module functional
+﻿Imports MadMilkman.Ini
+Module functional
 
     '---------get network data-------------
     Declare Function SendARP Lib "iphlpapi.dll" Alias "SendARP" (ByVal DestIP As Int32, ByVal SrcIP As Int32, ByVal pMacAddr() As Byte, ByRef PhyAddrLen As Int32) As Int32
@@ -79,4 +80,33 @@
         End If
         Return z
     End Function
+
+    '-----------.ini file manipulation-------------
+    'load connection
+    Public Function loadCon(con_type As String) As cnction
+        Dim options As New IniOptions()
+        Dim inifile As New IniFile(options)
+        Dim x As cnction
+
+        x.host = "localhost"
+        x.uid = "root"
+        x.pass = "root"
+        x.db = "db-inventory"
+
+        Try
+            inifile.Load(Application.StartupPath & "\config.ini")
+            Console.WriteLine(Application.StartupPath & "\config.ini")
+            With inifile.Sections(con_type)
+                x.host = .Keys("Host").Value
+                x.uid = .Keys("UID").Value
+                x.pass = .Keys("Pass").Value
+                x.db = .Keys("DB").Value
+            End With
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
+
+        Return x
+    End Function
+
 End Module

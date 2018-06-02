@@ -9,6 +9,13 @@
         Dim user_ver As String
     End Structure
 
+    Public Structure cnction
+        Dim host As String
+        Dim uid As String
+        Dim pass As String
+        Dim db As String
+    End Structure
+
     Public usernull As New userdata
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
 

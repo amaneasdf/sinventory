@@ -40,25 +40,29 @@ Partial Class fr_login
         'bt_close
         '
         Me.bt_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_close.BackColor = System.Drawing.Color.White
         Me.bt_close.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_close.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_close.Location = New System.Drawing.Point(311, 185)
         Me.bt_close.Name = "bt_close"
         Me.bt_close.Size = New System.Drawing.Size(101, 39)
         Me.bt_close.TabIndex = 3
         Me.bt_close.Text = "Keluar"
-        Me.bt_close.UseVisualStyleBackColor = True
+        Me.bt_close.UseVisualStyleBackColor = False
         '
         'bt_login
         '
         Me.bt_login.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_login.BackColor = System.Drawing.Color.White
+        Me.bt_login.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_login.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_login.Location = New System.Drawing.Point(199, 185)
         Me.bt_login.Name = "bt_login"
         Me.bt_login.Size = New System.Drawing.Size(101, 39)
         Me.bt_login.TabIndex = 2
         Me.bt_login.Text = "Login"
-        Me.bt_login.UseVisualStyleBackColor = True
+        Me.bt_login.UseVisualStyleBackColor = False
         '
         'Label1
         '
