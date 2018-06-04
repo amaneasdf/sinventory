@@ -494,6 +494,7 @@ Partial Class fr_custo_detail
         'cb_tipe
         '
         Me.cb_tipe.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_tipe.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_tipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_tipe.FormattingEnabled = True
         Me.cb_tipe.Location = New System.Drawing.Point(185, 176)
@@ -504,6 +505,7 @@ Partial Class fr_custo_detail
         'cb_status
         '
         Me.cb_status.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_status.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_status.FormattingEnabled = True
         Me.cb_status.Location = New System.Drawing.Point(185, 147)
@@ -934,6 +936,7 @@ Partial Class fr_custo_detail
         'cb_harga
         '
         Me.cb_harga.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_harga.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_harga.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_harga.FormattingEnabled = True
         Me.cb_harga.Location = New System.Drawing.Point(200, 128)
@@ -944,6 +947,7 @@ Partial Class fr_custo_detail
         'cb_diskon
         '
         Me.cb_diskon.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cb_diskon.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.cb_diskon.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_diskon.FormattingEnabled = True
         Me.cb_diskon.Location = New System.Drawing.Point(200, 100)

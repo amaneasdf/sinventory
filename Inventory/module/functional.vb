@@ -1,4 +1,6 @@
 ﻿Imports MadMilkman.Ini
+Imports System.IO
+
 Module functional
 
     '---------get network data-------------
@@ -103,10 +105,85 @@ Module functional
                 x.db = .Keys("DB").Value
             End With
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
+            Console.WriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
         End Try
 
         Return x
     End Function
 
+    '--------------------logging db-----------------------
+    'log activity
+    Public Sub createLogAct(act As String)
+        If log_switch.log_act = False Then
+            Exit Sub
+        End If
+
+        Dim querycheck As Boolean = False
+        Dim dataAct As String() = {
+            "aktivitas_tanggal=NOW()",
+            "aktivitas_jam=NOW()",
+            "aktivitas_user='" & loggeduser.user_id & "'",
+            "aktivitas_ip='" & loggeduser.user_ip & "'",
+            "aktivitas_mac='" & loggeduser.user_mac & "'",
+            "aktivitas_komputer='" & loggeduser.user_host & "'",
+            "aktivitas_versi='" & Application.ProductVersion & "'",
+            "aktivitas_log='" & act & "'"
+            }
+
+        op_con()
+        querycheck = commnd("INSERT INTO log_aktivitas SET " & String.Join(",", dataAct))
+
+        If querycheck = False Then
+            Exit Sub
+        Else
+            Console.WriteLine("log act added")
+        End If
+    End Sub
+
+    'log stock
+    Public Sub createLogStock(query As List(Of String))
+        If log_switch.log_stock = False Then
+            Exit Sub
+        End If
+
+        Dim errorquery As New List(Of String)
+        Dim querycheck As Boolean = False
+
+        For Each x As String In query
+            querycheck = commnd(x)
+            If querycheck = False Then
+                errorquery.Add(x)
+            End If
+        Next
+        'If errorquery.Count > 0 Then
+
+        'End If
+    End Sub
+
+    '--------------logging file
+    Private appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+    Private filename As String
+
+    Private Sub createTXTfile(filedir As String, filenm As String, contain As List(Of String), append As Boolean)
+        filename = filedir & filenm
+
+        If Directory.Exists(filedir) = False Then
+            Directory.CreateDirectory(filedir)
+        End If
+
+        If File.Exists(filename) = False Then
+            File.Create(filename).Dispose()
+        End If
+
+        Dim writer As New StreamWriter(filename, append)
+        For Each x As String In contain
+            writer.WriteLine(x)
+        Next
+        writer.Close()
+    End Sub
+
+    Public Sub errLog(errList As List(Of String))
+        Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".log"
+        createTXTfile(appSysDir & "log", file, errList, True)
+    End Sub
 End Module

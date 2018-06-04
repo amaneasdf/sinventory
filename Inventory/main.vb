@@ -183,6 +183,7 @@
                 '    Exit Sub
                 'End If
             Case "mn0931"
+                Console.WriteLine("click jenis barang")
                 With frmjenisbarang
                     If .Visible = True Then
                         .Focus()
@@ -193,9 +194,9 @@
                     End If
                 End With
 
-                '    Console.WriteLine("click jenis barang")
                 '    openTab("jenisbarang")
             Case "mn0932"
+                Console.WriteLine("click satuan barang")
                 With frmsatuanbarang
                     If .Visible = True Then
                         .Focus()
@@ -226,10 +227,21 @@
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim x As cnction = loadCon("Connection")
         Me.Visible = False
+        Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")
+
         setConn(x.host, x.db, x.uid, x.pass)
         op_con()
+
+        If getConn.State <> 1 Then
+            Application.Exit()
+            Exit Sub
+        End If
+
+        Me.Cursor = Cursors.Default
+        strip_host.Text = x.host
         fr_login.Show()
+
         'MenuAkses()
         'test var
         'insertData("ii", {"1", "2"}, {"3", "4"})

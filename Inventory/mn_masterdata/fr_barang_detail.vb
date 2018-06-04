@@ -24,7 +24,11 @@
             in_nama.Text = rd.Item("barang_nama")
             in_supplier.Text = rd.Item("barang_supplier")
             in_kode_jenis.Text = rd.Item("barang_jenis")
-            cb_jenis.SelectedValue = in_kode_jenis.Text
+            Try
+                cb_jenis.SelectedValue = in_kode_jenis.Text
+            Catch ex As Exception
+                cb_jenis.SelectedValue = 0
+            End Try
             cb_sat_kecil.SelectedValue = rd.Item("barang_satuan_kecil")
             cb_sat_tengah.SelectedValue = rd.Item("barang_satuan_tengah")
             cb_sat_besar.SelectedValue = rd.Item("barang_satuan_besar")
@@ -65,7 +69,6 @@
         rd.Close()
         lbl_satuan1.Text = cb_sat_kecil.SelectedValue
         lbl_satuan2.Text = cb_sat_tengah.SelectedValue
-        lbl_satuan4.Text = lbl_satuan1.Text
         getSupplier(in_supplier.Text)
     End Sub
 
@@ -106,7 +109,7 @@
             .DataSource = statusBarang()
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = -1
+            .SelectedIndex = 0
         End With
         With cb_pajak
             .DataSource = statusBarangPajak()
@@ -163,7 +166,6 @@
     End Sub
 
     Private Sub cb_sat_besar_TextChanged(sender As Object, e As EventArgs) Handles cb_sat_besar.SelectionChangeCommitted
-        lbl_satuan4.Text = cb_sat_besar.SelectedValue
         in_isi_besar.Focus()
     End Sub
 
@@ -178,6 +180,12 @@
         If Trim(in_nama.Text) = Nothing Then
             MessageBox.Show("Nama belum di input")
             in_nama.Focus()
+            Exit Sub
+        End If
+        If Trim(in_kode_jenis.Text) = Nothing Then
+            MessageBox.Show("Jenis barang belum di input")
+            cb_jenis.DroppedDown = True
+            cb_jenis.Focus()
             Exit Sub
         End If
         If Trim(in_kode_status.Text) = Nothing Then
@@ -218,6 +226,7 @@
             "barang_status_pajak='" & in_kode_pajak.Text & "'"
             }
 
+        Me.Cursor = Cursors.WaitCursor
         op_con()
         If bt_simpanbarang.Text = "Simpan" Then
             If checkdata("data_barang_master", "'" & in_kode.Text & "'", "barang_kode") Then
@@ -245,11 +254,14 @@
         End If
 
         If querycheck = False Then
+            Me.Cursor = Cursors.Default
             Exit Sub
         Else
             MessageBox.Show("Data tersimpan")
+            'createLogAct("BARANG " & in_kode.Text)
             frmbank.in_cari.Clear()
             populateDGVUserCon("barang", "", frmbarang.dgv_list)
+            Me.Cursor = Cursors.Default
             Me.Close()
         End If
     End Sub
@@ -283,6 +295,20 @@
 
     Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
         lbl_supplier.Text = ""
+        If e.KeyCode = Keys.F1 Then
+            Using search As New fr_search_dialog
+                With search
+                    .query = "SELECT supplier_kode as kode, supplier_nama as nama FROM data_supplier_master"
+                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                    .type = "supplier"
+                    .ShowDialog()
+                    in_supplier.Text = .returnkode
+                End With
+            End Using
+            cb_jenis.DroppedDown = True
+            cb_jenis.Focus()
+            Exit Sub
+        End If
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = False
             cb_jenis.DroppedDown = True

@@ -881,7 +881,7 @@ Module mdlControl
         .HeaderText = "Status user",
         .Name = "userstatus",
         .ReadOnly = True,
-        .Visible = False
+        .Visible = True
     }
     Private user_logstat = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "loginstat",

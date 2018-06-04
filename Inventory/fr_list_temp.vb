@@ -62,6 +62,7 @@
 
     Private Sub bt_edit_Click(sender As Object, e As EventArgs) Handles bt_edit.Click
         If dgv_list.RowCount > 0 Then
+            Me.Cursor = Cursors.AppStarting
             Console.WriteLine(tabpagename.Name.ToString)
             Select Case tabpagename.Name.ToString
                 Case "pgbarang"
@@ -225,6 +226,7 @@
                 Case Else
                     MessageBox.Show("Under Construction")
             End Select
+            Me.Cursor = Cursors.Default
         Else
             MessageBox.Show("Data tidak ada")
         End If
@@ -344,12 +346,13 @@
 
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
         Try
-            rowindex = e.RowIndex
-            bt_edit.PerformClick()
+            If e.RowIndex >= 0 Then
+                rowindex = e.RowIndex
+                bt_edit.PerformClick()
+            End If
         Catch ex As Exception
             Console.WriteLine(ex.Message)
         End Try
-
     End Sub
 
     Private Sub dgv_list_KeyDown(sender As Object, e As KeyEventArgs) Handles dgv_list.KeyDown

@@ -44,11 +44,12 @@ Partial Class fr_barang_detail
         Me.cb_sat_besar = New System.Windows.Forms.ComboBox()
         Me.cb_sat_tengah = New System.Windows.Forms.ComboBox()
         Me.cb_sat_kecil = New System.Windows.Forms.ComboBox()
+        Me.in_isi_besar = New System.Windows.Forms.NumericUpDown()
+        Me.in_isi_tengah = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
         Me.in_stok_berat = New System.Windows.Forms.NumericUpDown()
         Me.in_stok_aktif = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.lbl_satuan4 = New System.Windows.Forms.Label()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
@@ -114,10 +115,10 @@ Partial Class fr_barang_detail
         Me.in_kode_jenis = New System.Windows.Forms.TextBox()
         Me.Label15 = New System.Windows.Forms.Label()
         Me.in_ket = New System.Windows.Forms.TextBox()
-        Me.in_isi_tengah = New System.Windows.Forms.NumericUpDown()
-        Me.in_isi_besar = New System.Windows.Forms.NumericUpDown()
         Me.Panel1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        CType(Me.in_isi_besar, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.in_isi_tengah, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox2.SuspendLayout()
         CType(Me.in_stok_berat, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_stok_aktif, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -140,8 +141,6 @@ Partial Class fr_barang_detail
         CType(Me.in_beli_d1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox5.SuspendLayout()
-        CType(Me.in_isi_tengah, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.in_isi_besar, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -388,12 +387,31 @@ Partial Class fr_barang_detail
         Me.cb_sat_kecil.Size = New System.Drawing.Size(68, 24)
         Me.cb_sat_kecil.TabIndex = 5
         '
+        'in_isi_besar
+        '
+        Me.in_isi_besar.Location = New System.Drawing.Point(156, 82)
+        Me.in_isi_besar.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.in_isi_besar.Name = "in_isi_besar"
+        Me.in_isi_besar.Size = New System.Drawing.Size(63, 22)
+        Me.in_isi_besar.TabIndex = 9
+        Me.in_isi_besar.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_isi_besar.ThousandsSeparator = True
+        '
+        'in_isi_tengah
+        '
+        Me.in_isi_tengah.Location = New System.Drawing.Point(156, 52)
+        Me.in_isi_tengah.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
+        Me.in_isi_tengah.Name = "in_isi_tengah"
+        Me.in_isi_tengah.Size = New System.Drawing.Size(63, 22)
+        Me.in_isi_tengah.TabIndex = 7
+        Me.in_isi_tengah.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_isi_tengah.ThousandsSeparator = True
+        '
         'GroupBox2
         '
         Me.GroupBox2.Controls.Add(Me.in_stok_berat)
         Me.GroupBox2.Controls.Add(Me.in_stok_aktif)
         Me.GroupBox2.Controls.Add(Me.Label13)
-        Me.GroupBox2.Controls.Add(Me.lbl_satuan4)
         Me.GroupBox2.Controls.Add(Me.Label14)
         Me.GroupBox2.Controls.Add(Me.Label12)
         Me.GroupBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -430,16 +448,6 @@ Partial Class fr_barang_detail
         Me.Label13.Size = New System.Drawing.Size(40, 16)
         Me.Label13.TabIndex = 142
         Me.Label13.Text = "Berat"
-        '
-        'lbl_satuan4
-        '
-        Me.lbl_satuan4.AutoSize = True
-        Me.lbl_satuan4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_satuan4.Location = New System.Drawing.Point(149, 24)
-        Me.lbl_satuan4.Name = "lbl_satuan4"
-        Me.lbl_satuan4.Size = New System.Drawing.Size(32, 16)
-        Me.lbl_satuan4.TabIndex = 142
-        Me.lbl_satuan4.Text = "Min."
         '
         'Label14
         '
@@ -1148,26 +1156,6 @@ Partial Class fr_barang_detail
         Me.in_ket.Size = New System.Drawing.Size(173, 55)
         Me.in_ket.TabIndex = 2
         '
-        'in_isi_tengah
-        '
-        Me.in_isi_tengah.Location = New System.Drawing.Point(156, 52)
-        Me.in_isi_tengah.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
-        Me.in_isi_tengah.Name = "in_isi_tengah"
-        Me.in_isi_tengah.Size = New System.Drawing.Size(63, 22)
-        Me.in_isi_tengah.TabIndex = 7
-        Me.in_isi_tengah.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.in_isi_tengah.ThousandsSeparator = True
-        '
-        'in_isi_besar
-        '
-        Me.in_isi_besar.Location = New System.Drawing.Point(156, 82)
-        Me.in_isi_besar.Maximum = New Decimal(New Integer() {9999, 0, 0, 0})
-        Me.in_isi_besar.Name = "in_isi_besar"
-        Me.in_isi_besar.Size = New System.Drawing.Size(63, 22)
-        Me.in_isi_besar.TabIndex = 9
-        Me.in_isi_besar.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        Me.in_isi_besar.ThousandsSeparator = True
-        '
         'fr_barang_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1205,6 +1193,8 @@ Partial Class fr_barang_detail
         Me.Panel1.PerformLayout()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
+        CType(Me.in_isi_besar, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.in_isi_tengah, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
         CType(Me.in_stok_berat, System.ComponentModel.ISupportInitialize).EndInit()
@@ -1231,8 +1221,6 @@ Partial Class fr_barang_detail
         CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox5.ResumeLayout(False)
         Me.GroupBox5.PerformLayout()
-        CType(Me.in_isi_tengah, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.in_isi_besar, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1263,7 +1251,6 @@ Partial Class fr_barang_detail
     Friend WithEvents in_stok_berat As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_stok_aktif As System.Windows.Forms.NumericUpDown
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents lbl_satuan4 As System.Windows.Forms.Label
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents GroupBox3 As System.Windows.Forms.GroupBox

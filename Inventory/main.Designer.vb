@@ -28,6 +28,7 @@ Partial Class main
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.strip_user = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel2.SuspendLayout()
         Me.SplitContainer.SuspendLayout()
@@ -81,7 +82,7 @@ Partial Class main
         'StatusStrip1
         '
         Me.StatusStrip1.BackColor = System.Drawing.Color.White
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl, Me.strip_host})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 659)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(944, 22)
@@ -99,6 +100,12 @@ Partial Class main
         Me.strip_tgl.Name = "strip_tgl"
         Me.strip_tgl.Size = New System.Drawing.Size(121, 17)
         Me.strip_tgl.Text = "ToolStripStatusLabel1"
+        '
+        'strip_host
+        '
+        Me.strip_host.Name = "strip_host"
+        Me.strip_host.Size = New System.Drawing.Size(121, 17)
+        Me.strip_host.Text = "ToolStripStatusLabel1"
         '
         'main
         '
@@ -128,5 +135,6 @@ Partial Class main
     Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
     Friend WithEvents strip_user As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_tgl As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents strip_host As System.Windows.Forms.ToolStripStatusLabel
 
 End Class

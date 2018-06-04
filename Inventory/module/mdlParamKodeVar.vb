@@ -16,6 +16,13 @@
         Dim db As String
     End Structure
 
+    Public Structure dblogwrite
+        Dim log_login As Boolean
+        Dim log_stock As Boolean
+        Dim log_trans As Boolean
+        Dim log_act As Boolean
+    End Structure
+
     Public usernull As New userdata
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
 
@@ -60,12 +67,14 @@
     Public Function jenisCusto() As DataTable
         Dim dt As New DataTable
 
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Ritel", "1")
-        dt.Rows.Add("Grosir", "2")
-        dt.Rows.Add("Modern", "3")
-        dt.Rows.Add("Horeka", "4")
+        'dt.Columns.Add("Text", GetType(String))
+        'dt.Columns.Add("Value", GetType(String))
+        'dt.Rows.Add("Ritel", "1")
+        'dt.Rows.Add("Grosir", "2")
+        'dt.Rows.Add("Modern", "3")
+        'dt.Rows.Add("Horeka", "4")
+        dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as Text, jenis_kode as `Value` FROM data_customer_jenis")
+        Console.WriteLine(dt.Rows.Count)
 
         Return dt
     End Function
@@ -321,4 +330,11 @@
         .NullValue = "-"
     }
 
+    '-----------dev purpose
+    Public log_switch As New dblogwrite With {
+        .log_login = False,
+        .log_stock = False,
+        .log_trans = False,
+        .log_act = False
+    }
 End Module

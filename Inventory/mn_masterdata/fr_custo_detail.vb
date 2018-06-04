@@ -188,16 +188,6 @@
                 Exit Sub
             End If
 
-            'dataCol = {
-            '    "customer_kode",
-            '    "customer_salesman",
-            '    "customer_nama",
-            '    "customer_alamat",
-            '    "customer_alamat_blok",
-            '    "customer_alamat_nomor",
-            '    "customer_alamat_rt",
-            '    "customer_alamat_rw"
-            '    }
             data = {
                 "customer_kode='" & in_kode.Text & "'",
                 "customer_jenis='" & in_tipe_kode.Text & "'",
@@ -277,12 +267,12 @@
             MessageBox.Show("Data tersimpan")
             frmcusto.in_cari.Clear()
             populateDGVUserCon("custo", "", frmcusto.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
     Private Sub bt_batalsupplier_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
@@ -293,6 +283,19 @@
 
     Private Sub cb_tipe_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_tipe.SelectionChangeCommitted
         in_tipe_kode.Text = cb_tipe.SelectedValue
+        Try
+            readcommd("SELECT hargajual_kode FROM `data_customer_hargajual` INNER JOIN data_customer_jenis ON hargajual_kode=jenis_def_jual WHERE jenis_kode='" & in_tipe_kode.Text & "'")
+            Console.WriteLine(rd.Item("hargajual_kode"))
+            If rd.HasRows Then
+                in_kode_harga.Text = rd.Item("hargajual_kode")
+                cb_harga.SelectedValue = in_kode_harga.Text
+                cb_diskon.SelectedIndex = 0
+                in_kode_diskon.Text = cb_diskon.SelectedValue
+            End If
+            rd.Close()
+        Catch ex As Exception
+            Console.WriteLine(ex.Message)
+        End Try
         in_telpcusto.Focus()
     End Sub
 

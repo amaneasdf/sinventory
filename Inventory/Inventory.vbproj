@@ -120,12 +120,6 @@
     <Compile Include="fr_search_dialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_masterdata\fr_bank\fr_bank.Designer.vb">
-      <DependentUpon>fr_bank.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_masterdata\fr_bank\fr_bank.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="mn_masterdata\fr_bank_detail.Designer.vb">
       <DependentUpon>fr_bank_detail.vb</DependentUpon>
     </Compile>
@@ -304,9 +298,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="fr_search_dialog.resx">
       <DependentUpon>fr_search_dialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_masterdata\fr_bank\fr_bank.resx">
-      <DependentUpon>fr_bank.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_masterdata\fr_bank_detail.resx">
       <DependentUpon>fr_bank_detail.vb</DependentUpon>

@@ -23,6 +23,10 @@
     End Function
 
     Private Sub logUser()
+        If log_switch.log_login = False Then
+            Exit Sub
+        End If
+
         op_con()
         With loggeduser
             Console.WriteLine(.user_id)
@@ -50,12 +54,24 @@
             salahlogin -= 1
             If salahlogin = 0 Then
                 MessageBox.Show("Anda telah 3x salah login, aplikasi akan ditutup!")
+                'set user status to blocked
                 Application.Exit()
             Else
                 Exit Sub
             End If
         Else
             'cek ststus user -> setup, aktif, nonaktif/block
+            readcommd("SELECT user_status FROM data_pengguna_alias WHERE user_alias='" & id & "'")
+            Dim user_stat As String = rd.Item("user_status")
+            rd.Close()
+            If user_stat <> "1" Then
+                If user_stat = "0" Then
+                    'open set pass form
+                Else
+                    MessageBox.Show("Akun anda terblokir, Aplikasi akan ditutup")
+                    Application.Exit()
+                End If
+            End If
 
             readcommd("select user_group,user_nama,user_exp_date from data_pengguna_alias where user_alias='" & id & "'")
 

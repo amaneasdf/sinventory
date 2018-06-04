@@ -257,7 +257,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
         "ProductCode" = "8:{E5937C76-7A53-49C3-B851-53E61BE8B0ED}"
-        "PackageCode" = "8:{40962387-06F2-4CD4-B1E7-29C01CF50931}"
+        "PackageCode" = "8:{AA5F6642-8D2C-4FA6-BF91-D346B0B38196}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

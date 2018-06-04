@@ -31,6 +31,9 @@ Module dbproceduralstuff
                 'Next
             Catch ex As Exception
                 MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
+                'Dim er As New List(Of String)
+                'er.Add("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.Source & ":" & ex.TargetSite.ToString)
+                'errLog(er)
             End Try
         End If
     End Sub
@@ -117,7 +120,9 @@ Module dbproceduralstuff
     Public Sub readcommd(query As String)
         Try
             dbSelect(query)
-            rd.Read()
+            If rd IsNot Nothing Then
+                rd.Read()
+            End If
         Catch ex As Exception
             Console.WriteLine(ex.Message)
             'MsgBox("Data tidak dapat ditemukan" & Environment.NewLine & ex.Message)

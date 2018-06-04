@@ -337,6 +337,7 @@
         'confirm opname
         'ask verification?
         'UPDATE stok -> stok awal, tgl, reset qty[0]
+        'UPDATE stockop -> tgl_proses, by_who
         'write log -> barang, gudang, tgl, act => opn, by, ip, host, mac, ket
 
         'For Each rows As DataGridViewRow In dgv_barang.Rows

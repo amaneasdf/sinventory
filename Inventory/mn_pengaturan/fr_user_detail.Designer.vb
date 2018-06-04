@@ -505,6 +505,7 @@ Partial Class fr_user_detail
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.Name = "fr_user_detail"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Detail User : "
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()

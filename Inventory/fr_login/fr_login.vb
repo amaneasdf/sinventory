@@ -1,5 +1,5 @@
 ﻿Public Class fr_login
-
+    Private pass_switch As Boolean = True
     Private tglkom As Date = System.DateTime.Today
 
     Public Sub clearLogin()
@@ -50,5 +50,19 @@
             e.SuppressKeyPress = True
             bt_login.PerformClick()
         End If
+    End Sub
+
+    Private Sub bt_switch_Click(sender As Object, e As EventArgs) Handles bt_switch.Click
+        With bt_switch
+            If pass_switch = True Then
+                .BackgroundImage = Global.Inventory.My.Resources.Resources.hide_password
+                pass_switch = False
+                in_pass.UseSystemPasswordChar = False
+            Else
+                .BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
+                pass_switch = True
+                in_pass.UseSystemPasswordChar = True
+            End If
+        End With
     End Sub
 End Class

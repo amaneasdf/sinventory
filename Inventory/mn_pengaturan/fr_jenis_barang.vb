@@ -78,6 +78,15 @@
         End If
     End Sub
 
+    Private Sub fr_jenis_barang_Closing(sender As Object, e As EventArgs) Handles Me.FormClosing
+        Select Case setfor
+            Case "jenisbarang"
+                frmsatuanbarang = New fr_jenis_barang
+            Case "satuan"
+                frmjenisbarang = New fr_jenis_barang
+        End Select
+    End Sub
+
     Private Sub fr_jenis_barang_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
 
@@ -99,28 +108,6 @@
         End Select
 
         loadDGV(query, param, paramQuery)
-
-        'If bt_simpan_jenis.Text = "Update" Then
-        '    in_nama_jenis.Focus()
-        '    With in_kode
-        '        Select Case setfor
-        '            Case "jenisbarang"
-        '                lbl_judul.Text = "Set Jenis Barang"
-        '                loadDataJenis(.Text)
-        '            Case "satuan"
-        '                lbl_judul.Text = "Set Satuan Barang"
-        '                loadDataSatuan(.Text)
-        '        End Select
-
-        '    End With
-        'ElseIf bt_simpan_jenis.Text = "Simpan" AndAlso setfor = "satuan" Then
-        '    With in_kode
-        '        .ReadOnly = False
-        '        .BackColor = Color.White
-        '        .Enabled = True
-        '        .Focus()
-        '    End With
-        'End If
     End Sub
 
     Private Sub bt_simpan_jenis_Click(sender As Object, e As EventArgs) Handles bt_simpan_jenis.Click
@@ -241,18 +228,20 @@
     End Sub
 
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
-        Dim kode As String = dgv_list.Rows(e.RowIndex).Cells("kode").Value
-        op_con()
-        Select Case setfor
-            Case "jenisbarang"
-                loadDataJenis(kode)
-            Case "satuan"
-                loadDataSatuan(kode)
-        End Select
-        in_kode.ReadOnly = True
-        in_kode.BackColor = Color.Gainsboro
-        in_nama_jenis.Focus()
-        bt_simpan_jenis.Text = "Update"
+        If e.RowIndex >= 0 Then
+            Dim kode As String = dgv_list.Rows(e.RowIndex).Cells("kode").Value
+            op_con()
+            Select Case setfor
+                Case "jenisbarang"
+                    loadDataJenis(kode)
+                Case "satuan"
+                    loadDataSatuan(kode)
+            End Select
+            in_kode.ReadOnly = True
+            in_kode.BackColor = Color.Gainsboro
+            in_nama_jenis.Focus()
+            bt_simpan_jenis.Text = "Update"
+        End If
     End Sub
 
     Private Sub fr_jenis_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
@@ -278,5 +267,4 @@
             bt_cari.PerformClick()
         End If
     End Sub
-
 End Class

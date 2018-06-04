@@ -34,6 +34,7 @@ Partial Class fr_login
         Me.out_tglkomp = New System.Windows.Forms.TextBox()
         Me.lbl_judul = New System.Windows.Forms.Label()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
+        Me.bt_switch = New System.Windows.Forms.Button()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -173,6 +174,21 @@ Partial Class fr_login
         Me.PictureBox1.TabIndex = 4
         Me.PictureBox1.TabStop = False
         '
+        'bt_switch
+        '
+        Me.bt_switch.BackColor = System.Drawing.Color.White
+        Me.bt_switch.BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
+        Me.bt_switch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.bt_switch.FlatAppearance.BorderSize = 0
+        Me.bt_switch.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_switch.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_switch.Location = New System.Drawing.Point(392, 92)
+        Me.bt_switch.Name = "bt_switch"
+        Me.bt_switch.Size = New System.Drawing.Size(19, 19)
+        Me.bt_switch.TabIndex = 19
+        Me.bt_switch.TabStop = False
+        Me.bt_switch.UseVisualStyleBackColor = False
+        '
         'fr_login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -180,6 +196,7 @@ Partial Class fr_login
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer), CType(CType(0, Byte), Integer))
         Me.CancelButton = Me.bt_close
         Me.ClientSize = New System.Drawing.Size(434, 245)
+        Me.Controls.Add(Me.bt_switch)
         Me.Controls.Add(Me.out_tglkomp)
         Me.Controls.Add(Me.out_tglserver)
         Me.Controls.Add(Me.in_pass)
@@ -215,4 +232,5 @@ Partial Class fr_login
     Friend WithEvents out_tglkomp As System.Windows.Forms.TextBox
     Friend WithEvents lbl_judul As System.Windows.Forms.Label
     Friend WithEvents PictureBox1 As System.Windows.Forms.PictureBox
+    Friend WithEvents bt_switch As System.Windows.Forms.Button
 End Class
