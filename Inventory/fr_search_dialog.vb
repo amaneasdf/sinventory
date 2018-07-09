@@ -173,6 +173,8 @@
 
     Private Sub addColtoDGV(type As String)
         With dgv_list
+            .Columns.Clear()
+            setDoubleBuffered(dgv_list, True)
             Select Case type
                 Case "sales"
                     lbl_judul.Text += " Salesman"

@@ -40,6 +40,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_A3688B798832BCDD49B3E50EBCDF52C5"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -47,12 +53,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_B6C5253058C8230C706C6267D439447D"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -73,6 +73,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -89,6 +97,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -256,15 +272,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
-        "ProductCode" = "8:{E5937C76-7A53-49C3-B851-53E61BE8B0ED}"
-        "PackageCode" = "8:{AA5F6642-8D2C-4FA6-BF91-D346B0B38196}"
+        "ProductCode" = "8:{306F0FBE-A5DB-42D4-824E-B7DE452C08FC}"
+        "PackageCode" = "8:{4BAF3462-8BDE-4BF1-84E0-98DB4EE12F75}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.1"
+        "ProductVersion" = "8:0.0.2"
         "Manufacturer" = "8:MSO"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

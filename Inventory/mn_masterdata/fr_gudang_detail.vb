@@ -20,7 +20,21 @@
             txtUpdAlias.Text = rd.Item("gudang_upd_alias")
         End If
         rd.Close()
+        dgv_inv.DataSource = getDataTablefromDB("SELECT barang_nama, stock_sisa FROM data_barang_stok INNER JOIN data_barang_master ON barang_kode=stock_barang WHERE stock_gudang='" & kode & "'")
+        loadDataHistory(kode, "All", dt_awal.Value, dt_akhir.Value)
     End Sub
+
+    Private Sub loadDataHistory(kode As String, barang As String, tglawal As Date, tglakhir As Date)
+        dgv_su.DataSource = getDataTablefromDB("getProductStockMovement('" & kode & "','" & barang & "','" & tglawal.ToString("yyyy-MM-dd") & "','" & tglakhir.ToString("yyyy-MM-dd") & "')")
+        dgv_su.Sort(dgv_su.Columns("his_tanggal"), System.ComponentModel.ListSortDirection.Descending)
+    End Sub
+
+    Private Function loadCBBarang(kode As String) As DataTable
+        Dim dt As New DataTable
+        dt = getDataTablefromDB("SELECT barang_kode,barang_nama FROM data_barang_stok INNER JOIN data_barang_master ON barang_kode=stock_barang WHERE stock_gudang='" & kode & "'")
+        dt.Rows.Add({"all", "All"})
+        Return dt
+    End Function
 
     Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
         If e.KeyCode = Keys.Enter Then
@@ -38,11 +52,21 @@
             .SelectedIndex = -1
         End With
 
+        For Each x As DataGridViewColumn In {prod_qty, his_qty_in, his_qty_out}
+            x.DefaultCellStyle = dgvstyle_commathousand
+        Next
+
         If bt_simpangudang.Text = "Update" Then
             With in_kode
                 .ReadOnly = True
                 .BackColor = Color.Gainsboro
                 loadDataGudang(.Text)
+            End With
+            With cb_kodeprod
+                .DataSource = loadCBBarang(in_kode.Text)
+                .DisplayMember = "barang_nama"
+                .ValueMember = "barang_kode"
+                .SelectedIndex = .Items.Count - 1
             End With
             in_namagudang.Focus()
         End If
@@ -100,19 +124,48 @@
             MessageBox.Show("Data tersimpan")
             frmgudang.in_cari.Clear()
             populateDGVUserCon("gudang", "", frmgudang.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
     Private Sub bt_batalgudang_Click(sender As Object, e As EventArgs) Handles bt_batalgudang.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(in_namagudang, e)
     End Sub
 
-    Private Sub in_namagudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namagudang.KeyDown
+    Private Sub in_namagudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(in_alamatgudang, e)
+    End Sub
+
+    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        bt_batalgudang.PerformClick()
+    End Sub
+
+    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
+        lbl_close.Visible = True
+    End Sub
+
+    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
+        lbl_close.Visible = False
+    End Sub
+
+    Private Sub cb_kodeprod_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_kodeprod.KeyPress
+        e.Handled = True
+    End Sub
+
+    '----------------- st_his tab page
+    Private Sub bt_su_view_Click(sender As Object, e As EventArgs) Handles bt_su_view.Click
+        loadDataHistory(in_kode.Text, cb_kodeprod.SelectedValue, dt_awal.Value, dt_akhir.Value)
+    End Sub
+
+    Private Sub dt_awal_ValueChanged(sender As Object, e As EventArgs) Handles dt_awal.ValueChanged
+        dt_akhir.MinDate = dt_awal.Value
+    End Sub
+
+    Private Sub dt_akhir_ValueChanged(sender As Object, e As EventArgs) Handles dt_akhir.ValueChanged
+        dt_awal.MaxDate = dt_akhir.Value
     End Sub
 End Class

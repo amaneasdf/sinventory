@@ -21,6 +21,8 @@
                 createTabPage(pgbgtangan, type, frmbgditangan, "Data Giro In")
             Case "perkiraan"
                 createTabPage(pgperkiraan, type, frmperkiraan, "Data Master Perkiraan")
+            Case "neracaawal"
+                createTabPage(pgawalneraca, type, frmawalneraca, "Data Neraca Awal")
             Case "beli"
                 createTabPage(pgpembelian, type, frmpembelian, "Daftar Pembelian")
             Case "returbeli"
@@ -37,6 +39,26 @@
                 createTabPage(pgmutasistok, type, frmmutasistok, "Mutasi Barang")
             Case "stockop"
                 createTabPage(pgstockop, type, frmstockop, "Stok Opname")
+            Case "hutangawal"
+                createTabPage(pghutangawal, type, frmhutangawal, "Hutang")
+            Case "hutangbayar"
+                createTabPage(pghutangbayar, type, frmhutangbayar, "Pembayaran Hutang")
+            Case "hutangbgo"
+                createTabPage(pghutangbgo, type, frmhutangbgo, "BG Out Cair")
+            Case "piutangawal"
+                createTabPage(pgpiutangawal, type, frmpiutangawal, "Piutang")
+            Case "piutangbayar"
+                createTabPage(pgpiutangbayar, type, frmpiutangbayar, "Pembayaran Piutang")
+            Case "piutangbgcair"
+                createTabPage(pgpiutangbgcair, type, frmpiutangbgcair, "BG Cair")
+            Case "piutangbgtolak"
+                createTabPage(pgpiutangbgtolak, type, frmpiutangbgTolak, "BG Tolak")
+            Case "kas"
+                createTabPage(pgkas, type, frmkas, "Kas/Bank")
+            Case "jurnalumum"
+                createTabPage(pgjurnalumum, type, frmjurnalumum, "Jurnal Umum")
+            Case "jurnalmemorial"
+                createTabPage(pgjurnalmemorial, type, frmjurnalmemorial, "Jurnal Memorial")
                 'Case "jenisbarang"
                 '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
             Case "group"
@@ -149,6 +171,12 @@
             Case "mn020202"
                 Console.WriteLine("click trans retur jual")
                 openTab("returjual")
+            Case "mn020203"
+                Console.WriteLine("click draft tagihan")
+                fr_jual_tagihan.Show()
+            Case "mn020204"
+                Console.WriteLine("click draft rekap nota/barang")
+                fr_jual_rekap.Show()
             Case "mn0301"
                 Console.WriteLine("click stok awal")
                 openTab("stok")
@@ -161,6 +189,36 @@
             Case "mn0304"
                 Console.WriteLine("click stock op")
                 openTab("stockop")
+            Case "mn0401"
+                Console.WriteLine("click hutang awal")
+                openTab("hutangawal")
+            Case "mn0402"
+                Console.WriteLine("click hutang bayar")
+                openTab("hutangbayar")
+            Case "mn0403"
+                Console.WriteLine("click hutang bgo")
+                openTab("hutangbgo")
+            Case "mn0501"
+                Console.WriteLine("click piutang awal")
+                openTab("piutangawal")
+            Case "mn0502"
+                Console.WriteLine("click piutang bayar")
+                openTab("piutangbayar")
+            Case "mn0503"
+                Console.WriteLine("click piutang bgcair")
+                openTab("piutangbgcair")
+            Case "mn0504"
+                Console.WriteLine("click piutang bgtolak")
+                openTab("piutangbgtolak")
+            Case "mn0601"
+                Console.WriteLine("click kas")
+                openTab("kas")
+            Case "mn0602"
+                Console.WriteLine("click jurnal umum")
+                openTab("jurnalumum")
+            Case "mn0603"
+                Console.WriteLine("click jurnal memorial")
+                openTab("jurnalmemorial")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()

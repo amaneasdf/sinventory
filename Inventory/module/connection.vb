@@ -30,10 +30,13 @@ Module dbproceduralstuff
                 '    x += 1
                 'Next
             Catch ex As Exception
-                MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
-                'Dim er As New List(Of String)
-                'er.Add("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.Source & ":" & ex.TargetSite.ToString)
-                'errLog(er)
+                'MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"))
+                Dim er As New List(Of String)
+                Dim st As New StackTrace
+                st = New StackTrace(ex, True)
+                er.Add(String.Format("ERR:{0}:{1}{5}--{2}:{3}:{4}", Date.Now.ToString("yyyyMMdd-hhmmss"), ex.Message, st.GetFrame(st.FrameCount - 1).GetMethod, st.GetFrame(st.FrameCount - 1).GetFileLineNumber, ex.TargetSite.ToString, Environment.NewLine))
+                errLog(er)
             End Try
         End If
     End Sub

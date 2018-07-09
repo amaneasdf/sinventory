@@ -23,6 +23,7 @@ Partial Class main
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
@@ -30,6 +31,7 @@ Partial Class main
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
         Me.SplitContainer.SuspendLayout()
         Me.tabcontrol.SuspendLayout()
@@ -49,6 +51,8 @@ Partial Class main
         'SplitContainer.Panel1
         '
         Me.SplitContainer.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer.Panel1.BackgroundImage = Global.Inventory.My.Resources.Resources.bg_stripes_gray
+        Me.SplitContainer.Panel1.Controls.Add(Me.Label12)
         '
         'SplitContainer.Panel2
         '
@@ -56,6 +60,18 @@ Partial Class main
         Me.SplitContainer.Size = New System.Drawing.Size(944, 659)
         Me.SplitContainer.SplitterDistance = 60
         Me.SplitContainer.TabIndex = 1
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.BackColor = System.Drawing.Color.Transparent
+        Me.Label12.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.Orange
+        Me.Label12.Location = New System.Drawing.Point(3, 9)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(443, 30)
+        Me.Label12.TabIndex = 137
+        Me.Label12.Text = "Sistem Informasi managemen inventory"
         '
         'tabcontrol
         '
@@ -92,8 +108,8 @@ Partial Class main
         'strip_user
         '
         Me.strip_user.Name = "strip_user"
-        Me.strip_user.Size = New System.Drawing.Size(121, 17)
-        Me.strip_user.Text = "ToolStripStatusLabel1"
+        Me.strip_user.Size = New System.Drawing.Size(30, 17)
+        Me.strip_user.Text = "User"
         '
         'strip_tgl
         '
@@ -117,8 +133,12 @@ Partial Class main
         Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(960, 720)
         Me.Name = "main"
+        Me.Opacity = 0.0R
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Menu Utama"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
+        Me.SplitContainer.Panel1.ResumeLayout(False)
+        Me.SplitContainer.Panel1.PerformLayout()
         Me.SplitContainer.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer.ResumeLayout(False)
@@ -136,5 +156,6 @@ Partial Class main
     Friend WithEvents strip_user As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_tgl As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_host As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents Label12 As System.Windows.Forms.Label
 
 End Class

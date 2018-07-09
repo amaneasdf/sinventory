@@ -16,8 +16,7 @@
             in_rek_giro.Text = rd.Item("supplier_rek_bg")
             in_ket.Text = rd.Item("supplier_keterangan")
             in_term.Text = rd.Item("supplier_term")
-            in_status_kode.Text = rd.Item("supplier_status")
-            cb_status.SelectedValue = in_status_kode.Text
+            cb_status.SelectedValue = rd.Item("supplier_status")
             txtRegAlias.Text = rd.Item("supplier_reg_alias")
             txtRegdate.Text = rd.Item("supplier_reg_date")
             Try
@@ -30,30 +29,14 @@
         rd.Close()
     End Sub
 
-    Private Sub numericGotFocus(sender As NumericUpDown)
-        If sender.Value = 0 Then
-            sender.ResetText()
-        End If
-    End Sub
-
-    Private Sub numericLostFocus(x As NumericUpDown)
-        x.Controls.Item(1).Text = x.Value
-    End Sub
-
-    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            nextcontrol.Focus()
-        End If
-    End Sub
-
+    '-------------- load
     Private Sub fr_supplier_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
         With cb_status
             .DataSource = statusSupplier()
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = -1
+            .SelectedIndex = 0
         End With
 
         If bt_simpansupplier.Text = "Update" Then
@@ -65,11 +48,7 @@
         End If
     End Sub
 
-    Private Sub cb_status_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_status.SelectionChangeCommitted
-        in_status_kode.Text = cb_status.SelectedValue
-        bt_simpansupplier.Focus()
-    End Sub
-
+    '-------------- save
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpansupplier.Click
         Dim data As String()
         Dim dataCol As String()
@@ -86,17 +65,11 @@
             Exit Sub
         End If
 
-        If in_alamatsupplier.Text = Nothing Then
-            MessageBox.Show("Alamat supplier belum di input")
-            in_alamatsupplier.Focus()
-            Exit Sub
-        End If
-
-        If in_status_kode.Text = Nothing Then
-            MessageBox.Show("Status supplier belum di input")
-            cb_status.Focus()
-            Exit Sub
-        End If
+        'If in_alamatsupplier.Text = Nothing Then
+        '    MessageBox.Show("Alamat supplier belum di input")
+        '    in_alamatsupplier.Focus()
+        '    Exit Sub
+        'End If
 
         If bt_simpansupplier.Text = "Simpan" Then
             If checkdata("data_supplier_master", in_kode.Text, "supplier_kode") = True Then
@@ -119,7 +92,7 @@
                 "'" & in_rek_bank.Text & "'",
                 "'" & in_term.Text & "'",
                 "'" & in_ket.Text & "'",
-                "'" & in_status_kode.Text & "'",
+                "'" & cb_status.SelectedValue & "'",
                 "NOW()",
                 "'" & loggeduser.user_ip & "'",
                 "'" & loggeduser.user_id & "'",
@@ -144,7 +117,7 @@
                 "'" & in_rek_bank.Text & "'",
                 "'" & in_term.Text & "'",
                 "'" & in_ket.Text & "'",
-                "'" & in_status_kode.Text & "'",
+                "'" & cb_status.SelectedValue & "'",
                 "NOW()",
                 "'" & loggeduser.user_ip & "'",
                 "'" & loggeduser.user_id & "'"
@@ -185,16 +158,91 @@
             MessageBox.Show("Data tersimpan")
             frmsupplier.in_cari.Clear()
             populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
-    Private Sub bt_batalsupplier_Click(sender As Object, e As EventArgs) Handles bt_batalsupplier.Click
-        Me.Dispose()
+    '------------drag form
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
+        startdrag(Me, e)
     End Sub
 
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(in_namasupplier, e)
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
+        dragging(Me)
+    End Sub
+
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
+        stopdrag(Me)
+    End Sub
+
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
+        CenterToScreen()
+    End Sub
+
+    '-------------close
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalsupplier.Click
+        Me.Close()
+    End Sub
+
+    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        bt_batalsupplier.PerformClick()
+    End Sub
+
+    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
+        lbl_close.Visible = True
+    End Sub
+
+    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
+        lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_supplier_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        For Each tx As TextBox In {in_kode, in_alamatsupplier, in_cp, in_emailsupplier, in_faxsupplier, in_ket, in_namasupplier, in_npwpsupplier, in_rek_bank, in_rek_giro, in_telp1supplier, in_telp2supplier}
+            tx.Clear()
+        Next
+        in_term.Value = 0
+    End Sub
+
+    '------------------ menu
+    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
+        bt_simpansupplier.PerformClick()
+    End Sub
+
+    Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
+        If mn_deact.Text = "Deactivate" Then
+            cb_status.SelectedValue = "2"
+            mn_deact.Text = "Activate"
+        ElseIf mn_deact.Text = "Activate" Then
+            cb_status.SelectedValue = "1"
+            mn_deact.Text = "Deactivate"
+        End If
+    End Sub
+
+    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+
+    End Sub
+
+    '---------------- numeric
+    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
+        numericLostFocus(sender)
+    End Sub
+
+    '---------------- cb prevent input
+    Private Sub cb_status_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_status.KeyPress
+        e.Handled = True
+    End Sub
+
+    '--------------- textbox numeric
+    Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telp2supplier.KeyPress, in_telp1supplier.KeyPress, in_rek_giro.KeyPress, in_rek_bank.KeyPress, in_npwpsupplier.KeyPress, in_faxsupplier.KeyPress
+        If Asc(e.KeyChar) <> 8 Then
+            If Asc(e.KeyChar) < 48 Or Asc(e.KeyChar) > 57 Then
+                e.Handled = True
+            End If
+        End If
     End Sub
 
     Private Sub in_namasupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasupplier.KeyDown
@@ -218,6 +266,10 @@
     End Sub
 
     Private Sub in_emailsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_emailsupplier.KeyDown
+        keyshortenter(in_term, e)
+    End Sub
+
+    Private Sub in_term_KeyDown(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
         keyshortenter(in_npwpsupplier, e)
     End Sub
 
@@ -230,22 +282,14 @@
     End Sub
 
     Private Sub in_rek_giro_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_giro.KeyDown
-        keyshortenter(in_ket, e)
+        keyshortenter(bt_simpansupplier, e)
     End Sub
 
-    Private Sub in_term_KeyDown(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            cb_status.DroppedDown = True
-            cb_status.Focus()
-        End If
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(cb_status, e)
     End Sub
 
-    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
-        numericGotFocus(sender)
-    End Sub
-
-    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
-        numericLostFocus(sender)
+    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
+        keyshortenter(bt_simpansupplier, e)
     End Sub
 End Class

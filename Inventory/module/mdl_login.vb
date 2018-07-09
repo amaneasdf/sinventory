@@ -98,6 +98,7 @@
             main.strip_user.Text = loggeduser.user_id.ToString
             main.strip_tgl.Text = System.DateTime.Today.ToString("dd MMMM yyyy")
             main.Visible = True
+            main.Opacity = 100
             main.MenuAkses()
             fr_login.clearLogin()
             fr_login.Dispose()

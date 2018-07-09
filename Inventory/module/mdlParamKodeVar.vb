@@ -30,17 +30,39 @@
     Public tglHariIni As Date = System.DateTime.Today
     Public sekarang As Date = System.DateTime.Now
 
+    'pajak increment
+    Public Const ppn As Double = 0.1
+    Public Const ppnbm As Double = 0.2
+
+    'jenisreferensi
+    Public Function jenisRef() As DataTable
+        Dim dt As New DataTable
+
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
+        dt.Rows.Add("Kategori Barang", "katbarang")
+        dt.Rows.Add("Jenis Barang", "jenisbarang")
+        dt.Rows.Add("Satuan", "satuan")
+        dt.Rows.Add("Jenis Customer", "custo")
+        Return dt
+    End Function
+
     'jenisbarang
     Public Function jenisBarang() As DataTable
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis")
+        'dt = getDataTablefromDB("SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis")
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
+        dt.Rows.Add("Stok", "1")
+        dt.Rows.Add("Non Stok", "0")
         Return dt
     End Function
 
     'jenissatuan
     Public Function jenisSatuan() As DataTable
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan")
+        'dt = getDataTablefromDB("SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan")
+        dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
         Return dt
     End Function
 
@@ -122,19 +144,19 @@
         Return dt
     End Function
 
-    'jenisjurnal
+    'jenisPPn
     Public Function jenisPPN() As DataTable
         Dim dt As New DataTable
 
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Included", "1")
-        dt.Rows.Add("Non", "0")
+        dt.Rows.Add("Pajak", "1")
+        dt.Rows.Add("Non Pajak", "0")
 
         Return dt
     End Function
 
-    'jenisPPN
+    'jenisJurnal
     Public Function jenisJurnal() As DataTable
         Dim dt As New DataTable
 
@@ -153,12 +175,12 @@
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Potong Nota", "1")
-        dt.Rows.Add("Non", "0")
+        dt.Rows.Add("Tunai", "0")
 
         Return dt
     End Function
 
-    'jenisJual
+    'jenisJual -> gak guna, cuma untuk otomatisasi no.faktur
     Public Function jenisJual() As DataTable
         Dim dt As New DataTable
 
@@ -216,7 +238,9 @@
 
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Pajak", 1)
+        dt.Rows.Add("PPn 10% Included", 1)
+        dt.Rows.Add("PPn 10% Excluded", 2)
+        'dt.Rows.Add("PPnBM", 2)
         dt.Rows.Add("Non Pajak", 0)
 
         Return dt
@@ -279,6 +303,16 @@
     Public pgmutasigudang = New TabPage() With {.Name = "pgmutasigudang"}
     Public pgmutasistok = New TabPage() With {.Name = "pgmutasistok"}
     Public pgstockop = New TabPage() With {.Name = "pgstockop"}
+    Public pghutangawal = New TabPage() With {.Name = "pghutangawal"}
+    Public pghutangbayar = New TabPage() With {.Name = "pghutangbayar"}
+    Public pghutangbgo = New TabPage() With {.Name = "pghutangbgo"}
+    Public pgpiutangawal = New TabPage() With {.Name = "pgpiutangawal"}
+    Public pgpiutangbayar = New TabPage() With {.Name = "pgpiutangbayar"}
+    Public pgpiutangbgcair = New TabPage() With {.Name = "pgpiutangbgcair"}
+    Public pgpiutangbgtolak = New TabPage() With {.Name = "pgpiutangbgtolak"}
+    Public pgkas = New TabPage() With {.Name = "pgkas"}
+    Public pgjurnalumum = New TabPage() With {.Name = "pgjurnalumum"}
+    Public pgjurnalmemorial = New TabPage() With {.Name = "pgjurnalmemorial"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
@@ -302,6 +336,16 @@
     Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmmutasistok As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmstockop As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmhutangawal As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmhutangbayar As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmhutangbgo As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmpiutangawal As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmpiutangbayar As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmpiutangbgcair As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmpiutangbgTolak As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmkas As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmjurnalumum As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmjurnalmemorial As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang

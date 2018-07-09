@@ -401,46 +401,63 @@ Module mdlControl
     }
 
     '----------neracaawal_list dgv col----------------------
-    Private neracaawal_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-       .DataPropertyName = "kode",
-       .HeaderText = "Kode",
-       .Name = "kode",
-       .ReadOnly = True
-   }
-    Private neracaawal_parent = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "parent",
-        .HeaderText = "Parent",
-        .Name = "parent",
-        .ReadOnly = True
-    }
-    Private neracaawal_nama = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "nama",
-        .HeaderText = "Nama Perkiraan",
-        .Name = "nama",
+    Private neraca_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracaawal",
+        .HeaderText = "Saldo Awal",
+        .Name = "neraca_awal",
         .ReadOnly = True,
-        .MinimumWidth = 250
-    }
-    Private neracaawal_posisi = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "posisi",
-        .HeaderText = "Posisi D/K",
-        .Name = "posisi",
-        .ReadOnly = True
-    }
-    Private neracaawal_saldo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "saldo",
-        .HeaderText = "Saldo",
-        .Name = "saldo",
-        .ReadOnly = True,
-        .MinimumWidth = 200,
+        .MinimumWidth = 150,
         .DefaultCellStyle = dgvstyle_currency
     }
-    Private neracaawal_ket = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "ket",
-        .HeaderText = "Keterangan",
-        .Name = "ket",
+    Private neraca_mem_debet = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracamemdebet",
+        .HeaderText = "Memorial Debet",
+        .Name = "neraca_mem_debet",
         .ReadOnly = True,
-        .MinimumWidth = 500
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
     }
+    Private neraca_mem_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracamemkredit",
+        .HeaderText = "Memorial Kredit",
+        .Name = "neraca_mem_kredit",
+        .ReadOnly = True,
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
+    }
+    Private neraca_sesuai_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracaseskredit",
+        .HeaderText = "Penyesuaian Kredit",
+        .Name = "neraca_sesuai_kredit",
+        .ReadOnly = True,
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
+    }
+    Private neraca_sesuai_debet = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracasesdebet",
+        .HeaderText = "Penyesuaian Debet",
+        .Name = "neraca_sesuai_kredit",
+        .ReadOnly = True,
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
+    }
+    Private neraca_akhir_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracaakhirkredit",
+        .HeaderText = "Saldo Akhir Kredit",
+        .Name = "neraca_akhir_kredit",
+        .ReadOnly = True,
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
+    }
+    Private neraca_akhir_debet = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "neracaakhirdebet",
+        .HeaderText = "Saldo Akhir Debet",
+        .Name = "neraca_akhir_kredit",
+        .ReadOnly = True,
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency
+    }
+
 
     '----------beli_list dgv col-------------------
     Private beli_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -453,7 +470,8 @@ Module mdlControl
         .DataPropertyName = "tanggal",
         .HeaderText = "Tanggal",
         .Name = "tanggal",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .Width = 150
     }
     Private beli_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "gudang",
@@ -510,7 +528,8 @@ Module mdlControl
         .DataPropertyName = "bukti",
         .HeaderText = "No. Bukti",
         .Name = "bukti",
-        .ReadOnly = True
+        .ReadOnly = True,
+        .Width = 150
     }
     Private retur_beli_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "tanggal",
@@ -814,6 +833,150 @@ Module mdlControl
         .ReadOnly = True
     }
 
+    '----------hutang_awal dgv col-------------------
+    Private hutang_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hutangawal",
+        .HeaderText = "Hutang Awal",
+        .Name = "hutang_awal",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private hutang_hutang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hutang",
+        .HeaderText = "Hutang",
+        .Name = "hutang_hutang",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+    Private hutang_retur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hutangretur",
+        .HeaderText = "Retur",
+        .Name = "hutang_retur",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+    Private hutang_bayar = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hutangbayar",
+        .HeaderText = "Bayar",
+        .Name = "hutang_bayar",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private hutang_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hutangsisa",
+        .HeaderText = "Sisa",
+        .Name = "hutang_sisa",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+
+    '----------hutang_bayar dgv col-------------------
+    Private hutang_debet = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "kredit",
+        .HeaderText = "Total Kredit",
+        .Name = "kredit",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private hutang_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "debet",
+        .HeaderText = "Total Debet",
+        .Name = "debet",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+    Private hutang_selisih = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "selisih",
+        .HeaderText = "Selisih",
+        .Name = "selisih",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+
+    '----------hutang_awal dgv col-------------------
+    Private piutang_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangawal",
+        .HeaderText = "Piutang Awal",
+        .Name = "piutang_awal",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private piutang_piutang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutang",
+        .HeaderText = "Piutang",
+        .Name = "piutang_piutang",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+    Private piutang_retur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangretur",
+        .HeaderText = "Retur",
+        .Name = "piutang_retur",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+    }
+    Private piutang_bayar = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangbayar",
+        .HeaderText = "Bayar",
+        .Name = "piutang_bayar",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private piutang_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangsisa",
+        .HeaderText = "Sisa",
+        .Name = "piutang_sisa",
+        .MinimumWidth = 150,
+        .DefaultCellStyle = dgvstyle_currency,
+        .ReadOnly = True
+        }
+    Private piutang_tempo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangtempo",
+        .HeaderText = "Jatuh Tempo",
+        .Name = "piutang_tempo",
+        .ReadOnly = True
+    }
+    Private piutang_lunas = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutanglunas",
+        .HeaderText = "Tgl Lunas",
+        .Name = "piutang_lunas",
+        .ReadOnly = True
+    }
+
+    '----------piutang_bayar dgv col-------------------
+    Private piutang_it = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutangit",
+        .HeaderText = "IT",
+        .Name = "piutang_it",
+        .ReadOnly = True
+    }
+    Private piutang_et = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "piutanget",
+        .HeaderText = "ET",
+        .Name = "piutang_et",
+        .ReadOnly = True
+    }
+
+    '----------jurnal_umum dgv col-------------------
+    Private jurnal_u_jenis = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "jurnaljenis",
+        .HeaderText = "Jenis",
+        .Name = "jurnal_u_jenis",
+        .ReadOnly = True
+    }
+
     '----------group_list dgv col----------------------
     Private group_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "kode",
@@ -952,7 +1115,7 @@ Module mdlControl
                 setListcodetemp(pgbgtangan, type, frmbgditangan, "Daftar BG Di Tangan")
             Case "perkiraan"
                 setListcodetemp(pgperkiraan, type, frmperkiraan, "Daftar Perkiraan")
-            Case "neracawal"
+            Case "neracaawal"
                 setListcodetemp(pgawalneraca, type, frmawalneraca, "Daftar Neraca Awal / Migrasi")
             Case "beli"
                 setListcodetemp(pgpembelian, type, frmpembelian, "Daftar Data Pembelian")
@@ -970,6 +1133,26 @@ Module mdlControl
                 setListcodetemp(pgmutasistok, type, frmmutasistok, "Daftar Mutasi Barang")
             Case "stockop"
                 setListcodetemp(pgstockop, type, frmstockop, "Daftar Transaksi Stock Opname")
+            Case "hutangawal"
+                setListcodetemp(pghutangawal, type, frmhutangawal, "Daftar Hutang")
+            Case "hutangbayar"
+                setListcodetemp(pghutangbayar, type, frmhutangbayar, "Daftar Pembayaran Hutang")
+            Case "hutangbgo"
+                setListcodetemp(pghutangbgo, type, frmhutangbgo, "Daftar BG Out Cair")
+            Case "piutangawal"
+                setListcodetemp(pgpiutangawal, type, frmpiutangawal, "Daftar Piutang")
+            Case "piutangbayar"
+                setListcodetemp(pgpiutangbayar, type, frmpiutangbayar, "Daftar Pembayaran Piutang")
+            Case "piutangbgcair"
+                setListcodetemp(pgpiutangbgcair, type, frmpiutangbgcair, "Daftar BG Cair")
+            Case "piutangbgtolak"
+                setListcodetemp(pgpiutangbgtolak, type, frmpiutangbgTolak, "Daftar BG Tolak")
+            Case "kas"
+                setListcodetemp(pgkas, type, frmkas, "Daftar Transaksi Kas/Bank")
+            Case "jurnalumum"
+                setListcodetemp(pgjurnalumum, type, frmjurnalumum, "List Jurnal Umum")
+            Case "jurnalmemorial"
+                setListcodetemp(pgjurnalmemorial, type, frmjurnalmemorial, "List Jurnal Memorial")
             Case "group"
                 setListcodetemp(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -984,24 +1167,25 @@ Module mdlControl
     Public Sub setListcodetemp(tbpg As Object, type As String, frm As fr_list_temp, text As String)
         frm.dgv_list.Columns.Clear()
         setDoubleBuffered(frm.dgv_list, True)
-        addColtoDGV(type)
+        setTabPageControl(type)
         populateDGVUserCon(type, "", frm.dgv_list)
         Console.WriteLine(tbpg.Name.ToString & "listcode")
         With frm
             .bt_export.Visible = False
             .lbl_judul.Text = text
+            .in_countdata.Text = .dgv_list.Rows.Count
             .setpage(tbpg)
         End With
     End Sub
 
-    Private Sub setDoubleBuffered(dgv As DataGridView, x As Boolean)
+    Public Sub setDoubleBuffered(dgv As DataGridView, x As Boolean)
         Dim type As Type = dgv.[GetType]()
         Dim PI As PropertyInfo = type.GetProperty("DoubleBuffered", BindingFlags.Instance Or BindingFlags.NonPublic)
         PI.SetValue(dgv, True, Nothing)
-        Console.WriteLine("SET")
+        Console.WriteLine("SET dgvdblbuffer")
     End Sub
 
-    Private Sub addColtoDGV(type As String)
+    Private Sub setTabPageControl(type As String)
         Select Case type
             Case "barang"
                 With frmbarang.dgv_list
@@ -1039,7 +1223,7 @@ Module mdlControl
                     Next
                 End With
             Case "bank"
-                With frmbgditangan.dgv_list
+                With frmbank.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {bank_kode})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
@@ -1060,14 +1244,28 @@ Module mdlControl
                     Next
                 End With
             Case "neracaawal"
-                With frmperkiraan.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {neracaawal_kode, neracaawal_parent, neracaawal_nama, neracaawal_posisi, neracaawal_saldo, neracaawal_ket})
-                    For i = 0 To .Columns.Count - 1
-                        .Columns(i).DisplayIndex = i
-                    Next
+                With frmawalneraca
+                    Dim neraca_kode = New DataGridViewColumn()
+                    Dim neraca_perkiraan = New DataGridViewColumn()
+                    Dim neraca_kredit = New DataGridViewColumn()
+                    Dim neraca_debet = New DataGridViewColumn()
+                    neraca_kode = perkiraan_kode.Clone()
+                    neraca_perkiraan = perkiraan_nama.Clone()
+                    neraca_kredit = hutang_kredit.Clone()
+                    neraca_debet = hutang_debet.Clone()
+
+                    '.bt_tambah.Enabled = False
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {neraca_kode, neraca_perkiraan, neraca_awal, neraca_debet, neraca_kredit, neraca_mem_debet, neraca_sesuai_debet, neraca_mem_kredit, neraca_sesuai_kredit, neraca_akhir_debet, neraca_akhir_kredit})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
                 End With
             Case "beli"
                 With frmpembelian.dgv_list
+                    .AutoGenerateColumns = False
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier, beli_gudang, beli_pajak, beli_netto, beli_klaim, beli_total, beli_term})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
@@ -1122,6 +1320,217 @@ Module mdlControl
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
+            Case "hutangawal"
+                With frmhutangawal
+                    Dim hutang_faktur = New DataGridViewColumn()
+                    Dim hutang_tgl = New DataGridViewColumn()
+                    Dim hutang_supplier = New DataGridViewColumn()
+                    Dim hutang_term = New DataGridViewColumn()
+                    hutang_faktur = beli_faktur.Clone()
+                    hutang_tgl = beli_tgl.Clone()
+                    hutang_supplier = beli_supplier.Clone()
+                    hutang_term = beli_term.Clone()
+
+                    .bt_refresh.Location = New Point(.bt_hapus.Left, .bt_hapus.Top)
+                    .bt_hapus.Location = New Point(.bt_edit.Left, .bt_edit.Top)
+                    .bt_edit.Location = New Point(.bt_tambah.Left, .bt_tambah.Top)
+                    .bt_tambah.Enabled = False
+                    .bt_tambah.Visible = False
+
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_awal, hutang_hutang, hutang_retur, hutang_bayar, hutang_sisa})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "hutangbayar"
+                With frmhutangbayar.dgv_list
+                    Dim hutang_bukti = New DataGridViewColumn()
+                    Dim hutang_tgl = New DataGridViewColumn()
+                    Dim hutang_supplier = New DataGridViewColumn()
+                    Dim hutang_user = New DataGridViewColumn()
+                    hutang_bukti = retur_beli_bukti.Clone()
+                    hutang_tgl = beli_tgl.Clone()
+                    hutang_supplier = beli_supplier.Clone()
+                    hutang_user = user_id.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_kredit, hutang_selisih, hutang_user})
+                    For i = 0 To .Columns.Count - 1
+                        .Columns(i).DisplayIndex = i
+                    Next
+                End With
+            Case "hutangbgo"
+                With frmhutangbgo
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "piutangawal"
+                With frmpiutangawal
+                    Dim piutang_faktur = New DataGridViewColumn()
+                    Dim piutang_tgl = New DataGridViewColumn()
+                    Dim piutang_custo = New DataGridViewColumn()
+                    Dim piutang_sales = New DataGridViewColumn()
+                    Dim piutang_term = New DataGridViewColumn()
+                    piutang_faktur = beli_faktur.Clone()
+                    piutang_tgl = beli_tgl.Clone()
+                    piutang_custo = jual_custo.Clone()
+                    piutang_sales = jual_sales.Clone()
+                    piutang_term = beli_term.Clone()
+
+                    .bt_refresh.Location = New Point(.bt_hapus.Left, .bt_hapus.Top)
+                    .bt_hapus.Location = New Point(.bt_edit.Left, .bt_edit.Top)
+                    .bt_edit.Location = New Point(.bt_tambah.Left, .bt_tambah.Top)
+                    .bt_tambah.Enabled = False
+                    .bt_tambah.Visible = False
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {piutang_faktur, piutang_tgl, piutang_custo, piutang_term, piutang_sales, piutang_awal, piutang_piutang, piutang_retur, piutang_sisa, piutang_tempo, piutang_lunas})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "piutangbayar"
+                With frmpiutangbayar
+                    Dim piutang_bukti = New DataGridViewColumn()
+                    Dim piutang_tgl = New DataGridViewColumn()
+                    Dim piutang_sales = New DataGridViewColumn()
+                    Dim piutang_kredit = New DataGridViewColumn()
+                    Dim piutang_debet = New DataGridViewColumn()
+                    Dim piutang_user = New DataGridViewColumn()
+                    piutang_bukti = retur_beli_bukti.Clone()
+                    piutang_tgl = beli_tgl.Clone()
+                    piutang_sales = jual_sales.Clone()
+                    piutang_kredit = hutang_kredit.Clone()
+                    piutang_debet = hutang_debet.Clone()
+                    piutang_user = user_id.Clone()
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {piutang_bukti, piutang_tgl, piutang_sales, piutang_kredit, piutang_debet, piutang_user, piutang_it, piutang_et})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "piutangbgcair"
+                With frmpiutangbgcair
+                    Dim bg_no = New DataGridViewColumn()
+                    Dim bg_bank = New DataGridViewColumn()
+                    Dim bg_tglbg = New DataGridViewColumn()
+                    Dim bg_jml = New DataGridViewColumn()
+                    Dim bg_custo = New DataGridViewColumn()
+                    Dim bg_tgl = New DataGridViewColumn()
+                    Dim bg_sales = New DataGridViewColumn()
+                    bg_no = giro_nobg.Clone()
+                    bg_bank = giro_bank.Clone()
+                    bg_tglbg = giro_tgl_bg.Clone()
+                    bg_jml = giro_jml.Clone()
+                    bg_custo = jual_custo.Clone()
+                    bg_tgl = beli_tgl.Clone()
+                    bg_sales = jual_sales.Clone()
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {bg_no, bg_bank, bg_tglbg, bg_jml, bg_custo, bg_tgl, bg_sales})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "piutangbgtolak"
+                With frmpiutangbgTolak
+                    Dim bg_bukti = New DataGridViewColumn()
+                    Dim bg_tgl = New DataGridViewColumn()
+                    Dim bg_sales = New DataGridViewColumn()
+                    Dim bg_custo = New DataGridViewColumn()
+                    Dim bg_no = New DataGridViewColumn()
+                    Dim bg_tglbg = New DataGridViewColumn()
+                    Dim bg_jml = New DataGridViewColumn()
+                    Dim bg_supplier = New DataGridViewColumn()
+                    bg_bukti = retur_beli_bukti.Clone()
+                    bg_tgl = beli_tgl.Clone()
+                    bg_sales = jual_sales.Clone()
+                    bg_custo = jual_custo.Clone()
+                    bg_no = giro_nobg.Clone()
+                    bg_tglbg = giro_tgl_bg.Clone()
+                    bg_jml = giro_jml.Clone()
+                    bg_supplier = beli_supplier.Clone()
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {bg_bukti, bg_tgl, bg_sales, bg_custo, bg_no, bg_tglbg, bg_jml, bg_supplier})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "kas"
+                With frmkas
+                    Dim kas_bank = New DataGridViewColumn()
+                    Dim kas_bukti = New DataGridViewColumn()
+                    Dim kas_debet = New DataGridViewColumn()
+                    Dim kas_kredit = New DataGridViewColumn()
+                    Dim kas_user = New DataGridViewColumn()
+                    kas_bank = bank_kode.Clone()
+                    kas_bukti = retur_beli_bukti.Clone()
+                    kas_debet = hutang_debet.Clone()
+                    kas_kredit = hutang_kredit.Clone()
+                    kas_user = user_id.Clone()
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {kas_bank, kas_bukti, kas_debet, kas_kredit, kas_user})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "jurnalumum"
+                With frmjurnalumum
+                    Dim jurnal_u_kredit = New DataGridViewColumn()
+                    Dim jurnal_u_debet = New DataGridViewColumn()
+                    Dim jurnal_u_selisih = New DataGridViewColumn()
+                    Dim jurnal_u_tgl = New DataGridViewColumn()
+                    Dim jurnal_u_bukti = New DataGridViewColumn()
+                    jurnal_u_bukti = retur_beli_bukti.Clone()
+                    jurnal_u_tgl = beli_tgl.Clone()
+                    jurnal_u_debet = hutang_debet.Clone()
+                    jurnal_u_kredit = hutang_kredit.Clone()
+                    jurnal_u_selisih = hutang_selisih.Clone()
+
+                    .bt_refresh.Location = New Point(.bt_tambah.Left, .bt_tambah.Top)
+                    .bt_hapus.Enabled = False
+                    .bt_hapus.Visible = False
+                    .bt_edit.Enabled = False
+                    .bt_edit.Visible = False
+                    .bt_tambah.Enabled = False
+                    .bt_tambah.Visible = False
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_u_jenis, jurnal_u_tgl, jurnal_u_bukti, jurnal_u_kredit, jurnal_u_debet, jurnal_u_selisih})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "jurnalmemorial"
+                With frmjurnalmemorial
+                    Dim jurnal_e_tgl = New DataGridViewColumn()
+                    Dim jurnal_e_bukti = New DataGridViewColumn()
+                    Dim jurnal_e_ket = New DataGridViewColumn()
+                    jurnal_e_tgl = beli_tgl.Clone()
+                    jurnal_e_bukti = retur_beli_bukti.Clone()
+                    jurnal_e_ket = group_ket.Clone()
+
+                    With .dgv_list
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_e_tgl, jurnal_e_bukti, jurnal_e_ket})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
             Case "group"
                 With frmgroup.dgv_list
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
@@ -1171,7 +1580,8 @@ Module mdlControl
             Case "perkiraan"
                 bs = populateDGVUserConTemp("getDataMaster('perkiraan')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "neracaawal"
-                bs = populateDGVUserConTemp("getDataMaster('neracaawal')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
+                Exit Sub
+                '    bs = populateDGVUserConTemp("getDataMaster('neracaawal')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "beli"
                 bs = populateDGVUserConTemp("getTrans('beli')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
             Case "returbeli"
@@ -1183,11 +1593,32 @@ Module mdlControl
             Case "stok"
                 bs = populateDGVUserConTemp("getStok('stok')", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
             Case "mutasigudang"
-                bs = populateDGVUserConTemp("getMutasi('gudang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('mutasigudang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
             Case "mutasistok"
-                bs = populateDGVUserConTemp("getMutasi('barang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('mutasibarang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "stockop"
                 bs = populateDGVUserConTemp("getStok('stockop')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+            Case "hutangawal"
+                Exit Sub
+                'bs = populateDGVUserConTemp("getHutang('list')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
+            Case "hutangbayar"
+                Exit Sub
+            Case "hutangbgo"
+                Exit Sub
+            Case "piutangawal"
+                Exit Sub
+            Case "piutangbayar"
+                Exit Sub
+            Case "piutangbgcair"
+                Exit Sub
+            Case "piutangbgtolak"
+                Exit Sub
+            Case "kas"
+                Exit Sub
+            Case "jurnalumum"
+                Exit Sub
+            Case "jurnalmemorial"
+                Exit Sub
             Case "group"
                 bs = populateDGVUserConTemp("getDataMaster('group')", "nama LIKE '%" & param & "%'")
             Case "user"
@@ -1247,6 +1678,26 @@ Module mdlControl
                 frm = frmmutasigudang
             Case "pgmutasistok"
                 frm = frmmutasistok
+            Case "pghutangawal"
+                frm = frmhutangawal
+            Case "pghutangbayar"
+                frm = frmhutangbayar
+            Case "pghutangbgo"
+                frm = frmhutangbgo
+            Case "pgpiutangawal"
+                frm = frmpiutangawal
+            Case "pgpiutangbayar"
+                frm = frmpiutangbayar
+            Case "pgpiutangbgcair"
+                frm = frmpiutangbgcair
+            Case "pgpiutangbgtolak"
+                frm = frmpiutangbgTolak
+            Case "kas"
+                frm = frmkas
+            Case "jurnalumum"
+                frm = frmjurnalumum
+            Case "jurnalmemorial"
+                frm = frmjurnalmemorial
 
                 'Case "pgjenisbarang"
                 '    frm = frmjenisbarang
@@ -1296,6 +1747,7 @@ Module mdlControl
 
     Private Sub keyshortRefresh(frm As fr_list_temp)
         frm.bt_refresh.PerformClick()
+        frm.in_countdata.Text = frm.dgv_list.RowCount
     End Sub
 
     Private Sub keyshortClose(frm As fr_list_temp)

@@ -33,6 +33,51 @@ Module functional
         Return macAddress
     End Function
 
+    '----form & control manipulation----------
+    Private drag As Boolean
+    Private mousex As Integer
+    Private mousey As Integer
+
+    Public Sub startdrag(fr As Form, e As MouseEventArgs)
+        If e.Button = Windows.Forms.MouseButtons.Left Then
+            drag = True
+            Console.WriteLine(fr.Left & "*" & fr.Top)
+            mousex = Windows.Forms.Cursor.Position.X - fr.Left
+            mousey = Windows.Forms.Cursor.Position.Y - fr.Top
+            fr.Cursor = Cursors.SizeAll
+        End If
+    End Sub
+
+    Public Sub dragging(fr As Form)
+        If drag Then
+            fr.Top = Windows.Forms.Cursor.Position.Y - mousey
+            fr.Left = Windows.Forms.Cursor.Position.X - mousex
+        End If
+    End Sub
+
+    Public Sub stopdrag(fr As Form)
+        drag = False
+        fr.Cursor = Cursors.Default
+    End Sub
+
+    Public Sub numericGotFocus(sender As NumericUpDown)
+        If sender.Value = 0 Then
+            sender.ResetText()
+        End If
+    End Sub
+
+    Public Sub numericLostFocus(x As NumericUpDown)
+        x.Controls.Item(1).Text = x.Value
+    End Sub
+
+    Public Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+            nextcontrol.Focus()
+        End If
+    End Sub
+
+
     '----string manipulation----------
     'split string into two string and the nth string
     Function SplitText(ByVal text As String, ByVal separator As String, ByVal ke As Double)
@@ -183,7 +228,7 @@ Module functional
     End Sub
 
     Public Sub errLog(errList As List(Of String))
-        Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".log"
+        Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".syslg"
         createTXTfile(appSysDir & "log", file, errList, True)
     End Sub
 End Module

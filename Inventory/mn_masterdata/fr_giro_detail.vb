@@ -30,8 +30,7 @@
             txtRegdate.Text = rd.Item("giro_reg_date")
             txtRegAlias.Text = rd.Item("giro_reg_alias")
             date_tgl_bg.Value = rd.Item("giro_tanggal_bg")
-            in_status_kode.Text = rd.Item("giro_status")
-            'cb_status.SelectedValue = in_status_kode.Text
+            cb_status.SelectedValue = rd.Item("giro_status")
             Try
                 txtUpdDate.Text = rd.Item("giro_upd_date")
             Catch ex As Exception
@@ -41,60 +40,12 @@
             txtUpdAlias.Text = rd.Item("giro_upd_alias")
         End If
         rd.Close()
-        setNamaSales(in_kode_sales.Text)
-        setNamaCusto(in_kode_custo.Text)
-    End Sub
-
-    Private Sub setNamaSales(kode As String)
-        op_con()
-        Try
-            readcommd("SELECT salesman_nama FROM data_salesman_master WHERE salesman_kode='" & kode & "'")
-            If rd.HasRows Then
-                lbl_sales.Text = rd.Item("salesman_nama")
-            Else
-                lbl_sales.Text = ""
-            End If
-            rd.Close()
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
-    End Sub
-
-    Private Sub setNamaCusto(kode As String)
-        op_con()
-        Try
-            readcommd("SELECT customer_nama FROM data_customer_master WHERE customer_kode='" & kode & "'")
-            If rd.HasRows Then
-                lbl_custo.Text = rd.Item("customer_nama")
-            Else
-                lbl_custo.Text = ""
-            End If
-            rd.Close()
-        Catch ex As Exception
-            Console.WriteLine(ex.Message)
-        End Try
-    End Sub
-
-    Private Sub numericGotFocus(sender As NumericUpDown)
-        If sender.Value = 0 Then
-            sender.ResetText()
-        End If
-    End Sub
-
-    Private Sub numericLostFocus(x As NumericUpDown)
-        x.Controls.Item(1).Text = x.Value
-    End Sub
-
-    Private Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            nextcontrol.Focus()
-        End If
     End Sub
 
     Private Sub fr_giro_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lbl_sales.Text = ""
-        lbl_custo.Text = ""
+        With cb_sales
+
+        End With
         If bt_simpangiro.Text = "Update" Then
             op_con()
             loadDataGiro(in_kode.Text)
@@ -157,13 +108,13 @@
                 "'" & in_bank.Text & "'",
                 "'" & in_jumlah.Value & "'",
                 "'" & date_tgl_bg.Value.ToString("yyyy-MM-dd") & "'",
-                "'" & in_status_kode.Text & "'",
+                "'" & cb_status.SelectedValue & "'",
                 "NOW()",
                 "'" & loggeduser.user_id & "'"
                 }
             querycheck = commnd("INSERT INTO data_giro_master(" & String.Join(",", dataCol) & ") VALUES(" & String.Join(",", data) & ")")
         ElseIf bt_simpangiro.Text = "Update" Then
-            querycheck = commnd("UPDATE data_giro_master SET giro_tanggal='" & date_tgl.Value.ToString("yyyy-MM-dd") & "', giro_salesman='" & in_kode_sales.Text & "', giro_customer='" & in_kode_custo.Text & "', giro_rekening='" & in_nobg.Text & "', giro_jumlah='" & in_jumlah.Value & "', giro_tanggal_bg='" & date_tgl_bg.Value.ToString("yyyy-MM-dd") & "', giro_bank='" & in_bank.Text & "', giro_status='" & in_status_kode.Text & "', giro_upd_date=NOW(), giro_upd_alias='" & loggeduser.user_id & "' WHERE giro_id='" & in_kode.Text & "'")
+            querycheck = commnd("UPDATE data_giro_master SET giro_tanggal='" & date_tgl.Value.ToString("yyyy-MM-dd") & "', giro_salesman='" & in_kode_sales.Text & "', giro_customer='" & in_kode_custo.Text & "', giro_rekening='" & in_nobg.Text & "', giro_jumlah='" & in_jumlah.Value & "', giro_tanggal_bg='" & date_tgl_bg.Value.ToString("yyyy-MM-dd") & "', giro_bank='" & in_bank.Text & "', giro_status='" & cb_status.SelectedValue & "', giro_upd_date=NOW(), giro_upd_alias='" & loggeduser.user_id & "' WHERE giro_id='" & in_kode.Text & "'")
         End If
 
         If querycheck = False Then
@@ -187,20 +138,22 @@
     End Sub
 
     Private Sub in_kode_sales_Leave(sender As Object, e As EventArgs) Handles in_kode_sales.Leave
-        setNamaSales(in_kode_sales.Text)
+        If Trim(in_kode_sales.Text) <> Nothing Then
+            cb_sales.SelectedValue = Trim(in_kode_sales.Text)
+        End If
     End Sub
 
     Private Sub in_kode_custo_Leave(sender As Object, e As EventArgs) Handles in_kode_custo.Leave
-        setNamaCusto(in_kode_custo.Text)
+        If Trim(in_kode_custo.Text) <> Nothing Then
+            cb_custo.SelectedValue = Trim(in_kode_custo.Text)
+        End If
     End Sub
 
     Private Sub in_kode_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_sales.KeyDown
-        lbl_sales.Text = ""
         keyshortenter(in_kode_custo, e)
     End Sub
 
     Private Sub in_kode_custo_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_custo.KeyDown
-        lbl_custo.Text = ""
         keyshortenter(in_nobg, e)
     End Sub
 

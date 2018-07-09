@@ -120,6 +120,36 @@
     <Compile Include="fr_search_dialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_akuntansi\fr_jurnal_mem.Designer.vb">
+      <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_akuntansi\fr_jurnal_mem.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_akuntansi\fr_jurnal_u_det.Designer.vb">
+      <DependentUpon>fr_jurnal_u_det.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_akuntansi\fr_jurnal_u_det.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_akuntansi\fr_kas_detail.Designer.vb">
+      <DependentUpon>fr_kas_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_akuntansi\fr_kas_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_hutang\fr_hutang_awal.Designer.vb">
+      <DependentUpon>fr_hutang_awal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_hutang\fr_hutang_awal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_hutang\fr_hutang_bayar.Designer.vb">
+      <DependentUpon>fr_hutang_bayar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_hutang\fr_hutang_bayar.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_masterdata\fr_bank_detail.Designer.vb">
       <DependentUpon>fr_bank_detail.vb</DependentUpon>
     </Compile>
@@ -199,6 +229,12 @@
     <Compile Include="mn_pengaturan\fr_jenis_barang.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_pengaturan\fr_reference\fr_reference.Designer.vb">
+      <DependentUpon>fr_reference.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_reference\fr_reference.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_pengaturan\fr_setup_menu.Designer.vb">
       <DependentUpon>fr_setup_menu.vb</DependentUpon>
     </Compile>
@@ -235,6 +271,12 @@
     <Compile Include="mn_persediaan\fr_stok_awal.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_persediaan\fr_stok_detail.Designer.vb">
+      <DependentUpon>fr_stok_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_persediaan\fr_stok_mutasi.Designer.vb">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </Compile>
@@ -245,6 +287,24 @@
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_persediaan\fr_stok_mutasi_barang.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_piutang\fr_bg_tolak.Designer.vb">
+      <DependentUpon>fr_bg_tolak.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_piutang\fr_bg_tolak.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_bayar.Designer.vb">
+      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_bayar.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_awal.Designer.vb">
+      <DependentUpon>fr_piutang_awal.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_awal.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_beli_detail.Designer.vb">
@@ -263,6 +323,18 @@
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_tagihan.Designer.vb">
+      <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_tagihan.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_rekap.Designer.vb">
+      <DependentUpon>fr_jual_rekap.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jual_rekap.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_retur_detail.Designer.vb">
@@ -298,6 +370,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="fr_search_dialog.resx">
       <DependentUpon>fr_search_dialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_akuntansi\fr_jurnal_mem.resx">
+      <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_akuntansi\fr_jurnal_u_det.resx">
+      <DependentUpon>fr_jurnal_u_det.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_akuntansi\fr_kas_detail.resx">
+      <DependentUpon>fr_kas_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_hutang\fr_hutang_awal.resx">
+      <DependentUpon>fr_hutang_awal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_hutang\fr_hutang_bayar.resx">
+      <DependentUpon>fr_hutang_bayar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_masterdata\fr_bank_detail.resx">
       <DependentUpon>fr_bank_detail.vb</DependentUpon>
@@ -338,6 +425,9 @@
     <EmbeddedResource Include="mn_pengaturan\fr_jenis_barang.resx">
       <DependentUpon>fr_jenis_barang.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_reference\fr_reference.resx">
+      <DependentUpon>fr_reference.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_setup_menu.resx">
       <DependentUpon>fr_setup_menu.vb</DependentUpon>
     </EmbeddedResource>
@@ -356,11 +446,23 @@
     <EmbeddedResource Include="mn_persediaan\fr_stok_awal.resx">
       <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stok_detail.resx">
+      <DependentUpon>fr_stok_detail.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi.resx">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi_barang.resx">
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_piutang\fr_bg_tolak.resx">
+      <DependentUpon>fr_bg_tolak.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_piutang\fr_piutang_bayar.resx">
+      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_piutang\fr_piutang_awal.resx">
+      <DependentUpon>fr_piutang_awal.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_beli_detail.resx">
       <DependentUpon>fr_beli_detail.vb</DependentUpon>
@@ -370,6 +472,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_detail.resx">
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_jual_tagihan.resx">
+      <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_jual_rekap.resx">
+      <DependentUpon>fr_jual_rekap.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_retur_detail.resx">
       <DependentUpon>fr_jual_retur_detail.vb</DependentUpon>
@@ -449,6 +557,36 @@
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bg-stripes-gray.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_save_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_cancel_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_add_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_list_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_list_icon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_print_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_print_icon1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\toolbar_save_icon_s.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

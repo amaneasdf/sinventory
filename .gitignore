@@ -190,3 +190,7 @@ ModelManifest.xml
 /.vs/Inventory/v15/Server/sqlite3
 .vs/Inventory/DesignTimeBuild/.dtbcache
 Dump20180602.sql
+dump/inventory2.sql
+dump/inventory.sql
+proc.sql
+Release.rar

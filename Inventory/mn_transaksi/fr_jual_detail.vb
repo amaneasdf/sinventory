@@ -1,4 +1,8 @@
 ﻿Public Class fr_jual_detail
+    'note
+    'penjualana bisa untuk input & validasi -> hutang custo
+    'alur so -> sales>validasi>admin>gudang
+
     Private rowindex As Integer = 0
     Private jeniscusto As String
 
@@ -419,7 +423,7 @@
             queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, in_gudang.Text, rows.Cells("qty").Value, rows.Cells("sat").Value))
 
             'log
-            queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='PENJUALAN {6}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_faktur.Text))
+            'queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='PENJUALAN {6}'", loggeduser.user_id, rows.Cells(0).Value, in_gudang.Text, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_faktur.Text))
         Next
 
         'begin transaction
@@ -472,6 +476,10 @@
         If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
                 With search
+                    If Trim(in_gudang.Text) <> Nothing Then
+                        .in_cari.Text = in_gudang.Text
+                        .returnkode = in_gudang.Text
+                    End If
                     .query = "SELECT gudang_nama as nama, gudang_kode as kode FROM data_barang_gudang"
                     .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                     .type = "gudang"
@@ -627,7 +635,7 @@
     End Sub
 
     Private Sub cb_ppn_jenis_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_ppn_jenis.SelectionChangeCommitted
-        countbiaya()
+        countBiaya()
         in_klaim.Focus()
     End Sub
 
@@ -642,11 +650,11 @@
     End Sub
 
     Private Sub dgv_barang_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgv_barang.RowsRemoved
-        countbiaya()
+        countBiaya()
     End Sub
 
     Private Sub in_discount_ValueChanged(sender As Object, e As EventArgs) Handles in_discount.Leave, in_ppn_persen.Leave, in_klaim.Leave
-        countbiaya()
+        countBiaya()
     End Sub
 
     Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_disc1.Enter, in_disc2.Enter, in_disc3.Enter, in_disc4.Enter, in_disc5.Enter, in_discrp.Enter, in_discount.Enter, in_ppn_persen.Enter, in_klaim.Enter, in_term.Enter

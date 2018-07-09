@@ -36,6 +36,7 @@ Partial Class fr_list_temp
         Me.bt_hapus = New System.Windows.Forms.Button()
         Me.dgv_list = New System.Windows.Forms.DataGridView()
         Me.bt_export = New System.Windows.Forms.Button()
+        Me.in_countdata = New System.Windows.Forms.TextBox()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
@@ -150,6 +151,7 @@ Partial Class fr_list_temp
         'SplitContainer3.Panel1
         '
         Me.SplitContainer3.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer3.Panel1.Controls.Add(Me.in_countdata)
         Me.SplitContainer3.Panel1.Controls.Add(Me.Label2)
         Me.SplitContainer3.Panel1.Controls.Add(Me.bt_edit)
         Me.SplitContainer3.Panel1.Controls.Add(Me.in_cari)
@@ -258,6 +260,19 @@ Partial Class fr_list_temp
         Me.bt_export.Text = "Export ke Excel"
         Me.bt_export.UseVisualStyleBackColor = True
         '
+        'in_countdata
+        '
+        Me.in_countdata.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.in_countdata.BackColor = System.Drawing.Color.White
+        Me.in_countdata.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_countdata.Location = New System.Drawing.Point(892, 12)
+        Me.in_countdata.MaxLength = 100
+        Me.in_countdata.Name = "in_countdata"
+        Me.in_countdata.ReadOnly = True
+        Me.in_countdata.Size = New System.Drawing.Size(45, 22)
+        Me.in_countdata.TabIndex = 5
+        Me.in_countdata.TabStop = False
+        '
         'fr_list_temp
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -297,5 +312,6 @@ Partial Class fr_list_temp
     Friend WithEvents dgv_list As System.Windows.Forms.DataGridView
     Friend WithEvents bt_export As System.Windows.Forms.Button
     Friend WithEvents lbl_close As System.Windows.Forms.Label
+    Friend WithEvents in_countdata As System.Windows.Forms.TextBox
 
 End Class
