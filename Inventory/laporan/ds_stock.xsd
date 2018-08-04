@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="ds_stock" targetNamespace="http://tempuri.org/DataSet1.xsd" xmlns:mstns="http://tempuri.org/DataSet1.xsd" xmlns="http://tempuri.org/DataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="ds_stock" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ds_stock" msprop:Generator_UserDSName="ds_stock">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dt_persediaan" msprop:Generator_TableClassName="dt_persediaanDataTable" msprop:Generator_TableVarName="tabledt_persediaan" msprop:Generator_TablePropName="dt_persediaan" msprop:Generator_RowDeletingName="dt_persediaanRowDeleting" msprop:Generator_RowChangingName="dt_persediaanRowChanging" msprop:Generator_RowEvHandlerName="dt_persediaanRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_persediaanRowDeleted" msprop:Generator_UserTableName="dt_persediaan" msprop:Generator_RowChangedName="dt_persediaanRowChanged" msprop:Generator_RowEvArgName="dt_persediaanRowChangeEvent" msprop:Generator_RowClassName="dt_persediaanRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="stock_gudang" msprop:Generator_ColumnVarNameInTable="columnstock_gudang" msprop:Generator_ColumnPropNameInRow="stock_gudang" msprop:Generator_ColumnPropNameInTable="stock_gudangColumn" msprop:Generator_UserColumnName="stock_gudang" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_barang" msprop:Generator_ColumnVarNameInTable="columnstock_barang" msprop:Generator_ColumnPropNameInRow="stock_barang" msprop:Generator_ColumnPropNameInTable="stock_barangColumn" msprop:Generator_UserColumnName="stock_barang" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_tanggal" msprop:Generator_ColumnVarNameInTable="columnstock_tanggal" msprop:Generator_ColumnPropNameInRow="stock_tanggal" msprop:Generator_ColumnPropNameInTable="stock_tanggalColumn" msprop:Generator_UserColumnName="stock_tanggal" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_sisa" msprop:Generator_ColumnVarNameInTable="columnstock_sisa" msprop:Generator_ColumnPropNameInRow="stock_sisa" msprop:Generator_ColumnPropNameInTable="stock_sisaColumn" msprop:Generator_UserColumnName="stock_sisa" type="xs:int" minOccurs="0" />
+              <xs:element name="stock_barang_n" msprop:Generator_ColumnVarNameInTable="columnstock_barang_n" msprop:Generator_ColumnPropNameInRow="stock_barang_n" msprop:Generator_ColumnPropNameInTable="stock_barang_nColumn" msprop:Generator_UserColumnName="stock_barang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_gudang_n" msprop:Generator_ColumnVarNameInTable="columnstock_gudang_n" msprop:Generator_ColumnPropNameInRow="stock_gudang_n" msprop:Generator_ColumnPropNameInTable="stock_gudang_nColumn" msprop:Generator_UserColumnName="stock_gudang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_sisa_n" msprop:Generator_ColumnVarNameInTable="columnstock_sisa_n" msprop:Generator_ColumnPropNameInRow="stock_sisa_n" msprop:Generator_ColumnPropNameInTable="stock_sisa_nColumn" msprop:Generator_UserColumnName="stock_sisa_n" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_persediaan_detail" msprop:Generator_TableClassName="dt_persediaan_detailDataTable" msprop:Generator_TableVarName="tabledt_persediaan_detail" msprop:Generator_RowChangedName="dt_persediaan_detailRowChanged" msprop:Generator_TablePropName="dt_persediaan_detail" msprop:Generator_RowDeletingName="dt_persediaan_detailRowDeleting" msprop:Generator_RowChangingName="dt_persediaan_detailRowChanging" msprop:Generator_RowEvHandlerName="dt_persediaan_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_persediaan_detailRowDeleted" msprop:Generator_RowClassName="dt_persediaan_detailRow" msprop:Generator_UserTableName="dt_persediaan_detail" msprop:Generator_RowEvArgName="dt_persediaan_detailRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="stock_gudang" msprop:Generator_ColumnVarNameInTable="columnstock_gudang" msprop:Generator_ColumnPropNameInRow="stock_gudang" msprop:Generator_ColumnPropNameInTable="stock_gudangColumn" msprop:Generator_UserColumnName="stock_gudang" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_gudang_n" msprop:Generator_ColumnVarNameInTable="columnstock_gudang_n" msprop:Generator_ColumnPropNameInRow="stock_gudang_n" msprop:Generator_ColumnPropNameInTable="stock_gudang_nColumn" msprop:Generator_UserColumnName="stock_gudang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_barang" msprop:Generator_ColumnVarNameInTable="columnstock_barang" msprop:Generator_ColumnPropNameInRow="stock_barang" msprop:Generator_ColumnPropNameInTable="stock_barangColumn" msprop:Generator_UserColumnName="stock_barang" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_barang_n" msprop:Generator_ColumnVarNameInTable="columnstock_barang_n" msprop:Generator_ColumnPropNameInRow="stock_barang_n" msprop:Generator_ColumnPropNameInTable="stock_barang_nColumn" msprop:Generator_UserColumnName="stock_barang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_tanggal" msprop:Generator_ColumnVarNameInTable="columnstock_tanggal" msprop:Generator_ColumnPropNameInRow="stock_tanggal" msprop:Generator_ColumnPropNameInTable="stock_tanggalColumn" msprop:Generator_UserColumnName="stock_tanggal" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_beli" msprop:Generator_ColumnVarNameInTable="columnstock_beli" msprop:Generator_ColumnPropNameInRow="stock_beli" msprop:Generator_ColumnPropNameInTable="stock_beliColumn" msprop:Generator_UserColumnName="stock_beli" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_beli_n" msprop:Generator_ColumnVarNameInTable="columnstock_beli_n" msprop:Generator_ColumnPropNameInRow="stock_beli_n" msprop:Generator_ColumnPropNameInTable="stock_beli_nColumn" msprop:Generator_UserColumnName="stock_beli_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_jual" msprop:Generator_ColumnVarNameInTable="columnstock_jual" msprop:Generator_ColumnPropNameInRow="stock_jual" msprop:Generator_ColumnPropNameInTable="stock_jualColumn" msprop:Generator_UserColumnName="stock_jual" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_jual_n" msprop:Generator_ColumnVarNameInTable="columnstock_jual_n" msprop:Generator_ColumnPropNameInRow="stock_jual_n" msprop:Generator_ColumnPropNameInTable="stock_jual_nColumn" msprop:Generator_UserColumnName="stock_jual_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_returbeli" msprop:Generator_ColumnVarNameInTable="columnstock_returbeli" msprop:Generator_ColumnPropNameInRow="stock_returbeli" msprop:Generator_ColumnPropNameInTable="stock_returbeliColumn" msprop:Generator_UserColumnName="stock_returbeli" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_returbeli_n" msprop:Generator_ColumnVarNameInTable="columnstock_returbeli_n" msprop:Generator_ColumnPropNameInRow="stock_returbeli_n" msprop:Generator_ColumnPropNameInTable="stock_returbeli_nColumn" msprop:Generator_UserColumnName="stock_returbeli_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_returjual" msprop:Generator_ColumnVarNameInTable="columnstock_returjual" msprop:Generator_ColumnPropNameInRow="stock_returjual" msprop:Generator_ColumnPropNameInTable="stock_returjualColumn" msprop:Generator_UserColumnName="stock_returjual" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_returjual_n" msprop:Generator_ColumnVarNameInTable="columnstock_returjual_n" msprop:Generator_ColumnPropNameInRow="stock_returjual_n" msprop:Generator_ColumnPropNameInTable="stock_returjual_nColumn" msprop:Generator_UserColumnName="stock_returjual_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_out" msprop:Generator_ColumnVarNameInTable="columnstock_out" msprop:Generator_ColumnPropNameInRow="stock_out" msprop:Generator_ColumnPropNameInTable="stock_outColumn" msprop:Generator_UserColumnName="stock_out" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_out_n" msprop:Generator_ColumnVarNameInTable="columnstock_out_n" msprop:Generator_ColumnPropNameInRow="stock_out_n" msprop:Generator_ColumnPropNameInTable="stock_out_nColumn" msprop:Generator_UserColumnName="stock_out_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_in" msprop:Generator_ColumnVarNameInTable="columnstock_in" msprop:Generator_ColumnPropNameInRow="stock_in" msprop:Generator_ColumnPropNameInTable="stock_inColumn" msprop:Generator_UserColumnName="stock_in" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_in_n" msprop:Generator_ColumnVarNameInTable="columnstock_in_n" msprop:Generator_ColumnPropNameInRow="stock_in_n" msprop:Generator_ColumnPropNameInTable="stock_in_nColumn" msprop:Generator_UserColumnName="stock_in_n" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_sisa" msprop:Generator_ColumnVarNameInTable="columnstock_sisa" msprop:Generator_ColumnPropNameInRow="stock_sisa" msprop:Generator_ColumnPropNameInTable="stock_sisaColumn" msprop:Generator_UserColumnName="stock_sisa" type="xs:string" minOccurs="0" />
+              <xs:element name="stock_sisa_n" msprop:Generator_ColumnVarNameInTable="columnstock_sisa_n" msprop:Generator_ColumnPropNameInRow="stock_sisa_n" msprop:Generator_ColumnPropNameInTable="stock_sisa_nColumn" msprop:Generator_UserColumnName="stock_sisa_n" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_kartustok" msprop:Generator_TableClassName="dt_kartustokDataTable" msprop:Generator_TableVarName="tabledt_kartustok" msprop:Generator_RowChangedName="dt_kartustokRowChanged" msprop:Generator_TablePropName="dt_kartustok" msprop:Generator_RowDeletingName="dt_kartustokRowDeleting" msprop:Generator_RowChangingName="dt_kartustokRowChanging" msprop:Generator_RowEvHandlerName="dt_kartustokRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_kartustokRowDeleted" msprop:Generator_RowClassName="dt_kartustokRow" msprop:Generator_UserTableName="dt_kartustok" msprop:Generator_RowEvArgName="dt_kartustokRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="kartu_gudang" msprop:Generator_ColumnVarNameInTable="columnkartu_gudang" msprop:Generator_ColumnPropNameInRow="kartu_gudang" msprop:Generator_ColumnPropNameInTable="kartu_gudangColumn" msprop:Generator_UserColumnName="kartu_gudang" type="xs:string" minOccurs="0" />
+              <xs:element name="kartu_barang" msprop:Generator_ColumnVarNameInTable="columnkartu_barang" msprop:Generator_ColumnPropNameInRow="kartu_barang" msprop:Generator_ColumnPropNameInTable="kartu_barangColumn" msprop:Generator_UserColumnName="kartu_barang" type="xs:string" minOccurs="0" />
+              <xs:element name="kartu_gudang_n" msprop:Generator_ColumnVarNameInTable="columnkartu_gudang_n" msprop:Generator_ColumnPropNameInRow="kartu_gudang_n" msprop:Generator_ColumnPropNameInTable="kartu_gudang_nColumn" msprop:Generator_UserColumnName="kartu_gudang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="kartu_barang_n" msprop:Generator_ColumnVarNameInTable="columnkartu_barang_n" msprop:Generator_ColumnPropNameInRow="kartu_barang_n" msprop:Generator_ColumnPropNameInTable="kartu_barang_nColumn" msprop:Generator_UserColumnName="kartu_barang_n" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_kartustok_detail" msprop:Generator_TableClassName="dt_kartustok_detailDataTable" msprop:Generator_TableVarName="tabledt_kartustok_detail" msprop:Generator_RowChangedName="dt_kartustok_detailRowChanged" msprop:Generator_TablePropName="dt_kartustok_detail" msprop:Generator_RowDeletingName="dt_kartustok_detailRowDeleting" msprop:Generator_RowChangingName="dt_kartustok_detailRowChanging" msprop:Generator_RowEvHandlerName="dt_kartustok_detailRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_kartustok_detailRowDeleted" msprop:Generator_RowClassName="dt_kartustok_detailRow" msprop:Generator_UserTableName="dt_kartustok_detail" msprop:Generator_RowEvArgName="dt_kartustok_detailRowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="kdetail_faktur" msprop:Generator_ColumnVarNameInTable="columnkdetail_faktur" msprop:Generator_ColumnPropNameInRow="kdetail_faktur" msprop:Generator_ColumnPropNameInTable="kdetail_fakturColumn" msprop:Generator_UserColumnName="kdetail_faktur" type="xs:string" minOccurs="0" />
+              <xs:element name="kdetali_tanggal" msprop:Generator_ColumnVarNameInTable="columnkdetali_tanggal" msprop:Generator_ColumnPropNameInRow="kdetali_tanggal" msprop:Generator_ColumnPropNameInTable="kdetali_tanggalColumn" msprop:Generator_UserColumnName="kdetali_tanggal" type="xs:string" minOccurs="0" />
+              <xs:element name="kdetail_keterangan" msprop:Generator_ColumnVarNameInTable="columnkdetail_keterangan" msprop:Generator_ColumnPropNameInRow="kdetail_keterangan" msprop:Generator_ColumnPropNameInTable="kdetail_keteranganColumn" msprop:Generator_UserColumnName="kdetail_keterangan" type="xs:string" minOccurs="0" />
+              <xs:element name="kdetail_debet" msprop:Generator_ColumnVarNameInTable="columnkdetail_debet" msprop:Generator_ColumnPropNameInRow="kdetail_debet" msprop:Generator_ColumnPropNameInTable="kdetail_debetColumn" msprop:Generator_UserColumnName="kdetail_debet" type="xs:string" minOccurs="0" />
+              <xs:element name="kdetail_kredit" msprop:Generator_ColumnVarNameInTable="columnkdetail_kredit" msprop:Generator_ColumnPropNameInRow="kdetail_kredit" msprop:Generator_ColumnPropNameInTable="kdetail_kreditColumn" msprop:Generator_UserColumnName="kdetail_kredit" type="xs:string" minOccurs="0" />
+              <xs:element name="kdetail_saldo" msprop:Generator_ColumnVarNameInTable="columnkdetail_saldo" msprop:Generator_ColumnPropNameInRow="kdetail_saldo" msprop:Generator_ColumnPropNameInTable="kdetail_saldoColumn" msprop:Generator_UserColumnName="kdetail_saldo" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

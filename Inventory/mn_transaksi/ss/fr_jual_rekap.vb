@@ -1,5 +1,12 @@
 ﻿Public Class fr_jual_rekap
     Private list_row As Integer = 0
+    'FLOW
+    'select date
+    'select faktur date
+    'select sales
+    'select faktur(s)
+    '-----------> print
+
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -40,7 +47,7 @@
     End Sub
 
     '--------------- dgv
-    Private Sub dgv_sales_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_sales.CellClick
+    Private Sub dgv_sales_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_sales.CellClick, DataGridView1.CellClick
         If e.RowIndex >= 0 Then
             Dim sales As String = dgv_sales.Rows(e.RowIndex).Cells("sales_kode").Value
             dgv_listfaktur.DataSource = getDataTablefromDB("SELECT faktur_kode, customer_nama, faktur_tanggal_trans,faktur_netto FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer WHERE faktur_sales='" & sales & "'")

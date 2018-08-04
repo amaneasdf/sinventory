@@ -101,6 +101,12 @@
         Me.Close()
     End Sub
 
+    Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        If MessageBox.Show("Tutup Form?", "Data Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
+            e.Cancel = True
+        End If
+    End Sub
+
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         bt_batalcusto.PerformClick()
     End Sub
@@ -180,17 +186,11 @@
         Dim querycheck As Boolean = False
 
 
-        If Trim(in_kode.Text) = Nothing And bt_simpancusto.Text = "Simpan" Then
-            MessageBox.Show("Kode Customer belum di input")
-            in_kode.Focus()
-            Exit Sub
-        End If
-        If Trim(in_kode_sales.Text) = Nothing Then
-            MessageBox.Show("Sales belum di input")
-            in_kode_sales.Focus()
-            Exit Sub
-        End If
-
+        'If Trim(in_kode.Text) = Nothing And bt_simpancusto.Text = "Simpan" Then
+        '    MessageBox.Show("Kode Customer belum di input")
+        '    in_kode.Focus()
+        '    Exit Sub
+        'End If
         If Trim(in_nama_custo.Text) = Nothing Then
             MessageBox.Show("Nama Customer belum di input")
             in_nama_custo.Focus()
@@ -205,6 +205,17 @@
 
         op_con()
         If bt_simpancusto.Text = "Simpan" Then
+            If Trim(in_kode.Text) = Nothing Then
+                readcommd("SELECT customer_kode FROM data_customer_master WHERE customer_kode LIKE 'CT%' ORDER BY customer_kode DESC LIMIT 1")
+                Dim x As String
+                If rd.HasRows Then
+                    x = rd.Item(0)
+                    in_kode.Text = "CT" & (CInt(sRight(x, 4)) + 1).ToString("D4")
+                Else
+                    in_kode.Text = "CT0001"
+                End If
+                rd.Close()
+            End If
             If checkdata("data_customer_master", "'" & in_kode.Text & "'", "customer_kode") Then
                 MessageBox.Show("Kode Customer " & in_kode.Text & " sudah ada")
                 in_kode.Focus()
@@ -292,10 +303,6 @@
             populateDGVUserCon("custo", "", frmcusto.dgv_list)
             Me.Close()
         End If
-    End Sub
-
-    Private Sub bt_batalsupplier_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        Me.Close()
     End Sub
 
     '----------------- menu
@@ -490,5 +497,13 @@
 
     Private Sub in_pajak_jabatan_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pajak_jabatan.KeyDown
         keyshortenter(in_pajak_alamat, e)
+    End Sub
+
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(cb_status, e)
+    End Sub
+
+    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
+        keyshortenter(in_kode_sales, e)
     End Sub
 End Class

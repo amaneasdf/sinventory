@@ -161,7 +161,7 @@
                 Case "pgreturbeli"
                     Dim detail As New fr_beli_retur_detail
                     With detail
-                        .bt_simpanreturbeli.Text = "OK"
+                        .bt_simpanreturbeli.Visible = False
                         .Text += dgv_list.Rows(rowindex).Cells(0).Value
                         .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)
@@ -170,14 +170,14 @@
                     Dim detail As New fr_jual_detail
                     With detail
                         .bt_simpanjual.Text = "Update"
-                        .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                        .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                        .in_faktur.Text = dgv_list.Rows(rowindex).Cells(1).Value
                         .Show(main)
                     End With
                 Case "pgreturjual"
                     Dim detail As New fr_jual_retur_detail
                     With detail
-                        .bt_simpanreturjual.Text = "OK"
+                        .bt_simpanreturjual.Visible = False
                         .Text += dgv_list.Rows(rowindex).Cells(0).Value
                         .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)
@@ -376,6 +376,7 @@
         End Select
         Me.Cursor = Cursors.Default
         in_cari.Clear()
+        in_countdata.Text = dgv_list.RowCount
     End Sub
 
     Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellClick
@@ -449,6 +450,7 @@
             End Select
             dgv_list.Focus()
         End If
+        in_countdata.Text = dgv_list.RowCount
     End Sub
 
     Private Sub dgv_list_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv_list.ColumnHeaderMouseClick

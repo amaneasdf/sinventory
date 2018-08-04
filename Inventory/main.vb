@@ -31,14 +31,95 @@
                 createTabPage(pgpenjualan, type, frmpenjualan, "Daftar Penjualan")
             Case "returjual"
                 createTabPage(pgreturjual, type, frmreturjual, "Retur Penjualan")
+            Case "draftrekap"
+                If tabcontrol.Contains(pgdraftrekap) Then
+                    tabcontrol.SelectedTab = pgdraftrekap
+                Else
+                    With pgdraftrekap
+                        .Text = "Rekap penjualan"
+                        tabcontrol.TabPages.Add(pgdraftrekap)
+                        setList(type)
+                        .Controls.Add(frmrekap)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgdraftrekap
+                    End With
+                End If
+            Case "drafttagihan"
+                If tabcontrol.Contains(pgdrafttagihan) Then
+                    tabcontrol.SelectedTab = pgdrafttagihan
+                Else
+                    With pgdrafttagihan
+                        .Text = "Rekap Tagihan"
+                        tabcontrol.TabPages.Add(pgdrafttagihan)
+                        setList(type)
+                        .Controls.Add(frmtagihan)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgdrafttagihan
+                    End With
+                End If
             Case "stok"
                 createTabPage(pgstok, type, frmstok, "Stok Barang")
             Case "mutasigudang"
-                createTabPage(pgmutasigudang, type, frmmutasigudang, "Mutasi Gudang")
+                'createTabPage(pgmutasigudang, type, frmmutasigudang, )
+                If tabcontrol.Contains(pgmutasigudang) Then
+                    tabcontrol.SelectedTab = pgmutasigudang
+                Else
+                    With pgmutasigudang
+                        .Text = "Mutasi Gudang"
+                        tabcontrol.TabPages.Add(pgmutasigudang)
+                        setList(type)
+                        .Controls.Add(frmmutasigudang)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgmutasigudang
+                    End With
+                End If
             Case "mutasistok"
-                createTabPage(pgmutasistok, type, frmmutasistok, "Mutasi Barang")
+                'createTabPage(pgmutasistok, type, frmmutasistok, "Mutasi Barang")
+                If tabcontrol.Contains(pgmutasistok) Then
+                    tabcontrol.SelectedTab = pgmutasistok
+                Else
+                    With pgmutasistok
+                        .Text = "Mutasi Barang"
+                        tabcontrol.TabPages.Add(pgmutasistok)
+                        setList(type)
+                        .Controls.Add(frmmutasistok)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgmutasistok
+                    End With
+                End If
             Case "stockop"
-                createTabPage(pgstockop, type, frmstockop, "Stok Opname")
+                'createTabPage(pgstockop, type, frmstockop, "Stok Opname")
+                If tabcontrol.Contains(pgstockop) Then
+                    tabcontrol.SelectedTab = pgstockop
+                Else
+                    With pgstockop
+                        .Text = "Stock Opname"
+                        tabcontrol.TabPages.Add(pgstockop)
+                        setList(type)
+                        .Controls.Add(frmstockop)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgstockop
+                    End With
+                End If
+            Case "lap"
+                If tabcontrol.Contains(pglap) Then
+                    tabcontrol.SelectedTab = pglap
+                Else
+                    With pglap
+                        .Text = "Stock Opname"
+                        tabcontrol.TabPages.Add(pglap)
+                        setList(type)
+                        .Controls.Add(frmlap)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pglap
+                    End With
+                End If
             Case "hutangawal"
                 createTabPage(pghutangawal, type, frmhutangawal, "Hutang")
             Case "hutangbayar"
@@ -86,7 +167,6 @@
     End Sub
 
     Sub MenuAkses()
-
         'dbSelect("SELECT * FROM kode_menu WHERE menu_group = '" & loggeduser.user_lev & "' ORDER BY menu_kode ASC ")
         dbSelect("SELECT data_menu_master.menu_kode, data_menu_master.menu_label FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode WHERE menu_group='" & loggeduser.user_lev & "' ORDER BY kode_menu.menu_kode ASC;")
         Do While rd.Read
@@ -125,7 +205,6 @@
 
         rd.Close()
         Me.Controls.Add(MainMenu)
-
     End Sub
 
     Private Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -173,10 +252,10 @@
                 openTab("returjual")
             Case "mn020203"
                 Console.WriteLine("click draft tagihan")
-                fr_jual_tagihan.Show()
+                openTab("drafttagihan")
             Case "mn020204"
                 Console.WriteLine("click draft rekap nota/barang")
-                fr_jual_rekap.Show()
+                openTab("draftrekap")
             Case "mn0301"
                 Console.WriteLine("click stok awal")
                 openTab("stok")
@@ -219,6 +298,107 @@
             Case "mn0603"
                 Console.WriteLine("click jurnal memorial")
                 openTab("jurnalmemorial")
+            Case "mn0801"
+                Console.WriteLine("click set periode")
+                fr_set_periode.ShowDialog()
+            Case "mn070301"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliNota",
+                    .Text = "Laporan Pembelian Per Nota"
+                }
+                x.Show()
+            Case "mn070302"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliSupplier",
+                    .Text = "Laporan Pembelian Per Supplier"
+                }
+                x.Show()
+            Case "mn070303"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliTgl",
+                    .Text = "Laporan Pembelian Per Tanggal"
+                    }
+                x.Show()
+            Case "mn070304"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliSupplierBarang",
+                    .Text = "Laporan Pembelian Per Supplier Per Barang"
+                    }
+                x.Show()
+            Case "mn070306"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliSupplierNota",
+                    .Text = "Laporan Pembelian Per Supplier Per Nota"
+                    }
+                x.Show()
+            Case "mn070307"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliTglNota",
+                    .Text = "Laporan Pembelian Per Tanggal Per Nota"
+                    }
+                x.Show()
+            Case "mn070401"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualNota",
+                    .Text = "Laporan Penjualan Per Nota"
+                    }
+                x.Show()
+            Case "mn070402"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualCusto",
+                    .Text = "Laporan Penjualan Per Customer"
+                    }
+                x.Show()
+            Case "mn070403"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualSupplier",
+                    .Text = "Laporan Penjualan Per Supplier"
+                    }
+                x.Show()
+            Case "mn070404"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualTipe",
+                    .Text = "Laporan Penjualan Per Tipe Customer"
+                    }
+                x.Show()
+            Case "mn070407"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualSales",
+                    .Text = "Laporan Penjualan Per Salesman"
+                    }
+                x.Show()
+            Case "mn070408"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualTgl",
+                    .Text = "Laporan Penjualan Per Tanggal"
+                    }
+                x.Show()
+            Case "mn070409"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualBarang",
+                    .Text = "Laporan Penjualan Per Barang"
+                    }
+                x.Show()
+            Case "mn070411"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualCustoNota",
+                    .Text = "Laporan Penjualan Per Customer Per Nota"
+                    }
+                x.Show()
+            Case "mn070412"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualSalesNota",
+                    .Text = "Laporan Penjualan Per Salesman Per Nota"
+                    }
+                x.Show()
+            Case "mn070413"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualTanggalNota",
+                    .Text = "Laporan Penjualan Per Tanggal Per Nota"
+                    }
+                x.Show()
+            Case "mn070507"
+                openTab("lap")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()
@@ -298,6 +478,7 @@
 
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
+        strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
         fr_login.Show()
 
         'MenuAkses()

@@ -30,11 +30,12 @@ Partial Class fr_user_password
         Me.bt_simpanuser = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_passold = New System.Windows.Forms.TextBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.bt_cl = New System.Windows.Forms.Button()
         Me.bt_switch_newpass = New System.Windows.Forms.Button()
         Me.bt_switch_oldpass = New System.Windows.Forms.Button()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.lbl_close = New System.Windows.Forms.Label()
+        Me.bt_cl = New System.Windows.Forms.Button()
+        Me.lbl_title = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -132,45 +133,6 @@ Partial Class fr_user_password
         Me.in_passold.Size = New System.Drawing.Size(266, 22)
         Me.in_passold.TabIndex = 0
         '
-        'Panel1
-        '
-        Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.Label9)
-        Me.Panel1.Controls.Add(Me.bt_cl)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(321, 42)
-        Me.Panel1.TabIndex = 199
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.BackColor = System.Drawing.Color.Orange
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(9, 9)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(134, 20)
-        Me.Label9.TabIndex = 133
-        Me.Label9.Text = "Ubah Password"
-        '
-        'bt_cl
-        '
-        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
-        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
-        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_cl.FlatAppearance.BorderSize = 0
-        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(287, 7)
-        Me.bt_cl.Name = "bt_cl"
-        Me.bt_cl.Size = New System.Drawing.Size(25, 25)
-        Me.bt_cl.TabIndex = 3
-        Me.bt_cl.UseVisualStyleBackColor = False
-        '
         'bt_switch_newpass
         '
         Me.bt_switch_newpass.BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
@@ -198,6 +160,63 @@ Partial Class fr_user_password
         Me.bt_switch_oldpass.TabIndex = 18
         Me.bt_switch_oldpass.TabStop = False
         Me.bt_switch_oldpass.UseVisualStyleBackColor = True
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.Orange
+        Me.Panel1.Controls.Add(Me.lbl_close)
+        Me.Panel1.Controls.Add(Me.bt_cl)
+        Me.Panel1.Controls.Add(Me.lbl_title)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(321, 42)
+        Me.Panel1.TabIndex = 344
+        '
+        'lbl_close
+        '
+        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lbl_close.AutoSize = True
+        Me.lbl_close.BackColor = System.Drawing.Color.Orange
+        Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.ForeColor = System.Drawing.Color.White
+        Me.lbl_close.Location = New System.Drawing.Point(241, 9)
+        Me.lbl_close.Name = "lbl_close"
+        Me.lbl_close.Size = New System.Drawing.Size(47, 20)
+        Me.lbl_close.TabIndex = 138
+        Me.lbl_close.Text = "Close"
+        Me.lbl_close.Visible = False
+        '
+        'bt_cl
+        '
+        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
+        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
+        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_cl.FlatAppearance.BorderSize = 0
+        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cl.Location = New System.Drawing.Point(294, 9)
+        Me.bt_cl.Name = "bt_cl"
+        Me.bt_cl.Size = New System.Drawing.Size(20, 20)
+        Me.bt_cl.TabIndex = 20
+        Me.bt_cl.TabStop = False
+        Me.bt_cl.UseVisualStyleBackColor = False
+        '
+        'lbl_title
+        '
+        Me.lbl_title.AutoSize = True
+        Me.lbl_title.BackColor = System.Drawing.Color.Orange
+        Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.ForeColor = System.Drawing.Color.White
+        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Name = "lbl_title"
+        Me.lbl_title.Size = New System.Drawing.Size(171, 30)
+        Me.lbl_title.TabIndex = 136
+        Me.lbl_title.Text = "User Password"
         '
         'fr_user_password
         '
@@ -238,6 +257,7 @@ Partial Class fr_user_password
     Friend WithEvents bt_switch_oldpass As System.Windows.Forms.Button
     Friend WithEvents bt_switch_newpass As System.Windows.Forms.Button
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
+    Friend WithEvents lbl_title As System.Windows.Forms.Label
 End Class

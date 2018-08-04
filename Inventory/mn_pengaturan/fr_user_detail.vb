@@ -110,7 +110,7 @@
             MessageBox.Show("Data tersimpan")
             frmuser.in_cari.Clear()
             populateDGVUserCon("user", "", frmuser.dgv_list)
-            Me.Dispose()
+            Me.Close()
         End If
     End Sub
 
@@ -123,13 +123,13 @@
         If MsgBox("Apakah yakin akan mereset user ini?", MsgBoxStyle.YesNo, Application.ProductName) = MsgBoxResult.Yes Then
             commnd("UPDATE data_pengguna_alias SET user_password = Password('123456'), user_exp_date=DATE_ADD(CURDATE(),INTERVAL 3 MONTH) WHERE user_alias = '" & in_userid.Text & "'")
             MsgBox("Password telah reset, password defaultnya: 123456 ", MsgBoxStyle.Information, Application.ProductName)
-            Me.Dispose()
+            Me.Close()
         Else
             Exit Sub
         End If
     End Sub
 
     Private Sub bt_bataluser_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click
-        Me.Dispose()
+        Me.Close()
     End Sub
 End Class

@@ -29,6 +29,7 @@
     'tgl
     Public tglHariIni As Date = System.DateTime.Today
     Public sekarang As Date = System.DateTime.Now
+    Public selectedperiode As Date = DateSerial(tglHariIni.Year, tglHariIni.Month, 1)
 
     'pajak increment
     Public Const ppn As Double = 0.1
@@ -50,26 +51,19 @@
     'jenisbarang
     Public Function jenisBarang() As DataTable
         Dim dt As New DataTable
-        'dt = getDataTablefromDB("SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis")
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Stok", "1")
-        dt.Rows.Add("Non Stok", "0")
+        dt = getDataTablefromDB("SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis")
+        'dt.Columns.Add("Text", GetType(String))
+        'dt.Columns.Add("Value", GetType(String))
+        'dt.Rows.Add("Stok", "STOK")
+        'dt.Rows.Add("Non Stok", "NONSTOK")
+        'dt.Rows.Add("Bonus", "BONUS")
         Return dt
     End Function
 
     'jenissatuan
     Public Function jenisSatuan() As DataTable
         Dim dt As New DataTable
-        'dt = getDataTablefromDB("SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan")
         dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
-        Return dt
-    End Function
-
-    'jenissatuanbesarbarang
-    Public Function jenisSatuanBesarBrg() As DataTable
-        Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT DISTINCT barang_satuan_besar as Text FROM data_barang_master")
         Return dt
     End Function
 
@@ -150,8 +144,8 @@
 
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Pajak", "1")
-        dt.Rows.Add("Non Pajak", "0")
+        dt.Rows.Add("Include", "1")
+        dt.Rows.Add("Excluded", "0")
 
         Return dt
     End Function
@@ -299,6 +293,8 @@
     Public pgreturbeli = New TabPage() With {.Name = "pgreturbeli"}
     Public pgpenjualan = New TabPage() With {.Name = "pgpenjualan"}
     Public pgreturjual = New TabPage() With {.Name = "pgreturjual"}
+    Public pgdraftrekap = New TabPage() With {.Name = "pgdraftrekap"}
+    Public pgdrafttagihan = New TabPage() With {.Name = "pgdrafttagihan"}
     Public pgstok = New TabPage() With {.Name = "pgstok"}
     Public pgmutasigudang = New TabPage() With {.Name = "pgmutasigudang"}
     Public pgmutasistok = New TabPage() With {.Name = "pgmutasistok"}
@@ -313,6 +309,7 @@
     Public pgkas = New TabPage() With {.Name = "pgkas"}
     Public pgjurnalumum = New TabPage() With {.Name = "pgjurnalumum"}
     Public pgjurnalmemorial = New TabPage() With {.Name = "pgjurnalmemorial"}
+    Public pglap = New TabPage() With {.Name = "pglap"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
@@ -332,10 +329,15 @@
     Public frmreturbeli As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmpenjualan As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
+    Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
     Public frmstok As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmmutasistok As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmstockop As New fr_list_temp With {.Dock = DockStyle.Fill}
+    'Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
+    'Public frmmutasistok As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}
+    'Public frmstockop As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmstockop As New fr_stockop_list With {.Dock = DockStyle.Fill}
     Public frmhutangawal As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmhutangbayar As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmhutangbgo As New fr_list_temp With {.Dock = DockStyle.Fill}
@@ -346,6 +348,7 @@
     Public frmkas As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjurnalumum As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjurnalmemorial As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmlap As New fr_lap_stok With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang

@@ -849,7 +849,7 @@ Partial Class fr_custo_detail
         Me.GroupBox1.Controls.Add(Me.Label4)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.cb_status)
-        Me.GroupBox1.Location = New System.Drawing.Point(698, 76)
+        Me.GroupBox1.Location = New System.Drawing.Point(698, 72)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(250, 68)
         Me.GroupBox1.TabIndex = 32
@@ -1011,6 +1011,7 @@ Partial Class fr_custo_detail
         Me.CancelButton = Me.bt_batalcusto
         Me.ClientSize = New System.Drawing.Size(967, 541)
         Me.Controls.Add(Me.bt_sales)
+        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.Label30)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.txtUpdDate)
@@ -1032,7 +1033,6 @@ Partial Class fr_custo_detail
         Me.Controls.Add(Me.Label35)
         Me.Controls.Add(Me.Label36)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.date_tgl_pkp)
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label8)

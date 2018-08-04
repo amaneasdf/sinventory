@@ -230,13 +230,17 @@
     End Sub
 
     Private Sub dgv_list_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellEnter
-        rowindex = e.RowIndex
+        If e.RowIndex > -1 Then
+            rowindex = e.RowIndex
+        End If
     End Sub
 
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
-        rowindex = e.RowIndex
-        returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
-        Me.Close()
+        If e.RowIndex > -1 Then
+            rowindex = e.RowIndex
+            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Me.Close()
+        End If
     End Sub
 
     Private Sub bt_ok_Click(sender As Object, e As EventArgs) Handles bt_ok.Click

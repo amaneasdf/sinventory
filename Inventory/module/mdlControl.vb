@@ -38,24 +38,13 @@ Module mdlControl
         .HeaderText = "Satuan Tengah",
         .Name = "sat_tengah",
         .ReadOnly = True,
+        .ValueType = GetType(System.String),
         .Width = 110
-    }
-    Private barang_satuan_tengah_isi = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "satuantengahisi",
-        .HeaderText = "Isi Tengah",
-        .Name = "isi_tengah",
-        .ReadOnly = True
     }
     Private barang_satuan_besar = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "satuanbesar",
         .HeaderText = "Satuan Besar",
         .Name = "sat_besar",
-        .ReadOnly = True
-    }
-    Private barang_satuan_besar_isi = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "satuanbesarisi",
-        .HeaderText = "Isi Besar",
-        .Name = "isi_besar",
         .ReadOnly = True
     }
     Private barang_harga_beli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -74,12 +63,36 @@ Module mdlControl
         .DefaultCellStyle = dgvstyle_currency,
         .MinimumWidth = 100
     }
-    Private barang_jenis_pajak = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "jenispajak",
-        .HeaderText = "Jenis Pajak",
-        .Name = "jenispajak",
-        .ReadOnly = True
+    Private barang_harga_mt = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hargamt",
+        .HeaderText = "Harga MT",
+        .Name = "barang_harga_mt",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_currency,
+        .MinimumWidth = 100
     }
+    Private barang_harga_horeka = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hargahoreka",
+        .HeaderText = "Harga Horeka",
+        .Name = "barang_harga_horeka",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_currency,
+        .MinimumWidth = 100
+    }
+    Private barang_harga_rita = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "hargarita",
+        .HeaderText = "Harga Rita",
+        .Name = "barang_harga_rita",
+        .ReadOnly = True,
+        .DefaultCellStyle = dgvstyle_currency,
+        .MinimumWidth = 100
+    }
+    'Private barang_jenis_pajak = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+    '            .DataPropertyName = "jenispajak",
+    '            .HeaderText = "Jenis Pajak",
+    '            .Name = "jenispajak",
+    '            .ReadOnly = True
+    '        }
 
     '----------supplier_list dgv col---------
     Private supplier_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -477,7 +490,7 @@ Module mdlControl
         .DataPropertyName = "gudang",
         .HeaderText = "Gudang",
         .Name = "gudang",
-        .MinimumWidth = 200,
+        .MinimumWidth = 150,
         .ReadOnly = True
     }
     Private beli_supplier = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -491,6 +504,7 @@ Module mdlControl
         .DataPropertyName = "pajak",
         .HeaderText = "Faktur Pajak",
         .Name = "pajak",
+        .MinimumWidth = 200,
         .ReadOnly = True
     }
     Private beli_netto = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -498,7 +512,7 @@ Module mdlControl
         .HeaderText = "Netto",
         .Name = "netto",
         .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
+        .MinimumWidth = 120,
         .ReadOnly = True
     }
     Private beli_klaim = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -513,7 +527,7 @@ Module mdlControl
         .HeaderText = "Sisa Klaim",
         .Name = "total",
         .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
+        .MinimumWidth = 120,
         .ReadOnly = True
     }
     Private beli_term = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -566,7 +580,14 @@ Module mdlControl
         .ReadOnly = True
     }
 
-    '----------jual_list dgv col-------------------
+    '----------jual_list dgv col------------------- 
+    Private jual_pkp = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "pkp",
+        .HeaderText = "PKP",
+        .Name = "pkp",
+        .Width = 35,
+        .ReadOnly = True
+    }
     Private jual_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "faktur",
         .HeaderText = "No. Faktur",
@@ -583,27 +604,28 @@ Module mdlControl
         .DataPropertyName = "gudang",
         .HeaderText = "Gudang",
         .Name = "gudang",
-        .MinimumWidth = 200,
+        .MinimumWidth = 175,
         .ReadOnly = True
     }
     Private jual_custo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "custo",
         .HeaderText = "Customer",
         .Name = "custo",
-        .MinimumWidth = 200,
+        .MinimumWidth = 175,
         .ReadOnly = True
     }
     Private jual_sales = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "sales",
         .HeaderText = "Salesman",
         .Name = "sales",
-        .MinimumWidth = 200,
+        .MinimumWidth = 175,
         .ReadOnly = True
     }
     Private jual_pajak = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "pajak",
         .HeaderText = "Faktur Pajak",
         .Name = "pajak",
+        .MinimumWidth = 175,
         .ReadOnly = True
     }
     Private jual_netto = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -611,7 +633,7 @@ Module mdlControl
         .HeaderText = "Netto",
         .Name = "netto",
         .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
+        .MinimumWidth = 120,
         .ReadOnly = True
     }
     Private jual_klaim = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -626,13 +648,14 @@ Module mdlControl
         .HeaderText = "Sisa Klaim",
         .Name = "total",
         .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
+        .MinimumWidth = 120,
         .ReadOnly = True
     }
     Private jual_term = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "term",
         .HeaderText = "Term",
         .Name = "term",
+        .Width = 35,
         .ReadOnly = True
     }
 
@@ -691,6 +714,7 @@ Module mdlControl
         .HeaderText = "ID",
         .Name = "kode",
         .Width = 40,
+        .Visible = False,
         .ReadOnly = True
     }
     Private stok_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -724,6 +748,7 @@ Module mdlControl
         .DataPropertyName = "awal",
         .HeaderText = "Stok Awal",
         .Name = "awal",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -731,6 +756,7 @@ Module mdlControl
         .DataPropertyName = "beli",
         .HeaderText = "Beli",
         .Name = "beli",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -738,6 +764,7 @@ Module mdlControl
         .DataPropertyName = "jual",
         .HeaderText = "Jual",
         .Name = "jual",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -745,6 +772,7 @@ Module mdlControl
         .DataPropertyName = "rbeli",
         .HeaderText = "Retur jual",
         .Name = "rjual",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -752,6 +780,7 @@ Module mdlControl
         .DataPropertyName = "rjual",
         .HeaderText = "Retur Jual",
         .Name = "jual",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -759,6 +788,7 @@ Module mdlControl
         .DataPropertyName = "masuk",
         .HeaderText = "Masuk",
         .Name = "in",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -766,6 +796,7 @@ Module mdlControl
         .DataPropertyName = "keluar",
         .HeaderText = "Keluar",
         .Name = "out",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -773,6 +804,7 @@ Module mdlControl
         .DataPropertyName = "total",
         .HeaderText = "Sisa",
         .Name = "total",
+        .Width = 75,
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
     }
@@ -782,12 +814,6 @@ Module mdlControl
         .Name = "op",
         .ReadOnly = True,
         .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_status = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "status",
-        .HeaderText = "Status",
-        .Name = "status",
-        .ReadOnly = True
     }
 
     '----------gudang_mutasi dgv col-------------------
@@ -830,6 +856,12 @@ Module mdlControl
         .DataPropertyName = "regby",
         .HeaderText = "RegBy",
         .Name = "regby",
+        .ReadOnly = True
+    }
+    Private mutasi_proses = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "tglproses",
+        .HeaderText = "Proses",
+        .Name = "tgtproses",
         .ReadOnly = True
     }
 
@@ -1125,14 +1157,56 @@ Module mdlControl
                 setListcodetemp(pgpenjualan, type, frmpenjualan, "Daftar Data Penjualan")
             Case "returjual"
                 setListcodetemp(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
+            Case "draftrekap"
+                With frmrekap
+                    setDoubleBuffered(.dgv_listfaktur, True)
+                    setDoubleBuffered(.dgv_draft_list, True)
+                    .setpage(pgdraftrekap)
+                End With
+            Case "drafttagihan"
+                With frmtagihan
+                    setDoubleBuffered(.dgv_listfaktur, True)
+                    setDoubleBuffered(.dgv_draft_list, True)
+                    .setpage(pgdrafttagihan)
+                End With
             Case "stok"
                 setListcodetemp(pgstok, type, frmstok, "Daftar Stok Barang")
             Case "mutasigudang"
-                setListcodetemp(pgmutasigudang, type, frmmutasigudang, "Daftar Mutasi Antar Gudang")
+                'setListcodetemp(pgmutasigudang, type, frmmutasigudang, "Daftar Mutasi Antar Gudang")
+                frmmutasigudang.dgv_list.Columns.Clear()
+                setDoubleBuffered(frmmutasigudang.dgv_list, True)
+                setTabPageControl(type)
+                populateDGVUserCon(type, "", frmmutasigudang.dgv_list)
+                Console.WriteLine(pgmutasigudang.Name.ToString & "listcode")
+                With frmmutasigudang
+                    .in_countdata.Text = .dgv_list.Rows.Count
+                    .loadCBGudang()
+                    .setpage(pgmutasigudang)
+                End With
             Case "mutasistok"
-                setListcodetemp(pgmutasistok, type, frmmutasistok, "Daftar Mutasi Barang")
+                'setListcodetemp(pgmutasistok, type, frmmutasistok, "Daftar Mutasi Barang")
+                frmmutasistok.dgv_list.Columns.Clear()
+                setDoubleBuffered(frmmutasistok.dgv_list, True)
+                setTabPageControl(type)
+                populateDGVUserCon(type, "", frmmutasistok.dgv_list)
+                Console.WriteLine(pgmutasistok.Name.ToString & "listcode")
+                With frmmutasistok
+                    .in_countdata.Text = .dgv_list.Rows.Count
+                    .loadCbGudang()
+                    .setpage(pgmutasistok)
+                End With
             Case "stockop"
-                setListcodetemp(pgstockop, type, frmstockop, "Daftar Transaksi Stock Opname")
+                'setListcodetemp(pgstockop, type, frmstockop, "Daftar Transaksi Stock Opname")
+                frmstockop.dgv_list.Columns.Clear()
+                setDoubleBuffered(frmstockop.dgv_list, True)
+                setTabPageControl(type)
+                populateDGVUserCon(type, "", frmstockop.dgv_list)
+                Console.WriteLine(pgstockop.Name.ToString & "listcode")
+                With frmstockop
+                    .in_countdata.Text = .dgv_list.Rows.Count
+                    .loadCbGudang()
+                    .setpage(pgstockop)
+                End With
             Case "hutangawal"
                 setListcodetemp(pghutangawal, type, frmhutangawal, "Daftar Hutang")
             Case "hutangbayar"
@@ -1189,7 +1263,7 @@ Module mdlControl
         Select Case type
             Case "barang"
                 With frmbarang.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {barang_kode, barang_nama, barang_jenis, barang_kode_supplier, barang_satuan_kecil, barang_satuan_tengah, barang_satuan_tengah_isi, barang_satuan_besar, barang_satuan_besar_isi, barang_harga_beli, barang_harga_jual, barang_jenis_pajak})
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {barang_kode, barang_nama, barang_jenis, barang_kode_supplier, barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar, barang_harga_beli, barang_harga_jual, barang_harga_mt, barang_harga_horeka, barang_harga_rita})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
@@ -1265,57 +1339,79 @@ Module mdlControl
                 End With
             Case "beli"
                 With frmpembelian.dgv_list
+                    Dim beli_user = New DataGridViewColumn
+                    beli_user = user_id.Clone()
+
                     .AutoGenerateColumns = False
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier, beli_gudang, beli_pajak, beli_netto, beli_klaim, beli_total, beli_term})
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier, beli_pajak, beli_gudang, beli_netto, beli_klaim, beli_total, beli_term, beli_user})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "returbeli"
                 With frmreturbeli.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_beli_bukti, retur_beli_faktur, retur_beli_tgl, retur_beli_supplier, retur_beli_gudang, retur_beli_jml})
+                    Dim retur_beli_user = New DataGridViewColumn
+                    retur_beli_user = user_id.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_beli_bukti, retur_beli_faktur, retur_beli_tgl, retur_beli_supplier, retur_beli_gudang, retur_beli_jml, retur_beli_user})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "jual"
                 With frmpenjualan.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jual_faktur, jual_tgl, jual_custo, jual_sales, jual_gudang, jual_pajak, jual_netto, jual_klaim, jual_total, jual_term})
+                    Dim jual_user = New DataGridViewColumn
+                    jual_user = user_id.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jual_pkp, jual_faktur, jual_tgl, jual_pajak, jual_custo, jual_sales, jual_gudang, jual_netto, jual_klaim, jual_total, jual_term, jual_user})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "returjual"
                 With frmreturjual.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_beli_gudang, retur_beli_jml})
+                    Dim retur_jual_user = New DataGridViewColumn
+                    Dim retur_jual_gudang = New DataGridViewColumn
+                    Dim retur_jual_jml = New DataGridViewColumn
+                    retur_jual_user = user_id.Clone()
+                    retur_jual_gudang = retur_beli_gudang.Clone()
+                    retur_jual_jml = retur_beli_jml.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_jual_user})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "stok"
                 With frmstok.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {stok_id, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname})
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {stok_id, stok_tgl, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "mutasigudang"
                 With frmmutasigudang.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang_asal, mutasi_gudang_tujuan})
+                    Dim mutasi_user = New DataGridViewColumn()
+                    mutasi_user = user_id.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang_asal, mutasi_gudang_tujuan, mutasi_user})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "mutasistok"
                 With frmmutasistok.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang})
+                    Dim mutasi_user = New DataGridViewColumn()
+                    mutasi_user = user_id.Clone()
+
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, user_id})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
                 End With
             Case "stockop"
                 With frmstockop.dgv_list
-                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby})
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby, mutasi_proses})
                     For i = 0 To .Columns.Count - 1
                         .Columns(i).DisplayIndex = i
                     Next
@@ -1411,7 +1507,7 @@ Module mdlControl
                     piutang_user = user_id.Clone()
 
                     With .dgv_list
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {piutang_bukti, piutang_tgl, piutang_sales, piutang_kredit, piutang_debet, piutang_user, piutang_it, piutang_et})
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {piutang_bukti, piutang_tgl, piutang_sales, piutang_kredit, piutang_debet, piutang_user, piutang_it, piutang_et, piutang_user})
                         For i = 0 To .Columns.Count - 1
                             .Columns(i).DisplayIndex = i
                         Next
@@ -1583,21 +1679,21 @@ Module mdlControl
                 Exit Sub
                 '    bs = populateDGVUserConTemp("getDataMaster('neracaawal')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "beli"
-                bs = populateDGVUserConTemp("getTrans('beli')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('beli','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
             Case "returbeli"
-                bs = populateDGVUserConTemp("getTrans('returbeli')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('returbeli','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "jual"
-                bs = populateDGVUserConTemp("getTrans('jual')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('jual','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
             Case "returjual"
-                bs = populateDGVUserConTemp("getTrans('returjual')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getTrans('returjual','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
             Case "stok"
-                bs = populateDGVUserConTemp("getStok('stok')", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('stok','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR barang LIKE '%" & param & "%'")
             Case "mutasigudang"
-                bs = populateDGVUserConTemp("getStok('mutasigudang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('mutasigudang','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
             Case "mutasistok"
-                bs = populateDGVUserConTemp("getStok('mutasibarang')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('mutasibarang','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "stockop"
-                bs = populateDGVUserConTemp("getStok('stockop')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                bs = populateDGVUserConTemp("getStok('stockop','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
             Case "hutangawal"
                 Exit Sub
                 'bs = populateDGVUserConTemp("getHutang('list')", "faktur LIKE '%" & param & "%' OR supplier LIKE '%" & param & "%'")
@@ -1675,9 +1771,16 @@ Module mdlControl
             Case "pgstok"
                 frm = frmstok
             Case "pgmutasigudang"
-                frm = frmmutasigudang
+                'frm = frmmutasigudang
+                frmmutasigudang.mn_refresh.PerformClick()
+                Exit Sub
             Case "pgmutasistok"
-                frm = frmmutasistok
+                'frm = frmmutasistok
+                frmmutasistok.mn_refresh.PerformClick()
+                Exit Sub
+            Case "pgstockop"
+                frmstockop.mn_refresh.PerformClick()
+                Exit Sub
             Case "pghutangawal"
                 frm = frmhutangawal
             Case "pghutangbayar"

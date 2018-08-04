@@ -1,5 +1,6 @@
 ﻿Public Class fr_jual_retur_detail
-    Private rowindex As Integer
+    Private rowindex As Integer = 0
+    Private rowindexlist As Integer = 0
     Private ppnjenis As String = "1"
     Private returstatus As String = "0"
 
@@ -102,22 +103,6 @@
             in_qty.Focus()
             Exit Sub
         End If
-
-        'op_con()
-        'Try
-        '    readcommd(String.Format("SELECT countQTYJual(a.trans_barang,a.trans_qty,a.trans_satuan)-countQTYJual(c.trans_barang,IFNULL(c.trans_qty,0),c.trans_satuan) as qtysisa, countQTYJual('{0}','{2}','{3}') as qtyinput FROM data_penjualan_trans a LEFT JOIN data_penjualan_retur_faktur b ON b.faktur_kode_faktur=a.trans_faktur LEFT JOIN data_penjualan_retur_trans c ON c.trans_faktur=b.faktur_kode_bukti WHERE a.trans_barang='{0}' AND a.trans_faktur='{1}'", in_barang.Text, in_no_faktur.Text, in_qty.Value, cb_sat.SelectedItem))
-        '    Dim qtysisa As Integer = rd.Item("qtysisa")
-        '    Dim qtyinput As Integer = rd.Item("qtyinput")
-        '    rd.Close()
-        '    If qtyinput > qtysisa Then
-        '        MessageBox.Show("QTY yg diinput lebih besar dari penjualan")
-        '        in_qty.Focus()
-        '        Exit Sub
-        '    End If
-        'Catch ex As Exception
-        '    Console.WriteLine("ERR:" & ex.Message)
-        '    Exit Sub
-        'End Try
 
         With dgv_barang.Rows
             Dim x As Integer = .Add
@@ -238,6 +223,34 @@
         cb_custo.SelectedValue = -1
     End Sub
 
+    '----------------close
+    Private Sub bt_batalbeli_Click(sender As Object, e As EventArgs) Handles bt_batalreturjual.Click
+        If MessageBox.Show("Tutup Form?", "Puchase Order", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
+    End Sub
+
+    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        bt_batalreturjual.PerformClick()
+    End Sub
+
+    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
+        lbl_close.Visible = True
+    End Sub
+
+    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
+        lbl_close.Visible = False
+    End Sub
+
+    '---------------numeric
+    Private Sub numericenter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_harga_retur.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub numericleave(sender As Object, e As EventArgs) Handles in_qty.Leave, in_harga_retur.Leave
+        numericLostFocus(sender)
+    End Sub
+
     Private Sub fr_jual_retur_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         cb_sat.SelectedIndex = -1
         With cb_sales
@@ -271,35 +284,13 @@
     End Sub
 
     Private Sub bt_simpanreturjual_Click(sender As Object, e As EventArgs) Handles bt_simpanreturjual.Click
-        'If Trim(in_no_bukti.Text) = "" Then
-        '    MessageBox.Show("No.Bukti belum di input")
-        '    in_no_bukti.Focus()
-        '    Exit Sub
-        'End If
-        If Trim(in_no_faktur.Text) = "" Then
-            MessageBox.Show("No.Faktur belum di input")
-            in_no_faktur.Focus()
-            Exit Sub
-        Else
-            op_con()
-            Try
-                loadDataFaktur(in_no_faktur.Text)
-            Catch ex As Exception
-                Console.Write(ex.Message)
-            End Try
-        End If
         If IsNothing(cb_gudang.SelectedValue) = True Then
-            MessageBox.Show("Gudang belum di input, Input No.Faktur yang benar")
+            MessageBox.Show("Gudang belum di input")
             in_no_faktur.Focus()
             Exit Sub
         End If
         If IsNothing(cb_custo.SelectedValue) = True Then
-            MessageBox.Show("Customer belum di input, Input No.Faktur yang benar")
-            in_no_faktur.Focus()
-            Exit Sub
-        End If
-        If IsNothing(cb_gudang.SelectedValue) = True Then
-            MessageBox.Show("Gudang belum di input, Input No.Faktur yang benar")
+            MessageBox.Show("Customer belum di input")
             in_no_faktur.Focus()
             Exit Sub
         End If
@@ -318,121 +309,86 @@
 
         op_con()
         If bt_simpanreturjual.Text = "Simpan" Then
-            If Trim(in_no_bukti.Text) <> Nothing Then
-                'TODO check no_bukti
-                If checkdata("data_penjualan_retur_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode_bukti") = True Then
-                    MessageBox.Show("No.Bukti " & in_no_bukti.Text & " sudah ada!")
-                    in_no_bukti.Select()
-                    Exit Sub
+            If MessageBox.Show("Simpan data transaksi retur penjualan?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.Yes Then
+                'GENERATE KODE
+                If Trim(in_no_bukti.Text) <> Nothing Then
+                    If checkdata("data_penjualan_retur_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode_bukti") = True Then
+                        MessageBox.Show("No.Bukti " & in_no_bukti.Text & " sudah ada!")
+                        in_no_bukti.Select()
+                        Exit Sub
+                    End If
+                Else
+                    readcommd("SELECT COUNT(faktur_kode_faktur) FROM data_penjualan_retur_faktur WHERE SUBSTRING(faktur_kode,3,8)='" & in_no_faktur.Text & "'")
+                    Dim x As Integer = rd.Item(0)
+                    x += 1
+                    rd.Close()
+                    Dim fakturkode As String = "RS" & in_no_faktur.Text & "" & x.ToString("D2")
+                    in_no_bukti.Text = fakturkode
                 End If
+
+                'INSERT DATA FAKTUR
+                dataFak = {
+                    "faktur_kode_bukti='" & in_no_bukti.Text & "'",
+                    "faktur_tanggal_trans='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+                    "faktur_pajak_no='" & in_pajak.Text & "'",
+                    "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
+                    "faktur_gudang='" & cb_gudang.SelectedValue & "'",
+                    "faktur_sales='" & cb_sales.SelectedValue & "'",
+                    "faktur_custo='" & cb_custo.SelectedValue & "'",
+                    "faktur_kode_faktur='" & in_no_faktur.Text & "'",
+                    "faktur_kode_exfaktur='" & in_no_faktur_ex.Text & "'",
+                    "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text) & "'",
+                    "faktur_ppn_persen='" & removeCommaThousand(in_ppn_tot.Text) & "'",
+                    "faktur_ppn_jenis='" & ppnjenis & "'",
+                    "faktur_netto='" & removeCommaThousand(in_netto.Text) & "'",
+                    "faktur_status=1",
+                    "faktur_reg_date=NOW()",
+                    "faktur_reg_alias='" & loggeduser.user_id & "'"
+                    }
+                queryArr.Add("INSERT INTO data_penjualan_retur_faktur SET " & String.Join(",", dataFak))
+
+                'TODO : UPDATE DATA PIUTANG AWAL IF POTONG NOTA - ?
+
+                'INSERT DATA BARANG
+                For Each rows As DataGridViewRow In dgv_barang.Rows
+                    dataBrg = {
+                    "trans_faktur='" & in_no_bukti.Text & "'",
+                    "trans_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+                    "trans_barang='" & rows.Cells(0).Value & "'",
+                    "trans_harga_retur='" & rows.Cells("harga").Value & "'",
+                    "trans_qty='" & rows.Cells("qty").Value & "'",
+                    "trans_satuan='" & rows.Cells("sat").Value & "'",
+                    "trans_jumlah='" & rows.Cells("jml").Value & "'",
+                    "trans_reg_date=NOW()",
+                    "trans_reg_alias='" & loggeduser.user_id & "'"
+                    }
+                    queryArr.Add("INSERT INTO data_penjualan_retur_trans SET " & String.Join(",", dataBrg))
+
+                    'TODO Update stok <- dont think still needed
+
+                    'TODO : WRITE KARTU STOK
+
+                    'TODO : WRITE LOG
+                Next
             Else
-                'TODO generate kode
-                readcommd("SELECT COUNT(faktur_kode_faktur) FROM data_penjualan_retur_faktur WHERE faktur_kode_faktur='" & in_no_faktur.Text & "'")
-                Dim x As Integer = rd.Item(0)
-                x += 1
-                rd.Close()
-                Dim fakturkode As String = "RS" & in_no_faktur.Text & "" & x.ToString("D2")
-                in_no_bukti.Text = fakturkode
+                Me.Close()
             End If
-            
-            dataFak = {
-                "faktur_kode_bukti='" & in_no_bukti.Text & "'",
-                "faktur_tanggal_trans='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-                "faktur_pajak_no='" & in_pajak.Text & "'",
-                "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
-                "faktur_gudang='" & cb_gudang.SelectedValue & "'",
-                "faktur_sales='" & cb_sales.SelectedValue & "'",
-                "faktur_custo='" & cb_custo.SelectedValue & "'",
-                "faktur_kode_faktur='" & in_no_faktur.Text & "'",
-                "faktur_kode_exfaktur='" & in_no_faktur_ex.Text & "'",
-                "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text) & "'",
-                "faktur_ppn_persen='" & removeCommaThousand(in_ppn_tot.Text) & "'",
-                "faktur_ppn_jenis='" & ppnjenis & "'",
-                "faktur_netto='" & removeCommaThousand(in_netto.Text) & "'",
-                "faktur_status=1",
-                "faktur_reg_date=NOW()",
-                "faktur_reg_alias='" & loggeduser.user_id & "'"
-                }
-            'TODO insert faktur
-            queryArr.Add("INSERT INTO data_penjualan_retur_faktur SET " & String.Join(",", dataFak))
 
+            'BEGIN TRANSACTION
+            querycheck = startTrans(queryArr)
 
-            For Each rows As DataGridViewRow In dgv_barang.Rows
-                dataBrg = {
-                "trans_faktur='" & in_no_bukti.Text & "'",
-                "trans_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-                "trans_barang='" & rows.Cells(0).Value & "'",
-                "trans_harga_retur='" & rows.Cells("harga").Value & "'",
-                "trans_qty='" & rows.Cells("qty").Value & "'",
-                "trans_satuan='" & rows.Cells("sat").Value & "'",
-                "trans_jumlah='" & rows.Cells("jml").Value & "'",
-                "trans_reg_date=NOW()",
-                "trans_reg_alias='" & loggeduser.user_id & "'"
-                }
-                'TODO insert brg
-                queryArr.Add("INSERT INTO data_penjualan_retur_trans SET " & String.Join(",", dataBrg))
-
-                ''TODO Update stok
-                'queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_return_jual=IFNULL(stock_return_jual,0)+(countQTYJual('{0}','{2}','{3}')) WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, cb_gudang.SelectedValue, rows.Cells("qty").Value, rows.Cells("sat").Value))
-                'queryArr.Add(String.Format("UPDATE data_barang_stok SET stock_sisa=countQTYSisaSTock('{0}','{1}') WHERE stock_barang='{0}' AND stock_gudang='{1}'", rows.Cells(0).Value, cb_gudang.SelectedValue))
-
-                ''log
-                'queryArr.Add(String.Format("INSERT INTO log_stock SET log_reg=NOW(), log_user='{0}', log_barang='{1}', log_gudang='{2}', log_tanggal=NOW(), log_ip='{3}', log_komputer='{4}', log_mac='{5}', log_nama='RETURJUAL {6}', log_ket='BUKTI {7}'", loggeduser.user_id, rows.Cells(0).Value, cb_gudang.SelectedValue, loggeduser.user_ip, loggeduser.user_host, loggeduser.user_mac, in_no_faktur.Text, in_no_bukti.Text))
-            Next
-        Else
-            Me.Close()
-        End If
-
-        querycheck = startTrans(queryArr)
-
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            MessageBox.Show("Data tidak dapat tersimpan")
             Me.Cursor = Cursors.Default
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            Try
-                loadDataFaktur(in_no_bukti.Text)
-            Catch ex As Exception
-                returstatus = "1"
-            End Try
-            'setFor(statusop)
-            frmstockop.in_cari.Clear()
-            populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
-            'Me.Close()
+
+            If querycheck = False Then
+                MessageBox.Show("Data tidak dapat tersimpan")
+                Exit Sub
+            Else
+                MessageBox.Show("Data tersimpan")
+                frmstockop.in_cari.Clear()
+                populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
+                Me.Close()
+            End If
         End If
-    End Sub
-
-    '---------------numeric
-    Private Sub numericenter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_harga_retur.Enter
-        numericGotFocus(sender)
-    End Sub
-
-    Private Sub numericleave(sender As Object, e As EventArgs) Handles in_qty.Leave, in_harga_retur.Leave
-        numericLostFocus(sender)
-    End Sub
-
-    '---------------close
-    Private Sub bt_batalreturjual_Click(sender As Object, e As EventArgs) Handles bt_batalreturjual.Click
-        If MessageBox.Show("Tutup Form?", "Retur Sales", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
-    End Sub
-
-    '----------------CL bt
-    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalreturjual.PerformClick()
-        'Me.WindowState = 1
-    End Sub
-
-    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
-    End Sub
-
-    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
     End Sub
 
     '--------------------input

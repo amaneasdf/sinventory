@@ -80,6 +80,8 @@
     <Reference Include="MadMilkman.Ini">
       <HintPath>..\..\..\roaming\sht\still ok\MadMilkman\MadMilkman.Ini.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="MySql.Data">
       <HintPath>..\..\..\roaming\sht\still ok\sql connector net\v4.0\MySql.Data.dll</HintPath>
     </Reference>
@@ -87,6 +89,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -119,6 +122,52 @@
     </Compile>
     <Compile Include="fr_search_dialog.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\beli\fr_lap_beli_nota_view.Designer.vb">
+      <DependentUpon>fr_lap_beli_nota_view.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\beli\fr_lap_beli_nota_view.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\draft\fr_draft_nota_view.Designer.vb">
+      <DependentUpon>fr_draft_nota_view.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\draft\fr_draft_nota_view.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\draft\fr_draft_barang_view.Designer.vb">
+      <DependentUpon>fr_draft_barang_view.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\draft\fr_draft_barang_view.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\ds_stock.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ds_stock.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\ds_stock.vb">
+      <DependentUpon>ds_stock.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\ds_transaksi.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ds_transaksi.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\ds_transaksi.vb">
+      <DependentUpon>ds_transaksi.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\fr_lap_filter.Designer.vb">
+      <DependentUpon>fr_lap_filter.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\fr_lap_filter.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\persediaan\fr_lap_stok.Designer.vb">
+      <DependentUpon>fr_lap_stok.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\persediaan\fr_lap_stok.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_akuntansi\fr_jurnal_mem.Designer.vb">
       <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
@@ -217,6 +266,12 @@
     <Compile Include="mn_masterdata\fr_supplier_detail.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_olahdata\fr_set_periode.Designer.vb">
+      <DependentUpon>fr_set_periode.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\fr_set_periode.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_pengaturan\fr_group_detail.Designer.vb">
       <DependentUpon>fr_group_detail.vb</DependentUpon>
     </Compile>
@@ -259,10 +314,28 @@
     <Compile Include="mn_pengaturan\fr_user_password.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stock_op.Designer.vb">
+    <Compile Include="mn_persediaan\fr_stockop_list.Designer.vb">
+      <DependentUpon>fr_stockop_list.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stockop_list.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasibarang_list.Designer.vb">
+      <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasibarang_list.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasi_list.Designer.vb">
+      <DependentUpon>fr_stok_mutasi_list.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stok_mutasi_list.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_persediaan\ss\fr_stock_op.Designer.vb">
       <DependentUpon>fr_stock_op.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stock_op.vb">
+    <Compile Include="mn_persediaan\ss\fr_stock_op.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_persediaan\fr_stok_awal.Designer.vb">
@@ -271,22 +344,22 @@
     <Compile Include="mn_persediaan\fr_stok_awal.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_detail.Designer.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_detail.Designer.vb">
       <DependentUpon>fr_stok_detail.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_detail.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi.Designer.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_mutasi.Designer.vb">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_mutasi.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi_barang.Designer.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_mutasi_barang.Designer.vb">
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi_barang.vb">
+    <Compile Include="mn_persediaan\ss\fr_stok_mutasi_barang.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_piutang\fr_bg_tolak.Designer.vb">
@@ -319,22 +392,34 @@
     <Compile Include="mn_transaksi\fr_beli_retur_detail.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_transaksi\fr_draft_rekap.Designer.vb">
+      <DependentUpon>fr_draft_rekap.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_draft_rekap.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_draft_tagihan.Designer.vb">
+      <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_draft_tagihan.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="mn_transaksi\fr_jual_detail.Designer.vb">
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_transaksi\fr_jual_tagihan.Designer.vb">
+    <Compile Include="mn_transaksi\ss\fr_jual_tagihan.Designer.vb">
       <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_transaksi\fr_jual_tagihan.vb">
+    <Compile Include="mn_transaksi\ss\fr_jual_tagihan.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_transaksi\fr_jual_rekap.Designer.vb">
+    <Compile Include="mn_transaksi\ss\fr_jual_rekap.Designer.vb">
       <DependentUpon>fr_jual_rekap.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_transaksi\fr_jual_rekap.vb">
+    <Compile Include="mn_transaksi\ss\fr_jual_rekap.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_retur_detail.Designer.vb">
@@ -346,6 +431,7 @@
     <Compile Include="module\connection.vb" />
     <Compile Include="module\functional.vb" />
     <Compile Include="module\mdlControl.vb" />
+    <Compile Include="module\mdlLogging.vb" />
     <Compile Include="module\mdlParamKodeVar.vb" />
     <Compile Include="module\mdl_login.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -370,6 +456,38 @@
     </EmbeddedResource>
     <EmbeddedResource Include="fr_search_dialog.resx">
       <DependentUpon>fr_search_dialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\beli\fr_lap_beli_nota_view.resx">
+      <DependentUpon>fr_lap_beli_nota_view.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplierbarang.rdlc" />
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_suppliernota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_tgl.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_tglnota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_custonota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_sales.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_custo.rdlc" />
+    <EmbeddedResource Include="laporan\draft\fr_draft_nota_view.resx">
+      <DependentUpon>fr_draft_nota_view.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\draft\fr_draft_barang_view.resx">
+      <DependentUpon>fr_draft_barang_view.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\fr_lap_filter.resx">
+      <DependentUpon>fr_lap_filter.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\lap\draft_nota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\draft_barangkeluar.rdlc" />
+    <EmbeddedResource Include="laporan\lap\draft_tagihan.rdlc" />
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_nota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_tgl.rdlc" />
+    <EmbeddedResource Include="laporan\lap\jual\lap_jual_nota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\lap_stock.rdlc" />
+    <EmbeddedResource Include="laporan\lap\lap_stock_rinci.rdlc" />
+    <EmbeddedResource Include="laporan\persediaan\fr_lap_stok.resx">
+      <DependentUpon>fr_lap_stok.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_akuntansi\fr_jurnal_mem.resx">
       <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
@@ -419,6 +537,9 @@
     <EmbeddedResource Include="mn_masterdata\fr_supplier_detail.resx">
       <DependentUpon>fr_supplier_detail.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\fr_set_periode.resx">
+      <DependentUpon>fr_set_periode.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_group_detail.resx">
       <DependentUpon>fr_group_detail.vb</DependentUpon>
     </EmbeddedResource>
@@ -440,19 +561,28 @@
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stock_op.resx">
+    <EmbeddedResource Include="mn_persediaan\fr_stockop_list.resx">
+      <DependentUpon>fr_stockop_list.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasibarang_list.resx">
+      <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi_list.resx">
+      <DependentUpon>fr_stok_mutasi_list.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\ss\fr_stock_op.resx">
       <DependentUpon>fr_stock_op.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_awal.resx">
       <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stok_detail.resx">
+    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_detail.resx">
       <DependentUpon>fr_stok_detail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi.resx">
+    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_mutasi.resx">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi_barang.resx">
+    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_mutasi_barang.resx">
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_piutang\fr_bg_tolak.resx">
@@ -470,13 +600,19 @@
     <EmbeddedResource Include="mn_transaksi\fr_beli_retur_detail.resx">
       <DependentUpon>fr_beli_retur_detail.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_draft_rekap.resx">
+      <DependentUpon>fr_draft_rekap.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_draft_tagihan.resx">
+      <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_detail.resx">
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\fr_jual_tagihan.resx">
+    <EmbeddedResource Include="mn_transaksi\ss\fr_jual_tagihan.resx">
       <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\fr_jual_rekap.resx">
+    <EmbeddedResource Include="mn_transaksi\ss\fr_jual_rekap.resx">
       <DependentUpon>fr_jual_rekap.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_retur_detail.resx">
@@ -492,6 +628,28 @@
   <ItemGroup>
     <None Include="bin\Debug\config.ini" />
     <None Include="Inventory_TemporaryKey.pfx" />
+    <None Include="laporan\ds_stock.xsc">
+      <DependentUpon>ds_stock.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_stock.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ds_stock.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="laporan\ds_stock.xss">
+      <DependentUpon>ds_stock.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_transaksi.xsc">
+      <DependentUpon>ds_transaksi.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_transaksi.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ds_transaksi.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="laporan\ds_transaksi.xss">
+      <DependentUpon>ds_transaksi.xsd</DependentUpon>
+    </None>
     <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
@@ -588,6 +746,7 @@
   <ItemGroup>
     <None Include="Resources\toolbar_save_icon_s.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

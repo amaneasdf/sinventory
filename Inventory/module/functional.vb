@@ -61,8 +61,11 @@ Module functional
     End Sub
 
     Public Sub numericGotFocus(sender As NumericUpDown)
+        Console.WriteLine(sender.Value)
         If sender.Value = 0 Then
             sender.ResetText()
+        Else
+            sender.Controls.Item(1).Text = sender.Value
         End If
     End Sub
 
