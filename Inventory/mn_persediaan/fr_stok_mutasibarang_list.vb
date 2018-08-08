@@ -5,6 +5,8 @@
     Private rowindexbarang As Integer = 0
     Private isisat_t As Integer = 0
     Private isisat_b As Integer = 0
+    Private act As String = "INSERT"
+    Private gdstatus As Integer = 1
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -13,7 +15,7 @@
     End Sub
 
     Private Sub loadData(kode As String)
-        readcommd("SELECT * FROM data_barang_mutasi WHERE faktur_kode ='" & kode & "'")
+        readcommd("SELECT * FROM data_barang_mutasi WHERE faktur_kode ='" & kode & "' ORDER BY faktur_version DESC LIMIT 1")
         If rd.HasRows Then
             in_kode.Text = rd.Item("faktur_kode")
             date_tgl_beli.Value = rd.Item("faktur_tanggal")
@@ -21,22 +23,48 @@
             cb_gudang.SelectedValue = rd.Item("faktur_gudang")
             in_gudang_r.Text = cb_gudang.Text
             in_ket.Text = rd.Item("faktur_ket")
-            txtRegAlias.Text = rd.Item("faktur_reg_alias")
+        End If
+        rd.Close()
+
+        Dim q As String = "SELECT " _
+                             & "reg.faktur_reg_date,reg.faktur_reg_alias, " _
+                             & "upd.faktur_reg_date as faktur_upd_date, " _
+                             & "upd.faktur_reg_alias as faktur_upd_alias " _
+                         & "FROM (SELECT " _
+                             & "faktur_kode, faktur_reg_date,faktur_reg_alias, faktur_version " _
+                             & "FROM data_barang_mutasi WHERE faktur_kode='{0}' ORDER BY faktur_version ASC LIMIT 1 " _
+                         & ") reg LEFT JOIN (SELECT " _
+                             & "faktur_kode, faktur_reg_date,faktur_reg_alias, faktur_version " _
+                             & "FROM data_barang_mutasi WHERE faktur_kode='{0}' ORDER BY faktur_version DESC LIMIT 1 " _
+                         & ") upd ON reg.faktur_kode=upd.faktur_kode"
+        readcommd(String.Format(q, kode))
+        If rd.HasRows Then
             txtRegdate.Text = rd.Item("faktur_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("faktur_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
+            txtRegAlias.Text = rd.Item("faktur_reg_alias")
+            txtUpdDate.Text = rd.Item("faktur_upd_date")
             txtUpdAlias.Text = rd.Item("faktur_upd_alias")
         End If
         rd.Close()
     End Sub
 
-    Private Sub loadBrg(kode As String)
+    Private Sub loadBrg(kode As String, Optional dataver As Integer = 0)
+        Dim q As String = "SELECT " _
+                              & "trans_barang_asal, a.barang_nama, trans_qty_asal, a.barang_satuan_kecil," _
+                              & "trans_barang_tujuan, b.barang_nama, trans_qty_tujuan, b.barang_satuan_kecil," _
+                              & "trans_hpp " _
+                          & "FROM data_barang_mutasi_trans " _
+                          & "LEFT JOIN({0}) a ON a.barang_kode=trans_barang_asal " _
+                          & "LEFT JOIN({0}) b ON b.barang_kode=trans_barang_tujuan " _
+                          & "WHERE trans_faktur='{1}' AND trans_version={2}"
+        Dim q2 As String = "SELECT barang_kode, barang_nama, barang_satuan_kecil " _
+                           & "FROM(SELECT * FROM data_barang_master ORDER BY barang_kode, barang_version DESC) a" _
+                           & "GROUP BY barang_kode"
+        Dim qbuild As String = String.Format(q, q2, kode, dataver)
+
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang_asal, a.barang_nama, trans_qty_asal, trans_sat_asal, trans_barang_tujuan, b.barang_nama, trans_qty_tujuan, trans_sat_tujuan, trans_hpp FROM data_barang_mutasi_trans INNER JOIN data_barang_master a ON a.barang_kode=trans_barang_asal INNER JOIN data_barang_master b ON b.barang_kode=trans_barang_tujuan WHERE trans_faktur='" & kode & "'")
+        dt = getDataTablefromDB(qbuild)
+        'dt = getDataTablefromDB("SELECT trans_barang_asal, a.barang_nama, trans_qty_asal, trans_sat_asal, trans_barang_tujuan, b.barang_nama, trans_qty_tujuan, trans_sat_tujuan, trans_hpp FROM data_barang_mutasi_trans INNER JOIN data_barang_master a ON a.barang_kode=trans_barang_asal INNER JOIN data_barang_master b ON b.barang_kode=trans_barang_tujuan WHERE trans_faktur='" & kode & "' AND trans_version=" & dataver)
+
         With dgv_barang.Rows
             For Each x As DataRow In dt.Rows
                 Dim y As Integer = .Add
@@ -56,8 +84,11 @@
     End Sub
 
     Public Sub loadCbGudang()
+        Dim q As String = "SELECT gudang_kode, gudang_nama FROM(SELECT * " _
+                           & "FROM(SELECT * FROM data_barang_gudang ORDER BY gudang_kode, gudang_version DESC) a " _
+                           & "GROUP BY gudang_kode) b WHERE gudang_status <> 9"
         With cb_gudang
-            .DataSource = getDataTablefromDB("SELECT gudang_kode, gudang_nama FROM data_barang_gudang")
+            .DataSource = getDataTablefromDB(q)
             .DisplayMember = "gudang_nama"
             .ValueMember = "gudang_kode"
             .SelectedIndex = -1
@@ -67,7 +98,7 @@
 
     Private Sub setBarang(kode As String, type As String)
         op_con()
-        readcommd("SELECT barang_nama, barang_satuan_kecil, getHPP(barang_kode) as hpp FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        readcommd("SELECT barang_nama, barang_satuan_kecil, getHPP(barang_kode) as hpp FROM data_barang_master WHERE barang_kode='" & kode & "' ORDER BY barang_version DESC LIMIT 1")
         If rd.HasRows Then
             Select Case type
                 Case "asal"
@@ -87,12 +118,24 @@
     End Sub
 
     Private Sub loadDataBRGPopup(type As String)
+        Dim q As String = "SELECT barang_kode, barang_nama FROM(" _
+                            & "SELECT * FROM(" _
+                                & "SELECT * FROM data_barang_master " _
+                                & "ORDER BY barang_kode, barang_version DESC" _
+                            & ") a GROUP BY barang_kode" _
+                          & ") b WHERE barang_status <> 9"
+        Dim q2 As String = "SELECT barang_kode, barang_nama FROM ({0}) barang " _
+                           & "LEFT JOIN data_stok_awal ON barang_kode=stock_kode " _
+                           & "WHERE barang_kode LIKE '%{1}%' AND stock_gudang='{2}'"
+        Dim qbuild As String
         With dgv_listbarang
             Select Case type
                 Case "asal"
-                    .DataSource = getDataTablefromDB("SELECT barang_kode, barang_nama FROM data_barang_master INNER JOIN data_stok_awal ON barang_kode=stock_barang WHERE barang_kode LIKE'%" & in_barang.Text & "%' AND stock_gudang='" & cb_gudang.SelectedValue & "' LIMIT 100")
+                    qbuild = String.Format(q2, q, in_barang.Text, cb_gudang.SelectedValue) & " LIMIT 200"
+                    .DataSource = getDataTablefromDB(qbuild)
                 Case "tujuan"
-                    .DataSource = getDataTablefromDB("SELECT barang_kode, barang_nama FROM data_barang_master INNER JOIN data_stok_awal ON barang_kode=stock_barang WHERE barang_kode LIKE'%" & in_barang2.Text & "%' AND stock_gudang='" & cb_gudang.SelectedValue & "' AND barang_kode <> '" & in_barang.Text & "' LIMIT 100")
+                    qbuild = String.Format(q2, q, in_barang2.Text, cb_gudang.SelectedValue) & " AND barang_kode<>'" & in_barang.Text & "' LIMIT 200"
+                    .DataSource = getDataTablefromDB(qbuild)
             End Select
         End With
     End Sub
@@ -221,6 +264,14 @@
     End Sub
 
     Private Sub saveData()
+        Dim querycheck As String = False
+        Dim queryArr As New List(Of String)
+        Dim data, dataCol As String()
+        Dim query As String = "INSERT INTO data_barang_mutasi({0}) SELECT {1} FROM data_barang_mutasi WHERE faktur_kode={2}"
+        Dim querybrg As String = "INSERT INTO data_barang_mutasi_trans({0}) SELECT {1} FROM data_barang_mutasi WHERE faktur_kode={2}"
+
+        'DONE : TODO : (?) : GENERATE KODE GUDANG -> PREVENT DUPLICATE AND ACCIDENTALY OVERWRITE EXISTING DATA
+        'TODO : (?) : ADD REFFERRAL CODE INPUT
         If cb_gudang.SelectedValue = Nothing Then
             MessageBox.Show("Gudang asal belum dimasukkan")
             cb_gudang.Focus()
@@ -232,72 +283,124 @@
             Exit Sub
         End If
 
-        Dim querycheck As String = False
-        Dim queryArr As New List(Of String)
-        Dim datafaktur As String()
-        Dim dataBrg As String()
-
         Me.Cursor = Cursors.WaitCursor
 
         op_con()
-        If mn_tambah.Text = "Batal" Then
-            'generate kode
-            readcommd("SELECT COUNT(faktur_tanggal) FROM data_barang_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "'")
-            Dim x As Integer = rd.Item(0)
-            x += 1
+        'If MessageBox.Show("Simpan Data Gudang?", "Data Gudang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        'WITH DATA-VERSION-ING  & USER ACT LOG
+        If Trim(in_kode.Text) = Nothing Then
+            Dim x As Integer = 0
+            readcommd("SELECT RIGHT(faktur_kode,4) FROM data_barang_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "' GROUP BY gudang_kode ORDER BY gudang_kode DESC LIMIT 1")
+            If rd.HasRows Then
+                x = CInt(rd.Item(0)) + 1
+            Else
+                x = 1
+            End If
             rd.Close()
-            Dim fakturkode As String = "MB" & date_tgl_beli.Value.ToString("yyyyMMdd") & x.ToString("D4")
-            in_kode.Text = fakturkode
-
-            datafaktur = {
-                "faktur_kode='" & in_kode.Text & "'",
-                "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                "faktur_gudang='" & cb_gudang.SelectedValue & "'",
-                "faktur_ket='" & in_ket.Text & "'",
-                "faktur_reg_date=NOW()",
-                "faktur_reg_alias='" & loggeduser.user_id & "'"
-                }
-
-            'INSERT
-            queryArr.Add("INSERT INTO data_barang_mutasi SET " & String.Join(",", datafaktur))
-        ElseIf mn_edit.Text = "Batal Edit" Then
-            datafaktur = {
-                "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                "faktur_gudang='" & cb_gudang.SelectedValue & "'",
-                "faktur_ket='" & in_ket.Text & "'",
-                "faktur_upd_date=NOW()",
-                "faktur_upd_alias='" & loggeduser.user_id & "'"
-                }
-
-            'UPDATE
-            queryArr.Add("UPDATE data_barang_mutasi SET " & String.Join(",", datafaktur) & " WHERE faktur_kode='" & in_kode.Text & "'")
-
-            'DELETE data trans/barang
-            queryArr.Add("DELETE FROM data_barang_mutasi_trans WHERE trans_faktur='" & in_kode.Text & "'")
+            in_kode.Text = "MB" & date_tgl_beli.Value.ToString("yyyyMMdd") & x.ToString("D4")
         End If
 
-        'INSERT/re-INSERT data trans/barang
-        For Each rows As DataGridViewRow In dgv_barang.Rows
-            dataBrg = {
-                "trans_faktur='" & in_kode.Text & "'",
-                "trans_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                "trans_barang_asal='" & rows.Cells(0).Value & "'",
-                "trans_qty_asal=" & rows.Cells("qty_a").Value,
-                "trans_sat_asal='" & rows.Cells("sat_b").Value & "'",
-                "trans_barang_tujuan='" & rows.Cells("kode_b").Value & "'",
-                "trans_qty_tujuan=" & rows.Cells("qty_a").Value,
-                "trans_sat_tujuan='" & rows.Cells("sat_b").Value & "'",
-                "trans_hpp=getHPP('" & rows.Cells("kode_b").Value & "')",
-                "trans_reg_date=NOW()",
-                "trans_reg_alias='" & loggeduser.user_id & "'"
+        'INSERT DATA FAKTUR
+        dataCol = {
+            "faktur_kode", "faktur_tanggal", "faktur_gudang",
+            "faktur_ket", "faktur_reg_date", "faktur_reg_alias",
+            "faktur_version"
+            }
+        data = {
+            "'" & in_kode.Text & "'",
+            "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "'" & cb_gudang.SelectedValue & "'",
+            "'" & in_ket.Text & "'",
+            "NOW()",
+            "'" & loggeduser.user_id & "'",
+            "MAX(faktur_version)+1"
+            }
+        Dim q As String = String.Format(query, String.Join(",", dataCol), String.Join(",", data), "'" & in_kode.Text & "'")
+        Console.WriteLine(q)
+        queryArr.Add(q)
+
+        'INSERT DATA BARANG
+        dataCol = {
+            "trans_faktur",
+            "trans_barang_asal", "trans_qty_asal",
+            "trans_barang_tujuan", "trans_qty_tujuan",
+            "trans_hpp", "trans_version"
+            }
+        For Each row As DataGridViewRow In dgv_barang.Rows
+            data = {
+                "'" & in_kode.Text & "'",
+                "'" & row.Cells(0).Value & "'",
+                "'" & row.Cells("qty_a").Value & "'",
+                "'" & row.Cells("kode_b").Value & "'",
+                "'" & row.Cells("qty_b").Value & "'",
+                row.Cells("hpp").Value,
+                "MAX(faktur_version)"
                 }
-
-            queryArr.Add("INSERT INTO data_barang_mutasi_trans SET " & String.Join(",", dataBrg))
-
-
-            'TODO:UPDATE STOCK
-            'TODO:WRITE LOG
+            q = String.Format(query, String.Join(",", dataCol), String.Join(",", data), "'" & in_kode.Text & "'")
+            Console.WriteLine(q)
+            queryArr.Add(q)
         Next
+
+        'End If
+
+        'If mn_tambah.Text = "Batal" Then
+        '    'generate kode
+        '    readcommd("SELECT COUNT(faktur_tanggal) FROM data_barang_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "'")
+        '    Dim x As Integer = rd.Item(0)
+        '    x += 1
+        '    rd.Close()
+        '    Dim fakturkode As String = "MB" & date_tgl_beli.Value.ToString("yyyyMMdd") & x.ToString("D4")
+        '    in_kode.Text = fakturkode
+
+        '    datafaktur = {
+        '        "faktur_kode='" & in_kode.Text & "'",
+        '        "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+        '        "faktur_gudang='" & cb_gudang.SelectedValue & "'",
+        '        "faktur_ket='" & in_ket.Text & "'",
+        '        "faktur_reg_date=NOW()",
+        '        "faktur_reg_alias='" & loggeduser.user_id & "'"
+        '        }
+
+        '    'INSERT
+        '    queryArr.Add("INSERT INTO data_barang_mutasi SET " & String.Join(",", datafaktur))
+        'ElseIf mn_edit.Text = "Batal Edit" Then
+        '    datafaktur = {
+        '        "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+        '        "faktur_gudang='" & cb_gudang.SelectedValue & "'",
+        '        "faktur_ket='" & in_ket.Text & "'",
+        '        "faktur_upd_date=NOW()",
+        '        "faktur_upd_alias='" & loggeduser.user_id & "'"
+        '        }
+
+        '    'UPDATE
+        '    queryArr.Add("UPDATE data_barang_mutasi SET " & String.Join(",", datafaktur) & " WHERE faktur_kode='" & in_kode.Text & "'")
+
+        '    'DELETE data trans/barang
+        '    queryArr.Add("DELETE FROM data_barang_mutasi_trans WHERE trans_faktur='" & in_kode.Text & "'")
+        'End If
+
+        ''INSERT/re-INSERT data trans/barang
+        'For Each rows As DataGridViewRow In dgv_barang.Rows
+        '    dataBrg = {
+        '        "trans_faktur='" & in_kode.Text & "'",
+        '        "trans_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+        '        "trans_barang_asal='" & rows.Cells(0).Value & "'",
+        '        "trans_qty_asal=" & rows.Cells("qty_a").Value,
+        '        "trans_sat_asal='" & rows.Cells("sat_b").Value & "'",
+        '        "trans_barang_tujuan='" & rows.Cells("kode_b").Value & "'",
+        '        "trans_qty_tujuan=" & rows.Cells("qty_a").Value,
+        '        "trans_sat_tujuan='" & rows.Cells("sat_b").Value & "'",
+        '        "trans_hpp=getHPP('" & rows.Cells("kode_b").Value & "')",
+        '        "trans_reg_date=NOW()",
+        '        "trans_reg_alias='" & loggeduser.user_id & "'"
+        '        }
+
+        '    queryArr.Add("INSERT INTO data_barang_mutasi_trans SET " & String.Join(",", dataBrg))
+
+
+        '    'TODO:UPDATE STOCK
+        '    'TODO:WRITE LOG
+        'Next
 
         querycheck = startTrans(queryArr)
 
@@ -524,6 +627,9 @@
     End Sub
 
     Private Sub bt_gudang_list_Click(sender As Object, e As EventArgs) Handles bt_gudang_list.Click
+        Dim q As String = "SELECT gudang_kode as kode, gudang_nama as nama FROM(SELECT * " _
+                   & "FROM(SELECT * FROM data_barang_gudang ORDER BY gudang_kode, gudang_version DESC) a " _
+                   & "GROUP BY gudang_kode) b WHERE gudang_status <> 9"
         Using search As New fr_search_dialog
             With search
                 If cb_gudang.Text <> Nothing Then
@@ -532,7 +638,7 @@
                 If cb_gudang.SelectedValue <> Nothing Then
                     .returnkode = cb_gudang.SelectedValue
                 End If
-                .query = "SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang"
+                .query = q
                 .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                 .type = "gudang"
                 .ShowDialog()
@@ -665,6 +771,9 @@
     End Sub
 
     Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+        Dim q As String = "SELECT barang_kode as kode, barang_nama as nama, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM(SELECT * " _
+                  & "FROM(SELECT * FROM data_barang_master ORDER BY barang_kode, barang_version DESC) a " _
+                  & "GROUP BY barang_kode) b WHERE barang_status <> 9"
         clearTextBarang("asal")
         If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
@@ -673,7 +782,7 @@
                         .in_cari.Text = in_barang.Text
                     End If
                     .returnkode = in_barang.Text
-                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
+                    .query = q
                     .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                     .type = "barang"
                     .ShowDialog()
@@ -699,6 +808,9 @@
     End Sub
 
     Private Sub in_barang2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang2.KeyDown
+        Dim q As String = "SELECT barang_kode as kode, barang_nama as nama, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM(SELECT * " _
+                            & "FROM(SELECT * FROM data_barang_master ORDER BY barang_kode, barang_version DESC) a " _
+                            & "GROUP BY barang_kode) b WHERE barang_status <> 9"
         clearTextBarang("tujuan")
         If e.KeyCode = Keys.F1 Then
             Using search As New fr_search_dialog
@@ -707,7 +819,7 @@
                         .in_cari.Text = in_barang2.Text
                     End If
                     .returnkode = in_barang2.Text
-                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
+                    .query = q
                     .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                     .type = "barang"
                     .ShowDialog()

@@ -48,9 +48,9 @@ Partial Class fr_sales_detail
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_bank_nama = New System.Windows.Forms.TextBox()
-        Me.cb_status = New System.Windows.Forms.ComboBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
+        Me.in_status_kode = New System.Windows.Forms.TextBox()
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
@@ -66,13 +66,14 @@ Partial Class fr_sales_detail
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
-        Me.Label14 = New System.Windows.Forms.Label()
+        Me.lbl_title = New System.Windows.Forms.Label()
         Me.in_target = New System.Windows.Forms.NumericUpDown()
         Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status_switch = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status_del = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.pic_sales, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
@@ -119,6 +120,7 @@ Partial Class fr_sales_detail
         '
         'bt_batalsales
         '
+        Me.bt_batalsales.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalsales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batalsales.Location = New System.Drawing.Point(564, 465)
         Me.bt_batalsales.Name = "bt_batalsales"
@@ -129,6 +131,7 @@ Partial Class fr_sales_detail
         '
         'bt_simpansales
         '
+        Me.bt_simpansales.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_simpansales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_simpansales.Location = New System.Drawing.Point(564, 429)
         Me.bt_simpansales.Name = "bt_simpansales"
@@ -357,20 +360,11 @@ Partial Class fr_sales_detail
         Me.in_bank_nama.Size = New System.Drawing.Size(211, 20)
         Me.in_bank_nama.TabIndex = 10
         '
-        'cb_status
-        '
-        Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_status.FormattingEnabled = True
-        Me.cb_status.Location = New System.Drawing.Point(48, 36)
-        Me.cb_status.Name = "cb_status"
-        Me.cb_status.Size = New System.Drawing.Size(167, 21)
-        Me.cb_status.TabIndex = 17
-        '
         'Label13
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(10, 40)
+        Me.Label13.Location = New System.Drawing.Point(10, 39)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(37, 13)
         Me.Label13.TabIndex = 33
@@ -378,15 +372,28 @@ Partial Class fr_sales_detail
         '
         'GroupBox1
         '
+        Me.GroupBox1.Controls.Add(Me.in_status_kode)
         Me.GroupBox1.Controls.Add(Me.in_kode)
         Me.GroupBox1.Controls.Add(Me.Label4)
         Me.GroupBox1.Controls.Add(Me.Label13)
-        Me.GroupBox1.Controls.Add(Me.cb_status)
         Me.GroupBox1.Location = New System.Drawing.Point(445, 71)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(221, 61)
         Me.GroupBox1.TabIndex = 133
         Me.GroupBox1.TabStop = False
+        '
+        'in_status_kode
+        '
+        Me.in_status_kode.BackColor = System.Drawing.Color.White
+        Me.in_status_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status_kode.ForeColor = System.Drawing.Color.Black
+        Me.in_status_kode.Location = New System.Drawing.Point(48, 34)
+        Me.in_status_kode.MaxLength = 5
+        Me.in_status_kode.Name = "in_status_kode"
+        Me.in_status_kode.ReadOnly = True
+        Me.in_status_kode.Size = New System.Drawing.Size(167, 21)
+        Me.in_status_kode.TabIndex = 34
+        Me.in_status_kode.TabStop = False
         '
         'txtRegAlias
         '
@@ -517,7 +524,7 @@ Partial Class fr_sales_detail
         Me.Panel1.BackColor = System.Drawing.Color.Orange
         Me.Panel1.Controls.Add(Me.lbl_close)
         Me.Panel1.Controls.Add(Me.bt_cl)
-        Me.Panel1.Controls.Add(Me.Label14)
+        Me.Panel1.Controls.Add(Me.lbl_title)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
@@ -556,17 +563,17 @@ Partial Class fr_sales_detail
         Me.bt_cl.TabIndex = 137
         Me.bt_cl.UseVisualStyleBackColor = False
         '
-        'Label14
+        'lbl_title
         '
-        Me.Label14.AutoSize = True
-        Me.Label14.BackColor = System.Drawing.Color.Orange
-        Me.Label14.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.ForeColor = System.Drawing.Color.White
-        Me.Label14.Location = New System.Drawing.Point(6, 4)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(240, 30)
-        Me.Label14.TabIndex = 136
-        Me.Label14.Text = "Data Retur Penjualan"
+        Me.lbl_title.AutoSize = True
+        Me.lbl_title.BackColor = System.Drawing.Color.Orange
+        Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.ForeColor = System.Drawing.Color.White
+        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Name = "lbl_title"
+        Me.lbl_title.Size = New System.Drawing.Size(250, 30)
+        Me.lbl_title.TabIndex = 136
+        Me.lbl_title.Text = "Data Salesman Master"
         '
         'in_target
         '
@@ -589,11 +596,11 @@ Partial Class fr_sales_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_status})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(678, 24)
-        Me.MenuStrip1.TabIndex = 182
+        Me.MenuStrip1.TabIndex = 183
         Me.MenuStrip1.Text = "MenuStrip1"
         '
         'mn_save
@@ -605,19 +612,26 @@ Partial Class fr_sales_detail
         Me.mn_save.Text = "&Save"
         Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'mn_deact
+        'mn_status
         '
-        Me.mn_deact.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
-        Me.mn_deact.Name = "mn_deact"
-        Me.mn_deact.Size = New System.Drawing.Size(90, 20)
-        Me.mn_deact.Text = "Deactivate"
-        Me.mn_deact.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_status.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_status_switch, Me.mn_status_del})
+        Me.mn_status.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
+        Me.mn_status.Name = "mn_status"
+        Me.mn_status.Size = New System.Drawing.Size(67, 20)
+        Me.mn_status.Text = "Status"
+        Me.mn_status.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'mn_del
+        'mn_status_switch
         '
-        Me.mn_del.Name = "mn_del"
-        Me.mn_del.Size = New System.Drawing.Size(53, 20)
-        Me.mn_del.Text = "Hapus"
+        Me.mn_status_switch.Name = "mn_status_switch"
+        Me.mn_status_switch.Size = New System.Drawing.Size(177, 22)
+        Me.mn_status_switch.Text = "Activate/Deactivate"
+        '
+        'mn_status_del
+        '
+        Me.mn_status_del.Name = "mn_status_del"
+        Me.mn_status_del.Size = New System.Drawing.Size(177, 22)
+        Me.mn_status_del.Text = "Hapus"
         '
         'Panel2
         '
@@ -633,6 +647,7 @@ Partial Class fr_sales_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.CancelButton = Me.bt_batalsales
         Me.ClientSize = New System.Drawing.Size(678, 516)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Label19)
@@ -676,6 +691,7 @@ Partial Class fr_sales_detail
         Me.Controls.Add(Me.Label6)
         Me.Controls.Add(Me.Label3)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.KeyPreview = True
         Me.Name = "fr_sales_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Detail Salesman :  "
@@ -719,7 +735,6 @@ Partial Class fr_sales_detail
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents in_bank_nama As System.Windows.Forms.TextBox
-    Friend WithEvents cb_status As System.Windows.Forms.ComboBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
     Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
@@ -737,12 +752,14 @@ Partial Class fr_sales_detail
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
-    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents in_target As System.Windows.Forms.NumericUpDown
     Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
+    Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents mn_status As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_status_switch As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_status_del As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents in_status_kode As System.Windows.Forms.TextBox
 End Class

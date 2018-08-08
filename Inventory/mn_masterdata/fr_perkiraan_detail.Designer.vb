@@ -23,7 +23,7 @@ Partial Class fr_perkiraan_detail
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.in_parent = New System.Windows.Forms.TextBox()
-        Me.in_kode = New System.Windows.Forms.TextBox()
+        Me.in_no = New System.Windows.Forms.TextBox()
         Me.in_nama = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -37,9 +37,8 @@ Partial Class fr_perkiraan_detail
         Me.Label6 = New System.Windows.Forms.Label()
         Me.cb_jenis = New System.Windows.Forms.ComboBox()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.cb_jurnal = New System.Windows.Forms.ComboBox()
+        Me.cb_neraca = New System.Windows.Forms.ComboBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.cb_status = New System.Windows.Forms.ComboBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
         Me.txtUpdDate = New System.Windows.Forms.TextBox()
@@ -48,8 +47,6 @@ Partial Class fr_perkiraan_detail
         Me.txtRegdate = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
@@ -58,10 +55,12 @@ Partial Class fr_perkiraan_detail
         Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status_switch = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_status_del = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.cb_posisi_neraca = New System.Windows.Forms.ComboBox()
+        Me.in_status_kode = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -78,16 +77,16 @@ Partial Class fr_perkiraan_detail
         Me.in_parent.Size = New System.Drawing.Size(133, 20)
         Me.in_parent.TabIndex = 1
         '
-        'in_kode
+        'in_no
         '
-        Me.in_kode.BackColor = System.Drawing.Color.White
-        Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_kode.Location = New System.Drawing.Point(108, 81)
-        Me.in_kode.MaxLength = 20
-        Me.in_kode.Name = "in_kode"
-        Me.in_kode.Size = New System.Drawing.Size(133, 20)
-        Me.in_kode.TabIndex = 0
+        Me.in_no.BackColor = System.Drawing.Color.White
+        Me.in_no.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_no.ForeColor = System.Drawing.Color.Black
+        Me.in_no.Location = New System.Drawing.Point(108, 81)
+        Me.in_no.MaxLength = 20
+        Me.in_no.Name = "in_no"
+        Me.in_no.Size = New System.Drawing.Size(133, 20)
+        Me.in_no.TabIndex = 0
         '
         'in_nama
         '
@@ -166,7 +165,7 @@ Partial Class fr_perkiraan_detail
         Me.bt_batalperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalperkiraan.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalperkiraan.Location = New System.Drawing.Point(493, 395)
+        Me.bt_batalperkiraan.Location = New System.Drawing.Point(493, 332)
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalperkiraan.TabIndex = 8
@@ -177,7 +176,7 @@ Partial Class fr_perkiraan_detail
         '
         Me.bt_simpanperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpanperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanperkiraan.Location = New System.Drawing.Point(391, 395)
+        Me.bt_simpanperkiraan.Location = New System.Drawing.Point(391, 332)
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
         Me.bt_simpanperkiraan.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpanperkiraan.TabIndex = 7
@@ -223,40 +222,31 @@ Partial Class fr_perkiraan_detail
         Me.Label8.TabIndex = 146
         Me.Label8.Text = "Posisi Neraca"
         '
-        'cb_jurnal
+        'cb_neraca
         '
-        Me.cb_jurnal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_jurnal.FormattingEnabled = True
-        Me.cb_jurnal.Location = New System.Drawing.Point(108, 197)
-        Me.cb_jurnal.Name = "cb_jurnal"
-        Me.cb_jurnal.Size = New System.Drawing.Size(133, 21)
-        Me.cb_jurnal.TabIndex = 5
+        Me.cb_neraca.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_neraca.FormattingEnabled = True
+        Me.cb_neraca.Location = New System.Drawing.Point(108, 197)
+        Me.cb_neraca.Name = "cb_neraca"
+        Me.cb_neraca.Size = New System.Drawing.Size(133, 21)
+        Me.cb_neraca.TabIndex = 5
         '
         'Label13
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(392, 110)
+        Me.Label13.Location = New System.Drawing.Point(12, 328)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(37, 13)
         Me.Label13.TabIndex = 338
         Me.Label13.Text = "Status"
-        '
-        'cb_status
-        '
-        Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_status.FormattingEnabled = True
-        Me.cb_status.Location = New System.Drawing.Point(430, 107)
-        Me.cb_status.Name = "cb_status"
-        Me.cb_status.Size = New System.Drawing.Size(160, 21)
-        Me.cb_status.TabIndex = 328
         '
         'Label30
         '
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(12, 408)
+        Me.Label30.Location = New System.Drawing.Point(398, 303)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(30, 13)
         Me.Label30.TabIndex = 336
@@ -265,7 +255,7 @@ Partial Class fr_perkiraan_detail
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(53, 383)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(439, 278)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
@@ -275,7 +265,7 @@ Partial Class fr_perkiraan_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(53, 405)
+        Me.txtUpdDate.Location = New System.Drawing.Point(439, 300)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
@@ -285,7 +275,7 @@ Partial Class fr_perkiraan_detail
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(53, 335)
+        Me.txtRegAlias.Location = New System.Drawing.Point(439, 230)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
@@ -297,7 +287,7 @@ Partial Class fr_perkiraan_detail
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(12, 386)
+        Me.Label28.Location = New System.Drawing.Point(398, 281)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 337
@@ -306,7 +296,7 @@ Partial Class fr_perkiraan_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(53, 357)
+        Me.txtRegdate.Location = New System.Drawing.Point(439, 252)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
@@ -318,7 +308,7 @@ Partial Class fr_perkiraan_detail
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(12, 338)
+        Me.Label27.Location = New System.Drawing.Point(398, 233)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 334
@@ -329,32 +319,11 @@ Partial Class fr_perkiraan_detail
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(12, 360)
+        Me.Label29.Location = New System.Drawing.Point(398, 255)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(30, 13)
         Me.Label29.TabIndex = 333
         Me.Label29.Text = "Date"
-        '
-        'TextBox1
-        '
-        Me.TextBox1.BackColor = System.Drawing.Color.White
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.ForeColor = System.Drawing.Color.Black
-        Me.TextBox1.Location = New System.Drawing.Point(430, 84)
-        Me.TextBox1.MaxLength = 10
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(160, 20)
-        Me.TextBox1.TabIndex = 327
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(392, 87)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(32, 13)
-        Me.Label7.TabIndex = 329
-        Me.Label7.Text = "Kode"
         '
         'Panel1
         '
@@ -409,15 +378,15 @@ Partial Class fr_perkiraan_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(172, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(250, 30)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Perkiraan"
+        Me.lbl_title.Text = "Data Master Perkiraan"
         '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 431)
+        Me.Panel2.Location = New System.Drawing.Point(0, 368)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(601, 10)
         Me.Panel2.TabIndex = 341
@@ -433,11 +402,11 @@ Partial Class fr_perkiraan_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_status})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(601, 24)
-        Me.MenuStrip1.TabIndex = 182
+        Me.MenuStrip1.TabIndex = 24
         Me.MenuStrip1.Text = "MenuStrip1"
         '
         'mn_save
@@ -449,19 +418,26 @@ Partial Class fr_perkiraan_detail
         Me.mn_save.Text = "&Save"
         Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'mn_deact
+        'mn_status
         '
-        Me.mn_deact.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
-        Me.mn_deact.Name = "mn_deact"
-        Me.mn_deact.Size = New System.Drawing.Size(90, 20)
-        Me.mn_deact.Text = "Deactivate"
-        Me.mn_deact.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_status.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_status_switch, Me.mn_status_del})
+        Me.mn_status.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
+        Me.mn_status.Name = "mn_status"
+        Me.mn_status.Size = New System.Drawing.Size(67, 20)
+        Me.mn_status.Text = "Status"
+        Me.mn_status.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'mn_del
+        'mn_status_switch
         '
-        Me.mn_del.Name = "mn_del"
-        Me.mn_del.Size = New System.Drawing.Size(53, 20)
-        Me.mn_del.Text = "Hapus"
+        Me.mn_status_switch.Name = "mn_status_switch"
+        Me.mn_status_switch.Size = New System.Drawing.Size(167, 22)
+        Me.mn_status_switch.Text = "Active/Deactivate"
+        '
+        'mn_status_del
+        '
+        Me.mn_status_del.Name = "mn_status_del"
+        Me.mn_status_del.Size = New System.Drawing.Size(167, 22)
+        Me.mn_status_del.Text = "Delete"
         '
         'Label9
         '
@@ -473,14 +449,27 @@ Partial Class fr_perkiraan_detail
         Me.Label9.TabIndex = 146
         Me.Label9.Text = "Posisi D/K Neraca"
         '
-        'ComboBox1
+        'cb_posisi_neraca
         '
-        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(108, 221)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(133, 21)
-        Me.ComboBox1.TabIndex = 4
+        Me.cb_posisi_neraca.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_posisi_neraca.FormattingEnabled = True
+        Me.cb_posisi_neraca.Location = New System.Drawing.Point(108, 221)
+        Me.cb_posisi_neraca.Name = "cb_posisi_neraca"
+        Me.cb_posisi_neraca.Size = New System.Drawing.Size(133, 21)
+        Me.cb_posisi_neraca.TabIndex = 4
+        '
+        'in_status_kode
+        '
+        Me.in_status_kode.BackColor = System.Drawing.Color.White
+        Me.in_status_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status_kode.ForeColor = System.Drawing.Color.Black
+        Me.in_status_kode.Location = New System.Drawing.Point(108, 323)
+        Me.in_status_kode.MaxLength = 5
+        Me.in_status_kode.Name = "in_status_kode"
+        Me.in_status_kode.ReadOnly = True
+        Me.in_status_kode.Size = New System.Drawing.Size(159, 21)
+        Me.in_status_kode.TabIndex = 1
+        Me.in_status_kode.TabStop = False
         '
         'fr_perkiraan_detail
         '
@@ -488,12 +477,12 @@ Partial Class fr_perkiraan_detail
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
-        Me.ClientSize = New System.Drawing.Size(601, 441)
+        Me.ClientSize = New System.Drawing.Size(601, 378)
+        Me.Controls.Add(Me.in_status_kode)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.pnl_Menu)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.cb_status)
         Me.Controls.Add(Me.Label30)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.txtUpdDate)
@@ -502,11 +491,9 @@ Partial Class fr_perkiraan_detail
         Me.Controls.Add(Me.txtRegdate)
         Me.Controls.Add(Me.Label27)
         Me.Controls.Add(Me.Label29)
-        Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.cb_jenis)
-        Me.Controls.Add(Me.cb_jurnal)
-        Me.Controls.Add(Me.ComboBox1)
+        Me.Controls.Add(Me.cb_neraca)
+        Me.Controls.Add(Me.cb_posisi_neraca)
         Me.Controls.Add(Me.cb_posisi)
         Me.Controls.Add(Me.bt_batalperkiraan)
         Me.Controls.Add(Me.Label6)
@@ -515,7 +502,7 @@ Partial Class fr_perkiraan_detail
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.in_parent)
-        Me.Controls.Add(Me.in_kode)
+        Me.Controls.Add(Me.in_no)
         Me.Controls.Add(Me.in_ket)
         Me.Controls.Add(Me.in_nama)
         Me.Controls.Add(Me.Label4)
@@ -538,7 +525,7 @@ Partial Class fr_perkiraan_detail
 
     End Sub
     Friend WithEvents in_parent As System.Windows.Forms.TextBox
-    Friend WithEvents in_kode As System.Windows.Forms.TextBox
+    Friend WithEvents in_no As System.Windows.Forms.TextBox
     Friend WithEvents in_nama As System.Windows.Forms.TextBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Label3 As System.Windows.Forms.Label
@@ -552,9 +539,8 @@ Partial Class fr_perkiraan_detail
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents cb_jenis As System.Windows.Forms.ComboBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents cb_jurnal As System.Windows.Forms.ComboBox
+    Friend WithEvents cb_neraca As System.Windows.Forms.ComboBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents cb_status As System.Windows.Forms.ComboBox
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
@@ -563,18 +549,18 @@ Partial Class fr_perkiraan_detail
     Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents cb_posisi_neraca As System.Windows.Forms.ComboBox
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents mn_status As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_status_switch As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_status_del As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents in_status_kode As System.Windows.Forms.TextBox
 End Class

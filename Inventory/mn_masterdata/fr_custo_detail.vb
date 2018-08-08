@@ -1,30 +1,14 @@
 ﻿Public Class fr_custo_detail
-
-    'Private Sub cb_tipe_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_tipe.SelectionChangeCommitted
-    '    Try
-    '        readcommd("SELECT hargajual_kode FROM `data_customer_hargajual` INNER JOIN data_customer_jenis ON hargajual_kode=jenis_def_jual WHERE jenis_kode='" & cb_tipe.SelectedValue & "'")
-    '        Console.WriteLine(rd.Item("hargajual_kode"))
-    '        If rd.HasRows Then
-    '            cb_harga.SelectedValue = rd.Item("hargajual_kode")
-    '            cb_diskon.SelectedIndex = 0
-    '        End If
-    '        rd.Close()
-    '    Catch ex As Exception
-    '        Console.WriteLine(ex.Message)
-    '    End Try
-    '    in_telpcusto.Focus()
-    'End Sub
+    Private gdstatus As Integer = 1
+    Private act As String = "INSERT"
 
     Private Sub loadDataCusto(kode As String)
         'Dim kodesales As String
-        readcommd("SELECT * FROM data_customer_master where customer_kode='" & kode & "'")
+        readcommd("SELECT * FROM data_customer_master where customer_kode='" & kode & "' ORDER BY customer_version DESC LIMIT 1")
         If rd.HasRows Then
             in_kode.Text = kode
-            'kodesales =rd.Item("customer_salesman")
-            in_kode_sales.Text = rd.Item("customer_salesman")
-            cb_sales.SelectedValue = in_kode_sales.Text
             in_nama_custo.Text = rd.Item("customer_nama")
-            cb_status.SelectedValue = rd.Item("customer_status")
+            gdstatus = rd.Item("customer_status")
             cb_tipe.SelectedValue = rd.Item("customer_jenis")
             in_alamat_custo.Text = rd.Item("customer_alamat")
             in_alamat_blok.Text = rd.Item("customer_alamat_blok")
@@ -51,56 +35,89 @@
             cb_diskon.SelectedValue = rd.Item("Customer_kriteria_discount")
             cb_harga.SelectedValue = rd.Item("Customer_kriteria_harga_jual")
             in_term.Value = rd.Item("customer_term")
+        End If
+        rd.Close()
+
+        Dim q As String = "SELECT " _
+                              & "reg.customer_reg_date,reg.customer_reg_alias, " _
+                              & "upd.customer_reg_date as customer_upd_date, " _
+                              & "upd.customerg_reg_alias as customer_upd_alias " _
+                          & "FROM (SELECT " _
+                              & "customer_kode, customer_reg_date,customer_reg_alias, customer_version " _
+                              & "FROM data_customer_master WHERE customer_kode='{0}' ORDER BY customer_version ASC LIMIT 1 " _
+                          & ") reg LEFT JOIN (SELECT " _
+                              & "customer_kode, customer_reg_date,customer_reg_alias, customer_version " _
+                              & "FROM data_customer_master WHERE customer_kode='{0}' ORDER BY customer_version DESC LIMIT 1 " _
+                          & ") upd ON reg.customer_kode=upd.customer_kode"
+        readcommd(String.Format(q, kode))
+        If rd.HasRows Then
             txtRegdate.Text = rd.Item("customer_reg_date")
             txtRegAlias.Text = rd.Item("customer_reg_alias")
-            Try
-                txtUpdDate.Text = rd.Item("customer_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
+            txtUpdDate.Text = rd.Item("customer_upd_date")
             txtUpdAlias.Text = rd.Item("customer_upd_alias")
         End If
         rd.Close()
     End Sub
 
-    'Private Sub setNamaSales(kode As String)
-    '    op_con()
-    '    Try
-    '        readcommd("SELECT salesman_nama FROM data_salesman_master WHERE salesman_kode='" & kode & "'")
-    '        If rd.HasRows Then
-    '            cb_sales.SelectedValue = rd.Item("salesman_nama")
-    '        Else
-    '            lbl_sales.Text = ""
-    '        End If
-    '        rd.Close()
-    '    Catch ex As Exception
-    '        Console.WriteLine(ex.Message)
-    '    End Try
-    'End Sub
+    Private Function setStatus(statcode As Integer) As String
+        Dim x As String = "A"
+        Select Case statcode
+            Case 1
+                x = "Aktif"
+            Case 2
+                x = "NonAktif"
+            Case 9
+                x = "Delete"
+            Case Else
+                x = "Err"
+        End Select
+        Return x
+    End Function
+
+    Private Sub writeLogAct(kode As String)
+        Dim ver, dataid As String
+        Dim q As String = "SELECT CONCAT_WS('/',customer_id,customer_kode,customer_version), customer_version FROM data_customer_master WHERE customer_kode ='" & kode & "' ORDER BY customer_version DESC LIMIT 1"
+
+        readcommd(q)
+        If rd.HasRows Then
+            ver = rd.Item("customer_version")
+            dataid = rd.Item(0)
+        Else
+            ver = "-1"
+            dataid = "err"
+        End If
+        rd.Close()
+
+        If ver = "0" Then
+            act = "INSERT"
+        ElseIf CInt(ver) > 0 And gdstatus <> 9 Then
+            act = "UPDATE"
+        ElseIf CInt(ver) < 0 Then
+            act = "ERR"
+        End If
+        Console.Write(act & "-" & dataid)
+
+        createLogAct(act, "data_customer_master", dataid)
+    End Sub
 
     '------------drag form
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
     End Sub
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
         dragging(Me)
     End Sub
 
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
         stopdrag(Me)
     End Sub
 
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
         CenterToScreen()
     End Sub
 
-    '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        Me.Close()
-    End Sub
-
+    '----------------close
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         If MessageBox.Show("Tutup Form?", "Data Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
             e.Cancel = True
@@ -129,19 +146,12 @@
     End Sub
 
     '----------------- cb disable input
-    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_status.KeyPress, cb_harga.KeyPress, cb_diskon.KeyPress
+    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_harga.KeyPress, cb_diskon.KeyPress
         e.Handled = True
     End Sub
 
     '---------- load
     Private Sub fr_custo_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        With cb_status
-            .DataSource = statusCusto()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-
         With cb_tipe
             .DataSource = jenisCusto()
             .DisplayMember = "Text"
@@ -163,14 +173,9 @@
             .SelectedIndex = 0
         End With
 
-        With cb_sales
-            .DataSource = getDataTablefromDB("SELECT salesman_kode, salesman_nama FROM data_salesman_master")
-            .DisplayMember = "salesman_nama"
-            .ValueMember = "salesman_kode"
-            .SelectedIndex = -1
-        End With
-
         op_con()
+        in_status_kode.Text = setStatus(gdstatus)
+
         If bt_simpancusto.Text = "Update" Then
             With in_kode
                 .ReadOnly = True
@@ -178,19 +183,17 @@
                 loadDataCusto(.Text)
             End With
         End If
+
+        in_nama_custo.Focus()
     End Sub
 
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
-        Dim data As String()
-        'Dim dataCol As String()
+        Dim data, dataCol As String()
         Dim querycheck As Boolean = False
+        Dim query As String = "INSERT INTO data_customer_master({0}) SELECT {1} FROM data_customer_master WHERE customer_kode={2}"
 
-
-        'If Trim(in_kode.Text) = Nothing And bt_simpancusto.Text = "Simpan" Then
-        '    MessageBox.Show("Kode Customer belum di input")
-        '    in_kode.Focus()
-        '    Exit Sub
-        'End If
+        'DONE : TODO : (?) : GENERATE KODE GUDANG -> PREVENT DUPLICATE AND ACCIDENTALY OVERWRITE EXISTING DATA
+        'TODO : (?) : ADD REFFERRAL CODE INPUT
         If Trim(in_nama_custo.Text) = Nothing Then
             MessageBox.Show("Nama Customer belum di input")
             in_nama_custo.Focus()
@@ -204,104 +207,79 @@
         End If
 
         op_con()
-        If bt_simpancusto.Text = "Simpan" Then
+        If MessageBox.Show("Simpan Data Customer?", "Data Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            'WITH DATA-VERSION-ING  & USER ACT LOG
             If Trim(in_kode.Text) = Nothing Then
-                readcommd("SELECT customer_kode FROM data_customer_master WHERE customer_kode LIKE 'CT%' ORDER BY customer_kode DESC LIMIT 1")
-                Dim x As String
+                Dim x As Integer = 0
+                readcommd("SELECT SUBSTR(customer_kode,3,5) FROM data_customer_master GROUP BY customer_kode ORDER BY customer_kode DESC LIMIT 1")
                 If rd.HasRows Then
-                    x = rd.Item(0)
-                    in_kode.Text = "CT" & (CInt(sRight(x, 4)) + 1).ToString("D4")
+                    x = CInt(rd.Item(0)) + 1
                 Else
-                    in_kode.Text = "CT0001"
+                    x = 1
                 End If
                 rd.Close()
+                in_kode.Text = "CT" & x.ToString("D5")
             End If
-            If checkdata("data_customer_master", "'" & in_kode.Text & "'", "customer_kode") Then
-                MessageBox.Show("Kode Customer " & in_kode.Text & " sudah ada")
-                in_kode.Focus()
+
+            dataCol = {
+                "customer_kode", "customer_jenis", "customer_nama", "customer_alamat",
+                "customer_alamat_blok", "customer_alamat_nomor", "customer_alamat_rt", "customer_alamat_rw",
+                "customer_alamat_kelurahan", "customer_kecamatan", "customer_kabupaten", "customer_pasar",
+                "customer_provinsi", "customer_kodepos", "customer_telpon", "customer_fax", "customer_cp",
+                "customer_nik", "customer_npwp", "customer_tanggal_pkp", "customer_pajak_nama", "customer_pajak_jabatan",
+                "customer_pajak_alamat", "customer_kunjungan_hari", "customer_max_piutang", "Customer_kriteria_discount",
+                "Customer_kriteria_harga_jual", "customer_term", "customer_status", "customer_reg_date", "customer_reg_alias",
+                "customer_version"
+                }
+
+            data = {
+                "'" & in_kode.Text & "'",
+                "'" & cb_tipe.SelectedValue & "'",
+                "'" & in_nama_custo.Text & "'",
+                "'" & in_alamat_custo.Text & "'",
+                "'" & in_alamat_blok.Text & "'",
+                "'" & in_alamat_no.Text & "'",
+                "'" & in_alamat_rt.Text & "'",
+                "'" & in_alamat_rw.Text & "'",
+                "'" & in_alamat_kelurahan.Text & "'",
+                "'" & in_alamat_kecamatan.Text & "'",
+                "'" & in_alamat_kabupaten.Text & "'",
+                "'" & in_alamat_pasar.Text & "'",
+                "'" & in_alamat_provinsi.Text & "'",
+                "'" & in_kodepos.Text & "'",
+                "'" & in_telpcusto.Text & "'",
+                "'" & in_faxcusto.Text & "'",
+                "'" & in_cpcusto.Text & "'",
+                "'" & in_nik.Text & "'",
+                "'" & in_npwp.Text & "'",
+                "'" & date_tgl_pkp.Value.ToString("yyyy-MM-dd") & "'",
+                "'" & in_pajak_nama.Text & "'",
+                "'" & in_pajak_jabatan.Text & "'",
+                "'" & in_pajak_alamat.Text & "'",
+                "'" & in_kunjungan_hr.Text & "'",
+                "'" & in_piutang.Value & "'",
+                "'" & cb_diskon.SelectedValue & "'",
+                "'" & cb_harga.SelectedValue & "'",
+                "'" & in_term.Value & "'",
+                "'" & gdstatus & "'",
+                "NOW()",
+                "'" & loggeduser.user_id & "'",
+                "MAX(customer_version) + 1"
+                }
+            Dim q As String = String.Format(query, String.Join(",", dataCol), String.Join(",", data), "'" & in_kode.Text & "'")
+            Console.WriteLine(q)
+            querycheck = commnd(q)
+
+            If querycheck = False Then
                 Exit Sub
+            Else
+                'TODO : WRITE LOG
+                writeLogAct(in_kode.Text)
+                MessageBox.Show("Data tersimpan")
+                frmcusto.in_cari.Clear()
+                populateDGVUserCon("custo", "", frmcusto.dgv_list)
+                Me.Close()
             End If
-
-            data = {
-                "customer_kode='" & in_kode.Text & "'",
-                "customer_jenis='" & cb_tipe.SelectedValue & "'",
-                "customer_salesman='" & in_kode_sales.Text & "'",
-                "customer_nama='" & in_nama_custo.Text & "'",
-                "customer_alamat='" & in_alamat_custo.Text & "'",
-                "customer_alamat_blok='" & in_alamat_blok.Text & "'",
-                "customer_alamat_nomor='" & in_alamat_no.Text & "'",
-                "customer_alamat_rt='" & in_alamat_rt.Text & "'",
-                "customer_alamat_rw='" & in_alamat_rw.Text & "'",
-                "customer_alamat_kelurahan='" & in_alamat_kelurahan.Text & "'",
-                "customer_kecamatan='" & in_alamat_kecamatan.Text & "'",
-                "customer_kabupaten='" & in_alamat_kabupaten.Text & "'",
-                "customer_pasar='" & in_alamat_pasar.Text & "'",
-                "customer_provinsi='" & in_alamat_provinsi.Text & "'",
-                "customer_kodepos='" & in_kodepos.Text & "'",
-                "customer_telpon='" & in_telpcusto.Text & "'",
-                "customer_fax='" & in_faxcusto.Text & "'",
-                "customer_cp='" & in_cpcusto.Text & "'",
-                "customer_nik='" & in_nik.Text & "'",
-                "customer_npwp='" & in_npwp.Text & "'",
-                "customer_tanggal_pkp='" & date_tgl_pkp.Value.ToString("yyyy-MM-dd") & "'",
-                "customer_pajak_nama='" & in_pajak_nama.Text & "'",
-                "customer_pajak_jabatan='" & in_pajak_jabatan.Text & "'",
-                "customer_pajak_alamat='" & in_pajak_alamat.Text & "'",
-                "customer_kunjungan_hari='" & in_kunjungan_hr.Text & "'",
-                "customer_max_piutang='" & in_piutang.Value & "'",
-                "Customer_kriteria_discount='" & cb_diskon.SelectedValue & "'",
-                "Customer_kriteria_harga_jual='" & cb_harga.SelectedValue & "'",
-                "customer_term='" & in_term.Value & "'",
-                "customer_status='" & cb_status.SelectedValue & "'",
-                "customer_reg_date=NOW()",
-                "customer_reg_alias='" & loggeduser.user_id & "'"
-                }
-            'querycheck = commnd("INSERT INTO data_customer_master(" & String.Join(",", dataCol) & ") VALUES(" & String.Join(",", data) & ")")
-            querycheck = commnd("INSERT INTO data_customer_master SET " & String.Join(",", data) & "")
-        ElseIf bt_simpancusto.Text = "Update" Then
-            data = {
-                "customer_jenis='" & cb_tipe.SelectedValue & "'",
-                "customer_salesman='" & in_kode_sales.Text & "'",
-                "customer_nama='" & in_nama_custo.Text & "'",
-                "customer_alamat='" & in_alamat_custo.Text & "'",
-                "customer_alamat_blok='" & in_alamat_blok.Text & "'",
-                "customer_alamat_nomor='" & in_alamat_no.Text & "'",
-                "customer_alamat_rt='" & in_alamat_rt.Text & "'",
-                "customer_alamat_rw='" & in_alamat_rw.Text & "'",
-                "customer_alamat_kelurahan='" & in_alamat_kelurahan.Text & "'",
-                "customer_kecamatan='" & in_alamat_kecamatan.Text & "'",
-                "customer_kabupaten='" & in_alamat_kabupaten.Text & "'",
-                "customer_pasar='" & in_alamat_pasar.Text & "'",
-                "customer_provinsi='" & in_alamat_provinsi.Text & "'",
-                "customer_kodepos='" & in_kodepos.Text & "'",
-                "customer_telpon='" & in_telpcusto.Text & "'",
-                "customer_fax='" & in_faxcusto.Text & "'",
-                "customer_cp='" & in_cpcusto.Text & "'",
-                "customer_nik='" & in_nik.Text & "'",
-                "customer_npwp='" & in_npwp.Text & "'",
-                "customer_tanggal_pkp='" & date_tgl_pkp.Value.ToString("yyyy-MM-dd") & "'",
-                "customer_pajak_nama='" & in_pajak_nama.Text & "'",
-                "customer_pajak_jabatan='" & in_pajak_jabatan.Text & "'",
-                "customer_pajak_alamat='" & in_pajak_alamat.Text & "'",
-                "customer_kunjungan_hari='" & in_kunjungan_hr.Text & "'",
-                "customer_max_piutang='" & in_piutang.Text & "'",
-                "Customer_kriteria_discount='" & cb_diskon.SelectedValue & "'",
-                "Customer_kriteria_harga_jual='" & cb_harga.SelectedValue & "'",
-                "customer_term='" & in_term.Value & "'",
-                "customer_status='" & cb_status.SelectedValue & "'",
-                "customer_upd_date=NOW()",
-                "customer_upd_alias='" & loggeduser.user_id & "'"
-                }
-            querycheck = commnd("UPDATE data_customer_master SET " & String.Join(",", data) & " WHERE customer_kode='" & in_kode.Text & "'")
-        End If
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            frmcusto.in_cari.Clear()
-            populateDGVUserCon("custo", "", frmcusto.dgv_list)
-            Me.Close()
         End If
     End Sub
 
@@ -310,68 +288,30 @@
         bt_simpancusto.PerformClick()
     End Sub
 
-    Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        If mn_deact.Text = "Deactivate" Then
-            cb_status.SelectedValue = "2"
-            mn_deact.Text = "Activate"
-        ElseIf mn_deact.Text = "Activate" Then
-            cb_status.SelectedValue = "1"
-            mn_deact.Text = "Deactivate"
-        End If
+    Private Sub mn_status_switch_Click(sender As Object, e As EventArgs) Handles mn_status_switch.Click
+        Select Case gdstatus
+            Case 1
+                gdstatus = 2
+            Case 2
+                gdstatus = 1
+            Case 9
+                gdstatus = 1
+                act = "UPDATE"
+            Case Else
+                Exit Sub
+        End Select
+        in_status_kode.Text = setStatus(gdstatus)
     End Sub
 
-    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-
+    Private Sub mn_status_del_Click(sender As Object, e As EventArgs) Handles mn_status_del.Click
+        If MessageBox.Show("Hapus Data Customer?", "Data Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            gdstatus = 9
+            in_status_kode.Text = setStatus(gdstatus)
+            act = "DELETE"
+        End If
     End Sub
 
     '----------------- input
-    Private Sub in_kode_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode_sales.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            bt_sales.PerformClick()
-        ElseIf e.KeyCode = Keys.Enter Then
-            keyshortenter(in_nama_custo, e)
-        End If
-    End Sub
-
-    Private Sub in_kode_sales_Leave(sender As Object, e As EventArgs) Handles in_kode_sales.Leave
-        If Trim(in_kode_sales.Text) <> Nothing Then
-            cb_sales.SelectedValue = in_kode_sales.Text
-        End If
-    End Sub
-
-    Private Sub cb_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_sales.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            bt_sales.PerformClick()
-        ElseIf e.KeyCode = Keys.Enter Then
-            keyshortenter(in_nama_custo, e)
-        End If
-    End Sub
-
-    Private Sub cb_sales_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_sales.SelectionChangeCommitted
-        in_kode_sales.Text = cb_sales.SelectedValue
-    End Sub
-
-    Private Sub bt_sales_Click(sender As Object, e As EventArgs) Handles bt_sales.Click
-        Using search As New fr_search_dialog
-            With search
-                .query = "SELECT salesman_nama as nama, salesman_kode as kode FROM data_salesman_master"
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
-                .type = "sales"
-                If Trim(in_kode_sales.Text) <> Nothing Then
-                    .returnkode = Trim(in_kode_sales.Text)
-                    .in_cari.Text = Trim(in_kode_sales.Text)
-                End If
-                If Trim(cb_sales.Text) <> Nothing Then
-                    .in_cari.Text = Trim(cb_sales.Text)
-                End If
-                .ShowDialog()
-                cb_sales.SelectedValue = .returnkode
-                in_kode_sales.Text = .returnkode
-            End With
-            in_nama_custo.Focus()
-        End Using
-    End Sub
-
     Private Sub in_nama_custo_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nama_custo.KeyDown
         keyshortenter(cb_tipe, e)
     End Sub
@@ -497,13 +437,5 @@
 
     Private Sub in_pajak_jabatan_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pajak_jabatan.KeyDown
         keyshortenter(in_pajak_alamat, e)
-    End Sub
-
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(cb_status, e)
-    End Sub
-
-    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
-        keyshortenter(in_kode_sales, e)
     End Sub
 End Class

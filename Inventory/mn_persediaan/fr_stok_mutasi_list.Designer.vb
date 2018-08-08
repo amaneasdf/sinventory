@@ -271,7 +271,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.dgv_listbarang.AllowUserToAddRows = False
         Me.dgv_listbarang.AllowUserToDeleteRows = False
-        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_listbarang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.brg_kode, Me.brg_nama})
         Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top

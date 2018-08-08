@@ -3,7 +3,9 @@ Imports System.IO
 
 Module functional
 
-    '---------get network data-------------
+    '---------------------------------------------------------------------------------------------------------------------------------
+    '-------------------------------------------NETWORK DATA--------------------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
     Declare Function SendARP Lib "iphlpapi.dll" Alias "SendARP" (ByVal DestIP As Int32, ByVal SrcIP As Int32, ByVal pMacAddr() As Byte, ByRef PhyAddrLen As Int32) As Int32
 
     Function GetIPv4Address() As String
@@ -32,8 +34,12 @@ Module functional
         End Try
         Return macAddress
     End Function
+    '----------------------------------------END OF NETWORK DATA---------------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
 
-    '----form & control manipulation----------
+    '---------------------------------------------------------------------------------------------------------------------------------
+    '------------------------------------FORM,TABPAGE & CONTROL MANIPULATION---------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
     Private drag As Boolean
     Private mousex As Integer
     Private mousey As Integer
@@ -79,9 +85,12 @@ Module functional
             nextcontrol.Focus()
         End If
     End Sub
+    '------------------------------END OF FORM,TABPAGE & CONTROL MANIPULATION---------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
 
-
-    '----string manipulation----------
+    '---------------------------------------------------------------------------------------------------------------------------------
+    '-----------------------------------------STRING MANIPULATION---------------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
     'split string into two string and the nth string
     Function SplitText(ByVal text As String, ByVal separator As String, ByVal ke As Double)
         Dim SplitStr As String = text
@@ -130,8 +139,13 @@ Module functional
         End If
         Return z
     End Function
+    '-----------------------------------------END OF STRING MANIPULATION-------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
 
-    '-----------.ini file manipulation-------------
+
+    '---------------------------------------------------------------------------------------------------------------------------------
+    '----------------------------------------.INI FILE MANIPULATION------------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
     'load connection
     Public Function loadCon(con_type As String) As cnction
         Dim options As New IniOptions()
@@ -158,24 +172,31 @@ Module functional
 
         Return x
     End Function
+    '-----------------------------------------END OF .INI FILE MANIPULATION---------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
 
-    '--------------------logging db-----------------------
+
+    '---------------------------------------------------------------------------------------------------------------------------------
+    '--------------------------------------------LOGGING FUNCTION-------------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
     'log activity
-    Public Sub createLogAct(act As String)
+    Public Sub createLogAct(act As String, table As String, Optional dataid As String = "-")
         If log_switch.log_act = False Then
             Exit Sub
         End If
 
         Dim querycheck As Boolean = False
         Dim dataAct As String() = {
-            "aktivitas_tanggal=NOW()",
+            "aktivitas_date=NOW()",
             "aktivitas_jam=NOW()",
             "aktivitas_user='" & loggeduser.user_id & "'",
             "aktivitas_ip='" & loggeduser.user_ip & "'",
             "aktivitas_mac='" & loggeduser.user_mac & "'",
             "aktivitas_komputer='" & loggeduser.user_host & "'",
             "aktivitas_versi='" & Application.ProductVersion & "'",
-            "aktivitas_log='" & act & "'"
+            "aktivitas_act='" & act & "'",
+            "aktivitas_table='" & table & "'",
+            "aktivitas_dataid='" & dataid & "'"
             }
 
         op_con()
@@ -186,26 +207,6 @@ Module functional
         Else
             Console.WriteLine("log act added")
         End If
-    End Sub
-
-    'log stock
-    Public Sub createLogStock(query As List(Of String))
-        If log_switch.log_stock = False Then
-            Exit Sub
-        End If
-
-        Dim errorquery As New List(Of String)
-        Dim querycheck As Boolean = False
-
-        For Each x As String In query
-            querycheck = commnd(x)
-            If querycheck = False Then
-                errorquery.Add(x)
-            End If
-        Next
-        'If errorquery.Count > 0 Then
-
-        'End If
     End Sub
 
     '--------------logging file
@@ -231,7 +232,10 @@ Module functional
     End Sub
 
     Public Sub errLog(errList As List(Of String))
-        Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".syslg"
+        Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".applg"
         createTXTfile(appSysDir & "log", file, errList, True)
     End Sub
+    '------------------------------------------END OF LOGGING FUCTION----------------------------------------------------------------
+    '---------------------------------------------------------------------------------------------------------------------------------
+
 End Module

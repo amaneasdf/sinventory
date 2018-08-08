@@ -18,21 +18,29 @@
         Me.Cursor = Cursors.AppStarting
         Select Case tabpagename.Name.ToString
             Case "pgbarang"
-                fr_barang_detail.ShowDialog()
+                Dim x = New fr_barang_detail
+                x.ShowDialog()
             Case "pgsupplier"
-                fr_supplier_detail.ShowDialog()
+                Dim x = New fr_supplier_detail
+                x.ShowDialog()
             Case "pggudang"
-                fr_gudang_detail.ShowDialog()
+                Dim x = New fr_gudang_detail
+                x.ShowDialog()
             Case "pgsales"
-                fr_sales_detail.ShowDialog()
+                Dim x = New fr_sales_detail
+                x.ShowDialog()
             Case "pgcusto"
-                fr_custo_detail.ShowDialog()
+                Dim x = New fr_custo_detail
+                x.ShowDialog()
             Case "pgbank"
-                fr_bank_detail.ShowDialog()
+                Dim x = New fr_bank_detail
+                x.ShowDialog()
             Case "pgbgtangan"
-                fr_giro_detail.ShowDialog()
+                Dim x = New fr_giro_detail
+                x.ShowDialog()
             Case "pgperkiraan"
-                fr_perkiraan_detail.ShowDialog(main)
+                Dim x = New fr_perkiraan_detail
+                x.ShowDialog(main)
             Case "pgawalneraca"
                 fr_neracaawal_detail.ShowDialog()
             Case "pgpembelian"
@@ -137,7 +145,7 @@
                         With detail
                             .bt_simpanperkiraan.Text = "Update"
                             .Text += dgv_list.Rows(rowindex).Cells(2).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .in_no.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .ShowDialog()
                         End With
                     End Using

@@ -463,7 +463,7 @@
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim x As cnction = loadCon("Connection")
+        Dim x As cnction = loadCon("Local")
         Me.Visible = False
         Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")

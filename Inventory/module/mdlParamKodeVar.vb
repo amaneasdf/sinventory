@@ -35,6 +35,7 @@
     Public Const ppn As Double = 0.1
     Public Const ppnbm As Double = 0.2
 
+    '----------------------------------------COMBOBOX-------------------------------------------------------------------------
     'jenisreferensi
     Public Function jenisRef() As DataTable
         Dim dt As New DataTable
@@ -75,7 +76,7 @@
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Sales TO", "TO")
         dt.Rows.Add("Sales Kanvas", "Kanvas")
-
+        'a
         Return dt
     End Function
 
@@ -278,7 +279,9 @@
 
         Return dt
     End Function
+    '----------------------------------------END OF COMBOBOX-------------------------------------------------------------------------
 
+    '----------------------------------------FORM AND TABPAGE------------------------------------------------------------------------
     'tabpage list
     Public pgbarang = New TabPage() With {.Name = "pgbarang"}
     Public pgsupplier = New TabPage() With {.Name = "pgsupplier"}
@@ -353,7 +356,9 @@
     Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang
     Public frmsatuanbarang As New fr_jenis_barang
+    '----------------------------------------END OF FORM AND TABPAGE----------------------------------------------------------------
 
+    '----------------------------------------DGV CELL STYLE-------------------------------------------------------------------------
     'dgv currency style
     Public dgvstyle_currency As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "N2",
@@ -376,12 +381,12 @@
         .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
         .NullValue = "-"
     }
+    '----------------------------------------END OF DGV CELL STYLE--------------------------------------------------------------------
 
     '-----------dev purpose
+    'db log
     Public log_switch As New dblogwrite With {
         .log_login = False,
-        .log_stock = False,
-        .log_trans = False,
-        .log_act = False
+        .log_act = True
     }
 End Module

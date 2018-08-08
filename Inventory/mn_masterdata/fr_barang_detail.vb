@@ -1,11 +1,14 @@
 ﻿Public Class fr_barang_detail
+    Private gdstatus As Integer = 1
+    Private act As String = "INSERT"
 
     Private Sub loadData(kode As String)
-        readcommd("SELECT * FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        readcommd("SELECT * FROM data_barang_master WHERE barang_kode='" & kode & "' ORDER BY barang_version DESC LIMIT 1")
         If rd.HasRows Then
+            in_kode.Text = kode
             'Basic
             in_supplier.Text = rd.Item("barang_supplier")
-            in_kode.Text = kode
+            cb_supplier.SelectedValue = in_supplier.Text
             in_nama.Text = rd.Item("barang_nama")
             Try
                 cb_jenis.SelectedValue = rd.Item("barang_jenis")
@@ -40,15 +43,27 @@
             in_jual_d4.Value = rd.Item("barang_harga_jual_d4")
             in_jual_d5.Value = rd.Item("barang_harga_jual_d5")
             'other
-            cb_status.SelectedValue = rd.Item("barang_status")
-            'user
-            txtRegAlias.Text = rd.Item("barang_reg_alias")
+            gdstatus = rd.Item("barang_status")
+            in_status_kode.Text = setStatus(gdstatus)
+        End If
+        rd.Close()
+
+        Dim q As String = "SELECT " _
+                             & "reg.barang_reg_date,reg.barang_reg_alias, " _
+                             & "upd.barang_reg_date as barang_upd_date, " _
+                             & "upd.barang_reg_alias as barang_upd_alias " _
+                         & "FROM (SELECT " _
+                             & "barang_kode, barang_reg_date,barang_reg_alias, barang_version " _
+                             & "FROM data_barang_master WHERE barang_kode='{0}' ORDER BY barang_version ASC LIMIT 1 " _
+                         & ") reg LEFT JOIN (SELECT " _
+                             & "barang_kode, barang_reg_date,barang_reg_alias, barang_version " _
+                             & "FROM data_barang_master WHERE barang_kode='{0}' ORDER BY barang_version DESC LIMIT 1 " _
+                         & ") upd ON reg.barang_kode=upd.barang_kode"
+        readcommd(String.Format(q, kode))
+        If rd.HasRows Then
             txtRegdate.Text = rd.Item("barang_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("barang_upd_date")
-            Catch ex As Exception
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
+            txtRegAlias.Text = rd.Item("barang_reg_alias")
+            txtUpdDate.Text = rd.Item("barang_upd_date")
             txtUpdAlias.Text = rd.Item("barang_upd_alias")
         End If
         rd.Close()
@@ -59,31 +74,45 @@
 
     End Sub
 
-    Private Sub getSupplier(kode As String)
-        op_con()
-        readcommd("SELECT supplier_nama FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_suppliernama.Text = rd.Item("supplier_nama")
-        Else
-            in_suppliernama.Clear()
-        End If
-        rd.Close()
-    End Sub
-
-    Private Function loadCBGudang(kode As String) As DataTable
-        Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT DISTINCT gudang_kode,CONCAT(gudang_kode,' : ',gudang_nama) as gudang_nama FROM data_barang_stok INNER JOIN data_barang_gudang ON gudang_kode=stock_gudang WHERE stock_barang='" & kode & "'")
-        dt.Rows.Add({"all", "All"})
-        Return dt
+    Private Function setStatus(statcode As Integer) As String
+        Dim x As String = "A"
+        Select Case statcode
+            Case 1
+                x = "Aktif"
+            Case 2
+                x = "NonAktif"
+            Case 9
+                x = "Delete"
+            Case Else
+                x = "Err"
+        End Select
+        Return x
     End Function
 
-    Private Sub getHisStock(kode As String, gudang As String, tglawal As Date, tglakhir As Date)
-        Dim _tglawal As String = tglawal.ToString("yyyy-MM-dd")
-        Dim _tglakhir As String = tglakhir.ToString("yyyy-MM-dd")
+    Private Sub writeLogAct(kode As String)
+        Dim ver, dataid As String
+        Dim q As String = "SELECT CONCAT_WS('/',barang_id,barang_kode,barang_version), barang_version FROM data_barang_master WHERE barang_kode ='" & kode & "' ORDER BY barang_version DESC LIMIT 1"
 
-        op_con()
-        dgv_his_st.DataSource = getDataTablefromDB("getProductStockMovement('" & gudang & "','" & kode & "','" & tglawal.ToString("yyyy-MM-dd") & "','" & tglakhir.ToString("yyyy-MM-dd") & "')")
-        dgv_his_st.Sort(dgv_his_st.Columns("his_tanggal"), System.ComponentModel.ListSortDirection.Descending)
+        readcommd(q)
+        If rd.HasRows Then
+            ver = rd.Item("barang_version")
+            dataid = rd.Item(0)
+        Else
+            ver = "-1"
+            dataid = "err"
+        End If
+        rd.Close()
+
+        If ver = "0" Then
+            act = "INSERT"
+        ElseIf CInt(ver) > 0 And gdstatus <> 9 Then
+            act = "UPDATE"
+        ElseIf CInt(ver) < 0 Then
+            act = "ERR"
+        End If
+        Console.Write(act & "-" & dataid)
+
+        createLogAct(act, "data_barang_master", dataid)
     End Sub
 
     '------------drag form
@@ -105,13 +134,12 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbarang.Click
-        Me.Close()
+        If MessageBox.Show("Tutup Form?", "Data Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If MessageBox.Show("Tutup Form?", "Data Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
-            e.Cancel = True
-        End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -127,21 +155,49 @@
     End Sub
 
     '---------------------------- numeric
-    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_isi_tengah.Enter, in_isi_besar.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_beli.Enter
+    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_jual_d5.Enter, in_jual_d4.Enter, in_jual_d3.Enter, in_jual_d2.Enter, in_jual_d1.Enter, in_isi_tengah.Enter, in_isi_besar.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_disc.Enter, in_harga_beli.Enter, in_beli_klaim.Enter, in_beli_d3.Enter, in_beli_d2.Enter, in_beli_d1.Enter
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_isi_tengah.Leave, in_isi_besar.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_beli.Leave
+    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_jual_d5.Leave, in_jual_d4.Leave, in_jual_d3.Leave, in_jual_d2.Leave, in_jual_d1.Leave, in_isi_tengah.Leave, in_isi_besar.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_disc.Leave, in_harga_beli.Leave, in_beli_klaim.Leave, in_beli_d3.Leave, in_beli_d2.Leave, in_beli_d1.Leave
         numericLostFocus(sender)
+    End Sub
+
+    '----------------------- menu
+    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
+        bt_simpanbarang.PerformClick()
+    End Sub
+
+    Private Sub mn_status_switch_Click(sender As Object, e As EventArgs) Handles mn_status_switch.Click
+        Select Case gdstatus
+            Case 1
+                gdstatus = 2
+            Case 2
+                gdstatus = 1
+            Case 9
+                gdstatus = 1
+                act = "UPDATE"
+            Case Else
+                Exit Sub
+        End Select
+        in_status_kode.Text = setStatus(gdstatus)
+    End Sub
+
+    Private Sub mn_status_del_Click(sender As Object, e As EventArgs) Handles mn_status_del.Click
+        If MessageBox.Show("Hapus Data Gudang?", "Data Gudang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            gdstatus = 9
+            in_status_kode.Text = setStatus(gdstatus)
+            act = "DELETE"
+        End If
     End Sub
 
     '------------------- load
     Private Sub fr_barang_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        With cb_status
-            .DataSource = statusBarang()
+        With cb_supplier
+            .DataSource = getDataTablefromDB("SELECT supplier_nama as Text, supplier_kode as Value FROM(SELECT * FROM data_supplier_master ORDER BY supplier_kode ASC, supplier_version DESC) a GROUP BY supplier_kode")
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = 0
+            .SelectedIndex = -1
         End With
         With cb_jenis
             .DataSource = jenisBarang()
@@ -159,8 +215,7 @@
             End With
         Next
 
-        dt_akhir_st.MaxDate = Date.Today
-        dt_awal_st.MaxDate = Date.Today
+        in_status_kode.Text = setStatus(gdstatus)
 
         op_con()
         If bt_simpanbarang.Text = "Update" Then
@@ -169,33 +224,27 @@
                 .BackColor = Color.Gainsboro
                 loadData(.Text)
             End With
-
-            With cb_kodegd
-                .DataSource = loadCBGudang(in_kode.Text)
-                .DisplayMember = "gudang_nama"
-                .ValueMember = "gudang_kode"
-                .SelectedIndex = .Items.Count - 1
-            End With
-
-            'data supplier
-            getSupplier(in_supplier.Text)
-
-            getHisStock(in_kode.Text, "all", dt_awal_st.Value, dt_akhir_st.Value)
         End If
+
+        cb_supplier.Focus()
     End Sub
 
     'save
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpanbarang.Click
-        Dim data As String()
+        Dim data, dataCol As String()
         Dim querycheck As Boolean = False
-        If Trim(in_kode.Text) = Nothing Then
-            MessageBox.Show("Kode belum di input")
-            in_kode.Focus()
-            Exit Sub
-        End If
+        Dim query As String = "INSERT INTO data_barang_master({0}) SELECT {1} FROM data_barang_master WHERE barang_kode={2}"
+
+        'DONE : TODO : (?) : GENERATE KODE GUDANG -> PREVENT DUPLICATE AND ACCIDENTALY OVERWRITE EXISTING DATA
+        'TODO : (?) : ADD REFFERRAL CODE INPUT
         If Trim(in_nama.Text) = Nothing Then
             MessageBox.Show("Nama belum di input")
             in_nama.Focus()
+            Exit Sub
+        End If
+        If Trim(in_supplier.Text) = Nothing Then
+            MessageBox.Show("Supplier belum di input")
+            cb_supplier.Focus()
             Exit Sub
         End If
         If cb_jenis.SelectedValue = Nothing Then
@@ -205,95 +254,99 @@
             Exit Sub
         End If
 
-        'If Trim(in_kode_status.Text) = Nothing Then
-        '    MessageBox.Show("Status belum di input")
-        '    cb_status.Focus()
-        '    Exit Sub
-        'End If
-
-        data = {
-            "barang_kode='" & in_kode.Text & "'",
-            "barang_nama='" & in_nama.Text & "'",
-            "barang_supplier='" & in_supplier.Text & "'",
-            "barang_jenis='" & cb_jenis.SelectedValue & "'",
-            "barang_satuan_kecil='" & cb_sat_kecil.Text & "'",
-            "barang_satuan_tengah='" & cb_sat_tengah.Text & "'",
-            "barang_satuan_tengah_jumlah='" & in_isi_tengah.Value & "'",
-            "barang_satuan_besar='" & cb_sat_besar.Text & "'",
-            "barang_satuan_besar_jumlah='" & in_isi_besar.Value & "'",
-            "barang_harga_beli='" & in_harga_beli.Value & "'",
-            "barang_harga_jual='" & in_harga_jual.Value & "'",
-            "barang_harga_beli_d1='" & in_beli_d1.Value & "'",
-            "barang_harga_beli_d2='" & in_beli_d2.Value & "'",
-            "barang_harga_beli_d3='" & in_beli_d3.Value & "'",
-            "barang_harga_beli_klaim='" & in_beli_klaim.Value & "'",
-            "barang_harga_jual_mt='" & in_harga_mt.Value & "'",
-            "barang_harga_jual_rita='" & in_harga_rita.Value & "'",
-            "barang_harga_jual_horeka='" & in_harga_horeka.Value & "'",
-            "barang_harga_jual_discount='" & in_harga_disc.Value & "'",
-            "barang_harga_jual_d1='" & in_jual_d1.Value & "'",
-            "barang_harga_jual_d2='" & in_jual_d2.Value & "'",
-            "barang_harga_jual_d3='" & in_jual_d3.Value & "'",
-            "barang_harga_jual_d4='" & in_jual_d4.Value & "'",
-            "barang_harga_jual_d5='" & in_jual_d5.Value & "'",
-            "barang_status='" & cb_status.SelectedValue & "'"
-            }
-
         Me.Cursor = Cursors.WaitCursor
         op_con()
-        If bt_simpanbarang.Text = "Simpan" Then
-            cb_status.SelectedIndex = 0
-
-            If checkdata("data_barang_master", "'" & in_kode.Text & "'", "barang_kode") Then
-                MessageBox.Show("Kode Barang " & in_kode.Text & " sudah ada")
-                in_kode.Focus()
-                Exit Sub
+        If MessageBox.Show("Simpan Data Barang?", "Data Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            'WITH DATA-VERSION-ING  & USER ACT LOG
+            If Trim(in_kode.Text) = Nothing Then
+                Dim x As Integer = 0
+                readcommd("SELECT SUBSTR(barang_kode,3,7) FROM data_barang_master GROUP BY barang_kode ORDER BY barang_kode DESC LIMIT 1")
+                If rd.HasRows Then
+                    x = CInt(rd.Item(0)) + 1
+                Else
+                    x = 1
+                End If
+                rd.Close()
+                in_kode.Text = "BR" & x.ToString("D7")
             End If
 
-            querycheck = commnd("INSERT INTO data_barang_master SET " & String.Join(",", data) & ",barang_reg_date=NOW(), barang_reg_alias='" & loggeduser.user_id & "'")
 
-        ElseIf bt_simpanbarang.Text = "Update" Then
-            data = data.Skip(1).ToArray
+            dataCol = {
+                "barang_kode", "barang_nama", "barang_supplier", "barang_jenis", "barang_kategori",
+                "barang_satuan_kecil", "barang_satuan_tengah", "barang_satuan_tengah_jumlah", "barang_satuan_besar",
+                "barang_satuan_besar_jumlah", "barang_harga_beli", "barang_harga_jual", "barang_harga_beli_d1",
+                "barang_harga_beli_d2", "barang_harga_beli_d3", "barang_harga_beli_klaim", "barang_harga_jual_mt",
+                "barang_harga_jual_rita", "barang_harga_jual_horeka", "barang_harga_jual_discount", "barang_harga_jual_d1",
+                "barang_harga_jual_d2", "barang_harga_jual_d3", "barang_harga_jual_d4", "barang_harga_jual_d5",
+                "barang_keterangan", "barang_status", "barang_reg_date", "barang_reg_alias", "barang_version"
+                }
 
-            querycheck = commnd("UPDATE data_barang_master SET " & String.Join(",", data) & ",barang_upd_date=NOW(), barang_upd_alias='" & loggeduser.user_id & "' WHERE barang_kode='" & in_kode.Text & "'")
-        End If
+            data = {
+                "'" & in_kode.Text & "'",
+                "'" & in_nama.Text & "'",
+                "'" & in_supplier.Text & "'",
+                "'" & cb_jenis.SelectedValue & "'",
+                "''",
+                "'" & cb_sat_kecil.Text & "'",
+                "'" & cb_sat_tengah.Text & "'",
+                "'" & in_isi_tengah.Value & "'",
+                "'" & cb_sat_besar.Text & "'",
+                "'" & in_isi_besar.Value & "'",
+                "'" & in_harga_beli.Value & "'",
+                "'" & in_harga_jual.Value & "'",
+                "'" & in_beli_d1.Value & "'",
+                "'" & in_beli_d2.Value & "'",
+                "'" & in_beli_d3.Value & "'",
+                "'" & in_beli_klaim.Value & "'",
+                "'" & in_harga_mt.Value & "'",
+                "'" & in_harga_rita.Value & "'",
+                "'" & in_harga_horeka.Value & "'",
+                "'" & in_harga_disc.Value & "'",
+                "'" & in_jual_d1.Value & "'",
+                "'" & in_jual_d2.Value & "'",
+                "'" & in_jual_d3.Value & "'",
+                "'" & in_jual_d4.Value & "'",
+                "'" & in_jual_d5.Value & "'",
+                "'" & in_ket.Text & "'",
+                "'" & gdstatus & "'",
+                "NOW()",
+                "'" & loggeduser.user_id & "'",
+                "MAX(barang_version)+1"
+                }
 
-        Me.Cursor = Cursors.Default
+            Dim q As String = String.Format(query, String.Join(",", dataCol), String.Join(",", data), "'" & in_kode.Text & "'")
+            Console.WriteLine(q)
+            querycheck = commnd(q)
 
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            'createLogAct("BARANG " & in_kode.Text)
-            frmbank.in_cari.Clear()
-            populateDGVUserCon("barang", "", frmbarang.dgv_list)
-            'Me.Close()
-            bt_simpanbarang.Text = "Update"
+            Me.Cursor = Cursors.Default
+
+            If querycheck = False Then
+                Exit Sub
+            Else
+                'DONE : TODO : WRITE LOG
+                writeLogAct(in_kode.Text)
+                MessageBox.Show("Data tersimpan", "Data Barang")
+                frmbank.in_cari.Clear()
+                populateDGVUserCon("barang", "", frmbarang.dgv_list)
+                Me.Close()
+                bt_simpanbarang.Text = "Update"
+            End If
         End If
     End Sub
 
     'input
-    Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            bt_supplier_list.PerformClick()
-        ElseIf e.KeyCode = Keys.Enter Then
-            keyshortenter(in_kode, e)
-        End If
-    End Sub
-
-    Private Sub in_supplierLeave(sender As Object, e As EventArgs) Handles in_supplier.Leave
-        in_supplier.Text = Trim(in_supplier.Text)
-        If in_supplier.Text <> Nothing Then
-            getSupplier(in_supplier.Text)
-        Else
-            in_suppliernama.Clear()
+    Private Sub cb_supplier_commit(sender As Object, e As EventArgs) Handles cb_supplier.SelectionChangeCommitted, cb_supplier.Leave
+        If cb_supplier.SelectedIndex > -1 Then
+            in_supplier.Text = cb_supplier.SelectedValue
+        ElseIf cb_supplier.Text = "" Then
+            in_supplier.Clear()
         End If
     End Sub
 
     Private Sub bt_supplier_list_Click(sender As Object, e As EventArgs) Handles bt_supplier_list.Click
         Using search As New fr_search_dialog
             With search
-                .query = "SELECT supplier_kode as kode, supplier_nama as nama FROM data_supplier_master"
+                .query = "SELECT supplier_nama as kode, supplier_kode as nama FROM(SELECT * FROM data_supplier_master ORDER BY supplier_kode ASC, supplier_version DESC) a GROUP BY supplier_kode"
                 .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                 .type = "supplier"
                 If Trim(in_supplier.Text) <> Nothing Then
@@ -302,13 +355,12 @@
                     '.bt_search.PerformClick()
                 End If
                 .ShowDialog()
-                in_supplier.Text = .returnkode
+                cb_supplier.SelectedValue = .returnkode
             End With
-            getSupplier(in_supplier.Text)
         End Using
     End Sub
 
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+    Private Sub cb_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_supplier.KeyDown
         keyshortenter(in_nama, e)
     End Sub
 
@@ -344,11 +396,11 @@
         keyshortenter(in_harga_beli, e)
     End Sub
 
-    Private Sub cb_sat_kecil_Leave(sender As Object, e As EventArgs) Handles cb_sat_kecil.Leave
+    Private Sub cb_sat_kecil_Leave(sender As Object, e As EventArgs) Handles cb_sat_kecil.Leave, cb_sat_kecil.SelectionChangeCommitted
         lbl_satuan1.Text = cb_sat_kecil.Text
     End Sub
 
-    Private Sub cb_sat_tengah_Leave(sender As Object, e As EventArgs) Handles cb_sat_tengah.Leave
+    Private Sub cb_sat_tengah_Leave(sender As Object, e As EventArgs) Handles cb_sat_tengah.Leave, cb_sat_tengah.SelectionChangeCommitted
         lbl_satuan2.Text = cb_sat_tengah.Text
     End Sub
 
