@@ -53,7 +53,7 @@ Partial Class fr_jurnal_u_det
         Me.bt_batalperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalperkiraan.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalperkiraan.Location = New System.Drawing.Point(667, 342)
+        Me.bt_batalperkiraan.Location = New System.Drawing.Point(667, 442)
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalperkiraan.TabIndex = 6
@@ -64,7 +64,7 @@ Partial Class fr_jurnal_u_det
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 378)
+        Me.Panel2.Location = New System.Drawing.Point(0, 478)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(775, 10)
         Me.Panel2.TabIndex = 7
@@ -138,7 +138,7 @@ Partial Class fr_jurnal_u_det
         Me.dgv_kas.ReadOnly = True
         Me.dgv_kas.RowHeadersVisible = False
         Me.dgv_kas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_kas.Size = New System.Drawing.Size(753, 193)
+        Me.dgv_kas.Size = New System.Drawing.Size(753, 294)
         Me.dgv_kas.TabIndex = 2
         '
         'kas_rek
@@ -224,7 +224,7 @@ Partial Class fr_jurnal_u_det
         Me.in_kredit_tot.BackColor = System.Drawing.Color.White
         Me.in_kredit_tot.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kredit_tot.ForeColor = System.Drawing.Color.Black
-        Me.in_kredit_tot.Location = New System.Drawing.Point(201, 314)
+        Me.in_kredit_tot.Location = New System.Drawing.Point(197, 416)
         Me.in_kredit_tot.MaxLength = 150
         Me.in_kredit_tot.Name = "in_kredit_tot"
         Me.in_kredit_tot.ReadOnly = True
@@ -237,7 +237,7 @@ Partial Class fr_jurnal_u_det
         Me.in_debet_tot.BackColor = System.Drawing.Color.White
         Me.in_debet_tot.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_debet_tot.ForeColor = System.Drawing.Color.Black
-        Me.in_debet_tot.Location = New System.Drawing.Point(15, 314)
+        Me.in_debet_tot.Location = New System.Drawing.Point(11, 416)
         Me.in_debet_tot.MaxLength = 150
         Me.in_debet_tot.Name = "in_debet_tot"
         Me.in_debet_tot.ReadOnly = True
@@ -250,7 +250,7 @@ Partial Class fr_jurnal_u_det
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label10.Location = New System.Drawing.Point(198, 298)
+        Me.Label10.Location = New System.Drawing.Point(194, 400)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(40, 13)
         Me.Label10.TabIndex = 384
@@ -261,7 +261,7 @@ Partial Class fr_jurnal_u_det
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label9.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label9.Location = New System.Drawing.Point(12, 298)
+        Me.Label9.Location = New System.Drawing.Point(8, 400)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(41, 13)
         Me.Label9.TabIndex = 385
@@ -272,7 +272,7 @@ Partial Class fr_jurnal_u_det
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label1.Location = New System.Drawing.Point(385, 298)
+        Me.Label1.Location = New System.Drawing.Point(381, 400)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(36, 13)
         Me.Label1.TabIndex = 384
@@ -283,7 +283,7 @@ Partial Class fr_jurnal_u_det
         Me.in_total.BackColor = System.Drawing.Color.White
         Me.in_total.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_total.ForeColor = System.Drawing.Color.Black
-        Me.in_total.Location = New System.Drawing.Point(388, 314)
+        Me.in_total.Location = New System.Drawing.Point(384, 416)
         Me.in_total.MaxLength = 150
         Me.in_total.Name = "in_total"
         Me.in_total.ReadOnly = True
@@ -310,7 +310,7 @@ Partial Class fr_jurnal_u_det
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
-        Me.ClientSize = New System.Drawing.Size(775, 388)
+        Me.ClientSize = New System.Drawing.Size(775, 488)
         Me.Controls.Add(Me.in_total)
         Me.Controls.Add(Me.in_kredit_tot)
         Me.Controls.Add(Me.in_debet_tot)

@@ -202,6 +202,9 @@
                 Case "beli"
                     lbl_judul.Text += " Pembelian"
                     .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier, beli_gudang})
+                Case "hutangfaktur"
+                    lbl_judul.Text += " Faktur"
+                    .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {beli_faktur, beli_tgl, beli_supplier})
                 Case Else
                     Exit Sub
             End Select
@@ -238,13 +241,23 @@
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
         If e.RowIndex > -1 Then
             rowindex = e.RowIndex
-            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Try
+                returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Catch ex As Exception
+                returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+                consoleWriteLine(ex.Message)
+            End Try
             Me.Close()
         End If
     End Sub
 
     Private Sub bt_ok_Click(sender As Object, e As EventArgs) Handles bt_ok.Click
-        returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+        Try
+            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+        Catch ex As Exception
+            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            consoleWriteLine(ex.Message)
+        End Try
         Me.Close()
     End Sub
 
@@ -252,7 +265,12 @@
         If e.KeyCode = Keys.Escape Then
             Me.Close()
         ElseIf e.KeyCode = Keys.Enter AndAlso dgv_list.Focused = True Then
-            returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Try
+                returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+            Catch ex As Exception
+                returnkode = dgv_list.Rows(rowindex).Cells("kode").Value
+                consoleWriteLine(ex.Message)
+            End Try
             Me.Close()
         End If
     End Sub

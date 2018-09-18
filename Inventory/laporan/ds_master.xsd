@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="data_master" targetNamespace="http://tempuri.org/data_master.xsd" xmlns:mstns="http://tempuri.org/data_master.xsd" xmlns="http://tempuri.org/data_master.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="data_master" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="data_master" msprop:Generator_UserDSName="data_master">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dt_barang" msprop:Generator_TableClassName="dt_barangDataTable" msprop:Generator_TableVarName="tabledt_barang" msprop:Generator_TablePropName="dt_barang" msprop:Generator_RowDeletingName="dt_barangRowDeleting" msprop:Generator_RowChangingName="dt_barangRowChanging" msprop:Generator_RowEvHandlerName="dt_barangRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_barangRowDeleted" msprop:Generator_UserTableName="dt_barang" msprop:Generator_RowChangedName="dt_barangRowChanged" msprop:Generator_RowEvArgName="dt_barangRowChangeEvent" msprop:Generator_RowClassName="dt_barangRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="barang" msprop:Generator_ColumnVarNameInTable="columnbarang" msprop:Generator_ColumnPropNameInRow="barang" msprop:Generator_ColumnPropNameInTable="barangColumn" msprop:Generator_UserColumnName="barang" type="xs:string" minOccurs="0" />
+              <xs:element name="barang_n" msprop:Generator_ColumnVarNameInTable="columnbarang_n" msprop:Generator_ColumnPropNameInRow="barang_n" msprop:Generator_ColumnPropNameInTable="barang_nColumn" msprop:Generator_UserColumnName="barang_n" type="xs:string" minOccurs="0" />
+              <xs:element name="barang_h_beli" msprop:Generator_ColumnVarNameInTable="columnbarang_h_beli" msprop:Generator_ColumnPropNameInRow="barang_h_beli" msprop:Generator_ColumnPropNameInTable="barang_h_beliColumn" msprop:Generator_UserColumnName="barang_h_beli" type="xs:double" minOccurs="0" />
+              <xs:element name="barang_h_jual" msprop:Generator_ColumnVarNameInTable="columnbarang_h_jual" msprop:Generator_ColumnPropNameInRow="barang_h_jual" msprop:Generator_ColumnPropNameInTable="barang_h_jualColumn" msprop:Generator_UserColumnName="barang_h_jual" type="xs:double" minOccurs="0" />
+              <xs:element name="barang_supplier_n" msprop:Generator_ColumnVarNameInTable="columnbarang_supplier_n" msprop:Generator_ColumnPropNameInRow="barang_supplier_n" msprop:Generator_ColumnPropNameInTable="barang_supplier_nColumn" msprop:Generator_UserColumnName="barang_supplier_n" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_supplier" msprop:Generator_TableClassName="dt_supplierDataTable" msprop:Generator_TableVarName="tabledt_supplier" msprop:Generator_TablePropName="dt_supplier" msprop:Generator_RowDeletingName="dt_supplierRowDeleting" msprop:Generator_RowChangingName="dt_supplierRowChanging" msprop:Generator_RowEvHandlerName="dt_supplierRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_supplierRowDeleted" msprop:Generator_UserTableName="dt_supplier" msprop:Generator_RowChangedName="dt_supplierRowChanged" msprop:Generator_RowEvArgName="dt_supplierRowChangeEvent" msprop:Generator_RowClassName="dt_supplierRow">
+          <xs:complexType>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_custo" msprop:Generator_TableClassName="dt_custoDataTable" msprop:Generator_TableVarName="tabledt_custo" msprop:Generator_TablePropName="dt_custo" msprop:Generator_RowDeletingName="dt_custoRowDeleting" msprop:Generator_RowChangingName="dt_custoRowChanging" msprop:Generator_RowEvHandlerName="dt_custoRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_custoRowDeleted" msprop:Generator_UserTableName="dt_custo" msprop:Generator_RowChangedName="dt_custoRowChanged" msprop:Generator_RowEvArgName="dt_custoRowChangeEvent" msprop:Generator_RowClassName="dt_custoRow">
+          <xs:complexType>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="dt_sales" msprop:Generator_TableClassName="dt_salesDataTable" msprop:Generator_TableVarName="tabledt_sales" msprop:Generator_TablePropName="dt_sales" msprop:Generator_RowDeletingName="dt_salesRowDeleting" msprop:Generator_RowChangingName="dt_salesRowChanging" msprop:Generator_RowEvHandlerName="dt_salesRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_salesRowDeleted" msprop:Generator_UserTableName="dt_sales" msprop:Generator_RowChangedName="dt_salesRowChanged" msprop:Generator_RowEvArgName="dt_salesRowChangeEvent" msprop:Generator_RowClassName="dt_salesRow">
+          <xs:complexType>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

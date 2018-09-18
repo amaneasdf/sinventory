@@ -51,11 +51,18 @@ Partial Class fr_stok_awal
         Me.in_barang = New System.Windows.Forms.TextBox()
         Me.in_gudang_n = New System.Windows.Forms.TextBox()
         Me.in_barang_n = New System.Windows.Forms.TextBox()
+        Me.popPnl_barang = New System.Windows.Forms.Panel()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.brg_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.in_stok_awal, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_hpp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.popPnl_barang.SuspendLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'in_kode
@@ -116,7 +123,7 @@ Partial Class fr_stok_awal
         Me.in_stok_awal.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_stok_awal.Name = "in_stok_awal"
         Me.in_stok_awal.Size = New System.Drawing.Size(131, 20)
-        Me.in_stok_awal.TabIndex = 6
+        Me.in_stok_awal.TabIndex = 4
         Me.in_stok_awal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_stok_awal.ThousandsSeparator = True
         '
@@ -137,7 +144,7 @@ Partial Class fr_stok_awal
         Me.bt_batalbarang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalbarang.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbarang.Location = New System.Drawing.Point(515, 224)
+        Me.bt_batalbarang.Location = New System.Drawing.Point(518, 206)
         Me.bt_batalbarang.Name = "bt_batalbarang"
         Me.bt_batalbarang.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbarang.TabIndex = 9
@@ -148,7 +155,7 @@ Partial Class fr_stok_awal
         '
         Me.bt_simpanbarang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpanbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbarang.Location = New System.Drawing.Point(413, 224)
+        Me.bt_simpanbarang.Location = New System.Drawing.Point(416, 206)
         Me.bt_simpanbarang.Name = "bt_simpanbarang"
         Me.bt_simpanbarang.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpanbarang.TabIndex = 8
@@ -159,9 +166,9 @@ Partial Class fr_stok_awal
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 260)
+        Me.Panel2.Location = New System.Drawing.Point(0, 242)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(618, 10)
+        Me.Panel2.Size = New System.Drawing.Size(621, 10)
         Me.Panel2.TabIndex = 284
         '
         'pnl_Menu
@@ -170,7 +177,7 @@ Partial Class fr_stok_awal
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
         Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(618, 30)
+        Me.pnl_Menu.Size = New System.Drawing.Size(621, 30)
         Me.pnl_Menu.TabIndex = 283
         '
         'MenuStrip1
@@ -178,7 +185,7 @@ Partial Class fr_stok_awal
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(618, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(621, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -215,7 +222,7 @@ Partial Class fr_stok_awal
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(618, 42)
+        Me.Panel1.Size = New System.Drawing.Size(621, 42)
         Me.Panel1.TabIndex = 282
         '
         'lbl_close
@@ -225,7 +232,7 @@ Partial Class fr_stok_awal
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
         Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(538, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(541, 9)
         Me.lbl_close.Name = "lbl_close"
         Me.lbl_close.Size = New System.Drawing.Size(47, 20)
         Me.lbl_close.TabIndex = 138
@@ -244,7 +251,7 @@ Partial Class fr_stok_awal
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(591, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(594, 9)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 8
@@ -276,6 +283,7 @@ Partial Class fr_stok_awal
         Me.bt_gudang_list.TabIndex = 2
         Me.bt_gudang_list.TabStop = False
         Me.bt_gudang_list.UseVisualStyleBackColor = False
+        Me.bt_gudang_list.Visible = False
         '
         'Label6
         '
@@ -300,6 +308,7 @@ Partial Class fr_stok_awal
         Me.bt_barang_list.TabIndex = 5
         Me.bt_barang_list.TabStop = False
         Me.bt_barang_list.UseVisualStyleBackColor = False
+        Me.bt_barang_list.Visible = False
         '
         'Label1
         '
@@ -329,6 +338,7 @@ Partial Class fr_stok_awal
         Me.in_gudang.Location = New System.Drawing.Point(75, 81)
         Me.in_gudang.MaxLength = 15
         Me.in_gudang.Name = "in_gudang"
+        Me.in_gudang.ReadOnly = True
         Me.in_gudang.Size = New System.Drawing.Size(131, 20)
         Me.in_gudang.TabIndex = 0
         '
@@ -339,6 +349,7 @@ Partial Class fr_stok_awal
         Me.in_barang.Location = New System.Drawing.Point(75, 106)
         Me.in_barang.MaxLength = 15
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(131, 20)
         Me.in_barang.TabIndex = 3
         '
@@ -349,7 +360,6 @@ Partial Class fr_stok_awal
         Me.in_gudang_n.Location = New System.Drawing.Point(206, 81)
         Me.in_gudang_n.MaxLength = 15
         Me.in_gudang_n.Name = "in_gudang_n"
-        Me.in_gudang_n.ReadOnly = True
         Me.in_gudang_n.Size = New System.Drawing.Size(189, 20)
         Me.in_gudang_n.TabIndex = 1
         '
@@ -360,9 +370,65 @@ Partial Class fr_stok_awal
         Me.in_barang_n.Location = New System.Drawing.Point(206, 106)
         Me.in_barang_n.MaxLength = 15
         Me.in_barang_n.Name = "in_barang_n"
-        Me.in_barang_n.ReadOnly = True
         Me.in_barang_n.Size = New System.Drawing.Size(189, 20)
         Me.in_barang_n.TabIndex = 4
+        '
+        'popPnl_barang
+        '
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(206, 122)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(313, 127)
+        Me.popPnl_barang.TabIndex = 292
+        Me.popPnl_barang.Visible = False
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 107)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.brg_kode, Me.brg_nama})
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(313, 104)
+        Me.dgv_listbarang.TabIndex = 20
+        '
+        'brg_kode
+        '
+        Me.brg_kode.DataPropertyName = "barang_kode"
+        Me.brg_kode.HeaderText = "Kode"
+        Me.brg_kode.MinimumWidth = 125
+        Me.brg_kode.Name = "brg_kode"
+        Me.brg_kode.ReadOnly = True
+        Me.brg_kode.Width = 125
+        '
+        'brg_nama
+        '
+        Me.brg_nama.DataPropertyName = "barang_nama"
+        Me.brg_nama.HeaderText = "Nama"
+        Me.brg_nama.MinimumWidth = 175
+        Me.brg_nama.Name = "brg_nama"
+        Me.brg_nama.ReadOnly = True
+        Me.brg_nama.Width = 175
         '
         'fr_stok_awal
         '
@@ -370,7 +436,8 @@ Partial Class fr_stok_awal
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalbarang
-        Me.ClientSize = New System.Drawing.Size(618, 270)
+        Me.ClientSize = New System.Drawing.Size(621, 252)
+        Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.in_barang_n)
         Me.Controls.Add(Me.in_barang)
         Me.Controls.Add(Me.in_gudang_n)
@@ -404,6 +471,9 @@ Partial Class fr_stok_awal
         Me.MenuStrip1.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
+        Me.popPnl_barang.ResumeLayout(False)
+        Me.popPnl_barang.PerformLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -436,4 +506,9 @@ Partial Class fr_stok_awal
     Friend WithEvents in_barang As System.Windows.Forms.TextBox
     Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
     Friend WithEvents in_barang_n As System.Windows.Forms.TextBox
+    Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
+    Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
+    Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
+    Friend WithEvents brg_kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents brg_nama As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

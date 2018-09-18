@@ -60,6 +60,7 @@ Partial Class fr_jual_detail
         Me.cb_sales = New System.Windows.Forms.ComboBox()
         Me.bt_sales_list = New System.Windows.Forms.Button()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label34 = New System.Windows.Forms.Label()
         Me.cb_sat = New System.Windows.Forms.ComboBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -70,6 +71,9 @@ Partial Class fr_jual_detail
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.brg_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_jual = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.in_disc4 = New System.Windows.Forms.NumericUpDown()
         Me.in_harga_beli = New System.Windows.Forms.NumericUpDown()
@@ -84,6 +88,7 @@ Partial Class fr_jual_detail
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
         Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -126,9 +131,6 @@ Partial Class fr_jual_detail
         Me.Label32 = New System.Windows.Forms.Label()
         Me.in_total_netto = New System.Windows.Forms.TextBox()
         Me.Label33 = New System.Windows.Forms.Label()
-        Me.brg_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_jual = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -307,7 +309,7 @@ Partial Class fr_jual_detail
         '
         'cb_gudang
         '
-        Me.cb_gudang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cb_gudang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_gudang.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_gudang.FormattingEnabled = True
         Me.cb_gudang.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
@@ -329,7 +331,7 @@ Partial Class fr_jual_detail
         '
         'cb_custo
         '
-        Me.cb_custo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cb_custo.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_custo.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_custo.FormattingEnabled = True
         Me.cb_custo.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
@@ -520,7 +522,7 @@ Partial Class fr_jual_detail
         '
         'cb_sales
         '
-        Me.cb_sales.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cb_sales.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_sales.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_sales.FormattingEnabled = True
         Me.cb_sales.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
@@ -546,6 +548,7 @@ Partial Class fr_jual_detail
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.Label34)
         Me.Panel2.Controls.Add(Me.cb_sat)
         Me.Panel2.Controls.Add(Me.Label11)
         Me.Panel2.Controls.Add(Me.Label9)
@@ -576,6 +579,17 @@ Partial Class fr_jual_detail
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(1025, 253)
         Me.Panel2.TabIndex = 324
+        '
+        'Label34
+        '
+        Me.Label34.AutoSize = True
+        Me.Label34.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label34.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label34.Location = New System.Drawing.Point(359, 9)
+        Me.Label34.Name = "Label34"
+        Me.Label34.Size = New System.Drawing.Size(30, 13)
+        Me.Label34.TabIndex = 264
+        Me.Label34.Text = "Sat."
         '
         'cb_sat
         '
@@ -695,6 +709,33 @@ Partial Class fr_jual_detail
         Me.dgv_listbarang.Size = New System.Drawing.Size(444, 111)
         Me.dgv_listbarang.TabIndex = 0
         '
+        'brg_kode
+        '
+        Me.brg_kode.DataPropertyName = "barang_kode"
+        Me.brg_kode.HeaderText = "Kode"
+        Me.brg_kode.MinimumWidth = 125
+        Me.brg_kode.Name = "brg_kode"
+        Me.brg_kode.ReadOnly = True
+        Me.brg_kode.Width = 125
+        '
+        'brg_nama
+        '
+        Me.brg_nama.DataPropertyName = "barang_nama"
+        Me.brg_nama.HeaderText = "Nama"
+        Me.brg_nama.MinimumWidth = 175
+        Me.brg_nama.Name = "brg_nama"
+        Me.brg_nama.ReadOnly = True
+        Me.brg_nama.Width = 175
+        '
+        'brg_jual
+        '
+        Me.brg_jual.DataPropertyName = "barang_harga_jual"
+        Me.brg_jual.HeaderText = "Harga Jual"
+        Me.brg_jual.MinimumWidth = 135
+        Me.brg_jual.Name = "brg_jual"
+        Me.brg_jual.ReadOnly = True
+        Me.brg_jual.Width = 135
+        '
         'Label25
         '
         Me.Label25.AutoSize = True
@@ -775,12 +816,15 @@ Partial Class fr_jual_detail
         '
         'in_barang
         '
+        Me.in_barang.BackColor = System.Drawing.Color.White
         Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang.Location = New System.Drawing.Point(9, 25)
         Me.in_barang.MaxLength = 20
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 13
+        Me.in_barang.TabStop = False
         '
         'in_disc3
         '
@@ -797,12 +841,10 @@ Partial Class fr_jual_detail
         Me.in_barang_nm.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang_nm.ForeColor = System.Drawing.Color.Black
         Me.in_barang_nm.Location = New System.Drawing.Point(109, 25)
-        Me.in_barang_nm.MaxLength = 150
+        Me.in_barang_nm.MaxLength = 200
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm.TabIndex = 14
-        Me.in_barang_nm.TabStop = False
         '
         'in_qty
         '
@@ -820,7 +862,7 @@ Partial Class fr_jual_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat, Me.harga, Me.subtot, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.sat_type, Me.nama, Me.qty, Me.sat, Me.harga, Me.subtot, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml})
         Me.dgv_barang.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgv_barang.Location = New System.Drawing.Point(0, 52)
         Me.dgv_barang.Name = "dgv_barang"
@@ -836,6 +878,13 @@ Partial Class fr_jual_detail
         Me.kode.HeaderText = "Kode"
         Me.kode.Name = "kode"
         Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
         '
         'nama
         '
@@ -1297,38 +1346,12 @@ Partial Class fr_jual_detail
         Me.Label33.TabIndex = 330
         Me.Label33.Text = "Netto - Klaim"
         '
-        'brg_kode
-        '
-        Me.brg_kode.DataPropertyName = "barang_kode"
-        Me.brg_kode.HeaderText = "Kode"
-        Me.brg_kode.MinimumWidth = 125
-        Me.brg_kode.Name = "brg_kode"
-        Me.brg_kode.ReadOnly = True
-        Me.brg_kode.Width = 125
-        '
-        'brg_nama
-        '
-        Me.brg_nama.DataPropertyName = "barang_nama"
-        Me.brg_nama.HeaderText = "Nama"
-        Me.brg_nama.MinimumWidth = 175
-        Me.brg_nama.Name = "brg_nama"
-        Me.brg_nama.ReadOnly = True
-        Me.brg_nama.Width = 175
-        '
-        'brg_jual
-        '
-        Me.brg_jual.DataPropertyName = "barang_harga_jual"
-        Me.brg_jual.HeaderText = "Harga Jual"
-        Me.brg_jual.MinimumWidth = 135
-        Me.brg_jual.Name = "brg_jual"
-        Me.brg_jual.ReadOnly = True
-        Me.brg_jual.Width = 135
-        '
         'fr_jual_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.CancelButton = Me.bt_cl
         Me.ClientSize = New System.Drawing.Size(1042, 573)
         Me.Controls.Add(Me.txtRegAlias)
         Me.Controls.Add(Me.Label27)
@@ -1479,19 +1502,6 @@ Partial Class fr_jual_detail
     Friend WithEvents in_jumlah As System.Windows.Forms.TextBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents Label19 As System.Windows.Forms.Label
-    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents subtot As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents discrp As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents disc1 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents disc2 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents disc3 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
@@ -1509,4 +1519,19 @@ Partial Class fr_jual_detail
     Friend WithEvents brg_kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_nama As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_jual As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents subtot As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents discrp As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents disc1 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents disc2 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents disc3 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label34 As System.Windows.Forms.Label
 End Class

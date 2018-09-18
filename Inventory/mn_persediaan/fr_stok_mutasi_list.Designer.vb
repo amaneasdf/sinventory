@@ -342,8 +342,10 @@ Partial Class fr_stok_mutasi_list
         Me.in_barang.Location = New System.Drawing.Point(9, 25)
         Me.in_barang.MaxLength = 20
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 7
+        Me.in_barang.TabStop = False
         '
         'in_barang_nm
         '
@@ -353,10 +355,8 @@ Partial Class fr_stok_mutasi_list
         Me.in_barang_nm.Location = New System.Drawing.Point(109, 25)
         Me.in_barang_nm.MaxLength = 150
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm.TabIndex = 8
-        Me.in_barang_nm.TabStop = False
         '
         'in_qty3
         '
@@ -786,6 +786,7 @@ Partial Class fr_stok_mutasi_list
         Me.mn_hapus.ShortcutKeys = System.Windows.Forms.Keys.F3
         Me.mn_hapus.Size = New System.Drawing.Size(69, 20)
         Me.mn_hapus.Text = "Hapus"
+        Me.mn_hapus.Visible = False
         '
         'mn_save
         '

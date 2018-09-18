@@ -21,6 +21,7 @@
         Dim log_stock As Boolean
         Dim log_trans As Boolean
         Dim log_act As Boolean
+        Dim log_c_w As Boolean
     End Structure
 
     Public usernull As New userdata
@@ -115,13 +116,24 @@
     End Function
 
     'jenisperkiraan
-    Public Function jenisPerkiraan() As DataTable
+    Public Function jenisPerkiraan(tipe As String) As DataTable
         Dim dt As New DataTable
-
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Judul", "0")
-        dt.Rows.Add("AKTIVA", "1")
+
+        Select Case tipe
+            Case "jenis"
+                dt.Rows.Add("Aktiva", "1")
+                dt.Rows.Add("Hutang", "2")
+                dt.Rows.Add("Modal", "3")
+                dt.Rows.Add("Pendapatan", "4")
+                dt.Rows.Add("Biaya", "5")
+                dt.Rows.Add("Biaya Operasional", "6")
+            Case "gol"
+                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' FROM ref_gol_perkiraan")
+            Case "sub-gol"
+
+        End Select
 
         Return dt
     End Function
@@ -146,18 +158,7 @@
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Include", "1")
         dt.Rows.Add("Excluded", "0")
-
-        Return dt
-    End Function
-
-    'jenisJurnal
-    Public Function jenisJurnal() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Jurnal", "1")
-        dt.Rows.Add("Non Jurnal", "0")
+        dt.Rows.Add("Non-PPn", "2")
 
         Return dt
     End Function
@@ -169,8 +170,33 @@
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Potong Nota", "1")
-        dt.Rows.Add("Tunai", "0")
+        dt.Rows.Add("Tunai", "2")
 
+        Return dt
+    End Function
+
+    'jenisBayar
+    Public Function jenisBayar(tipe As String) As DataTable
+        Dim dt As New DataTable
+
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
+
+        Select Case tipe
+            Case "retur"
+                dt.Rows.Add("Potong Nota", "1")
+                dt.Rows.Add("Tunai", "2")
+            Case "hutang", "piutang"
+                dt.Rows.Add("Tunai", "TUNAI")
+                dt.Rows.Add("BG", "BG")
+                dt.Rows.Add("Transfer", "TF")
+                dt.Rows.Add("Titipan", "TTP")
+                dt.Rows.Add("PiutangSupl", "PIUTSUPL")
+                dt.Rows.Add("PotongHarga", "POTHARG")
+                dt.Rows.Add("Pendapatan", "PENDPT")
+            Case "kas"
+                dt.Rows.Add("Tunai", "TUNAI")
+        End Select
         Return dt
     End Function
 
@@ -309,6 +335,7 @@
     Public pgkas = New TabPage() With {.Name = "pgkas"}
     Public pgjurnalumum = New TabPage() With {.Name = "pgjurnalumum"}
     Public pgjurnalmemorial = New TabPage() With {.Name = "pgjurnalmemorial"}
+    Public pgkartustok = New TabPage() With {.Name = "pgkartustok"}
     Public pglap = New TabPage() With {.Name = "pglap"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
@@ -316,41 +343,39 @@
     'Public pgsatuanbarang = New TabPage() With {.Name = "pgsatuanbarang"}
 
     'user con list
-    Public frmbarang As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmsupplier As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmsales As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmgudang As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmcusto As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmbank As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmbgditangan As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmperkiraan As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmawalneraca As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpembelian As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmreturbeli As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpenjualan As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmreturjual As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmbarang As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmsupplier As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmsales As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmgudang As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmcusto As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmbank As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmbgditangan As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmperkiraan As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmawalneraca As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpembelian As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmreturbeli As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpenjualan As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmreturjual As New fr_list With {.Dock = DockStyle.Fill}
     Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
     Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
-    Public frmstok As New fr_list_temp With {.Dock = DockStyle.Fill}
-    'Public frmmutasigudang As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmstok As New fr_list With {.Dock = DockStyle.Fill}
     Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
-    'Public frmmutasistok As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}
-    'Public frmstockop As New fr_list_temp With {.Dock = DockStyle.Fill}
     Public frmstockop As New fr_stockop_list With {.Dock = DockStyle.Fill}
-    Public frmhutangawal As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmhutangbayar As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmhutangbgo As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpiutangawal As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpiutangbayar As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpiutangbgcair As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmpiutangbgTolak As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmkas As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmjurnalumum As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmjurnalmemorial As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmhutangawal As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmhutangbayar As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmhutangbgo As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpiutangawal As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpiutangbayar As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpiutangbgcair As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpiutangbgTolak As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmkas As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmjurnalumum As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmjurnalmemorial As New fr_list With {.Dock = DockStyle.Fill}
     Public frmlap As New fr_lap_stok With {.Dock = DockStyle.Fill}
-    Public frmuser As New fr_list_temp With {.Dock = DockStyle.Fill}
-    Public frmgroup As New fr_list_temp With {.Dock = DockStyle.Fill}
+    Public frmkartustok As New fr_urut_kartustok With {.Dock = DockStyle.Fill}
+    Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang
     Public frmsatuanbarang As New fr_jenis_barang
 
@@ -370,6 +395,11 @@
         .Alignment = DataGridViewContentAlignment.MiddleRight
     }
 
+    'dgv currency style
+    Public dgvstyle_multiline As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+        .WrapMode = DataGridViewTriState.True
+    }
+
     'dgv percentage style
     Public dgvstyle_percentage As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "p2",
@@ -382,6 +412,7 @@
         .log_login = False,
         .log_stock = False,
         .log_trans = False,
-        .log_act = False
+        .log_act = False,
+        .log_c_w = True
     }
 End Module

@@ -118,18 +118,57 @@ Module functional
         Return s
     End Function
 
-    Public Function removeCommaThousand(x As String) As Double
+    Public Function removeCommaThousand(x As String) As Decimal
         Dim s As String = 0
         s = Replace(Replace(x, ",00", ""), ".", "")
         Dim y = Split(s, ",")
-        Dim z As Double = 0
+        Dim z As Decimal = 0
         If y.Count = 2 Then
-            z = CDbl(y(0)) + (CDbl(y(1)) / 100)
+            z = CDec(y(0)) + (CDec(y(1)) / 100)
         Else
-            z = CDbl(y(0))
+            z = CDec(y(0))
         End If
         Return z
     End Function
+
+    '-----------SET PERIODE
+    Public Sub setperiode(selecteddate As Date)
+        Dim x As Date = selecteddate
+        If x.ToString("MMMM yyyy") <> selectedperiode.ToString("MMMM yyyy") Then
+            selectedperiode = DateSerial(x.Year, x.Month, 1)
+            main.strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
+
+            'TODO:REFRESH TAB
+            Dim tbpg As TabPage() = {
+                pgstockop,
+                pgstok,
+                pgpembelian,
+                pgpenjualan,
+                pgreturbeli,
+                pgreturjual,
+                pgmutasigudang,
+                pgmutasistok,
+                pghutangawal,
+                pghutangbayar,
+                pghutangbgo,
+                pgpiutangawal,
+                pgpiutangbayar,
+                pgpiutangbgcair,
+                pgpiutangbgtolak,
+                pgkas,
+                pgjurnalmemorial,
+                pgjurnalumum
+                }
+            For Each y As TabPage In tbpg
+                If main.tabcontrol.Contains(y) = True Then
+                    refreshTabPage(y.Name.ToString)
+                End If
+            Next
+
+            MessageBox.Show("Periode has been changed to " & selectedperiode.ToString("MMMM yyyy"))
+
+        End If
+    End Sub
 
     '-----------.ini file manipulation-------------
     'load connection
@@ -230,8 +269,13 @@ Module functional
         writer.Close()
     End Sub
 
+    Private Sub logErrToDb(err As List(Of String))
+
+    End Sub
+
     Public Sub errLog(errList As List(Of String))
         Dim file As String = "\error_" & Date.Today.ToString("yyyyMMdd") & ".syslg"
         createTXTfile(appSysDir & "log", file, errList, True)
+        logErrToDb(errList)
     End Sub
 End Module

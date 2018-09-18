@@ -142,6 +142,20 @@
                 createTabPage(pgjurnalmemorial, type, frmjurnalmemorial, "Jurnal Memorial")
                 'Case "jenisbarang"
                 '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
+            Case "kartustok"
+                If tabcontrol.Contains(pgkartustok) Then
+                    tabcontrol.SelectedTab = pgkartustok
+                Else
+                    With pgkartustok
+                        .Text = "Urut Trans.Stok"
+                        tabcontrol.TabPages.Add(pgkartustok)
+                        setList(type)
+                        .Controls.Add(frmkartustok)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgkartustok
+                    End With
+                End If
             Case "group"
                 createTabPage(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -149,7 +163,7 @@
         End Select
     End Sub
 
-    Private Sub createTabPage(tbpg As TabPage, type As String, frm As fr_list_temp, text As String)
+    Private Sub createTabPage(tbpg As TabPage, type As String, frm As Object, text As String)
         If tabcontrol.Contains(tbpg) Then
             tabcontrol.SelectedTab = tbpg
         Else
@@ -161,7 +175,7 @@
                 .Show()
                 Console.WriteLine(.Name.ToString)
                 tabcontrol.SelectedTab = tbpg
-                frm.dgv_list.Focus()
+                'frm.dgv_list.Focus()
             End With
         End If
     End Sub
@@ -201,6 +215,9 @@
             End If
             MainMenu.Items.Add(ParentMenu)
             MainMenu.BackColor = Color.Orange
+            If rd.Item("menu_kode") = "mn0801" Then
+                bt_setperiode.Visible = True
+            End If
         Loop
 
         rd.Close()
@@ -325,6 +342,12 @@
                     .Text = "Laporan Pembelian Per Supplier Per Barang"
                     }
                 x.Show()
+            Case "mn070305"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliTglBarang",
+                    .Text = "Laporan Pembelian Per Tanggal Per Barang"
+                    }
+                x.Show()
             Case "mn070306"
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapBeliSupplierNota",
@@ -335,6 +358,12 @@
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapBeliTglNota",
                     .Text = "Laporan Pembelian Per Tanggal Per Nota"
+                    }
+                x.Show()
+            Case "mn070310"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapBeliTglNotaBarang",
+                    .Text = "Laporan Pembelian Per Tanggal Per Nota Per Barang"
                     }
                 x.Show()
             Case "mn070401"
@@ -397,8 +426,63 @@
                     .Text = "Laporan Penjualan Per Tanggal Per Nota"
                     }
                 x.Show()
+            Case "mn070417"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualBarangSupplier",
+                    .Text = "Laporan Penjualan Per Barang Per Supplier"
+                    }
+                x.Show()
+            Case "mn070419"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualBarangSales",
+                    .Text = "Laporan Penjualan Per Barang Per Sales"
+                    }
+                x.Show()
+            Case "mn070420"
+                Dim x As New fr_lap_beli_nota_view With {
+                    .inlap_type = "lapJualSalesCustoBarang",
+                    .Text = "Laporan Penjualan Per Barang Per Sales"
+                    }
+                x.Show()
+            Case "mn070506"
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapKartuStok",
+                    .Text = "Kartu Stok"
+                    }
+                x.Show()
             Case "mn070507"
-                openTab("lap")
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapPersediaan",
+                    .Text = "Laporan Persediaan"
+                    }
+                x.Show()
+            Case "mn070511"
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapStok",
+                    .Text = "Laporan Stok"
+                    }
+                x.Show()
+            Case "mn070512"
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapStokSupplier",
+                    .Text = "Laporan Stok Per Supplier"
+                    }
+                x.Show()
+            Case "mn070513"
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapStokMutasi",
+                    .Text = "Laporan Mutasi Stok"
+                    }
+                x.Show()
+            Case "mn070514"
+                Dim x As New fr_lap_stock_view With {
+                    .inlap_type = "lapPersediaanMutasi",
+                    .Text = "Laporan Mutasi Persediaan"
+                    }
+                x.Show()
+            Case "mn0813"
+                Console.WriteLine("click kartustok")
+                openTab("kartustok")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()
@@ -463,7 +547,7 @@
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim x As cnction = loadCon("Connection")
+        Dim x As cnction = loadCon("Local")
         Me.Visible = False
         Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")
@@ -479,6 +563,7 @@
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
         strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
+        bt_setperiode.Text = "Set Periode to " & cal_front.SelectionStart.ToString("MMMM yyyy")
         fr_login.Show()
 
         'MenuAkses()
@@ -498,31 +583,40 @@
     End Sub
 
     Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
-        If Not tabcontrol.SelectedTab Is TabPage1 Then
-            If e.KeyCode = Keys.Escape Then
-                Console.Write(tabcontrol.SelectedTab.Name)
-                keyshortcut("close", tabcontrol.SelectedTab.Name.ToString)
-            End If
-            If e.KeyCode = Keys.F2 Then
-                Console.WriteLine(tabcontrol.SelectedTab.Name)
-                keyshortcut("edit", tabcontrol.SelectedTab.Name.ToString)
-            End If
-            If e.KeyCode = Keys.F1 Then
-                Console.WriteLine(tabcontrol.SelectedTab.Name)
-                keyshortcut("tambah", tabcontrol.SelectedTab.Name.ToString)
-            End If
-            If e.KeyCode = Keys.F3 Then
-                Console.WriteLine(tabcontrol.SelectedTab.Name)
-                keyshortcut("hapus", tabcontrol.SelectedTab.Name.ToString)
-            End If
-            If e.KeyCode = Keys.F5 Then
-                Console.WriteLine(tabcontrol.SelectedTab.Name)
-                keyshortcut("refresh", tabcontrol.SelectedTab.Name.ToString)
-            End If
-            If e.KeyCode = Keys.F AndAlso e.Control = True Then
-                Console.WriteLine(tabcontrol.SelectedTab.Name)
-                keyshortcut("cari", tabcontrol.SelectedTab.Name.ToString)
-            End If
-        End If
+        'If Not tabcontrol.SelectedTab Is TabPage1 Then
+        '    If e.KeyCode = Keys.Escape Then
+        '        Console.Write(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("close", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        '    If e.KeyCode = Keys.F2 Then
+        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("edit", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        '    If e.KeyCode = Keys.F1 Then
+        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("tambah", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        '    If e.KeyCode = Keys.F3 Then
+        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("hapus", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        '    If e.KeyCode = Keys.F5 Then
+        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("refresh", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        '    If e.KeyCode = Keys.F AndAlso e.Control = True Then
+        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
+        '        keyshortcut("cari", tabcontrol.SelectedTab.Name.ToString)
+        '    End If
+        'End If
+    End Sub
+
+    'SET PERIODE BT
+    Private Sub bt_setperiode_Click(sender As Object, e As EventArgs) Handles bt_setperiode.Click
+        setperiode(cal_front.SelectionStart)
+    End Sub
+
+    Private Sub cal_front_DateChanged(sender As Object, e As DateRangeEventArgs) Handles cal_front.DateChanged
+        bt_setperiode.Text = "Set Periode to " & cal_front.SelectionStart.ToString("MMMM yyyy")
     End Sub
 End Class

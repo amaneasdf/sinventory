@@ -44,15 +44,13 @@
                       <rd:DefaultName>Textbox3</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>DimGray</Color>
                           <Style>None</Style>
-                          <Width>2pt</Width>
                         </Border>
                         <TopBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -84,15 +82,13 @@
                       <rd:DefaultName>Textbox5</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>DimGray</Color>
                           <Style>None</Style>
-                          <Width>2pt</Width>
                         </Border>
                         <TopBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -124,15 +120,13 @@
                       <rd:DefaultName>Textbox7</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>DimGray</Color>
                           <Style>None</Style>
-                          <Width>2pt</Width>
                         </Border>
                         <TopBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -164,15 +158,13 @@
                       <rd:DefaultName>Textbox14</rd:DefaultName>
                       <Style>
                         <Border>
-                          <Color>DimGray</Color>
                           <Style>None</Style>
-                          <Width>2pt</Width>
                         </Border>
                         <TopBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Dashed</Style>
+                          <Style>Solid</Style>
                         </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>

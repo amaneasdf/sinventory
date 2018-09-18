@@ -32,6 +32,11 @@ Partial Class fr_draft_tagihan
         Me.bt_remsales = New System.Windows.Forms.Button()
         Me.bt_addsales = New System.Windows.Forms.Button()
         Me.dgv_draftfaktur = New System.Windows.Forms.DataGridView()
+        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_tgl_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.in_caridraft = New System.Windows.Forms.TextBox()
         Me.bt_caridraft = New System.Windows.Forms.Button()
@@ -41,6 +46,16 @@ Partial Class fr_draft_tagihan
         Me.bt_remfaktur = New System.Windows.Forms.Button()
         Me.bt_addfaktur = New System.Windows.Forms.Button()
         Me.dgv_listfaktur = New System.Windows.Forms.DataGridView()
+        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_temp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_tgl_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_pasar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_kec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_kab = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draft_list = New System.Windows.Forms.DataGridView()
         Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -49,9 +64,6 @@ Partial Class fr_draft_tagihan
         Me.bt_cari_sales = New System.Windows.Forms.Button()
         Me.in_cari_sales = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.dgv_draftsales = New System.Windows.Forms.DataGridView()
-        Me.draft_sales_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_sales_n = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_sales = New System.Windows.Forms.DataGridView()
         Me.sales_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sales_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -73,23 +85,15 @@ Partial Class fr_draft_tagihan
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.ck_tgl2 = New System.Windows.Forms.CheckBox()
         Me.ck_tgl1 = New System.Windows.Forms.CheckBox()
-        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_tgl_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_draft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_tgl_cicilan = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.in_sales = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.in_sales_n = New System.Windows.Forms.TextBox()
+        Me.lbl_statprint = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         CType(Me.dgv_draftfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_listfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_draft_list, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgv_draftsales, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_sales, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -101,7 +105,7 @@ Partial Class fr_draft_tagihan
         Me.bt_create_draft.Name = "bt_create_draft"
         Me.bt_create_draft.Size = New System.Drawing.Size(253, 27)
         Me.bt_create_draft.TabIndex = 320
-        Me.bt_create_draft.Text = "Input Draft"
+        Me.bt_create_draft.Text = "Simpan Draft"
         Me.bt_create_draft.UseVisualStyleBackColor = True
         '
         'Panel2
@@ -193,6 +197,45 @@ Partial Class fr_draft_tagihan
         Me.dgv_draftfaktur.Size = New System.Drawing.Size(340, 174)
         Me.dgv_draftfaktur.TabIndex = 316
         '
+        'draft_custo
+        '
+        Me.draft_custo.DataPropertyName = "customer_nama"
+        Me.draft_custo.HeaderText = "Customer"
+        Me.draft_custo.MinimumWidth = 100
+        Me.draft_custo.Name = "draft_custo"
+        Me.draft_custo.ReadOnly = True
+        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.draft_custo.Width = 120
+        '
+        'draft_faktur
+        '
+        Me.draft_faktur.DataPropertyName = "trans_faktur"
+        Me.draft_faktur.HeaderText = "No.Faktur"
+        Me.draft_faktur.Name = "draft_faktur"
+        Me.draft_faktur.ReadOnly = True
+        Me.draft_faktur.Width = 90
+        '
+        'draft_sisa
+        '
+        Me.draft_sisa.DataPropertyName = "trans_harga_retur"
+        Me.draft_sisa.HeaderText = "Sisa"
+        Me.draft_sisa.MinimumWidth = 50
+        Me.draft_sisa.Name = "draft_sisa"
+        Me.draft_sisa.ReadOnly = True
+        Me.draft_sisa.Width = 75
+        '
+        'draft_cicilan
+        '
+        Me.draft_cicilan.HeaderText = "Cicilan"
+        Me.draft_cicilan.Name = "draft_cicilan"
+        Me.draft_cicilan.ReadOnly = True
+        '
+        'draft_tgl_cicilan
+        '
+        Me.draft_tgl_cicilan.HeaderText = "Tgl.Cicilan"
+        Me.draft_tgl_cicilan.Name = "draft_tgl_cicilan"
+        Me.draft_tgl_cicilan.ReadOnly = True
+        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -280,7 +323,7 @@ Partial Class fr_draft_tagihan
         Me.dgv_listfaktur.AllowUserToDeleteRows = False
         Me.dgv_listfaktur.BackgroundColor = System.Drawing.Color.White
         Me.dgv_listfaktur.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listfaktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.list_faktur, Me.list_tanggal, Me.list_custo, Me.list_sisa, Me.list_cicilan, Me.list_tgl_cicilan, Me.list_draft})
+        Me.dgv_listfaktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.list_faktur, Me.list_tanggal, Me.list_custo, Me.list_sisa, Me.list_temp, Me.list_cicilan, Me.list_tgl_cicilan, Me.list_pasar, Me.list_kec, Me.list_kab})
         Me.dgv_listfaktur.Location = New System.Drawing.Point(12, 296)
         Me.dgv_listfaktur.Name = "dgv_listfaktur"
         Me.dgv_listfaktur.ReadOnly = True
@@ -288,6 +331,83 @@ Partial Class fr_draft_tagihan
         Me.dgv_listfaktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_listfaktur.Size = New System.Drawing.Size(519, 174)
         Me.dgv_listfaktur.TabIndex = 306
+        '
+        'list_faktur
+        '
+        Me.list_faktur.DataPropertyName = "piutang_faktur"
+        Me.list_faktur.HeaderText = "No.Faktur"
+        Me.list_faktur.Name = "list_faktur"
+        Me.list_faktur.ReadOnly = True
+        Me.list_faktur.Width = 90
+        '
+        'list_tanggal
+        '
+        Me.list_tanggal.DataPropertyName = "piutang_tgl"
+        Me.list_tanggal.HeaderText = "Tanggal"
+        Me.list_tanggal.MinimumWidth = 90
+        Me.list_tanggal.Name = "list_tanggal"
+        Me.list_tanggal.ReadOnly = True
+        Me.list_tanggal.Width = 90
+        '
+        'list_custo
+        '
+        Me.list_custo.DataPropertyName = "piutang_custo_n"
+        Me.list_custo.HeaderText = "Customer"
+        Me.list_custo.MinimumWidth = 160
+        Me.list_custo.Name = "list_custo"
+        Me.list_custo.ReadOnly = True
+        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.list_custo.Width = 160
+        '
+        'list_sisa
+        '
+        Me.list_sisa.DataPropertyName = "piutang_sisa"
+        Me.list_sisa.HeaderText = "Sisa"
+        Me.list_sisa.MinimumWidth = 95
+        Me.list_sisa.Name = "list_sisa"
+        Me.list_sisa.ReadOnly = True
+        Me.list_sisa.Width = 95
+        '
+        'list_temp
+        '
+        Me.list_temp.DataPropertyName = "piutang_jt"
+        Me.list_temp.HeaderText = "Tgl.Jt.Tempo"
+        Me.list_temp.Name = "list_temp"
+        Me.list_temp.ReadOnly = True
+        '
+        'list_cicilan
+        '
+        Me.list_cicilan.DataPropertyName = "piutang_bayar"
+        Me.list_cicilan.HeaderText = "Cicilan"
+        Me.list_cicilan.Name = "list_cicilan"
+        Me.list_cicilan.ReadOnly = True
+        '
+        'list_tgl_cicilan
+        '
+        Me.list_tgl_cicilan.HeaderText = "Tgl.Cicilan"
+        Me.list_tgl_cicilan.Name = "list_tgl_cicilan"
+        Me.list_tgl_cicilan.ReadOnly = True
+        '
+        'list_pasar
+        '
+        Me.list_pasar.DataPropertyName = "customer_pasar"
+        Me.list_pasar.HeaderText = "Pasar"
+        Me.list_pasar.Name = "list_pasar"
+        Me.list_pasar.ReadOnly = True
+        '
+        'list_kec
+        '
+        Me.list_kec.DataPropertyName = "customer_kecamatan"
+        Me.list_kec.HeaderText = "Kecamatan"
+        Me.list_kec.Name = "list_kec"
+        Me.list_kec.ReadOnly = True
+        '
+        'list_kab
+        '
+        Me.list_kab.DataPropertyName = "customer_kabupaten"
+        Me.list_kab.HeaderText = "Kabupaten"
+        Me.list_kab.Name = "list_kab"
+        Me.list_kab.ReadOnly = True
         '
         'dgv_draft_list
         '
@@ -309,7 +429,7 @@ Partial Class fr_draft_tagihan
         'draftlist_kode
         '
         Me.draftlist_kode.DataPropertyName = "draft_kode"
-        Me.draftlist_kode.HeaderText = "Kode Rekap"
+        Me.draftlist_kode.HeaderText = "Kode Tagihan"
         Me.draftlist_kode.MinimumWidth = 100
         Me.draftlist_kode.Name = "draftlist_kode"
         Me.draftlist_kode.ReadOnly = True
@@ -318,7 +438,7 @@ Partial Class fr_draft_tagihan
         'draftlist_tgl
         '
         Me.draftlist_tgl.DataPropertyName = "draft_tgl"
-        Me.draftlist_tgl.HeaderText = "Tgl.Rekap"
+        Me.draftlist_tgl.HeaderText = "Tgl.Tagihan"
         Me.draftlist_tgl.MinimumWidth = 50
         Me.draftlist_tgl.Name = "draftlist_tgl"
         Me.draftlist_tgl.ReadOnly = True
@@ -373,37 +493,6 @@ Partial Class fr_draft_tagihan
         Me.Label5.TabIndex = 304
         Me.Label5.Text = "Sales"
         '
-        'dgv_draftsales
-        '
-        Me.dgv_draftsales.AllowUserToAddRows = False
-        Me.dgv_draftsales.AllowUserToDeleteRows = False
-        Me.dgv_draftsales.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_draftsales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_draftsales.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.draft_sales_kode, Me.draft_sales_n})
-        Me.dgv_draftsales.Location = New System.Drawing.Point(358, 175)
-        Me.dgv_draftsales.Name = "dgv_draftsales"
-        Me.dgv_draftsales.ReadOnly = True
-        Me.dgv_draftsales.RowHeadersVisible = False
-        Me.dgv_draftsales.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_draftsales.Size = New System.Drawing.Size(303, 85)
-        Me.dgv_draftsales.TabIndex = 300
-        '
-        'draft_sales_kode
-        '
-        Me.draft_sales_kode.DataPropertyName = "kode"
-        Me.draft_sales_kode.HeaderText = "Kode"
-        Me.draft_sales_kode.Name = "draft_sales_kode"
-        Me.draft_sales_kode.ReadOnly = True
-        '
-        'draft_sales_n
-        '
-        Me.draft_sales_n.DataPropertyName = "nama"
-        Me.draft_sales_n.HeaderText = "Nama"
-        Me.draft_sales_n.MinimumWidth = 190
-        Me.draft_sales_n.Name = "draft_sales_n"
-        Me.draft_sales_n.ReadOnly = True
-        Me.draft_sales_n.Width = 190
-        '
         'dgv_sales
         '
         Me.dgv_sales.AllowUserToAddRows = False
@@ -412,6 +501,7 @@ Partial Class fr_draft_tagihan
         Me.dgv_sales.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_sales.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.sales_kode, Me.sales_nama})
         Me.dgv_sales.Location = New System.Drawing.Point(11, 175)
+        Me.dgv_sales.MultiSelect = False
         Me.dgv_sales.Name = "dgv_sales"
         Me.dgv_sales.ReadOnly = True
         Me.dgv_sales.RowHeadersVisible = False
@@ -451,9 +541,9 @@ Partial Class fr_draft_tagihan
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.Location = New System.Drawing.Point(232, 70)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(55, 13)
+        Me.Label1.Size = New System.Drawing.Size(87, 13)
         Me.Label1.TabIndex = 295
-        Me.Label1.Text = "Tgl Faktur"
+        Me.Label1.Text = "Tgl Jatuh Tempo"
         '
         'date_faktur_akhir
         '
@@ -617,108 +707,75 @@ Partial Class fr_draft_tagihan
         Me.ck_tgl1.Text = "Filter sblm tgl jatuh tempo"
         Me.ck_tgl1.UseVisualStyleBackColor = True
         '
-        'list_faktur
+        'in_sales
         '
-        Me.list_faktur.DataPropertyName = "kode"
-        Me.list_faktur.HeaderText = "No.Faktur"
-        Me.list_faktur.Name = "list_faktur"
-        Me.list_faktur.ReadOnly = True
-        Me.list_faktur.Width = 90
+        Me.in_sales.BackColor = System.Drawing.Color.White
+        Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_sales.ForeColor = System.Drawing.Color.Black
+        Me.in_sales.Location = New System.Drawing.Point(367, 189)
+        Me.in_sales.MaxLength = 30
+        Me.in_sales.Name = "in_sales"
+        Me.in_sales.ReadOnly = True
+        Me.in_sales.Size = New System.Drawing.Size(236, 20)
+        Me.in_sales.TabIndex = 276
+        Me.in_sales.TabStop = False
         '
-        'list_tanggal
+        'Label8
         '
-        Me.list_tanggal.DataPropertyName = "faktur_tanggal_trans"
-        Me.list_tanggal.HeaderText = "Tanggal"
-        Me.list_tanggal.MinimumWidth = 90
-        Me.list_tanggal.Name = "list_tanggal"
-        Me.list_tanggal.ReadOnly = True
-        Me.list_tanggal.Width = 90
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(364, 173)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(81, 13)
+        Me.Label8.TabIndex = 250
+        Me.Label8.Text = "Kode Salesman"
         '
-        'list_custo
+        'Label9
         '
-        Me.list_custo.DataPropertyName = "nama"
-        Me.list_custo.HeaderText = "Customer"
-        Me.list_custo.MinimumWidth = 160
-        Me.list_custo.Name = "list_custo"
-        Me.list_custo.ReadOnly = True
-        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.list_custo.Width = 160
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(364, 217)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(53, 13)
+        Me.Label9.TabIndex = 250
+        Me.Label9.Text = "Salesman"
         '
-        'list_sisa
+        'in_sales_n
         '
-        Me.list_sisa.DataPropertyName = "faktur_sisa"
-        Me.list_sisa.HeaderText = "Sisa"
-        Me.list_sisa.MinimumWidth = 95
-        Me.list_sisa.Name = "list_sisa"
-        Me.list_sisa.ReadOnly = True
-        Me.list_sisa.Width = 95
+        Me.in_sales_n.BackColor = System.Drawing.Color.White
+        Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_sales_n.ForeColor = System.Drawing.Color.Black
+        Me.in_sales_n.Location = New System.Drawing.Point(367, 233)
+        Me.in_sales_n.MaxLength = 30
+        Me.in_sales_n.Name = "in_sales_n"
+        Me.in_sales_n.ReadOnly = True
+        Me.in_sales_n.Size = New System.Drawing.Size(236, 20)
+        Me.in_sales_n.TabIndex = 276
+        Me.in_sales_n.TabStop = False
         '
-        'list_cicilan
+        'lbl_statprint
         '
-        Me.list_cicilan.HeaderText = "Cicilan"
-        Me.list_cicilan.Name = "list_cicilan"
-        Me.list_cicilan.ReadOnly = True
-        '
-        'list_tgl_cicilan
-        '
-        Me.list_tgl_cicilan.HeaderText = "Tgl.Cicilan"
-        Me.list_tgl_cicilan.Name = "list_tgl_cicilan"
-        Me.list_tgl_cicilan.ReadOnly = True
-        '
-        'list_draft
-        '
-        Me.list_draft.DataPropertyName = "faktur_draft_rekap"
-        Me.list_draft.HeaderText = "Draft"
-        Me.list_draft.Name = "list_draft"
-        Me.list_draft.ReadOnly = True
-        Me.list_draft.Width = 50
-        '
-        'draft_custo
-        '
-        Me.draft_custo.DataPropertyName = "customer_nama"
-        Me.draft_custo.HeaderText = "Customer"
-        Me.draft_custo.MinimumWidth = 100
-        Me.draft_custo.Name = "draft_custo"
-        Me.draft_custo.ReadOnly = True
-        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.draft_custo.Width = 120
-        '
-        'draft_faktur
-        '
-        Me.draft_faktur.DataPropertyName = "trans_faktur"
-        Me.draft_faktur.HeaderText = "No.Faktur"
-        Me.draft_faktur.Name = "draft_faktur"
-        Me.draft_faktur.ReadOnly = True
-        Me.draft_faktur.Width = 90
-        '
-        'draft_sisa
-        '
-        Me.draft_sisa.DataPropertyName = "trans_harga_retur"
-        Me.draft_sisa.HeaderText = "Sisa"
-        Me.draft_sisa.MinimumWidth = 50
-        Me.draft_sisa.Name = "draft_sisa"
-        Me.draft_sisa.ReadOnly = True
-        Me.draft_sisa.Width = 75
-        '
-        'draft_cicilan
-        '
-        Me.draft_cicilan.HeaderText = "Cicilan"
-        Me.draft_cicilan.Name = "draft_cicilan"
-        Me.draft_cicilan.ReadOnly = True
-        '
-        'draft_tgl_cicilan
-        '
-        Me.draft_tgl_cicilan.HeaderText = "Tgl.Cicilan"
-        Me.draft_tgl_cicilan.Name = "draft_tgl_cicilan"
-        Me.draft_tgl_cicilan.ReadOnly = True
+        Me.lbl_statprint.AutoSize = True
+        Me.lbl_statprint.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_statprint.Location = New System.Drawing.Point(563, 79)
+        Me.lbl_statprint.Name = "lbl_statprint"
+        Me.lbl_statprint.Size = New System.Drawing.Size(40, 13)
+        Me.lbl_statprint.TabIndex = 250
+        Me.lbl_statprint.Text = "Printed"
+        Me.lbl_statprint.Visible = False
         '
         'fr_draft_tagihan
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.in_sales_n)
+        Me.Controls.Add(Me.in_sales)
         Me.Controls.Add(Me.ck_tgl2)
+        Me.Controls.Add(Me.lbl_statprint)
+        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.ck_tgl1)
+        Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.bt_create_draft)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.bt_remsales)
@@ -738,7 +795,6 @@ Partial Class fr_draft_tagihan
         Me.Controls.Add(Me.bt_cari_sales)
         Me.Controls.Add(Me.in_cari_sales)
         Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.dgv_draftsales)
         Me.Controls.Add(Me.dgv_sales)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label1)
@@ -754,7 +810,6 @@ Partial Class fr_draft_tagihan
         CType(Me.dgv_draftfaktur, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_listfaktur, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_draft_list, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgv_draftsales, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_sales, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
@@ -783,16 +838,10 @@ Partial Class fr_draft_tagihan
     Friend WithEvents bt_addfaktur As System.Windows.Forms.Button
     Friend WithEvents dgv_listfaktur As System.Windows.Forms.DataGridView
     Friend WithEvents dgv_draft_list As System.Windows.Forms.DataGridView
-    Friend WithEvents draftlist_kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents draftlist_tgl As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents draftlist_sales As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents bt_loaddraft As System.Windows.Forms.Button
     Friend WithEvents bt_cari_sales As System.Windows.Forms.Button
     Friend WithEvents in_cari_sales As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
-    Friend WithEvents dgv_draftsales As System.Windows.Forms.DataGridView
-    Friend WithEvents draft_sales_kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents draft_sales_n As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents dgv_sales As System.Windows.Forms.DataGridView
     Friend WithEvents sales_kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sales_nama As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -819,12 +868,23 @@ Partial Class fr_draft_tagihan
     Friend WithEvents draft_sisa As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents draft_cicilan As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents draft_tgl_cicilan As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents in_sales As System.Windows.Forms.TextBox
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents in_sales_n As System.Windows.Forms.TextBox
+    Friend WithEvents draftlist_kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents draftlist_tgl As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents draftlist_sales As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_tanggal As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_custo As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_sisa As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents list_temp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_cicilan As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_tgl_cicilan As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents list_draft As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents list_pasar As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents list_kec As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents list_kab As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents lbl_statprint As System.Windows.Forms.Label
 
 End Class

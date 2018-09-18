@@ -50,6 +50,7 @@ Partial Class fr_jual_retur_detail
         Me.in_jumlah = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
@@ -70,6 +71,7 @@ Partial Class fr_jual_retur_detail
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label20 = New System.Windows.Forms.Label()
@@ -449,6 +451,7 @@ Partial Class fr_jual_retur_detail
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.Label10)
         Me.Panel2.Controls.Add(Me.popPnl_barang)
         Me.Panel2.Controls.Add(Me.bt_tbbarang)
         Me.Panel2.Controls.Add(Me.in_subtotal)
@@ -467,6 +470,17 @@ Partial Class fr_jual_retur_detail
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(881, 198)
         Me.Panel2.TabIndex = 11
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label10.Location = New System.Drawing.Point(364, 5)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(30, 13)
+        Me.Label10.TabIndex = 276
+        Me.Label10.Text = "Sat."
         '
         'popPnl_barang
         '
@@ -574,8 +588,10 @@ Partial Class fr_jual_retur_detail
         Me.in_barang.ForeColor = System.Drawing.Color.Black
         Me.in_barang.Location = New System.Drawing.Point(12, 21)
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 12
+        Me.in_barang.TabStop = False
         '
         'in_barang_nm
         '
@@ -585,7 +601,6 @@ Partial Class fr_jual_retur_detail
         Me.in_barang_nm.Location = New System.Drawing.Point(112, 21)
         Me.in_barang_nm.MaxLength = 150
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm.TabIndex = 13
         '
@@ -637,7 +652,7 @@ Partial Class fr_jual_retur_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat, Me.harga, Me.jml})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat, Me.sat_type, Me.harga, Me.jml})
         Me.dgv_barang.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgv_barang.Location = New System.Drawing.Point(0, 44)
         Me.dgv_barang.Name = "dgv_barang"
@@ -681,6 +696,13 @@ Partial Class fr_jual_retur_detail
         Me.sat.ReadOnly = True
         Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.sat.Width = 60
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sat_type"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
         '
         'harga
         '
@@ -1096,12 +1118,6 @@ Partial Class fr_jual_retur_detail
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents in_qty As System.Windows.Forms.NumericUpDown
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
-    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label21 As System.Windows.Forms.Label
@@ -1142,4 +1158,12 @@ Partial Class fr_jual_retur_detail
     Friend WithEvents brg_kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_nama As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_beli As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label10 As System.Windows.Forms.Label
 End Class

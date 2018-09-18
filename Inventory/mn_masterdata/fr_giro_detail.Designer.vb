@@ -73,6 +73,7 @@ Partial Class fr_giro_detail
         '
         'bt_batalgiro
         '
+        Me.bt_batalgiro.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalgiro.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batalgiro.Location = New System.Drawing.Point(525, 366)
         Me.bt_batalgiro.Name = "bt_batalgiro"
@@ -459,9 +460,9 @@ Partial Class fr_giro_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(159, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(146, 30)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Supplier"
+        Me.lbl_title.Text = "BG Ditangan"
         '
         'bt_cl
         '

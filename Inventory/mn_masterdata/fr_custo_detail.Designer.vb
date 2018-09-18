@@ -120,7 +120,7 @@ Partial Class fr_custo_detail
         'in_alamat_custo
         '
         Me.in_alamat_custo.BackColor = System.Drawing.Color.White
-        Me.in_alamat_custo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_alamat_custo.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_alamat_custo.ForeColor = System.Drawing.Color.Black
         Me.in_alamat_custo.Location = New System.Drawing.Point(107, 147)
         Me.in_alamat_custo.MaxLength = 300

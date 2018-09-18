@@ -37,7 +37,7 @@
 
     Private Sub loadDataBrg(kode As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_jumlah FROM data_pembelian_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "'")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_jumlah, trans_satuan_type FROM data_pembelian_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "'")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -47,6 +47,7 @@
                     .Cells("harga").Value = rows.ItemArray(2)
                     .Cells("qty").Value = rows.ItemArray(3)
                     .Cells("sat").Value = rows.ItemArray(4)
+                    .Cells("sat_type").Value = rows.ItemArray(6)
                     .Cells("jml").Value = rows.ItemArray(5)
                 End With
             Next
@@ -56,33 +57,59 @@
 
     Private Sub loadSatuanBrg(kode As String)
         op_con()
+        Dim dt As New DataTable
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
         readcommd("SELECT barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar FROM data_barang_master WHERE barang_kode='" & kode & "'")
-        cb_sat.ResetText()
-        cb_sat.Items.Clear()
-        cb_sat.Items.Add(rd.Item("barang_satuan_kecil"))
-        cb_sat.Items.Add(rd.Item("barang_satuan_tengah"))
-        cb_sat.Items.Add(rd.Item("barang_satuan_besar"))
+        With dt.Rows
+            If rd.HasRows Then
+                .Add(rd.Item("barang_satuan_kecil"), "kecil")
+                .Add(rd.Item("barang_satuan_tengah"), "tengah")
+                .Add(rd.Item("barang_satuan_besar"), "besar")
+            End If
+        End With
         rd.Close()
+        'cb_sat.DataSource.Clear()
+        cb_sat.DataSource = dt
+        cb_sat.DisplayMember = "Text"
+        cb_sat.ValueMember = "Value"
     End Sub
 
     Private Sub loadDataBRGPopup()
         With dgv_listbarang
-            .DataSource = getDataTablefromDB("SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as harga_beli FROM data_barang_master WHERE barang_kode LIKE '%" & in_barang.Text & "%' LIMIT 200")
+            .DataSource = getDataTablefromDB("SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as harga_beli " _
+                                             & "FROM data_barang_master " _
+                                             & "LEFT JOIN data_pembelian_trans ON barang_kode=trans_barang " _
+                                             & "LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode " _
+                                             & "WHERE faktur_supplier='" & cb_supplier.SelectedValue & "' " _
+                                             & "AND barang_nama LIKE '" & in_barang_nm.Text & "%' " _
+                                             & "GROUP BY barang_kode")
         End With
     End Sub
 
-    Private Sub setBarang(kode As String)
+    Private Sub setBarang(nama As String, Optional kode As String = Nothing)
         op_con()
-        readcommd("SELECT barang_nama, barang_kode, barang_harga_beli FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        If kode = Nothing Then
+            readcommd("SELECT barang_kode FROM data_barang_master WHERE barang_nama LIKE '" & nama & "%' LIMIT 1")
+            If rd.HasRows Then
+                kode = rd.Item(0)
+                rd.Close()
+            Else
+                rd.Close()
+                Exit Sub
+            End If
+        End If
+
+        readcommd("SELECT barang_nama, barang_kode, barang_harga_beli FROM data_barang_master WHERE barang_kode='" & kode & "' AND barang_supplier='" & cb_supplier.SelectedValue & "'")
         If rd.HasRows Then
             in_barang_nm.Text = rd.Item("barang_nama")
             in_harga_retur.Value = rd.Item("barang_harga_beli")
         End If
         rd.Close()
 
-        If in_barang_nm.Text <> Nothing Then
+        If in_barang.Text <> Nothing Then
             loadSatuanBrg(kode)
-            cb_sat.SelectedIndex = 2
+            'cb_sat.SelectedIndex = 2
         End If
     End Sub
 
@@ -99,23 +126,6 @@
 
         Me.Cursor = Cursors.AppStarting
 
-        op_con()
-        Try
-            readcommd(String.Format("SELECT stock_sisa, countQTYJual('{0}','{1}','{2}') as qtyinput FROM data_stok_awal WHERE stock_barang='{0}' AND stock_gudang='{3}'", in_barang.Text, in_qty.Value, cb_sat.Text, cb_gudang.SelectedValue))
-            Dim qtysisa As Integer = rd.Item("stock_sisa")
-            Dim qtyinput As Integer = rd.Item("qtyinput")
-            rd.Close()
-            If qtyinput > qtysisa Then
-                MessageBox.Show("QTY yg diinput lebih besar dari stok")
-                in_qty.Focus()
-                Exit Sub
-            End If
-        Catch ex As Exception
-            MessageBox.Show("barang tidak")
-            Me.Cursor = Cursors.Default
-            Exit Sub
-        End Try
-
         With dgv_barang.Rows
             Dim x As Integer = .Add
             With .Item(x)
@@ -123,6 +133,7 @@
                 .Cells("nama").Value = in_barang_nm.Text
                 .Cells("qty").Value = in_qty.Value
                 .Cells("sat").Value = cb_sat.Text
+                .Cells("sat_type").Value = cb_sat.SelectedValue
                 .Cells("harga").Value = in_harga_retur.Value
                 .Cells("jml").Value = removeCommaThousand(in_subtotal.Text)
             End With
@@ -142,7 +153,7 @@
             in_barang.Text = .Cells("kode").Value
             in_barang_nm.Text = .Cells("nama").Value
             in_qty.Value = .Cells("qty").Value
-            cb_sat.SelectedText = .Cells("sat").Value
+            cb_sat.SelectedValue = .Cells("sat_type").Value
             in_harga_retur.Text = .Cells("harga").Value
         End With
         countBiaya()
@@ -162,11 +173,13 @@
 
         If cb_ppn.SelectedValue = "1" Then
             'incl
-            pajak = 0
+            pajak = subtot * (1 - 1 / 1.1)
         ElseIf cb_ppn.SelectedValue = "0" Then
             'excl
             pajak = subtot * 0.1
             z = subtot + pajak
+        Else
+            pajak = 0
         End If
         Dim cc As Globalization.CultureInfo = Globalization.CultureInfo.GetCultureInfo("id-ID")
         in_jumlah.Text = subtot.ToString("N2", cc)
@@ -174,18 +187,24 @@
         in_ppn_tot.Text = pajak.ToString("N2", cc)
     End Sub
 
+    Private Sub clearTextBarang()
+        in_harga_retur.Value = 0
+        For Each x As TextBox In {in_barang, in_subtotal}
+            x.Clear()
+        Next
+    End Sub
+
     Private Sub clearInputBarang()
+        clearTextBarang()
         in_barang_nm.Clear()
         cb_sat.Text = ""
-        cb_sat.Items.Clear()
-        in_subtotal.Clear()
-        in_harga_retur.Value = 0
+        cb_sat.DataSource = Nothing
         in_qty.Value = 0
     End Sub
 
     Private Sub setReadOnly()
         Dim txt As TextBox() = {
-            in_no_bukti, in_no_faktur, in_no_faktur_ex, in_pajak, in_barang
+            in_no_bukti, in_no_faktur, in_no_faktur_ex, in_pajak, in_barang_nm
             }
         For Each x As TextBox In txt
             x.ReadOnly = True
@@ -244,28 +263,28 @@
     End Sub
 
     '---------------pop up list barang & input barang
-    Private Sub in_barang_Enter(sender As Object, e As EventArgs) Handles in_barang_nm.Enter, in_barang.Enter
-        popPnl_barang.Location = New Point(in_barang.Left, in_barang.Top + in_barang.Height)
+    Private Sub in_barang_Enter(sender As Object, e As EventArgs) Handles in_barang_nm.Enter
+        popPnl_barang.Location = New Point(in_barang_nm.Left, in_barang_nm.Top + in_barang_nm.Height)
         If popPnl_barang.Visible = False Then
             popPnl_barang.Visible = True
             loadDataBRGPopup()
         End If
     End Sub
 
-    Private Sub in_barang_Leave(sender As Object, e As EventArgs) Handles in_barang_nm.Leave, in_barang.Leave
+    Private Sub in_barang_Leave(sender As Object, e As EventArgs) Handles in_barang_nm.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
+            If Trim(in_barang_nm.Text) <> Nothing Then
+                setBarang(in_barang_nm.Text)
+            End If
         Else
             popPnl_barang.Visible = True
         End If
 
-        If Trim(in_barang.Text) <> Nothing Then
-            setBarang(in_barang.Text)
-        End If
     End Sub
 
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
-        If Not in_barang.Focused = True Or in_barang.Focused = True Then
+        If Not in_barang_nm.Focused = True Then
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
@@ -276,7 +295,7 @@
         If e.RowIndex >= 0 Then
             indexrowlist = e.RowIndex
             in_barang.Text = dgv_listbarang.Rows(indexrowlist).Cells("brg_kode").Value
-            setBarang(in_barang.Text)
+            setBarang("", in_barang.Text)
             in_qty.Focus()
         End If
     End Sub
@@ -290,48 +309,33 @@
     Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
             in_barang.Text = dgv_listbarang.Rows(indexrowlist).Cells("brg_kode").Value
-            setBarang(in_barang.Text)
+            setBarang("", in_barang.Text)
             in_qty.Focus()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
         If Char.IsLetterOrDigit(e.keyChar) Then
-            in_barang.Text += e.KeyChar
+            in_barang_nm.Text += e.KeyChar
             e.Handled = True
-            in_barang.Focus()
+            in_barang_nm.Focus()
         End If
     End Sub
 
-    Private Sub in_barang_TextChanged(sender As Object, e As EventArgs) Handles in_barang.TextChanged
-        If in_barang.Text = "" Then
-            clearInputBarang()
+    Private Sub in_barang_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged
+        If in_barang_nm.Text = "" Then
+            clearTextBarang()
         End If
+    End Sub
+
+    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
         If popPnl_barang.Visible = True Then
             loadDataBRGPopup()
         End If
     End Sub
 
-    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
-        clearInputBarang()
-        If e.KeyCode = Keys.F1 Then
-            Using search As New fr_search_dialog
-                With search
-                    If Trim(in_barang.Text) <> Nothing Then
-                        .in_cari.Text = in_barang.Text
-                    End If
-                    .returnkode = in_barang.Text
-                    .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
-                    .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
-                    .type = "barang"
-                    .ShowDialog()
-                    in_barang.Text = .returnkode
-                    in_barang.Focus()
-                End With
-            End Using
-            in_qty.Focus()
-            Exit Sub
-        ElseIf e.KeyCode = Keys.Down Then
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyDown
+       If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
             End If
@@ -348,11 +352,17 @@
         popPnl_barang.Visible = False
         Using search As New fr_search_dialog
             With search
-                If Trim(in_barang.Text) <> Nothing Then
-                    .in_cari.Text = in_barang.Text
+                If Trim(in_barang_nm.Text) <> Nothing Then
+                    .in_cari.Text = in_barang_nm.Text
                 End If
                 .returnkode = in_barang.Text
-                .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
+                .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as harga_beli " _
+                         & "FROM data_barang_master " _
+                         & "LEFT JOIN data_pembelian_trans ON barang_kode=trans_barang " _
+                         & "LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode " _
+                         & "WHERE faktur_supplier='" & cb_supplier.SelectedValue & "' " _
+                         & "AND barang_nama LIKE '" & in_barang_nm.Text & "%' " _
+                         & "GROUP BY barang_kode"
                 .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
                 .type = "barang"
                 .ShowDialog()
@@ -360,7 +370,7 @@
             End With
         End Using
         If Trim(in_barang.Text) <> Nothing Then
-            setBarang(Trim(in_barang.Text))
+            setBarang(in_barang_nm.Text, Trim(in_barang.Text))
         End If
         in_qty.Focus()
         Exit Sub
@@ -382,7 +392,7 @@
             .SelectedIndex = -1
         End With
         With cb_bayar_jenis
-            .DataSource = jenisBayarRetur()
+            .DataSource = jenisBayar("retur")
             .DisplayMember = "Text"
             .ValueMember = "Value"
             .SelectedIndex = 0
@@ -394,14 +404,25 @@
             .SelectedIndex = 0
         End With
 
+        With date_tgl_trans
+            .Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_trans.Value.Day)
+            .MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+            .MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+        End With
+        date_tgl_pajak.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_pajak.Value.Day)
+
+        For Each x As DataGridViewColumn In {qty, harga, jml, brg_beli}
+            x.DefaultCellStyle = dgvstyle_commathousand
+        Next
+
         op_con()
-        If bt_simpanreturbeli.Text = "OK" Then
+        If in_no_bukti.Text <> Nothing Then
             loadData(in_no_bukti.Text)
             loadDataBrg(in_no_bukti.Text)
             in_no_bukti.ReadOnly = True
         End If
 
-        cb_supplier.Focus()
+            cb_supplier.Focus()
     End Sub
 
     '----------------save
@@ -421,36 +442,42 @@
             in_barang.Focus()
             Exit Sub
         End If
-
-        Dim querycheck As Boolean = False
-        Dim dataFak As String()
-        Dim dataBrg As String()
-        Dim queryArr As New List(Of String)
+        If cb_bayar_jenis.SelectedValue = 1 And in_no_faktur.Text = Nothing Then
+            MessageBox.Show("Faktur belum di input")
+            in_no_faktur.Focus()
+            Exit Sub
+        End If
 
         op_con()
-        If bt_simpanreturbeli.Text = "Simpan" Then
-            If MessageBox.Show("Simpan data transaksi retur pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.Yes Then
-                Me.Cursor = Cursors.WaitCursor
 
-                'GENERATE KODE
-                If Trim(in_no_bukti.Text) <> Nothing Then
-                    If checkdata("data_pembelian_retur_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode_bukti") = True Then
-                        MessageBox.Show("No.Bukti " & in_no_bukti.Text & " sudah ada!")
-                        in_no_bukti.Select()
+        If MessageBox.Show("Simpan data transaksi retur pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+
+            'GENERATE KODE
+            If in_no_bukti.Text = Nothing Then
+                Dim no As Integer = 1
+                readcommd("SELECT COUNT(faktur_kode_bukti) FROM data_pembelian_retur_faktur WHERE SUBSTRING(faktur_kode_bukti,3,8)='" & date_tgl_trans.Value.ToString("yyyyMMdd") & "' AND faktur_kode_bukti LIKE 'RB%'")
+                If rd.HasRows Then
+                    no = CInt(rd.Item(0)) + 1
+                End If
+                rd.Close()
+                in_no_bukti.Text = "RB" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D4")
+            ElseIf in_no_bukti.Text <> Nothing And bt_simpanreturbeli.Text <> "Update" Then
+                If checkdata("data_pembelian_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode") = True Then
+                    If MessageBox.Show("Update data faktur " & in_no_bukti.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
                         Exit Sub
                     End If
-                Else
-                    readcommd("SELECT COUNT(faktur_tanggal_trans) FROM data_pembelian_retur_faktur WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_trans.Value.ToString("yyyyMMdd") & "'")
-                    Dim x As Integer = rd.Item(0)
-                    x += 1
-                    rd.Close()
-                    Dim fakturkode As String = "RP" & date_tgl_trans.Value.ToString("yyyyMMdd") & x.ToString("D2")
-                    in_no_bukti.Text = fakturkode
                 End If
+            End If
 
-                'INSERT DATA FAKTUR
-                dataFak = {
-                    "faktur_kode_bukti='" & in_no_bukti.Text & "'",
+            Dim querycheck As Boolean = False
+            Dim dataFak, dataBrg As String()
+            Dim data1, data2 As String()
+            Dim queryArr As New List(Of String)
+            Dim q1 As String = "INSERT INTO data_pembelian_retur_faktur SET faktur_kode_bukti='{0}',{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
+            Dim q2 As String = "INSERT INTO data_pembelian_retur_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
+            Dim q3 As String = "DELETE FROM data_pembelian_retur_trans WHERE trans_faktur='{0}' AND trans_barang NOT IN({1})"
+
+            dataFak = {
                     "faktur_tanggal_trans='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
                     "faktur_pajak_no='" & in_pajak.Text & "'",
                     "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
@@ -458,43 +485,100 @@
                     "faktur_supplier='" & cb_supplier.SelectedValue & "'",
                     "faktur_kode_faktur='" & in_no_faktur.Text & "'",
                     "faktur_kode_exfaktur='" & in_no_faktur_ex.Text & "'",
-                    "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text) & "'",
-                    "faktur_ppn='" & removeCommaThousand(in_ppn_tot.Text) & "'",
+                    "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text).ToString.Replace(",", ".") & "'",
+                    "faktur_ppn='" & removeCommaThousand(in_ppn_tot.Text).ToString.Replace(",", ".") & "'",
                     "faktur_ppn_jenis='" & cb_ppn.SelectedValue & "'",
-                    "faktur_netto='" & removeCommaThousand(in_netto.Text) & "'",
+                    "faktur_netto='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", ".") & "'",
+                    "faktur_jen_bayar='" & cb_bayar_jenis.SelectedValue & "'",
                     "faktur_sebab='" & in_ket.Text & "'",
-                    "faktur_status=1",
-                    "faktur_reg_date=NOW()",
-                    "faktur_reg_alias='" & loggeduser.user_id & "'"
+                    "faktur_status='" & statusretur & "'"
                     }
-                queryArr.Add("INSERT INTO data_pembelian_retur_faktur SET " & String.Join(",", dataFak))
+            data1 = {
+                "faktur_reg_date=NOW()",
+                "faktur_reg_alias='" & loggeduser.user_id & "'"
+                }
+            data2 = {
+                "faktur_upd_date=NOW()",
+                "faktur_upd_alias='" & loggeduser.user_id & "'"
+                }
+            'INSERT HEADER
+            queryArr.Add(String.Format(q1, in_no_bukti.Text, String.Join(",", dataFak), String.Join(",", data1), String.Join(",", data2)))
 
-                'TODO : UPDATE DATA HUTANG AWAL IF POTONG NOTA -> ?
-
+            'INSERT BARANG
+            Dim x As New List(Of String)
+            Dim x_kodestock As New List(Of String)
+            Dim qty As New List(Of Integer)
+            Dim nilai As New List(Of Double)
+            For Each rows As DataGridViewRow In dgv_barang.Rows
+                Dim _stock As String = cb_gudang.SelectedValue & "-" & rows.Cells(0).Value & "-" & date_tgl_trans.Value.ToString("yyMM")
                 'INSERT DATA BARANG
-                For Each rows As DataGridViewRow In dgv_barang.Rows
-                    dataBrg = {
-                    "trans_faktur='" & in_no_bukti.Text & "'",
-                    "trans_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+                dataBrg = {
                     "trans_barang='" & rows.Cells(0).Value & "'",
-                    "trans_harga_retur='" & rows.Cells("harga").Value & "'",
+                    "trans_harga_retur='" & rows.Cells("harga").Value.ToString.Replace(",", ".") & "'",
                     "trans_qty='" & rows.Cells("qty").Value & "'",
                     "trans_satuan='" & rows.Cells("sat").Value & "'",
-                    "trans_jumlah='" & rows.Cells("jml").Value & "'",
-                    "trans_reg_date=NOW()",
-                    "trans_reg_alias='" & loggeduser.user_id & "'"
+                    "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
+                    "trans_jumlah='" & rows.Cells("jml").Value.ToString.Replace(",", ".") & "'"
                     }
-                    queryArr.Add("INSERT INTO data_pembelian_retur_trans SET " & String.Join(",", dataBrg))
+                queryArr.Add(String.Format(q2, in_no_bukti.Text, String.Join(",", dataBrg)))
 
-                    'TODO Update stok <- dont think still needed
+                'COUNT QTY TOTAL PER ITEM
+                Dim _qtytot As Integer = 0
+                readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
+                If rd.HasRows Then
+                    _qtytot = rd.Item(0)
+                End If
+                rd.Close()
 
-                    'TODO : WRITE KARTU STOK
+                x.Add("'" & rows.Cells(0).Value & "'")
+                qty.Add(_qtytot)
+                x_kodestock.Add("'" & _stock & "'")
+                nilai.Add(rows.Cells("jml").Value)
+            Next
+            'DELETE REMOVED ITEM
+            queryArr.Add(String.Format(q3, in_no_bukti.Text, String.Join(",", x)))
 
-                    'TODO : WRITE LOG
-                Next
-            Else
-                Me.Close()
-                Exit Sub
+            'WRITE KARTU STOK
+            Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
+            Dim q5 As String = "DELETE FROM data_stok_kartustok WHERE trans_faktur='{0}' AND trans_stock NOT IN({1})"
+            data1 = {
+                    "trans_stock", "trans_index", "trans_jenis", "trans_faktur",
+                    "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
+                    }
+            Dim i As Integer = 0
+            For Each stock As String In x_kodestock
+                data2 = {
+                        stock,
+                        "MAX(trans_index)+1",
+                        "'rb'",
+                        "'" & in_no_bukti.Text & "'",
+                        "'RETUR PEMBELIAN'",
+                        qty.Item(i) * -1,
+                        (nilai.Item(i) * -1).ToString.Replace(",", "."),
+                        "'" & loggeduser.user_id & "'",
+                        "NOW()"
+                        }
+                dataBrg = {
+                    "trans_qty=" & qty.Item(i) * -1,
+                    "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
+                    "trans_upd_date=NOW()",
+                    "trans_upd_alias='" & loggeduser.user_id & "'"
+                    }
+                queryArr.Add(String.Format(q4, String.Join(",", data1), String.Join(",", data2), stock, String.Join(",", dataBrg)))
+                i += 1
+            Next
+            'DONE : TODO : DELETE REMOVED ITEM FROM KARTU STOK
+            queryArr.Add(String.Format(q5, in_no_bukti.Text, String.Join(",", x_kodestock)))
+
+            'TODO : WRITE HUTANG AWAL
+            If cb_bayar_jenis.SelectedValue = 1 Then
+                Dim q6 As String = "INSERT INTO data_hutang_retur SET h_retur_faktur='{0}',h_retur_bukti_retur='{1}',{2} ON DUPLICATE KEY UPDATE h_retur_id=h_retur_id"
+                data1 = {
+                    "h_retur_total=" & removeCommaThousand(in_netto.Text),
+                    "h_retur_reg_date=NOW()",
+                    "h_retur_reg_alias='" & loggeduser.user_id & "'"
+                    }
+                queryArr.Add(String.Format(q6, in_no_faktur.Text, in_no_bukti.Text, String.Join(",", data1)))
             End If
 
             'BEGIN TRANSACTION
@@ -504,6 +588,7 @@
             If querycheck = False Then
                 Exit Sub
             Else
+                'TODO : WRITE LOG ACTIVITY
                 MessageBox.Show("Data tersimpan")
                 frmpembelian.in_cari.Clear()
                 populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
@@ -539,7 +624,7 @@
                     .returnkode = cb_supplier.SelectedValue
                 End If
                 .query = "SELECT supplier_kode as kode, supplier_nama as nama FROM data_supplier_master"
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                .paramquery = "nama LIKE'{0}%' OR kode LIKE '{0}%'"
                 .type = "supplier"
                 .ShowDialog()
                 cb_supplier.SelectedValue = .returnkode
@@ -566,7 +651,7 @@
                     .returnkode = cb_gudang.SelectedValue
                 End If
                 .query = "SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang"
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
+                .paramquery = "nama LIKE'{0}%' OR kode LIKE '{0}%'"
                 .type = "gudang"
                 .ShowDialog()
                 cb_gudang.SelectedValue = .returnkode
@@ -597,8 +682,8 @@
                 If Trim(in_no_faktur.Text) <> Nothing Then
                     .in_cari.Text = Trim(in_no_faktur.Text)
                 End If
-                .query = "SELECT faktur_kode as kode, faktur_tanggal_trans as tgl, supplier_nama as supplier, gudang_nama as gudang FROM data_pembelian_faktur INNER JOIN data_supplier_master ON supplier_kode=faktur_supplier INNER JOIN data_barang_gudang ON gudang_kode=faktur_gudang ORDEr BY kode DESC"
-                .paramquery = "supplier LIKE'%{0}%' OR kode LIKE '%{0}%' OR gudang LIKE '%{0}%'"
+                .query = "SELECT faktur_kode as kode, faktur_tanggal_trans as tgl, supplier_nama as supplier, gudang_nama as gudang FROM data_pembelian_faktur INNER JOIN data_supplier_master ON supplier_kode=faktur_supplier INNER JOIN data_barang_gudang ON gudang_kode=faktur_gudang ORDER BY kode DESC"
+                .paramquery = "supplier LIKE'{0}%' OR kode LIKE '{0}%' OR gudang LIKE '{0}%'"
                 .type = "beli"
                 .ShowDialog()
                 in_no_faktur.Text = .returnkode
@@ -613,14 +698,14 @@
     End Sub
 
     Private Sub date_tgl_pajak_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_pajak.KeyDown
-        keyshortenter(in_barang, e)
+        keyshortenter(in_barang_nm, e)
     End Sub
 
     '-------------------- input barang
     Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
         If e.KeyCode = Keys.Enter Then
             keyshortenter(cb_sat, e)
-            cb_sat.DroppedDown = True
+            'cb_sat.DroppedDown = True
         End If
     End Sub
 
@@ -650,6 +735,17 @@
     'menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
         bt_simpanreturbeli.PerformClick()
+    End Sub
+
+    Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
+        Using nota As New fr_view_nota
+            Me.Cursor = Cursors.WaitCursor
+            With nota
+                .setVar("returbeli", in_no_bukti.Text, "")
+                .ShowDialog()
+            End With
+        End Using
+        Me.Cursor = Cursors.Default
     End Sub
 
     'other

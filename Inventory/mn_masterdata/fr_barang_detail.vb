@@ -180,7 +180,7 @@
             'data supplier
             getSupplier(in_supplier.Text)
 
-            getHisStock(in_kode.Text, "all", dt_awal_st.Value, dt_akhir_st.Value)
+            'getHisStock(in_kode.Text, "all", dt_awal_st.Value, dt_akhir_st.Value)
         End If
     End Sub
 

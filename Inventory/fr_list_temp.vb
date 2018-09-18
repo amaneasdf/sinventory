@@ -8,6 +8,76 @@
         Console.WriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
 
+    Public Sub performRefresh()
+        Console.WriteLine(tabpagename.Name.ToString)
+        Me.Cursor = Cursors.AppStarting
+        Select Case tabpagename.Name.ToString
+            Case "pgbarang"
+                populateDGVUserCon("barang", "", frmbarang.dgv_list)
+            Case "pgsupplier"
+                populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
+            Case "pggudang"
+                populateDGVUserCon("gudang", "", frmgudang.dgv_list)
+            Case "pgsales"
+                populateDGVUserCon("sales", "", frmsales.dgv_list)
+            Case "pgcusto"
+                populateDGVUserCon("custo", "", frmcusto.dgv_list)
+            Case "pgbgtangan"
+                populateDGVUserCon("giro", "", frmbgditangan.dgv_list)
+            Case "pgperkiraan"
+                populateDGVUserCon("perkiraan", "", frmperkiraan.dgv_list)
+            Case "pgawalneraca"
+                populateDGVUserCon("neracaawal", "", frmawalneraca.dgv_list)
+            Case "pgpembelian"
+                populateDGVUserCon("beli", "", frmpembelian.dgv_list)
+            Case "pgreturbeli"
+                populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
+            Case "pgpenjualan"
+                populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
+            Case "pgreturjual"
+                populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
+            Case "pgstok"
+                populateDGVUserCon("stok", "", frmstok.dgv_list)
+            Case "pgmutasigudang"
+                populateDGVUserCon("mutasigudang", "", frmmutasigudang.dgv_list)
+            Case "pgmutasistok"
+                populateDGVUserCon("mutasistok", "", frmmutasistok.dgv_list)
+            Case "pgstockop"
+                populateDGVUserCon("stockop", "", frmstockop.dgv_list)
+            Case "pghutangawal"
+                populateDGVUserCon("hutangawal", "", frmhutangawal.dgv_list)
+            Case "pghutangbayar"
+                populateDGVUserCon("hutangbayar", "", frmhutangbayar.dgv_list)
+            Case "pghutangbgo"
+                populateDGVUserCon("hutangbgo", "", frmhutangbgo.dgv_list)
+            Case "pgpiutangawal"
+                populateDGVUserCon("piutangawal", "", frmpiutangawal.dgv_list)
+            Case "pgpiutangbayar"
+                populateDGVUserCon("piutangbayar", "", frmpiutangbayar.dgv_list)
+            Case "pgpiutangbgcair"
+                populateDGVUserCon("piutangbgcair", "", frmpiutangbgcair.dgv_list)
+            Case "pgpiutangbgtolak"
+                populateDGVUserCon("piutangbgtolak", "", frmpiutangbgTolak.dgv_list)
+            Case "pgkas"
+                populateDGVUserCon("kas", "", frmkas.dgv_list)
+            Case "pgjurnalumum"
+                populateDGVUserCon("jurnalumum", "", frmjurnalumum.dgv_list)
+            Case "pgjurnalmemorial"
+                populateDGVUserCon("jurnalmemorial", "", frmjurnalmemorial.dgv_list)
+                'Case "pgjenisbarang"
+                '    populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
+            Case "pggroup"
+                populateDGVUserCon("group", "", frmgroup.dgv_list)
+            Case "pguser"
+                populateDGVUserCon("user", "", frmuser.dgv_list)
+            Case Else
+                Exit Sub
+        End Select
+        Me.Cursor = Cursors.Default
+        in_cari.Clear()
+        in_countdata.Text = dgv_list.RowCount
+    End Sub
+
     Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_close.Click
         main.tabcontrol.TabPages.Remove(tabpagename)
         rowindex = 0
@@ -52,6 +122,8 @@
             Case "pgstockop"
                 fr_stock_op.ShowDialog(main)
             Case "pghutangbayar"
+                'Dim xa As New fr_h_bayar
+                'xa.Show()
                 fr_hutang_bayar.ShowDialog(main)
             Case "pgpiutangbayar"
                 fr_piutang_bayar.ShowDialog(main)
@@ -209,7 +281,7 @@
                     Using detail As New fr_hutang_awal
                         With detail
                             .bt_simpanreturbeli.Text = "Update"
-
+                            .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .ShowDialog(main)
                         End With
                     End Using
@@ -217,89 +289,89 @@
                     Using detail As New fr_hutang_bayar
                         With detail
                             .bt_simpanperkiraan.Text = "Update"
-
+                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells("bukti").Value
                             .ShowDialog(main)
                         End With
                     End Using
                 Case "pgpiutangawal"
-                    Using detail As New fr_piutang_awal
-                        With detail
-                            .bt_simpanreturbeli.Text = "Update"
-
-                            .ShowDialog(main)
-                        End With
-                    End Using
+                        Using detail As New fr_piutang_awal
+                            With detail
+                                .bt_simpanreturbeli.Text = "Update"
+                                .in_faktur.Text = dgv_list.Rows(rowindex).Cells("faktur").Value
+                                .ShowDialog(main)
+                            End With
+                        End Using
                 Case "pgpiutangbayar"
-                    Using detail As New fr_piutang_bayar
-                        With detail
-                            .bt_simpanperkiraan.Text = "Update"
+                        Using detail As New fr_piutang_bayar
+                            With detail
+                                .bt_simpanperkiraan.Text = "Update"
 
-                            .ShowDialog(main)
-                        End With
-                    End Using
+                                .ShowDialog(main)
+                            End With
+                        End Using
                 Case "pgpiutangbgtolak"
-                    Using detail As New fr_bg_tolak
-                        With detail
-                            .bt_simpanperkiraan.Text = "Update"
+                        Using detail As New fr_bg_tolak
+                            With detail
+                                .bt_simpanperkiraan.Text = "Update"
 
-                            .ShowDialog(main)
-                        End With
-                    End Using
+                                .ShowDialog(main)
+                            End With
+                        End Using
                 Case "pgkas"
-                    Using detail As New fr_kas_detail
-                        With detail
+                        Using detail As New fr_kas_detail
+                            With detail
                             .bt_simpanperkiraan.Text = "Update"
-
+                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(1).Value
                             .ShowDialog(main)
-                        End With
-                    End Using
+                            End With
+                        End Using
                 Case "pgjurnalumum"
-                    Using detail As New fr_jurnal_u_det
-                        With detail
+                        Using detail As New fr_jurnal_u_det
+                            With detail
 
-                            .ShowDialog(main)
-                        End With
-                    End Using
+                                .ShowDialog(main)
+                            End With
+                        End Using
                 Case "pgjurnalmemorial"
-                    Using detail As New fr_jurnal_mem
-                        With detail
-                            .bt_simpanperkiraan.Text = "Update"
+                        Using detail As New fr_jurnal_mem
+                            With detail
+                                .bt_simpanperkiraan.Text = "Update"
 
-                            .ShowDialog(main)
-                        End With
-                    End Using
+                                .ShowDialog(main)
+                            End With
+                        End Using
                 Case "pggroup"
-                    Using detail As New fr_group_detail
-                        With detail
-                            .bt_simpan_group.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                            .in_nama_group.Text = dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_ket_group.Text = dgv_list.Rows(rowindex).Cells(2).Value
-                            .ShowDialog()
-                        End With
-                    End Using
+                        Using detail As New fr_group_detail
+                            With detail
+                                .bt_simpan_group.Text = "Update"
+                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                                .in_nama_group.Text = dgv_list.Rows(rowindex).Cells(1).Value
+                                .in_ket_group.Text = dgv_list.Rows(rowindex).Cells(2).Value
+                                .ShowDialog()
+                            End With
+                        End Using
                 Case "pguser"
-                    Using detail As New fr_user_detail
-                        With detail
-                            .bt_simpanuser.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                            .ShowDialog()
-                        End With
-                    End Using
-                    'Case "pgjenisbarang"
-                    '    Using detail As New fr_jenis_barang
-                    '        With detail
-                    '            .setfor = "jenisbarang"
-                    '            .bt_simpan_jenis.Text = "Update"
-                    '            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                    '            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                    '            .ShowDialog()
-                    '        End With
-                    '    End Using
+                        Using detail As New fr_user_detail
+                            With detail
+                                .bt_simpanuser.Text = "Update"
+                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                                .ShowDialog()
+                            End With
+                        End Using
+                        'Case "pgjenisbarang"
+                        '    Using detail As New fr_jenis_barang
+                        '        With detail
+                        '            .setfor = "jenisbarang"
+                        '            .bt_simpan_jenis.Text = "Update"
+                        '            .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                        '            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                        '            .ShowDialog()
+                        '        End With
+                        '    End Using
                 Case Else
-                    MessageBox.Show("Under Construction")
+                        MessageBox.Show("Under Construction")
             End Select
             Me.Cursor = Cursors.Default
         Else
@@ -312,71 +384,7 @@
     End Sub
 
     Private Sub bt_refresh_Click(sender As Object, e As EventArgs) Handles bt_refresh.Click
-        Console.WriteLine(tabpagename.Name.ToString)
-        Me.Cursor = Cursors.AppStarting
-        Select Case tabpagename.Name.ToString
-            Case "pgbarang"
-                populateDGVUserCon("barang", "", frmbarang.dgv_list)
-            Case "pgsupplier"
-                populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
-            Case "pggudang"
-                populateDGVUserCon("gudang", "", frmgudang.dgv_list)
-            Case "pgsales"
-                populateDGVUserCon("sales", "", frmsales.dgv_list)
-            Case "pgcusto"
-                populateDGVUserCon("custo", "", frmcusto.dgv_list)
-            Case "pgbgtangan"
-                populateDGVUserCon("giro", "", frmbgditangan.dgv_list)
-            Case "pgperkiraan"
-                populateDGVUserCon("perkiraan", "", frmperkiraan.dgv_list)
-            Case "pgawalneraca"
-                populateDGVUserCon("neracaawal", "", frmawalneraca.dgv_list)
-            Case "pgpembelian"
-                populateDGVUserCon("beli", "", frmpembelian.dgv_list)
-            Case "pgreturbeli"
-                populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
-            Case "pgpenjualan"
-                populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
-            Case "pgreturjual"
-                populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
-            Case "pgstok"
-                populateDGVUserCon("stok", "", frmstok.dgv_list)
-            Case "pgmutasigudang"
-                populateDGVUserCon("mutasigudang", "", frmmutasigudang.dgv_list)
-            Case "pgmutasistok"
-                populateDGVUserCon("mutasistok", "", frmmutasistok.dgv_list)
-            Case "pgstockop"
-                populateDGVUserCon("stockop", "", frmstockop.dgv_list)
-            Case "pghutangawal"
-                populateDGVUserCon("hutangawal", "", frmhutangawal.dgv_list)
-            Case "pghutangbayar"
-                populateDGVUserCon("hutangbayar", "", frmhutangbayar.dgv_list)
-            Case "pghutangbgo"
-                populateDGVUserCon("hutangbgo", "", frmhutangbgo.dgv_list)
-            Case "pgpiutangawal"
-                populateDGVUserCon("piutangawal", "", frmpiutangawal.dgv_list)
-            Case "pgpiutangbayar"
-                populateDGVUserCon("piutangbayar", "", frmpiutangbayar.dgv_list)
-            Case "pgpiutangbgcair"
-                populateDGVUserCon("piutangbgcair", "", frmpiutangbgcair.dgv_list)
-            Case "pgpiutangbgtolak"
-                populateDGVUserCon("piutangbgtolak", "", frmpiutangbgTolak.dgv_list)
-            Case "pgkas"
-                populateDGVUserCon("kas", "", frmkas.dgv_list)
-            Case "pgjurnalumum"
-                populateDGVUserCon("jurnalumum", "", frmjurnalumum.dgv_list)
-            Case "pgjurnalmemorial"
-                populateDGVUserCon("jurnalmemorial", "", frmjurnalmemorial.dgv_list)
-                'Case "pgjenisbarang"
-                '    populateDGVUserCon("jenisbarang", "", frmjenisbarang.dgv_list)
-            Case "pggroup"
-                populateDGVUserCon("group", "", frmgroup.dgv_list)
-            Case "pguser"
-                populateDGVUserCon("user", "", frmuser.dgv_list)
-        End Select
-        Me.Cursor = Cursors.Default
-        in_cari.Clear()
-        in_countdata.Text = dgv_list.RowCount
+        performRefresh()
     End Sub
 
     Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellClick
@@ -476,13 +484,13 @@
 
     Private Sub dgv_list_KeyDown(sender As Object, e As KeyEventArgs) Handles dgv_list.KeyDown
         If e.KeyCode = Keys.Enter And dgv_list.RowCount <> 0 Then
-            keyshortcut("edit", tabpagename.Name.ToString)
+            'keyshortcut("edit", tabpagename.Name.ToString)
         End If
     End Sub
 
     Private Sub SplitContainer1_KeyDown(sender As Object, e As KeyEventArgs) Handles SplitContainer1.KeyDown
         If e.KeyCode = Keys.Enter AndAlso in_cari.Focused = False Then
-            keyshortcut("edit", tabpagename.Name.ToString)
+            'keyshortcut("edit", tabpagename.Name.ToString)
         End If
     End Sub
 

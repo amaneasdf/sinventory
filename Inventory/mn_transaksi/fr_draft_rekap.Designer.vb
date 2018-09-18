@@ -680,7 +680,7 @@ Partial Class fr_draft_rekap
         Me.bt_create_draft.Name = "bt_create_draft"
         Me.bt_create_draft.Size = New System.Drawing.Size(253, 27)
         Me.bt_create_draft.TabIndex = 290
-        Me.bt_create_draft.Text = "Input Draft"
+        Me.bt_create_draft.Text = "Simpan Draft"
         Me.bt_create_draft.UseVisualStyleBackColor = True
         '
         'fr_draft_rekap

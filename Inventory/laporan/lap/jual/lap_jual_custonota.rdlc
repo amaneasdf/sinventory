@@ -90,7 +90,7 @@
                               <Value>NO.</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -129,7 +129,7 @@
                               <Value>NO.FAKTUR</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -168,7 +168,7 @@
                               <Value>TGL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -207,7 +207,7 @@
                               <Value>BRUTTO</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -248,7 +248,7 @@
                               <Value>DISKON</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -289,7 +289,7 @@
                               <Value>PPN</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -330,7 +330,7 @@
                               <Value>JUMLAH</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -376,7 +376,7 @@
                               <Value>=RunningValue(Fields!lap_faktur.Value,Count,"lap_supplier")</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -409,7 +409,7 @@
                               <Value>=Fields!lap_faktur.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -442,7 +442,7 @@
                               <Value>=Fields!lap_tgl.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>dd-MM-yy</Format>
                               </Style>
                             </TextRun>
@@ -478,7 +478,7 @@
                               <Value>=Fields!lap_brutto.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -516,7 +516,7 @@
                               <Value>=Fields!lap_diskon.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -554,7 +554,7 @@
                               <Value>=Fields!lap_ppn.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -592,7 +592,7 @@
                               <Value>=Fields!lap_jumlah.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -635,7 +635,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -670,7 +670,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -705,7 +705,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -742,7 +742,7 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -786,7 +786,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -825,7 +825,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -864,7 +864,7 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -913,7 +913,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -952,7 +952,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -991,7 +991,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1032,7 +1032,7 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1076,7 +1076,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1115,7 +1115,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1156,7 +1156,7 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1294,7 +1294,7 @@
     <Height>1.59441in</Height>
     <Style />
   </Body>
-  <Width>7.44505in</Width>
+  <Width>20cm</Width>
   <Page>
     <PageHeader>
       <Height>1.726cm</Height>

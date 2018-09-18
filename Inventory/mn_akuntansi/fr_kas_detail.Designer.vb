@@ -52,14 +52,12 @@ Partial Class fr_kas_detail
         Me.kas_ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.in_bank_n = New System.Windows.Forms.TextBox()
         Me.in_bank = New System.Windows.Forms.TextBox()
-        Me.bt_bank_list = New System.Windows.Forms.Button()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_jenis = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_bg = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.bt_sales_list = New System.Windows.Forms.Button()
         Me.in_sales = New System.Windows.Forms.TextBox()
         Me.in_sales_n = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -80,13 +78,17 @@ Partial Class fr_kas_detail
         Me.in_kredit_tot = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
-        Me.bt_rek_list = New System.Windows.Forms.Button()
+        Me.popPnl_barang = New System.Windows.Forms.Panel()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_kas, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_kredit, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_debet, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.popPnl_barang.SuspendLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel2
@@ -211,7 +213,7 @@ Partial Class fr_kas_detail
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(7, 451)
+        Me.Label30.Location = New System.Drawing.Point(164, 412)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(30, 13)
         Me.Label30.TabIndex = 361
@@ -220,7 +222,7 @@ Partial Class fr_kas_detail
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(48, 426)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(10, 428)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
@@ -230,7 +232,7 @@ Partial Class fr_kas_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(48, 448)
+        Me.txtUpdDate.Location = New System.Drawing.Point(166, 428)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
@@ -240,7 +242,7 @@ Partial Class fr_kas_detail
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(48, 381)
+        Me.txtRegAlias.Location = New System.Drawing.Point(11, 387)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
@@ -252,7 +254,7 @@ Partial Class fr_kas_detail
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(7, 429)
+        Me.Label28.Location = New System.Drawing.Point(7, 412)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 362
@@ -261,7 +263,7 @@ Partial Class fr_kas_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(48, 403)
+        Me.txtRegdate.Location = New System.Drawing.Point(167, 387)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
@@ -273,7 +275,7 @@ Partial Class fr_kas_detail
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(7, 384)
+        Me.Label27.Location = New System.Drawing.Point(8, 371)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 359
@@ -284,7 +286,7 @@ Partial Class fr_kas_detail
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(7, 406)
+        Me.Label29.Location = New System.Drawing.Point(164, 371)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(30, 13)
         Me.Label29.TabIndex = 358
@@ -321,6 +323,7 @@ Partial Class fr_kas_detail
         Me.dgv_kas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_kas.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kas_rek, Me.kas_rek_n, Me.kas_debet, Me.kas_kredit, Me.kas_ket})
         Me.dgv_kas.Location = New System.Drawing.Point(11, 222)
+        Me.dgv_kas.MultiSelect = False
         Me.dgv_kas.Name = "dgv_kas"
         Me.dgv_kas.ReadOnly = True
         Me.dgv_kas.RowHeadersVisible = False
@@ -381,10 +384,8 @@ Partial Class fr_kas_detail
         Me.in_bank_n.Location = New System.Drawing.Point(173, 80)
         Me.in_bank_n.MaxLength = 30
         Me.in_bank_n.Name = "in_bank_n"
-        Me.in_bank_n.ReadOnly = True
-        Me.in_bank_n.Size = New System.Drawing.Size(181, 20)
+        Me.in_bank_n.Size = New System.Drawing.Size(261, 20)
         Me.in_bank_n.TabIndex = 1
-        Me.in_bank_n.TabStop = False
         '
         'in_bank
         '
@@ -394,22 +395,9 @@ Partial Class fr_kas_detail
         Me.in_bank.Location = New System.Drawing.Point(67, 80)
         Me.in_bank.MaxLength = 30
         Me.in_bank.Name = "in_bank"
+        Me.in_bank.ReadOnly = True
         Me.in_bank.Size = New System.Drawing.Size(104, 20)
         Me.in_bank.TabIndex = 0
-        '
-        'bt_bank_list
-        '
-        Me.bt_bank_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_bank_list.BackgroundImage = CType(resources.GetObject("bt_bank_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_bank_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_bank_list.FlatAppearance.BorderSize = 0
-        Me.bt_bank_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_bank_list.Location = New System.Drawing.Point(358, 81)
-        Me.bt_bank_list.Name = "bt_bank_list"
-        Me.bt_bank_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_bank_list.TabIndex = 2
-        Me.bt_bank_list.TabStop = False
-        Me.bt_bank_list.UseVisualStyleBackColor = False
         '
         'Label7
         '
@@ -429,7 +417,7 @@ Partial Class fr_kas_detail
         Me.cb_jenis.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
         Me.cb_jenis.Location = New System.Drawing.Point(67, 103)
         Me.cb_jenis.Name = "cb_jenis"
-        Me.cb_jenis.Size = New System.Drawing.Size(104, 21)
+        Me.cb_jenis.Size = New System.Drawing.Size(181, 21)
         Me.cb_jenis.TabIndex = 3
         '
         'Label1
@@ -440,7 +428,7 @@ Partial Class fr_kas_detail
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(31, 13)
         Me.Label1.TabIndex = 367
-        Me.Label1.Text = "Janis"
+        Me.Label1.Text = "Jenis"
         '
         'Label2
         '
@@ -473,20 +461,6 @@ Partial Class fr_kas_detail
         Me.Label3.TabIndex = 367
         Me.Label3.Text = "Salesman"
         '
-        'bt_sales_list
-        '
-        Me.bt_sales_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_sales_list.BackgroundImage = CType(resources.GetObject("bt_sales_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_sales_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_sales_list.FlatAppearance.BorderSize = 0
-        Me.bt_sales_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_sales_list.Location = New System.Drawing.Point(358, 152)
-        Me.bt_sales_list.Name = "bt_sales_list"
-        Me.bt_sales_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_sales_list.TabIndex = 7
-        Me.bt_sales_list.TabStop = False
-        Me.bt_sales_list.UseVisualStyleBackColor = False
-        '
         'in_sales
         '
         Me.in_sales.BackColor = System.Drawing.Color.White
@@ -495,6 +469,7 @@ Partial Class fr_kas_detail
         Me.in_sales.Location = New System.Drawing.Point(67, 150)
         Me.in_sales.MaxLength = 30
         Me.in_sales.Name = "in_sales"
+        Me.in_sales.ReadOnly = True
         Me.in_sales.Size = New System.Drawing.Size(104, 20)
         Me.in_sales.TabIndex = 5
         '
@@ -506,10 +481,8 @@ Partial Class fr_kas_detail
         Me.in_sales_n.Location = New System.Drawing.Point(173, 150)
         Me.in_sales_n.MaxLength = 30
         Me.in_sales_n.Name = "in_sales_n"
-        Me.in_sales_n.ReadOnly = True
-        Me.in_sales_n.Size = New System.Drawing.Size(181, 20)
+        Me.in_sales_n.Size = New System.Drawing.Size(261, 20)
         Me.in_sales_n.TabIndex = 6
-        Me.in_sales_n.TabStop = False
         '
         'Label4
         '
@@ -600,10 +573,8 @@ Partial Class fr_kas_detail
         Me.in_rek_n.Location = New System.Drawing.Point(114, 196)
         Me.in_rek_n.MaxLength = 150
         Me.in_rek_n.Name = "in_rek_n"
-        Me.in_rek_n.ReadOnly = True
-        Me.in_rek_n.Size = New System.Drawing.Size(175, 20)
+        Me.in_rek_n.Size = New System.Drawing.Size(188, 20)
         Me.in_rek_n.TabIndex = 11
-        Me.in_rek_n.TabStop = False
         '
         'Label22
         '
@@ -721,19 +692,43 @@ Partial Class fr_kas_detail
         Me.Label10.TabIndex = 380
         Me.Label10.Text = "Kredit"
         '
-        'bt_rek_list
+        'popPnl_barang
         '
-        Me.bt_rek_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_rek_list.BackgroundImage = CType(resources.GetObject("bt_rek_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_rek_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_rek_list.FlatAppearance.BorderSize = 0
-        Me.bt_rek_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_rek_list.Location = New System.Drawing.Point(290, 198)
-        Me.bt_rek_list.Name = "bt_rek_list"
-        Me.bt_rek_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_rek_list.TabIndex = 11
-        Me.bt_rek_list.TabStop = False
-        Me.bt_rek_list.UseVisualStyleBackColor = False
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(233, 246)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(329, 135)
+        Me.popPnl_barang.TabIndex = 386
+        Me.popPnl_barang.Visible = False
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(329, 111)
+        Me.dgv_listbarang.TabIndex = 0
         '
         'fr_kas_detail
         '
@@ -742,6 +737,7 @@ Partial Class fr_kas_detail
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(773, 482)
+        Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.bt_tbkas)
         Me.Controls.Add(Me.in_kredit)
         Me.Controls.Add(Me.in_debet)
@@ -766,9 +762,6 @@ Partial Class fr_kas_detail
         Me.Controls.Add(Me.in_bank_n)
         Me.Controls.Add(Me.in_sales)
         Me.Controls.Add(Me.in_bank)
-        Me.Controls.Add(Me.bt_rek_list)
-        Me.Controls.Add(Me.bt_sales_list)
-        Me.Controls.Add(Me.bt_bank_list)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label3)
@@ -801,6 +794,9 @@ Partial Class fr_kas_detail
         CType(Me.dgv_kas, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_kredit, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_debet, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.popPnl_barang.ResumeLayout(False)
+        Me.popPnl_barang.PerformLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -829,14 +825,12 @@ Partial Class fr_kas_detail
     Friend WithEvents dgv_kas As System.Windows.Forms.DataGridView
     Friend WithEvents in_bank_n As System.Windows.Forms.TextBox
     Friend WithEvents in_bank As System.Windows.Forms.TextBox
-    Friend WithEvents bt_bank_list As System.Windows.Forms.Button
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents cb_jenis As System.Windows.Forms.ComboBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents in_bg As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
-    Friend WithEvents bt_sales_list As System.Windows.Forms.Button
     Friend WithEvents in_sales As System.Windows.Forms.TextBox
     Friend WithEvents in_sales_n As System.Windows.Forms.TextBox
     Friend WithEvents kas_rek As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -862,5 +856,7 @@ Partial Class fr_kas_detail
     Friend WithEvents in_kredit_tot As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents bt_rek_list As System.Windows.Forms.Button
+    Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
+    Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
+    Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
 End Class

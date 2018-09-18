@@ -12,8 +12,15 @@
         Console.WriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
 
+    Public Sub performRefresh()
+        ClearAll()
+        bt_cari_sales.PerformClick()
+        bt_cari_faktur.PerformClick()
+        loadDraftList(Trim(in_caridraft.Text))
+    End Sub
+
     Private Sub loadFaktur(param As String)
-        Dim query As String = "SELECT faktur_kode as kode, customer_nama as nama, faktur_tanggal_trans,faktur_netto,faktur_draft_rekap FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer WHERE faktur_sales IN ({0}) AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
+        Dim query As String = "SELECT faktur_kode as kode, customer_nama as nama, faktur_tanggal_trans,faktur_netto, IFNULL(faktur_draft_rekap,'N') as faktur_draft_rekap FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer WHERE faktur_sales IN ({0}) AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
         Dim bs As New BindingSource
@@ -37,7 +44,7 @@
 
         query = String.Format(query, String.Join(",", sales), _tglawal, _tglakhir)
 
-        Console.WriteLine(query)
+        consoleWriteLine(query)
         bs.DataSource = getDataTablefromDB(query)
         bs.Filter = "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'"
 
@@ -173,7 +180,7 @@
             startTrans(queryArr)
             Return True
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
+            consoleWriteLine(ex.Message)
             Return False
         End Try
     End Function
@@ -222,8 +229,12 @@
 
     '----------------- load
     Private Sub fr_draft_rekap_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        For Each s As DateTimePicker In {date_tgl_trans, date_faktur_akhir, date_faktur_awal}
+            s.MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            s.MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+        Next
         date_faktur_awal.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-        date_faktur_akhir.Value = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, -1)
+        date_faktur_akhir.Value = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
 
         loadSales("")
         loadDraftList("")
@@ -245,10 +256,7 @@
     End Sub
 
     Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
-        ClearAll()
-        bt_cari_sales.PerformClick()
-        bt_cari_faktur.PerformClick()
-        bt_caridraft.PerformClick()
+        performRefresh()
     End Sub
 
     '----------------- cari
@@ -336,7 +344,7 @@
     End Sub
 
     Private Sub dgv_draftfaktur_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_draftfaktur.CellDoubleClick
-        If e.RowIndex > -1 Then
+        If e.RowIndex > -1 And in_kode_draft.Text = Nothing Then
             bt_remfaktur.PerformClick()
         End If
     End Sub

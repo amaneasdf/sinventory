@@ -102,15 +102,6 @@ Partial Class fr_beli_detail
         Me.in_barang_nm = New System.Windows.Forms.TextBox()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.Label31 = New System.Windows.Forms.Label()
-        Me.Label22 = New System.Windows.Forms.Label()
-        Me.Label21 = New System.Windows.Forms.Label()
-        Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.lbl_title = New System.Windows.Forms.Label()
-        Me.bt_cl = New System.Windows.Forms.Button()
-        Me.lbl_close = New System.Windows.Forms.Label()
-        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -123,6 +114,16 @@ Partial Class fr_beli_detail
         Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Label31 = New System.Windows.Forms.Label()
+        Me.Label22 = New System.Windows.Forms.Label()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label21 = New System.Windows.Forms.Label()
+        Me.Label20 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.lbl_title = New System.Windows.Forms.Label()
+        Me.bt_cl = New System.Windows.Forms.Button()
+        Me.lbl_close = New System.Windows.Forms.Label()
+        Me.Panel1 = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.split_content, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.split_content.Panel1.SuspendLayout()
@@ -571,7 +572,7 @@ Partial Class fr_beli_detail
         '
         'cb_gudang
         '
-        Me.cb_gudang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cb_gudang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_gudang.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_gudang.FormattingEnabled = True
         Me.cb_gudang.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
@@ -593,7 +594,7 @@ Partial Class fr_beli_detail
         '
         'cb_supplier
         '
-        Me.cb_supplier.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cb_supplier.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
         Me.cb_supplier.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_supplier.FormattingEnabled = True
         Me.cb_supplier.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
@@ -666,7 +667,6 @@ Partial Class fr_beli_detail
         Me.in_faktur.Location = New System.Drawing.Point(68, 13)
         Me.in_faktur.MaxLength = 10
         Me.in_faktur.Name = "in_faktur"
-        Me.in_faktur.ReadOnly = True
         Me.in_faktur.Size = New System.Drawing.Size(169, 20)
         Me.in_faktur.TabIndex = 0
         '
@@ -836,6 +836,7 @@ Partial Class fr_beli_detail
         Me.Panel2.Controls.Add(Me.dgv_barang)
         Me.Panel2.Controls.Add(Me.Label31)
         Me.Panel2.Controls.Add(Me.Label22)
+        Me.Panel2.Controls.Add(Me.Label11)
         Me.Panel2.Controls.Add(Me.Label21)
         Me.Panel2.Controls.Add(Me.Label20)
         Me.Panel2.Controls.Add(Me.Label16)
@@ -1022,12 +1023,15 @@ Partial Class fr_beli_detail
         '
         'in_barang
         '
+        Me.in_barang.BackColor = System.Drawing.Color.White
         Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang.Location = New System.Drawing.Point(9, 25)
         Me.in_barang.MaxLength = 20
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 13
+        Me.in_barang.TabStop = False
         '
         'in_disc3
         '
@@ -1057,10 +1061,8 @@ Partial Class fr_beli_detail
         Me.in_barang_nm.Location = New System.Drawing.Point(109, 25)
         Me.in_barang_nm.MaxLength = 150
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm.TabIndex = 14
-        Me.in_barang_nm.TabStop = False
         '
         'in_qty
         '
@@ -1087,118 +1089,6 @@ Partial Class fr_beli_detail
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_barang.Size = New System.Drawing.Size(988, 240)
         Me.dgv_barang.TabIndex = 24
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label31.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label31.Location = New System.Drawing.Point(542, 9)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(58, 13)
-        Me.Label31.TabIndex = 256
-        Me.Label31.Text = "SubTotal"
-        '
-        'Label22
-        '
-        Me.Label22.AutoSize = True
-        Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label22.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label22.Location = New System.Drawing.Point(426, 9)
-        Me.Label22.Name = "Label22"
-        Me.Label22.Size = New System.Drawing.Size(66, 13)
-        Me.Label22.TabIndex = 256
-        Me.Label22.Text = "Harga Beli"
-        '
-        'Label21
-        '
-        Me.Label21.AutoSize = True
-        Me.Label21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label21.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label21.Location = New System.Drawing.Point(298, 9)
-        Me.Label21.Name = "Label21"
-        Me.Label21.Size = New System.Drawing.Size(26, 13)
-        Me.Label21.TabIndex = 256
-        Me.Label21.Text = "Qty"
-        '
-        'Label20
-        '
-        Me.Label20.AutoSize = True
-        Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label20.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label20.Location = New System.Drawing.Point(104, 9)
-        Me.Label20.Name = "Label20"
-        Me.Label20.Size = New System.Drawing.Size(39, 13)
-        Me.Label20.TabIndex = 256
-        Me.Label20.Text = "Nama"
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label16.Location = New System.Drawing.Point(6, 9)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(36, 13)
-        Me.Label16.TabIndex = 256
-        Me.Label16.Text = "Kode"
-        '
-        'lbl_title
-        '
-        Me.lbl_title.AutoSize = True
-        Me.lbl_title.BackColor = System.Drawing.Color.Orange
-        Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_title.ForeColor = System.Drawing.Color.White
-        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
-        Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(255, 30)
-        Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Form Order Pembelian"
-        '
-        'bt_cl
-        '
-        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
-        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
-        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_cl.FlatAppearance.BorderSize = 0
-        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(976, 9)
-        Me.bt_cl.Name = "bt_cl"
-        Me.bt_cl.Size = New System.Drawing.Size(20, 20)
-        Me.bt_cl.TabIndex = 137
-        Me.bt_cl.TabStop = False
-        Me.bt_cl.UseVisualStyleBackColor = False
-        '
-        'lbl_close
-        '
-        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lbl_close.AutoSize = True
-        Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(923, 9)
-        Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(47, 20)
-        Me.lbl_close.TabIndex = 138
-        Me.lbl_close.Text = "Close"
-        Me.lbl_close.Visible = False
-        '
-        'Panel1
-        '
-        Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.lbl_close)
-        Me.Panel1.Controls.Add(Me.bt_cl)
-        Me.Panel1.Controls.Add(Me.lbl_title)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel1.Location = New System.Drawing.Point(0, 0)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(1003, 42)
-        Me.Panel1.TabIndex = 180
         '
         'kode
         '
@@ -1303,6 +1193,129 @@ Partial Class fr_beli_detail
         Me.jml.HeaderText = "Jumlah"
         Me.jml.Name = "jml"
         Me.jml.ReadOnly = True
+        '
+        'Label31
+        '
+        Me.Label31.AutoSize = True
+        Me.Label31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label31.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label31.Location = New System.Drawing.Point(542, 9)
+        Me.Label31.Name = "Label31"
+        Me.Label31.Size = New System.Drawing.Size(58, 13)
+        Me.Label31.TabIndex = 256
+        Me.Label31.Text = "SubTotal"
+        '
+        'Label22
+        '
+        Me.Label22.AutoSize = True
+        Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label22.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label22.Location = New System.Drawing.Point(426, 9)
+        Me.Label22.Name = "Label22"
+        Me.Label22.Size = New System.Drawing.Size(66, 13)
+        Me.Label22.TabIndex = 256
+        Me.Label22.Text = "Harga Beli"
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label11.Location = New System.Drawing.Point(359, 9)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(30, 13)
+        Me.Label11.TabIndex = 256
+        Me.Label11.Text = "Sat."
+        '
+        'Label21
+        '
+        Me.Label21.AutoSize = True
+        Me.Label21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label21.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label21.Location = New System.Drawing.Point(298, 9)
+        Me.Label21.Name = "Label21"
+        Me.Label21.Size = New System.Drawing.Size(26, 13)
+        Me.Label21.TabIndex = 256
+        Me.Label21.Text = "Qty"
+        '
+        'Label20
+        '
+        Me.Label20.AutoSize = True
+        Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label20.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label20.Location = New System.Drawing.Point(104, 9)
+        Me.Label20.Name = "Label20"
+        Me.Label20.Size = New System.Drawing.Size(39, 13)
+        Me.Label20.TabIndex = 256
+        Me.Label20.Text = "Nama"
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label16.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label16.Location = New System.Drawing.Point(6, 9)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(36, 13)
+        Me.Label16.TabIndex = 256
+        Me.Label16.Text = "Kode"
+        '
+        'lbl_title
+        '
+        Me.lbl_title.AutoSize = True
+        Me.lbl_title.BackColor = System.Drawing.Color.Orange
+        Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.ForeColor = System.Drawing.Color.White
+        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Name = "lbl_title"
+        Me.lbl_title.Size = New System.Drawing.Size(255, 30)
+        Me.lbl_title.TabIndex = 136
+        Me.lbl_title.Text = "Form Order Pembelian"
+        '
+        'bt_cl
+        '
+        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
+        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
+        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_cl.FlatAppearance.BorderSize = 0
+        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cl.Location = New System.Drawing.Point(976, 9)
+        Me.bt_cl.Name = "bt_cl"
+        Me.bt_cl.Size = New System.Drawing.Size(20, 20)
+        Me.bt_cl.TabIndex = 137
+        Me.bt_cl.TabStop = False
+        Me.bt_cl.UseVisualStyleBackColor = False
+        '
+        'lbl_close
+        '
+        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.lbl_close.AutoSize = True
+        Me.lbl_close.BackColor = System.Drawing.Color.Orange
+        Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.ForeColor = System.Drawing.Color.White
+        Me.lbl_close.Location = New System.Drawing.Point(923, 9)
+        Me.lbl_close.Name = "lbl_close"
+        Me.lbl_close.Size = New System.Drawing.Size(47, 20)
+        Me.lbl_close.TabIndex = 138
+        Me.lbl_close.Text = "Close"
+        Me.lbl_close.Visible = False
+        '
+        'Panel1
+        '
+        Me.Panel1.BackColor = System.Drawing.Color.Orange
+        Me.Panel1.Controls.Add(Me.lbl_close)
+        Me.Panel1.Controls.Add(Me.bt_cl)
+        Me.Panel1.Controls.Add(Me.lbl_title)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(1003, 42)
+        Me.Panel1.TabIndex = 180
         '
         'fr_beli_detail
         '
@@ -1450,4 +1463,5 @@ Partial Class fr_beli_detail
     Friend WithEvents disc3 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents discrp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label11 As System.Windows.Forms.Label
 End Class

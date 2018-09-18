@@ -22,27 +22,29 @@ Partial Class main
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(main))
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.MonthCalendar1 = New System.Windows.Forms.MonthCalendar()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bt_setperiode = New System.Windows.Forms.Button()
+        Me.ListView1 = New System.Windows.Forms.ListView()
+        Me.cal_front = New System.Windows.Forms.MonthCalendar()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.strip_user = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_periode = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.ListView1 = New System.Windows.Forms.ListView()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
         Me.SplitContainer.SuspendLayout()
         Me.tabcontrol.SuspendLayout()
         Me.TabPage1.SuspendLayout()
-        Me.StatusStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.StatusStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'SplitContainer
@@ -103,14 +105,54 @@ Partial Class main
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Menu Utama"
         '
-        'MonthCalendar1
+        'Panel2
         '
-        Me.MonthCalendar1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.MonthCalendar1.Location = New System.Drawing.Point(13, 9)
-        Me.MonthCalendar1.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
-        Me.MonthCalendar1.MinimumSize = New System.Drawing.Size(227, 162)
-        Me.MonthCalendar1.Name = "MonthCalendar1"
-        Me.MonthCalendar1.TabIndex = 0
+        Me.Panel2.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
+        Me.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(3, 3)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(704, 560)
+        Me.Panel2.TabIndex = 2
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.bt_setperiode)
+        Me.Panel1.Controls.Add(Me.ListView1)
+        Me.Panel1.Controls.Add(Me.cal_front)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Right
+        Me.Panel1.Location = New System.Drawing.Point(707, 3)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(251, 560)
+        Me.Panel1.TabIndex = 1
+        '
+        'bt_setperiode
+        '
+        Me.bt_setperiode.Location = New System.Drawing.Point(13, 174)
+        Me.bt_setperiode.Name = "bt_setperiode"
+        Me.bt_setperiode.Size = New System.Drawing.Size(227, 23)
+        Me.bt_setperiode.TabIndex = 2
+        Me.bt_setperiode.Text = "bt_setperiode"
+        Me.bt_setperiode.UseVisualStyleBackColor = True
+        '
+        'ListView1
+        '
+        Me.ListView1.Location = New System.Drawing.Point(13, 203)
+        Me.ListView1.Name = "ListView1"
+        Me.ListView1.Size = New System.Drawing.Size(227, 329)
+        Me.ListView1.TabIndex = 1
+        Me.ListView1.UseCompatibleStateImageBehavior = False
+        Me.ListView1.Visible = False
+        '
+        'cal_front
+        '
+        Me.cal_front.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.cal_front.Location = New System.Drawing.Point(13, 9)
+        Me.cal_front.MaxSelectionCount = 1
+        Me.cal_front.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
+        Me.cal_front.MinimumSize = New System.Drawing.Size(227, 162)
+        Me.cal_front.Name = "cal_front"
+        Me.cal_front.TabIndex = 0
         '
         'StatusStrip1
         '
@@ -152,34 +194,6 @@ Partial Class main
         Me.strip_periode.Size = New System.Drawing.Size(85, 20)
         Me.strip_periode.Text = "xxxxxxx 0000"
         '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.ListView1)
-        Me.Panel1.Controls.Add(Me.MonthCalendar1)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel1.Location = New System.Drawing.Point(707, 3)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(251, 560)
-        Me.Panel1.TabIndex = 1
-        '
-        'ListView1
-        '
-        Me.ListView1.Location = New System.Drawing.Point(13, 183)
-        Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(227, 349)
-        Me.ListView1.TabIndex = 1
-        Me.ListView1.UseCompatibleStateImageBehavior = False
-        '
-        'Panel2
-        '
-        Me.Panel2.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
-        Me.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 3)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(704, 560)
-        Me.Panel2.TabIndex = 2
-        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -187,6 +201,7 @@ Partial Class main
         Me.ClientSize = New System.Drawing.Size(969, 681)
         Me.Controls.Add(Me.SplitContainer)
         Me.Controls.Add(Me.StatusStrip1)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.MinimumSize = New System.Drawing.Size(985, 720)
         Me.Name = "main"
@@ -201,9 +216,9 @@ Partial Class main
         Me.SplitContainer.ResumeLayout(False)
         Me.tabcontrol.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
-        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -216,10 +231,11 @@ Partial Class main
     Friend WithEvents strip_tgl As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_host As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents MonthCalendar1 As System.Windows.Forms.MonthCalendar
+    Friend WithEvents cal_front As System.Windows.Forms.MonthCalendar
     Friend WithEvents strip_periode As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
+    Friend WithEvents bt_setperiode As System.Windows.Forms.Button
 
 End Class

@@ -26,10 +26,17 @@ Partial Class fr_beli_retur_detail
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bt_cl = New System.Windows.Forms.Button()
         Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cancelorder = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tb_returbeli = New System.Windows.Forms.TabPage()
+        Me.bt_gudang_list = New System.Windows.Forms.Button()
+        Me.bt_supplier_list = New System.Windows.Forms.Button()
+        Me.bt_faktur_list = New System.Windows.Forms.Button()
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.txtRegdate = New System.Windows.Forms.TextBox()
@@ -44,12 +51,14 @@ Partial Class fr_beli_retur_detail
         Me.in_jumlah = New System.Windows.Forms.TextBox()
         Me.Label11 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.brg_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_beli = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bt_tbbarang = New System.Windows.Forms.Button()
         Me.in_subtotal = New System.Windows.Forms.TextBox()
         Me.cb_sat = New System.Windows.Forms.ComboBox()
         Me.in_barang = New System.Windows.Forms.TextBox()
@@ -62,6 +71,7 @@ Partial Class fr_beli_retur_detail
         Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -94,14 +104,6 @@ Partial Class fr_beli_retur_detail
         Me.in_pajak = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.bt_gudang_list = New System.Windows.Forms.Button()
-        Me.bt_supplier_list = New System.Windows.Forms.Button()
-        Me.bt_faktur_list = New System.Windows.Forms.Button()
-        Me.bt_tbbarang = New System.Windows.Forms.Button()
-        Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_cancelorder = New System.Windows.Forms.ToolStripMenuItem()
-        Me.bt_cl = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -155,6 +157,24 @@ Partial Class fr_beli_retur_detail
         Me.Panel1.Size = New System.Drawing.Size(903, 42)
         Me.Panel1.TabIndex = 246
         '
+        'bt_cl
+        '
+        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
+        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
+        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_cl.FlatAppearance.BorderSize = 0
+        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
+        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_cl.Location = New System.Drawing.Point(876, 9)
+        Me.bt_cl.Name = "bt_cl"
+        Me.bt_cl.Size = New System.Drawing.Size(20, 20)
+        Me.bt_cl.TabIndex = 137
+        Me.bt_cl.UseVisualStyleBackColor = False
+        '
         'pnl_Menu
         '
         Me.pnl_Menu.Controls.Add(Me.MenuStrip1)
@@ -172,6 +192,32 @@ Partial Class fr_beli_retur_detail
         Me.MenuStrip1.Size = New System.Drawing.Size(903, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'mn_save
+        '
+        Me.mn_save.Image = Global.Inventory.My.Resources.Resources.toolbar_save_icon_s
+        Me.mn_save.Name = "mn_save"
+        Me.mn_save.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.mn_save.Size = New System.Drawing.Size(59, 20)
+        Me.mn_save.Text = "&Save"
+        Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_print
+        '
+        Me.mn_print.Image = CType(resources.GetObject("mn_print.Image"), System.Drawing.Image)
+        Me.mn_print.Name = "mn_print"
+        Me.mn_print.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
+        Me.mn_print.Size = New System.Drawing.Size(60, 20)
+        Me.mn_print.Text = "&Print"
+        Me.mn_print.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_cancelorder
+        '
+        Me.mn_cancelorder.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
+        Me.mn_cancelorder.Name = "mn_cancelorder"
+        Me.mn_cancelorder.Size = New System.Drawing.Size(102, 20)
+        Me.mn_cancelorder.Text = "Cancel Retur"
+        Me.mn_cancelorder.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'TabControl1
         '
@@ -221,6 +267,46 @@ Partial Class fr_beli_retur_detail
         Me.tb_returbeli.TabIndex = 0
         Me.tb_returbeli.Text = "Retur Pembelian"
         Me.tb_returbeli.UseVisualStyleBackColor = True
+        '
+        'bt_gudang_list
+        '
+        Me.bt_gudang_list.BackColor = System.Drawing.Color.Transparent
+        Me.bt_gudang_list.BackgroundImage = CType(resources.GetObject("bt_gudang_list.BackgroundImage"), System.Drawing.Image)
+        Me.bt_gudang_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_gudang_list.FlatAppearance.BorderSize = 0
+        Me.bt_gudang_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_gudang_list.Location = New System.Drawing.Point(288, 34)
+        Me.bt_gudang_list.Name = "bt_gudang_list"
+        Me.bt_gudang_list.Size = New System.Drawing.Size(12, 15)
+        Me.bt_gudang_list.TabIndex = 3
+        Me.bt_gudang_list.UseVisualStyleBackColor = False
+        '
+        'bt_supplier_list
+        '
+        Me.bt_supplier_list.BackColor = System.Drawing.Color.Transparent
+        Me.bt_supplier_list.BackgroundImage = CType(resources.GetObject("bt_supplier_list.BackgroundImage"), System.Drawing.Image)
+        Me.bt_supplier_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_supplier_list.FlatAppearance.BorderSize = 0
+        Me.bt_supplier_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_supplier_list.Location = New System.Drawing.Point(288, 10)
+        Me.bt_supplier_list.Name = "bt_supplier_list"
+        Me.bt_supplier_list.Size = New System.Drawing.Size(12, 15)
+        Me.bt_supplier_list.TabIndex = 1
+        Me.bt_supplier_list.TabStop = False
+        Me.bt_supplier_list.UseVisualStyleBackColor = False
+        '
+        'bt_faktur_list
+        '
+        Me.bt_faktur_list.BackColor = System.Drawing.Color.Transparent
+        Me.bt_faktur_list.BackgroundImage = CType(resources.GetObject("bt_faktur_list.BackgroundImage"), System.Drawing.Image)
+        Me.bt_faktur_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_faktur_list.FlatAppearance.BorderSize = 0
+        Me.bt_faktur_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_faktur_list.Location = New System.Drawing.Point(589, 35)
+        Me.bt_faktur_list.Name = "bt_faktur_list"
+        Me.bt_faktur_list.Size = New System.Drawing.Size(12, 15)
+        Me.bt_faktur_list.TabIndex = 1
+        Me.bt_faktur_list.UseVisualStyleBackColor = False
         '
         'txtRegAlias
         '
@@ -372,13 +458,14 @@ Partial Class fr_beli_retur_detail
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.Location = New System.Drawing.Point(6, 16)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(62, 13)
+        Me.Label11.Size = New System.Drawing.Size(36, 13)
         Me.Label11.TabIndex = 192
-        Me.Label11.Text = "Sub-Total"
+        Me.Label11.Text = "Total"
         '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Panel2.Controls.Add(Me.Label12)
         Me.Panel2.Controls.Add(Me.popPnl_barang)
         Me.Panel2.Controls.Add(Me.bt_tbbarang)
         Me.Panel2.Controls.Add(Me.in_subtotal)
@@ -397,6 +484,17 @@ Partial Class fr_beli_retur_detail
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(889, 198)
         Me.Panel2.TabIndex = 8
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label12.Location = New System.Drawing.Point(364, 5)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(30, 13)
+        Me.Label12.TabIndex = 272
+        Me.Label12.Text = "Sat."
         '
         'popPnl_barang
         '
@@ -464,6 +562,20 @@ Partial Class fr_beli_retur_detail
         Me.brg_beli.ReadOnly = True
         Me.brg_beli.Width = 135
         '
+        'bt_tbbarang
+        '
+        Me.bt_tbbarang.BackColor = System.Drawing.Color.Transparent
+        Me.bt_tbbarang.BackgroundImage = Global.Inventory.My.Resources.Resources.toolbar_add_icon
+        Me.bt_tbbarang.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_tbbarang.FlatAppearance.BorderSize = 0
+        Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_tbbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_tbbarang.Location = New System.Drawing.Point(746, 22)
+        Me.bt_tbbarang.Name = "bt_tbbarang"
+        Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
+        Me.bt_tbbarang.TabIndex = 9
+        Me.bt_tbbarang.UseVisualStyleBackColor = False
+        '
         'in_subtotal
         '
         Me.in_subtotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -490,8 +602,10 @@ Partial Class fr_beli_retur_detail
         Me.in_barang.ForeColor = System.Drawing.Color.Black
         Me.in_barang.Location = New System.Drawing.Point(12, 21)
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 5
+        Me.in_barang.TabStop = False
         '
         'in_barang_nm
         '
@@ -499,11 +613,10 @@ Partial Class fr_beli_retur_detail
         Me.in_barang_nm.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang_nm.ForeColor = System.Drawing.Color.Black
         Me.in_barang_nm.Location = New System.Drawing.Point(112, 21)
-        Me.in_barang_nm.MaxLength = 150
+        Me.in_barang_nm.MaxLength = 200
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
-        Me.in_barang_nm.TabIndex = 270
+        Me.in_barang_nm.TabIndex = 5
         '
         'Label31
         '
@@ -525,6 +638,7 @@ Partial Class fr_beli_retur_detail
         Me.in_harga_retur.Size = New System.Drawing.Size(140, 20)
         Me.in_harga_retur.TabIndex = 8
         Me.in_harga_retur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_harga_retur.ThousandsSeparator = True
         '
         'Label22
         '
@@ -553,7 +667,7 @@ Partial Class fr_beli_retur_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat, Me.harga, Me.jml})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.jml})
         Me.dgv_barang.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.dgv_barang.Location = New System.Drawing.Point(0, 44)
         Me.dgv_barang.Name = "dgv_barang"
@@ -587,6 +701,13 @@ Partial Class fr_beli_retur_detail
         Me.qty.Name = "qty"
         Me.qty.ReadOnly = True
         Me.qty.Width = 60
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sat_type"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
         '
         'sat
         '
@@ -928,104 +1049,6 @@ Partial Class fr_beli_retur_detail
         Me.Label2.TabIndex = 260
         Me.Label2.Text = "No.Pajak"
         '
-        'bt_gudang_list
-        '
-        Me.bt_gudang_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_gudang_list.BackgroundImage = CType(resources.GetObject("bt_gudang_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_gudang_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_gudang_list.FlatAppearance.BorderSize = 0
-        Me.bt_gudang_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_gudang_list.Location = New System.Drawing.Point(288, 34)
-        Me.bt_gudang_list.Name = "bt_gudang_list"
-        Me.bt_gudang_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_gudang_list.TabIndex = 3
-        Me.bt_gudang_list.UseVisualStyleBackColor = False
-        '
-        'bt_supplier_list
-        '
-        Me.bt_supplier_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_supplier_list.BackgroundImage = CType(resources.GetObject("bt_supplier_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_supplier_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_supplier_list.FlatAppearance.BorderSize = 0
-        Me.bt_supplier_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_supplier_list.Location = New System.Drawing.Point(288, 10)
-        Me.bt_supplier_list.Name = "bt_supplier_list"
-        Me.bt_supplier_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_supplier_list.TabIndex = 1
-        Me.bt_supplier_list.TabStop = False
-        Me.bt_supplier_list.UseVisualStyleBackColor = False
-        '
-        'bt_faktur_list
-        '
-        Me.bt_faktur_list.BackColor = System.Drawing.Color.Transparent
-        Me.bt_faktur_list.BackgroundImage = CType(resources.GetObject("bt_faktur_list.BackgroundImage"), System.Drawing.Image)
-        Me.bt_faktur_list.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_faktur_list.FlatAppearance.BorderSize = 0
-        Me.bt_faktur_list.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_faktur_list.Location = New System.Drawing.Point(589, 35)
-        Me.bt_faktur_list.Name = "bt_faktur_list"
-        Me.bt_faktur_list.Size = New System.Drawing.Size(12, 15)
-        Me.bt_faktur_list.TabIndex = 1
-        Me.bt_faktur_list.UseVisualStyleBackColor = False
-        '
-        'bt_tbbarang
-        '
-        Me.bt_tbbarang.BackColor = System.Drawing.Color.Transparent
-        Me.bt_tbbarang.BackgroundImage = Global.Inventory.My.Resources.Resources.toolbar_add_icon
-        Me.bt_tbbarang.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_tbbarang.FlatAppearance.BorderSize = 0
-        Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_tbbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tbbarang.Location = New System.Drawing.Point(746, 22)
-        Me.bt_tbbarang.Name = "bt_tbbarang"
-        Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
-        Me.bt_tbbarang.TabIndex = 9
-        Me.bt_tbbarang.UseVisualStyleBackColor = False
-        '
-        'mn_save
-        '
-        Me.mn_save.Image = Global.Inventory.My.Resources.Resources.toolbar_save_icon_s
-        Me.mn_save.Name = "mn_save"
-        Me.mn_save.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.mn_save.Size = New System.Drawing.Size(59, 20)
-        Me.mn_save.Text = "&Save"
-        Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'mn_print
-        '
-        Me.mn_print.Image = CType(resources.GetObject("mn_print.Image"), System.Drawing.Image)
-        Me.mn_print.Name = "mn_print"
-        Me.mn_print.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.mn_print.Size = New System.Drawing.Size(60, 20)
-        Me.mn_print.Text = "&Print"
-        Me.mn_print.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'mn_cancelorder
-        '
-        Me.mn_cancelorder.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
-        Me.mn_cancelorder.Name = "mn_cancelorder"
-        Me.mn_cancelorder.Size = New System.Drawing.Size(102, 20)
-        Me.mn_cancelorder.Text = "Cancel Retur"
-        Me.mn_cancelorder.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'bt_cl
-        '
-        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_cl.BackColor = System.Drawing.Color.Transparent
-        Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
-        Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_cl.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_cl.FlatAppearance.BorderSize = 0
-        Me.bt_cl.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
-        Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(876, 9)
-        Me.bt_cl.Name = "bt_cl"
-        Me.bt_cl.Size = New System.Drawing.Size(20, 20)
-        Me.bt_cl.TabIndex = 137
-        Me.bt_cl.UseVisualStyleBackColor = False
-        '
         'fr_beli_retur_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1109,12 +1132,6 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents in_qty As System.Windows.Forms.NumericUpDown
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
-    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label21 As System.Windows.Forms.Label
@@ -1143,4 +1160,12 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents brg_beli As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cb_ppn As System.Windows.Forms.ComboBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label12 As System.Windows.Forms.Label
 End Class

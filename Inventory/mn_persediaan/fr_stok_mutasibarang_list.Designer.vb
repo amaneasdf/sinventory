@@ -84,6 +84,7 @@ Partial Class fr_stok_mutasibarang_list
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
         Me.txtRegdate = New System.Windows.Forms.TextBox()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.dgv_list = New System.Windows.Forms.DataGridView()
@@ -91,7 +92,6 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_countdata = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.in_cari = New System.Windows.Forms.TextBox()
-        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -333,8 +333,10 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_barang2.Location = New System.Drawing.Point(426, 25)
         Me.in_barang2.MaxLength = 20
         Me.in_barang2.Name = "in_barang2"
+        Me.in_barang2.ReadOnly = True
         Me.in_barang2.Size = New System.Drawing.Size(100, 20)
         Me.in_barang2.TabIndex = 10
+        Me.in_barang2.TabStop = False
         '
         'in_barang
         '
@@ -343,8 +345,10 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_barang.Location = New System.Drawing.Point(9, 25)
         Me.in_barang.MaxLength = 20
         Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 6
+        Me.in_barang.TabStop = False
         '
         'in_barang_nm2
         '
@@ -354,10 +358,8 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_barang_nm2.Location = New System.Drawing.Point(526, 25)
         Me.in_barang_nm2.MaxLength = 150
         Me.in_barang_nm2.Name = "in_barang_nm2"
-        Me.in_barang_nm2.ReadOnly = True
         Me.in_barang_nm2.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm2.TabIndex = 11
-        Me.in_barang_nm2.TabStop = False
         '
         'in_hpp
         '
@@ -380,10 +382,8 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_barang_nm.Location = New System.Drawing.Point(109, 25)
         Me.in_barang_nm.MaxLength = 150
         Me.in_barang_nm.Name = "in_barang_nm"
-        Me.in_barang_nm.ReadOnly = True
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
         Me.in_barang_nm.TabIndex = 7
-        Me.in_barang_nm.TabStop = False
         '
         'in_qty2
         '
@@ -774,6 +774,7 @@ Partial Class fr_stok_mutasibarang_list
         Me.mn_hapus.ShortcutKeys = System.Windows.Forms.Keys.F3
         Me.mn_hapus.Size = New System.Drawing.Size(69, 20)
         Me.mn_hapus.Text = "Hapus"
+        Me.mn_hapus.Visible = False
         '
         'mn_save
         '
@@ -800,6 +801,14 @@ Partial Class fr_stok_mutasibarang_list
         Me.mn_refresh.ShortcutKeys = System.Windows.Forms.Keys.F5
         Me.mn_refresh.Size = New System.Drawing.Size(58, 20)
         Me.mn_refresh.Text = "Refresh"
+        '
+        'mn_cari
+        '
+        Me.mn_cari.Name = "mn_cari"
+        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.mn_cari.Size = New System.Drawing.Size(40, 20)
+        Me.mn_cari.Text = "Cari"
+        Me.mn_cari.Visible = False
         '
         'txtRegdate
         '
@@ -881,14 +890,6 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_cari.Name = "in_cari"
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 18
-        '
-        'mn_cari
-        '
-        Me.mn_cari.Name = "mn_cari"
-        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.mn_cari.Size = New System.Drawing.Size(40, 20)
-        Me.mn_cari.Text = "Cari"
-        Me.mn_cari.Visible = False
         '
         'fr_stok_mutasibarang_list
         '
