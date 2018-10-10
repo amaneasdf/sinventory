@@ -138,6 +138,14 @@
     <Compile Include="laporan\draft\fr_draft_tagihan_view.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="laporan\ds_hutangpiutang.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\ds_hutangpiutang.vb">
+      <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
+    </Compile>
     <Compile Include="laporan\ds_master.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -153,10 +161,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ds_transaksi.xsd</DependentUpon>
     </Compile>
+    <Compile Include="laporan\lap\hutang\fr_lap_hutang.Designer.vb">
+      <DependentUpon>fr_lap_hutang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\lap\hutang\fr_lap_hutang.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="laporan\nota\fr_view_nota.Designer.vb">
       <DependentUpon>fr_view_nota.vb</DependentUpon>
     </Compile>
     <Compile Include="laporan\nota\fr_view_nota.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\view\fr_view_piutang.Designer.vb">
+      <DependentUpon>fr_view_piutang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\view\fr_view_piutang.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="laporan\view\fr_lap_beli_nota_view.Designer.vb">
@@ -506,6 +526,17 @@
       <DependentUpon>fr_draft_tagihan_view.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnotabrg.rdlc" />
+    <EmbeddedResource Include="laporan\lap\hutang\fr_lap_hutang.resx">
+      <DependentUpon>fr_lap_hutang.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\lap\hutang\hutang_detailbayar.rdlc" />
+    <EmbeddedResource Include="laporan\lap\hutang\hutang_kartu.rdlc" />
+    <EmbeddedResource Include="laporan\lap\hutang\hutang_nota.rdlc" />
+    <EmbeddedResource Include="laporan\lap\hutang\hutang_titipsupplier.rdlc" />
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_kartupiutang.rdlc" />
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_salesbayartanggal.rdlc" />
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_salesglobal.rdlc" />
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_saleslengkap2.rdlc" />
     <EmbeddedResource Include="laporan\nota\fr_view_nota.resx">
       <DependentUpon>fr_view_nota.vb</DependentUpon>
     </EmbeddedResource>
@@ -520,6 +551,10 @@
     <EmbeddedResource Include="laporan\lap\stok\lap_stok_mutasistok.rdlc" />
     <EmbeddedResource Include="laporan\lap\stok\lap_stok_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\stok\lap_stok_stok.rdlc" />
+    <EmbeddedResource Include="laporan\view\fr_view_piutang.resx">
+      <DependentUpon>fr_view_piutang.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_salesnota.rdlc" />
     <EmbeddedResource Include="laporan\view\fr_lap_beli_nota_view.resx">
       <DependentUpon>fr_lap_beli_nota_view.vb</DependentUpon>
     </EmbeddedResource>
@@ -701,6 +736,17 @@
   <ItemGroup>
     <None Include="bin\Debug\config.ini" />
     <None Include="Inventory_TemporaryKey.pfx" />
+    <None Include="laporan\ds_hutangpiutang.xsc">
+      <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_hutangpiutang.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ds_hutangpiutang.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="laporan\ds_hutangpiutang.xss">
+      <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
+    </None>
     <None Include="laporan\ds_master.xsc">
       <DependentUpon>ds_master.xsd</DependentUpon>
     </None>
@@ -839,6 +885,7 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

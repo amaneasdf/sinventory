@@ -1,4 +1,5 @@
 ﻿Public Class fr_supplier_detail
+    Private supStatus As String = 1
 
     Private Sub loadDataSupplier(kode As String)
         readcommd("SELECT * FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
@@ -16,7 +17,7 @@
             in_rek_giro.Text = rd.Item("supplier_rek_bg")
             in_ket.Text = rd.Item("supplier_keterangan")
             in_term.Text = rd.Item("supplier_term")
-            cb_status.SelectedValue = rd.Item("supplier_status")
+            supStatus = rd.Item("supplier_status")
             txtRegAlias.Text = rd.Item("supplier_reg_alias")
             txtRegdate.Text = rd.Item("supplier_reg_date")
             Try
@@ -27,18 +28,30 @@
             txtUpdAlias.Text = rd.Item("supplier_upd_alias")
         End If
         rd.Close()
+        setStatus()
+    End Sub
+
+    Private Sub setStatus()
+        Select Case supStatus
+            Case 0
+                mn_deact.Text = "Activate"
+                in_status.Text = "Non-Aktif"
+            Case 1
+                mn_deact.Text = "Deactivate"
+                in_status.Text = "Aktif"
+            Case 9
+                mn_deact.Enabled = False
+                in_status.Text = "Delete"
+            Case Else
+                Exit Sub
+        End Select
+
+
     End Sub
 
     '-------------- load
     Private Sub fr_supplier_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
-        With cb_status
-            .DataSource = statusSupplier()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-
         If bt_simpansupplier.Text = "Update" Then
             With in_kode
                 .ReadOnly = True
@@ -50,115 +63,72 @@
 
     '-------------- save
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpansupplier.Click
-        Dim data As String()
-        Dim dataCol As String()
-        Dim querycheck As Boolean = False
-        If in_kode.Text = Nothing Then
-            MessageBox.Show("Kode belum di input")
-            in_kode.Focus()
-            Exit Sub
-        End If
-
         If in_namasupplier.Text = Nothing Then
             MessageBox.Show("Nama supplier belum di input")
             in_namasupplier.Focus()
             Exit Sub
         End If
 
-        'If in_alamatsupplier.Text = Nothing Then
-        '    MessageBox.Show("Alamat supplier belum di input")
-        '    in_alamatsupplier.Focus()
-        '    Exit Sub
-        'End If
+        op_con()
+        If MessageBox.Show("Simpan data transaksi pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
 
-        If bt_simpansupplier.Text = "Simpan" Then
-            If checkdata("data_supplier_master", in_kode.Text, "supplier_kode") = True Then
-                MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
-                in_kode.Focus()
-                Exit Sub
+            Dim data1 As String()
+            Dim q As String = ""
+            Dim querycheck As Boolean = False
+
+            data1 = {
+                "supplier_nama='" & in_namasupplier.Text.Replace("'", "`") & "'",
+                "supplier_alamat='" & in_alamatsupplier.Text.Replace("'", "`") & "'",
+                "supplier_telpon1='" & in_telp1supplier.Text & "'",
+                "supplier_telpon2='" & in_telp2supplier.Text & "'",
+                "supplier_fax='" & in_faxsupplier.Text & "'",
+                "supplier_cp='" & in_cp.Text.Replace("'", "`") & "'",
+                "supplier_email='" & in_emailsupplier.Text & "'",
+                "supplier_npwp='" & in_npwpsupplier.Text & "'",
+                "supplier_rek_bg='" & in_rek_giro.Text & "'",
+                "supplier_rek_bank='" & in_rek_bank.Text & "'",
+                "supplier_term=" & in_term.Value,
+                "supplier_keterangan='" & in_ket.Text.Replace("'", "`") & "'",
+                "supplier_status='" & supStatus & "'"
+                }
+
+            op_con()
+            If bt_simpansupplier.Text = "Simpan" Then
+                'GENERATE CODE
+                If in_kode.Text = Nothing Then
+                    Dim no As Integer = 1
+                    readcommd("SELECT SUBSTRING(supplier_kode,4) as ss FROM data_supplier_master WHERE supplier_kode LIKE 'SUP%' " _
+                              & "ORDER BY ss DESC LIMIT 1")
+                    If rd.HasRows Then
+                        no = CInt(rd.Item(0)) + 1
+                    End If
+                    rd.Close()
+
+                    in_kode.Text = "SUP" & no.ToString("D4")
+                Else
+                    If checkdata("data_supplier_master", "'" & in_kode.Text & "'", "supplier_kode") = True Then
+                        MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
+                        in_kode.Focus()
+                        Exit Sub
+                    End If
+
+                End If
+
+                q = "INSERT INTO data_supplier_master SET supplier_kode='{0}',{1},supplier_reg_date=NOW(), supplier_reg_alias='{2}'"
+            ElseIf bt_simpansupplier.Text = "Update" Then
+                q = "UPDATE data_supplier_master SET {1},supplier_upd_date=NOW(), supplier_upd_alias='{2}' WHERE supplier_kode='{0}'"
             End If
+            querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
 
-            data = {
-                "'" & in_kode.Text & "'",
-                "'" & in_namasupplier.Text & "'",
-                "'" & in_alamatsupplier.Text & "'",
-                "'" & in_telp1supplier.Text & "'",
-                "'" & in_telp2supplier.Text & "'",
-                "'" & in_faxsupplier.Text & "'",
-                "'" & in_cp.Text & "'",
-                "'" & in_emailsupplier.Text & "'",
-                "'" & in_npwpsupplier.Text & "'",
-                "'" & in_rek_giro.Text & "'",
-                "'" & in_rek_bank.Text & "'",
-                "'" & in_term.Text & "'",
-                "'" & in_ket.Text & "'",
-                "'" & cb_status.SelectedValue & "'",
-                "NOW()",
-                "'" & loggeduser.user_ip & "'",
-                "'" & loggeduser.user_id & "'",
-                "''",
-                "''",
-                "''"
-                }
-
-            op_con()
-            querycheck = commnd("INSERT INTO data_supplier_master VALUES(" & String.Join(",", data) & ")")
-        ElseIf bt_simpansupplier.Text = "Update" Then
-            data = {
-                "'" & in_namasupplier.Text & "'",
-                "'" & in_alamatsupplier.Text & "'",
-                "'" & in_telp1supplier.Text & "'",
-                "'" & in_telp2supplier.Text & "'",
-                "'" & in_faxsupplier.Text & "'",
-                "'" & in_cp.Text & "'",
-                "'" & in_emailsupplier.Text & "'",
-                "'" & in_npwpsupplier.Text & "'",
-                "'" & in_rek_giro.Text & "'",
-                "'" & in_rek_bank.Text & "'",
-                "'" & in_term.Text & "'",
-                "'" & in_ket.Text & "'",
-                "'" & cb_status.SelectedValue & "'",
-                "NOW()",
-                "'" & loggeduser.user_ip & "'",
-                "'" & loggeduser.user_id & "'"
-                }
-            dataCol = {
-                "supplier_nama",
-                "supplier_alamat",
-                "supplier_telpon1",
-                "supplier_telpon2",
-                "supplier_fax",
-                "supplier_cp",
-                "supplier_email",
-                "supplier_npwp",
-                "supplier_rek_bg",
-                "supplier_rek_bank",
-                "supplier_term",
-                "supplier_keterangan",
-                "supplier_status",
-                "supplier_upd_date",
-                "supplier_upd_ip",
-                "supplier_upd_alias"
-                }
-
-            Dim i As Integer = 0
-            For Each x As String In dataCol
-                x += "=" & data(i)
-                dataCol(i) = x
-                i = i + 1
-            Next
-
-            op_con()
-            querycheck = commnd("UPDATE data_supplier_master SET " & String.Join(",", dataCol) & " WHERE supplier_kode='" & in_kode.Text & "'")
-        End If
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            frmsupplier.in_cari.Clear()
-            populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
-            Me.Close()
+            If querycheck = False Then
+                Exit Sub
+            Else
+                MessageBox.Show("Data tersimpan")
+                doRefreshTab({pgsupplier, pgpembelian, pgreturbeli, pghutangawal, pghutangbayar, pghutangbgo})
+                'frmsupplier.in_cari.Clear()
+                'populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
+                Me.Close()
+            End If
         End If
     End Sub
 
@@ -210,16 +180,17 @@
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
         If mn_deact.Text = "Deactivate" Then
-            cb_status.SelectedValue = "2"
-            mn_deact.Text = "Activate"
+            supStatus = "0"
         ElseIf mn_deact.Text = "Activate" Then
-            cb_status.SelectedValue = "1"
-            mn_deact.Text = "Deactivate"
+            supStatus = "1"
         End If
+        setStatus()
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-
+        'supStatus = 9
+        'UPDATE STATUS TO 9
+        'setStatus()
     End Sub
 
     '---------------- numeric
@@ -232,14 +203,14 @@
     End Sub
 
     '---------------- cb prevent input
-    Private Sub cb_status_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_status.KeyPress
+    Private Sub cb_status_KeyPress(sender As Object, e As KeyPressEventArgs)
         e.Handled = True
     End Sub
 
     '--------------- textbox numeric
-    Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telp2supplier.KeyPress, in_telp1supplier.KeyPress, in_rek_giro.KeyPress, in_rek_bank.KeyPress, in_npwpsupplier.KeyPress, in_faxsupplier.KeyPress
+    Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telp2supplier.KeyPress, in_telp1supplier.KeyPress, in_npwpsupplier.KeyPress, in_faxsupplier.KeyPress
         If Asc(e.KeyChar) <> 8 Then
-            If Asc(e.KeyChar) < 48 Or Asc(e.KeyChar) > 57 Then
+            If (e.KeyChar < "0" OrElse e.KeyChar > "9") AndAlso e.KeyChar <> ControlChars.Back AndAlso e.KeyChar <> "-" Then
                 e.Handled = True
             End If
         End If
@@ -286,10 +257,6 @@
     End Sub
 
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(cb_status, e)
-    End Sub
-
-    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
-        keyshortenter(bt_simpansupplier, e)
+        keyshortenter(in_namasupplier, e)
     End Sub
 End Class

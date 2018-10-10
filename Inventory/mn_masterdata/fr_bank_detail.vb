@@ -1,140 +1,113 @@
 ﻿Public Class fr_bank_detail
-    '------------drag form
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown, Panel2.MouseDown
-        startdrag(Me, e)
-    End Sub
+    Private bnkStatus As String = "1"
+    Private popState As String = "perkiraan"
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove, Panel2.MouseMove
-        dragging(Me)
-    End Sub
-
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp, Panel2.MouseUp
-        stopdrag(Me)
-    End Sub
-
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick, Panel2.DoubleClick
-        CenterToScreen()
-    End Sub
-
-    '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        Me.Close()
-    End Sub
-
-    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalcusto.PerformClick()
-    End Sub
-
-    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
-    End Sub
-
-    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
-    End Sub
-
-    '----------------- cb disable input
-    Private Sub cb_status_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_pos.KeyPress, cb_status.KeyPress
-        e.Handled = True
-    End Sub
-
-    '----------------- menu
-    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpancusto.PerformClick()
-    End Sub
-
-    Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        If mn_deact.Text = "Deactivate" Then
-            cb_status.SelectedValue = "2"
-            mn_deact.Text = "Activate"
-        ElseIf mn_deact.Text = "Activate" Then
-            cb_status.SelectedValue = "1"
-            mn_deact.Text = "Deactivate"
-        End If
-    End Sub
-
-    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+    Private Sub loadData(kode As String)
+        op_con()
 
     End Sub
 
-    '----------------- load
-    Private Sub fr_bank_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        With cb_status
-            .DataSource = statusBarang()
-            .ValueMember = "Value"
-            .DisplayMember = "Text"
-            .SelectedIndex = 0
-        End With
-
-        With cb_pos
-
-        End With
-
-
+    'SET STATUS
+    Private Sub setStatus()
+        Select Case bnkStatus
+            Case 0
+                mn_deact.Text = "Activate"
+                in_status.Text = "Non-Aktif"
+            Case 1
+                mn_deact.Text = "Deactivate"
+                in_status.Text = "Aktif"
+            Case 9
+                mn_deact.Enabled = False
+                in_status.Text = "Delete"
+            Case Else
+                Exit Sub
+        End Select
     End Sub
 
-    '----------------- save
-    Private Sub bt_simpancusto_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
 
-    End Sub
-
-    '----------------- input
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(in_namabank, e)
-    End Sub
-
-    Private Sub in_namabank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namabank.KeyDown
-        keyshortenter(in_pos, e)
-    End Sub
-
-    Private Sub in_pos_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pos.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            bt_pos.PerformClick()
-        ElseIf e.KeyCode = Keys.Enter Then
-            keyshortenter(cb_status, e)
-        End If
-    End Sub
-
-    Private Sub in_pos_Leave(sender As Object, e As EventArgs) Handles in_pos.Leave
-        If Trim(in_pos.Text) <> Nothing Then
-            cb_pos.SelectedValue = in_pos.Text
-        End If
-    End Sub
-
-    Private Sub cb_pos_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_pos.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            bt_pos.PerformClick()
-        ElseIf e.KeyCode = Keys.Enter Then
-            keyshortenter(cb_status, e)
-        End If
-    End Sub
-
-    Private Sub cb_pos_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_pos.SelectionChangeCommitted
-        in_pos.Text = cb_pos.SelectedValue
-    End Sub
-
-    Private Sub bt_pos_Click(sender As Object, e As EventArgs) Handles bt_pos.Click
+    'OPEN FULL WINDOWS SEARCH
+    Private Sub searchData(tipe As String)
+        Dim q As String = ""
         Using search As New fr_search_dialog
-            With search
-                .query = ""
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
-                .type = ""
-                If Trim(in_pos.Text) <> Nothing Then
-                    .returnkode = Trim(in_pos.Text)
-                    .in_cari.Text = Trim(in_pos.Text)
-                End If
-                If cb_pos.SelectedValue <> Nothing Then
-                    .returnkode = cb_pos.SelectedValue
-                    .in_cari.Text = cb_pos.Text
-                End If
-                cb_pos.SelectedValue = .returnkode
-                in_pos.Text = .returnkode
-            End With
+
         End Using
-        cb_status.Focus()
     End Sub
 
-    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
-        keyshortenter(bt_simpancusto, e)
+    'LOAD DATA TO DGV IN POPUP SEARCH PANEL
+    Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing, Optional param2 As String = Nothing)
+        Dim q As String
+        Dim dt As New DataTable
+        Dim autoco As New AutoCompleteStringCollection
+        Select Case tipe
+            Case "perk"
+                q = "SELECT perkiraan_kode as 'Kode', perkiraan_nama as 'Perkiraan', " _
+                    & "If(perkiraan_status=1,'Aktif','Non_Aktif') as 'Status' FROM data_perkiraan " _
+                    & "WHERE perkiraan_status<>9 AND perkiraan_nama LIKE '{0}%'"
+                dt = getDataTablefromDB(String.Format(q, param))
+            Case Else
+                Exit Sub
+        End Select
+
+        With dgv_listbarang
+            .DataSource = dt
+            .Columns(0).Width = 135
+            .Columns(1).Width = 200
+        End With
     End Sub
+
+    'SET RESULT VALUE FROM DGV SEARCH
+    Private Sub setPopUpResult()
+        With dgv_listbarang.SelectedRows.Item(0)
+            Select Case popState
+                Case "supplier"
+                    in_pos.Text = .Cells(0).Value
+                    in_pos_n.Text = .Cells(1).Value
+                    bt_simpancusto.Focus()
+                Case Else
+                    Exit Sub
+            End Select
+
+        End With
+        popPnl_barang.Visible = False
+    End Sub
+
+    'SAVE DATA
+    Private Sub saveData()
+        Dim data1 As String()
+        Dim querycheck As Boolean = False
+        Dim q As String = ""
+
+        Me.Cursor = Cursors.WaitCursor
+
+        data1 = {
+            }
+
+        op_con()
+        If bt_simpancusto.Text = "Simpan" Then
+            'GENNERATE CODE
+            If Trim(in_kode.Text) = Nothing Then
+                Dim no As Integer = 1
+                readcommd("SELECT SUBSTRING(bank_kode,4) as ss FROM data_barang_master WHERE barang_kode LIKE 'BNK%' " _
+                          & "ORDER BY ss DESC LIMIT 1")
+                If rd.HasRows Then
+                    no = CInt(rd.Item(0)) + 1
+                End If
+                rd.Close()
+
+                in_kode.Text = "BNK" & no.ToString("D5")
+            Else
+                If checkdata("data_barang_master", "'" & in_kode.Text & "'", "barang_kode") Then
+                    MessageBox.Show("Kode Barang " & in_kode.Text & " sudah ada")
+                    in_kode.Focus()
+                    Exit Sub
+                End If
+            End If
+
+        ElseIf bt_simpancusto.Text = "Update" Then
+
+        End If
+
+
+    End Sub
+
 End Class

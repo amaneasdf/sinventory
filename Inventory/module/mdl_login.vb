@@ -53,7 +53,7 @@
                 End If
             End If
 
-            readcommd("select user_group,user_nama,user_exp_date from data_pengguna_alias where user_alias='" & id & "'")
+            readcommd("select user_group,user_nama,user_listmaster from data_pengguna_alias where user_alias='" & id & "'")
 
             'Dim cek As Integer = cekuserexpired(rd.Item("user_exp_date"))
             'If cek = 1 Then
@@ -71,10 +71,13 @@
                 .user_ip = GetIPv4Address()
                 .user_mac = GetMac(.user_ip)
                 .user_ver = "0.0.1"
+                .user_listm = IIf(rd.Item("user_listmaster") = "Y", True, False)
             End With
             rd.Close()
+
             logUser()
             updateUserLogin()
+
             main.strip_user.Text = loggeduser.user_id.ToString
             main.strip_tgl.Text = System.DateTime.Today.ToString("dd MMMM yyyy")
             main.Visible = True

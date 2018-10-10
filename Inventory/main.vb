@@ -181,8 +181,27 @@
     End Sub
 
     Sub MenuAkses()
+        Dim group As String()
+        Dim _gr As String
+        Dim i As Integer = 0
+        Dim q As String = "SELECT menu_kode, menu_label FROM data_menu_master LEFT JOIN data_menu_group ON menu_kode=m_group_menu AND m_group_status=1 " _
+                          & "WHERE menu_status=1 AND m_group_kode IN ({0}) GROUP BY menu_kode ORDER BY menu_kode ASC"
+
+        group = Split(loggeduser.user_lev, ":")
+
+        For Each s As String In group
+            consoleWriteLine(s & "," & group(i))
+            group(i) = "'" & s & "'"
+            consoleWriteLine(group(i))
+            i += 1
+        Next
+
+        _gr = String.Join(",", group)
+        consoleWriteLine(_gr & Environment.NewLine & String.Format(q, _gr))
+        'dbSelect(String.Format(q,_gr))
+
         'dbSelect("SELECT * FROM kode_menu WHERE menu_group = '" & loggeduser.user_lev & "' ORDER BY menu_kode ASC ")
-        dbSelect("SELECT data_menu_master.menu_kode, data_menu_master.menu_label FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode WHERE menu_group='" & loggeduser.user_lev & "' ORDER BY kode_menu.menu_kode ASC;")
+        dbSelect("SELECT data_menu_master.menu_kode, data_menu_master.menu_label FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode WHERE menu_group='" & loggeduser.user_lev & "' AND menu_status=1 ORDER BY kode_menu.menu_kode ASC;")
         Do While rd.Read
             MenuKode = rd.Item("menu_kode")
             MenuLabel = rd.Item("menu_label").ToString
@@ -480,6 +499,54 @@
                     .Text = "Laporan Mutasi Persediaan"
                     }
                 x.Show()
+            Case "mn070602"
+                Dim x As New fr_lap_hutang
+                x.setVar("h_titipsupplier", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+                x.do_load()
+            Case "mn070603"
+                Dim x As New fr_lap_hutang
+                x.setVar("h_nota", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+                x.do_load()
+            Case "mn070604"
+                Dim x As New fr_lap_hutang
+                x.setVar("h_kartuhutang", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+                x.do_load()
+            Case "mn070605"
+                Dim x As New fr_lap_hutang
+                x.setVar("h_bayarnota", "", selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
+                x.Show()
+                x.do_load()
+            Case "mn070705"
+                Dim x As New fr_view_piutang
+                x.setVar("p_salesnota", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+            Case "mn070706"
+                Dim x As New fr_view_piutang
+                Dim tglawal As Date = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+                Dim tglakhir As Date = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+                x.setVar("p_saleslengkap2", "", tglawal.ToShortDateString & " s.d. " & tglakhir.ToShortDateString)
+                x.Show()
+            Case "mn070707"
+                Dim x As New fr_view_piutang
+                Dim tglawal As Date = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+                Dim tglakhir As Date = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+                x.setVar("p_salesbayartanggal", "", tglawal.ToShortDateString & " s.d. " & tglakhir.ToShortDateString)
+                x.Show()
+            Case "mn070712"
+                Dim x As New fr_view_piutang
+                x.setVar("p_salesglobal", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+            Case "mn070714"
+                Dim x As New fr_view_piutang
+                x.setVar("p_kartupiutang", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
+            Case "mn070715"
+                Dim x As New fr_view_piutang
+                x.setVar("p_kartupiutangsales", "", selectedperiode.ToString("MMMM yyyy"))
+                x.Show()
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")
@@ -556,14 +623,20 @@
         op_con()
 
         If getConn.State <> 1 Then
+            'messagebox.show()
             Application.Exit()
             Exit Sub
         End If
 
+        getPeriode()
+
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
-        strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
+        strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
+        'strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
         bt_setperiode.Text = "Set Periode to " & cal_front.SelectionStart.ToString("MMMM yyyy")
+
+        cal_front.MaxDate = DateSerial(Today.Year, Today.Month + 1, 0)
         fr_login.Show()
 
         'MenuAkses()
@@ -582,7 +655,7 @@
         End If
     End Sub
 
-    Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+    Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
         'If Not tabcontrol.SelectedTab Is TabPage1 Then
         '    If e.KeyCode = Keys.Escape Then
         '        Console.Write(tabcontrol.SelectedTab.Name)

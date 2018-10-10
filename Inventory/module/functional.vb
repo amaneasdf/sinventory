@@ -69,8 +69,8 @@ Module functional
         End If
     End Sub
 
-    Public Sub numericLostFocus(x As NumericUpDown)
-        x.Controls.Item(1).Text = x.Value
+    Public Sub numericLostFocus(x As NumericUpDown, Optional format As String = "N2")
+        x.Controls.Item(1).Text = x.Value.ToString(format)
     End Sub
 
     Public Sub keyshortenter(nextcontrol As Control, e As KeyEventArgs)
@@ -131,9 +131,73 @@ Module functional
         Return z
     End Function
 
+    Public Function mysqlQueryFriendlyStringFeed(text As String) As String
+        Return text.Replace("'", "\'").Replace("\", "\\").Replace("%", "\%").Replace("_", "\_")
+    End Function
+
     '-----------SET PERIODE
+    Public Sub getPeriode(Optional kodeperiode As String = Nothing, Optional selecteddate As Date = Nothing)
+        'app startup
+        Dim q As String
+        If kodeperiode = Nothing Then
+            q = "SELECT IFNULL(MAX(tutupbk_id),1) FROM data_tutup_buku " _
+                & "WHERE {0} BETWEEN tutupbk_periode_tglawal AND IFNULL(tutupbk_periode_tglakhir,NOW()) AND tutupbk_status=1"
+            readcommd(String.Format(q, IIf(selecteddate = Nothing, "NOW()", "'" & selecteddate.ToString("yyyy-MM-dd") & "'")))
+            If rd.HasRows Then
+                kodeperiode = rd.Item(0)
+            End If
+            rd.Close()
+        End If
+
+        q = "SELECT tutupbk_id,tutupbk_periode_tglawal, tutupbk_periode_tglakhir FROM data_tutup_buku " _
+            & "WHERE tutupbk_status=1 AND tutupbk_id='{0}'"
+        readcommd(String.Format(q, kodeperiode))
+        If rd.HasRows Then
+            selectperiode.id = rd.Item(0)
+            selectperiode.tglawal = rd.Item(1)
+            selectperiode.tglakhir = rd.Item(2)
+        Else
+            selectperiode.id = "1"
+            selectperiode.tglawal = "1990-01-01"
+            selectperiode.tglakhir = "2100-12-01"
+        End If
+        rd.Close()
+    End Sub
+
     Public Sub setperiode(selecteddate As Date)
         Dim x As Date = selecteddate
+        Dim lastperiod As String = selectperiode.id
+
+        getPeriode(, selecteddate)
+
+        If lastperiod <> selectperiode.id Then
+            main.strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
+
+            Dim tbpg As TabPage() = {
+                pgstockop,
+                pgstok,
+                pgpembelian,
+                pgpenjualan,
+                pgreturbeli,
+                pgreturjual,
+                pgmutasigudang,
+                pgmutasistok,
+                pghutangawal,
+                pghutangbayar,
+                pghutangbgo,
+                pgpiutangawal,
+                pgpiutangbayar,
+                pgpiutangbgcair,
+                pgpiutangbgtolak,
+                pgkas,
+                pgjurnalmemorial,
+                pgjurnalumum
+                }
+            doRefreshTab(tbpg)
+
+            MessageBox.Show("Periode has been changed to " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
+        End If
+
         If x.ToString("MMMM yyyy") <> selectedperiode.ToString("MMMM yyyy") Then
             selectedperiode = DateSerial(x.Year, x.Month, 1)
             main.strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
@@ -159,15 +223,19 @@ Module functional
                 pgjurnalmemorial,
                 pgjurnalumum
                 }
-            For Each y As TabPage In tbpg
-                If main.tabcontrol.Contains(y) = True Then
-                    refreshTabPage(y.Name.ToString)
-                End If
-            Next
+            doRefreshTab(tbpg)
 
             MessageBox.Show("Periode has been changed to " & selectedperiode.ToString("MMMM yyyy"))
 
         End If
+    End Sub
+
+    Public Sub doRefreshTab(tab As TabPage())
+        For Each y As TabPage In tab
+            If main.tabcontrol.Contains(y) = True Then
+                refreshTabPage(y.Name.ToString)
+            End If
+        Next
     End Sub
 
     '-----------.ini file manipulation-------------

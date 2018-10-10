@@ -7,6 +7,7 @@
         Dim user_host As String
         Dim user_lev As String
         Dim user_ver As String
+        Dim user_listm As Boolean
     End Structure
 
     Public Structure cnction
@@ -14,6 +15,12 @@
         Dim uid As String
         Dim pass As String
         Dim db As String
+    End Structure
+
+    Public Structure periode
+        Dim id As String
+        Dim tglawal As Date
+        Dim tglakhir As Date
     End Structure
 
     Public Structure dblogwrite
@@ -27,8 +34,10 @@
     Public usernull As New userdata
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
 
-    'tgl
+    Public selectperiode As New periode
     Public tglHariIni As Date = System.DateTime.Today
+
+    'tgl
     Public sekarang As Date = System.DateTime.Now
     Public selectedperiode As Date = DateSerial(tglHariIni.Year, tglHariIni.Month, 1)
 
@@ -74,8 +83,8 @@
 
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Sales TO", "TO")
-        dt.Rows.Add("Sales Kanvas", "Kanvas")
+        dt.Rows.Add("Sales TO", "1")
+        dt.Rows.Add("Sales Kanvas", "2")
 
         Return dt
     End Function
@@ -171,6 +180,7 @@
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Potong Nota", "1")
         dt.Rows.Add("Tunai", "2")
+        dt.Rows.Add("Titip", "3")
 
         Return dt
     End Function
@@ -186,16 +196,21 @@
             Case "retur"
                 dt.Rows.Add("Potong Nota", "1")
                 dt.Rows.Add("Tunai", "2")
+                dt.Rows.Add("Titip", "3")
             Case "hutang", "piutang"
                 dt.Rows.Add("Tunai", "TUNAI")
-                dt.Rows.Add("BG", "BG")
-                dt.Rows.Add("Transfer", "TF")
-                dt.Rows.Add("Titipan", "TTP")
-                dt.Rows.Add("PiutangSupl", "PIUTSUPL")
-                dt.Rows.Add("PotongHarga", "POTHARG")
-                dt.Rows.Add("Pendapatan", "PENDPT")
+                dt.Rows.Add("Giro", "BG")
+                dt.Rows.Add("TransferBank", "TRANSFER")
+                'dt.Rows.Add("Titipan", "TITIP")
+                'dt.Rows.Add("PiutangSupl", "PIUTSUPL")
+                'dt.Rows.Add("PotongHarga", "PTGHARGA")
+                'dt.Rows.Add("Pendapatan", "PENDAPTN")
+            Case "source"
+                'SELECT WHERE AKUN is Kas / Bank
+                'dt = getDataTablefromDB("SELECT akun_kode as 'Value', CONCAT(akun_kode, '-', akun_nama) FROM data_akun WHERE ...")
             Case "kas"
                 dt.Rows.Add("Tunai", "TUNAI")
+                dt.Rows.Add("Transfer", "TRANSFER")
         End Select
         Return dt
     End Function

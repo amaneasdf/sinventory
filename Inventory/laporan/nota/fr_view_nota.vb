@@ -35,7 +35,7 @@ Public Class fr_view_nota
                 Dim cus_n As String = "nope"
                 Dim sup_al As String = "nononono"
                 Dim term As Integer = 0
-                Dim ppn, disk, jml, netto As Integer
+                Dim ppn, disk, jml, netto As Double
                 Select Case inlap_type
                     Case "beli"
 
@@ -57,6 +57,7 @@ Public Class fr_view_nota
                             End If
                             rd.Close()
                         Catch ex As Exception
+                            logError(ex)
                             consoleWriteLine(ex.Message)
                         End Try
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
@@ -73,13 +74,15 @@ Public Class fr_view_nota
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n , " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_beli as beli_harga, " _
-                            & "trans_harga_beli*trans_qty as beli_jml, (trans_jumlah-trans_harga_beli*trans_qty)/100 as beli_disc " _
+                            & "trans_harga_beli*trans_qty as beli_jml, (trans_jumlah-trans_harga_beli*trans_qty)/trans_harga_beli*trans_qty as beli_disc " _
                             & "FROM data_pembelian_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_faktur='" & innofaktur & "'"
+                            & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
+
+                        consoleWriteLine(inquery)
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.nota_beli.rdlc"
-                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTerm, parTglFaktur, parJml, parDiskon, parPPN, parNetto})
+                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTerm, parTglFaktur, parJml, parDiskon, parNetto})
                         With ds_transaksi
                             .dt_lap_beli_nota.Clear()
                             filldatatabel(inquery, .dt_nota_beli)
@@ -136,7 +139,7 @@ Public Class fr_view_nota
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, customer_nama, " _
                                       & "customer_alamat, salesman_nama, if(faktur_upd_alias='',faktur_reg_alias,faktur_upd_alias), " _
-                                      & "faktur_jumlah, faktur_disc_rupiah,faktur_ppn_persen, faktur_netto " _
+                                      & "faktur_disc_rupiah, faktur_netto " _
                                       & "FROM data_penjualan_faktur LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
                                       & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
                                       & "WHERE faktur_kode='" & innofaktur & "'")
@@ -147,13 +150,12 @@ Public Class fr_view_nota
                                 sup_al = rd.Item(3)
                                 sales = rd.Item(4)
                                 inputuser = rd.Item(5)
-                                jml = rd.Item(6)
-                                disk = rd.Item(7)
-                                ppn = rd.Item(8)
-                                netto = rd.Item(9)
+                                disk = rd.Item(6)
+                                netto = rd.Item(7)
                             End If
                             rd.Close()
                         Catch ex As Exception
+                            logError(ex)
                             consoleWriteLine(ex.Message)
                         End Try
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
@@ -162,9 +164,7 @@ Public Class fr_view_nota
                         Dim parCusto As New ReportParameter("parSupplier", sup)
                         Dim parCustoAl As New ReportParameter("parSupplierAl", sup_al)
                         parUserId = New ReportParameter("parUserId", If(inputuser = Nothing, "NOPE", inputuser))
-                        Dim parJml As New ReportParameter("parJml", jml)
                         Dim parDiskon As New ReportParameter("parDiskon", disk)
-                        Dim parPPN As New ReportParameter("parPPN", ppn)
                         Dim parNetto As New ReportParameter("parNetto", netto)
 
                         repdatasource.Name = "ds_nota_jual"
@@ -173,14 +173,15 @@ Public Class fr_view_nota
 
                         inquery = "SELECT trans_barang as jual_barang ,barang_nama as jual_barang_n, " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as Jual_qty , trans_harga_jual as jual_harga, " _
-                            & "trans_harga_jual*trans_qty as jual_jml, trans_disc1/100 as jual_d1, trans_disc2/100 as jual_d2, " _
-                            & "trans_disc3/100 as jual_d3, trans_disc4/100 as jual_d4, trans_disc5/100 as jual_d5 " _
+                            & "trans_jumlah as jual_jml, trans_disc_rupiah as jual_discrp, trans_disc1 as jual_d1, " _
+                            & "trans_disc2 as jual_d2, trans_disc3 as jual_d3, trans_disc4 as jual_d4, " _
+                            & "trans_disc5 as jual_d5, trans_qty*trans_harga_jual-trans_jumlah as jual_disctot " _
                             & "FROM data_penjualan_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_faktur='" & innofaktur & "'"
+                            & "WHERE trans_faktur='" & innofaktur & "' AND trans_status<>9"
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.nota_jual.rdlc"
-                        .SetParameters(New ReportParameter() {parCusto, parCustoAl, parTerm, parTglFaktur, parSales, parDiskon, parJml, parPPN, parNetto})
+                        .SetParameters(New ReportParameter() {parCusto, parCustoAl, parTerm, parTglFaktur, parSales, parDiskon, parNetto})
 
                         With ds_transaksi
                             .dt_nota_jual.Clear()

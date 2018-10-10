@@ -7,12 +7,41 @@
     Public export_sw As Boolean = True
     Public print_sw As Boolean = False
     Public search_sw As Boolean = True
+    Public cancel_sw As Boolean = False
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
         consoleWriteLine("pg" & page.Name.ToString)
         consoleWriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
+
+    'KEYSHORTCUT
+    Protected Overrides Function ProcessKeyPreview(ByRef m As Message) As Boolean
+        If m.Msg = &H100 Or m.Msg = &H101 Then  'WM_KEYDOWN / WM_KEYUP
+            Dim key As Keys = m.WParam
+            If key = Keys.F5 Then
+                performRefresh()
+                Return True
+            ElseIf key = Keys.N And My.Computer.Keyboard.CtrlKeyDown Then
+                addItem()
+                Return True
+            ElseIf key = Keys.F And My.Computer.Keyboard.CtrlKeyDown Then
+                in_cari.Focus()
+                Return True
+            ElseIf key = Keys.O And My.Computer.Keyboard.CtrlKeyDown Then
+                editItem()
+                Return True
+            ElseIf key = Keys.Delete And My.Computer.Keyboard.CtrlKeyDown Then
+
+                Return True
+            ElseIf key = Keys.P And My.Computer.Keyboard.CtrlKeyDown Then
+                printItem()
+                Return True
+            End If
+        End If
+
+        Return MyBase.ProcessKeyPreview(m)
+    End Function
 
     Public Sub performRefresh()
         Console.WriteLine(tabpagename.Name.ToString)
@@ -91,25 +120,33 @@
             Me.Cursor = Cursors.AppStarting
             Select Case tabpagename.Name.ToString
                 Case "pgbarang"
-                    fr_barang_detail.ShowDialog()
+                    Dim x As New fr_barang_detail
+                    x.Show()
                 Case "pgsupplier"
-                    fr_supplier_detail.ShowDialog()
+                    Dim x As New fr_supplier_detail
+                    x.Show()
                 Case "pggudang"
-                    fr_gudang_detail.ShowDialog()
+                    Dim x As New fr_gudang_detail
+                    x.Show()
                 Case "pgsales"
-                    fr_sales_detail.ShowDialog()
+                    Dim x As New fr_sales_detail
+                    x.Show()
                 Case "pgcusto"
-                    fr_custo_detail.ShowDialog()
+                    Dim x As New fr_custo_detail
+                    x.Show()
                 Case "pgbank"
                     fr_bank_detail.ShowDialog()
                 Case "pgbgtangan"
                     fr_giro_detail.ShowDialog()
                 Case "pgperkiraan"
-                    fr_perkiraan_detail.ShowDialog(main)
+                    Dim x As New fr_perkiraan_detail
+                    x.Show()
                 Case "pgawalneraca"
                     fr_neracaawal_detail.ShowDialog()
                 Case "pgpembelian"
-                    fr_beli_detail.Show(main)
+                    Dim bd As New fr_beli_detail
+                    bd.Show(main)
+                    bd.do_load()
                 Case "pgreturbeli"
                     fr_beli_retur_detail.Show(main)
                 Case "pgpenjualan"
@@ -127,9 +164,12 @@
                 Case "pghutangbayar"
                     'Dim xa As New fr_h_bayar
                     'xa.Show()
-                    fr_hutang_bayar.ShowDialog(main)
+                    Dim frhb As New fr_hutang_bayar
+                    frhb.Show(main)
+                    frhb.do_load()
                 Case "pgpiutangbayar"
-                    fr_piutang_bayar.ShowDialog(main)
+                    Dim frpb As New fr_piutang_bayar
+                    frpb.Show(main)
                 Case "pgpiutangbgtolak"
                     fr_bg_tolak.ShowDialog(main)
                 Case "pgkas"
@@ -160,8 +200,8 @@
                         Dim detail As New fr_barang_detail
                         With detail
                             .bt_simpanbarang.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show()
                         End With
 
@@ -169,56 +209,51 @@
                         Dim detail As New fr_supplier_detail
                         With detail
                             .bt_simpansupplier.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show()
                         End With
 
                     Case "pggudang"
-                        Using detail As New fr_gudang_detail
-                            With detail
-                                .bt_simpangudang.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_gudang_detail
+                        With detail
+                            .bt_simpangudang.Text = "Update"
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .Show()
+                        End With
                     Case "pgsales"
-                        Using detail As New fr_sales_detail
-                            With detail
-                                .bt_simpansales.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_sales_detail
+                        With detail
+                            .bt_simpansales.Text = "Update"
+                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
+                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Show()
+                        End With
                     Case "pgcusto"
-                        Using detail As New fr_custo_detail
-                            With detail
-                                .bt_simpancusto.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_custo_detail
+                        With detail
+                            .bt_simpancusto.Text = "Update"
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .Show()
+                        End With
                     Case "pgbgtangan"
-                        Using detail As New fr_giro_detail
-                            With detail
-                                .bt_simpangiro.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_giro_detail
+                        With detail
+                            .bt_simpangiro.Text = "Update"
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .Show()
+                        End With
                     Case "pgperkiraan"
-                        Using detail As New fr_perkiraan_detail
-                            With detail
-                                .bt_simpanperkiraan.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(2).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_perkiraan_detail
+                        With detail
+                            .bt_simpanperkiraan.Text = "Update"
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(2).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .Show()
+                        End With
                     Case "pgawalneraca"
                         Using detail As New fr_neracaawal_detail
                             With detail
@@ -235,11 +270,12 @@
                             .Text += dgv_list.Rows(rowindex).Cells(0).Value
                             .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .Show(main)
+                            .do_load()
                         End With
                     Case "pgreturbeli"
                         Dim detail As New fr_beli_retur_detail
                         With detail
-                            .bt_simpanreturbeli.Visible = False
+                            .bt_simpanreturbeli.Text = "Update"
                             .Text += dgv_list.Rows(rowindex).Cells(0).Value
                             .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .Show(main)
@@ -293,13 +329,14 @@
                             End With
                         End Using
                     Case "pghutangbayar"
-                        Using detail As New fr_hutang_bayar
-                            With detail
-                                .bt_simpanperkiraan.Text = "Update"
-                                .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells("bukti").Value
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        Dim detail As New fr_hutang_bayar
+                        With detail
+                            .bt_simpanperkiraan.Text = "Update"
+                            .Text += dgv_list.Rows(rowindex).Cells("bukti").Value
+                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells("bukti").Value
+                            .Show(main)
+                            .do_load()
+                        End With
                     Case "pgpiutangawal"
                         Using detail As New fr_piutang_awal
                             With detail
@@ -310,13 +347,13 @@
                             End With
                         End Using
                     Case "pgpiutangbayar"
-                        Using detail As New fr_piutang_bayar
-                            With detail
-                                .bt_simpanperkiraan.Text = "Update"
-
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        Dim detail As New fr_piutang_bayar
+                        With detail
+                            .bt_simpanperkiraan.Text = "Update"
+                            .Text += dgv_list.Rows(rowindex).Cells(0).Value
+                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Show(main)
+                        End With
                     Case "pgpiutangbgtolak"
                         Using detail As New fr_bg_tolak
                             With detail
@@ -523,6 +560,7 @@
         mn_del.Visible = del_sw
         mn_export.Visible = False
         mn_print.Visible = print_sw
+        mn_bataljual.Visible = cancel_sw
     End Sub
 
     '---------------- CLOSE
@@ -586,5 +624,29 @@
 
     Private Sub mn_exportExcel_Click(sender As Object, e As EventArgs) Handles mn_exportExcel.Click
         exportItem()
+    End Sub
+
+    Private Sub mn_bataljual_Click(sender As Object, e As EventArgs) Handles mn_bataljual.Click
+        'UPDATE STATUS FAKTUR TO '2'
+        'CEK TRANSAKSI->sudah dibayar/diretur
+        'IF YES -> stop
+        'IF NO -> UPDATE
+        If cancel_sw = True Then
+            Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
+            With dgv_list.SelectedRows
+                If .Count > 0 Then
+                    Dim msg As String = "Batalkan penjualan {0} untuk customer {1}?"
+                    If MessageBox.Show("Batalkan penjualan " & .Item(0).Cells(1).Value, "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                        op_con()
+                        If commnd(String.Format(q, .Item(0).Cells(1).Value)) = True Then
+                            .Item(0).Cells(11).Value = "Batal"
+                        Else
+                            MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)
+                        End If
+                    End If
+                End If
+
+            End With
+        End If
     End Sub
 End Class

@@ -3,6 +3,7 @@
     Private rowindexlist As Integer = 0
     Private ppnjenis As String = "1"
     Private returstatus As String = "1"
+    Private _persed As Decimal = 0
 
     Private Sub loadDataRetur(kode As String)
         readcommd("SELECT * FROM data_penjualan_retur_faktur WHERE faktur_kode_bukti='" & kode & "'")
@@ -32,7 +33,7 @@
 
     Private Sub loadDataReturJualBrg(kode As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_jumlah, trans_satuan_type FROM data_penjualan_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "'")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_satuan_type, trans_hpp FROM data_penjualan_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "'")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -41,9 +42,10 @@
                     .Cells("nama").Value = rows.ItemArray(1)
                     .Cells("harga").Value = rows.ItemArray(2)
                     .Cells("qty").Value = rows.ItemArray(3)
-                    .Cells("sat_type").Value = rows.ItemArray(6)
+                    .Cells("sat_type").Value = rows.ItemArray(5)
                     .Cells("sat").Value = rows.ItemArray(4)
-                    .Cells("jml").Value = rows.ItemArray(5)
+                    .Cells("jml").Value = rows.ItemArray(3) * rows.ItemArray(2)
+                    .Cells("brg_hpp").Value = rows.ItemArray(6)
                 End With
             Next
         End With
@@ -128,6 +130,15 @@
             Exit Sub
         End If
 
+        Dim hpp As Double = 0
+
+        op_con()
+        readcommd("SELECT AVG(stock_hpp) FROM data_stok_awal WHERE stock_barang='" & in_barang.Text & "' AND stock_periode='" & date_tgl_trans.Value.ToString("yyyy-MM") & "'")
+        If rd.HasRows Then
+            hpp = rd.Item(0)
+        End If
+        rd.Close()
+
         With dgv_barang.Rows
             Dim x As Integer = .Add
             With .Item(x)
@@ -138,13 +149,14 @@
                 .Cells("sat_type").Value = cb_sat.SelectedValue
                 .Cells("harga").Value = in_harga_retur.Value
                 .Cells("jml").Value = biayaPerItem()
+                .Cells("brg_hpp").Value = hpp
             End With
         End With
 
         countBiaya()
         clearInputBarang()
         in_barang_nm.Clear()
-        in_barang_nm.Focus()
+        in_barang.Focus()
     End Sub
 
     Private Sub dgvToTxt()
@@ -181,9 +193,16 @@
 
     Private Function jumlahBiayaPerItem() As Double
         Dim x As Double = 0
+        _persed = 0
         For Each rows As DataGridViewRow In dgv_barang.Rows
-            Console.WriteLine(rows.Cells("jml").Value)
+            op_con()
+            Dim _qtytot As Integer = 0
+            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
+            If rd.HasRows Then
+                _qtytot = rd.Item(0)
+            End If
             x += rows.Cells("jml").Value
+            _persed += _qtytot * rows.Cells("brg_hpp").Value
         Next
         Return x
     End Function
@@ -193,7 +212,7 @@
         Dim y As Double = 0
         Dim z As Double = x
         If ppnjenis = "1" Then
-            y = x * (1 - 1 / 1.1)
+            y = x * (1 - 10 / 11)
         ElseIf ppnjenis = "2" Then
             y = x * 0.1
             z = x + y
@@ -437,7 +456,10 @@
             .SelectedIndex = -1
         End With
         With cb_bayar_jenis
-
+            .DataSource = jenisBayar("retur")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
         End With
 
         With date_tgl_trans
@@ -521,7 +543,9 @@
                     "faktur_ppn_persen='" & removeCommaThousand(in_ppn_tot.Text) & "'",
                     "faktur_ppn_jenis='" & ppnjenis & "'",
                     "faktur_netto='" & removeCommaThousand(in_netto.Text) & "'",
-                    "faktur_status='" & returstatus & "'"
+                    "faktur_jen_bayar='" & cb_bayar_jenis.SelectedValue & "'",
+                    "faktur_status='" & returstatus & "'",
+                    "faktur_persediaan='" & _persed & "'"
                     }
             data1 = {
                 "faktur_reg_date=NOW()",
@@ -537,6 +561,7 @@
             Dim x As New List(Of String)
             Dim x_kodestock As New List(Of String)
             Dim qty As New List(Of Integer)
+            Dim nilai As New List(Of Double)
             For Each rows As DataGridViewRow In dgv_barang.Rows
                 'CHECK / INSERT DATA STOCK FOR GUDANG TUJUAN -> STOCK AWAL
                 Dim stockkode As String = cb_gudang.SelectedValue & "-" & rows.Cells(0).Value & "-" & date_tgl_trans.Value.ToString("yyMM")
@@ -544,7 +569,6 @@
                     "stock_kode='" & stockkode & "'",
                     "stock_gudang='" & cb_gudang.SelectedValue & "'",
                     "stock_barang='" & rows.Cells(0).Value & "'",
-                    "stock_hpp=getHPP('" & rows.Cells(0).Value & "')",
                     "stock_awal=0",
                     "stock_reg_alias='" & loggeduser.user_id & "'",
                     "stock_reg_date=NOW()"
@@ -554,11 +578,11 @@
                 'INSERT BARANG
                 dataBrg = {
                     "trans_barang='" & rows.Cells(0).Value & "'",
-                    "trans_harga_retur='" & rows.Cells("harga").Value & "'",
+                    "trans_harga_retur='" & rows.Cells("harga").Value.ToString.Replace(".", ",") & "'",
                     "trans_qty='" & rows.Cells("qty").Value & "'",
                     "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
                     "trans_satuan='" & rows.Cells("sat").Value & "'",
-                    "trans_jumlah='" & rows.Cells("jml").Value & "'"
+                    "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(".", ",") & "'"
                     }
                 queryArr.Add(String.Format(q2, in_no_bukti.Text, String.Join(",", dataBrg)))
 
@@ -788,7 +812,7 @@
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
-        Using nota As New fr_view_nota
+        Using nota As New fr_view_piutang
             Me.Cursor = Cursors.WaitCursor
             With nota
                 .setVar("returjual", in_no_bukti.Text, "")

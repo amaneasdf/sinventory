@@ -31,15 +31,16 @@ Partial Class fr_list
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_judul = New System.Windows.Forms.Label()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_add = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_export = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_exportExcel = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -154,19 +155,27 @@ Partial Class fr_list
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
         Me.MenuStrip1.TabIndex = 341
         Me.MenuStrip1.Text = "MenuStrip1"
         '
+        'mn_cari
+        '
+        Me.mn_cari.Name = "mn_cari"
+        Me.mn_cari.ShortcutKeyDisplayString = "Ctrl+F"
+        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.mn_cari.Size = New System.Drawing.Size(40, 20)
+        Me.mn_cari.Text = "Cari"
+        Me.mn_cari.Visible = False
+        '
         'mn_add
         '
         Me.mn_add.Image = Global.Inventory.My.Resources.Resources.toolbar_add_icon
         Me.mn_add.Name = "mn_add"
         Me.mn_add.ShortcutKeyDisplayString = "Ctrl+N"
-        Me.mn_add.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.N), System.Windows.Forms.Keys)
         Me.mn_add.Size = New System.Drawing.Size(79, 20)
         Me.mn_add.Text = "Tambah"
         Me.mn_add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -176,7 +185,6 @@ Partial Class fr_list
         Me.mn_edit.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_edit.Name = "mn_edit"
         Me.mn_edit.ShortcutKeyDisplayString = "Ctrl+O"
-        Me.mn_edit.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
         Me.mn_edit.Size = New System.Drawing.Size(55, 20)
         Me.mn_edit.Text = "Edit"
         Me.mn_edit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -189,19 +197,20 @@ Partial Class fr_list
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"
         '
-        'mn_refresh
+        'mn_print
         '
-        Me.mn_refresh.Name = "mn_refresh"
-        Me.mn_refresh.ShortcutKeyDisplayString = "F5"
-        Me.mn_refresh.ShortcutKeys = System.Windows.Forms.Keys.F5
-        Me.mn_refresh.Size = New System.Drawing.Size(58, 20)
-        Me.mn_refresh.Text = "Refresh"
+        Me.mn_print.Image = Global.Inventory.My.Resources.Resources.toolbar_print_icon
+        Me.mn_print.Name = "mn_print"
+        Me.mn_print.ShortcutKeyDisplayString = "Ctrl+P"
+        Me.mn_print.Size = New System.Drawing.Size(60, 20)
+        Me.mn_print.Text = "&Print"
+        Me.mn_print.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_print.Visible = False
         '
         'mn_export
         '
         Me.mn_export.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_exportExcel})
         Me.mn_export.Name = "mn_export"
-        Me.mn_export.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
         Me.mn_export.Size = New System.Drawing.Size(52, 20)
         Me.mn_export.Text = "&Export"
         '
@@ -211,25 +220,13 @@ Partial Class fr_list
         Me.mn_exportExcel.Size = New System.Drawing.Size(117, 22)
         Me.mn_exportExcel.Text = "To Excel"
         '
-        'mn_print
+        'mn_refresh
         '
-        Me.mn_print.Image = Global.Inventory.My.Resources.Resources.toolbar_print_icon
-        Me.mn_print.Name = "mn_print"
-        Me.mn_print.ShortcutKeyDisplayString = "Ctrl+P"
-        Me.mn_print.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.mn_print.Size = New System.Drawing.Size(60, 20)
-        Me.mn_print.Text = "&Print"
-        Me.mn_print.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.mn_print.Visible = False
-        '
-        'mn_cari
-        '
-        Me.mn_cari.Name = "mn_cari"
-        Me.mn_cari.ShortcutKeyDisplayString = "Ctrl+F"
-        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.mn_cari.Size = New System.Drawing.Size(40, 20)
-        Me.mn_cari.Text = "Cari"
-        Me.mn_cari.Visible = False
+        Me.mn_refresh.Name = "mn_refresh"
+        Me.mn_refresh.ShortcutKeyDisplayString = "F5"
+        Me.mn_refresh.ShortcutKeys = System.Windows.Forms.Keys.F5
+        Me.mn_refresh.Size = New System.Drawing.Size(58, 20)
+        Me.mn_refresh.Text = "Refresh"
         '
         'Panel2
         '
@@ -242,6 +239,12 @@ Partial Class fr_list
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
         Me.Panel2.TabIndex = 342
+        '
+        'mn_bataljual
+        '
+        Me.mn_bataljual.Name = "mn_bataljual"
+        Me.mn_bataljual.Size = New System.Drawing.Size(76, 20)
+        Me.mn_bataljual.Text = "Batal Kirim"
         '
         'fr_list
         '
@@ -282,5 +285,6 @@ Partial Class fr_list
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_exportExcel As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
 
 End Class

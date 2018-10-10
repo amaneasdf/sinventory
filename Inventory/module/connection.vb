@@ -6,7 +6,7 @@ Module dbproceduralstuff
     'Public conn As New SqlConnection("server=(localdb)\MSSQLLocalDB;Integrated Security=true;database=Konveksitest;")
     'Public cmd As New SqlCommand
     'Public rd As SqlDataReader
-	Private Const connstring As String = "Server={0};Database={1};Uid={2};Pwd={3};"
+    Private Const connstring As String = "Server={0};Database={1};Uid={2};Pwd={3};Allow User Variables=TRUE"
     Private conn As MySqlConnection
     Private cmd As New MySqlCommand
     Public rd As MySqlDataReader
@@ -32,11 +32,7 @@ Module dbproceduralstuff
             Catch ex As Exception
                 'MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
                 MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"))
-                Dim er As New List(Of String)
-                Dim st As New StackTrace
-                st = New StackTrace(ex, True)
-                er.Add(String.Format("ERR:{0}:{1}{5}--{2}:{3}:{4}", Date.Now.ToString("yyyyMMdd-hhmmss"), ex.Message, st.GetFrame(st.FrameCount - 1).GetMethod, st.GetFrame(st.FrameCount - 1).GetFileLineNumber, ex.TargetSite.ToString, Environment.NewLine))
-                errLog(er)
+                logError(ex)
             End Try
         End If
     End Sub
@@ -47,6 +43,7 @@ Module dbproceduralstuff
                 conn.Close()
             Catch ex As Exception
                 MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                logError(ex)
             End Try
         End If
     End Sub
@@ -60,12 +57,14 @@ Module dbproceduralstuff
         ctrans.Transaction = transact
         For Each query As String In queryArr
             Try
-                Console.WriteLine(query)
+                consoleWriteLine(query)
                 ctrans.CommandText = query
                 ctrans.ExecuteNonQuery()
                 querycheck = True
             Catch ex As Exception
-                Console.WriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                logError(ex)
                 querycheck = False
                 Exit For
             End Try
@@ -75,14 +74,23 @@ Module dbproceduralstuff
             Try
                 transact.Commit()
             Catch ex As Exception
-                Console.WriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                logError(ex)
                 querycheck = False
             End Try
         End If
 
         If querycheck = False Then
             MessageBox.Show("transaksi tidak bisa disimpan")
-            transact.Rollback()
+            Try
+                transact.Rollback()
+            Catch ex As Exception
+                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                logError(ex)
+                querycheck = False
+            End Try
         End If
 
         Return querycheck
@@ -100,7 +108,9 @@ Module dbproceduralstuff
             cmd.Dispose()
             check = True
         Catch ex As Exception
-            Console.WriteLine(String.Format("Error: {0}", ex.Message))
+            consoleWriteLine(String.Format("Error: {0}", ex.Message))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            logError(ex)
             'MessageBox.Show(String.Format("Error: {0}", ex.Message))
             check = False
         End Try
@@ -116,18 +126,24 @@ Module dbproceduralstuff
             cmd.CommandText = query
             rd = cmd.ExecuteReader
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
+            consoleWriteLine(String.Format("Error: {0}", ex.Message))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            logError(ex)
         End Try
     End Sub
 
     Public Sub readcommd(query As String)
         Try
+            'consoleWriteLine(query)
             dbSelect(query)
             If rd IsNot Nothing Then
                 rd.Read()
+                'consoleWriteLine(rd.Item(0))
             End If
         Catch ex As Exception
-            Console.WriteLine(ex.Message)
+            consoleWriteLine(String.Format("Error: {0}", ex.Message))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            logError(ex)
             'MsgBox("Data tidak dapat ditemukan" & Environment.NewLine & ex.Message)
         End Try
     End Sub
@@ -157,6 +173,7 @@ Module dbproceduralstuff
             conn.Close()
         Catch ex As Exception
             MsgBox("Data tidak dapat ditemukan" & Environment.NewLine & ex.Message)
+            logError(ex)
         End Try
         Return dtable
     End Function

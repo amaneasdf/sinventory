@@ -264,7 +264,7 @@
                 Case "bt_down"
                     dgv_kartustok.Rows.Insert(index1 + 1, dragRow)
                     stokrowindex = index1 + 1
-                    countSaldoKartu(index1 + 1, index1)
+                    countSaldoKartu(index1, index1 + 1)
             End Select
             dragRow.Selected = True
             setBTkartustok()

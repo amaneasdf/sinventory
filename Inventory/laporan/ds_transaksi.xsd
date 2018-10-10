@@ -228,6 +228,8 @@
               <xs:element name="jual_d4" msprop:Generator_ColumnVarNameInTable="columnjual_d4" msprop:Generator_ColumnPropNameInRow="jual_d4" msprop:Generator_ColumnPropNameInTable="jual_d4Column" msprop:Generator_UserColumnName="jual_d4" type="xs:decimal" minOccurs="0" />
               <xs:element name="jual_d5" msprop:Generator_ColumnVarNameInTable="columnjual_d5" msprop:Generator_ColumnPropNameInRow="jual_d5" msprop:Generator_ColumnPropNameInTable="jual_d5Column" msprop:Generator_UserColumnName="jual_d5" type="xs:decimal" minOccurs="0" />
               <xs:element name="jual_jml" msprop:Generator_ColumnVarNameInTable="columnjual_jml" msprop:Generator_ColumnPropNameInRow="jual_jml" msprop:Generator_ColumnPropNameInTable="jual_jmlColumn" msprop:Generator_UserColumnName="jual_jml" type="xs:decimal" minOccurs="0" />
+              <xs:element name="jual_discrp" msprop:Generator_ColumnVarNameInTable="columnjual_discrp" msprop:Generator_ColumnPropNameInRow="jual_discrp" msprop:Generator_ColumnPropNameInTable="jual_discrpColumn" msprop:Generator_UserColumnName="jual_discrp" type="xs:decimal" minOccurs="0" />
+              <xs:element name="jual_disctot" msprop:Generator_ColumnVarNameInTable="columnjual_disctot" msprop:Generator_ColumnPropNameInRow="jual_disctot" msprop:Generator_ColumnPropNameInTable="jual_disctotColumn" msprop:Generator_UserColumnName="jual_disctot" type="xs:decimal" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

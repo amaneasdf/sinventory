@@ -23,7 +23,7 @@ Partial Class fr_supplier_detail
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.cb_status = New System.Windows.Forms.ComboBox()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -83,7 +83,7 @@ Partial Class fr_supplier_detail
         '
         'GroupBox1
         '
-        Me.GroupBox1.Controls.Add(Me.cb_status)
+        Me.GroupBox1.Controls.Add(Me.in_status)
         Me.GroupBox1.Controls.Add(Me.Label13)
         Me.GroupBox1.Controls.Add(Me.in_kode)
         Me.GroupBox1.Controls.Add(Me.Label4)
@@ -93,14 +93,17 @@ Partial Class fr_supplier_detail
         Me.GroupBox1.TabIndex = 171
         Me.GroupBox1.TabStop = False
         '
-        'cb_status
+        'in_status
         '
-        Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_status.FormattingEnabled = True
-        Me.cb_status.Location = New System.Drawing.Point(44, 35)
-        Me.cb_status.Name = "cb_status"
-        Me.cb_status.Size = New System.Drawing.Size(160, 21)
-        Me.cb_status.TabIndex = 15
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(44, 35)
+        Me.in_status.MaxLength = 10
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(160, 20)
+        Me.in_status.TabIndex = 15
         '
         'Label13
         '
@@ -227,6 +230,7 @@ Partial Class fr_supplier_detail
         Me.pic_supplier.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.pic_supplier.TabIndex = 168
         Me.pic_supplier.TabStop = False
+        Me.pic_supplier.Visible = False
         '
         'in_alamatsupplier
         '
@@ -256,7 +260,7 @@ Partial Class fr_supplier_detail
         '
         Me.bt_batalsupplier.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalsupplier.Location = New System.Drawing.Point(540, 455)
+        Me.bt_batalsupplier.Location = New System.Drawing.Point(538, 448)
         Me.bt_batalsupplier.Name = "bt_batalsupplier"
         Me.bt_batalsupplier.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalsupplier.TabIndex = 13
@@ -273,11 +277,12 @@ Partial Class fr_supplier_detail
         Me.bt_gambar.TabIndex = 16
         Me.bt_gambar.Text = "Ubah Gambar"
         Me.bt_gambar.UseVisualStyleBackColor = True
+        Me.bt_gambar.Visible = False
         '
         'bt_simpansupplier
         '
         Me.bt_simpansupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpansupplier.Location = New System.Drawing.Point(540, 421)
+        Me.bt_simpansupplier.Location = New System.Drawing.Point(538, 414)
         Me.bt_simpansupplier.Name = "bt_simpansupplier"
         Me.bt_simpansupplier.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpansupplier.TabIndex = 12
@@ -695,7 +700,6 @@ Partial Class fr_supplier_detail
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents Label19 As System.Windows.Forms.Label
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
-    Friend WithEvents cb_status As System.Windows.Forms.ComboBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents pic_supplier As System.Windows.Forms.PictureBox
     Friend WithEvents in_alamatsupplier As System.Windows.Forms.TextBox
@@ -737,4 +741,5 @@ Partial Class fr_supplier_detail
     Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 End Class

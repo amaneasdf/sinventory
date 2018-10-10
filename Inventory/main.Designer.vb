@@ -27,7 +27,7 @@ Partial Class main
         Me.Label12 = New System.Windows.Forms.Label()
         Me.tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.pnl_main = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.bt_setperiode = New System.Windows.Forms.Button()
         Me.ListView1 = New System.Windows.Forms.ListView()
@@ -37,6 +37,8 @@ Partial Class main
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_periode = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.lb_periodeselector = New System.Windows.Forms.ListBox()
+        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
@@ -96,7 +98,7 @@ Partial Class main
         '
         Me.TabPage1.BackColor = System.Drawing.Color.White
         Me.TabPage1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.TabPage1.Controls.Add(Me.Panel2)
+        Me.TabPage1.Controls.Add(Me.pnl_main)
         Me.TabPage1.Controls.Add(Me.Panel1)
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
@@ -105,18 +107,20 @@ Partial Class main
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Menu Utama"
         '
-        'Panel2
+        'pnl_main
         '
-        Me.Panel2.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
-        Me.Panel2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 3)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(704, 560)
-        Me.Panel2.TabIndex = 2
+        Me.pnl_main.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
+        Me.pnl_main.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.pnl_main.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnl_main.Location = New System.Drawing.Point(3, 3)
+        Me.pnl_main.Name = "pnl_main"
+        Me.pnl_main.Size = New System.Drawing.Size(704, 560)
+        Me.pnl_main.TabIndex = 2
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.Label1)
+        Me.Panel1.Controls.Add(Me.lb_periodeselector)
         Me.Panel1.Controls.Add(Me.bt_setperiode)
         Me.Panel1.Controls.Add(Me.ListView1)
         Me.Panel1.Controls.Add(Me.cal_front)
@@ -128,7 +132,7 @@ Partial Class main
         '
         'bt_setperiode
         '
-        Me.bt_setperiode.Location = New System.Drawing.Point(13, 174)
+        Me.bt_setperiode.Location = New System.Drawing.Point(13, 303)
         Me.bt_setperiode.Name = "bt_setperiode"
         Me.bt_setperiode.Size = New System.Drawing.Size(227, 23)
         Me.bt_setperiode.TabIndex = 2
@@ -137,9 +141,9 @@ Partial Class main
         '
         'ListView1
         '
-        Me.ListView1.Location = New System.Drawing.Point(13, 203)
+        Me.ListView1.Location = New System.Drawing.Point(13, 336)
         Me.ListView1.Name = "ListView1"
-        Me.ListView1.Size = New System.Drawing.Size(227, 329)
+        Me.ListView1.Size = New System.Drawing.Size(227, 196)
         Me.ListView1.TabIndex = 1
         Me.ListView1.UseCompatibleStateImageBehavior = False
         Me.ListView1.Visible = False
@@ -194,6 +198,23 @@ Partial Class main
         Me.strip_periode.Size = New System.Drawing.Size(85, 20)
         Me.strip_periode.Text = "xxxxxxx 0000"
         '
+        'lb_periodeselector
+        '
+        Me.lb_periodeselector.FormattingEnabled = True
+        Me.lb_periodeselector.Location = New System.Drawing.Point(13, 206)
+        Me.lb_periodeselector.Name = "lb_periodeselector"
+        Me.lb_periodeselector.Size = New System.Drawing.Size(227, 95)
+        Me.lb_periodeselector.TabIndex = 3
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(10, 190)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(69, 13)
+        Me.Label1.TabIndex = 4
+        Me.Label1.Text = "Periode Data"
+        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -217,6 +238,7 @@ Partial Class main
         Me.tabcontrol.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
+        Me.Panel1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -233,9 +255,11 @@ Partial Class main
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents cal_front As System.Windows.Forms.MonthCalendar
     Friend WithEvents strip_periode As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents pnl_main As System.Windows.Forms.Panel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
     Friend WithEvents bt_setperiode As System.Windows.Forms.Button
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lb_periodeselector As System.Windows.Forms.ListBox
 
 End Class

@@ -20,7 +20,7 @@
     <Shape ID="DesignTable:dt_lap_jual_barang" ZOrder="3" X="411" Y="443" Height="219" Width="173" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="215" />
     <Shape ID="DesignTable:dt_lap_jual_custo_detail" ZOrder="5" X="200" Y="252" Height="448" Width="201" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="444" />
     <Shape ID="DesignTable:dt_nota_beli" ZOrder="2" X="609" Y="502" Height="162" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="158" />
-    <Shape ID="DesignTable:dt_nota_jual" ZOrder="1" X="787" Y="360" Height="219" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="215" />
+    <Shape ID="DesignTable:dt_nota_jual" ZOrder="1" X="787" Y="360" Height="257" Width="150" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="234" />
   </Shapes>
   <Connectors />
 </DiagramLayout>

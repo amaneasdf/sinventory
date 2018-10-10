@@ -5751,6 +5751,10 @@ Partial Public Class ds_transaksi
 
         Private columnjual_jml As Global.System.Data.DataColumn
 
+        Private columnjual_discrp As Global.System.Data.DataColumn
+
+        Private columnjual_disctot As Global.System.Data.DataColumn
+
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
@@ -5867,6 +5871,22 @@ Partial Public Class ds_transaksi
         End Property
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property jual_discrpColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnjual_discrp
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property jual_disctotColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnjual_disctot
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
          Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
@@ -5903,9 +5923,9 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Overloads Function Adddt_nota_jualRow(ByVal jual_barang As String, ByVal jual_barang_n As String, ByVal jual_qty As String, ByVal jual_harga As Decimal, ByVal jual_d1 As Decimal, ByVal jual_d2 As Decimal, ByVal jual_d3 As Decimal, ByVal jual_d4 As Decimal, ByVal jual_d5 As Decimal, ByVal jual_jml As Decimal) As dt_nota_jualRow
+        Public Overloads Function Adddt_nota_jualRow(ByVal jual_barang As String, ByVal jual_barang_n As String, ByVal jual_qty As String, ByVal jual_harga As Decimal, ByVal jual_d1 As Decimal, ByVal jual_d2 As Decimal, ByVal jual_d3 As Decimal, ByVal jual_d4 As Decimal, ByVal jual_d5 As Decimal, ByVal jual_jml As Decimal, ByVal jual_discrp As Decimal, ByVal jual_disctot As Decimal) As dt_nota_jualRow
             Dim rowdt_nota_jualRow As dt_nota_jualRow = CType(Me.NewRow, dt_nota_jualRow)
-            Dim columnValuesArray() As Object = New Object() {jual_barang, jual_barang_n, jual_qty, jual_harga, jual_d1, jual_d2, jual_d3, jual_d4, jual_d5, jual_jml}
+            Dim columnValuesArray() As Object = New Object() {jual_barang, jual_barang_n, jual_qty, jual_harga, jual_d1, jual_d2, jual_d3, jual_d4, jual_d5, jual_jml, jual_discrp, jual_disctot}
             rowdt_nota_jualRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_nota_jualRow)
             Return rowdt_nota_jualRow
@@ -5938,6 +5958,8 @@ Partial Public Class ds_transaksi
             Me.columnjual_d4 = MyBase.Columns("jual_d4")
             Me.columnjual_d5 = MyBase.Columns("jual_d5")
             Me.columnjual_jml = MyBase.Columns("jual_jml")
+            Me.columnjual_discrp = MyBase.Columns("jual_discrp")
+            Me.columnjual_disctot = MyBase.Columns("jual_disctot")
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -5963,6 +5985,10 @@ Partial Public Class ds_transaksi
             MyBase.Columns.Add(Me.columnjual_d5)
             Me.columnjual_jml = New Global.System.Data.DataColumn("jual_jml", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnjual_jml)
+            Me.columnjual_discrp = New Global.System.Data.DataColumn("jual_discrp", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnjual_discrp)
+            Me.columnjual_disctot = New Global.System.Data.DataColumn("jual_disctot", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnjual_disctot)
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -9775,6 +9801,36 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property jual_discrp() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_jual.jual_discrpColumn), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'jual_discrp' in table 'dt_nota_jual' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_jual.jual_discrpColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property jual_disctot() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_jual.jual_disctotColumn), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'jual_disctot' in table 'dt_nota_jual' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_jual.jual_disctotColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Isjual_barangNull() As Boolean
             Return Me.IsNull(Me.tabledt_nota_jual.jual_barangColumn)
         End Function
@@ -9891,6 +9947,30 @@ Partial Public Class ds_transaksi
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setjual_jmlNull()
             Me(Me.tabledt_nota_jual.jual_jmlColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isjual_discrpNull() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_jual.jual_discrpColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setjual_discrpNull()
+            Me(Me.tabledt_nota_jual.jual_discrpColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isjual_disctotNull() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_jual.jual_disctotColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setjual_disctotNull()
+            Me(Me.tabledt_nota_jual.jual_disctotColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
     

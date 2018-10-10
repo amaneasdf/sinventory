@@ -30,240 +30,262 @@ Public Class fr_lap_beli_nota_view
                     Case "lapBeliNota"
                         repdatasource.Name = "ds_nota"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota
-                        inquery = "SELECT * FROM selectBeliNota ORDER BY lap_faktur"
+
+                        inquery = "SELECT supplier_kode as lap_supplier, supplier_nama as lap_supplier_n, faktur_kode as lap_faktur, " _
+                            & "faktur_tanggal_trans as lap_tgl,if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
+                            & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah " _
+                            & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                            & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}'"
+                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
+
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_nota.rdlc"
+
                     Case "lapBeliSupplier"
                         repdatasource.Name = "ds_lap_supplier"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota
-                        inquery = "SELECT lap_supplier_n,SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectBeliNota GROUP BY lap_supplier ORDER BY lap_supplier"
+
+                        inquery = "SELECT supplier_kode as lap_supplier, supplier_nama as lap_supplier_n," _
+                            & "SUM(if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah)) as lap_brutto, " _
+                            & "SUM(faktur_disc) as lap_diskon, SUM(faktur_ppn) as lap_ppn, SUM(faktur_netto) as lap_jumlah " _
+                            & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                            & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' GROUP BY supplier_kode"
+                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
+
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_supplier.rdlc"
                     Case "lapBeliTgl"
                         repdatasource.Name = "ds_lap_tgl"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota
-                        inquery = "SELECT lap_tgl, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectBeliNota GROUP BY lap_tgl"
+
+                        inquery = "SELECT faktur_tanggal_trans as lap_tgl,SUM(if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah)) as lap_brutto, " _
+                            & "SUM(faktur_disc) as lap_diskon, SUM(faktur_ppn) as lap_ppn, SUM(faktur_netto) as lap_jumlah " _
+                            & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                            & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' GROUP BY faktur_tanggal_trans"
+                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
+
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_tgl.rdlc"
+
                     Case "lapBeliSupplierBarang"
                         repdatasource.Name = "ds_beli_detail"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
 
                         inquery = "SELECT dlap_supplier, dlap_barang, dlap_barang_n, " _
-                           & "SUM(dlap_qty) as dlap_qty,getQTYdetail(dlap_barang,SUM(dlap_qty),2) as dlap_qty_n, " _
-                           & "SUM(dlap_harga_beli) as dlap_harga_beli, SUM(dlap_total_diskon) as dlap_total_diskon, " _
-                           & "SUM(dlap_jumlah) as dlap_jumlah, dlap_supplier_n " _
-                           & "FROM selectBeliNotaWithDetail " _
-                           & "GROUP BY dlap_barang " _
-                           & "ORDER BY dlap_tgl,dlap_barang"
+                               & "SUM(dlap_qty) as dlap_qty,getQTYdetail(dlap_barang,SUM(dlap_qty),2) as dlap_qty_n, " _
+                               & "SUM(dlap_harga_beli) as dlap_harga_beli, SUM(dlap_total_diskon) as dlap_total_diskon, " _
+                               & "SUM(dlap_jumlah) as dlap_jumlah, dlap_supplier_n " _
+                               & "FROM selectBeliNotaWithDetail " _
+                               & "GROUP BY dlap_barang " _
+                               & "ORDER BY dlap_tgl,dlap_barang"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
                     Case "lapBeliTglBarang"
-                        Dim parLabelTitle As New ReportParameter("parLabelTitle", "Pembelian Per Tanggal Per Barang")
+                            Dim parLabelTitle As New ReportParameter("parLabelTitle", "Pembelian Per Tanggal Per Barang")
 
-                        repdatasource.Name = "ds_beli_detail"
-                        repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-                        'sort err, date <> string
-                        inquery = "SELECT DATE_FORMAT(dlap_tgl,'%d-%m-%Y') as dlap_supplier, dlap_barang, dlap_barang_n, " _
-                            & "SUM(dlap_qty) as dlap_qty,getQTYdetail(dlap_barang,SUM(dlap_qty),2) as dlap_qty_n, " _
-                            & "SUM(dlap_harga_beli) as dlap_harga_beli, SUM(dlap_total_diskon) as dlap_total_diskon, " _
-                            & "SUM(dlap_jumlah) as dlap_jumlah, ' ' as dlap_supplier_n " _
-                            & "FROM selectBeliNotaWithDetail " _
-                            & "GROUP BY dlap_barang " _
-                            & "ORDER BY dlap_tgl,dlap_barang"
+                            repdatasource.Name = "ds_beli_detail"
+                            repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
+                            'sort err, date <> string
+                            inquery = "SELECT DATE_FORMAT(dlap_tgl,'%d-%m-%Y') as dlap_supplier, dlap_barang, dlap_barang_n, " _
+                                & "SUM(dlap_qty) as dlap_qty,getQTYdetail(dlap_barang,SUM(dlap_qty),2) as dlap_qty_n, " _
+                                & "SUM(dlap_harga_beli) as dlap_harga_beli, SUM(dlap_total_diskon) as dlap_total_diskon, " _
+                                & "SUM(dlap_jumlah) as dlap_jumlah, ' ' as dlap_supplier_n " _
+                                & "FROM selectBeliNotaWithDetail " _
+                                & "GROUP BY dlap_barang " _
+                                & "ORDER BY dlap_tgl,dlap_barang"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelTitle})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelTitle})
                     Case "lapBeliSupplierNota"
-                        repdatasource.Name = "ds_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_beli_nota
-                        inquery = "SELECT * FROM selectBeliNota ORDER BY lap_tgl"
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_suppliernota.rdlc"
+                            repdatasource.Name = "ds_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_beli_nota
+                            inquery = "SELECT * FROM selectBeliNota ORDER BY lap_tgl"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_suppliernota.rdlc"
                     Case "lapBeliTglNota"
-                        repdatasource.Name = "ds_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_beli_nota
-                        inquery = "SELECT * FROM selectBeliNota ORDER BY lap_tgl"
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_tglnota.rdlc"
+                            repdatasource.Name = "ds_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_beli_nota
+                            inquery = "SELECT * FROM selectBeliNota ORDER BY lap_tgl"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_tglnota.rdlc"
                     Case "lapBeliTglBarang"
-                        repdatasource.Name = "ds_beli_detail"
-                        repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-                        inquery = "SELECT * FROM selectBeliNotaWithDetail ORDER BY dlap_tgl, dlap_supplier, dlap_barang"
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_tglbarang.rdlc"
+                            repdatasource.Name = "ds_beli_detail"
+                            repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
+                            inquery = "SELECT * FROM selectBeliNotaWithDetail ORDER BY dlap_tgl, dlap_supplier, dlap_barang"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_tglbarang.rdlc"
                     Case "lapBeliSupplierNotaBarang"
-                        'repdatasource.Name = ""
-                        'repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-                        'inquery = "SELECT * FROM selectBeliNotaWithDetail ORDER BY dlap_supplier, dlap_tgl"
-                        '.DataSources.Add(repdatasource)
-                        '.ReportEmbeddedResource = "Inventory.lap_beli_suppliernotabarang.rdlc"
+                            'repdatasource.Name = ""
+                            'repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
+                            'inquery = "SELECT * FROM selectBeliNotaWithDetail ORDER BY dlap_supplier, dlap_tgl"
+                            '.DataSources.Add(repdatasource)
+                            '.ReportEmbeddedResource = "Inventory.lap_beli_suppliernotabarang.rdlc"
                     Case "lapBeliTglNotaBarang"
-                        repdatasource.Name = "ds_nota_brg"
-                        repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-                        'data didnt show in report
-                        inquery = "SELECT dlap_tgl, dlap_faktur, dlap_supplier_n, " _
-                            & "dlap_barang_n, TRUNCATE(dlap_harga_beli/dlap_qty,2) as dlap_harga_beli, " _
-                            & "CONCAT(dlap_qty,' ', barang_satuan_kecil) as dlap_qty, " _
-                            & "TRUNCATE((dlap_harga_beli-dlap_jumlah)/dlap_harga_beli,2) as dlap_total_diskon, dlap_jumlah " _
-                            & "FROM selectBeliNotaWithDetail " _
-                            & "LEFT JOIN data_barang_master ON barang_kode=dlap_barang " _
-                            & "ORDER BY dlap_tgl,dlap_faktur"
+                            repdatasource.Name = "ds_nota_brg"
+                            repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
+                            'data didnt show in report
+                            inquery = "SELECT dlap_tgl, dlap_faktur, dlap_supplier_n, " _
+                                & "dlap_barang_n, TRUNCATE(dlap_harga_beli/dlap_qty,2) as dlap_harga_beli, " _
+                                & "CONCAT(dlap_qty,' ', barang_satuan_kecil) as dlap_qty, " _
+                                & "TRUNCATE((dlap_harga_beli-dlap_jumlah)/dlap_harga_beli,2) as dlap_total_diskon, dlap_jumlah " _
+                                & "FROM selectBeliNotaWithDetail " _
+                                & "LEFT JOIN data_barang_master ON barang_kode=dlap_barang " _
+                                & "ORDER BY dlap_tgl,dlap_faktur"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_beli_tglnotabrg.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_beli_tglnotabrg.rdlc"
                     Case "lapBeliRetur"
 
                     Case "lapJualNota"
-                        repdatasource.Name = "ds_jual_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-                        inquery = "SELECT * FROM selectJualNota ORDER BY lap_faktur"
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_nota.rdlc"
+                            repdatasource.Name = "ds_jual_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            inquery = "SELECT * FROM selectJualNota ORDER BY lap_faktur"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_nota.rdlc"
                     Case "lapJualCusto"
-                        repdatasource.Name = "ds_jual_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-                        inquery = "SELECT lap_custo_n, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_custo"
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
+                            repdatasource.Name = "ds_jual_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            inquery = "SELECT lap_custo_n, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_custo"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
                     Case "lapJualSales"
-                        repdatasource.Name = "ds_jual_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT lap_jenis, lap_sales, lap_sales_n, SUM(lap_brutto) as lap_brutto, " _
-                            & "SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah " _
-                            & "FROM selectJualSales GROUP BY lap_sales,lap_jenis ORDER BY lap_sales"
+                            inquery = "SELECT lap_jenis, lap_sales, lap_sales_n, SUM(lap_brutto) as lap_brutto, " _
+                                & "SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah " _
+                                & "FROM selectJualSales GROUP BY lap_sales,lap_jenis ORDER BY lap_sales"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_sales.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_sales.rdlc"
                     Case "lapJualTgl"
-                        repdatasource.Name = "ds_jual_tgl"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_tgl"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT lap_tgl, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_tgl"
+                            inquery = "SELECT lap_tgl, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_tgl"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
                     Case "lapJualSupplier"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Supplier")
-                        Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "SUPPLIER")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Supplier")
+                            Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "SUPPLIER")
 
-                        repdatasource.Name = "ds_jual_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT IFNULL(supplier_kode,'-') as lap_custo, IFNULL(supplier_nama,'-') as lap_custo_n, SUM(dlap_brutto) as lap_brutto, SUM(dlap_brutto-dlap_jumlah) as lap_diskon, SUM(dlap_jumlah) as lap_jumlah FROM selectJualNotaWithDetail LEFT JOIN data_barang_master ON barang_kode=dlap_barang LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier GROUP BY supplier_kode"
+                            inquery = "SELECT IFNULL(supplier_kode,'-') as lap_custo, IFNULL(supplier_nama,'-') as lap_custo_n, SUM(dlap_brutto) as lap_brutto, SUM(dlap_brutto-dlap_jumlah) as lap_diskon, SUM(dlap_jumlah) as lap_jumlah FROM selectJualNotaWithDetail LEFT JOIN data_barang_master ON barang_kode=dlap_barang LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier GROUP BY supplier_kode"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelJudul, parJudulKolom1})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelJudul, parJudulKolom1})
                     Case "lapJualTipe"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Tipe")
-                        Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "TIPE CUSTOMER")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Tipe")
+                            Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "TIPE CUSTOMER")
 
-                        repdatasource.Name = "ds_jual_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT jenis_nama as lap_custo_n, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota LEFT JOIN `data_customer_master` ON customer_kode=lap_custo LEFT JOIN `data_customer_jenis` ON customer_jenis = jenis_kode GROUP BY jenis_kode"
+                            inquery = "SELECT jenis_nama as lap_custo_n, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota LEFT JOIN `data_customer_master` ON customer_kode=lap_custo LEFT JOIN `data_customer_jenis` ON customer_jenis = jenis_kode GROUP BY jenis_kode"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelJudul, parJudulKolom1})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelJudul, parJudulKolom1})
                     Case "lapJualBarang"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Barang")
-                        Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "BARANG")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Barang")
+                            Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "BARANG")
 
-                        repdatasource.Name = "ds_jual_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT IFNULL(barang_kode,'-') as lap_custo, IFNULL(barang_nama,'-') as lap_custo_n, SUM(dlap_brutto) as lap_brutto, SUM(dlap_brutto-dlap_jumlah) as lap_diskon, SUM(dlap_jumlah) as lap_jumlah FROM selectJualNotaWithDetail LEFT JOIN data_barang_master ON barang_kode=dlap_barang GROUP BY barang_kode ORDER BY barang_kode"
+                            inquery = "SELECT IFNULL(barang_kode,'-') as lap_custo, IFNULL(barang_nama,'-') as lap_custo_n, SUM(dlap_brutto) as lap_brutto, SUM(dlap_brutto-dlap_jumlah) as lap_diskon, SUM(dlap_jumlah) as lap_jumlah FROM selectJualNotaWithDetail LEFT JOIN data_barang_master ON barang_kode=dlap_barang GROUP BY barang_kode ORDER BY barang_kode"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
 
                     Case "lapJualCustoNota"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Custo Per Nota")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Custo Per Nota")
 
-                        repdatasource.Name = "ds_jual_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT * FROM selectJualNota ORDER BY lap_custo, lap_faktur"
+                            inquery = "SELECT * FROM selectJualNota ORDER BY lap_custo, lap_faktur"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custonota.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelJudul})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custonota.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelJudul})
 
                     Case "lapJualSalesNota"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Sales Per Nota")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Sales Per Nota")
 
-                        repdatasource.Name = "ds_jual_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT * FROM selectJualNota ORDER BY lap_sales, lap_faktur"
+                            inquery = "SELECT * FROM selectJualNota ORDER BY lap_sales, lap_faktur"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_salesnota.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelJudul})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_salesnota.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelJudul})
 
                     Case "lapJualTanggalNota"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Tanggal Per Nota")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Tanggal Per Nota")
 
-                        repdatasource.Name = "ds_jual_nota"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_nota
+                            repdatasource.Name = "ds_jual_nota"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_nota
 
-                        inquery = "SELECT * FROM selectJualNota ORDER BY lap_tgl, lap_faktur"
+                            inquery = "SELECT * FROM selectJualNota ORDER BY lap_tgl, lap_faktur"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_tglnota.rdlc"
-                        .SetParameters(New ReportParameter() {parLabelJudul})
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_tglnota.rdlc"
+                            .SetParameters(New ReportParameter() {parLabelJudul})
                     Case "lapJualBarangSupplier"
-                        repdatasource.Name = "ds_jual_brg"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_barang
+                            repdatasource.Name = "ds_jual_brg"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_barang
 
-                        inquery = "SELECT dlap_supplier,dlap_supplier_n, dlap_barang,dlap_barang_n, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,0)),2) as dlap_qty_jual, " _
-                            & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,0)) as dlap_nilai_jual, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='RETUR',dlap_qty_jual,0)),2) as dlap_qty_retur, " _
-                            & "SUM(IF(dlap_jenis='RETUR',dlap_jual_total,0)) as dlap_nilai_retur, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,dlap_qty_jual*-1)),2) as dlap_qty_tot, " _
-                            & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,dlap_jual_total*-1)) as dlap_nilai_tot " _
-                            & "FROM selectJualDetail " _
-                            & "GROUP BY dlap_barang " _
-                            & "ORDER BY dlap_supplier"
+                            inquery = "SELECT dlap_supplier,dlap_supplier_n, dlap_barang,dlap_barang_n, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,0)),2) as dlap_qty_jual, " _
+                                & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,0)) as dlap_nilai_jual, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='RETUR',dlap_qty_jual,0)),2) as dlap_qty_retur, " _
+                                & "SUM(IF(dlap_jenis='RETUR',dlap_jual_total,0)) as dlap_nilai_retur, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,dlap_qty_jual*-1)),2) as dlap_qty_tot, " _
+                                & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,dlap_jual_total*-1)) as dlap_nilai_tot " _
+                                & "FROM selectJualDetail " _
+                                & "GROUP BY dlap_barang " _
+                                & "ORDER BY dlap_supplier"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_brgsupplier.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_brgsupplier.rdlc"
                     Case "lapJualBarangSales"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Barang Per Salesman")
+                            Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Barang Per Salesman")
 
-                        repdatasource.Name = "ds_jual_brg"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_barang
+                            repdatasource.Name = "ds_jual_brg"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_barang
 
-                        inquery = "SELECT dlap_sales AS dlap_supplier, dlap_sales_n AS dlap_supplier_n, " _
-                            & "dlap_barang,dlap_barang_n, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,0)),2) as dlap_qty_jual, " _
-                            & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,0)) as dlap_nilai_jual, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='RETUR',dlap_qty_jual,0)),2) as dlap_qty_retur, " _
-                            & "SUM(IF(dlap_jenis='RETUR',dlap_jual_total,0)) as dlap_nilai_retur, " _
-                            & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,dlap_qty_jual*-1)),2) as dlap_qty_tot, " _
-                            & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,dlap_jual_total*-1)) as dlap_nilai_tot " _
-                            & "FROM selectJualDetail " _
-                            & "GROUP BY dlap_barang " _
-                            & "ORDER BY dlap_supplier"
+                            inquery = "SELECT dlap_sales AS dlap_supplier, dlap_sales_n AS dlap_supplier_n, " _
+                                & "dlap_barang,dlap_barang_n, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,0)),2) as dlap_qty_jual, " _
+                                & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,0)) as dlap_nilai_jual, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='RETUR',dlap_qty_jual,0)),2) as dlap_qty_retur, " _
+                                & "SUM(IF(dlap_jenis='RETUR',dlap_jual_total,0)) as dlap_nilai_retur, " _
+                                & "getQTYdetail(dlap_barang,SUM(IF(dlap_jenis='JUAL',dlap_qty_jual,dlap_qty_jual*-1)),2) as dlap_qty_tot, " _
+                                & "SUM(IF(dlap_jenis='JUAL',dlap_jual_total,dlap_jual_total*-1)) as dlap_nilai_tot " _
+                                & "FROM selectJualDetail " _
+                                & "GROUP BY dlap_barang " _
+                                & "ORDER BY dlap_supplier"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_brgsupplier.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_brgsupplier.rdlc"
                     Case "lapJualSalesCustoBarang"
-                        repdatasource.Name = "ds_lap_custo"
-                        repdatasource.Value = ds_transaksi.dt_lap_jual_custo_detail
+                            repdatasource.Name = "ds_lap_custo"
+                            repdatasource.Value = ds_transaksi.dt_lap_jual_custo_detail
 
-                        inquery = "SELECT * FROM selectJualCustoBarang"
+                            inquery = "SELECT * FROM selectJualCustoBarang"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.lap_jual_custobrg.rdlc"
+                            .DataSources.Add(repdatasource)
+                            .ReportEmbeddedResource = "Inventory.lap_jual_custobrg.rdlc"
                     Case Else
-                        Exit Sub
+                            Exit Sub
                 End Select
                 Select Case lap_type
                     Case "lapBeliNota", "lapBeliSupplier", "lapBeliTgl", "lapBeliSupplierNota", "lapBeliTglNota"

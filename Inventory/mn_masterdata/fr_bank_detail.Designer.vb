@@ -22,7 +22,6 @@ Partial Class fr_bank_detail
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_bank_detail))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
@@ -39,8 +38,6 @@ Partial Class fr_bank_detail
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.in_pos = New System.Windows.Forms.TextBox()
-        Me.bt_pos = New System.Windows.Forms.Button()
-        Me.cb_pos = New System.Windows.Forms.ComboBox()
         Me.bt_batalcusto = New System.Windows.Forms.Button()
         Me.bt_simpancusto = New System.Windows.Forms.Button()
         Me.Label30 = New System.Windows.Forms.Label()
@@ -51,11 +48,18 @@ Partial Class fr_bank_detail
         Me.txtRegdate = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.Label29 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.cb_status = New System.Windows.Forms.ComboBox()
+        Me.in_status = New System.Windows.Forms.TextBox()
+        Me.popPnl_barang = New System.Windows.Forms.Panel()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.bt_perkiraan_add = New System.Windows.Forms.Button()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.in_pos_n = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
+        Me.popPnl_barang.SuspendLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -67,7 +71,7 @@ Partial Class fr_bank_detail
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(427, 42)
+        Me.Panel1.Size = New System.Drawing.Size(606, 42)
         Me.Panel1.TabIndex = 277
         '
         'lbl_close
@@ -77,7 +81,7 @@ Partial Class fr_bank_detail
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
         Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(347, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(526, 9)
         Me.lbl_close.Name = "lbl_close"
         Me.lbl_close.Size = New System.Drawing.Size(47, 20)
         Me.lbl_close.TabIndex = 138
@@ -96,7 +100,7 @@ Partial Class fr_bank_detail
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(400, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(579, 9)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 8
@@ -121,7 +125,7 @@ Partial Class fr_bank_detail
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
         Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(427, 30)
+        Me.pnl_Menu.Size = New System.Drawing.Size(606, 30)
         Me.pnl_Menu.TabIndex = 280
         '
         'MenuStrip1
@@ -129,7 +133,7 @@ Partial Class fr_bank_detail
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(427, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(606, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -160,9 +164,9 @@ Partial Class fr_bank_detail
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 292)
+        Me.Panel2.Location = New System.Drawing.Point(0, 262)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(427, 10)
+        Me.Panel2.Size = New System.Drawing.Size(606, 10)
         Me.Panel2.TabIndex = 281
         '
         'in_kode
@@ -180,7 +184,7 @@ Partial Class fr_bank_detail
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(12, 84)
+        Me.Label4.Location = New System.Drawing.Point(8, 84)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(32, 13)
         Me.Label4.TabIndex = 285
@@ -194,14 +198,14 @@ Partial Class fr_bank_detail
         Me.in_namabank.Location = New System.Drawing.Point(50, 103)
         Me.in_namabank.MaxLength = 100
         Me.in_namabank.Name = "in_namabank"
-        Me.in_namabank.Size = New System.Drawing.Size(314, 20)
+        Me.in_namabank.Size = New System.Drawing.Size(333, 20)
         Me.in_namabank.TabIndex = 1
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(12, 106)
+        Me.Label3.Location = New System.Drawing.Point(8, 106)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(35, 13)
         Me.Label3.TabIndex = 284
@@ -211,7 +215,7 @@ Partial Class fr_bank_detail
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(12, 128)
+        Me.Label1.Location = New System.Drawing.Point(8, 128)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(25, 13)
         Me.Label1.TabIndex = 285
@@ -228,34 +232,11 @@ Partial Class fr_bank_detail
         Me.in_pos.Size = New System.Drawing.Size(95, 20)
         Me.in_pos.TabIndex = 2
         '
-        'bt_pos
-        '
-        Me.bt_pos.BackColor = System.Drawing.Color.Transparent
-        Me.bt_pos.BackgroundImage = CType(resources.GetObject("bt_pos.BackgroundImage"), System.Drawing.Image)
-        Me.bt_pos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_pos.FlatAppearance.BorderSize = 0
-        Me.bt_pos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_pos.Location = New System.Drawing.Point(370, 128)
-        Me.bt_pos.Name = "bt_pos"
-        Me.bt_pos.Size = New System.Drawing.Size(12, 15)
-        Me.bt_pos.TabIndex = 4
-        Me.bt_pos.TabStop = False
-        Me.bt_pos.UseVisualStyleBackColor = False
-        '
-        'cb_pos
-        '
-        Me.cb_pos.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_pos.FormattingEnabled = True
-        Me.cb_pos.Location = New System.Drawing.Point(145, 125)
-        Me.cb_pos.Name = "cb_pos"
-        Me.cb_pos.Size = New System.Drawing.Size(219, 21)
-        Me.cb_pos.TabIndex = 3
-        '
         'bt_batalcusto
         '
         Me.bt_batalcusto.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalcusto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalcusto.Location = New System.Drawing.Point(319, 245)
+        Me.bt_batalcusto.Location = New System.Drawing.Point(503, 223)
         Me.bt_batalcusto.Name = "bt_batalcusto"
         Me.bt_batalcusto.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalcusto.TabIndex = 7
@@ -265,7 +246,7 @@ Partial Class fr_bank_detail
         'bt_simpancusto
         '
         Me.bt_simpancusto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpancusto.Location = New System.Drawing.Point(217, 245)
+        Me.bt_simpancusto.Location = New System.Drawing.Point(401, 223)
         Me.bt_simpancusto.Name = "bt_simpancusto"
         Me.bt_simpancusto.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpancusto.TabIndex = 6
@@ -277,7 +258,7 @@ Partial Class fr_bank_detail
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(12, 258)
+        Me.Label30.Location = New System.Drawing.Point(193, 236)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(30, 13)
         Me.Label30.TabIndex = 323
@@ -286,30 +267,30 @@ Partial Class fr_bank_detail
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(53, 233)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(234, 211)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
-        Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdAlias.Size = New System.Drawing.Size(138, 20)
         Me.txtUpdAlias.TabIndex = 322
         Me.txtUpdAlias.TabStop = False
         '
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(53, 255)
+        Me.txtUpdDate.Location = New System.Drawing.Point(234, 233)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
-        Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdDate.Size = New System.Drawing.Size(138, 20)
         Me.txtUpdDate.TabIndex = 317
         Me.txtUpdDate.TabStop = False
         '
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(53, 185)
+        Me.txtRegAlias.Location = New System.Drawing.Point(49, 211)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
-        Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegAlias.Size = New System.Drawing.Size(138, 20)
         Me.txtRegAlias.TabIndex = 319
         Me.txtRegAlias.TabStop = False
         '
@@ -318,7 +299,7 @@ Partial Class fr_bank_detail
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(12, 236)
+        Me.Label28.Location = New System.Drawing.Point(193, 214)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 324
@@ -327,10 +308,10 @@ Partial Class fr_bank_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(53, 207)
+        Me.txtRegdate.Location = New System.Drawing.Point(49, 233)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
-        Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegdate.Size = New System.Drawing.Size(138, 20)
         Me.txtRegdate.TabIndex = 318
         Me.txtRegdate.TabStop = False
         '
@@ -339,7 +320,7 @@ Partial Class fr_bank_detail
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(12, 188)
+        Me.Label27.Location = New System.Drawing.Point(8, 214)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 321
@@ -350,39 +331,109 @@ Partial Class fr_bank_detail
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(12, 210)
+        Me.Label29.Location = New System.Drawing.Point(8, 236)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(30, 13)
         Me.Label29.TabIndex = 320
         Me.Label29.Text = "Date"
         '
-        'Label13
+        'in_status
         '
-        Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(12, 151)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(37, 13)
-        Me.Label13.TabIndex = 326
-        Me.Label13.Text = "Status"
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(465, 80)
+        Me.in_status.MaxLength = 10
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(134, 20)
+        Me.in_status.TabIndex = 495
+        Me.in_status.TabStop = False
         '
-        'cb_status
+        'popPnl_barang
         '
-        Me.cb_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_status.FormattingEnabled = True
-        Me.cb_status.Location = New System.Drawing.Point(50, 148)
-        Me.cb_status.Name = "cb_status"
-        Me.cb_status.Size = New System.Drawing.Size(170, 21)
-        Me.cb_status.TabIndex = 5
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(250, 148)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(323, 96)
+        Me.popPnl_barang.TabIndex = 497
+        Me.popPnl_barang.Visible = False
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 76)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(323, 73)
+        Me.dgv_listbarang.TabIndex = 0
+        '
+        'bt_perkiraan_add
+        '
+        Me.bt_perkiraan_add.BackColor = System.Drawing.Color.Transparent
+        Me.bt_perkiraan_add.BackgroundImage = Global.Inventory.My.Resources.Resources.toolbar_add_icon
+        Me.bt_perkiraan_add.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.bt_perkiraan_add.FlatAppearance.BorderSize = 0
+        Me.bt_perkiraan_add.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_perkiraan_add.Location = New System.Drawing.Point(389, 127)
+        Me.bt_perkiraan_add.Name = "bt_perkiraan_add"
+        Me.bt_perkiraan_add.Size = New System.Drawing.Size(15, 15)
+        Me.bt_perkiraan_add.TabIndex = 494
+        Me.bt_perkiraan_add.UseVisualStyleBackColor = False
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.ForeColor = System.Drawing.Color.Black
+        Me.Label11.Location = New System.Drawing.Point(422, 83)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(37, 13)
+        Me.Label11.TabIndex = 496
+        Me.Label11.Text = "Status"
+        '
+        'in_pos_n
+        '
+        Me.in_pos_n.BackColor = System.Drawing.Color.White
+        Me.in_pos_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_pos_n.ForeColor = System.Drawing.Color.Black
+        Me.in_pos_n.Location = New System.Drawing.Point(146, 125)
+        Me.in_pos_n.MaxLength = 200
+        Me.in_pos_n.Name = "in_pos_n"
+        Me.in_pos_n.Size = New System.Drawing.Size(237, 20)
+        Me.in_pos_n.TabIndex = 498
         '
         'fr_bank_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(427, 302)
-        Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.cb_status)
+        Me.ClientSize = New System.Drawing.Size(606, 272)
+        Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.in_pos_n)
+        Me.Controls.Add(Me.in_status)
+        Me.Controls.Add(Me.bt_perkiraan_add)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.Label30)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.txtUpdDate)
@@ -393,8 +444,6 @@ Partial Class fr_bank_detail
         Me.Controls.Add(Me.Label29)
         Me.Controls.Add(Me.bt_batalcusto)
         Me.Controls.Add(Me.bt_simpancusto)
-        Me.Controls.Add(Me.bt_pos)
-        Me.Controls.Add(Me.cb_pos)
         Me.Controls.Add(Me.in_pos)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.in_kode)
@@ -414,6 +463,9 @@ Partial Class fr_bank_detail
         Me.pnl_Menu.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        Me.popPnl_barang.ResumeLayout(False)
+        Me.popPnl_barang.PerformLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -434,8 +486,6 @@ Partial Class fr_bank_detail
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents in_pos As System.Windows.Forms.TextBox
-    Friend WithEvents bt_pos As System.Windows.Forms.Button
-    Friend WithEvents cb_pos As System.Windows.Forms.ComboBox
     Friend WithEvents bt_batalcusto As System.Windows.Forms.Button
     Friend WithEvents bt_simpancusto As System.Windows.Forms.Button
     Friend WithEvents Label30 As System.Windows.Forms.Label
@@ -446,6 +496,11 @@ Partial Class fr_bank_detail
     Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents Label29 As System.Windows.Forms.Label
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents cb_status As System.Windows.Forms.ComboBox
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
+    Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
+    Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
+    Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
+    Friend WithEvents bt_perkiraan_add As System.Windows.Forms.Button
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents in_pos_n As System.Windows.Forms.TextBox
 End Class

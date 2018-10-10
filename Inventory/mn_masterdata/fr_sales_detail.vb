@@ -1,4 +1,5 @@
 ﻿Public Class fr_sales_detail
+    Private slsStatus As String = "1"
 
     'Protected Overrides Sub WndProc(ByRef m As Message)
     '    Const WM_NCLBUTTONDOWN As Integer = 161
@@ -34,7 +35,7 @@
             in_bank_nama.Text = rd.Item("salesman_bank_nama")
             in_bank_rek.Text = rd.Item("salesman_bank_rekening")
             in_bank_an.Text = rd.Item("salesman_bank_atasnama")
-            cb_status.SelectedValue = rd.Item("salesman_status")
+            slsStatus = rd.Item("salesman_status")
             txtRegAlias.Text = rd.Item("salesman_reg_alias")
             txtRegdate.Text = rd.Item("salesman_reg_date")
             Try
@@ -45,115 +46,112 @@
             txtUpdAlias.Text = rd.Item("salesman_upd_alias")
         End If
         rd.Close()
+        setStatus()
     End Sub
 
-    '--------------- load
-    Private Sub fr_sales_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        op_con()
-        With cb_status
-            .DataSource = statusSales()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-        With cb_jenis
-            .DataSource = jenisSales()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-        If bt_simpansales.Text = "Update" Then
-            With in_kode
-                .ReadOnly = True
-                .BackColor = Color.Gainsboro
-                loadDataSales(.Text)
-            End With
-        End If
+    Private Sub setStatus()
+        Select Case slsStatus
+            Case 0
+                mn_deact.Text = "Activate"
+                in_status.Text = "Non-Aktif"
+            Case 1
+                mn_deact.Text = "Deactivate"
+                in_status.Text = "Aktif"
+            Case 9
+                mn_deact.Enabled = False
+                in_status.Text = "Delete"
+            Case Else
+                Exit Sub
+        End Select
     End Sub
 
-    '------------------ save
-    Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpansales.Click
-        Dim data As String()
-        'Dim dataCol As String()
+    'SAVE DATA
+    Private Sub saveData()
+        Dim data1 As String()
         Dim querycheck As Boolean = False
-        If in_kode.Text = Nothing Then
-            MessageBox.Show("Kode belum di input")
-            in_kode.Focus()
-            Exit Sub
-        End If
+        Dim q As String = ""
 
-        If in_namasales.Text = Nothing Then
-            MessageBox.Show("Nama belum di input")
-            in_namasales.Focus()
-            Exit Sub
-        End If
+        Me.Cursor = Cursors.WaitCursor
+
+        op_con()
+        data1 = {
+            "salesman_nama='" & in_namasales.Text.Replace("'", "`") & "'",
+            "salesman_alamat='" & in_alamatsales.Text.Replace("'", "`") & "'",
+            "salesman_tanggal_masuk='" & date_kerja.Value.ToString("yyyy-MM-dd") & "'",
+            "salesman_jenis='" & cb_jenis.SelectedValue & "'",
+            "salesman_lahir_kota='" & in_lahir_kota.Text.Replace("'", "`") & "'",
+            "salesman_lahir_tanggal='" & date_lahir_tgl.Value.ToString("yyyy-MM-dd") & "'",
+            "salesman_hp='" & in_telpsales.Text & "'",
+            "salesman_fax='" & in_faxsales.Text & "'",
+            "salesman_nik='" & in_nik.Text & "'",
+            "salesman_target='" & in_target.Value.ToString.Replace(",", ".") & "'",
+            "salesman_bank_nama='" & in_bank_nama.Text.Replace("'", "`") & "'",
+            "salesman_bank_rekening='" & in_bank_rek.Text & "'",
+            "salesman_bank_atasnama='" & in_bank_an.Text & "'",
+            "salesman_status='" & slsStatus & "'"
+            }
 
         If bt_simpansales.Text = "Simpan" Then
-            If checkdata("data_salesman_master", in_kode.Text, "salesman_kode") = True Then
-                MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
-                in_kode.Focus()
-                Exit Sub
+            'GENERATE CODE
+            If Trim(in_kode.Text) = Nothing Then
+                Dim no As Integer = 1
+                readcommd("SELECT SUBSTRING(salesman_kode,6) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'SLS%' " _
+                          & "ORDER BY ss DESC LIMIT 1")
+                If rd.HasRows Then
+                    no = CInt(rd.Item(0)) + 1
+                End If
+                rd.Close()
+
+                in_kode.Text = "SLS" & CInt(cb_jenis.SelectedValue).ToString("D2") & no.ToString("D5")
+            Else
+                If checkdata("data_salesman_master", "'" & in_kode.Text & "'", "salesman_kode") = True Then
+                    MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
+                    in_kode.Focus()
+                    Exit Sub
+                End If
             End If
 
-            data = {
-                "'" & in_kode.Text & "'",
-                "'" & in_namasales.Text & "'",
-                "'" & in_alamatsales.Text & "'",
-                "'" & date_kerja.Value.ToString("yyyy-MM-dd") & "'",
-                "'" & cb_jenis.SelectedValue & "'",
-                "'" & in_lahir_kota.Text & "'",
-                "'" & date_lahir_tgl.Value.ToString("yyyy-MM-dd") & "'",
-                "'" & in_telpsales.Text & "'",
-                "'" & in_faxsales.Text & "'",
-                "'" & in_nik.Text & "'",
-                "'" & in_target.Value & "'",
-                "'" & in_bank_nama.Text & "'",
-                "'" & in_bank_rek.Text & "'",
-                "'" & in_bank_an.Text & "'",
-                "''",
-                "'" & cb_status.SelectedValue & "'",
-                "NOW()",
-                "'" & loggeduser.user_id & "'",
-                "''",
-                "''"
-            }
-            op_con()
-            querycheck = commnd("INSERT INTO data_salesman_master VALUES(" & String.Join(",", data) & ")")
+            q = "INSERT INTO data_salesman_master SET salesman_kode='{0}',{1},salesman_reg_date=NOW(),salesman_reg_alias='{2}'"
         ElseIf bt_simpansales.Text = "Update" Then
-            op_con()
-            querycheck = commnd("UPDATE data_salesman_master SET salesman_nama='" & in_namasales.Text & "', salesman_alamat='" & in_alamatsales.Text & "', salesman_tanggal_masuk='" & date_kerja.Value.ToString("yyyy-MM-dd") & "', salesman_jenis='" & cb_jenis.SelectedValue & "', salesman_lahir_kota='" & in_lahir_kota.Text & "', salesman_lahir_tanggal='" & date_lahir_tgl.Value.ToString("yyyy-MM-dd") & "', salesman_hp='" & in_telpsales.Text & "', salesman_fax='" & in_faxsales.Text & "', salesman_nik='" & in_nik.Text & "', salesman_target='" & in_target.Value & "', salesman_bank_nama='" & in_bank_nama.Text & "', salesman_bank_rekening='" & in_bank_rek.Text & "', salesman_bank_atasnama='" & in_bank_an.Text & "', salesman_status='" & cb_status.SelectedValue & "', salesman_upd_date=NOW(), salesman_upd_alias='" & loggeduser.user_id & "' WHERE salesman_kode='" & in_kode.Text & "'")
+            q = "UPDATE data_salesman_master SET {1}, salesman_upd_date=NOW(),salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
         End If
+        querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
+
+        Me.Cursor = Cursors.Default
 
         If querycheck = False Then
             Exit Sub
         Else
             MessageBox.Show("Data tersimpan")
-            frmsales.in_cari.Clear()
-            populateDGVUserCon("sales", "", frmsales.dgv_list)
+            'frmsales.in_cari.Clear()
+            'populateDGVUserCon("sales", "", frmsales.dgv_list)
+            doRefreshTab({pgsales})
             Me.Close()
         End If
     End Sub
 
-    '------------drag form
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown
+    'DRAG FORM
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
     End Sub
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
         dragging(Me)
     End Sub
 
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
         stopdrag(Me)
     End Sub
 
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
         CenterToScreen()
     End Sub
 
-    '-------------close
+    'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalsales.Click
-        Me.Close()
+        If MessageBox.Show("Tutup Form?", "Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -168,22 +166,77 @@
         lbl_close.Visible = False
     End Sub
 
-    Private Sub fr_sales_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        For Each tx As TextBox In {in_kode, in_namasales, in_alamatsales, in_bank_an, in_bank_nama, in_bank_rek, in_faxsales, in_lahir_kota, in_nik, in_telpsales}
-            tx.Clear()
-        Next
-        in_target.Value = 0
+    'MENU
+    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
+        bt_simpansales.PerformClick()
     End Sub
 
+    Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
+        If mn_deact.Text = "Deactivate" Then
+            slsStatus = "0"
+        ElseIf mn_deact.Text = "Activate" Then
+            slsStatus = "1"
+        End If
+        setStatus()
+    End Sub
+
+    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+        'brgStatus = 9
+        'UPDATE STATUS TO 9
+        'setStatus()
+    End Sub
+
+    'LOAD
+    Private Sub fr_sales_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        op_con()
+        With cb_jenis
+            .DataSource = jenisSales()
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
+        End With
+        setStatus()
+
+        If bt_simpansales.Text = "Update" Then
+            With in_kode
+                .ReadOnly = True
+                .BackColor = Color.Gainsboro
+                loadDataSales(.Text)
+            End With
+        End If
+    End Sub
+
+    'SAVE
+    Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpansales.Click
+        If in_namasales.Text = Nothing Then
+            MessageBox.Show("Nama belum di input")
+            in_namasales.Focus()
+            Exit Sub
+        End If
+
+        If MessageBox.Show("Simpan data sales?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            saveData()
+        End If
+    End Sub
+
+    'UI
     '------------------ cb prevent input
-    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_status.KeyPress, cb_jenis.KeyPress
+    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_jenis.KeyPress
         e.Handled = True
     End Sub
 
     '------------------ txtbox numeric
-    Private Sub in_telpsales_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telpsales.KeyPress, in_nik.KeyPress, in_faxsales.KeyPress, in_bank_rek.KeyPress
+    Private Sub in_telpsales_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_nik.KeyPress
         If Asc(e.KeyChar) <> 8 Then
             If Asc(e.KeyChar) < 48 Or Asc(e.KeyChar) > 57 Then
+                e.Handled = True
+            End If
+        End If
+    End Sub
+
+    Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telpsales.KeyPress, in_faxsales.KeyPress, in_bank_rek.KeyPress
+        If Asc(e.KeyChar) <> 8 Then
+            If (e.KeyChar < "0" OrElse e.KeyChar > "9") AndAlso e.KeyChar <> ControlChars.Back AndAlso e.KeyChar <> "-" Then
                 e.Handled = True
             End If
         End If
@@ -198,23 +251,9 @@
         numericLostFocus(sender)
     End Sub
 
-    '----------------- menu
-    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpansales.PerformClick()
-    End Sub
-
-    Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        If mn_deact.Text = "Deactivate" Then
-            cb_status.SelectedValue = "2"
-            mn_deact.Text = "Activate"
-        ElseIf mn_deact.Text = "Activate" Then
-            cb_status.SelectedValue = "1"
-            mn_deact.Text = "Deactivate"
-        End If
-    End Sub
-
-    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-
+    '-------------input
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+        keyshortenter(in_namasales, e)
     End Sub
 
     Private Sub in_namasales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasales.KeyDown
@@ -262,14 +301,6 @@
     End Sub
 
     Private Sub in_bank_an_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_an.KeyDown
-        keyshortenter(bt_simpansales, e)
-    End Sub
-
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(cb_status, e)
-    End Sub
-
-    Private Sub cb_status_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_status.KeyDown
         keyshortenter(bt_simpansales, e)
     End Sub
 End Class
