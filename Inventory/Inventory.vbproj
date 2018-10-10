@@ -81,12 +81,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MadMilkman.Ini">
-      <HintPath>..\..\..\roaming\sht\still ok\MadMilkman\MadMilkman.Ini.dll</HintPath>
+      <HintPath>..\..\..\..\net lib\MadMilkman\MadMilkman.Ini.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="MySql.Data">
-      <HintPath>..\..\..\roaming\sht\still ok\sql connector net\v4.0\MySql.Data.dll</HintPath>
+      <HintPath>..\..\..\..\net lib\sql connector net\v4.5\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
