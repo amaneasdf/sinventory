@@ -71,7 +71,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
@@ -161,6 +161,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ds_transaksi.xsd</DependentUpon>
     </Compile>
+    <Compile Include="laporan\fr_lap_filtervb.Designer.vb">
+      <DependentUpon>fr_lap_filtervb.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\fr_lap_filtervb.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="laporan\lap\hutang\fr_lap_hutang.Designer.vb">
       <DependentUpon>fr_lap_hutang.vb</DependentUpon>
     </Compile>
@@ -199,12 +205,6 @@
     </Compile>
     <Compile Include="laporan\ds_transaksi.vb">
       <DependentUpon>ds_transaksi.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="laporan\fr_lap_filter.Designer.vb">
-      <DependentUpon>fr_lap_filter.vb</DependentUpon>
-    </Compile>
-    <Compile Include="laporan\fr_lap_filter.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="laporan\persediaan\fr_lap_stok.Designer.vb">
       <DependentUpon>fr_lap_stok.vb</DependentUpon>
@@ -525,6 +525,10 @@
     <EmbeddedResource Include="laporan\draft\fr_draft_tagihan_view.resx">
       <DependentUpon>fr_draft_tagihan_view.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="laporan\fr_lap_filtervb.resx">
+      <DependentUpon>fr_lap_filtervb.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnotabrg.rdlc" />
     <EmbeddedResource Include="laporan\lap\hutang\fr_lap_hutang.resx">
       <DependentUpon>fr_lap_hutang.vb</DependentUpon>
@@ -572,14 +576,10 @@
     <EmbeddedResource Include="laporan\draft\fr_draft_barang_view.resx">
       <DependentUpon>fr_draft_barang_view.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="laporan\fr_lap_filter.resx">
-      <DependentUpon>fr_lap_filter.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="laporan\lap\draft_nota.rdlc" />
     <EmbeddedResource Include="laporan\lap\draft_barangkeluar.rdlc" />
     <EmbeddedResource Include="laporan\lap\draft_tagihan.rdlc" />
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_nota.rdlc" />
-    <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\jual\lap_jual_tgl.rdlc" />
     <EmbeddedResource Include="laporan\lap\jual\lap_jual_nota.rdlc" />
     <EmbeddedResource Include="laporan\lap\lap_stock.rdlc" />
@@ -735,7 +735,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\config.ini" />
-    <None Include="Inventory_TemporaryKey.pfx" />
     <None Include="laporan\ds_hutangpiutang.xsc">
       <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
     </None>

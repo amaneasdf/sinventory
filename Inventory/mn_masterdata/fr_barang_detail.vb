@@ -300,7 +300,7 @@
         Dim cbsat As ComboBox() = {cb_sat_besar, cb_sat_kecil, cb_sat_tengah}
         For Each x As ComboBox In cbsat
             With x
-                .DataSource = jenisSatuan()
+                .DataSource = jenis("satuan")
                 .DisplayMember = "Text"
                 .ValueMember = "Value"
                 .SelectedIndex = -1

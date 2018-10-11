@@ -42,7 +42,7 @@ Public Class fr_view_nota
                         op_con()
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, supplier_nama, " _
-                                      & "supplier_alamat, faktur_jumlah, faktur_ppn,faktur_disc, faktur_netto " _
+                                      & "supplier_alamat, faktur_jumlah,faktur_disc, faktur_netto " _
                                       & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                                       & "WHERE faktur_kode='" & innofaktur & "'")
                             If rd.HasRows Then
@@ -51,9 +51,8 @@ Public Class fr_view_nota
                                 sup = rd.Item(2)
                                 sup_al = rd.Item(3)
                                 jml = rd.Item(4)
-                                disk = rd.Item(6)
-                                ppn = rd.Item(5)
-                                netto = rd.Item(7)
+                                disk = rd.Item(5)
+                                netto = rd.Item(6)
                             End If
                             rd.Close()
                         Catch ex As Exception
@@ -66,7 +65,6 @@ Public Class fr_view_nota
                         Dim parSupplierAl As New ReportParameter("parSupplierAl", sup_al)
                         Dim parJml As New ReportParameter("parJml", jml)
                         Dim parDiskon As New ReportParameter("parDiskon", disk)
-                        Dim parPPN As New ReportParameter("parPPN", ppn)
                         Dim parNetto As New ReportParameter("parNetto", netto)
 
                         repdatasource.Name = "ds_nota_beli"
@@ -74,7 +72,8 @@ Public Class fr_view_nota
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n , " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_beli as beli_harga, " _
-                            & "trans_harga_beli*trans_qty as beli_jml, (trans_jumlah-trans_harga_beli*trans_qty)/trans_harga_beli*trans_qty as beli_disc " _
+                            & "trans_disc1 as beli_disc1,trans_disc2 as beli_disc2, trans_disc3 as beli_disc3, trans_disc_rupiah as beli_discrp, " _
+                            & "trans_harga_beli*trans_qty - trans_jumlah as beli_disctot, trans_jumlah as beli_jml " _
                             & "FROM data_pembelian_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
 
@@ -108,6 +107,7 @@ Public Class fr_view_nota
                         Catch ex As Exception
                             consoleWriteLine(ex.Message)
                         End Try
+
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
                         Dim parSupplier As New ReportParameter("parSupplier", "A.N. " & sup)
                         Dim parSupplierAl As New ReportParameter("parSupplierAl", sup_al)
@@ -121,13 +121,13 @@ Public Class fr_view_nota
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n, " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, " _
-                            & "trans_harga_retur*trans_qty as beli_jml, (trans_jumlah-trans_harga_retur*trans_qty)/100 as beli_disc " _
+                            & "trans_harga_retur*trans_qty as beli_jml " _
                             & "FROM data_pembelian_retur_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_faktur='" & innofaktur & "'"
+                            & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.nota_returbeli.rdlc"
-                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTglFaktur, parJml, parPPN, parNetto})
+                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTglFaktur, parJml, parNetto})
                         With ds_transaksi
                             .dt_nota_beli.Clear()
                             filldatatabel(inquery, .dt_nota_beli)
@@ -244,8 +244,13 @@ Public Class fr_view_nota
         End With
     End Sub
 
-    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        repViewerSelector(inlap_type)
+    Public Sub do_load()
 
+    End Sub
+
+    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Cursor = Cursors.AppStarting
+        repViewerSelector(inlap_type)
+        Me.Cursor = Cursors.Default
     End Sub
 End Class

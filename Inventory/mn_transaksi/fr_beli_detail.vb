@@ -505,7 +505,7 @@
             "line_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
             "line_status='1'"
             }
-        'queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
+        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", data1), loggeduser.user_id))
         '==========================================================================================================================
 
         '--------------------------------------------------------------------------------------------------------------

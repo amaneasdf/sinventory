@@ -3061,20 +3061,22 @@ Partial Public Class ds_transaksi
         
         Private columnlap_supplier As Global.System.Data.DataColumn
         
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+        Private columnlap_jenis As Global.System.Data.DataColumn
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
-            MyBase.New
+            MyBase.New()
             Me.TableName = "dt_lap_beli_nota"
-            Me.BeginInit
-            Me.InitClass
-            Me.EndInit
+            Me.BeginInit()
+            Me.InitClass()
+            Me.EndInit()
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Friend Sub New(ByVal table As Global.System.Data.DataTable)
-            MyBase.New
+            MyBase.New()
             Me.TableName = table.TableName
             If (table.CaseSensitive <> table.DataSet.CaseSensitive) Then
                 Me.CaseSensitive = table.CaseSensitive
@@ -3088,139 +3090,147 @@ Partial Public Class ds_transaksi
             Me.Prefix = table.Prefix
             Me.MinimumCapacity = table.MinimumCapacity
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Sub New(ByVal info As Global.System.Runtime.Serialization.SerializationInfo, ByVal context As Global.System.Runtime.Serialization.StreamingContext)
             MyBase.New(info, context)
-            Me.InitVars
+            Me.InitVars()
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_supplier_nColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_supplier_n
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_fakturColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_faktur
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_tglColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_tgl
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_bruttoColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_brutto
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_diskonColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_diskon
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_ppnColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_ppn
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_jumlahColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_jumlah
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property lap_supplierColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnlap_supplier
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"),  _
-         Global.System.ComponentModel.Browsable(false)>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property lap_jenisColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnlap_jenis
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
+         Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
             Get
                 Return Me.Rows.Count
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Default ReadOnly Property Item(ByVal index As Integer) As dt_lap_beli_notaRow
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Default Public ReadOnly Property Item(ByVal index As Integer) As dt_lap_beli_notaRow
             Get
-                Return CType(Me.Rows(index),dt_lap_beli_notaRow)
+                Return CType(Me.Rows(index), dt_lap_beli_notaRow)
             End Get
         End Property
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_notaRowChanging As dt_lap_beli_notaRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_notaRowChanged As dt_lap_beli_notaRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_notaRowDeleting As dt_lap_beli_notaRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_notaRowDeleted As dt_lap_beli_notaRowChangeEventHandler
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Overloads Sub Adddt_lap_beli_notaRow(ByVal row As dt_lap_beli_notaRow)
             Me.Rows.Add(row)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Overloads Function Adddt_lap_beli_notaRow(ByVal lap_supplier_n As String, ByVal lap_faktur As String, ByVal lap_tgl As Date, ByVal lap_brutto As Double, ByVal lap_diskon As Double, ByVal lap_ppn As Double, ByVal lap_jumlah As Double, ByVal lap_supplier As String) As dt_lap_beli_notaRow
-            Dim rowdt_lap_beli_notaRow As dt_lap_beli_notaRow = CType(Me.NewRow,dt_lap_beli_notaRow)
-            Dim columnValuesArray() As Object = New Object() {lap_supplier_n, lap_faktur, lap_tgl, lap_brutto, lap_diskon, lap_ppn, lap_jumlah, lap_supplier}
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Overloads Function Adddt_lap_beli_notaRow(ByVal lap_supplier_n As String, ByVal lap_faktur As String, ByVal lap_tgl As Date, ByVal lap_brutto As Double, ByVal lap_diskon As Double, ByVal lap_ppn As Double, ByVal lap_jumlah As Double, ByVal lap_supplier As String, ByVal lap_jenis As String) As dt_lap_beli_notaRow
+            Dim rowdt_lap_beli_notaRow As dt_lap_beli_notaRow = CType(Me.NewRow, dt_lap_beli_notaRow)
+            Dim columnValuesArray() As Object = New Object() {lap_supplier_n, lap_faktur, lap_tgl, lap_brutto, lap_diskon, lap_ppn, lap_jumlah, lap_supplier, lap_jenis}
             rowdt_lap_beli_notaRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_lap_beli_notaRow)
             Return rowdt_lap_beli_notaRow
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Overrides Function Clone() As Global.System.Data.DataTable
-            Dim cln As dt_lap_beli_notaDataTable = CType(MyBase.Clone,dt_lap_beli_notaDataTable)
-            cln.InitVars
+            Dim cln As dt_lap_beli_notaDataTable = CType(MyBase.Clone, dt_lap_beli_notaDataTable)
+            cln.InitVars()
             Return cln
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function CreateInstance() As Global.System.Data.DataTable
             Return New dt_lap_beli_notaDataTable()
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Friend Sub InitVars()
             Me.columnlap_supplier_n = MyBase.Columns("lap_supplier_n")
             Me.columnlap_faktur = MyBase.Columns("lap_faktur")
@@ -3230,10 +3240,11 @@ Partial Public Class ds_transaksi
             Me.columnlap_ppn = MyBase.Columns("lap_ppn")
             Me.columnlap_jumlah = MyBase.Columns("lap_jumlah")
             Me.columnlap_supplier = MyBase.Columns("lap_supplier")
+            Me.columnlap_jenis = MyBase.Columns("lap_jenis")
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Private Sub InitClass()
             Me.columnlap_supplier_n = New Global.System.Data.DataColumn("lap_supplier_n", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnlap_supplier_n)
@@ -3251,70 +3262,72 @@ Partial Public Class ds_transaksi
             MyBase.Columns.Add(Me.columnlap_jumlah)
             Me.columnlap_supplier = New Global.System.Data.DataColumn("lap_supplier", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnlap_supplier)
+            Me.columnlap_jenis = New Global.System.Data.DataColumn("lap_jenis", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnlap_jenis)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Newdt_lap_beli_notaRow() As dt_lap_beli_notaRow
-            Return CType(Me.NewRow,dt_lap_beli_notaRow)
+            Return CType(Me.NewRow, dt_lap_beli_notaRow)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function NewRowFromBuilder(ByVal builder As Global.System.Data.DataRowBuilder) As Global.System.Data.DataRow
             Return New dt_lap_beli_notaRow(builder)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function GetRowType() As Global.System.Type
             Return GetType(dt_lap_beli_notaRow)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowChanged(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowChanged(e)
             If (Not (Me.dt_lap_beli_notaRowChangedEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_notaRowChanged(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row,dt_lap_beli_notaRow), e.Action))
+                RaiseEvent dt_lap_beli_notaRowChanged(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row, dt_lap_beli_notaRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowChanging(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowChanging(e)
             If (Not (Me.dt_lap_beli_notaRowChangingEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_notaRowChanging(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row,dt_lap_beli_notaRow), e.Action))
+                RaiseEvent dt_lap_beli_notaRowChanging(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row, dt_lap_beli_notaRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowDeleted(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowDeleted(e)
             If (Not (Me.dt_lap_beli_notaRowDeletedEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_notaRowDeleted(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row,dt_lap_beli_notaRow), e.Action))
+                RaiseEvent dt_lap_beli_notaRowDeleted(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row, dt_lap_beli_notaRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowDeleting(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowDeleting(e)
             If (Not (Me.dt_lap_beli_notaRowDeletingEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_notaRowDeleting(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row,dt_lap_beli_notaRow), e.Action))
+                RaiseEvent dt_lap_beli_notaRowDeleting(Me, New dt_lap_beli_notaRowChangeEvent(CType(e.Row, dt_lap_beli_notaRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Removedt_lap_beli_notaRow(ByVal row As dt_lap_beli_notaRow)
             Me.Rows.Remove(row)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Shared Function GetTypedTableSchema(ByVal xs As Global.System.Xml.Schema.XmlSchemaSet) As Global.System.Xml.Schema.XmlSchemaComplexType
             Dim type As Global.System.Xml.Schema.XmlSchemaComplexType = New Global.System.Xml.Schema.XmlSchemaComplexType()
             Dim sequence As Global.System.Xml.Schema.XmlSchemaSequence = New Global.System.Xml.Schema.XmlSchemaSequence()
@@ -3343,35 +3356,35 @@ Partial Public Class ds_transaksi
             If xs.Contains(dsSchema.TargetNamespace) Then
                 Dim s1 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
                 Dim s2 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
-                Try 
+                Try
                     Dim schema As Global.System.Xml.Schema.XmlSchema = Nothing
                     dsSchema.Write(s1)
                     Dim schemas As Global.System.Collections.IEnumerator = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator
                     Do While schemas.MoveNext
-                        schema = CType(schemas.Current,Global.System.Xml.Schema.XmlSchema)
+                        schema = CType(schemas.Current, Global.System.Xml.Schema.XmlSchema)
                         s2.SetLength(0)
                         schema.Write(s2)
                         If (s1.Length = s2.Length) Then
                             s1.Position = 0
                             s2.Position = 0
-                            
-                            Do While ((s1.Position <> s1.Length)  _
+
+                            Do While ((s1.Position <> s1.Length) _
                                         AndAlso (s1.ReadByte = s2.ReadByte))
-                                
-                                
+
+
                             Loop
                             If (s1.Position = s1.Length) Then
                                 Return type
                             End If
                         End If
-                        
+
                     Loop
                 Finally
                     If (Not (s1) Is Nothing) Then
-                        s1.Close
+                        s1.Close()
                     End If
                     If (Not (s2) Is Nothing) Then
-                        s2.Close
+                        s2.Close()
                     End If
                 End Try
             End If
@@ -3379,61 +3392,61 @@ Partial Public Class ds_transaksi
             Return type
         End Function
     End Class
-    
+
     '''<summary>
     '''Represents the strongly named DataTable class.
     '''</summary>
-    <Global.System.Serializable(),  _
-     Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
+    <Global.System.Serializable(), _
+     Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")> _
     Partial Public Class dt_lap_beli_nota_detailDataTable
         Inherits Global.System.Data.TypedTableBase(Of dt_lap_beli_nota_detailRow)
-        
+
         Private columndlap_barang As Global.System.Data.DataColumn
-        
+
         Private columndlap_qty As Global.System.Data.DataColumn
-        
+
         Private columndlap_harga_beli As Global.System.Data.DataColumn
-        
+
         Private columndlap_total_diskon As Global.System.Data.DataColumn
-        
+
         Private columndlap_ppn As Global.System.Data.DataColumn
-        
+
         Private columndlap_jumlah As Global.System.Data.DataColumn
-        
+
         Private columndlap_barang_n As Global.System.Data.DataColumn
-        
+
         Private columndlap_supplier As Global.System.Data.DataColumn
-        
+
         Private columndlap_supplier_n As Global.System.Data.DataColumn
-        
+
         Private columndlap_faktur As Global.System.Data.DataColumn
-        
+
         Private columndlap_tgl As Global.System.Data.DataColumn
-        
+
         Private columndlap_disc1 As Global.System.Data.DataColumn
-        
+
         Private columndlap_disc2 As Global.System.Data.DataColumn
-        
+
         Private columndlap_disc3 As Global.System.Data.DataColumn
-        
+
         Private columndlap_disc_rp As Global.System.Data.DataColumn
-        
+
         Private columndlap_qty_n As Global.System.Data.DataColumn
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
-            MyBase.New
+            MyBase.New()
             Me.TableName = "dt_lap_beli_nota_detail"
-            Me.BeginInit
-            Me.InitClass
-            Me.EndInit
+            Me.BeginInit()
+            Me.InitClass()
+            Me.EndInit()
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Friend Sub New(ByVal table As Global.System.Data.DataTable)
-            MyBase.New
+            MyBase.New()
             Me.TableName = table.TableName
             If (table.CaseSensitive <> table.DataSet.CaseSensitive) Then
                 Me.CaseSensitive = table.CaseSensitive
@@ -3447,219 +3460,219 @@ Partial Public Class ds_transaksi
             Me.Prefix = table.Prefix
             Me.MinimumCapacity = table.MinimumCapacity
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Sub New(ByVal info As Global.System.Runtime.Serialization.SerializationInfo, ByVal context As Global.System.Runtime.Serialization.StreamingContext)
             MyBase.New(info, context)
-            Me.InitVars
+            Me.InitVars()
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_barangColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_barang
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_qtyColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_qty
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_harga_beliColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_harga_beli
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_total_diskonColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_total_diskon
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_ppnColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_ppn
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_jumlahColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_jumlah
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_barang_nColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_barang_n
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_supplierColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_supplier
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_supplier_nColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_supplier_n
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_fakturColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_faktur
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_tglColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_tgl
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_disc1Column() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_disc1
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_disc2Column() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_disc2
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_disc3Column() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_disc3
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_disc_rpColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_disc_rp
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property dlap_qty_nColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columndlap_qty_n
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"),  _
-         Global.System.ComponentModel.Browsable(false)>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
+         Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
             Get
                 Return Me.Rows.Count
             End Get
         End Property
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
-        Public Default ReadOnly Property Item(ByVal index As Integer) As dt_lap_beli_nota_detailRow
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Default Public ReadOnly Property Item(ByVal index As Integer) As dt_lap_beli_nota_detailRow
             Get
-                Return CType(Me.Rows(index),dt_lap_beli_nota_detailRow)
+                Return CType(Me.Rows(index), dt_lap_beli_nota_detailRow)
             End Get
         End Property
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_nota_detailRowChanging As dt_lap_beli_nota_detailRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_nota_detailRowChanged As dt_lap_beli_nota_detailRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_nota_detailRowDeleting As dt_lap_beli_nota_detailRowChangeEventHandler
-        
-        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Event dt_lap_beli_nota_detailRowDeleted As dt_lap_beli_nota_detailRowChangeEventHandler
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Overloads Sub Adddt_lap_beli_nota_detailRow(ByVal row As dt_lap_beli_nota_detailRow)
             Me.Rows.Add(row)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Overloads Function Adddt_lap_beli_nota_detailRow( _
-                    ByVal dlap_barang As String,  _
-                    ByVal dlap_qty As String,  _
-                    ByVal dlap_harga_beli As Decimal,  _
-                    ByVal dlap_total_diskon As Double,  _
-                    ByVal dlap_ppn As Double,  _
-                    ByVal dlap_jumlah As Double,  _
-                    ByVal dlap_barang_n As String,  _
-                    ByVal dlap_supplier As String,  _
-                    ByVal dlap_supplier_n As String,  _
-                    ByVal dlap_faktur As String,  _
-                    ByVal dlap_tgl As Date,  _
-                    ByVal dlap_disc1 As String,  _
-                    ByVal dlap_disc2 As String,  _
-                    ByVal dlap_disc3 As String,  _
-                    ByVal dlap_disc_rp As Double,  _
+                    ByVal dlap_barang As String, _
+                    ByVal dlap_qty As String, _
+                    ByVal dlap_harga_beli As Decimal, _
+                    ByVal dlap_total_diskon As Double, _
+                    ByVal dlap_ppn As Double, _
+                    ByVal dlap_jumlah As Double, _
+                    ByVal dlap_barang_n As String, _
+                    ByVal dlap_supplier As String, _
+                    ByVal dlap_supplier_n As String, _
+                    ByVal dlap_faktur As String, _
+                    ByVal dlap_tgl As Date, _
+                    ByVal dlap_disc1 As String, _
+                    ByVal dlap_disc2 As String, _
+                    ByVal dlap_disc3 As String, _
+                    ByVal dlap_disc_rp As Double, _
                     ByVal dlap_qty_n As String) As dt_lap_beli_nota_detailRow
-            Dim rowdt_lap_beli_nota_detailRow As dt_lap_beli_nota_detailRow = CType(Me.NewRow,dt_lap_beli_nota_detailRow)
+            Dim rowdt_lap_beli_nota_detailRow As dt_lap_beli_nota_detailRow = CType(Me.NewRow, dt_lap_beli_nota_detailRow)
             Dim columnValuesArray() As Object = New Object() {dlap_barang, dlap_qty, dlap_harga_beli, dlap_total_diskon, dlap_ppn, dlap_jumlah, dlap_barang_n, dlap_supplier, dlap_supplier_n, dlap_faktur, dlap_tgl, dlap_disc1, dlap_disc2, dlap_disc3, dlap_disc_rp, dlap_qty_n}
             rowdt_lap_beli_nota_detailRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_lap_beli_nota_detailRow)
             Return rowdt_lap_beli_nota_detailRow
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Overrides Function Clone() As Global.System.Data.DataTable
-            Dim cln As dt_lap_beli_nota_detailDataTable = CType(MyBase.Clone,dt_lap_beli_nota_detailDataTable)
-            cln.InitVars
+            Dim cln As dt_lap_beli_nota_detailDataTable = CType(MyBase.Clone, dt_lap_beli_nota_detailDataTable)
+            cln.InitVars()
             Return cln
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function CreateInstance() As Global.System.Data.DataTable
             Return New dt_lap_beli_nota_detailDataTable()
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Friend Sub InitVars()
             Me.columndlap_barang = MyBase.Columns("dlap_barang")
             Me.columndlap_qty = MyBase.Columns("dlap_qty")
@@ -3678,9 +3691,9 @@ Partial Public Class ds_transaksi
             Me.columndlap_disc_rp = MyBase.Columns("dlap_disc_rp")
             Me.columndlap_qty_n = MyBase.Columns("dlap_qty_n")
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Private Sub InitClass()
             Me.columndlap_barang = New Global.System.Data.DataColumn("dlap_barang", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columndlap_barang)
@@ -3715,69 +3728,69 @@ Partial Public Class ds_transaksi
             Me.columndlap_qty_n = New Global.System.Data.DataColumn("dlap_qty_n", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columndlap_qty_n)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Newdt_lap_beli_nota_detailRow() As dt_lap_beli_nota_detailRow
-            Return CType(Me.NewRow,dt_lap_beli_nota_detailRow)
+            Return CType(Me.NewRow, dt_lap_beli_nota_detailRow)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function NewRowFromBuilder(ByVal builder As Global.System.Data.DataRowBuilder) As Global.System.Data.DataRow
             Return New dt_lap_beli_nota_detailRow(builder)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Function GetRowType() As Global.System.Type
             Return GetType(dt_lap_beli_nota_detailRow)
         End Function
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowChanged(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowChanged(e)
             If (Not (Me.dt_lap_beli_nota_detailRowChangedEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_nota_detailRowChanged(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row,dt_lap_beli_nota_detailRow), e.Action))
+                RaiseEvent dt_lap_beli_nota_detailRowChanged(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row, dt_lap_beli_nota_detailRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowChanging(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowChanging(e)
             If (Not (Me.dt_lap_beli_nota_detailRowChangingEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_nota_detailRowChanging(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row,dt_lap_beli_nota_detailRow), e.Action))
+                RaiseEvent dt_lap_beli_nota_detailRowChanging(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row, dt_lap_beli_nota_detailRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowDeleted(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowDeleted(e)
             If (Not (Me.dt_lap_beli_nota_detailRowDeletedEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_nota_detailRowDeleted(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row,dt_lap_beli_nota_detailRow), e.Action))
+                RaiseEvent dt_lap_beli_nota_detailRowDeleted(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row, dt_lap_beli_nota_detailRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Protected Overrides Sub OnRowDeleting(ByVal e As Global.System.Data.DataRowChangeEventArgs)
             MyBase.OnRowDeleting(e)
             If (Not (Me.dt_lap_beli_nota_detailRowDeletingEvent) Is Nothing) Then
-                RaiseEvent dt_lap_beli_nota_detailRowDeleting(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row,dt_lap_beli_nota_detailRow), e.Action))
+                RaiseEvent dt_lap_beli_nota_detailRowDeleting(Me, New dt_lap_beli_nota_detailRowChangeEvent(CType(e.Row, dt_lap_beli_nota_detailRow), e.Action))
             End If
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Removedt_lap_beli_nota_detailRow(ByVal row As dt_lap_beli_nota_detailRow)
             Me.Rows.Remove(row)
         End Sub
-        
-        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")>  _
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Shared Function GetTypedTableSchema(ByVal xs As Global.System.Xml.Schema.XmlSchemaSet) As Global.System.Xml.Schema.XmlSchemaComplexType
             Dim type As Global.System.Xml.Schema.XmlSchemaComplexType = New Global.System.Xml.Schema.XmlSchemaComplexType()
             Dim sequence As Global.System.Xml.Schema.XmlSchemaSequence = New Global.System.Xml.Schema.XmlSchemaSequence()
@@ -3806,35 +3819,35 @@ Partial Public Class ds_transaksi
             If xs.Contains(dsSchema.TargetNamespace) Then
                 Dim s1 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
                 Dim s2 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
-                Try 
+                Try
                     Dim schema As Global.System.Xml.Schema.XmlSchema = Nothing
                     dsSchema.Write(s1)
                     Dim schemas As Global.System.Collections.IEnumerator = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator
                     Do While schemas.MoveNext
-                        schema = CType(schemas.Current,Global.System.Xml.Schema.XmlSchema)
+                        schema = CType(schemas.Current, Global.System.Xml.Schema.XmlSchema)
                         s2.SetLength(0)
                         schema.Write(s2)
                         If (s1.Length = s2.Length) Then
                             s1.Position = 0
                             s2.Position = 0
-                            
-                            Do While ((s1.Position <> s1.Length)  _
+
+                            Do While ((s1.Position <> s1.Length) _
                                         AndAlso (s1.ReadByte = s2.ReadByte))
-                                
-                                
+
+
                             Loop
                             If (s1.Position = s1.Length) Then
                                 Return type
                             End If
                         End If
-                        
+
                     Loop
                 Finally
                     If (Not (s1) Is Nothing) Then
-                        s1.Close
+                        s1.Close()
                     End If
                     If (Not (s2) Is Nothing) Then
-                        s2.Close
+                        s2.Close()
                     End If
                 End Try
             End If
@@ -3842,37 +3855,37 @@ Partial Public Class ds_transaksi
             Return type
         End Function
     End Class
-    
+
     '''<summary>
     '''Represents the strongly named DataTable class.
     '''</summary>
-    <Global.System.Serializable(),  _
-     Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")>  _
+    <Global.System.Serializable(), _
+     Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")> _
     Partial Public Class dt_lap_jual_notaDataTable
         Inherits Global.System.Data.TypedTableBase(Of dt_lap_jual_notaRow)
-        
+
         Private columnlap_faktur As Global.System.Data.DataColumn
-        
+
         Private columnlap_tanggal As Global.System.Data.DataColumn
-        
+
         Private columnlap_brutto As Global.System.Data.DataColumn
-        
+
         Private columnlap_diskon As Global.System.Data.DataColumn
-        
+
         Private columnlap_ppn As Global.System.Data.DataColumn
-        
+
         Private columnlap_jumlah As Global.System.Data.DataColumn
-        
+
         Private columnlap_custo_n As Global.System.Data.DataColumn
-        
+
         Private columnlap_sales_n As Global.System.Data.DataColumn
-        
+
         Private columnlap_custo As Global.System.Data.DataColumn
-        
+
         Private columnlap_sales As Global.System.Data.DataColumn
-        
+
         Private columnlap_jenis As Global.System.Data.DataColumn
-        
+
         Private columnlap_tunai As Global.System.Data.DataColumn
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -5409,11 +5422,19 @@ Partial Public Class ds_transaksi
 
         Private columnbeli_harga As Global.System.Data.DataColumn
 
-        Private columnbeli_disc As Global.System.Data.DataColumn
+        Private columnbeli_disc1 As Global.System.Data.DataColumn
 
         Private columnbeli_ppn As Global.System.Data.DataColumn
 
         Private columnbeli_jml As Global.System.Data.DataColumn
+
+        Private columnbeli_disc2 As Global.System.Data.DataColumn
+
+        Private columnbeli_disc3 As Global.System.Data.DataColumn
+
+        Private columnbeli_discrp As Global.System.Data.DataColumn
+
+        Private columnbeli_disctot As Global.System.Data.DataColumn
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
@@ -5484,9 +5505,9 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public ReadOnly Property beli_discColumn() As Global.System.Data.DataColumn
+        Public ReadOnly Property beli_disc1Column() As Global.System.Data.DataColumn
             Get
-                Return Me.columnbeli_disc
+                Return Me.columnbeli_disc1
             End Get
         End Property
 
@@ -5503,6 +5524,38 @@ Partial Public Class ds_transaksi
         Public ReadOnly Property beli_jmlColumn() As Global.System.Data.DataColumn
             Get
                 Return Me.columnbeli_jml
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property beli_disc2Column() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnbeli_disc2
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property beli_disc3Column() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnbeli_disc3
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property beli_discrpColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnbeli_discrp
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property beli_disctotColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnbeli_disctot
             End Get
         End Property
 
@@ -5543,9 +5596,9 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Overloads Function Adddt_nota_beliRow(ByVal beli_barang As String, ByVal beli_brg_n As String, ByVal beli_qty As String, ByVal beli_harga As Decimal, ByVal beli_disc As Decimal, ByVal beli_ppn As Decimal, ByVal beli_jml As Decimal) As dt_nota_beliRow
+        Public Overloads Function Adddt_nota_beliRow(ByVal beli_barang As String, ByVal beli_brg_n As String, ByVal beli_qty As String, ByVal beli_harga As Decimal, ByVal beli_disc1 As Decimal, ByVal beli_ppn As Decimal, ByVal beli_jml As Decimal, ByVal beli_disc2 As Decimal, ByVal beli_disc3 As Decimal, ByVal beli_discrp As Decimal, ByVal beli_disctot As Decimal) As dt_nota_beliRow
             Dim rowdt_nota_beliRow As dt_nota_beliRow = CType(Me.NewRow, dt_nota_beliRow)
-            Dim columnValuesArray() As Object = New Object() {beli_barang, beli_brg_n, beli_qty, beli_harga, beli_disc, beli_ppn, beli_jml}
+            Dim columnValuesArray() As Object = New Object() {beli_barang, beli_brg_n, beli_qty, beli_harga, beli_disc1, beli_ppn, beli_jml, beli_disc2, beli_disc3, beli_discrp, beli_disctot}
             rowdt_nota_beliRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_nota_beliRow)
             Return rowdt_nota_beliRow
@@ -5572,9 +5625,13 @@ Partial Public Class ds_transaksi
             Me.columnbeli_brg_n = MyBase.Columns("beli_brg_n")
             Me.columnbeli_qty = MyBase.Columns("beli_qty")
             Me.columnbeli_harga = MyBase.Columns("beli_harga")
-            Me.columnbeli_disc = MyBase.Columns("beli_disc")
+            Me.columnbeli_disc1 = MyBase.Columns("beli_disc1")
             Me.columnbeli_ppn = MyBase.Columns("beli_ppn")
             Me.columnbeli_jml = MyBase.Columns("beli_jml")
+            Me.columnbeli_disc2 = MyBase.Columns("beli_disc2")
+            Me.columnbeli_disc3 = MyBase.Columns("beli_disc3")
+            Me.columnbeli_discrp = MyBase.Columns("beli_discrp")
+            Me.columnbeli_disctot = MyBase.Columns("beli_disctot")
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -5588,12 +5645,20 @@ Partial Public Class ds_transaksi
             MyBase.Columns.Add(Me.columnbeli_qty)
             Me.columnbeli_harga = New Global.System.Data.DataColumn("beli_harga", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnbeli_harga)
-            Me.columnbeli_disc = New Global.System.Data.DataColumn("beli_disc", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
-            MyBase.Columns.Add(Me.columnbeli_disc)
+            Me.columnbeli_disc1 = New Global.System.Data.DataColumn("beli_disc1", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnbeli_disc1)
             Me.columnbeli_ppn = New Global.System.Data.DataColumn("beli_ppn", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnbeli_ppn)
             Me.columnbeli_jml = New Global.System.Data.DataColumn("beli_jml", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnbeli_jml)
+            Me.columnbeli_disc2 = New Global.System.Data.DataColumn("beli_disc2", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnbeli_disc2)
+            Me.columnbeli_disc3 = New Global.System.Data.DataColumn("beli_disc3", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnbeli_disc3)
+            Me.columnbeli_discrp = New Global.System.Data.DataColumn("beli_discrp", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnbeli_discrp)
+            Me.columnbeli_disctot = New Global.System.Data.DataColumn("beli_disctot", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnbeli_disctot)
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -7620,6 +7685,21 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property lap_jenis() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_lap_beli_nota.lap_jenisColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'lap_jenis' in table 'dt_lap_beli_nota' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_lap_beli_nota.lap_jenisColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Islap_supplier_nNull() As Boolean
             Return Me.IsNull(Me.tabledt_lap_beli_nota.lap_supplier_nColumn)
         End Function
@@ -7712,6 +7792,18 @@ Partial Public Class ds_transaksi
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setlap_supplierNull()
             Me(Me.tabledt_lap_beli_nota.lap_supplierColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Islap_jenisNull() As Boolean
+            Return Me.IsNull(Me.tabledt_lap_beli_nota.lap_jenisColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setlap_jenisNull()
+            Me(Me.tabledt_lap_beli_nota.lap_jenisColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
 
@@ -9506,16 +9598,16 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Property beli_disc() As Decimal
+        Public Property beli_disc1() As Decimal
             Get
                 Try
-                    Return CType(Me(Me.tabledt_nota_beli.beli_discColumn), Decimal)
+                    Return CType(Me(Me.tabledt_nota_beli.beli_disc1Column), Decimal)
                 Catch e As Global.System.InvalidCastException
-                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_disc' in table 'dt_nota_beli' is DBNull.", e)
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_disc1' in table 'dt_nota_beli' is DBNull.", e)
                 End Try
             End Get
             Set(value As Decimal)
-                Me(Me.tabledt_nota_beli.beli_discColumn) = value
+                Me(Me.tabledt_nota_beli.beli_disc1Column) = value
             End Set
         End Property
 
@@ -9546,6 +9638,66 @@ Partial Public Class ds_transaksi
             End Get
             Set(value As Decimal)
                 Me(Me.tabledt_nota_beli.beli_jmlColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property beli_disc2() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_beli.beli_disc2Column), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_disc2' in table 'dt_nota_beli' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_beli.beli_disc2Column) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property beli_disc3() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_beli.beli_disc3Column), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_disc3' in table 'dt_nota_beli' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_beli.beli_disc3Column) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property beli_discrp() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_beli.beli_discrpColumn), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_discrp' in table 'dt_nota_beli' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_beli.beli_discrpColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property beli_disctot() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_nota_beli.beli_disctotColumn), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'beli_disctot' in table 'dt_nota_beli' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_nota_beli.beli_disctotColumn) = value
             End Set
         End Property
 
@@ -9599,14 +9751,14 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Function Isbeli_discNull() As Boolean
-            Return Me.IsNull(Me.tabledt_nota_beli.beli_discColumn)
+        Public Function Isbeli_disc1Null() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_beli.beli_disc1Column)
         End Function
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Sub Setbeli_discNull()
-            Me(Me.tabledt_nota_beli.beli_discColumn) = Global.System.Convert.DBNull
+        Public Sub Setbeli_disc1Null()
+            Me(Me.tabledt_nota_beli.beli_disc1Column) = Global.System.Convert.DBNull
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -9631,6 +9783,54 @@ Partial Public Class ds_transaksi
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setbeli_jmlNull()
             Me(Me.tabledt_nota_beli.beli_jmlColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isbeli_disc2Null() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_beli.beli_disc2Column)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setbeli_disc2Null()
+            Me(Me.tabledt_nota_beli.beli_disc2Column) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isbeli_disc3Null() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_beli.beli_disc3Column)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setbeli_disc3Null()
+            Me(Me.tabledt_nota_beli.beli_disc3Column) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isbeli_discrpNull() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_beli.beli_discrpColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setbeli_discrpNull()
+            Me(Me.tabledt_nota_beli.beli_discrpColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isbeli_disctotNull() As Boolean
+            Return Me.IsNull(Me.tabledt_nota_beli.beli_disctotColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setbeli_disctotNull()
+            Me(Me.tabledt_nota_beli.beli_disctotColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
 

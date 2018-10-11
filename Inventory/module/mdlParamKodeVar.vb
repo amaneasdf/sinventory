@@ -71,9 +71,20 @@
     End Function
 
     'jenissatuan
-    Public Function jenisSatuan() As DataTable
+    Public Function jenis(tipe As String) As DataTable
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
+        Select Case tipe
+            Case "satuan"
+                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
+            Case "transbeli"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Pembelian", "'BELI'")
+                dt.Rows.Add("Retur Pembelian", "'RETUR'")
+                dt.Rows.Add("Beli & Retur Beli", "'BELI','RETUR'")
+            Case Else
+                dt = Nothing
+        End Select
         Return dt
     End Function
 
