@@ -338,92 +338,66 @@
                 Console.WriteLine("click set periode")
                 fr_set_periode.ShowDialog()
             Case "mn070301"
-                Using x As New fr_lap_filter
+                Using x As New fr_lap_filter_beli
                     With x
                         .do_load("transbeli", "Laporan Pembelian Per Nota", "lapBeliNota")
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '    .inlap_type = "lapBeliNota",
-                '    .Text = "Laporan Pembelian Per Nota"
-                '}
-                'x.Show()
-                'x.do_load()
             Case "mn070302"
-                Using x As New fr_lap_filter
+                Using x As New fr_lap_filter_beli
                     With x
                         .do_load("transbeli", "Laporan Pembelian Per Supplier", "lapBeliSupplier")
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '    .inlap_type = "lapBeliSupplier",
-                '    .Text = "Laporan Pembelian Per Supplier"
-                '}
-                'x.Show()
-                'x.do_load()
             Case "mn070303"
-                Using x As New fr_lap_filter
+                Using x As New fr_lap_filter_beli
                     With x
-                        .do_load("transbeli", "Laporan Pembelian Per Tanggal", "lapBeliTgl")
                         .supplier_sw = False
+                        .do_load("transbeli", "Laporan Pembelian Per Tanggal", "lapBeliTgl")
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '    .inlap_type = "lapBeliTgl",
-                '    .Text = "Laporan Pembelian Per Tanggal"
-                '    }
-                'x.Show()
-                'x.do_load()
             Case "mn070304"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapBeliSupplierBarang",
-                    .Text = "Laporan Pembelian Per Supplier Per Barang"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_beli
+                    With x
+                        .barang_sw = True
+                        .do_load("transbeli", "Laporan Pembelian Per Supplier Per Barang", "lapBeliSupplierBarang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070305"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapBeliTglBarang",
-                    .Text = "Laporan Pembelian Per Tanggal Per Barang"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_beli
+                    With x
+                        .barang_sw = True
+                        .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Barang", "lapBeliTglBarang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070306"
-                Using x As New fr_lap_filter
+                Using x As New fr_lap_filter_beli
                     With x
                         .do_load("transbeli", "Laporan Pembelian Per Supplier Per Nota", "lapBeliSupplierNota")
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '                    .inlap_type = "lapBeliSupplierNota",
-                '                    .Text = "Laporan Pembelian Per Supplier Per Nota"
-                '                    }
-                'x.Show()
-                'x.do_load()
             Case "mn070307"
-                Using x As New fr_lap_filter
+                Using x As New fr_lap_filter_beli
                     With x
                         .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Nota", "lapBeliTglNota")
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '                    .inlap_type = "lapBeliTglNota",
-                '                    .Text = "Laporan Pembelian Per Tanggal Per Nota"
-                '                    }
-                'x.Show()
-                'x.do_load()
             Case "mn070310"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapBeliTglNotaBarang",
-                    .Text = "Laporan Pembelian Per Tanggal Per Nota Per Barang"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_beli
+                    With x
+                        .jenis_sw = False
+                        .barang_sw = True
+                        .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Nota Per Barang", "lapBeliTglNotaBarang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070401"
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapJualNota",

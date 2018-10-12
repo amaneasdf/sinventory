@@ -1,5 +1,5 @@
 ﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
-Partial Class fr_lap_filter
+Partial Class fr_lap_filter_beli
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
@@ -22,7 +22,7 @@ Partial Class fr_lap_filter
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_lap_filter))
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_lap_filter_beli))
         Me.bt_batalbeli = New System.Windows.Forms.Button()
         Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -41,8 +41,10 @@ Partial Class fr_lap_filter
         Me.in_supplier = New System.Windows.Forms.TextBox()
         Me.lbl_supplier = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.in_barang_n = New System.Windows.Forms.TextBox()
+        Me.in_barang = New System.Windows.Forms.TextBox()
+        Me.lbl_barang = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -56,7 +58,7 @@ Partial Class fr_lap_filter
         Me.bt_batalbeli.Location = New System.Drawing.Point(488, 210)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalbeli.TabIndex = 337
+        Me.bt_batalbeli.TabIndex = 8
         Me.bt_batalbeli.Text = "Close"
         Me.bt_batalbeli.UseVisualStyleBackColor = True
         '
@@ -67,7 +69,7 @@ Partial Class fr_lap_filter
         Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 210)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
-        Me.bt_simpanbeli.TabIndex = 336
+        Me.bt_simpanbeli.TabIndex = 7
         Me.bt_simpanbeli.Text = "Tampilkan"
         Me.bt_simpanbeli.UseVisualStyleBackColor = True
         '
@@ -88,11 +90,11 @@ Partial Class fr_lap_filter
         Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lbl_close.AutoSize = True
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(511, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(511, 8)
         Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(54, 20)
+        Me.lbl_close.Size = New System.Drawing.Size(52, 22)
         Me.lbl_close.TabIndex = 138
         Me.lbl_close.Text = "Close"
         Me.lbl_close.Visible = False
@@ -120,11 +122,11 @@ Partial Class fr_lap_filter
         '
         Me.lbl_title.AutoSize = True
         Me.lbl_title.BackColor = System.Drawing.Color.Orange
-        Me.lbl_title.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_title.ForeColor = System.Drawing.Color.White
-        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Location = New System.Drawing.Point(5, 3)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(240, 29)
+        Me.lbl_title.Size = New System.Drawing.Size(246, 33)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Laporan Pembelian"
         '
@@ -145,7 +147,7 @@ Partial Class fr_lap_filter
         Me.bt_exportxl.Location = New System.Drawing.Point(11, 210)
         Me.bt_exportxl.Name = "bt_exportxl"
         Me.bt_exportxl.Size = New System.Drawing.Size(96, 30)
-        Me.bt_exportxl.TabIndex = 337
+        Me.bt_exportxl.TabIndex = 9
         Me.bt_exportxl.Text = "Export Excel"
         Me.bt_exportxl.UseVisualStyleBackColor = True
         '
@@ -157,7 +159,7 @@ Partial Class fr_lap_filter
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
         Me.date_tglawal.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglawal.TabIndex = 411
+        Me.date_tglawal.TabIndex = 0
         Me.date_tglawal.TabStop = False
         '
         'Label4
@@ -188,7 +190,7 @@ Partial Class fr_lap_filter
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
         Me.date_tglakhir.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglakhir.TabIndex = 413
+        Me.date_tglakhir.TabIndex = 1
         Me.date_tglakhir.TabStop = False
         '
         'cb_jenis
@@ -201,7 +203,7 @@ Partial Class fr_lap_filter
         Me.cb_jenis.Location = New System.Drawing.Point(82, 71)
         Me.cb_jenis.Name = "cb_jenis"
         Me.cb_jenis.Size = New System.Drawing.Size(193, 21)
-        Me.cb_jenis.TabIndex = 415
+        Me.cb_jenis.TabIndex = 2
         '
         'lbl_jenis
         '
@@ -222,7 +224,7 @@ Partial Class fr_lap_filter
         Me.in_supplier_n.MaxLength = 200
         Me.in_supplier_n.Name = "in_supplier_n"
         Me.in_supplier_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_supplier_n.TabIndex = 418
+        Me.in_supplier_n.TabIndex = 4
         '
         'in_supplier
         '
@@ -234,13 +236,13 @@ Partial Class fr_lap_filter
         Me.in_supplier.Name = "in_supplier"
         Me.in_supplier.ReadOnly = True
         Me.in_supplier.Size = New System.Drawing.Size(121, 20)
-        Me.in_supplier.TabIndex = 417
+        Me.in_supplier.TabIndex = 3
         '
         'lbl_supplier
         '
         Me.lbl_supplier.AutoSize = True
         Me.lbl_supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_supplier.Location = New System.Drawing.Point(8, 100)
+        Me.lbl_supplier.Location = New System.Drawing.Point(8, 99)
         Me.lbl_supplier.Name = "lbl_supplier"
         Me.lbl_supplier.Size = New System.Drawing.Size(45, 13)
         Me.lbl_supplier.TabIndex = 419
@@ -248,26 +250,12 @@ Partial Class fr_lap_filter
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(233, 75)
+        Me.popPnl_barang.Location = New System.Drawing.Point(209, 118)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 425
         Me.popPnl_barang.Visible = False
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 91)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'dgv_listbarang
         '
@@ -284,16 +272,52 @@ Partial Class fr_lap_filter
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 88)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 103)
         Me.dgv_listbarang.TabIndex = 0
         '
-        'fr_lap_filter
+        'in_barang_n
+        '
+        Me.in_barang_n.BackColor = System.Drawing.Color.White
+        Me.in_barang_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_barang_n.ForeColor = System.Drawing.Color.Black
+        Me.in_barang_n.Location = New System.Drawing.Point(205, 118)
+        Me.in_barang_n.MaxLength = 200
+        Me.in_barang_n.Name = "in_barang_n"
+        Me.in_barang_n.Size = New System.Drawing.Size(322, 20)
+        Me.in_barang_n.TabIndex = 6
+        '
+        'in_barang
+        '
+        Me.in_barang.BackColor = System.Drawing.Color.White
+        Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_barang.ForeColor = System.Drawing.Color.Black
+        Me.in_barang.Location = New System.Drawing.Point(82, 118)
+        Me.in_barang.MaxLength = 30
+        Me.in_barang.Name = "in_barang"
+        Me.in_barang.ReadOnly = True
+        Me.in_barang.Size = New System.Drawing.Size(121, 20)
+        Me.in_barang.TabIndex = 5
+        '
+        'lbl_barang
+        '
+        Me.lbl_barang.AutoSize = True
+        Me.lbl_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_barang.Location = New System.Drawing.Point(8, 122)
+        Me.lbl_barang.Name = "lbl_barang"
+        Me.lbl_barang.Size = New System.Drawing.Size(41, 13)
+        Me.lbl_barang.TabIndex = 428
+        Me.lbl_barang.Text = "Barang"
+        '
+        'fr_lap_filter_beli
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 257)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.in_barang_n)
+        Me.Controls.Add(Me.in_barang)
+        Me.Controls.Add(Me.lbl_barang)
         Me.Controls.Add(Me.in_supplier_n)
         Me.Controls.Add(Me.in_supplier)
         Me.Controls.Add(Me.lbl_supplier)
@@ -310,13 +334,12 @@ Partial Class fr_lap_filter
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.Name = "fr_lap_filter"
+        Me.Name = "fr_lap_filter_beli"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Laporan "
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.popPnl_barang.ResumeLayout(False)
-        Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -340,6 +363,8 @@ Partial Class fr_lap_filter
     Friend WithEvents in_supplier As System.Windows.Forms.TextBox
     Friend WithEvents lbl_supplier As System.Windows.Forms.Label
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
-    Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
+    Friend WithEvents in_barang_n As System.Windows.Forms.TextBox
+    Friend WithEvents in_barang As System.Windows.Forms.TextBox
+    Friend WithEvents lbl_barang As System.Windows.Forms.Label
 End Class

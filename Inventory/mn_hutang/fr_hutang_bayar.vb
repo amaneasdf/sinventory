@@ -603,6 +603,11 @@
             in_faktur.Focus()
             Exit Sub
         End If
+        If cb_bayar.SelectedValue = "BG" And Trim(in_no_bg.Text) = Nothing Then
+            MessageBox.Show("Nomor Giro belum di input")
+            in_no_bg.Focus()
+            Exit Sub
+        End If
 
         If MessageBox.Show("Simpan data transaksi pembayaran hutang?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             Me.Cursor = Cursors.WaitCursor

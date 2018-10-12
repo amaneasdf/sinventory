@@ -337,6 +337,13 @@
                             .Show(main)
                             .do_load()
                         End With
+                    Case "pghutangbgo"
+                        Dim detail As New fr_giro
+                        With detail
+                            .Text = "Detail Giro : " & dgv_list.Rows(rowindex).Cells(0).Value
+                            .Show()
+                            .do_load("OUT", dgv_list.Rows(rowindex).Cells(0).Value)
+                        End With
                     Case "pgpiutangawal"
                         Using detail As New fr_piutang_awal
                             With detail

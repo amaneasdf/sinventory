@@ -3433,6 +3433,8 @@ Partial Public Class ds_transaksi
 
         Private columndlap_qty_n As Global.System.Data.DataColumn
 
+        Private columndlap_jenis As Global.System.Data.DataColumn
+
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
@@ -3597,6 +3599,14 @@ Partial Public Class ds_transaksi
         End Property
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property dlap_jenisColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columndlap_jenis
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
          Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
@@ -3649,9 +3659,10 @@ Partial Public Class ds_transaksi
                     ByVal dlap_disc2 As String, _
                     ByVal dlap_disc3 As String, _
                     ByVal dlap_disc_rp As Double, _
-                    ByVal dlap_qty_n As String) As dt_lap_beli_nota_detailRow
+                    ByVal dlap_qty_n As String, _
+                    ByVal dlap_jenis As String) As dt_lap_beli_nota_detailRow
             Dim rowdt_lap_beli_nota_detailRow As dt_lap_beli_nota_detailRow = CType(Me.NewRow, dt_lap_beli_nota_detailRow)
-            Dim columnValuesArray() As Object = New Object() {dlap_barang, dlap_qty, dlap_harga_beli, dlap_total_diskon, dlap_ppn, dlap_jumlah, dlap_barang_n, dlap_supplier, dlap_supplier_n, dlap_faktur, dlap_tgl, dlap_disc1, dlap_disc2, dlap_disc3, dlap_disc_rp, dlap_qty_n}
+            Dim columnValuesArray() As Object = New Object() {dlap_barang, dlap_qty, dlap_harga_beli, dlap_total_diskon, dlap_ppn, dlap_jumlah, dlap_barang_n, dlap_supplier, dlap_supplier_n, dlap_faktur, dlap_tgl, dlap_disc1, dlap_disc2, dlap_disc3, dlap_disc_rp, dlap_qty_n, dlap_jenis}
             rowdt_lap_beli_nota_detailRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_lap_beli_nota_detailRow)
             Return rowdt_lap_beli_nota_detailRow
@@ -3690,6 +3701,7 @@ Partial Public Class ds_transaksi
             Me.columndlap_disc3 = MyBase.Columns("dlap_disc3")
             Me.columndlap_disc_rp = MyBase.Columns("dlap_disc_rp")
             Me.columndlap_qty_n = MyBase.Columns("dlap_qty_n")
+            Me.columndlap_jenis = MyBase.Columns("dlap_jenis")
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -3727,6 +3739,8 @@ Partial Public Class ds_transaksi
             MyBase.Columns.Add(Me.columndlap_disc_rp)
             Me.columndlap_qty_n = New Global.System.Data.DataColumn("dlap_qty_n", GetType(String), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columndlap_qty_n)
+            Me.columndlap_jenis = New Global.System.Data.DataColumn("dlap_jenis", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columndlap_jenis)
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -8070,6 +8084,21 @@ Partial Public Class ds_transaksi
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property dlap_jenis() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_lap_beli_nota_detail.dlap_jenisColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'dlap_jenis' in table 'dt_lap_beli_nota_detail' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_lap_beli_nota_detail.dlap_jenisColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Isdlap_barangNull() As Boolean
             Return Me.IsNull(Me.tabledt_lap_beli_nota_detail.dlap_barangColumn)
         End Function
@@ -8258,6 +8287,18 @@ Partial Public Class ds_transaksi
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setdlap_qty_nNull()
             Me(Me.tabledt_lap_beli_nota_detail.dlap_qty_nColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isdlap_jenisNull() As Boolean
+            Return Me.IsNull(Me.tabledt_lap_beli_nota_detail.dlap_jenisColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setdlap_jenisNull()
+            Me(Me.tabledt_lap_beli_nota_detail.dlap_jenisColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
 

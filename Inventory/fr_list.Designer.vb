@@ -39,8 +39,8 @@ Partial Class fr_list
         Me.mn_export = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_exportExcel = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -113,11 +113,11 @@ Partial Class fr_list
         Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lbl_close.AutoSize = True
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(870, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(870, 8)
         Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(47, 20)
+        Me.lbl_close.Size = New System.Drawing.Size(52, 22)
         Me.lbl_close.TabIndex = 138
         Me.lbl_close.Text = "Close"
         Me.lbl_close.Visible = False
@@ -145,11 +145,11 @@ Partial Class fr_list
         '
         Me.lbl_judul.AutoSize = True
         Me.lbl_judul.BackColor = System.Drawing.Color.Orange
-        Me.lbl_judul.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_judul.Font = New System.Drawing.Font("Open Sans", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_judul.ForeColor = System.Drawing.Color.White
-        Me.lbl_judul.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_judul.Location = New System.Drawing.Point(6, 3)
         Me.lbl_judul.Name = "lbl_judul"
-        Me.lbl_judul.Size = New System.Drawing.Size(172, 30)
+        Me.lbl_judul.Size = New System.Drawing.Size(194, 33)
         Me.lbl_judul.TabIndex = 136
         Me.lbl_judul.Text = "Data Perkiraan"
         '
@@ -176,7 +176,7 @@ Partial Class fr_list
         Me.mn_add.Image = Global.Inventory.My.Resources.Resources.toolbar_add_icon
         Me.mn_add.Name = "mn_add"
         Me.mn_add.ShortcutKeyDisplayString = "Ctrl+N"
-        Me.mn_add.Size = New System.Drawing.Size(79, 20)
+        Me.mn_add.Size = New System.Drawing.Size(78, 20)
         Me.mn_add.Text = "Tambah"
         Me.mn_add.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -217,7 +217,7 @@ Partial Class fr_list
         'mn_exportExcel
         '
         Me.mn_exportExcel.Name = "mn_exportExcel"
-        Me.mn_exportExcel.Size = New System.Drawing.Size(117, 22)
+        Me.mn_exportExcel.Size = New System.Drawing.Size(116, 22)
         Me.mn_exportExcel.Text = "To Excel"
         '
         'mn_refresh
@@ -227,6 +227,12 @@ Partial Class fr_list
         Me.mn_refresh.ShortcutKeys = System.Windows.Forms.Keys.F5
         Me.mn_refresh.Size = New System.Drawing.Size(58, 20)
         Me.mn_refresh.Text = "Refresh"
+        '
+        'mn_bataljual
+        '
+        Me.mn_bataljual.Name = "mn_bataljual"
+        Me.mn_bataljual.Size = New System.Drawing.Size(76, 20)
+        Me.mn_bataljual.Text = "Batal Kirim"
         '
         'Panel2
         '
@@ -239,12 +245,6 @@ Partial Class fr_list
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
         Me.Panel2.TabIndex = 342
-        '
-        'mn_bataljual
-        '
-        Me.mn_bataljual.Name = "mn_bataljual"
-        Me.mn_bataljual.Size = New System.Drawing.Size(76, 20)
-        Me.mn_bataljual.Text = "Batal Kirim"
         '
         'fr_list
         '

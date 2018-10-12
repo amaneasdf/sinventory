@@ -52,19 +52,6 @@ Public Class fr_lap_beli_nota_view
                         repdatasource.Name = "ds_beli_detail"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
 
-                        inquery = "SELECT supplier_kode as dlap_supplier, supplier_nama as dlap_supplier_n, " _
-                            & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
-                            & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
-                            & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
-                            & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
-                            & "SUM(trans_jumlah) as dlap_jumlah " _
-                            & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
-                            & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                            & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                            & "GROUP BY supplier_kode, trans_barang"
-                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
-
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
 
@@ -73,19 +60,6 @@ Public Class fr_lap_beli_nota_view
 
                         repdatasource.Name = "ds_beli_detail"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-
-                        inquery = "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y') as dlap_supplier, '' as dlap_supplier_n, " _
-                            & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
-                            & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
-                            & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
-                            & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
-                            & "SUM(trans_jumlah) as dlap_jumlah " _
-                            & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
-                            & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                            & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                            & "GROUP BY faktur_tanggal_trans, trans_barang"
-                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_supplierbarang.rdlc"
@@ -115,16 +89,6 @@ Public Class fr_lap_beli_nota_view
                     Case "lapBeliTglNotaBarang"
                         repdatasource.Name = "ds_nota_brg"
                         repdatasource.Value = ds_transaksi.dt_lap_beli_nota_detail
-                        'data didnt show in report
-                        inquery = "SELECT faktur_tanggal_trans as dlap_tgl, supplier_nama dlap_supplier_n, barang_nama as dlap_barang_n," _
-                            & "faktur_kode as dlap_faktur, CONCAT(trans_qty, ' ', trans_satuan) as dlap_qty, trans_harga_beli as dlap_harga_beli, " _
-                            & "TRUNCATE(((trans_qty*trans_harga_beli-trans_jumlah)/(trans_qty*trans_harga_beli))*100,2) as dlap_total_diskon, " _
-                            & "trans_jumlah as dlap_jumlah " _
-                            & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
-                            & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                            & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                            & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}'"
-                        inquery = String.Format(inquery, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_beli_tglnotabrg.rdlc"

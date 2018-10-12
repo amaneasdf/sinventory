@@ -65,6 +65,7 @@ Partial Class fr_lap_beli_nota_view
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.Size = New System.Drawing.Size(845, 64)
         Me.DataGridView1.TabIndex = 1
+        Me.DataGridView1.Visible = False
         '
         'fr_lap_beli_nota_view
         '

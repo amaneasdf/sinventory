@@ -1,20 +1,28 @@
-﻿Public Class fr_lap_filter
+﻿Public Class fr_lap_filter_beli
     Private popupstate As String = "supplier"
     Private lapwintext As String = ""
     Public laptype As String
     Public jenis_sw As Boolean = True
     Public supplier_sw As Boolean = True
+    Public barang_sw As Boolean = False
 
     Private Sub prcessSW()
-        If supplier_sw = False Then
-            lbl_supplier.Visible = False
-            in_supplier.Visible = False
-            in_supplier_n.Visible = False
-        End If
-        If jenis_sw = False Then
-            lbl_jenis.Visible = False
-            cb_jenis.Visible = False
-        End If
+        'If supplier_sw = False Then
+        lbl_supplier.Visible = supplier_sw
+        in_supplier.Visible = supplier_sw
+        in_supplier_n.Visible = supplier_sw
+        'End If
+        'If jenis_sw = False Then
+        lbl_jenis.Visible = jenis_sw
+        cb_jenis.Visible = jenis_sw
+        'End If
+        'If barang_sw = False Then
+        lbl_barang.Visible = barang_sw
+        in_barang.Visible = barang_sw
+        in_barang_n.Visible = barang_sw
+        'End If
+
+        Me.Text = lapwintext
     End Sub
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
@@ -25,7 +33,11 @@
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
             Case "barang"
-                q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_nama LIKE '{0}%'"
+                If in_supplier.Text <> Nothing Then
+                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_supplier='" & in_supplier.Text & "' AND barang_nama LIKE '{0}%'"
+                Else
+                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_nama LIKE '{0}%'"
+                End If
             Case Else
                 Exit Sub
         End Select
@@ -45,9 +57,11 @@
                 Case "supplier"
                     in_supplier.Text = .Cells(0).Value
                     in_supplier_n.Text = .Cells(1).Value
-                    bt_simpanbeli.Focus()
+                    If barang_sw = True Then in_barang.Focus() Else bt_simpanbeli.Focus()
                 Case "barang"
-
+                    in_barang.Text = .Cells(0).Value
+                    in_barang_n.Text = .Cells(1).Value
+                    bt_simpanbeli.Focus()
                 Case Else
                     Exit Sub
             End Select
@@ -139,12 +153,94 @@
                     & ") beli {2} ORDER BY lap_tgl"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
-        End Select
-        qwh += "WHERE lap_jenis IN (" & cb_jenis.SelectedValue & ") "
+            Case "lapBeliSupplierBarang"
+                q = "SELECT * FROM( " _
+                    & "SELECT supplier_kode as dlap_supplier, supplier_nama as dlap_supplier_n, " _
+                    & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
+                    & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
+                    & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
+                    & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
+                    & "SUM(trans_jumlah) as dlap_jumlah, 'BELI' as dlap_jenis " _
+                    & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                    & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "GROUP BY supplier_kode, trans_barang " _
+                    & "UNION " _
+                    & "SELECT supplier_kode,supplier_nama, trans_barang, barang_nama, " _
+                    & "	SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), " _
+                    & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
+                    & "	SUM(trans_qty*trans_harga_retur) as dlap_harga_beli, 0 as dlap_total_diskon, " _
+                    & "	SUM(trans_qty*trans_harga_retur) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                    & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "GROUP BY supplier_kode,trans_barang" _
+                    & ") beli {2} ORDER BY dlap_barang_n"
+                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
-        If in_supplier.Text <> Nothing Then
-            qwh += "AND lap_supplier='" & in_supplier.Text & "' "
-        End If
+            Case "lapBeliTglBarang"
+                q = "SELECT * FROM( " _
+                    & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y') as dlap_supplier, '' as dlap_supplier_n, " _
+                    & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
+                    & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
+                    & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
+                    & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
+                    & "SUM(trans_jumlah) as dlap_jumlah, 'BELI' as dlap_jenis " _
+                    & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                    & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "GROUP BY supplier_kode, trans_barang " _
+                    & "UNION " _
+                    & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y'),'', trans_barang, barang_nama, " _
+                    & "	SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), " _
+                    & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
+                    & "	SUM(trans_qty*trans_harga_retur) as dlap_harga_beli, 0 as dlap_total_diskon, " _
+                    & "	SUM(trans_qty*trans_harga_retur) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                    & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "GROUP BY supplier_kode,trans_barang" _
+                    & ") beli {2} ORDER BY dlap_barang_n"
+                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+
+            Case "lapBeliTglNotaBarang"
+                q = "SELECT faktur_tanggal_trans as dlap_tgl, supplier_nama dlap_supplier_n, barang_nama as dlap_barang_n," _
+                    & "faktur_kode as dlap_faktur, CONCAT(trans_qty, ' ', trans_satuan) as dlap_qty, trans_harga_beli as dlap_harga_beli, " _
+                    & "TRUNCATE(((trans_qty*trans_harga_beli-trans_jumlah)/(trans_qty*trans_harga_beli))*100,2) as dlap_total_diskon, " _
+                    & "trans_jumlah as dlap_jumlah " _
+                    & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                    & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' {2}"
+                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+        End Select
+
+        Select Case tipe
+            Case "lapBeliSupplierNota", "lapBeliTglNota", "lapBeliSupplier", "lapBeliTgl", "lapBeliNota"
+                qwh += "WHERE lap_jenis IN (" & cb_jenis.SelectedValue & ") "
+                If in_supplier.Text <> Nothing Then
+                    qwh += "AND lap_supplier='" & in_supplier.Text & "' "
+                End If
+            Case "lapBeliSupplierBarang", "lapBeliTglBarang"
+                qwh += "WHERE dlap_jenis IN (" & cb_jenis.SelectedValue & ") "
+                If in_supplier.Text <> Nothing Then
+                    qwh += "AND dlap_supplier='" & in_supplier.Text & "' "
+                End If
+                If in_barang.Text <> Nothing Then
+                    qwh += "AND dlap_barang='" & in_barang.Text & "' "
+                End If
+            Case Else
+                If in_supplier.Text <> Nothing Then
+                    qwh += "AND faktur_supplier='" & in_supplier.Text & "' "
+                End If
+                If in_barang.Text <> Nothing Then
+                    qwh += "AND trans_barang='" & in_barang.Text & "' "
+                End If
+        End Select
 
         qreturn = String.Format(q, qwh)
         consoleWriteLine(qreturn)
@@ -228,7 +324,7 @@
     'UI
     '------------- POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
-        If Not in_supplier_n.Focused Then
+        If Not in_supplier_n.Focused Or in_barang_n.Focused Then
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
@@ -253,6 +349,8 @@
             Select Case popupstate
                 Case "supplier"
                     x = in_supplier_n
+                Case "barang"
+                    x = in_barang_n
                 Case Else
                     x = Nothing
                     x.Dispose()
@@ -290,6 +388,7 @@
     Private Sub cb_jenis_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_jenis.KeyUp
         keyshortenter(IIf(supplier_sw = False, bt_simpanbeli, in_supplier_n), e)
     End Sub
+
     Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
         keyshortenter(in_supplier_n, e)
     End Sub
@@ -320,7 +419,7 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(bt_simpanbeli, e)
+            keyshortenter(IIf(barang_sw = True, in_barang_n, bt_simpanbeli), e)
         Else
             If popPnl_barang.Visible = False Then
                 popPnl_barang.Visible = True
@@ -332,6 +431,52 @@
     Private Sub in_supplier_n_TextChanged(sender As Object, e As EventArgs) Handles in_supplier_n.TextChanged
         If in_supplier_n.Text = "" Then
             in_supplier.Clear()
+            'AND OTHER STUFF
+        End If
+    End Sub
+
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+        keyshortenter(in_barang_n, e)
+    End Sub
+
+    Private Sub in_barang_n_Enter(sender As Object, e As EventArgs) Handles in_barang_n.Enter
+        popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height)
+        If popPnl_barang.Visible = False Then
+            popPnl_barang.Visible = True
+        End If
+        popupstate = "barang"
+        loadDataBRGPopup("barang", in_barang_n.Text)
+    End Sub
+
+    Private Sub in_barang_n_Leave(sender As Object, e As EventArgs) Handles in_barang_n.Leave
+        If Not dgv_listbarang.Focused = True Then
+            popPnl_barang.Visible = False
+        Else
+            popPnl_barang.Visible = True
+        End If
+    End Sub
+
+    Private Sub in_barang_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_n.KeyUp
+        If e.KeyCode = Keys.Down Then
+            If popPnl_barang.Visible = True Then
+                dgv_listbarang.Focus()
+            End If
+        ElseIf e.KeyCode = Keys.Enter Then
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
+                setPopUpResult()
+            End If
+            keyshortenter(bt_simpanbeli, e)
+        Else
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup("barang", in_barang_n.Text)
+        End If
+    End Sub
+
+    Private Sub in_barang_n_TextChanged(sender As Object, e As EventArgs) Handles in_barang_n.TextChanged
+        If in_barang_n.Text = "" Then
+            in_barang.Clear()
             'AND OTHER STUFF
         End If
     End Sub

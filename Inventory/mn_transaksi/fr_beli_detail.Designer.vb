@@ -166,7 +166,7 @@ Partial Class fr_beli_detail
         '
         Me.mn_cancelorder.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_cancelorder.Name = "mn_cancelorder"
-        Me.mn_cancelorder.Size = New System.Drawing.Size(75, 20)
+        Me.mn_cancelorder.Size = New System.Drawing.Size(74, 20)
         Me.mn_cancelorder.Text = "Validasi"
         Me.mn_cancelorder.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.mn_cancelorder.Visible = False
@@ -182,11 +182,11 @@ Partial Class fr_beli_detail
         '
         Me.lbl_title.AutoSize = True
         Me.lbl_title.BackColor = System.Drawing.Color.Orange
-        Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_title.ForeColor = System.Drawing.Color.White
-        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Location = New System.Drawing.Point(6, 3)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(255, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(286, 33)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Form Order Pembelian"
         '
@@ -214,11 +214,11 @@ Partial Class fr_beli_detail
         Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lbl_close.AutoSize = True
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(923, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(923, 8)
         Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(47, 20)
+        Me.lbl_close.Size = New System.Drawing.Size(52, 22)
         Me.lbl_close.TabIndex = 138
         Me.lbl_close.Text = "Close"
         Me.lbl_close.Visible = False
