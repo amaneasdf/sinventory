@@ -526,25 +526,37 @@
                     }
                 x.Show()
             Case "mn070602"
-                Dim x As New fr_lap_hutang
-                x.setVar("h_titipsupplier", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_hutang
+                    With x
+                        .do_load("Laporan Piutang Titipan Per Supplier", "h_titipsupplier")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070603"
-                Dim x As New fr_lap_hutang
-                x.setVar("h_nota", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_hutang
+                    With x
+                        .do_load("Laporan Hutang Per Nota", "h_nota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070604"
-                Dim x As New fr_lap_hutang
-                x.setVar("h_kartuhutang", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_hutang
+                    With x
+                        .do_load("Kartu Hutang", "h_kartuhutang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070605"
-                Dim x As New fr_lap_hutang
-                x.setVar("h_bayarnota", "", selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_hutang
+                    With x
+                        .do_load("Laporan Pembayaran Hutang Per Nota", "h_bayarnota")
+                        .ShowDialog()
+                    End With
+                End Using
+                'Dim x As New fr_lap_hutang
+                'x.setVar("h_bayarnota", "", selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
+                'x.Show()
+                'x.do_load()
             Case "mn070705"
                 Dim x As New fr_view_piutang
                 x.setVar("p_salesnota", "", selectedperiode.ToString("MMMM yyyy"))

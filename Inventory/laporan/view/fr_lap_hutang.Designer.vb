@@ -22,18 +22,20 @@ Partial Class fr_lap_hutang
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ReportDataSource2 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
+        Dim ReportDataSource1 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
         Me.rv_nota = New Microsoft.Reporting.WinForms.ReportViewer()
         Me.ds_hutangpiutang = New Inventory.ds_hutangpiutang()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'rv_nota
         '
         Me.rv_nota.Dock = System.Windows.Forms.DockStyle.Fill
-        ReportDataSource2.Name = "ds_jual_tgl"
-        ReportDataSource2.Value = Nothing
-        Me.rv_nota.LocalReport.DataSources.Add(ReportDataSource2)
+        ReportDataSource1.Name = "ds_jual_tgl"
+        ReportDataSource1.Value = Nothing
+        Me.rv_nota.LocalReport.DataSources.Add(ReportDataSource1)
         Me.rv_nota.LocalReport.ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
         Me.rv_nota.Location = New System.Drawing.Point(0, 0)
         Me.rv_nota.Name = "rv_nota"
@@ -45,17 +47,36 @@ Partial Class fr_lap_hutang
         Me.ds_hutangpiutang.DataSetName = "ds_hutangpiutang"
         Me.ds_hutangpiutang.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
         '
-        'fr_view_piutang
+        'DataGridView1
+        '
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridView1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView1.Location = New System.Drawing.Point(0, 415)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.ReadOnly = True
+        Me.DataGridView1.Size = New System.Drawing.Size(818, 97)
+        Me.DataGridView1.TabIndex = 1
+        Me.DataGridView1.Visible = False
+        '
+        'fr_lap_hutang
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(818, 524)
+        Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.rv_nota)
-        Me.Name = "fr_view_piutang"
+        Me.Name = "fr_lap_hutang"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
     Friend WithEvents rv_nota As Microsoft.Reporting.WinForms.ReportViewer
     Friend WithEvents ds_hutangpiutang As Inventory.ds_hutangpiutang
+    Friend WithEvents DataGridView1 As System.Windows.Forms.DataGridView
 End Class

@@ -82,6 +82,18 @@
                 dt.Rows.Add("Pembelian", "'BELI'")
                 dt.Rows.Add("Retur Pembelian", "'RETUR'")
                 dt.Rows.Add("Beli & Retur Beli", "'BELI','RETUR'")
+            Case "periode"
+                dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
+                                        & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
+                                        & "FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id<>0")
+            Case "bayarhutang"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Semua", "ALL")
+                dt.Rows.Add("Tunai", "TUNAI")
+                dt.Rows.Add("Giro", "BG")
+                dt.Rows.Add("TransferBank", "TRANSFER")
+                dt.Rows.Add("ReturPembelian", "RETUR")
             Case Else
                 dt = Nothing
         End Select
