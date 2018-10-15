@@ -150,7 +150,7 @@
                     & "LEFT JOIN data_pembelian_faktur ON hutang_faktur=faktur_kode " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE hutang_status=1 {2}" _
-                    & "ORDER BY hn_jt, hn_faktur"
+                    & "ORDER BY salesman_nama, customer_nama, faktur_tanggal_trans"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
                 qwh += "AND hutang_idperiode='" & cb_periode.SelectedValue & "' "

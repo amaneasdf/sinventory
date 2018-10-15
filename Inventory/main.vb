@@ -553,38 +553,55 @@
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_hutang
-                'x.setVar("h_bayarnota", "", selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
-                'x.Show()
-                'x.do_load()
             Case "mn070705"
-                Dim x As New fr_view_piutang
-                x.setVar("p_salesnota", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Laporan Piutang Per Salesman Per Nota", "p_salesnota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070706"
-                Dim x As New fr_view_piutang
-                Dim tglawal As Date = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-                Dim tglakhir As Date = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-                x.setVar("p_saleslengkap2", "", tglawal.ToShortDateString & " s.d. " & tglakhir.ToShortDateString)
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Laporan Piutang Per Salesman Lengkap", "p_saleslengkap2")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070707"
-                Dim x As New fr_view_piutang
-                Dim tglawal As Date = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-                Dim tglakhir As Date = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-                x.setVar("p_salesbayartanggal", "", tglawal.ToShortDateString & " s.d. " & tglakhir.ToShortDateString)
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Laporan Bayar Piutang Per Salesman dan Tanggal", "p_salesbayartanggal")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070712"
-                Dim x As New fr_view_piutang
-                x.setVar("p_salesglobal", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Laporan Piutang Global Per Sales", "p_salesglobal")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070714"
-                Dim x As New fr_view_piutang
-                x.setVar("p_kartupiutang", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Kartu Piutang", "p_kartupiutang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070715"
-                Dim x As New fr_view_piutang
-                x.setVar("p_kartupiutangsales", "", selectedperiode.ToString("MMMM yyyy"))
-                x.Show()
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Kartu Piutang Per Salesman", "p_kartupiutangsales")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070717"
+                Using x As New fr_lap_filter_piutang
+                    With x
+                        .do_load("Laporan Detail Pembayaran Piutang", "p_bayarnota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")

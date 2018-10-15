@@ -1429,6 +1429,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1440,6 +1442,7 @@
                   <Value>Jl. Bima No.14 Jatiwinangun</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1451,6 +1454,7 @@
                   <Value>Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1460,7 +1464,7 @@
           <rd:DefaultName>Textbox20</rd:DefaultName>
           <Top>0.00862cm</Top>
           <Height>1.99138cm</Height>
-          <Width>5.41042cm</Width>
+          <Width>5.80052cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1493,9 +1497,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>0.71207cm</Top>
-          <Left>5.41042cm</Left>
+          <Left>5.80052cm</Left>
           <Height>0.60882cm</Height>
-          <Width>9.43659cm</Width>
+          <Width>8.24597cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1529,9 +1533,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>1.39118cm</Top>
-          <Left>5.41042cm</Left>
+          <Left>5.80052cm</Left>
           <Height>0.60882cm</Height>
-          <Width>9.43659cm</Width>
+          <Width>8.24597cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -1563,9 +1567,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Left>17.02369cm</Left>
+          <Left>17.34701cm</Left>
           <Height>0.46771cm</Height>
-          <Width>2.82332cm</Width>
+          <Width>2.5cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>
@@ -1596,7 +1600,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"), "lapKartuStok")</Value>
+                  <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"), "lapPiutangSlsNota")</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
                     <FontSize>8pt</FontSize>
@@ -1607,9 +1611,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.17639cm</Top>
+          <Top>0.17638cm</Top>
           <Height>0.47653cm</Height>
-          <Width>8.72cm</Width>
+          <Width>7.34701cm</Width>
           <Style>
             <Border>
               <Style>None</Style>

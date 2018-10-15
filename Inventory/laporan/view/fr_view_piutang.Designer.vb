@@ -22,7 +22,7 @@ Partial Class fr_view_piutang
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim ReportDataSource2 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
+        Dim ReportDataSource1 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
         Me.rv_nota = New Microsoft.Reporting.WinForms.ReportViewer()
         Me.ds_hutangpiutang = New Inventory.ds_hutangpiutang()
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -31,9 +31,9 @@ Partial Class fr_view_piutang
         'rv_nota
         '
         Me.rv_nota.Dock = System.Windows.Forms.DockStyle.Fill
-        ReportDataSource2.Name = "ds_jual_tgl"
-        ReportDataSource2.Value = Nothing
-        Me.rv_nota.LocalReport.DataSources.Add(ReportDataSource2)
+        ReportDataSource1.Name = "ds_jual_tgl"
+        ReportDataSource1.Value = Nothing
+        Me.rv_nota.LocalReport.DataSources.Add(ReportDataSource1)
         Me.rv_nota.LocalReport.ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
         Me.rv_nota.Location = New System.Drawing.Point(0, 0)
         Me.rv_nota.Name = "rv_nota"
@@ -52,6 +52,8 @@ Partial Class fr_view_piutang
         Me.ClientSize = New System.Drawing.Size(818, 524)
         Me.Controls.Add(Me.rv_nota)
         Me.Name = "fr_view_piutang"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 

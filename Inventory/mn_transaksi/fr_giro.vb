@@ -36,6 +36,33 @@
                     in_ket.Text = rd.Item("giro_ket")
                 End If
                 rd.Close()
+            Case "IN"
+                q = "SELECT giro_no, giro_nilai, giro_tglcair, g_cair_tglcair," _
+                    & "p_bayar_custo, customer_nama, giro_ref, giro_ket " _
+                    & "FROM data_giro LEFT JOIN data_giro_cair ON giro_no=g_cair_nobg AND g_cair_status=1 " _
+                    & "left join data_piutang_bayar ON giro_ref=p_bayar_bukti AND p_bayar_status=1 " _
+                    & "LEFT JOIN data_customer_master ON p_bayar_custo=customer_kode " _
+                    & "WHERE giro_type='IN' AND giro_status=1 AND giro_no='{0}'"
+                q = String.Format(q, kode)
+
+                readcommd(q)
+                If rd.HasRows Then
+                    in_nobg.Text = rd.Item("giro_no")
+                    'bank
+                    in_nilaibg.Text = commaThousand(rd.Item("giro_nilai"))
+                    in_tgl_bg.Text = CDate(rd.Item("giro_tglcair"))
+                    If IsDBNull(rd.Item("g_cair_tglcair")) = False Then
+                        statuscair = True
+                        date_tgl_cair.Value = rd.Item("g_cair_tglcair")
+                        in_tgl_cair.Text = date_tgl_cair.Value.ToShortDateString
+                        datecairchange = False
+                    End If
+                    in_ref.Text = rd.Item("p_bayar_custo")
+                    in_ref_n.Text = rd.Item("customer_nama")
+                    in_faktur.Text = rd.Item("giro_ref")
+                    in_ket.Text = rd.Item("giro_ket")
+                End If
+                rd.Close()
             Case Else
                 Exit Sub
         End Select
@@ -104,7 +131,7 @@
 
         If in_tgl_cair.Text <> Nothing Then
             'PENCAIRAN
-            If datecairchange = True And MessageBox.Show("Giro " & in_nobg.Text & " sudah pernah diinputkan. Ganti tanggal pencairan?", "Pencairan Giro", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
+            If statuscair = True And datecairchange = True And MessageBox.Show("Giro " & in_nobg.Text & " sudah pernah diinputkan. Ganti tanggal pencairan?", "Pencairan Giro", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
                 Exit Sub
             End If
             q = "INSERT INTO data_giro_cair SET g_cair_nobg='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
@@ -142,7 +169,7 @@
             MessageBox.Show("Data tidak dapat tersimpan")
         Else
             MessageBox.Show("Data tersimpan")
-            doRefreshTab({pghutangbgo})
+            doRefreshTab({pghutangbgo, pgpiutangbgcair})
             Me.Close()
         End If
     End Sub
@@ -168,8 +195,10 @@
 
     'UI
     Private Sub date_tgl_cair_ValueChanged(sender As Object, e As EventArgs) Handles date_tgl_cair.ValueChanged
+        If statuscair = True Then
+            datecairchange = True
+        End If
         in_tgl_cair.Text = date_tgl_cair.Value.ToShortDateString
-        datecairchange = True
     End Sub
 
     Private Sub cb_akun_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_akun.KeyPress

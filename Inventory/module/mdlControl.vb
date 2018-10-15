@@ -1940,7 +1940,9 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "custo"
-                bs = populateDGVUserConTemp("getDataMaster('custo')", "nama LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                q = "getDataMaster('custo')"
+                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' alamat LIKE '%{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%'"
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "giro"
                 q = "SELECT giro_no as nobg, giro_bank as bank, giro_tglbg as tglbg, giro_nilai as jml, " _
@@ -1955,7 +1957,6 @@ Module mdlControl
                 bs = populateDGVUserConTemp("getDataMaster('perkiraan')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "neracaawal"
                 Exit Sub
-                '    bs = populateDGVUserConTemp("getDataMaster('neracaawal')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
 
             Case "beli"
                 q = "getTableTrans('beli','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
@@ -1974,39 +1975,36 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "jualvalid"
-                q = "SELECT faktur_kode as faktur, faktur_tanggal_trans as tanggal, gudang_nama as gudang, salesman_nama as sales, " _
-                    & "customer_nama as custo, faktur_pajak_no as pajak, faktur_netto as netto, faktur_bayar as klaim, " _
-                    & "faktur_netto-faktur_bayar as total, faktur_term as term, (CASE WHEN faktur_upd_alias = '' THEN " _
-                    & "faktur_reg_alias ELSE faktur_upd_alias END) as userid FROM data_penjualan_faktur, " _
-                    & "IF(faktur_status=2,'Batal','') as batal " _
-                    & "inner join data_barang_gudang on gudang_kode=faktur_gudang " _
-                    & "inner join `data_customer_master` on customer_kode=faktur_customer " _
-                    & "inner join `data_salesman_master` on salesman_kode=faktur_sales " _
-                    & "WHERE DATE_FORMAT(faktur_tanggal_trans,'%y%m') = DATE_FORMAT('{0}','%y%m') AND faktur_status=0" _
-                    & "ORDER BY faktur DESC"
-                p = "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'"
+                q = "getTableTrans('jualvalid','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
+                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%'"
+                Dim pNumeric As String = "netto={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
                 Exit Sub
+
             Case "jual"
-                q = "SELECT faktur_kode as faktur, faktur_tanggal_trans as tanggal, gudang_nama as gudang, salesman_nama as sales, " _
-                    & "customer_nama as custo, faktur_pajak_no as pajak, faktur_netto as netto, faktur_bayar as klaim, " _
-                    & "faktur_netto-faktur_bayar as total, faktur_term as term, (CASE WHEN faktur_upd_alias = '' THEN " _
-                    & "faktur_reg_alias ELSE faktur_upd_alias END) as userid FROM data_penjualan_faktur, " _
-                    & "IF(faktur_status=2,'Batal','') as batal " _
-                    & "inner join data_barang_gudang on gudang_kode=faktur_gudang " _
-                    & "inner join `data_customer_master` on customer_kode=faktur_customer " _
-                    & "inner join `data_salesman_master` on salesman_kode=faktur_sales " _
-                    & "WHERE DATE_FORMAT(faktur_tanggal_trans,'%y%m') = DATE_FORMAT('{0}','%y%m') AND faktur_status IN(1,2)" _
-                    & "ORDER BY faktur DESC"
-                bs = populateDGVUserConTemp(String.Format(q, selectedperiode.ToString("yyyy-MM-dd")), "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%'")
-                consoleWriteLine(String.Format(q, selectedperiode.ToString("yyyy-MM-dd")))
+                q = "getTableTrans('jual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
+                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR pajak LIKE '{0}%' OR batal LIKE '{0}%'"
+                Dim pNumeric As String = "bayar={0} OR total={0} OR term={0} OR klaim={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "returjual"
-                bs = populateDGVUserConTemp("getTrans('returjual','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "faktur LIKE '%" & param & "%' OR sales LIKE '%" & param & "%' OR custo LIKE '%" & param & "%' OR bukti LIKE '%" & param & "%'")
+                q = "getTableTrans('rjual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
+                Dim pDefault As String = "bukti LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR faktur LIKE '{0}%'"
+                Dim pNumeric As String = "jumlah={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "stok"
                 q = "getDataStockTable('" & selectperiode.id & "')"
                 Dim pAlphabet As String = "barang_nama LIKE '{0}%' OR gudang_nama LIKE '{0}%' OR stock_status LIKE '{0}%'"
                 Dim pNumeric As String = "stock_sisa ='{0}' OR stock_sisastockop={0}"
                 p = IIf(IsNumeric(param), pNumeric, pAlphabet)
+
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "mutasigudang"
@@ -2042,39 +2040,43 @@ Module mdlControl
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
                 'Exit Sub
+
             Case "piutangawal"
-                q = "SELECT piutang_tgl as tanggal, piutang_faktur as faktur, piutang_custo_n as custo, " _
-                                  & "piutang_term as term, piutang_awal, piutang_piutang,piutang_retur, " _
-                                  & "piutang_bayar, piutang_sales_n as sales, " _
-                                  & "piutang_sisa, piutang_jt " _
-                                  & "FROM selectPiutangAwal " _
-                                  '& "WHERE piutang_sisa <> 0"
-                bs = populateDGVUserConTemp(String.Format(q, selectedperiode.ToString("yyyy-MM")), "faktur LIKE '%" & param & "%' OR custo LIKE '" & param & "%'")
+                q = "getDataPiutangTable('" & selectperiode.id & "','awal')"
+                Dim pDefault As String = "faktur LIKE '{0}%' OR custo LIKE '{0}%' OR tanggal LIKE '{0}%' OR piutang_jt LIKE '{0}%'"
+                Dim pNumeric As String = "piutang_sisa={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "piutangbayar"
-                q = "SELECT p_bayar_bukti as bukti, p_bayar_tanggal_bayar as tanggal, salesman_nama as sales, " _
-                                  & "SUM(p_trans_nilaibayar) as debet, " _
-                                  & "IF(p_bayar_upd_alias='',p_bayar_reg_alias,p_bayar_upd_alias) as userid, " _
-                                  & "p_bayar_reg_date as piutangit, if(month(p_bayar_upd_date)=0,NULL,p_bayar_upd_date) as piutanget " _
-                                  & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_bayar_bukti=p_trans_bukti " _
-                                  & "LEFT JOIN data_salesman_master ON salesman_kode=p_bayar_sales " _
-                                  & "WHERE p_bayar_status<>9 AND p_trans_status<>9 AND " _
-                                  & "DATE_FORMAT(p_bayar_tanggal_bayar,'%y%m')='{0}'" _
-                                  & "GROUP BY p_bayar_bukti"
-                'consoleWriteLine(String.Format(q, selectedperiode.ToString("yyMM")))
-                bs = populateDGVUserConTemp(String.Format(q, selectedperiode.ToString("yyMM")), "bukti LIKE '" & param & "%' OR sales LIKE '" & param & "%'")
+                q = "getDataPiutangTable('" & selectperiode.id & "','bayar')"
+                Dim pDefault As String = "bukti LIKE '{0}%' OR custo LIKE '{0}%' OR sales LIKE '{0}%' OR tanggal LIKE '{0}%' OR jenisbayar LIKE '{0}%' OR userid LIKE '{0}%'"
+                Dim pNumeric As String = "debet={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "piutangbgcair"
-                q = "SELECT giro_no as nobg, giro_bank as bank, giro_tglbg as tglbg, giro_nilai as jml, " _
-                                  & "piutang_custo_n as custo, salesman_nama as sales, p_bayar_tanggal_bayar as tanggal " _
-                                  & "FROM data_giro " _
-                                  & "LEFT JOIN data_piutang_bayar_trans ON giro_ref=p_trans_bukti  AND  p_trans_status<>9 " _
-                                  & "LEFT JOIN data_piutang_bayar ON p_trans_bukti=p_bayar_bukti AND p_bayar_status<>9 " _
-                                  & "LEFT JOIN data_salesman_master ON p_bayar_sales=salesman_kode " _
-                                  & "LEFT JOIN selectpiutangawal ON p_trans_kode_piutang=piutang_faktur " _
-                                  & "WHERE giro_type='IN' and giro_status<>9"
+                q = "getDataPiutangTable('" & selectperiode.id & "','bgi')"
+                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tglcair LIKE '{0}%'"
+                Dim pNumeric As String = "jml={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
                 consoleWriteLine(q)
-                bs = populateDGVUserConTemp(String.Format(q, selectedperiode.ToString("yyyy-MM")), "nobg LIKE '%" & param & "%' OR bank LIKE '" & param & "%'")
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "piutangbgtolak"
-                Exit Sub
+                q = "getDataPiutangTable('" & selectperiode.id & "','bgitolak')"
+                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tgltolak LIKE '{0}%'"
+                Dim pNumeric As String = "jml={0}"
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                consoleWriteLine(q)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "kas"
                 q = "SELECT kas_kode as bukti, kas_tgl as tanggal ,perk_nama_akun as bank, salesman_nama as sales, " _
                                   & "sum(k_trans_debet) as debet, sum(k_trans_kredit) as kredit, " _

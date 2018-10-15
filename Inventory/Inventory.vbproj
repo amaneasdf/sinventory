@@ -167,6 +167,12 @@
     <Compile Include="laporan\filter\fr_lap_filter_beli.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_piutang.Designer.vb">
+      <DependentUpon>fr_lap_filter_piutang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_piutang.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_hutang.Designer.vb">
       <DependentUpon>fr_lap_filter_hutang.vb</DependentUpon>
     </Compile>
@@ -540,11 +546,15 @@
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_beli.resx">
       <DependentUpon>fr_lap_filter_beli.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="laporan\filter\fr_lap_filter_piutang.resx">
+      <DependentUpon>fr_lap_filter_piutang.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_hutang.resx">
       <DependentUpon>fr_lap_filter_hutang.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnotabrg.rdlc" />
+    <EmbeddedResource Include="laporan\lap\piutang\piutang_detailbayar.rdlc" />
     <EmbeddedResource Include="laporan\view\fr_lap_hutang.resx">
       <DependentUpon>fr_lap_hutang.vb</DependentUpon>
     </EmbeddedResource>
