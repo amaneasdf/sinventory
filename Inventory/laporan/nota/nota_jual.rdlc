@@ -538,7 +538,6 @@
                               <Value>=Fields!jual_barang.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -569,7 +568,6 @@
                               <Value>=Fields!jual_barang_n.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -600,7 +598,6 @@
                               <Value>=Fields!jual_qty.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -635,7 +632,6 @@
                               <Value>=Fields!jual_harga.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -671,7 +667,6 @@
                               <Value>=Fields!jual_discrp.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -707,7 +702,6 @@
                               <Value>=Fields!jual_d1.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -743,7 +737,6 @@
                               <Value>=Fields!jual_d2.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -779,7 +772,6 @@
                               <Value>=Fields!jual_d3.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -815,7 +807,6 @@
                               <Value>=Fields!jual_d4.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -851,7 +842,6 @@
                               <Value>=Fields!jual_d5.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -887,7 +877,6 @@
                               <Value>=Fields!jual_disctot.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -923,7 +912,6 @@
                               <Value>=Fields!jual_jml.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>

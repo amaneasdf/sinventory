@@ -1605,7 +1605,7 @@ Module mdlControl
                         mutasi_user = user_id.Clone()
 
                         .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, user_id})
+                    '.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, user_id})
                         For i = 0 To .Columns.Count - 1
                             .Columns(i).DisplayIndex = i
                         Next
@@ -1613,7 +1613,7 @@ Module mdlControl
             Case "stockop"
                     With frmstockop.dgv_list
                         .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby, mutasi_proses})
+                    '.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby, mutasi_proses})
                         For i = 0 To .Columns.Count - 1
                             .Columns(i).DisplayIndex = i
                         Next
@@ -1941,7 +1941,7 @@ Module mdlControl
 
             Case "custo"
                 q = "getDataMaster('custo')"
-                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' alamat LIKE '%{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%'"
+                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%'"
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "giro"

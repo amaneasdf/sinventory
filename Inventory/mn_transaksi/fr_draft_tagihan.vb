@@ -33,15 +33,24 @@
         Dim bs As New BindingSource
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
-        Dim q As String = "SELECT piutang_faktur, piutang_tgl, piutang_custo_n, piutang_sisa, piutang_jt, " _
+        'Dim q As String = "SELECT piutang_faktur, piutang_tgl, piutang_custo_n, piutang_sisa, piutang_jt, " _
+        '                  & "customer_pasar, customer_kabupaten, customer_kecamatan " _
+        '                  & "FROM selectPiutangAwal LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+        '                  & "WHERE piutang_sales='{0}' {1} AND piutang_sisa<>0"
+
+        Dim q As String = "SELECT piutang_faktur, faktur_tanggal_trans as piutang_tgl, customer_nama as piutang_custo_n, " _
+                          & "getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as piutang_sisa, " _
+                          & "ADDDATE(faktur_tanggal_trans,faktur_term) as piutang_jt, " _
                           & "customer_pasar, customer_kabupaten, customer_kecamatan " _
-                          & "FROM selectPiutangAwal LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
-                          & "WHERE piutang_sales='{0}' {1} AND piutang_sisa<>0"
+                          & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
+                          & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
+                          & "WHERE piutang_idperiode='" & selectperiode.id & "' AND faktur_sales='{0}' {1} " _
+                          & "AND getSisaPiutang(piutang_faktur,'" & selectperiode.id & "')<>0"
 
         If ck_tgl2.Checked = True And ck_tgl1.Checked = False Then
-            q = String.Format(q, in_sales.Text, "AND piutang_jt BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'")
+            q = String.Format(q, in_sales.Text, "AND ADDDATE(faktur_tanggal_trans,faktur_term) BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'")
         ElseIf ck_tgl1.Checked = True And ck_tgl2.Checked = False Then
-            q = String.Format(q, in_sales.Text, "AND piutang_jt < '" & _tglawal & "'")
+            q = String.Format(q, in_sales.Text, "AND ADDDATE(faktur_tanggal_trans,faktur_term) < '" & _tglawal & "'")
         Else
             q = String.Format(q, in_sales.Text, "")
         End If

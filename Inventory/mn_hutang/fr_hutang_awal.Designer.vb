@@ -28,7 +28,6 @@ Partial Class fr_hutang_awal
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.bt_batalreturbeli = New System.Windows.Forms.Button()
-        Me.bt_simpanreturbeli = New System.Windows.Forms.Button()
         Me.in_faktur = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -48,6 +47,7 @@ Partial Class fr_hutang_awal
         Me.Label7 = New System.Windows.Forms.Label()
         Me.in_tgllunas = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
+        Me.bt_bayar = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -127,20 +127,8 @@ Partial Class fr_hutang_awal
         Me.bt_batalreturbeli.Name = "bt_batalreturbeli"
         Me.bt_batalreturbeli.Size = New System.Drawing.Size(96, 29)
         Me.bt_batalreturbeli.TabIndex = 9
-        Me.bt_batalreturbeli.Text = "Batal"
+        Me.bt_batalreturbeli.Text = "OK"
         Me.bt_batalreturbeli.UseVisualStyleBackColor = True
-        '
-        'bt_simpanreturbeli
-        '
-        Me.bt_simpanreturbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_simpanreturbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanreturbeli.Location = New System.Drawing.Point(340, 498)
-        Me.bt_simpanreturbeli.Name = "bt_simpanreturbeli"
-        Me.bt_simpanreturbeli.Size = New System.Drawing.Size(96, 29)
-        Me.bt_simpanreturbeli.TabIndex = 8
-        Me.bt_simpanreturbeli.Text = "Simpan"
-        Me.bt_simpanreturbeli.UseVisualStyleBackColor = True
-        Me.bt_simpanreturbeli.Visible = False
         '
         'in_faktur
         '
@@ -352,12 +340,24 @@ Partial Class fr_hutang_awal
         Me.Label8.TabIndex = 370
         Me.Label8.Text = "Tgl Pelunasan"
         '
+        'bt_bayar
+        '
+        Me.bt_bayar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_bayar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_bayar.Location = New System.Drawing.Point(14, 487)
+        Me.bt_bayar.Name = "bt_bayar"
+        Me.bt_bayar.Size = New System.Drawing.Size(146, 29)
+        Me.bt_bayar.TabIndex = 371
+        Me.bt_bayar.Text = "Tambah Pembayaran"
+        Me.bt_bayar.UseVisualStyleBackColor = True
+        '
         'fr_hutang_awal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(550, 543)
+        Me.Controls.Add(Me.bt_bayar)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.Label6)
@@ -378,7 +378,6 @@ Partial Class fr_hutang_awal
         Me.Controls.Add(Me.in_faktur)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.bt_batalreturbeli)
-        Me.Controls.Add(Me.bt_simpanreturbeli)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
@@ -399,7 +398,6 @@ Partial Class fr_hutang_awal
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents bt_batalreturbeli As System.Windows.Forms.Button
-    Friend WithEvents bt_simpanreturbeli As System.Windows.Forms.Button
     Friend WithEvents in_faktur As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
@@ -419,4 +417,5 @@ Partial Class fr_hutang_awal
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents in_tgllunas As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents bt_bayar As System.Windows.Forms.Button
 End Class

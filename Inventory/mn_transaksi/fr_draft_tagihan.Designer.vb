@@ -90,6 +90,12 @@ Partial Class fr_draft_tagihan
         Me.Label9 = New System.Windows.Forms.Label()
         Me.in_sales_n = New System.Windows.Forms.TextBox()
         Me.lbl_statprint = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.TextBox3 = New System.Windows.Forms.TextBox()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.Panel2.SuspendLayout()
         CType(Me.dgv_draftfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_listfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -764,11 +770,83 @@ Partial Class fr_draft_tagihan
         Me.lbl_statprint.Text = "Printed"
         Me.lbl_statprint.Visible = False
         '
+        'TextBox1
+        '
+        Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox1.ForeColor = System.Drawing.Color.Black
+        Me.TextBox1.Location = New System.Drawing.Point(76, 483)
+        Me.TextBox1.MaxLength = 30
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.Size = New System.Drawing.Size(188, 20)
+        Me.TextBox1.TabIndex = 323
+        Me.TextBox1.TabStop = False
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(16, 486)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(61, 13)
+        Me.Label10.TabIndex = 324
+        Me.Label10.Text = "Kecamatan"
+        '
+        'TextBox2
+        '
+        Me.TextBox2.BackColor = System.Drawing.Color.White
+        Me.TextBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox2.ForeColor = System.Drawing.Color.Black
+        Me.TextBox2.Location = New System.Drawing.Point(76, 506)
+        Me.TextBox2.MaxLength = 30
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(188, 20)
+        Me.TextBox2.TabIndex = 325
+        Me.TextBox2.TabStop = False
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.Location = New System.Drawing.Point(16, 509)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(59, 13)
+        Me.Label11.TabIndex = 326
+        Me.Label11.Text = "Kabupaten"
+        '
+        'TextBox3
+        '
+        Me.TextBox3.BackColor = System.Drawing.Color.White
+        Me.TextBox3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox3.ForeColor = System.Drawing.Color.Black
+        Me.TextBox3.Location = New System.Drawing.Point(325, 483)
+        Me.TextBox3.MaxLength = 30
+        Me.TextBox3.Name = "TextBox3"
+        Me.TextBox3.Size = New System.Drawing.Size(188, 20)
+        Me.TextBox3.TabIndex = 327
+        Me.TextBox3.TabStop = False
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.Location = New System.Drawing.Point(283, 486)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(34, 13)
+        Me.Label12.TabIndex = 328
+        Me.Label12.Text = "Pasar"
+        '
         'fr_draft_tagihan
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.Controls.Add(Me.TextBox3)
+        Me.Controls.Add(Me.Label12)
+        Me.Controls.Add(Me.TextBox2)
+        Me.Controls.Add(Me.Label11)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.in_sales_n)
         Me.Controls.Add(Me.in_sales)
         Me.Controls.Add(Me.ck_tgl2)
@@ -886,5 +964,11 @@ Partial Class fr_draft_tagihan
     Friend WithEvents list_kec As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents list_kab As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents lbl_statprint As System.Windows.Forms.Label
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents TextBox3 As System.Windows.Forms.TextBox
+    Friend WithEvents Label12 As System.Windows.Forms.Label
 
 End Class

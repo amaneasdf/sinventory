@@ -171,7 +171,7 @@
                     Dim frpb As New fr_piutang_bayar
                     frpb.Show(main)
                 Case "pgpiutangbgtolak"
-                    fr_bg_tolak.ShowDialog(main)
+                    'fr_bg_tolak.ShowDialog(main)
                 Case "pgkas"
                     fr_kas_detail.ShowDialog(main)
                 Case "pgjurnalmemorial"
@@ -291,34 +291,11 @@
                     Case "pgreturjual"
                         Dim detail As New fr_jual_retur_detail
                         With detail
-                            .bt_simpanreturjual.Visible = False
+                            .bt_simpanreturbeli.Text = "Update"
                             .Text += dgv_list.Rows(rowindex).Cells(0).Value
                             .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .Show(main)
                         End With
-                        'Case "pgmutasigudang"
-                        '    Dim detail As New fr_stok_mutasi
-                        '    With detail
-                        '        .bt_simpanreturbeli.Text = "Update"
-                        '        .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                        '        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                        '        .Show(main)
-                        '    End With
-                        'Case "pgmutasistok"
-                        '    Dim detail As New fr_stok_mutasi_barang
-                        '    With detail
-                        '        .bt_simpanreturbeli.Text = "Update"
-                        '        .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                        '        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                        '        .Show(main)
-                        '    End With
-                        'Case "pgstockop"
-                        '    Dim detail As New fr_stock_op
-                        '    With detail
-                        '        .bt_simpanreturbeli.Text = "Update"
-                        '        .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                        '        .Show(main)
-                        'End With
                     Case "pghutangawal"
                         Using detail As New fr_hutang_awal
                             With detail
@@ -361,14 +338,21 @@
                             .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .Show(main)
                         End With
+                    Case "pgpiutangbgcair"
+                        Dim detail As New fr_giro
+                        With detail
+                            .Text = "Detail Giro : " & dgv_list.Rows(rowindex).Cells(0).Value
+                            .Show()
+                            .do_load("IN", dgv_list.Rows(rowindex).Cells(0).Value)
+                        End With
                     Case "pgpiutangbgtolak"
-                        Using detail As New fr_bg_tolak
-                            With detail
-                                .bt_simpanperkiraan.Text = "Update"
+                        'Using detail As New fr_bg_tolak
+                        '    With detail
+                        '        .bt_simpanperkiraan.Text = "Update"
 
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        '        .ShowDialog(main)
+                        '    End With
+                        'End Using
                     Case "pgkas"
                         Using detail As New fr_kas_detail
                             With detail

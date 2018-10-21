@@ -241,8 +241,10 @@
                     & "WHERE customer_status<>9 AND customer_nama LIKE '{0}%'"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case "faktur"
-                q = "SELECT piutang_faktur as 'Kode Faktur', piutang_sisa as 'Sisa Piutang', piutang_jt as 'Jatuh Tempo' " _
-                    & "FROM selectpiutangawal WHERE piutang_sisa <> 0 AND piutang_custo='{1}' AND piutang_faktur LIKE '{0}%'"
+                q = "SELECT piutang_faktur as 'Kode Faktur', getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as 'Sisa Piutang', " _
+                    & "ADDDATE(faktur_tanggal_trans, faktur_term) as 'Jatuh Tempo' " _
+                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
+                    & "WHERE getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0 AND faktur_customer='{1}' AND piutang_faktur LIKE '{0}%'"
                 consoleWriteLine(String.Format(q, param, param2))
                 dt = getDataTablefromDB(String.Format(q, param, param2))
             Case Else
@@ -317,7 +319,7 @@
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If MessageBox.Show("Tutup Form?", "Kas", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
+        If MessageBox.Show("Tutup Form?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
             e.Cancel = True
         End If
     End Sub
@@ -372,7 +374,7 @@
 
     '------------ save
     Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpanperkiraan.Click
-        saveData()
+        'saveData()
     End Sub
 
     'UI
