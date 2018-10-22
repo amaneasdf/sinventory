@@ -1982,7 +1982,7 @@ Module mdlControl
 
             Case "custo"
                 q = "getDataMaster('custo')"
-                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' alamat LIKE '%{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%'"
+                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%'"
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "giro"

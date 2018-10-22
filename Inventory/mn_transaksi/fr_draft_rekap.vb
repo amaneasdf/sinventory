@@ -63,6 +63,7 @@
     Private Sub loadDraftList(param As String)
         Dim bs As New BindingSource
         'bs.DataSource = getDataTablefromDB("viewDraft('all','header')")
+
         bs.DataSource = getDataTablefromDB("SELECT * FROM selectDraftRekapList WHERE draft_kode LIKE 'RS" & selectedperiode.ToString("yyyyMM") & "%'")
         bs.Filter = "draft_kode LIKE '%" & param & "%' OR draft_sales LIKE '%" & param & "%'"
         dgv_draft_list.DataSource = bs
@@ -377,7 +378,7 @@
                         Exit Sub
                     End If
                 Next
-                If selected.Cells("list_draft").Value = "N" Then
+                If selected.Cells("list_draft").Value = "N" Or selected.Cells("list_draft").Value = "" Then
                     selected.Cells("list_draft").Value = "Y"
                     dgv_draftfaktur.Rows.Add(selected.Cells("list_custo").Value, selected.Cells("list_faktur").Value, selected.Cells("list_netto").Value)
                 End If

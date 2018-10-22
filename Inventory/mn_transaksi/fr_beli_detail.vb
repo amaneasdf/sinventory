@@ -386,7 +386,7 @@
         q = "UPDATE data_pembelian_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_faktur.Text))
 
-        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}'"
+        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}' AND trans_jenis='po'"
         queryArr.Add(String.Format(q, in_faktur.Text))
         '==========================================================================================================================
 
@@ -434,6 +434,9 @@
                 _qtytot = rd.Item(0)
             End If
             rd.Close()
+
+            q = "setHPP('" & rows.Cells(0).Value & "')"
+            queryArr.Add(q)
 
             x.Add("'" & rows.Cells(0).Value & "'")
             qty.Add(_qtytot)

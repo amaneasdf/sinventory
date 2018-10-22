@@ -7,7 +7,14 @@
     Private rowindexlist As Integer = 0
     Private jeniscusto As String
     Public tjlStatus As String = 1
+    Private pjkStatus As String = 0
     Private popupstate As String = "barang"
+    Private totpersediaan As Decimal = 0
+    Private isibesar As Integer = 0
+    Private isitengah As Integer = 0
+    Private _satuanstate As String = "kecil"
+    Private term As Integer = 0
+
 
     Private Sub loadDataFaktur(faktur As String)
         Dim q As String = "SELECT faktur_ppn_jenis, faktur_pajak_no, faktur_tanggal_trans, faktur_pajak_tanggal, faktur_gudang, " _
@@ -59,7 +66,7 @@
 
     Private Sub loadDataBarang(faktur As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_jual, trans_qty, trans_satuan, trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5, trans_disc_rupiah, trans_jumlah, trans_satuan_type, trans_hpp FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & faktur & "'")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_jual, trans_qty, trans_satuan, trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5, trans_disc_rupiah, trans_jumlah, trans_satuan_type, trans_hpp FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & faktur & "' AND trans_status=1")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -103,12 +110,15 @@
         Dim dt As New DataTable
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        readcommd("SELECT barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        readcommd("SELECT barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar, " _
+                          & "barang_satuan_tengah_jumlah, barang_satuan_besar_jumlah FROM data_barang_master WHERE barang_kode='" & kode & "'")
         With dt.Rows
             If rd.HasRows Then
                 .Add(rd.Item("barang_satuan_kecil"), "kecil")
                 .Add(rd.Item("barang_satuan_tengah"), "tengah")
                 .Add(rd.Item("barang_satuan_besar"), "besar")
+                isibesar = rd.Item("barang_satuan_besar_jumlah")
+                isitengah = rd.Item("barang_satuan_tengah_jumlah")
             End If
         End With
         rd.Close()
@@ -116,8 +126,48 @@
         cb_sat.DataSource = dt
         cb_sat.DisplayMember = "Text"
         cb_sat.ValueMember = "Value"
+        cb_sat.SelectedIndex = 2
+        _satuanstate = cb_sat.SelectedValue
         rd.Close()
     End Sub
+
+    'COUNT PRICE
+    Private Function countHarga(state As String, hargaawal As Decimal, convState As String) As Decimal
+        Dim retHarga As Decimal = 0
+        Dim isi As Integer = 0
+        Dim opertr As String = "bagi"
+
+        Select Case state
+            Case "besar"
+                If convState = "tengah" Then
+                    retHarga = hargaawal / isibesar
+                ElseIf convState = "kecil" Then
+                    retHarga = hargaawal / (isibesar * isitengah)
+                Else
+                    retHarga = hargaawal
+                End If
+            Case "tengah"
+                If convState = "besar" Then
+                    retHarga = hargaawal * isibesar
+                ElseIf convState = "kecil" Then
+                    retHarga = hargaawal / isitengah
+                Else
+                    retHarga = hargaawal
+                End If
+            Case "kecil"
+                If convState = "besar" Then
+                    retHarga = hargaawal * isitengah * isibesar
+                ElseIf convState = "tengah" Then
+                    retHarga = hargaawal * isitengah
+                Else
+                    retHarga = hargaawal
+                End If
+            Case Else
+                retHarga = hargaawal
+        End Select
+
+        Return retHarga
+    End Function
 
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
         setDoubleBuffered(Me.dgv_listbarang, True)
@@ -357,14 +407,35 @@
         'THESE NEED REWORK
         op_con()
 
-        Dim dataBrg, dataFak As String()
+        Dim dataBrg, dataHead As String()
         Dim data1, data2 As String()
         Dim querycheck As Boolean = False
         Dim queryArr As New List(Of String)
-        Dim q1 As String = "INSERT INTO data_penjualan_faktur SET faktur_kode='{0}',{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
+        Dim q As String = ""
         Dim q2 As String = "INSERT INTO data_penjualan_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
         Dim q3 As String = "DELETE FROM data_penjualan_trans WHERE trans_faktur='{0}' AND trans_barang NOT IN({1})"
 
+        '==========================================================================================================================
+        dataHead = {
+            "faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "faktur_pajak_no='" & in_pajak.Text & "'",
+            "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
+            "faktur_gudang='" & in_gudang.Text & "'",
+            "faktur_sales='" & in_sales.Text & "'",
+            "faktur_customer='" & in_custo.Text & "'",
+            "faktur_term='" & in_term.Value & "'",
+            "faktur_catatan='" & in_ket.Text & "'",
+            "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text).ToString.Replace(",", ".") & "'",
+            "faktur_disc_rupiah='" & removeCommaThousand(in_diskon.Text).ToString.Replace(",", ".") & "'",
+            "faktur_total='" & removeCommaThousand(in_total.Text).ToString.Replace(",", ".") & "'",
+            "faktur_ppn_persen='" & removeCommaThousand(in_ppn_tot.Text).ToString.Replace(",", ".") & "'",
+            "faktur_ppn_jenis='" & cb_ppn.SelectedValue & "'",
+            "faktur_netto='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", ".") & "'",
+            "faktur_bayar='" & in_bayar.Value.ToString.Replace(",", ".") & "'",
+            "faktur_status=" & tjlStatus
+            }
+
+        'SAVE HEADER
         If bt_simpanjual.Text = "Simpan" Then
             'GENERATE KODE
             If in_faktur.Text = Nothing Then
@@ -377,21 +448,36 @@
                 in_faktur.Text = "SO" & date_tgl_beli.Value.ToString("yyyyMMdd") & no.ToString("D4")
             ElseIf in_faktur.Text <> Nothing And bt_simpanjual.Text <> "Update" Then
                 If checkdata("data_penjualan_faktur", "'" & in_faktur.Text & "'", "faktur_kode") = True Then
-                    If MessageBox.Show("Faktur sudah ada. Update data faktur " & in_faktur.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
-                        Exit Sub
-                    End If
+                    MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernnah diinputkan", "Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    in_faktur.Focus()
+                    Exit Sub
                 End If
             End If
 
-
+            q = "INSERT INTO data_penjualan_faktur SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
+        ElseIf bt_simpanjual.Text = "Update" Then
+            q = "UPDATE data_penjualan_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}'"
         End If
+        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), loggeduser.user_id))
+        '==========================================================================================================================
 
+
+        '==========================================================================================================================
         'INSERT BARANG
         Dim x As New List(Of String)
         Dim x_kodestock As New List(Of String)
         Dim qty As New List(Of Integer)
         Dim nilai As New List(Of Double)
-        Dim persediaan As Double = 0
+
+        '==========================================================================================================================
+        q = "UPDATE data_penjualan_trans SET trans_status=9 WHERE trans_faktur='{0}'"
+        queryArr.Add(String.Format(q, in_faktur.Text))
+
+        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}' AND trans_jenis='so'"
+        queryArr.Add(String.Format(q, in_faktur.Text))
+        '==========================================================================================================================
+
+        '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
             Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & date_tgl_beli.Value.ToString("yyMM")
             dataBrg = {
@@ -407,62 +493,30 @@
                "trans_disc5='" & rows.Cells("disc5").Value.ToString.Replace(",", ".") & "'",
                "trans_disc_rupiah='" & rows.Cells("discrp").Value.ToString.Replace(",", ".") & "'",
                "trans_jumlah='" & rows.Cells("jml").Value.ToString.Replace(",", ".") & "'",
-               "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(",", ".") & "'"
+               "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(",", ".") & "'",
+               "trans_status=1"
                }
-            queryArr.Add(String.Format(q2, in_faktur.Text, String.Join(",", dataBrg)))
+            q = "INSERT INTO data_penjualan_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
+            queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataBrg)))
 
             'COUNT QTY TOTAL PER ITEM
             Dim _qtytot As Integer = 0
-            Dim _hpp As Double = 0
-            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "'), AVG(stock_hpp) FROM data_stok_awal WHERE stock_barang='" & rows.Cells(0).Value & "'")
+            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "') FROM data_stok_awal WHERE stock_barang='" & rows.Cells(0).Value & "'")
             If rd.HasRows Then
                 _qtytot = rd.Item(0)
-                _hpp = rd.Item(1)
             End If
             rd.Close()
-
-            persediaan += _qtytot * _hpp
 
             x.Add("'" & rows.Cells(0).Value & "'")
             qty.Add(_qtytot)
             x_kodestock.Add("'" & stockkode & "'")
-            nilai.Add(_qtytot * _hpp)
+            nilai.Add(_qtytot * rows.Cells("brg_hpp").Value)
         Next
-        'DELETE REMOVED ITEM
-        queryArr.Add(String.Format(q3, in_faktur.Text, String.Join(",", x)))
-
-        dataFak = {
-                    "faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                    "faktur_pajak_no='" & in_pajak.Text & "'",
-                    "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
-                    "faktur_gudang='" & in_gudang.Text & "'",
-                    "faktur_sales='" & in_sales.Text & "'",
-                    "faktur_customer='" & in_custo.Text & "'",
-                    "faktur_term='" & in_term.Value & "'",
-                    "faktur_catatan='" & in_ket.Text & "'",
-                    "faktur_jumlah='" & removeCommaThousand(in_jumlah.Text).ToString.Replace(",", ".") & "'",
-                    "faktur_disc_rupiah='" & removeCommaThousand(in_diskon.Text).ToString.Replace(",", ".") & "'",
-                    "faktur_total='" & removeCommaThousand(in_total.Text).ToString.Replace(",", ".") & "'",
-                    "faktur_ppn_persen='" & removeCommaThousand(in_ppn_tot.Text).ToString.Replace(",", ".") & "'",
-                    "faktur_ppn_jenis='" & cb_ppn.SelectedValue & "'",
-                    "faktur_netto='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", ".") & "'",
-                    "faktur_bayar='" & in_bayar.Value.ToString.Replace(",", ".") & "'",
-                    "faktur_persediaan='" & persediaan & "'",
-                    "faktur_status=" & tjlStatus
-                    }
-        data1 = {
-            "faktur_reg_date=NOW()",
-            "faktur_reg_alias='" & loggeduser.user_id & "'"
-            }
-        data2 = {
-            "faktur_upd_date=NOW()",
-            "faktur_upd_alias='" & loggeduser.user_id & "'"
-            }
-        'INSERT HEADER
-        queryArr.Add(String.Format(q1, in_faktur.Text, String.Join(",", dataFak), String.Join(",", data1), String.Join(",", data2)))
+        '==========================================================================================================================
+        '==========================================================================================================================
 
 
-
+        '==========================================================================================================================
         'WRITE KARTU STOK
         Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
         Dim q5 As String = "DELETE FROM data_stok_kartustok WHERE trans_faktur='{0}' AND trans_stock NOT IN({1})"
@@ -492,24 +546,40 @@
             queryArr.Add(String.Format(q4, String.Join(",", data1), String.Join(",", data2), stock, String.Join(",", dataBrg)))
             i += 1
         Next
-        'DONE : TODO : DELETE REMOVED ITEM FROM KARTU STOK
-        queryArr.Add(String.Format(q5, in_faktur.Text, String.Join(",", x_kodestock)))
+        '==========================================================================================================================
 
-        'TODO : WRITE HUTANG AWAL
-        Dim q6 As String = "INSERT INTO data_piutang_awal SET piutang_faktur='{0}',{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
-        dataBrg = {
-            "piutang_awal=" & removeCommaThousand(in_sisa.Text).ToString.Replace(",", "."),
-            "piutang_piutang=0"
-            }
+        '==========================================================================================================================
+        'TODO : WRITE PIUTANG AWAL
+        If in_term.Value <> 0 Then
+            Dim q6 As String = "INSERT INTO data_piutang_awal SET piutang_faktur='{0}', piutang_idperiode={4},{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
+            dataBrg = {
+                "piutang_awal=" & removeCommaThousand(in_sisa.Text).ToString.Replace(",", ".")
+              }
+            data1 = {
+                "piutang_reg_date=NOW()",
+                "piutang_reg_alias='" & loggeduser.user_id & "'"
+                }
+            data2 = {
+                "piutang_upd_date=NOW()",
+                "piutang_upd_alias='" & loggeduser.user_id & "'"
+                }
+            queryArr.Add(String.Format(q6, in_faktur.Text, String.Join(",", dataBrg), String.Join(",", data1), String.Join(",", data2), selectperiode.id))
+        End If
+        '==========================================================================================================================
+
+        '==========================================================================================================================
+        'INPUT JURNAL
+        '----------HEAD
+        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='JUAL',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
         data1 = {
-            "piutang_reg_date=NOW()",
-            "piutang_reg_alias='" & loggeduser.user_id & "'"
+            "line_ref='" & in_custo.Text & "'",
+            "line_ref_type='CUSTO'",
+            "line_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "line_status='1'"
             }
-        data2 = {
-            "piutang_upd_date=NOW()",
-            "piutang_upd_alias='" & loggeduser.user_id & "'"
-            }
-        queryArr.Add(String.Format(q6, in_faktur.Text, String.Join(",", dataBrg), String.Join(",", data1), String.Join(",", data2)))
+        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", data1), loggeduser.user_id))
+        '==========================================================================================================================
 
         'BEGIN TRANSACTION
         querycheck = startTrans(queryArr)
@@ -633,6 +703,11 @@
         If dgv_barang.RowCount = 0 Then
             MessageBox.Show("Barang belum di input")
             in_barang.Focus()
+            Exit Sub
+        End If
+        If in_term.Value = 0 And removeCommaThousand(in_sisa.Text) > 0 Then
+            MessageBox.Show("Pembayaran secara tunai masih kurang. Harap cek kembali")
+            in_term.Focus()
             Exit Sub
         End If
 
@@ -925,6 +1000,11 @@
         in_subtotal.Text = commaThousand(total)
     End Sub
 
+    Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectedIndexChanged
+        in_harga_beli.Value = countHarga(_satuanstate, in_harga_beli.Value, cb_sat.SelectedValue)
+        _satuanstate = cb_sat.SelectedValue
+    End Sub
+
     Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyUp
         keyshortenter(in_harga_beli, e)
     End Sub
@@ -974,6 +1054,10 @@
     End Sub
 
     Private Sub in_bayar_ValueChanged(sender As Object, e As EventArgs) Handles in_bayar.ValueChanged
-        in_sisa.Text = commaThousand(IIf(in_netto.Text <> Nothing, removeCommaThousand(in_netto.Text), 0) - in_bayar.Value)
+        Dim sisa As Double = IIf(in_netto.Text <> Nothing, removeCommaThousand(in_netto.Text), 0) - in_bayar.Value
+        in_sisa.Text = commaThousand(sisa)
+        If sisa = 0 Then
+            in_term.Value = 0
+        End If
     End Sub
 End Class

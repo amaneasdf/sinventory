@@ -249,7 +249,7 @@
                 Case "pgreturjual"
                     Dim detail As New fr_jual_retur_detail
                     With detail
-                        .bt_simpanreturjual.Visible = False
+                        .bt_simpanreturbeli.Visible = False
                         .Text += dgv_list.Rows(rowindex).Cells(0).Value
                         .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
                         .Show(main)

@@ -110,8 +110,8 @@ Partial Class fr_jual_detail
         Me.in_custo_n = New System.Windows.Forms.TextBox()
         Me.in_custo = New System.Windows.Forms.TextBox()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -127,6 +127,8 @@ Partial Class fr_jual_detail
         Me.in_bayar = New System.Windows.Forms.NumericUpDown()
         Me.in_sisa = New System.Windows.Forms.TextBox()
         Me.Label33 = New System.Windows.Forms.Label()
+        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.Label35 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -288,7 +290,7 @@ Partial Class fr_jual_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(465, 536)
+        Me.in_status.Location = New System.Drawing.Point(465, 508)
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(169, 20)
@@ -299,7 +301,7 @@ Partial Class fr_jual_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(425, 540)
+        Me.Label10.Location = New System.Drawing.Point(425, 512)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(37, 13)
         Me.Label10.TabIndex = 242
@@ -466,7 +468,7 @@ Partial Class fr_jual_detail
         '
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(449, 485)
+        Me.Label15.Location = New System.Drawing.Point(8, 485)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(27, 13)
         Me.Label15.TabIndex = 192
@@ -478,7 +480,7 @@ Partial Class fr_jual_detail
         Me.in_total.Cursor = System.Windows.Forms.Cursors.Default
         Me.in_total.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_total.ForeColor = System.Drawing.Color.Black
-        Me.in_total.Location = New System.Drawing.Point(517, 460)
+        Me.in_total.Location = New System.Drawing.Point(76, 460)
         Me.in_total.MaxLength = 20
         Me.in_total.Name = "in_total"
         Me.in_total.ReadOnly = True
@@ -491,7 +493,7 @@ Partial Class fr_jual_detail
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(449, 463)
+        Me.Label13.Location = New System.Drawing.Point(8, 463)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(36, 13)
         Me.Label13.TabIndex = 192
@@ -503,7 +505,7 @@ Partial Class fr_jual_detail
         Me.in_ppn_tot.Cursor = System.Windows.Forms.Cursors.Default
         Me.in_ppn_tot.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ppn_tot.ForeColor = System.Drawing.Color.Black
-        Me.in_ppn_tot.Location = New System.Drawing.Point(517, 482)
+        Me.in_ppn_tot.Location = New System.Drawing.Point(76, 482)
         Me.in_ppn_tot.MaxLength = 20
         Me.in_ppn_tot.Name = "in_ppn_tot"
         Me.in_ppn_tot.ReadOnly = True
@@ -518,7 +520,7 @@ Partial Class fr_jual_detail
         Me.in_diskon.Cursor = System.Windows.Forms.Cursors.Default
         Me.in_diskon.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_diskon.ForeColor = System.Drawing.Color.Black
-        Me.in_diskon.Location = New System.Drawing.Point(517, 437)
+        Me.in_diskon.Location = New System.Drawing.Point(76, 437)
         Me.in_diskon.MaxLength = 20
         Me.in_diskon.Name = "in_diskon"
         Me.in_diskon.ReadOnly = True
@@ -533,7 +535,7 @@ Partial Class fr_jual_detail
         Me.in_jumlah.Cursor = System.Windows.Forms.Cursors.Default
         Me.in_jumlah.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_jumlah.ForeColor = System.Drawing.Color.Black
-        Me.in_jumlah.Location = New System.Drawing.Point(517, 414)
+        Me.in_jumlah.Location = New System.Drawing.Point(76, 414)
         Me.in_jumlah.MaxLength = 20
         Me.in_jumlah.Name = "in_jumlah"
         Me.in_jumlah.ReadOnly = True
@@ -546,7 +548,7 @@ Partial Class fr_jual_detail
         '
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(449, 417)
+        Me.Label18.Location = New System.Drawing.Point(8, 417)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(62, 13)
         Me.Label18.TabIndex = 192
@@ -556,7 +558,7 @@ Partial Class fr_jual_detail
         '
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(449, 440)
+        Me.Label19.Location = New System.Drawing.Point(8, 440)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(49, 13)
         Me.Label19.TabIndex = 192
@@ -567,19 +569,19 @@ Partial Class fr_jual_detail
         Me.in_ket.BackColor = System.Drawing.Color.White
         Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket.ForeColor = System.Drawing.Color.Black
-        Me.in_ket.Location = New System.Drawing.Point(15, 430)
+        Me.in_ket.Location = New System.Drawing.Point(281, 430)
         Me.in_ket.MaxLength = 200
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.in_ket.Size = New System.Drawing.Size(380, 72)
+        Me.in_ket.Size = New System.Drawing.Size(353, 72)
         Me.in_ket.TabIndex = 328
         '
         'Label26
         '
         Me.Label26.AutoSize = True
         Me.Label26.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label26.Location = New System.Drawing.Point(12, 414)
+        Me.Label26.Location = New System.Drawing.Point(278, 414)
         Me.Label26.Name = "Label26"
         Me.Label26.Size = New System.Drawing.Size(82, 13)
         Me.Label26.TabIndex = 331
@@ -1048,25 +1050,13 @@ Partial Class fr_jual_detail
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Location = New System.Drawing.Point(285, 242)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
         Me.popPnl_barang.TabIndex = 372
         Me.popPnl_barang.Visible = False
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'dgv_listbarang
         '
@@ -1081,8 +1071,20 @@ Partial Class fr_jual_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 127)
         Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'Panel3
         '
@@ -1250,6 +1252,28 @@ Partial Class fr_jual_detail
         Me.Label33.TabIndex = 424
         Me.Label33.Text = "SISA"
         '
+        'TextBox1
+        '
+        Me.TextBox1.BackColor = System.Drawing.Color.White
+        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.TextBox1.ForeColor = System.Drawing.Color.Black
+        Me.TextBox1.Location = New System.Drawing.Point(498, 533)
+        Me.TextBox1.Name = "TextBox1"
+        Me.TextBox1.ReadOnly = True
+        Me.TextBox1.Size = New System.Drawing.Size(136, 20)
+        Me.TextBox1.TabIndex = 425
+        Me.TextBox1.TabStop = False
+        '
+        'Label35
+        '
+        Me.Label35.AutoSize = True
+        Me.Label35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label35.Location = New System.Drawing.Point(425, 537)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(67, 13)
+        Me.Label35.TabIndex = 426
+        Me.Label35.Text = "Status Pajak"
+        '
         'fr_jual_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1257,6 +1281,8 @@ Partial Class fr_jual_detail
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_cl
         Me.ClientSize = New System.Drawing.Size(1003, 573)
+        Me.Controls.Add(Me.TextBox1)
+        Me.Controls.Add(Me.Label35)
         Me.Controls.Add(Me.in_sisa)
         Me.Controls.Add(Me.Label33)
         Me.Controls.Add(Me.Label17)
@@ -1469,4 +1495,6 @@ Partial Class fr_jual_detail
     Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label35 As System.Windows.Forms.Label
 End Class

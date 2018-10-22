@@ -230,7 +230,7 @@ Partial Class fr_giro
         Me.in_nilaibg.MaxLength = 30
         Me.in_nilaibg.Name = "in_nilaibg"
         Me.in_nilaibg.ReadOnly = True
-        Me.in_nilaibg.Size = New System.Drawing.Size(352, 20)
+        Me.in_nilaibg.Size = New System.Drawing.Size(188, 20)
         Me.in_nilaibg.TabIndex = 3
         Me.in_nilaibg.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '

@@ -91,6 +91,31 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to [Connection]
+        '''Host = 10.201.7.2
+        '''DB = inventory
+        '''UID = usr_ata
+        '''Pass = ata**!
+        '''
+        '''[LocalTESTLOG]
+        '''Host = localhost
+        '''DB = inventory
+        '''UID = root
+        '''Pass = root
+        '''
+        '''[Local]
+        '''Host = localhost
+        '''DB = db-inventory
+        '''UID = root
+        '''Pass = root.
+        '''</summary>
+        Friend ReadOnly Property config() As String
+            Get
+                Return ResourceManager.GetString("config", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
         Friend ReadOnly Property DnArrow() As System.Drawing.Bitmap

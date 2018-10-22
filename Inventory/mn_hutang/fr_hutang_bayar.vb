@@ -5,7 +5,7 @@
     Private indexrowfaktur As Integer = 0
     Private indexrowbayar As Integer = 0
     Private _sisaHutang As Double = 0
-    Private _totalhutang As Double = 0
+    Public _totalhutang As Double = 0
 
     Private Sub loadData(kode As String)
         Dim nobg As String = ""
@@ -88,41 +88,6 @@
         in_total.Text = commaThousand(countTotal())
     End Sub
 
-    Private Sub search(tipe As String)
-        Using x As New fr_search_dialog
-            With x
-                Select Case tipe
-                    Case "faktur"
-                        If in_faktur.Text <> Nothing Then
-                            .in_cari.Text = in_faktur.Text
-                            .returnkode = in_faktur.Text
-                        End If
-                        .query = "SELECT hutang_faktur as kode, hutang_supplier_n as supplier, hutang_tgl as tanggal, hutang_sisa as SisaHutang,ADDDATE(hutang_tgl,hutang_term) as 'Tgl.JatuhTempo' FROM selectHutangAwal WHERE hutang_supplier='" & in_supplier.Text & "'"
-                        .paramquery = "supplier LIKE'{0}%' OR kode LIKE '{0}%'"
-                        .type = "hutangfaktur"
-                        .ShowDialog()
-                        in_faktur.Text = .returnkode
-                        setFaktur(in_faktur.Text)
-                    Case "supplier"
-                        If in_supplier_n.Text <> Nothing Then
-                            .in_cari.Text = in_supplier_n.Text
-                        End If
-                        If in_supplier.Text <> Nothing Then
-                            .returnkode = in_supplier.Text
-                        End If
-                        .query = "SELECT supplier_kode as kode, supplier_nama as nama FROM data_supplier_master"
-                        .paramquery = "nama LIKE'{0}%' OR kode LIKE '{0}%'"
-                        .type = "supplier"
-                        .ShowDialog()
-                        in_supplier.Text = .returnkode
-                        setSupplier(in_supplier.Text)
-                    Case Else
-                        Exit Sub
-                End Select
-            End With
-        End Using
-    End Sub
-
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
         setDoubleBuffered(Me.dgv_listbarang, True)
         Dim q As String
@@ -159,20 +124,6 @@
             If rd.HasRows Then
                 in_supplier.Text = rd.Item("supplier_kode")
                 in_supplier_n.Text = rd.Item("supplier_nama")
-            End If
-            rd.Close()
-        End If
-    End Sub
-
-    Private Sub setFaktur(kode As String)
-        If kode <> Nothing Then
-            Dim q As String = "SELECT hutang_faktur, hutang_sisa FROM selectHutangAwal WHERE hutang_faktur='" & kode & "'"
-            op_con()
-            readcommd(q)
-            If rd.HasRows Then
-                in_faktur.Text = rd.Item("hutang_faktur")
-                _sisaHutang = rd.Item("hutang_sisa")
-                in_kredit.Value = rd.Item("hutang_sisa")
             End If
             rd.Close()
         End If

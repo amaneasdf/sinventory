@@ -191,7 +191,7 @@
         Dim hpp As Double = 0
 
         op_con()
-        readcommd("SELECT AVG(stock_hpp) FROM data_stok_awal WHERE stock_barang='" & in_barang.Text & "'")
+        readcommd("SELECT getHPP('" & in_barang.Text & "')")
         If rd.HasRows Then
             hpp = rd.Item(0)
         End If
@@ -262,6 +262,7 @@
         Else
             pajak = 0
         End If
+
         Dim cc As Globalization.CultureInfo = Globalization.CultureInfo.GetCultureInfo("id-ID")
         in_jumlah.Text = subtot.ToString("N2", cc)
         in_netto.Text = z.ToString("N2", cc)
@@ -330,9 +331,9 @@
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
-                in_no_bukti.Text = "RB" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D4")
+                in_no_bukti.Text = "RB" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
             ElseIf in_no_bukti.Text <> Nothing And bt_simpanreturbeli.Text <> "Update" Then
-                If checkdata("data_pembelian_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode") = True Then
+                If checkdata("data_pembelian_retur_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode_bukti") = True Then
                     MessageBox.Show("Nomor faktur " & in_no_bukti.Text & " sudah pernah diinputkan", "Retur Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     in_no_bukti.Focus()
                     Exit Sub
@@ -373,7 +374,7 @@
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
                 "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(",", ".") & "'",
-                "trans_status='1'"
+                "trans_status='" & rtbStatus & "'"
                 }
             q = "INSERT INTO data_pembelian_retur_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", dataBrg)))
@@ -420,7 +421,7 @@
                 "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status='1'"
+                "trans_status='" & rtbStatus & "'"
                 }
             queryArr.Add(String.Format(q4, String.Join(",", data1), String.Join(",", data2), stock, String.Join(",", dataBrg)))
             i += 1
@@ -449,7 +450,7 @@
             "line_ref='" & in_supplier.Text & "'",
             "line_ref_type='SUPPLIER'",
             "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-            "line_status='1'"
+            "line_status='" & rtbStatus & "'"
             }
         queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
         '==========================================================================================================================

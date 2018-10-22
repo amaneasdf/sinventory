@@ -46,6 +46,7 @@ Partial Class fr_lap_filter_hutang
         Me.lbl_bayar = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.lbl_periodedata = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -234,7 +235,7 @@ Partial Class fr_lap_filter_hutang
         Me.cb_periode.BackColor = System.Drawing.Color.White
         Me.cb_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_periode.FormattingEnabled = True
-        Me.cb_periode.Location = New System.Drawing.Point(82, 199)
+        Me.cb_periode.Location = New System.Drawing.Point(82, 171)
         Me.cb_periode.Name = "cb_periode"
         Me.cb_periode.Size = New System.Drawing.Size(316, 21)
         Me.cb_periode.TabIndex = 423
@@ -243,7 +244,7 @@ Partial Class fr_lap_filter_hutang
         '
         Me.lbl_periode.AutoSize = True
         Me.lbl_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_periode.Location = New System.Drawing.Point(8, 203)
+        Me.lbl_periode.Location = New System.Drawing.Point(8, 175)
         Me.lbl_periode.Name = "lbl_periode"
         Me.lbl_periode.Size = New System.Drawing.Size(43, 13)
         Me.lbl_periode.TabIndex = 424
@@ -319,12 +320,23 @@ Partial Class fr_lap_filter_hutang
         Me.dgv_listbarang.Size = New System.Drawing.Size(351, 103)
         Me.dgv_listbarang.TabIndex = 0
         '
+        'lbl_periodedata
+        '
+        Me.lbl_periodedata.AutoSize = True
+        Me.lbl_periodedata.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.Location = New System.Drawing.Point(8, 210)
+        Me.lbl_periodedata.Name = "lbl_periodedata"
+        Me.lbl_periodedata.Size = New System.Drawing.Size(43, 13)
+        Me.lbl_periodedata.TabIndex = 430
+        Me.lbl_periodedata.Text = "Periode"
+        '
         'fr_lap_filter_hutang
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 273)
+        Me.Controls.Add(Me.lbl_periodedata)
         Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.cb_bayar)
         Me.Controls.Add(Me.lbl_bayar)
@@ -380,4 +392,5 @@ Partial Class fr_lap_filter_hutang
     Friend WithEvents lbl_bayar As System.Windows.Forms.Label
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
+    Friend WithEvents lbl_periodedata As System.Windows.Forms.Label
 End Class

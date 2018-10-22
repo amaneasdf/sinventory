@@ -19,7 +19,7 @@
         End If
         rd.Close()
         in_tgl.Text = fak_date.ToLongDateString
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToLongDateString
+        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
         loadDgv(kode)
     End Sub
 
@@ -55,6 +55,22 @@
         End If
     End Sub
 
+    Private Sub doBayar()
+        Dim x As New fr_hutang_bayar
+        With x
+            .in_supplier.Text = in_supplier.Text
+            .in_supplier_n.Text = in_supplier_n.Text
+
+            .in_faktur.Text = in_faktur.Text
+            .in_tgl_jtfaktur.Text = in_tgl_term.Text
+            ._totalhutang = removeCommaThousand(in_hutang_awal.Text)
+            .in_sisafaktur.Text = in_sisa.Text
+
+            .Show()
+        End With
+        Me.Close()
+    End Sub
+
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -74,13 +90,13 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
+        'If MessageBox.Show("Tutup Form?", "Hutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
         Me.Close()
+        'End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If MessageBox.Show("Tutup Form?", "Kas", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
-            e.Cancel = True
-        End If
+        'e.Cancel = True
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -101,7 +117,7 @@
     End Sub
 
     Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
-        numericLostFocus(sender)
+        numericLostFocus(sender, "N0")
     End Sub
 
     '---------------------- LOAD FORM
@@ -113,5 +129,11 @@
 
     Private Sub in_term_ValueChanged(sender As Object, e As EventArgs) Handles in_term.ValueChanged
         in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToLongDateString
+    End Sub
+
+    Private Sub bt_bayar_Click(sender As Object, e As EventArgs) Handles bt_bayar.Click
+        If MessageBox.Show("Tambah Pembayaran?", "Hutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            doBayar()
+        End If
     End Sub
 End Class

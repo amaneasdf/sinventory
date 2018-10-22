@@ -517,9 +517,9 @@ Partial Class fr_hutang_bayar
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(369, 229)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(358, 226)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(389, 135)
         Me.popPnl_barang.TabIndex = 366
@@ -550,7 +550,7 @@ Partial Class fr_hutang_bayar
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 127)
         Me.dgv_listbarang.TabIndex = 0
         '
         'Label3
@@ -789,8 +789,8 @@ Partial Class fr_hutang_bayar
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(901, 544)
-        Me.Controls.Add(Me.in_no_bg)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.in_no_bg)
         Me.Controls.Add(Me.in_tglpencairan)
         Me.Controls.Add(Me.Label15)
         Me.Controls.Add(Me.Label14)
