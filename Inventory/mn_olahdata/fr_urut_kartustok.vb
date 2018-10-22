@@ -30,7 +30,7 @@
         Dim bs As New BindingSource
         Dim q As String = "SELECT stock_barang as kode, barang_nama as nama " _
                           & "FROM data_stok_awal LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
-                          & "WHERE stock_gudang='" & gudang & "' AND stock_periode='" & selectedperiode.ToString("yyyy-MM") & "'"
+                          & "WHERE stock_gudang='" & gudang & "' AND stock_periode='" & selectperiode.id & "'"
 
         bs.DataSource = getDataTablefromDB(q)
         bs.Filter = "kode LIKE '" & param & "%' OR nama LIKE '" & param & "%'"
@@ -39,20 +39,24 @@
         gdgrowindex = 0
     End Sub
 
-    Private Sub loadKartuStok(kode As String)
+    Private Sub loadKartuStok(barang As String, gudang As String)
         Dim dt As New DataTable
-        Dim q As String = "SELECT DATE_FORMAT(kartu_tgl,'%d-%m-%Y') as tgl, kartu_faktur, " _
-                          & "kartu_ket, kartu_ket2, kartu_debet, kartu_kredit, kartu_saldo " _
-                          & "FROM selectKartuStok WHERE kartu_kode='" & kode & "' " _
-                          & "ORDER BY kartu_index ASC"
+        Dim q As String = "getDataKartuStok('{0}','{1}','{2}')"
+        Dim kode As String = gudang & "-" & barang & "-" & selectperiode.id
+
         in_kode_stok.Text = kode
-        readcommd("SELECT kartu_barang_n, kartu_gudang_n FROM selectKartuStok WHERE kartu_kode='" & kode & "' LIMIT 1")
+        readcommd("SELECT gudang_nama FROM data_barang_gudang WHERE gudang_kode='" & gudang & "'")
         If rd.HasRows Then
-            in_gudang_n.Text = rd.Item(0)
-            in_barang_n.Text = rd.Item(1)
+            in_gudang_n.Text = rd.Item("gudang_nama")
+        End If
+        rd.Close()
+        readcommd("SELECT barang_nama FROM data_barang_master WHERE barang_kode='" & barang & "'")
+        If rd.HasRows Then
+            in_barang_n.Text = rd.Item("barang_nama")
         End If
         rd.Close()
 
+        q = String.Format(q, selectperiode.id, barang, gudang)
         Console.WriteLine(q)
         dt = getDataTablefromDB(q)
         With dgv_kartustok.Rows
@@ -60,13 +64,13 @@
             For Each x As DataRow In dt.Rows
                 Dim y As Integer = .Add
                 With .Item(y)
-                    .Cells("kartu_tgl").Value = x.ItemArray(0)
-                    .Cells("kartu_faktur").Value = x.ItemArray(1)
-                    .Cells("kartu_ket").Value = x.ItemArray(2)
-                    .Cells("kartu_ket2").Value = x.ItemArray(3)
-                    .Cells("kartu_debet").Value = x.ItemArray(4)
-                    .Cells("kartu_kredit").Value = x.ItemArray(5)
-                    .Cells("kartu_saldo").Value = x.ItemArray(6)
+                    .Cells("kartu_tgl").Value = x.ItemArray(3)
+                    .Cells("kartu_faktur").Value = x.ItemArray(8)
+                    .Cells("kartu_ket").Value = x.ItemArray(9)
+                    .Cells("kartu_ket2").Value = x.ItemArray(10)
+                    .Cells("kartu_debet").Value = x.ItemArray(11)
+                    .Cells("kartu_kredit").Value = x.ItemArray(12)
+                    .Cells("kartu_saldo").Value = x.ItemArray(13)
                 End With
             Next
         End With
@@ -84,7 +88,7 @@
             Dim tgl As String = rows.Cells("kartu_tgl").Value
             data1 = {
                 "trans_index='" & index & "'",
-                "trans_tgl=STR_TO_DATE('" & tgl & "','%d-%m-%Y')"
+                "trans_tgl='" & tgl & "'"
                 }
             queryArr.Add(String.Format(q, String.Join(",", data1), in_kode_stok.Text, rows.Cells("kartu_faktur").Value))
         Next
@@ -233,8 +237,7 @@
     '-------------- LOAD KARTU STOK
     Private Sub bt_load_kartu_Click(sender As Object, e As EventArgs) Handles bt_load_kartu.Click
         If dgv_barang.Rows.Count > 0 Then
-            Dim stokkode As String = String.Join("-", dgv_gudang.SelectedRows.Item(0).Cells(0).Value, dgv_barang.SelectedRows.Item(0).Cells("brg_kode").Value, selectedperiode.ToString("yyMM"))
-            loadKartuStok(stokkode)
+            loadKartuStok(dgv_barang.SelectedRows.Item(0).Cells("brg_kode").Value, dgv_gudang.SelectedRows.Item(0).Cells(0).Value)
         End If
     End Sub
 

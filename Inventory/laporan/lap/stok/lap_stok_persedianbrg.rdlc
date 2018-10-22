@@ -15,10 +15,10 @@
               <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.5cm</Width>
+              <Width>3.75cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>3.5cm</Width>
@@ -734,6 +734,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0.00</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -873,7 +876,7 @@
   <Width>19.75cm</Width>
   <Page>
     <PageHeader>
-      <Height>2.66048cm</Height>
+      <Height>1.51433cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -887,6 +890,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -898,6 +903,7 @@
                   <Value>Jl. Bima No.14 Jatiwinangun</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -909,6 +915,7 @@
                   <Value>Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -916,8 +923,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Height>2.12315cm</Height>
-          <Width>5.41042cm</Width>
+          <Height>1.51433cm</Height>
+          <Width>5.6567cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -949,8 +956,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
-          <Top>0.90551cm</Top>
-          <Left>5.41042cm</Left>
+          <Top>0.29669cm</Top>
+          <Left>5.6567cm</Left>
           <Height>0.60882cm</Height>
           <Width>8.43659cm</Width>
           <ZIndex>1</ZIndex>
@@ -985,8 +992,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
-          <Top>1.51433cm</Top>
-          <Left>5.41042cm</Left>
+          <Top>0.90551cm</Top>
+          <Left>5.6567cm</Left>
           <Height>0.60882cm</Height>
           <Width>8.43659cm</Width>
           <ZIndex>2</ZIndex>
@@ -1021,9 +1028,9 @@
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
           <Top>0.00862cm</Top>
-          <Left>16.92668cm</Left>
+          <Left>16.25cm</Left>
           <Height>0.46771cm</Height>
-          <Width>2.82332cm</Width>
+          <Width>3.5cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>
@@ -1043,7 +1050,7 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>0.97083cm</Height>
+      <Height>0.75cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -1065,7 +1072,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.44951cm</Top>
+          <Top>0.17639cm</Top>
           <Height>0.47653cm</Height>
           <Width>7.5cm</Width>
           <Style>

@@ -117,7 +117,7 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "supplier"
-                q = "SELECT supplier_kode as 'Kode', supplier_nama as 'Salesman', " _
+                q = "SELECT supplier_kode as 'Kode', supplier_nama as 'Nama Supplier', " _
                     & "If(supplier_status=1,'Aktif','Non_Aktif') as 'Status' FROM data_supplier_master " _
                     & "WHERE supplier_status<>9 AND supplier_nama LIKE '{0}%'"
                 dt = getDataTablefromDB(String.Format(q, param))
@@ -187,14 +187,14 @@
             'GENNERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(barang_kode,4) as ss FROM data_barang_master WHERE barang_kode LIKE 'BRG%' " _
+                readcommd("SELECT SUBSTRING(barang_kode," & in_supplier.Text.Length & ") as ss FROM data_barang_master WHERE barang_kode LIKE '" & in_supplier.Text & "%' " _
                           & "ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
 
-                in_kode.Text = "BRG" & no.ToString("D5")
+                in_kode.Text = in_supplier.Text & no.ToString("D5")
             Else
                 If checkdata("data_barang_master", "'" & in_kode.Text & "'", "barang_kode") Then
                     MessageBox.Show("Kode Barang " & in_kode.Text & " sudah ada")
@@ -224,6 +224,13 @@
         End If
     End Sub
 
+    'DEL DATA
+    Private Sub delData()
+        op_con()
+        Dim q As String = "UPDATE data_barang_master SET barang_status=9 WHERE barang_kode='{0}'"
+        'chk if item already used
+    End Sub
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -243,7 +250,7 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbarang.Click
-        If MessageBox.Show("Tutup Form?", "Kas", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Tutup Form?", "Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
     End Sub
@@ -319,6 +326,11 @@
 
     'SAVE
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpanbarang.Click
+        If in_supplier.Text = Nothing Then
+            MessageBox.Show("Supplier belum di input")
+            in_suppliernama.Focus()
+            Exit Sub
+        End If
         If Trim(in_nama.Text) = Nothing Then
             MessageBox.Show("Nama belum di input")
             in_nama.Focus()
@@ -447,6 +459,12 @@
 
     Private Sub in_nama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nama.KeyDown
         keyshortenter(cb_jenis, e)
+    End Sub
+
+    Private Sub cb_sat_besar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_sat_besar.KeyPress, cb_sat_kecil.KeyPress, cb_sat_tengah.KeyPress, cb_jenis.KeyPress
+        If e.KeyChar <> ControlChars.Cr Then
+            e.Handled = True
+        End If
     End Sub
 
     Private Sub cb_jenis_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_jenis.KeyDown

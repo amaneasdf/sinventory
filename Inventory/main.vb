@@ -490,41 +490,48 @@
                 x.Show()
                 x.do_load()
             Case "mn070506"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapKartuStok",
-                    .Text = "Kartu Stok"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Kartu Stok", "lapKartuStok")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070507"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapPersediaan",
-                    .Text = "Laporan Persediaan"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Laporan Persediaan", "lapPersediaan")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070511"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapStok",
-                    .Text = "Laporan Stok"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Laporan Stok", "lapStok")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070512"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapStokSupplier",
-                    .Text = "Laporan Stok Per Supplier"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .supplier_sw = True
+                        .do_load("Laporan Stok Per Supplier", "lapStokSupplier")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070513"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapStokMutasi",
-                    .Text = "Laporan Mutasi Stok"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Laporan Mutasi Stok", "lapStokMutasi")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070514"
-                Dim x As New fr_lap_stock_view With {
-                    .inlap_type = "lapPersediaanMutasi",
-                    .Text = "Laporan Mutasi Persediaan"
-                    }
-                x.Show()
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Laporan Mutasi Persediaan", "lapPersediaanMutasi")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070602"
                 Using x As New fr_lap_filter_hutang
                     With x

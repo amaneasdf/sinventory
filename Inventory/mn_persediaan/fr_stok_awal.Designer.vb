@@ -45,8 +45,6 @@ Partial Class fr_stok_awal
         Me.bt_gudang_list = New System.Windows.Forms.Button()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.bt_barang_list = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.date_tgl_beli = New System.Windows.Forms.DateTimePicker()
         Me.in_gudang = New System.Windows.Forms.TextBox()
         Me.in_barang = New System.Windows.Forms.TextBox()
         Me.in_gudang_n = New System.Windows.Forms.TextBox()
@@ -54,8 +52,6 @@ Partial Class fr_stok_awal
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
-        Me.brg_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.in_stok_awal, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_hpp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl_Menu.SuspendLayout()
@@ -266,7 +262,7 @@ Partial Class fr_stok_awal
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(118, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(119, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Stok Awal"
         '
@@ -309,27 +305,6 @@ Partial Class fr_stok_awal
         Me.bt_barang_list.TabStop = False
         Me.bt_barang_list.UseVisualStyleBackColor = False
         Me.bt_barang_list.Visible = False
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(453, 108)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(22, 13)
-        Me.Label1.TabIndex = 291
-        Me.Label1.Text = "Tgl"
-        '
-        'date_tgl_beli
-        '
-        Me.date_tgl_beli.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tgl_beli.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.date_tgl_beli.Location = New System.Drawing.Point(491, 104)
-        Me.date_tgl_beli.MaxDate = New Date(2050, 12, 31, 0, 0, 0, 0)
-        Me.date_tgl_beli.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
-        Me.date_tgl_beli.Name = "date_tgl_beli"
-        Me.date_tgl_beli.Size = New System.Drawing.Size(120, 20)
-        Me.date_tgl_beli.TabIndex = 11
         '
         'in_gudang
         '
@@ -375,9 +350,9 @@ Partial Class fr_stok_awal
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(206, 122)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(172, 113)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(313, 127)
         Me.popPnl_barang.TabIndex = 292
@@ -401,7 +376,6 @@ Partial Class fr_stok_awal
         Me.dgv_listbarang.AllowUserToDeleteRows = False
         Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
         Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listbarang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.brg_kode, Me.brg_nama})
         Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
         Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
         Me.dgv_listbarang.MultiSelect = False
@@ -409,26 +383,8 @@ Partial Class fr_stok_awal
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(313, 104)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(313, 120)
         Me.dgv_listbarang.TabIndex = 20
-        '
-        'brg_kode
-        '
-        Me.brg_kode.DataPropertyName = "barang_kode"
-        Me.brg_kode.HeaderText = "Kode"
-        Me.brg_kode.MinimumWidth = 125
-        Me.brg_kode.Name = "brg_kode"
-        Me.brg_kode.ReadOnly = True
-        Me.brg_kode.Width = 125
-        '
-        'brg_nama
-        '
-        Me.brg_nama.DataPropertyName = "barang_nama"
-        Me.brg_nama.HeaderText = "Nama"
-        Me.brg_nama.MinimumWidth = 175
-        Me.brg_nama.Name = "brg_nama"
-        Me.brg_nama.ReadOnly = True
-        Me.brg_nama.Width = 175
         '
         'fr_stok_awal
         '
@@ -442,8 +398,6 @@ Partial Class fr_stok_awal
         Me.Controls.Add(Me.in_barang)
         Me.Controls.Add(Me.in_gudang_n)
         Me.Controls.Add(Me.in_gudang)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.date_tgl_beli)
         Me.Controls.Add(Me.bt_barang_list)
         Me.Controls.Add(Me.bt_gudang_list)
         Me.Controls.Add(Me.Label6)
@@ -500,8 +454,6 @@ Partial Class fr_stok_awal
     Friend WithEvents bt_gudang_list As System.Windows.Forms.Button
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents bt_barang_list As System.Windows.Forms.Button
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents date_tgl_beli As System.Windows.Forms.DateTimePicker
     Friend WithEvents in_gudang As System.Windows.Forms.TextBox
     Friend WithEvents in_barang As System.Windows.Forms.TextBox
     Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
@@ -509,6 +461,4 @@ Partial Class fr_stok_awal
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
     Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
-    Friend WithEvents brg_kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents brg_nama As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

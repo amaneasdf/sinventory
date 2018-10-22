@@ -193,7 +193,7 @@ Partial Class fr_barang_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(3, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(146, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(147, 31)
         Me.lbl_title.TabIndex = 1
         Me.lbl_title.Text = "Data Produk"
         '
@@ -1089,8 +1089,8 @@ Partial Class fr_barang_detail
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Location = New System.Drawing.Point(365, 170)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(389, 135)
@@ -1122,7 +1122,7 @@ Partial Class fr_barang_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 127)
         Me.dgv_listbarang.TabIndex = 0
         '
         'in_status

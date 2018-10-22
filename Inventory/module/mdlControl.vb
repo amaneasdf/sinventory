@@ -1219,7 +1219,6 @@ Module mdlControl
                 Console.WriteLine(pgmutasigudang.Name.ToString & "listcode")
                 With frmmutasigudang
                     .in_countdata.Text = .dgv_list.Rows.Count
-                    .loadCBGudang()
                     .setpage(pgmutasigudang)
                 End With
             Case "mutasistok"
@@ -1231,7 +1230,6 @@ Module mdlControl
                 Console.WriteLine(pgmutasistok.Name.ToString & "listcode")
                 With frmmutasistok
                     .in_countdata.Text = .dgv_list.Rows.Count
-                    .loadCbGudang()
                     .setpage(pgmutasistok)
                 End With
             Case "stockop"
@@ -1243,7 +1241,6 @@ Module mdlControl
                 Console.WriteLine(pgstockop.Name.ToString & "listcode")
                 With frmstockop
                     .in_countdata.Text = .dgv_list.Rows.Count
-                    .loadCbGudang()
                     .setpage(pgstockop)
                 End With
             Case "hutangawal"
@@ -1580,93 +1577,133 @@ Module mdlControl
 
                     With .dgv_list()
                         .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {stok_tgl, stok_status, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_in2, stok_out2, stok_total, stok_opname, stok_sisaop})
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {stok_tgl, stok_status, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname, stok_sisaop})
                         For i = 0 To .Columns.Count - 1
                             .Columns(i).DisplayIndex = i
                         Next
                     End With
                 End With
             Case "mutasigudang"
-                    With frmmutasigudang
-                        With .dgv_list
-                            Dim mutasi_user = New DataGridViewColumn()
-                            mutasi_user = user_id.Clone()
+                With frmmutasigudang
+                    With .dgv_list
+                        Dim mutasig_id = New DataGridViewColumn()
+                        Dim mutasig_tgl = New DataGridViewColumn()
+                        Dim mutasig_gudang_asal = New DataGridViewColumn()
+                        Dim mutasig_gudang_tujuan = New DataGridViewColumn()
+                        Dim mutasig_user = New DataGridViewColumn()
+                        mutasig_user = user_id.Clone()
+                        mutasig_id = mutasi_id.CLone()
+                        mutasig_tgl = mutasi_tgl.Clone()
+                        mutasig_user = mutasi_id.Clone()
+                        mutasig_gudang_asal = mutasi_gudang_asal.Clone()
+                        mutasig_gudang_tujuan = mutasi_gudang_tujuan.Clone()
 
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang_asal, mutasi_gudang_tujuan, mutasi_user})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
-                    End With
-            Case "mutasistok"
-                    With frmmutasistok.dgv_list
-                        Dim mutasi_user = New DataGridViewColumn()
-                        mutasi_user = user_id.Clone()
-
-                        .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, user_id})
-                        For i = 0 To .Columns.Count - 1
-                            .Columns(i).DisplayIndex = i
-                        Next
-                    End With
-            Case "stockop"
-                    With frmstockop.dgv_list
-                        .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {mutasi_id, mutasi_tgl, mutasi_gudang, mutasi_regby, mutasi_proses})
-                        For i = 0 To .Columns.Count - 1
-                            .Columns(i).DisplayIndex = i
-                        Next
-                    End With
-            Case "hutangawal"
-                    With frmhutangawal
-                        Dim hutang_faktur = New DataGridViewColumn()
-                        Dim hutang_tgl = New DataGridViewColumn()
-                        Dim hutang_supplier = New DataGridViewColumn()
-                        Dim hutang_term = New DataGridViewColumn()
-                        hutang_faktur = beli_faktur.Clone()
-                        hutang_tgl = beli_tgl.Clone()
-                        hutang_supplier = beli_supplier.Clone()
-                        hutang_term = beli_term.Clone()
-
-                        .add_sw = False
-
-                        With .dgv_list
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_awal, hutang_hutang, hutang_retur, hutang_bayar, hutang_sisa})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
-                    End With
-            Case "hutangbayar"
-                    With frmhutangbayar
-                        Dim hutang_bukti = New DataGridViewColumn()
-                        Dim hutang_tgl = New DataGridViewColumn()
-                        Dim hutang_supplier = New DataGridViewColumn()
-                        Dim hutang_it = New DataGridViewColumn()
-                        Dim hutang_et = New DataGridViewColumn()
-                        Dim hutang_user = New DataGridViewColumn()
-                        hutang_bukti = retur_beli_bukti.Clone()
-                        hutang_tgl = beli_tgl.Clone()
-                        hutang_supplier = beli_supplier.Clone()
-                        hutang_it = piutang_it.Clone()
-                        hutang_et = piutang_et.Clone()
-                        hutang_user = user_id.Clone()
-
-                        hutang_tgl.HeaderText = "Tgl. Pembayaran"
-
-                        .print_sw = False
-
-                        Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_it, hutang_et, hutang_user}
+                        Dim x As DataGridViewColumn() = {mutasig_id, mutasig_tgl, mutasig_gudang_asal, mutasig_gudang_tujuan, mutasig_user}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                             consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                         Next
 
-                        .dgv_list.AutoGenerateColumns = False
-                        .dgv_list.Columns.AddRange(x)
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(x)
                     End With
+                End With
+            Case "mutasistok"
+                With frmmutasistok
+                    With .dgv_list
+                        Dim mutasis_user = New DataGridViewColumn()
+                        Dim mutasis_id = New DataGridViewColumn()
+                        Dim mutasis_tgl = New DataGridViewColumn()
+                        Dim mutasis_gudang = New DataGridViewColumn()
+                        mutasis_user = user_id.Clone()
+                        mutasis_id = mutasi_id.Clone()
+                        mutasis_tgl = mutasi_tgl.Clone()
+                        mutasis_gudang = mutasi_gudang.Clone()
+
+                        Dim x As DataGridViewColumn() = {mutasis_id, mutasis_tgl, mutasis_gudang, mutasis_user}
+                        For i = 0 To x.Count - 1
+                            x(i).DisplayIndex = i
+                            consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                        Next
+
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(x)
+                    End With
+                End With
+
+            Case "stockop"
+                With frmstockop
+                    With .dgv_list
+                        Dim mutasiop_user = New DataGridViewColumn()
+                        Dim mutasiop_id = New DataGridViewColumn()
+                        Dim mutasiop_tgl = New DataGridViewColumn()
+                        Dim mutasiop_gudang = New DataGridViewColumn()
+                        Dim mutasiop_proses = New DataGridViewColumn()
+                        mutasiop_user = user_id.Clone()
+                        mutasiop_id = mutasi_id.Clone()
+                        mutasiop_tgl = mutasi_tgl.Clone()
+                        mutasiop_gudang = mutasi_gudang.Clone()
+                        mutasiop_proses = mutasi_proses.Clone()
+
+                        Dim x As DataGridViewColumn() = {mutasiop_id, mutasiop_tgl, mutasiop_gudang, mutasiop_user, mutasiop_proses}
+                        For i = 0 To x.Count - 1
+                            x(i).DisplayIndex = i
+                            consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                        Next
+
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(x)
+                    End With
+                End With
+            Case "hutangawal"
+                With frmhutangawal
+                    Dim hutang_faktur = New DataGridViewColumn()
+                    Dim hutang_tgl = New DataGridViewColumn()
+                    Dim hutang_supplier = New DataGridViewColumn()
+                    Dim hutang_term = New DataGridViewColumn()
+                    hutang_faktur = beli_faktur.Clone()
+                    hutang_tgl = beli_tgl.Clone()
+                    hutang_supplier = beli_supplier.Clone()
+                    hutang_term = beli_term.Clone()
+
+                    .add_sw = False
+
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_awal, hutang_hutang, hutang_retur, hutang_bayar, hutang_sisa})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+            Case "hutangbayar"
+                With frmhutangbayar
+                    Dim hutang_bukti = New DataGridViewColumn()
+                    Dim hutang_tgl = New DataGridViewColumn()
+                    Dim hutang_supplier = New DataGridViewColumn()
+                    Dim hutang_it = New DataGridViewColumn()
+                    Dim hutang_et = New DataGridViewColumn()
+                    Dim hutang_user = New DataGridViewColumn()
+                    hutang_bukti = retur_beli_bukti.Clone()
+                    hutang_tgl = beli_tgl.Clone()
+                    hutang_supplier = beli_supplier.Clone()
+                    hutang_it = piutang_it.Clone()
+                    hutang_et = piutang_et.Clone()
+                    hutang_user = user_id.Clone()
+
+                    hutang_tgl.HeaderText = "Tgl. Pembayaran"
+
+                    .print_sw = False
+
+                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_it, hutang_et, hutang_user}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                    Next
+
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+                End With
             Case "hutangbgo"
                 With frmhutangbgo
                     Dim hutangbgo_kode = New DataGridViewColumn()
@@ -1700,207 +1737,211 @@ Module mdlControl
                     End With
                 End With
             Case "piutangawal"
-                    With frmpiutangawal
-                        Dim piutang_faktur = New DataGridViewColumn()
-                        Dim piutang_tgl = New DataGridViewColumn()
-                        Dim piutang_custo = New DataGridViewColumn()
-                        Dim piutang_sales = New DataGridViewColumn()
-                        Dim piutang_term = New DataGridViewColumn()
-                        piutang_faktur = beli_faktur.Clone()
-                        piutang_tgl = beli_tgl.Clone()
-                        piutang_custo = jual_custo.Clone()
-                        piutang_sales = jual_sales.Clone()
-                        piutang_term = beli_term.Clone()
+                With frmpiutangawal
+                    Dim piutang_faktur = New DataGridViewColumn()
+                    Dim piutang_tgl = New DataGridViewColumn()
+                    Dim piutang_custo = New DataGridViewColumn()
+                    Dim piutang_sales = New DataGridViewColumn()
+                    Dim piutang_term = New DataGridViewColumn()
+                    piutang_faktur = beli_faktur.Clone()
+                    piutang_tgl = beli_tgl.Clone()
+                    piutang_custo = jual_custo.Clone()
+                    piutang_sales = jual_sales.Clone()
+                    piutang_term = beli_term.Clone()
 
-                        .add_sw = False
+                    .add_sw = False
 
-                        Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_term, piutang_sales, piutang_awal, piutang_piutang, piutang_retur, piutang_bayar, piutang_sisa, piutang_tempo, piutang_lunas}
-                        For i = 0 To x.Count - 1
-                            x(i).DisplayIndex = i
-                            consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
-                        Next
+                    Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_term, piutang_sales, piutang_awal, piutang_piutang, piutang_retur, piutang_bayar, piutang_sisa, piutang_tempo, piutang_lunas}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                    Next
 
-                        .dgv_list.AutoGenerateColumns = False
-                        .dgv_list.Columns.AddRange(x)
-                    End With
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+                End With
             Case "piutangbayar"
-                    With frmpiutangbayar
-                        Dim piutang_bukti = New DataGridViewColumn()
-                        Dim piutang_tgl = New DataGridViewColumn()
-                        Dim piutang_sales = New DataGridViewColumn()
-                        Dim piutang_kredit = New DataGridViewColumn()
-                        Dim piutang_debet = New DataGridViewColumn()
-                        Dim piutang_user = New DataGridViewColumn()
-                        piutang_bukti = retur_beli_bukti.Clone()
-                        piutang_tgl = beli_tgl.Clone()
-                        piutang_sales = jual_sales.Clone()
-                        piutang_debet = hutang_debet.Clone()
-                        piutang_user = user_id.Clone()
+                With frmpiutangbayar
+                    Dim piutang_bukti = New DataGridViewColumn()
+                    Dim piutang_tgl = New DataGridViewColumn()
+                    Dim piutang_sales = New DataGridViewColumn()
+                    Dim piutang_kredit = New DataGridViewColumn()
+                    Dim piutang_debet = New DataGridViewColumn()
+                    Dim piutang_user = New DataGridViewColumn()
+                    piutang_bukti = retur_beli_bukti.Clone()
+                    piutang_tgl = beli_tgl.Clone()
+                    piutang_sales = jual_sales.Clone()
+                    piutang_debet = hutang_debet.Clone()
+                    piutang_user = user_id.Clone()
 
-                        piutang_tgl.HeaderText = "Tanggal Pembayaran"
-                        piutang_debet.HeaderText = "Total Pembayaran"
+                    piutang_tgl.HeaderText = "Tanggal Pembayaran"
+                    piutang_debet.HeaderText = "Total Pembayaran"
 
-                        Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_sales, piutang_debet, piutang_it, piutang_et, piutang_user}
-                        For i = 0 To x.Count - 1
-                            x(i).DisplayIndex = i
-                        Next
+                    Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_sales, piutang_debet, piutang_it, piutang_et, piutang_user}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                    Next
 
-                        .dgv_list.AutoGenerateColumns = False
-                        .dgv_list.Columns.AddRange(x)
-                    End With
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+                End With
+
             Case "piutangbgcair"
-                    With frmpiutangbgcair
-                        Dim bg_no = New DataGridViewColumn()
-                        Dim bg_bank = New DataGridViewColumn()
-                        Dim bg_tglbg = New DataGridViewColumn()
-                        Dim bg_jml = New DataGridViewColumn()
-                        Dim bg_custo = New DataGridViewColumn()
-                        Dim bg_tgl = New DataGridViewColumn()
-                        Dim bg_sales = New DataGridViewColumn()
-                        Dim bg_tglcair = New DataGridViewColumn()
-                        Dim bg_tgltolak = New DataGridViewColumn()
-                        Dim bg_userid = New DataGridViewColumn()
-                        bg_no = giro_nobg.Clone()
-                        bg_bank = giro_bank.Clone()
-                        bg_tglbg = giro_tgl_bg.Clone()
-                        bg_jml = giro_jml.Clone()
-                        bg_custo = jual_custo.Clone()
-                        bg_tgl = beli_tgl.Clone()
-                        bg_sales = jual_sales.Clone()
-                        bg_tglcair = hutangbgo_tglcair.Clone()
-                        bg_tgltolak = hutangbgo_tgltolak.Clone()
-                        bg_userid = user_id.Clone()
+                With frmpiutangbgcair
+                    Dim bg_no = New DataGridViewColumn()
+                    Dim bg_bank = New DataGridViewColumn()
+                    Dim bg_tglbg = New DataGridViewColumn()
+                    Dim bg_jml = New DataGridViewColumn()
+                    Dim bg_custo = New DataGridViewColumn()
+                    Dim bg_tgl = New DataGridViewColumn()
+                    Dim bg_sales = New DataGridViewColumn()
+                    Dim bg_tglcair = New DataGridViewColumn()
+                    Dim bg_tgltolak = New DataGridViewColumn()
+                    Dim bg_userid = New DataGridViewColumn()
+                    bg_no = giro_nobg.Clone()
+                    bg_bank = giro_bank.Clone()
+                    bg_tglbg = giro_tgl_bg.Clone()
+                    bg_jml = giro_jml.Clone()
+                    bg_custo = jual_custo.Clone()
+                    bg_tgl = beli_tgl.Clone()
+                    bg_sales = jual_sales.Clone()
+                    bg_tglcair = hutangbgo_tglcair.Clone()
+                    bg_tgltolak = hutangbgo_tgltolak.Clone()
+                    bg_userid = user_id.Clone()
 
-                        .add_sw = False
+                    .add_sw = False
 
-                        With .dgv_list
-                            Dim x As DataGridViewColumn() = {bg_no, bg_bank, bg_tglbg, bg_jml, bg_custo, bg_tgl, bg_sales, piutangbgo_cairke, bg_tglcair, bg_tgltolak, bg_userid}
-                            For i = 0 To x.Count - 1
-                                x(i).DisplayIndex = i
-                            Next
-
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(x)
-                        End With
-                    End With
-            Case "piutangbgtolak"
-                    With frmpiutangbgTolak
-                        Dim bg_bukti = New DataGridViewColumn()
-                        Dim bg_tgl = New DataGridViewColumn()
-                        Dim bg_sales = New DataGridViewColumn()
-                        Dim bg_custo = New DataGridViewColumn()
-                        Dim bg_no = New DataGridViewColumn()
-                        Dim bg_tglbg = New DataGridViewColumn()
-                        Dim bg_jml = New DataGridViewColumn()
-                        Dim bg_supplier = New DataGridViewColumn()
-                        bg_bukti = retur_beli_bukti.Clone()
-                        bg_tgl = beli_tgl.Clone()
-                        bg_sales = jual_sales.Clone()
-                        bg_custo = jual_custo.Clone()
-                        bg_no = giro_nobg.Clone()
-                        bg_tglbg = giro_tgl_bg.Clone()
-                        bg_jml = giro_jml.Clone()
-                        bg_supplier = beli_supplier.Clone()
-
-                        With .dgv_list
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {bg_bukti, bg_tgl, bg_sales, bg_custo, bg_no, bg_tglbg, bg_jml, bg_supplier})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
-                    End With
-            Case "kas"
-                    With frmkas
-                        Dim kas_bank = New DataGridViewColumn()
-                        Dim kas_bukti = New DataGridViewColumn()
-                        Dim kas_tgl = New DataGridViewColumn()
-                        Dim kas_sales = New DataGridViewColumn()
-                        Dim kas_debet = New DataGridViewColumn()
-                        Dim kas_kredit = New DataGridViewColumn()
-                        Dim kas_user = New DataGridViewColumn()
-                        kas_bank = giro_bank.Clone()
-                        kas_bukti = retur_beli_bukti.Clone()
-                        kas_tgl = retur_beli_tgl.Clone()
-                        kas_sales = jual_sales.Clone()
-                        kas_debet = hutang_debet.Clone()
-                        kas_kredit = hutang_kredit.Clone()
-                        kas_user = user_id.Clone()
-
-                        Dim x As DataGridViewColumn() = {kas_bank, kas_bukti, kas_tgl, kas_sales, kas_debet, kas_kredit, kas_user}
+                    With .dgv_list
+                        Dim x As DataGridViewColumn() = {bg_no, bg_bank, bg_tglbg, bg_jml, bg_custo, bg_tgl, bg_sales, piutangbgo_cairke, bg_tglcair, bg_tgltolak, bg_userid}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                         Next
 
-                        .dgv_list.AutoGenerateColumns = False
-                        .dgv_list.Columns.AddRange(x)
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(x)
                     End With
-                    Exit Sub
+                End With
+            Case "piutangbgtolak"
+                With frmpiutangbgTolak
+                    Dim bg_bukti = New DataGridViewColumn()
+                    Dim bg_tgl = New DataGridViewColumn()
+                    Dim bg_sales = New DataGridViewColumn()
+                    Dim bg_custo = New DataGridViewColumn()
+                    Dim bg_no = New DataGridViewColumn()
+                    Dim bg_tglbg = New DataGridViewColumn()
+                    Dim bg_jml = New DataGridViewColumn()
+                    Dim bg_supplier = New DataGridViewColumn()
+                    bg_bukti = retur_beli_bukti.Clone()
+                    bg_tgl = beli_tgl.Clone()
+                    bg_sales = jual_sales.Clone()
+                    bg_custo = jual_custo.Clone()
+                    bg_no = giro_nobg.Clone()
+                    bg_tglbg = giro_tgl_bg.Clone()
+                    bg_jml = giro_jml.Clone()
+                    bg_supplier = beli_supplier.Clone()
+
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {bg_bukti, bg_tgl, bg_sales, bg_custo, bg_no, bg_tglbg, bg_jml, bg_supplier})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
+                    End With
+                End With
+
+            Case "kas"
+                With frmkas
+                    Dim kas_bank = New DataGridViewColumn()
+                    Dim kas_bukti = New DataGridViewColumn()
+                    Dim kas_tgl = New DataGridViewColumn()
+                    Dim kas_sales = New DataGridViewColumn()
+                    Dim kas_debet = New DataGridViewColumn()
+                    Dim kas_kredit = New DataGridViewColumn()
+                    Dim kas_user = New DataGridViewColumn()
+                    kas_bank = giro_bank.Clone()
+                    kas_bukti = retur_beli_bukti.Clone()
+                    kas_tgl = retur_beli_tgl.Clone()
+                    kas_sales = jual_sales.Clone()
+                    kas_debet = hutang_debet.Clone()
+                    kas_kredit = hutang_kredit.Clone()
+                    kas_user = user_id.Clone()
+
+                    Dim x As DataGridViewColumn() = {kas_bank, kas_bukti, kas_tgl, kas_sales, kas_debet, kas_kredit, kas_user}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                    Next
+
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+                End With
+                Exit Sub
+
             Case "jurnalumum"
-                    'With frmjurnalumum
-                    '    Dim jurnal_u_kredit = New DataGridViewColumn()
-                    '    Dim jurnal_u_debet = New DataGridViewColumn()
-                    '    Dim jurnal_u_selisih = New DataGridViewColumn()
-                    '    Dim jurnal_u_tgl = New DataGridViewColumn()
-                    '    Dim jurnal_u_bukti = New DataGridViewColumn()
-                    '    jurnal_u_bukti = retur_beli_bukti.Clone()
-                    '    jurnal_u_tgl = beli_tgl.Clone()
-                    '    jurnal_u_debet = hutang_debet.Clone()
-                    '    jurnal_u_kredit = hutang_kredit.Clone()
-                    '    jurnal_u_selisih = hutang_selisih.Clone()
+                'With frmjurnalumum
+                '    Dim jurnal_u_kredit = New DataGridViewColumn()
+                '    Dim jurnal_u_debet = New DataGridViewColumn()
+                '    Dim jurnal_u_selisih = New DataGridViewColumn()
+                '    Dim jurnal_u_tgl = New DataGridViewColumn()
+                '    Dim jurnal_u_bukti = New DataGridViewColumn()
+                '    jurnal_u_bukti = retur_beli_bukti.Clone()
+                '    jurnal_u_tgl = beli_tgl.Clone()
+                '    jurnal_u_debet = hutang_debet.Clone()
+                '    jurnal_u_kredit = hutang_kredit.Clone()
+                '    jurnal_u_selisih = hutang_selisih.Clone()
 
-                    '    .add_sw = False
-                    '    .edit_sw = False
-                    '    .del_sw = False
+                '    .add_sw = False
+                '    .edit_sw = False
+                '    .del_sw = False
 
-                    '    With .dgv_list
-                    '        .AutoGenerateColumns = False
-                    '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_u_jenis, jurnal_u_tgl, jurnal_u_bukti, jurnal_u_kredit, jurnal_u_debet, jurnal_u_selisih})
-                    '        For i = 0 To .Columns.Count - 1
-                    '            .Columns(i).DisplayIndex = i
-                    '        Next
-                    '    End With
-                    'End With
+                '    With .dgv_list
+                '        .AutoGenerateColumns = False
+                '        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_u_jenis, jurnal_u_tgl, jurnal_u_bukti, jurnal_u_kredit, jurnal_u_debet, jurnal_u_selisih})
+                '        For i = 0 To .Columns.Count - 1
+                '            .Columns(i).DisplayIndex = i
+                '        Next
+                '    End With
+                'End With
+
             Case "jurnalmemorial"
-                    With frmjurnalmemorial
-                        Dim jurnal_e_tgl = New DataGridViewColumn()
-                        Dim jurnal_e_bukti = New DataGridViewColumn()
-                        Dim jurnal_e_ket = New DataGridViewColumn()
-                        jurnal_e_tgl = beli_tgl.Clone()
-                        jurnal_e_bukti = retur_beli_bukti.Clone()
-                        jurnal_e_ket = group_ket.Clone()
+                With frmjurnalmemorial
+                    Dim jurnal_e_tgl = New DataGridViewColumn()
+                    Dim jurnal_e_bukti = New DataGridViewColumn()
+                    Dim jurnal_e_ket = New DataGridViewColumn()
+                    jurnal_e_tgl = beli_tgl.Clone()
+                    jurnal_e_bukti = retur_beli_bukti.Clone()
+                    jurnal_e_ket = group_ket.Clone()
 
-                        With .dgv_list
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_e_tgl, jurnal_e_bukti, jurnal_e_ket})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {jurnal_e_tgl, jurnal_e_bukti, jurnal_e_ket})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
                     End With
+                End With
             Case "group"
-                    With frmgroup
-                        .export_sw = False
-                        With .dgv_list
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
+                With frmgroup
+                    .export_sw = False
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {group_kode, group_nama, group_jmlmenu, group_ket})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
                     End With
+                End With
             Case "user"
-                    With frmuser
-                        With .dgv_list
-                            .AutoGenerateColumns = False
-                            .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {user_kode, user_id, user_nama, user_group, user_group_nama, user_logstat, user_status})
-                            For i = 0 To .Columns.Count - 1
-                                .Columns(i).DisplayIndex = i
-                            Next
-                        End With
+                With frmuser
+                    With .dgv_list
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {user_kode, user_id, user_nama, user_group, user_group_nama, user_logstat, user_status})
+                        For i = 0 To .Columns.Count - 1
+                            .Columns(i).DisplayIndex = i
+                        Next
                     End With
+                End With
             Case Else
-                    Exit Sub
+                Exit Sub
         End Select
     End Sub
 

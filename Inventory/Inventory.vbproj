@@ -161,6 +161,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ds_transaksi.xsd</DependentUpon>
     </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_stok.Designer.vb">
+      <DependentUpon>fr_lap_filter_stok.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_stok.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_beli.Designer.vb">
       <DependentUpon>fr_lap_filter_beli.vb</DependentUpon>
     </Compile>
@@ -542,6 +548,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="laporan\draft\fr_draft_tagihan_view.resx">
       <DependentUpon>fr_draft_tagihan_view.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="laporan\filter\fr_lap_filter_stok.resx">
+      <DependentUpon>fr_lap_filter_stok.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_beli.resx">
       <DependentUpon>fr_lap_filter_beli.vb</DependentUpon>

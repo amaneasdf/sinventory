@@ -1434,7 +1434,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!persediaan_sisa.Value</Value>
+                              <Value>=(Fields!persediaan_awal.Value+Fields!persediaan_beli.Value+Fields!persediaan_masuk.Value+Fields!persediaan_rjual.Value)-(Fields!persediaan_jual.Value+Fields!persediaan_keluar.Value+Fields!persediaan_rbeli.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -1471,7 +1471,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!persediaan_sisa.Value*Fields!persediaan_hpp.Value</Value>
+                              <Value>=((Fields!persediaan_awal.Value+Fields!persediaan_beli.Value+Fields!persediaan_masuk.Value+Fields!persediaan_rjual.Value)-(Fields!persediaan_jual.Value+Fields!persediaan_keluar.Value+Fields!persediaan_rbeli.Value))*Fields!persediaan_hpp.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -2183,7 +2183,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!persediaan_sisa.Value*Fields!persediaan_hpp.Value)</Value>
+                              <Value>=Sum(((Fields!persediaan_awal.Value+Fields!persediaan_beli.Value+Fields!persediaan_masuk.Value+Fields!persediaan_rjual.Value)-(Fields!persediaan_jual.Value+Fields!persediaan_keluar.Value+Fields!persediaan_rbeli.Value))*Fields!persediaan_hpp.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
@@ -2946,6 +2946,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_stok_mutasi</DataSetName>
+        <Top>0cm</Top>
         <Height>3cm</Height>
         <Width>31.75cm</Width>
         <Style>
@@ -2975,7 +2976,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2987,7 +2989,7 @@
                   <Value>Jl. Bima No.14 Jatiwinangun</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2999,7 +3001,7 @@
                   <Value>Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -3007,7 +3009,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Height>1.32004cm</Height>
+          <Height>1.92886cm</Height>
           <Width>5.41042cm</Width>
           <Style>
             <Border>
@@ -3155,7 +3157,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.50256cm</Top>
+          <Top>0.50255cm</Top>
           <Height>0.47653cm</Height>
           <Width>7cm</Width>
           <Style>

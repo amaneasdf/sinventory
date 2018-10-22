@@ -14,8 +14,7 @@
 
     '-----------------load
     Private Sub fr_set_periode_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        cal_periode.SelectionRange.Start = selectedperiode
-        cal_periode.SelectionRange.End = selectedperiode
+        cal_periode.SelectionRange.Start = selectperiode.tglawal
     End Sub
 
     '-----------------set periode

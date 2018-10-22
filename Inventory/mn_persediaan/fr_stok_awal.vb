@@ -1,79 +1,57 @@
 ﻿Public Class fr_stok_awal
     Private rowindexlist As Integer = 0
+    Private popupstate As String = "barang"
 
-    Private Sub getGudang(kode As String)
-        op_con()
-        readcommd("SELECT gudang_kode, gudang_nama FROM data_barang_gudang WHERE gudang_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_gudang.Text = rd.Item("gudang_kode")
-            in_gudang_n.Text = rd.Item("gudang_nama")
-        End If
-        rd.Close()
-    End Sub
+    'LOAD DATA TO DGV IN POPUP SEARCH PANEL
+    Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
+        Dim q As String
+        Dim dt As New DataTable
+        Dim autoco As New AutoCompleteStringCollection
+        Select Case tipe
+            Case "barang"
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getHPP(barang_kode) AS 'HPP' FROM data_barang_master " _
+                    & "WHERE barang_nama LIKE '{0}%' AND barang_status=1 ORDER BY barang_kode LIMIT 250"
+            Case "gudang"
+                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
+            Case Else
+                Exit Sub
+        End Select
 
-    Private Sub getBarang(kode As String)
-        op_con()
-        readcommd("SELECT barang_kode, barang_nama, getHPP(barang_kode) as hpp FROM data_barang_master WHERE barang_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_barang.Text = rd.Item("barang_kode")
-            in_barang_n.Text = rd.Item("barang_nama")
-            in_hpp.Value = rd.Item("hpp")
-        End If
-        rd.Close()
-    End Sub
+        dt = getDataTablefromDB(String.Format(q, param))
 
-    Private Sub baranglist()
-        in_barang.Text = Trim(in_barang.Text)
-        Using search As New fr_search_dialog
-            With search
-                If in_barang.Text <> Nothing Then
-                    .returnkode = in_barang.Text
-                End If
-                .in_cari.Text = in_barang.Text
-                .returnkode = in_barang.Text
-                .query = "SELECT barang_nama as nama, barang_kode as kode, barang_harga_beli as hargabeli, barang_harga_jual as hargajual FROM data_barang_master"
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
-                .type = "barang"
-                .ShowDialog()
-                If .returnkode <> Nothing Then
-                    getBarang(.returnkode)
-                End If
-            End With
-        End Using
-        in_stok_awal.Focus()
-    End Sub
-
-    Private Sub gudanglist()
-        in_gudang.Text = Trim(in_gudang.Text)
-        Using search As New fr_search_dialog
-            With search
-                If in_gudang.Text <> Nothing Then
-                    .returnkode = in_gudang.Text
-                End If
-                .in_cari.Text = in_gudang_n.Text
-                .query = "SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang"
-                .paramquery = "nama LIKE'%{0}%' OR kode LIKE '%{0}%'"
-                .type = "gudang"
-                .ShowDialog()
-                If .returnkode <> Nothing Then
-                    getGudang(.returnkode)
-                End If
-            End With
-        End Using
-        in_barang.Focus()
-    End Sub
-
-    Private Sub loadDataBRGPopup(type As String)
-        Dim q As String = "SELECT barang_kode, barang_nama FROM data_barang_master WHERE barang_nama LIKE '{0}%' ORDER BY barang_kode LIMIT 100"
-        Dim q2 As String = "SELECT gudang_kode as barang_kode, gudang_nama as barang_nama FROM data_barang_gudang WHERE gudang_nama LIKE '{0}%' ORDER BY gudang_kode LIMIT 100"
         With dgv_listbarang
-            Select Case type
+            .DataSource = dt
+            .Columns(0).Width = 135
+            .Columns(1).Width = 200
+            If tipe = "barang" Then
+                .Columns(2).DefaultCellStyle = dgvstyle_currency
+            End If
+        End With
+    End Sub
+
+    'OPEN SEARCH WINDOW
+    Private Sub doSearch()
+
+    End Sub
+
+    'SET RESULT VALUE FROM DGV SEARCH
+    Private Sub setPopUpResult()
+        With dgv_listbarang.SelectedRows.Item(0)
+            Select Case popupstate
                 Case "barang"
-                    .DataSource = getDataTablefromDB(String.Format(q, in_barang_n.Text))
+                    in_barang.Text = .Cells(0).Value
+                    in_barang_n.Text = .Cells(1).Value
+                    in_hpp.Value = .Cells(2).Value
+                    in_stok_awal.Focus()
                 Case "gudang"
-                    .DataSource = getDataTablefromDB(String.Format(q2, in_gudang_n.Text))
+                    in_gudang.Text = .Cells(0).Value
+                    in_gudang_n.Text = .Cells(1).Value
+                    in_barang.Focus()
+                Case Else
+                    Exit Sub
             End Select
         End With
+        'popPnl_barang.Visible = False
     End Sub
 
     '------------drag form
@@ -110,52 +88,10 @@
         lbl_close.Visible = False
     End Sub
 
-    '---------------pop up list barang & input barang
-    Private Sub in_barang_Enter(sender As Object, e As EventArgs) Handles in_barang_n.Enter
-        If mn_save.Enabled = True Then
-            popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barang")
-        End If
-    End Sub
-
-    Private Sub in_barang2_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
-        If mn_save.Enabled = True Then
-            popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("gudang")
-        End If
-    End Sub
-
-    Private Sub in_barang_n_Leave(sender As Object, e As EventArgs) Handles in_barang_n.Leave
-        If Not dgv_listbarang.Focused = True Then
-            popPnl_barang.Visible = False
-            'If Trim(in_barang.Text) <> Nothing Then
-            '    getBarang(in_kode.Text)
-            'End If
-        Else
-            popPnl_barang.Visible = True
-        End If
-
-    End Sub
-
-    Private Sub in_gudang_n_Leave(sender As Object, e As EventArgs) Handles in_gudang_n.Leave
-        If Not dgv_listbarang.Focused = True Then
-            popPnl_barang.Visible = False
-            'If Trim(in_barang_nm2.Text) <> Nothing Then
-            '    setBarang("tujuan", , in_barang_nm2.Text)
-            'End If
-        Else
-            popPnl_barang.Visible = True
-        End If
-
-    End Sub
+    'UI
+    '------------- POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
-        If Not in_barang_n.Focused = True Or in_gudang_n.Focused = True Then
+        If Not in_gudang_n.Focused Or in_barang_n.Focused Then
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
@@ -164,55 +100,65 @@
 
     Private Sub dgv_listbarang_CellContentDBLClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_listbarang.CellDoubleClick
         If e.RowIndex >= 0 Then
-            rowindexlist = e.RowIndex
-            If popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height) Then
-                in_barang.Text = dgv_listbarang.Rows(rowindexlist).Cells("brg_kode").Value
-                getBarang(in_barang.Text)
-                in_stok_awal.Focus()
-            ElseIf popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height) Then
-                in_gudang.Text = dgv_listbarang.Rows(rowindexlist).Cells("brg_kode").Value
-                getGudang(in_gudang.Text)
-                in_barang.Focus()
-            End If
-        End If
-    End Sub
-
-    Private Sub dgv_listbarang_Cellenter(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_listbarang.CellEnter
-        If e.RowIndex >= 0 Then
-            rowindexlist = e.RowIndex
+            setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height) Then
-                in_barang.Text = dgv_listbarang.Rows(rowindexlist).Cells("brg_kode").Value
-                getBarang(in_barang.Text)
-                in_stok_awal.Focus()
-            ElseIf popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height) Then
-                in_gudang.Text = dgv_listbarang.Rows(rowindexlist).Cells("brg_kode").Value
-                getGudang(in_gudang.Text)
-                in_barang.Focus()
-            End If
+            setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
         If Char.IsLetterOrDigit(e.KeyChar) Then
+            Dim x As TextBox
+            Select Case popupstate
+                Case "gudang"
+                    x = in_gudang_n
+                Case "barang"
+                    x = in_barang_n
+                Case Else
+                    x = Nothing
+                    x.Dispose()
+                    Exit Sub
+            End Select
+            x.Text += e.KeyChar
             e.Handled = True
-            If popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height) Then
-                in_barang_n.Text += e.KeyChar
-                in_barang_n.Focus()
-            ElseIf popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height) Then
-                in_gudang_n.Text += e.KeyChar
-                in_gudang_n.Focus()
-            End If
+            x.Focus()
+            x.Select(x.TextLength, x.TextLength)
         End If
     End Sub
 
-    Private Sub in_barang_n_TextChanged(sender As Object, e As EventArgs) Handles in_barang_n.TextChanged
-        If in_barang_n.Text = "" Then
-            in_barang.Clear()
+    'INPUT
+    Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
+        keyshortenter(in_gudang_n, e)
+    End Sub
+
+    Private Sub in_gudang_n_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
+        popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height)
+        If popPnl_barang.Visible = False Then
+            popPnl_barang.Visible = True
+        End If
+        popupstate = "gudang"
+        loadDataBRGPopup("gudang", in_gudang_n.Text)
+    End Sub
+
+    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
+        If e.KeyCode = Keys.Down Then
+            If popPnl_barang.Visible = True Then
+                dgv_listbarang.Focus()
+            End If
+        ElseIf e.KeyCode = Keys.Enter Then
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
+                setPopUpResult()
+            End If
+            keyshortenter(in_barang, e)
+        Else
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
     End Sub
 
@@ -222,63 +168,42 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            gudanglist()
-        ElseIf e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                rowindexlist = 0
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            'If popPnl_barang.Visible = True Then
-            '    rowindexlist = 0
-            '    dgv_listbarang.Focus()
-            'Else
-            keyshortenter(in_barang, e)
-            'End If
-        End If
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+        keyshortenter(in_barang_n, e)
     End Sub
 
-    Private Sub in_barang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang_n.KeyDown
-        If e.KeyCode = Keys.F1 Then
-            baranglist()
-        ElseIf e.KeyCode = Keys.Down Then
+    Private Sub in_barang_n_Enter(sender As Object, e As EventArgs) Handles in_barang_n.Enter
+        popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height)
+        If popPnl_barang.Visible = False Then
+            popPnl_barang.Visible = True
+        End If
+        popupstate = "barang"
+        loadDataBRGPopup("barang", in_barang_n.Text)
+    End Sub
+
+    Private Sub in_barang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang_n.KeyUp
+        If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
-                rowindexlist = 0
                 dgv_listbarang.Focus()
             End If
         ElseIf e.KeyCode = Keys.Enter Then
-            'If popPnl_barang.Visible = True Then
-            '    rowindexlist = 0
-            '    dgv_listbarang.Focus()
-            'Else
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
+                setPopUpResult()
+            End If
             keyshortenter(in_stok_awal, e)
-            'End If
+        Else
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup("barang", in_barang_n.Text)
         End If
     End Sub
 
-    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_n.KeyUp
-        If popPnl_barang.Visible = True Then
-            loadDataBRGPopup("barang")
+    Private Sub in_barang_n_TextChanged(sender As Object, e As EventArgs) Handles in_barang_n.TextChanged
+        If in_barang_n.Text = "" Then
+            in_barang.Clear()
         End If
     End Sub
-
-    Private Sub in_gudang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
-        If popPnl_barang.Visible = True Then
-            loadDataBRGPopup("gudang")
-        End If
-    End Sub
-
-    Private Sub linkLbl_searchbarang_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkLbl_searchbarang.LinkClicked
-        popPnl_barang.Visible = False
-        If popPnl_barang.Location = New Point(in_barang_n.Left, in_barang_n.Top + in_barang_n.Height) Then
-            bt_barang_list.PerformClick()
-        ElseIf popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height) Then
-            bt_gudang_list.PerformClick()
-        End If
-    End Sub
-
 
     '----------------- menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
@@ -299,17 +224,20 @@
     End Sub
 
     Private Sub in_stok_awal_Leave(sender As Object, e As EventArgs) Handles in_stok_awal.Leave, in_hpp.Leave
-        numericLostFocus(sender)
+        If sender.Name = "in_stok_awal" Then
+            numericLostFocus(sender, "N0")
+        Else
+            numericLostFocus(sender)
+        End If
     End Sub
 
     '---------------- load
     Private Sub fr_stok_awal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        date_tgl_beli.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, Today.Day)
-        date_tgl_beli.Focus()
+
     End Sub
 
     'input
-    Private Sub date_tgl_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_beli.KeyDown
+    Private Sub date_tgl_beli_KeyDown(sender As Object, e As KeyEventArgs)
         keyshortenter(in_gudang_n, e)
     End Sub
 
@@ -324,7 +252,7 @@
     '------------------- save
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpanbarang.Click
         Dim dataCol As String()
-        Dim stockkode As String = in_gudang.Text & "-" & in_barang.Text & "-" & date_tgl_beli.Value.ToString("yyMM")
+        Dim stockkode As String = in_gudang.Text & "-" & in_barang.Text & "-" & selectperiode.id
         Dim queryarr As New List(Of String)
         Dim querycheck As Boolean = False
 
@@ -334,9 +262,8 @@
             "stock_kode='" & stockkode & "'",
             "stock_gudang='" & in_gudang.Text & "'",
             "stock_barang='" & in_barang.Text & "'",
-            "stock_hpp='" & in_hpp.Value & "'",
             "stock_awal=" & in_stok_awal.Value,
-            "stock_periode='" & date_tgl_beli.Value.ToString("yyyy-MM") & "'",
+            "stock_periode='" & selectperiode.id & "'",
             "stock_reg_alias='" & loggeduser.user_id & "'",
             "stock_reg_date=NOW()"
             }
@@ -351,6 +278,7 @@
                 End If
 
                 queryarr.Add("INSERT INTO data_stok_awal SET " & String.Join(",", dataCol))
+                queryarr.Add("UPDATE data_barang_master SET barang_hpp='" & in_hpp.Value & "'")
 
                 'TODO: WRITE LOG
 
@@ -371,5 +299,11 @@
         End If
 
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub fr_stok_mutasi_list_Click(sender As Object, e As EventArgs) Handles Me.Click
+        If popPnl_barang.Visible = True Then
+            popPnl_barang.Visible = False
+        End If
     End Sub
 End Class

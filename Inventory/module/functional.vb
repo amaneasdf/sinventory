@@ -139,6 +139,7 @@ Module functional
     Public Sub getPeriode(Optional kodeperiode As String = Nothing, Optional selecteddate As Date = Nothing)
         'app startup
         Dim q As String
+
         If kodeperiode = Nothing Then
             q = "SELECT IFNULL(MAX(tutupbk_id),1) FROM data_tutup_buku " _
                 & "WHERE {0} BETWEEN tutupbk_periode_tglawal AND IFNULL(tutupbk_periode_tglakhir,NOW()) AND tutupbk_status=1"
@@ -260,7 +261,9 @@ Module functional
                 x.db = .Keys("DB").Value
             End With
         Catch ex As Exception
+            logError(ex)
             Console.WriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
+            'Application.Exit()
         End Try
 
         Return x

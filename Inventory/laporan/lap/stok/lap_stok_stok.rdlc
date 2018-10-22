@@ -596,6 +596,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_lap_stock</DataSetName>
+        <Top>0cm</Top>
         <Height>2.4cm</Height>
         <Width>19cm</Width>
         <Style>
@@ -605,7 +606,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>1.17069in</Height>
+    <Height>0.94488in</Height>
     <Style />
   </Body>
   <Width>19.75cm</Width>
@@ -625,6 +626,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -636,6 +639,7 @@
                   <Value>Jl. Bima No.14 Jatiwinangun</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -647,6 +651,7 @@
                   <Value>Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -655,7 +660,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
           <Top>0.00862cm</Top>
-          <Height>1.24975cm</Height>
+          <Height>1.92886cm</Height>
           <Width>5.41042cm</Width>
           <Style>
             <Border>
@@ -689,7 +694,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>0.64955cm</Top>
-          <Left>5.41042cm</Left>
+          <Left>5.6567cm</Left>
           <Height>0.60882cm</Height>
           <Width>8.43659cm</Width>
           <ZIndex>1</ZIndex>
@@ -725,7 +730,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>1.32866cm</Top>
-          <Left>5.41042cm</Left>
+          <Left>5.6567cm</Left>
           <Height>0.60882cm</Height>
           <Width>8.43659cm</Width>
           <ZIndex>2</ZIndex>
@@ -781,7 +786,7 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>1.25cm</Height>
+      <Height>0.75cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -803,7 +808,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.48243cm</Top>
+          <Top>0.17639cm</Top>
           <Height>0.47653cm</Height>
           <Width>7.57312cm</Width>
           <Style>
@@ -825,8 +830,8 @@
     </PageFooter>
     <PageHeight>33cm</PageHeight>
     <PageWidth>21cm</PageWidth>
-    <LeftMargin>0.5cm</LeftMargin>
-    <RightMargin>0.5cm</RightMargin>
+    <LeftMargin>1cm</LeftMargin>
+    <RightMargin>0cm</RightMargin>
     <TopMargin>0.5cm</TopMargin>
     <BottomMargin>0.5cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>

@@ -100,7 +100,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>KD.BRG</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -133,7 +133,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>NAMA BARANG</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -317,7 +317,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>KD.BRG</Value>
+                              <Value />
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -353,7 +353,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>NAMA BARANG</Value>
+                              <Value />
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -766,6 +766,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -800,6 +803,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -834,6 +840,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -868,6 +877,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -902,6 +914,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -936,6 +951,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -970,6 +988,9 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1000,10 +1021,13 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!persediaan_sisa.Value</Value>
+                              <Value>=(Fields!persediaan_awal.Value+Fields!persediaan_beli.Value+Fields!persediaan_masuk.Value+Fields!persediaan_rjual.Value)-(Fields!persediaan_jual.Value+Fields!persediaan_keluar.Value+Fields!persediaan_rbeli.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1483,6 +1507,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1494,6 +1520,7 @@
                   <Value>Jl. Bima No.14 Jatiwinangun</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1505,6 +1532,7 @@
                   <Value>Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1512,8 +1540,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Top>0.01724cm</Top>
-          <Height>1.94068cm</Height>
+          <Height>1.95792cm</Height>
           <Width>5.41042cm</Width>
           <Style>
             <Border>
@@ -1618,9 +1645,9 @@
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
           <Top>0.00862cm</Top>
-          <Left>17.02369cm</Left>
+          <Left>16.59701cm</Left>
           <Height>0.46771cm</Height>
-          <Width>2.82332cm</Width>
+          <Width>3.25cm</Width>
           <ZIndex>3</ZIndex>
           <Style>
             <Border>
@@ -1662,7 +1689,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.50257cm</Top>
+          <Top>0.17638cm</Top>
           <Height>0.47653cm</Height>
           <Width>7.34701cm</Width>
           <Style>
@@ -1684,8 +1711,8 @@
     </PageFooter>
     <PageHeight>33cm</PageHeight>
     <PageWidth>21cm</PageWidth>
-    <LeftMargin>0.5cm</LeftMargin>
-    <RightMargin>0.5cm</RightMargin>
+    <LeftMargin>1cm</LeftMargin>
+    <RightMargin>0cm</RightMargin>
     <TopMargin>0.5cm</TopMargin>
     <BottomMargin>0.5cm</BottomMargin>
     <ColumnSpacing>0.13cm</ColumnSpacing>
