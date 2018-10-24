@@ -70,8 +70,8 @@ Partial Class fr_beli_retur_detail
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.bt_tbbarang = New System.Windows.Forms.Button()
         Me.in_subtotal = New System.Windows.Forms.TextBox()
         Me.cb_sat = New System.Windows.Forms.ComboBox()
@@ -88,6 +88,7 @@ Partial Class fr_beli_retur_detail
         Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.diskon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label20 = New System.Windows.Forms.Label()
@@ -97,6 +98,8 @@ Partial Class fr_beli_retur_detail
         Me.in_gudang = New System.Windows.Forms.TextBox()
         Me.in_supplier_n = New System.Windows.Forms.TextBox()
         Me.in_supplier = New System.Windows.Forms.TextBox()
+        Me.in_diskon = New System.Windows.Forms.NumericUpDown()
+        Me.Label18 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -106,6 +109,7 @@ Partial Class fr_beli_retur_detail
         CType(Me.in_harga_retur, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.in_diskon, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lbl_title
@@ -116,7 +120,7 @@ Partial Class fr_beli_retur_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(246, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(247, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Retur Pembelian"
         '
@@ -612,7 +616,7 @@ Partial Class fr_beli_retur_detail
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label12.Location = New System.Drawing.Point(363, 171)
+        Me.Label12.Location = New System.Drawing.Point(357, 171)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(30, 13)
         Me.Label12.TabIndex = 425
@@ -620,25 +624,13 @@ Partial Class fr_beli_retur_detail
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Location = New System.Drawing.Point(399, 232)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
         Me.popPnl_barang.TabIndex = 424
         Me.popPnl_barang.Visible = False
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'dgv_listbarang
         '
@@ -653,8 +645,20 @@ Partial Class fr_beli_retur_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 127)
         Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'bt_tbbarang
         '
@@ -664,19 +668,19 @@ Partial Class fr_beli_retur_detail
         Me.bt_tbbarang.FlatAppearance.BorderSize = 0
         Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_tbbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tbbarang.Location = New System.Drawing.Point(745, 188)
+        Me.bt_tbbarang.Location = New System.Drawing.Point(777, 189)
         Me.bt_tbbarang.Name = "bt_tbbarang"
         Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
-        Me.bt_tbbarang.TabIndex = 17
+        Me.bt_tbbarang.TabIndex = 18
         Me.bt_tbbarang.UseVisualStyleBackColor = False
         '
         'in_subtotal
         '
         Me.in_subtotal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_subtotal.Location = New System.Drawing.Point(583, 187)
+        Me.in_subtotal.Location = New System.Drawing.Point(615, 188)
         Me.in_subtotal.Name = "in_subtotal"
         Me.in_subtotal.Size = New System.Drawing.Size(156, 20)
-        Me.in_subtotal.TabIndex = 16
+        Me.in_subtotal.TabIndex = 17
         Me.in_subtotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'cb_sat
@@ -684,9 +688,9 @@ Partial Class fr_beli_retur_detail
         Me.cb_sat.BackColor = System.Drawing.Color.White
         Me.cb_sat.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_sat.FormattingEnabled = True
-        Me.cb_sat.Location = New System.Drawing.Point(366, 187)
+        Me.cb_sat.Location = New System.Drawing.Point(360, 187)
         Me.cb_sat.Name = "cb_sat"
-        Me.cb_sat.Size = New System.Drawing.Size(71, 21)
+        Me.cb_sat.Size = New System.Drawing.Size(53, 21)
         Me.cb_sat.TabIndex = 14
         '
         'in_barang
@@ -717,7 +721,7 @@ Partial Class fr_beli_retur_detail
         Me.Label31.AutoSize = True
         Me.Label31.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label31.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label31.Location = New System.Drawing.Point(580, 171)
+        Me.Label31.Location = New System.Drawing.Point(612, 172)
         Me.Label31.Name = "Label31"
         Me.Label31.Size = New System.Drawing.Size(58, 13)
         Me.Label31.TabIndex = 419
@@ -727,10 +731,10 @@ Partial Class fr_beli_retur_detail
         '
         Me.in_harga_retur.DecimalPlaces = 2
         Me.in_harga_retur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_harga_retur.Location = New System.Drawing.Point(443, 187)
+        Me.in_harga_retur.Location = New System.Drawing.Point(418, 187)
         Me.in_harga_retur.Maximum = New Decimal(New Integer() {-1981284353, -1966660860, 0, 0})
         Me.in_harga_retur.Name = "in_harga_retur"
-        Me.in_harga_retur.Size = New System.Drawing.Size(140, 20)
+        Me.in_harga_retur.Size = New System.Drawing.Size(113, 20)
         Me.in_harga_retur.TabIndex = 15
         Me.in_harga_retur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_harga_retur.ThousandsSeparator = True
@@ -740,7 +744,7 @@ Partial Class fr_beli_retur_detail
         Me.Label22.AutoSize = True
         Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label22.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label22.Location = New System.Drawing.Point(440, 171)
+        Me.Label22.Location = New System.Drawing.Point(415, 171)
         Me.Label22.Name = "Label22"
         Me.Label22.Size = New System.Drawing.Size(76, 13)
         Me.Label22.TabIndex = 420
@@ -752,7 +756,7 @@ Partial Class fr_beli_retur_detail
         Me.in_qty.Location = New System.Drawing.Point(303, 187)
         Me.in_qty.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty.Name = "in_qty"
-        Me.in_qty.Size = New System.Drawing.Size(63, 20)
+        Me.in_qty.Size = New System.Drawing.Size(57, 20)
         Me.in_qty.TabIndex = 13
         Me.in_qty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -762,7 +766,7 @@ Partial Class fr_beli_retur_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.jml, Me.brg_hpp})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.diskon, Me.jml, Me.brg_hpp})
         Me.dgv_barang.Location = New System.Drawing.Point(11, 213)
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
@@ -821,6 +825,12 @@ Partial Class fr_beli_retur_detail
         Me.harga.Name = "harga"
         Me.harga.ReadOnly = True
         Me.harga.Width = 110
+        '
+        'diskon
+        '
+        Me.diskon.HeaderText = "Diskon"
+        Me.diskon.Name = "diskon"
+        Me.diskon.ReadOnly = True
         '
         'jml
         '
@@ -915,6 +925,28 @@ Partial Class fr_beli_retur_detail
         Me.in_supplier.Size = New System.Drawing.Size(121, 20)
         Me.in_supplier.TabIndex = 4
         '
+        'in_diskon
+        '
+        Me.in_diskon.DecimalPlaces = 2
+        Me.in_diskon.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_diskon.Location = New System.Drawing.Point(536, 188)
+        Me.in_diskon.Name = "in_diskon"
+        Me.in_diskon.Size = New System.Drawing.Size(73, 20)
+        Me.in_diskon.TabIndex = 16
+        Me.in_diskon.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_diskon.ThousandsSeparator = True
+        '
+        'Label18
+        '
+        Me.Label18.AutoSize = True
+        Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label18.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label18.Location = New System.Drawing.Point(533, 172)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(46, 13)
+        Me.Label18.TabIndex = 427
+        Me.Label18.Text = "Diskon"
+        '
         'fr_beli_retur_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -922,6 +954,8 @@ Partial Class fr_beli_retur_detail
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(807, 536)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.in_diskon)
+        Me.Controls.Add(Me.Label18)
         Me.Controls.Add(Me.Label13)
         Me.Controls.Add(Me.in_gudang_n)
         Me.Controls.Add(Me.in_status)
@@ -989,6 +1023,7 @@ Partial Class fr_beli_retur_detail
         CType(Me.in_harga_retur, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.in_diskon, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1052,14 +1087,6 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents Label22 As System.Windows.Forms.Label
     Friend WithEvents in_qty As System.Windows.Forms.NumericUpDown
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
-    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents brg_hpp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label21 As System.Windows.Forms.Label
@@ -1067,4 +1094,15 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents in_gudang As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier_n As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier As System.Windows.Forms.TextBox
+    Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents diskon As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents brg_hpp As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents in_diskon As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Label18 As System.Windows.Forms.Label
 End Class

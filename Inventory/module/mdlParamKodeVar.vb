@@ -1,13 +1,24 @@
 ﻿Module mdlParamKodeVar
     Public Structure userdata
+        'general info
         Dim user_id As String
         Dim user_nama As String
+        Dim saleskode As String
+
+        'computer info
         Dim user_ip As String
         Dim user_mac As String
         Dim user_host As String
+
+        'level and access info
         Dim user_lev As String
+        Dim allowedit_transact As Boolean
+        Dim allowedit_master As Boolean
+        Dim validasi_trans As Boolean
+        Dim validasi_master As Boolean
+
+        'app ver info
         Dim user_ver As String
-        Dim user_listm As Boolean
     End Structure
 
     Public Structure cnction
@@ -35,6 +46,7 @@
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
 
     Public selectperiode As New periode
+    Public currentperiode As New periode
     Public tglHariIni As Date = System.DateTime.Today
 
     'tgl
@@ -170,12 +182,14 @@
 
         Select Case tipe
             Case "jenis"
-                dt.Rows.Add("Aktiva", "1")
-                dt.Rows.Add("Hutang", "2")
-                dt.Rows.Add("Modal", "3")
-                dt.Rows.Add("Pendapatan", "4")
-                dt.Rows.Add("Biaya", "5")
-                dt.Rows.Add("Biaya Operasional", "6")
+                dt.Rows.Add("Aktiva Lancar", "1")
+                dt.Rows.Add("Aktiva Tetap", "2")
+                dt.Rows.Add("Aktiva Lain-lain", "3")
+                dt.Rows.Add("Hutang", "4")
+                dt.Rows.Add("Modal", "5")
+                dt.Rows.Add("Pendapatan", "6")
+                dt.Rows.Add("Biaya", "7")
+                dt.Rows.Add("Biaya Operasional", "8")
             Case "gol"
                 'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' FROM ref_gol_perkiraan")
             Case "sub-gol"
@@ -240,7 +254,7 @@
                 dt.Rows.Add("Giro", "BG")
                 dt.Rows.Add("TransferBank", "TRANSFER")
                 'dt.Rows.Add("Titipan", "TITIP")
-                'dt.Rows.Add("PiutangSupl", "PIUTSUPL")
+                dt.Rows.Add("PiutangSupl", "PIUTSUPL")
                 'dt.Rows.Add("PotongHarga", "PTGHARGA")
                 'dt.Rows.Add("Pendapatan", "PENDAPTN")
             Case "source"

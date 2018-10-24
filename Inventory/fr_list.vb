@@ -8,6 +8,7 @@
     Public print_sw As Boolean = False
     Public search_sw As Boolean = True
     Public cancel_sw As Boolean = False
+    Public bayar_sw As Boolean = False
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -299,7 +300,6 @@
                     Case "pghutangawal"
                         Using detail As New fr_hutang_awal
                             With detail
-                                .bt_simpanreturbeli.Text = "Update"
                                 .bt_batalreturbeli.Text = "OK"
                                 .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
                                 .ShowDialog(main)
@@ -324,7 +324,6 @@
                     Case "pgpiutangawal"
                         Using detail As New fr_piutang_awal
                             With detail
-                                .bt_simpanreturbeli.Text = "Update"
                                 .bt_batalreturbeli.Text = "OK"
                                 .in_faktur.Text = dgv_list.Rows(rowindex).Cells("faktur").Value
                                 .ShowDialog(main)
@@ -552,6 +551,7 @@
         mn_export.Visible = False
         mn_print.Visible = print_sw
         mn_bataljual.Visible = cancel_sw
+        mn_bayar.Visible = bayar_sw
     End Sub
 
     '---------------- CLOSE
@@ -623,13 +623,21 @@
         'IF YES -> stop
         'IF NO -> UPDATE
         If cancel_sw = True Then
-            Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
             With dgv_list.SelectedRows
-                If .Count > 0 Then
+                Dim chkdt As Boolean = False
+                Dim chkdt2 As Boolean = False
+                Dim kodefaktur As String = .Item(0).Cells(1).Value
+
+                op_con()
+                chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "'", "p_trans_kode_piutang")
+                chkdt2 = checkdata("data_piutang_retur", "'" & kodefaktur & "'", "p_retur_faktur")
+
+                Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
+                If .Count > 0 And (chkdt = False And chkdt2 = False) Then
                     Dim msg As String = "Batalkan penjualan {0} untuk customer {1}?"
-                    If MessageBox.Show("Batalkan penjualan " & .Item(0).Cells(1).Value, "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    If MessageBox.Show("Batalkan penjualan " & kodefaktur, "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                         op_con()
-                        If commnd(String.Format(q, .Item(0).Cells(1).Value)) = True Then
+                        If commnd(String.Format(q, kodefaktur)) = True Then
                             .Item(0).Cells(11).Value = "Batal"
                         Else
                             MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)

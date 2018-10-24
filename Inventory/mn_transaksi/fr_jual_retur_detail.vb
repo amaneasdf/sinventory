@@ -47,7 +47,9 @@
 
     Private Sub loadDataBrg(kode As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_satuan_type, trans_hpp FROM data_penjualan_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "' AND trans_status=1")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, " _
+                                & "trans_satuan_type, trans_hpp, trans_diskon FROM data_penjualan_retur_trans " _
+                                & "INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "' AND trans_status=1")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -60,6 +62,7 @@
                     .Cells("sat").Value = rows.ItemArray(4)
                     .Cells("jml").Value = rows.ItemArray(3) * rows.ItemArray(2)
                     .Cells("brg_hpp").Value = rows.ItemArray(6)
+                    .Cells("diskon").Value = rows.ItemArray(7)
                 End With
             Next
         End With
@@ -163,9 +166,9 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama', AVG(trans_hpp) as hpp " _
+                q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama', AVG(trans_harga_jual) as hpp " _
                     & "FROM data_penjualan_trans LEFT JOIN data_penjualan_faktur ON faktur_kode=trans_faktur AND faktur_status=1 " _
-                    & "LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
+                    & "LEFT JOIN data_barang_master ON trans_barang=barang_kode AND trans_status=1" _
                     & "WHERE trans_status=1 AND faktur_customer='" & in_custo.Text & "' AND barang_nama LIKE '{0}%' " _
                     & "GROUP BY barang_kode LIMIT 250"
             Case "custo"
@@ -492,7 +495,7 @@
 
         '==========================================================================================================================
         'TODO : WRITE PIUTANG RETUR/TITIPAN
-        q = "UPDATE data_piutang_retur SET p_retur_status=9 WHERE p_retur_retur_bukti='{0}'"
+        q = "UPDATE data_piutang_retur SET p_retur_status=9 WHERE p_retur_bukti_retur='{0}'"
         queryArr.Add(String.Format(q, kode))
         q = "UPDATE data_piutang_titip SET p_titip_status=9 WHERE p_titip_faktur='{0}'"
         queryArr.Add(String.Format(q, kode))
@@ -978,6 +981,10 @@
     End Sub
 
     Private Sub in_harga_retur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyUp
+        keyshortenter(in_diskon, e)
+    End Sub
+
+    Private Sub in_diskon_KeyUp(sender As Object, e As KeyEventArgs) Handles in_diskon.KeyUp
         keyshortenter(bt_tbbarang, e)
     End Sub
 

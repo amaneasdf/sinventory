@@ -1,9 +1,11 @@
 ﻿Public Class fr_hutang_bayar
     Private popupstate As String = ""
-    Private selectedsup As String = ""
     Private indexrowlist As Integer = 0
-    Private indexrowfaktur As Integer = 0
     Private indexrowbayar As Integer = 0
+
+    Private selectedsup As String = ""
+    Private _totaltitipan As Double = 0
+
     Private _sisaHutang As Double = 0
     Public _totalhutang As Double = 0
 
@@ -12,9 +14,10 @@
         Dim tglbgcair As String = ""
         Dim q As String = "SELECT h_bayar_bukti, h_bayar_supplier, supplier_nama, h_bayar_jenis_bayar, h_bayar_akun, h_bayar_tgl_bayar, h_bayar_tgl_jt, " _
                           & "IFNULL(giro_no,'') as giro_no, IFNULL(g_cair_tglcair,'') as g_cair_tglcair, h_bayar_ket, h_bayar_potongan_nilai, " _
-                          & "h_bayar_reg_alias,h_bayar_reg_date,h_bayar_upd_alias,h_bayar_upd_date " _
+                          & "h_bayar_reg_alias,h_bayar_reg_date,h_bayar_upd_alias,h_bayar_upd_date, " _
+                          & "getSisaTitipan('hutang','" & selectperiode.id & "',h_bayar_supplier) as titipan " _
                           & "FROM data_hutang_bayar LEFT JOIN data_supplier_master ON supplier_kode=h_bayar_supplier " _
-                          & "LEFT JOIN data_giro ON giro_ref=h_bayar_bukti AND giro_status=1 AND giro_type='OUT'" _
+                          & "LEFT JOIN data_giro ON giro_ref=h_bayar_bukti AND giro_status<>9 AND giro_type='OUT'" _
                           & "LEFT JOIN data_giro_cair ON giro_no=g_cair_nobg and g_cair_status=1 " _
                           & "WHERE h_bayar_bukti='{0}'"
 
@@ -24,6 +27,7 @@
             in_no_bukti.Text = rd.Item("h_bayar_bukti")
             in_supplier.Text = rd.Item("h_bayar_supplier")
             in_supplier_n.Text = rd.Item("supplier_nama")
+            in_saldotitipan.Text = commaThousand(rd.Item("titipan"))
             cb_bayar.SelectedValue = rd.Item("h_bayar_jenis_bayar")
             cb_akun.SelectedValue = rd.Item("h_bayar_akun")
             date_tgl_trans.Value = rd.Item("h_bayar_tgl_bayar")
@@ -66,7 +70,7 @@
 
     Private Sub loadListedBayar(kode As String)
         Dim dt As New DataTable
-        Dim q As String = "SELECT h_trans_faktur, DATE_FORMAT(ADDDATE(faktur_tanggal_trans,faktur_term),'%d/%m/%Y'), faktur_netto, " _
+        Dim q As String = "SELECT h_trans_faktur, DATE_FORMAT(ADDDATE(faktur_tanggal_trans,faktur_term),'%d/%m/%Y'), faktur_total_netto, " _
                           & "h_trans_sisa, h_trans_nilaibayar " _
                           & "FROM data_hutang_bayar_trans LEFT JOIN data_pembelian_faktur ON h_trans_faktur=faktur_kode AND faktur_status=1 " _
                           & "WHERE h_trans_status=1 AND h_trans_bukti='{0}'"
@@ -95,7 +99,9 @@
             .DataSource = Nothing
             Select Case tipe
                 Case "supplier"
-                    q = "SELECT supplier_kode as Kode, supplier_nama as Nama FROM data_supplier_master WHERE supplier_nama LIKE '" & param & "%' LIMIT 100"
+                    q = "SELECT supplier_kode as Kode, supplier_nama as Nama, getSisaTitipan('hutang','{0}',supplier_kode) as sisaTitip " _
+                        & "FROM data_supplier_master WHERE supplier_nama LIKE '" & param & "%' LIMIT 100"
+                    q = String.Format(q, selectperiode.id)
                 Case "faktur"
                     q = "SELECT hutang_faktur AS Faktur, getSisaHutang(hutang_faktur,{0}) as Sisa, faktur_netto, " _
                         & "DATE_FORMAT(ADDDATE(faktur_tanggal_trans,faktur_term),'%d/%m/%Y') as TglJatuhTempo " _
@@ -110,6 +116,8 @@
             .Columns(1).Width = 125
             If tipe = "faktur" Then
                 .Columns(1).DefaultCellStyle = dgvstyle_currency
+                .Columns(2).Visible = False
+            ElseIf tipe = "supplier" Then
                 .Columns(2).Visible = False
             End If
             popupstate = tipe
@@ -136,6 +144,7 @@
                 Case "supplier"
                     in_supplier.Text = .Cells(0).Value
                     in_supplier_n.Text = .Cells(1).Value
+                    in_saldotitipan.Text = commaThousand(.Cells(2).Value)
                     cb_bayar.Focus()
                 Case "faktur"
                     in_faktur.Text = .Cells(0).Value
@@ -203,10 +212,12 @@
             in_kredit.Focus()
             Exit Sub
         End If
-        If cb_bayar.SelectedValue = "" Then
-            cb_bayar.Focus()
+        If cb_bayar.SelectedValue = "PIUTSUPL" And removeCommaThousand(in_saldotitipan.Text) < in_kredit.Value + removeCommaThousand(in_total.Text) Then
+            MessageBox.Show("Saldo Titipan tidak Mencukupi")
+            in_kredit.Focus()
             Exit Sub
         End If
+
 
         dgv_bayar.Rows.Add(in_faktur.Text, in_tgl_jtfaktur.Text, _totalhutang, removeCommaThousand(in_sisafaktur.Text), in_kredit.Value)
         clearInput("bayar")
@@ -288,7 +299,7 @@
             "h_bayar_akun='" & cb_akun.SelectedValue & "'",
             "h_bayar_potongan_nilai=" & in_potongan.Value.ToString.Replace(",", "."),
             "h_bayar_ket='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
-            "h_bayar_status='1'"
+            "h_bayar_status='" & IIf(cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text = "", 0, 1) & "'"
             }
 
         If bt_simpanperkiraan.Text = "Simpan Pembayaran" Then
@@ -300,7 +311,7 @@
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
-                in_no_bukti.Text = "PH" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D4")
+                in_no_bukti.Text = "PH" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
             ElseIf in_no_bukti.Text <> Nothing And LCase(bt_simpanperkiraan.Text) = "simpan pembayaran" Then
                 If checkdata("data_hutang_bayar", "'" & in_no_bukti.Text & "'", "h_bayar_bukti") = True Then
                     MessageBox.Show("Nomor faktur " & in_no_bukti.Text & " sudah pernah diinputkan", "Pembayaran Hutang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -316,9 +327,12 @@
         '==========================================================================================================================
 
         '==========================================================================================================================
-        'GIRO BLYAT
+        'GIRO BLYAT/TITIP
         q = "UPDATE data_giro SET giro_status=9,giro_upd_date=NOW(),giro_upd_alias='system' WHERE giro_ref='{0}' AND giro_type='OUT'"
         queryArr.Add(String.Format(q, in_no_bukti.Text))
+        q = "UPDATE data_hutang_titip SET h_titip_status=9 WHERE h_titip_faktur='{0}' AND h_titip_idperiode='{1}' AND h_titip_tipe='bayar'"
+        queryArr.Add(String.Format(q, in_no_bukti.Text, selectperiode.id))
+
 
         If cb_bayar.SelectedValue = "BG" Then
             q = "INSERT INTO data_giro SET giro_no='{0}',giro_ref='{1}',{2},giro_reg_date=NOW(),giro_reg_alias='{3}' ON DUPLICATE KEY UPDATE {2}," _
@@ -332,6 +346,15 @@
                 "giro_status=1"
                 }
             queryArr.Add(String.Format(q, in_no_bg.Text, in_no_bukti.Text, String.Join(",", data2), loggeduser.user_id))
+        ElseIf cb_bayar.SelectedValue = "PIUTSUPL" Then
+            q = "INSERT INTO data_hutang_titip SET h_titip_faktur='{0}',h_titip_idperiode='{1}',{2} ON DUPLICATE KEY UPDATE {2}"
+            data2 = {
+                "h_titip_tipe='bayar'",
+                "h_titip_ref='" & in_supplier.Text & "'",
+                "h_titip_nilai=" & removeCommaThousand(in_total.Text).ToString.Replace(",", ".") * -1,
+                "h_titip_status=1"
+                }
+            queryArr.Add(String.Format(q, in_no_bukti.Text, selectperiode.id, String.Join(",", data2)))
         End If
         '==========================================================================================================================
 
@@ -368,7 +391,7 @@
             "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
             "line_status='1'"
             }
-        'queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
+        queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
         '==========================================================================================================================
 
 
@@ -512,7 +535,7 @@
 
     '------------- load
     Private Sub fr_hutang_bayar_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        
+        'Me.Size = New Size(300, 300)
     End Sub
 
     Public Sub do_load()
@@ -525,16 +548,14 @@
         End With
 
         With date_tgl_trans
-            .Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_trans.Value.Day)
-            .MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-            .MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+            .MaxDate = selectperiode.tglakhir
+            .MinDate = selectperiode.tglawal
         End With
 
         For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisahutang, bayar_saldoawal}
             x.DefaultCellStyle = dgvstyle_commathousand
         Next
-
-        lbl_title.Focus()
 
         If in_no_bukti.Text <> Nothing Then
             loadData(in_no_bukti.Text)
@@ -569,12 +590,14 @@
     '----------- Input Supplier
     '---------------pop up list Supplier
     Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
-        popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If in_supplier_n.ReadOnly = False And in_supplier_n.Enabled = True Then
+            popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "supplier"
+            loadDataBRGPopup("supplier", in_supplier_n.Text)
         End If
-        popupstate = "supplier"
-        loadDataBRGPopup("supplier", in_supplier_n.Text)
     End Sub
 
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave
@@ -602,10 +625,12 @@
             End If
             keyshortenter(cb_bayar, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If sender.ReadOnly = False And sender.Ennabled = True Then
+                If popPnl_barang.Visible = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup("supplier", in_supplier_n.Text)
             End If
-            loadDataBRGPopup("supplier", in_supplier_n.Text)
         End If
     End Sub
 
@@ -701,7 +726,7 @@
         End If
     End Sub
 
-    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click
+    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click, Panel1.Click, Panel2.Click, Panel3.Click
         If popPnl_barang.Visible = True Then
             popPnl_barang.Visible = False
         End If

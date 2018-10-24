@@ -107,7 +107,13 @@ Namespace My.Resources
         '''Host = localhost
         '''DB = db-inventory
         '''UID = root
-        '''Pass = root.
+        '''Pass = root
+        '''
+        '''[Catra]
+        '''Host = 17.5.16.21
+        '''DB = db-inventory
+        '''UID = usr_inventory
+        '''Pass = inventory123!.
         '''</summary>
         Friend ReadOnly Property config() As String
             Get

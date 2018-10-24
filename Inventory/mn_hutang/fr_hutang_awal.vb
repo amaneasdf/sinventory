@@ -57,16 +57,28 @@
 
     Private Sub doBayar()
         Dim x As New fr_hutang_bayar
+        Dim titipan As String = "0"
+
+        op_con()
+        readcommd("SELECT getSisaTitipan('hutang','" & selectperiode.id & "','" & in_supplier.Text & "')")
+        If rd.HasRows Then
+            titipan = commaThousand(rd.Item(0))
+        End If
+        rd.Close()
+
         With x
+            .do_load()
+
             .in_supplier.Text = in_supplier.Text
             .in_supplier_n.Text = in_supplier_n.Text
+            .in_saldotitipan.Text = titipan
 
             .in_faktur.Text = in_faktur.Text
             .in_tgl_jtfaktur.Text = in_tgl_term.Text
             ._totalhutang = removeCommaThousand(in_hutang_awal.Text)
             .in_sisafaktur.Text = in_sisa.Text
 
-            .Show()
+            .Show(main)
         End With
         Me.Close()
     End Sub

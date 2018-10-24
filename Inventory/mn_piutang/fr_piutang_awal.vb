@@ -23,7 +23,7 @@
         End If
         rd.Close()
         in_tgl.Text = fak_date.ToLongDateString
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToLongDateString
+        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
 
         loadDgv(kode)
     End Sub
@@ -47,7 +47,7 @@
         Dim _hutang As Double = 0
         If dgv_hutang.Rows.Count > 0 Then
             For Each row As DataGridViewRow In dgv_hutang.Rows
-                _bayar += row.Cells("bayar").Value
+                _bayar += IIf(row.Cells("status").Value = "-", row.Cells("bayar").Value, 0)
                 _hutang += row.Cells("piutang").Value
             Next
         End If
@@ -60,9 +60,28 @@
 
     Private Sub doBayar()
         Dim x As New fr_piutang_bayar
-        With x
+        Dim titipan As String = "0"
 
-            .Show()
+        op_con()
+        readcommd("SELECT getSisaTitipan('piutang','" & selectperiode.id & "','" & in_custo.Text & "')")
+        If rd.HasRows Then
+            titipan = commaThousand(rd.Item(0))
+        End If
+        rd.Close()
+
+        With x
+            .in_sales.Text = in_sales.Text
+            .in_sales_n.Text = in_sales_n.Text
+            .in_saldotitipan.Text = titipan
+            .in_custo.Text = in_custo.Text
+            .in_custo_n.Text = in_custo_n.Text
+
+            .in_faktur.Text = in_faktur.Text
+            .in_sisafaktur.Text = in_sisa.Text
+            ._totalhutang = removeCommaThousand(in_piutangawal.Text)
+            .in_tgl_jtfaktur.Text = in_tgl_term.Text
+
+            .Show(main)
         End With
         Me.Close()
     End Sub
@@ -85,14 +104,15 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        Me.Close()
+        If MessageBox.Show("Tutup Form?", "Piutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If MessageBox.Show("Tutup Form?", "Kas", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
-            e.Cancel = True
-        End If
+
     End Sub
+
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         bt_batalreturbeli.PerformClick()
     End Sub

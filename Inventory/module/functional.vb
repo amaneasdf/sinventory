@@ -132,13 +132,14 @@ Module functional
     End Function
 
     Public Function mysqlQueryFriendlyStringFeed(text As String) As String
-        Return text.Replace("'", "\'").Replace("\", "\\").Replace("%", "\%").Replace("_", "\_")
+        Return text.Replace("'", "\'").Replace("%", "\%").Replace("_", "\_")
     End Function
 
     '-----------SET PERIODE
-    Public Sub getPeriode(Optional kodeperiode As String = Nothing, Optional selecteddate As Date = Nothing)
+    Public Function getPeriode(Optional kodeperiode As String = Nothing, Optional selecteddate As Date = Nothing) As periode
         'app startup
         Dim q As String
+        Dim selected As New periode
 
         If kodeperiode = Nothing Then
             q = "SELECT IFNULL(MAX(tutupbk_id),1) FROM data_tutup_buku " _
@@ -154,16 +155,18 @@ Module functional
             & "WHERE tutupbk_status=1 AND tutupbk_id='{0}'"
         readcommd(String.Format(q, kodeperiode))
         If rd.HasRows Then
-            selectperiode.id = rd.Item(0)
-            selectperiode.tglawal = rd.Item(1)
-            selectperiode.tglakhir = rd.Item(2)
+            selected.id = rd.Item(0)
+            selected.tglawal = rd.Item(1)
+            selected.tglakhir = rd.Item(2)
         Else
-            selectperiode.id = "1"
-            selectperiode.tglawal = "1990-01-01"
-            selectperiode.tglakhir = "2100-12-01"
+            selected.id = "1"
+            selected.tglawal = "1990-01-01"
+            selected.tglakhir = "2100-12-01"
         End If
         rd.Close()
-    End Sub
+
+        Return selected
+    End Function
 
     Public Sub setperiode(selecteddate As Date)
         Dim x As Date = selecteddate

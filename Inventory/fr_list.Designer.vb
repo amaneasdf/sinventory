@@ -40,6 +40,7 @@ Partial Class fr_list
         Me.mn_exportExcel = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_bayar = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -155,7 +156,7 @@ Partial Class fr_list
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual, Me.mn_bayar})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
@@ -234,6 +235,13 @@ Partial Class fr_list
         Me.mn_bataljual.Size = New System.Drawing.Size(76, 20)
         Me.mn_bataljual.Text = "Batal Kirim"
         '
+        'mn_bayar
+        '
+        Me.mn_bayar.Name = "mn_bayar"
+        Me.mn_bayar.Size = New System.Drawing.Size(48, 20)
+        Me.mn_bayar.Text = "Bayar"
+        Me.mn_bayar.Visible = False
+        '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
@@ -286,5 +294,6 @@ Partial Class fr_list
     Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_exportExcel As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_bayar As System.Windows.Forms.ToolStripMenuItem
 
 End Class

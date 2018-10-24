@@ -280,7 +280,6 @@
                 Case "pghutangawal"
                     Using detail As New fr_hutang_awal
                         With detail
-                            .bt_simpanreturbeli.Text = "Update"
                             .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .ShowDialog(main)
                         End With
@@ -294,13 +293,12 @@
                         End With
                     End Using
                 Case "pgpiutangawal"
-                        Using detail As New fr_piutang_awal
-                            With detail
-                                .bt_simpanreturbeli.Text = "Update"
-                                .in_faktur.Text = dgv_list.Rows(rowindex).Cells("faktur").Value
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                    Using detail As New fr_piutang_awal
+                        With detail
+                            .in_faktur.Text = dgv_list.Rows(rowindex).Cells("faktur").Value
+                            .ShowDialog(main)
+                        End With
+                    End Using
                 Case "pgpiutangbayar"
                         Using detail As New fr_piutang_bayar
                             With detail

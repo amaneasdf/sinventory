@@ -676,7 +676,7 @@
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim x As cnction = loadCon("Local")
+        Dim x As cnction = loadCon("Catra")
         Me.Visible = False
         Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")
@@ -690,13 +690,15 @@
             Exit Sub
         End If
 
-        getPeriode()
+        selectperiode = getPeriode()
+        currentperiode = selectperiode
 
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
         strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
         'strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
-        bt_setperiode.Text = "Set Periode to " & cal_front.SelectionStart.ToString("MMMM yyyy")
+
+        bt_setperiode.Text = "Set Periode"
 
         cal_front.MaxDate = DateSerial(Today.Year, Today.Month + 1, 0)
         fr_login.Show()

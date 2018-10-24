@@ -4,6 +4,10 @@
     Private _persediaan As Double = 0
     Private popupstate As String = "barang"
     Private indexrow As Integer = 0
+    Private hargabesr As Decimal = 0
+    Private isibesar As Integer = 0
+    Private isitengah As Integer = 0
+    Private _satuanstate As String = "kecil"
 
     '-----------------------note
     'hitung pajak -> unfinished
@@ -49,7 +53,9 @@
 
     Private Sub loadDataBrg(kode As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, trans_satuan_type FROM data_pembelian_retur_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "' AND trans_status=1")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_retur, trans_qty, trans_satuan, " _
+                                & "trans_satuan_type, trans_hpp, trans_diskon FROM data_pembelian_retur_trans " _
+                                & "INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & kode & "' AND trans_status=1")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -61,10 +67,17 @@
                     .Cells("sat").Value = rows.ItemArray(4)
                     .Cells("sat_type").Value = rows.ItemArray(5)
                     .Cells("jml").Value = rows.ItemArray(3) * rows.ItemArray(2)
+                    .Cells("brg_hpp").Value = rows.ItemArray(6)
+                    .Cells("diskon").Value = rows.ItemArray(7)
                 End With
             Next
         End With
         dt.Dispose()
+
+        If dgv_barang.RowCount > 0 Then
+            in_supplier_n.ReadOnly = True
+            in_gudang_n.ReadOnly = True
+        End If
     End Sub
 
     Private Sub setStatus()
@@ -86,19 +99,77 @@
         Dim dt As New DataTable
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
-        readcommd("SELECT barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar FROM data_barang_master WHERE barang_kode='" & kode & "'")
+        readcommd("SELECT barang_satuan_kecil, barang_satuan_tengah, barang_satuan_besar, " _
+                  & "barang_satuan_tengah_jumlah, barang_satuan_besar_jumlah FROM data_barang_master WHERE barang_kode='" & kode & "'")
         With dt.Rows
             If rd.HasRows Then
                 .Add(rd.Item("barang_satuan_kecil"), "kecil")
                 .Add(rd.Item("barang_satuan_tengah"), "tengah")
                 .Add(rd.Item("barang_satuan_besar"), "besar")
+                isibesar = rd.Item("barang_satuan_besar_jumlah")
+                isitengah = rd.Item("barang_satuan_tengah_jumlah")
             End If
         End With
         rd.Close()
+        'cb_sat.DataSource.Clear()
         cb_sat.DataSource = dt
         cb_sat.DisplayMember = "Text"
         cb_sat.ValueMember = "Value"
+        _satuanstate = cb_sat.SelectedValue
     End Sub
+
+    'COUNT PRICE
+    Private Function countHarga(state As String, hargaawal As Decimal, convState As String) As Decimal
+        Dim retHarga As Decimal = 0
+        Dim isi As Integer = 0
+        Dim opertr As String = "bagi"
+
+        Select Case state
+            Case "besar"
+                If convState = "tengah" Then
+                    retHarga = hargaawal / isibesar
+                ElseIf convState = "kecil" Then
+                    retHarga = hargaawal / (isibesar * isitengah)
+                Else
+                    retHarga = hargaawal
+                End If
+            Case "tengah"
+                If convState = "besar" Then
+                    retHarga = hargaawal * isibesar
+                ElseIf convState = "kecil" Then
+                    retHarga = hargaawal / isitengah
+                Else
+                    retHarga = hargaawal
+                End If
+            Case "kecil"
+                If convState = "besar" Then
+                    retHarga = hargaawal * isitengah * isibesar
+                ElseIf convState = "tengah" Then
+                    retHarga = hargaawal * isitengah
+                Else
+                    retHarga = hargaawal
+                End If
+            Case Else
+                retHarga = hargaawal
+                Return retHarga
+                Exit Function
+        End Select
+
+        Return retHarga
+    End Function
+
+    'COUNT SUBTOTAL
+    Private Function countSubtot(harga As Double, qty As Integer, Optional disk As Double = 0) As Double
+        Dim retSubtot As Double = 0
+        Dim _jl As Double = 0
+        Dim _disk As Double = 0
+
+        _jl = harga * qty
+        _disk = _jl * (disk / 100)
+        retSubtot = _jl - _disk
+
+        Return retSubtot
+    End Function
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
@@ -107,8 +178,9 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', AVG(trans_harga_beli) as harga_beli " _
                     & "FROM data_barang_master LEFT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_status=1 " _
+                    & "LEFT JOIN data_pembelian_trans ON trans_barang=barang_kode AND trans_status=1" _
                     & "WHERE barang_nama LIKE '{0}%' AND stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
                     & "AND barang_supplier='" & in_supplier.Text & "' AND barang_status=1 LIMIT 250"
             Case "supplier"
@@ -154,6 +226,7 @@
                 Case "barang"
                     in_barang.Text = .Cells(0).Value
                     in_barang_nm.Text = .Cells(1).Value
+                    in_harga_retur.Value = .Cells(2).Value
                     loadSatuanBrg(in_barang.Text)
                     in_qty.Focus()
                 Case "supplier"
@@ -217,6 +290,9 @@
         in_barang.Focus()
 
         Me.Cursor = Cursors.Default
+
+        in_supplier_n.ReadOnly = True
+        in_gudang_n.ReadOnly = True
     End Sub
 
     'GET DATA TO TEXTBOX FR DGV
@@ -230,6 +306,13 @@
             in_harga_retur.Text = .Cells("harga").Value
         End With
         countBiaya()
+        If dgv_barang.RowCount = 0 Then
+            in_supplier_n.ReadOnly = False
+            in_gudang_n.ReadOnly = False
+        Else
+            in_supplier_n.ReadOnly = True
+            in_gudang_n.ReadOnly = True
+        End If
     End Sub
 
     Private Sub countBiaya()
@@ -372,6 +455,7 @@
                 "trans_harga_retur='" & rows.Cells("harga").Value.ToString.Replace(",", ".") & "'",
                 "trans_qty='" & rows.Cells("qty").Value & "'",
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
+                "trans_diskon=" & rows.Cells("diskon").Value.ToString.Replace(",", "."),
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
                 "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(",", ".") & "'",
                 "trans_status='" & rtbStatus & "'"
@@ -429,15 +513,31 @@
         '==========================================================================================================================
 
         '==========================================================================================================================
-        'TODO : WRITE HUTANG RETUR
+        'TODO : WRITE HUTANG/TITIP RETUR
+        q = "UPDATE data_hutang_retur SET h_retur_status=9 WHERE h_retur_bukti_retur='{0}'"
+        queryArr.Add(String.Format(q, kode))
+        q = "UPDATE data_hutang_titip SET h_titip_status=9 WHERE h_titip_faktur='{0}'"
+        queryArr.Add(String.Format(q, kode))
+
         If cb_bayar_jenis.SelectedValue = 1 Then
             Dim q6 As String = "INSERT INTO data_hutang_retur SET h_retur_faktur='{0}',h_retur_bukti_retur='{1}',{2} ON DUPLICATE KEY UPDATE {2}"
             data1 = {
                 "h_retur_total=" & removeCommaThousand(in_netto.Text),
                 "h_retur_reg_date=NOW()",
-                "h_retur_reg_alias='" & loggeduser.user_id & "'"
+                "h_retur_reg_alias='" & loggeduser.user_id & "'",
+                "h_retur_status='" & rtbStatus & "'"
                 }
             queryArr.Add(String.Format(q6, in_no_faktur.Text, in_no_bukti.Text, String.Join(",", data1)))
+        ElseIf cb_bayar_jenis.SelectedValue = 3 Then
+            q = "INSERT INTO data_hutang_titip SET h_titip_faktur='{0}',{1},h_titip_reg_date=NOW(),h_titip_reg_alias='{2}' ON DUPLICATE KEY UPDATE {1}," _
+                & "h_titip_upd_alias='{2}',h_titip_upd_date=NOW()"
+            data1 = {
+                "h_titip_ref='" & in_supplier.Text & "'",
+                "h_titip_nilai=" & removeCommaThousand(in_netto.Text).ToString.Replace(",", "."),
+                "h_titip_idperiode='" & selectperiode.id & "'",
+                "h_titip_status='" & rtbStatus & "'"
+                }
+            queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
         End If
         '==========================================================================================================================
 
@@ -674,16 +774,21 @@
     End Sub
 
     Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
-        popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If in_supplier_n.ReadOnly = False And in_supplier_n.Enabled = True Then
+            popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "supplier"
+            loadDataBRGPopup("supplier", in_supplier_n.Text)
         End If
-        popupstate = "supplier"
-        loadDataBRGPopup("supplier", in_supplier_n.Text)
     End Sub
 
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave, in_gudang_n.Leave, in_barang_nm.Leave, in_no_faktur.Leave
         If Not dgv_listbarang.Focused = True Then
+            If sender.Text <> Nothing And sender.ReadOnly = False And sender.Enabled = True Then
+                setPopUpResult()
+            End If
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
@@ -701,7 +806,7 @@
             End If
             keyshortenter(in_gudang_n, e)
         Else
-            If popPnl_barang.Visible = False Then
+            If popPnl_barang.Visible = False And sender.ReadOnly = False And sender.Enabled = True Then
                 popPnl_barang.Visible = True
             End If
             loadDataBRGPopup("supplier", in_supplier_n.Text)
@@ -825,8 +930,13 @@
         keyshortenter(cb_sat, e)
     End Sub
 
-    Private Sub in_harga_retur_ValueChanged(sender As Object, e As EventArgs) Handles in_harga_retur.ValueChanged, in_qty.ValueChanged
-        in_subtotal.Text = commaThousand(in_qty.Value * in_harga_retur.Value)
+    Private Sub in_harga_retur_ValueChanged(sender As Object, e As EventArgs) Handles in_harga_retur.ValueChanged, in_qty.ValueChanged, in_diskon.ValueChanged
+        in_subtotal.Text = commaThousand(countSubtot(in_harga_retur.Value, in_qty.Value, in_diskon.Value))
+    End Sub
+
+    Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectionChangeCommitted
+        in_harga_retur.Value = countHarga(_satuanstate, in_harga_retur.Value, cb_sat.SelectedValue)
+        _satuanstate = cb_sat.SelectedValue
     End Sub
 
     Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyUp
@@ -834,6 +944,10 @@
     End Sub
 
     Private Sub in_harga_retur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyUp
+        keyshortenter(in_diskon, e)
+    End Sub
+
+    Private Sub in_diskon_KeyUp(sender As Object, e As KeyEventArgs) Handles in_diskon.KeyUp
         keyshortenter(bt_tbbarang, e)
     End Sub
 

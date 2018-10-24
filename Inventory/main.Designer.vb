@@ -25,10 +25,13 @@ Partial Class main
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(main))
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
         Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.pnl_main = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lb_periodeselector = New System.Windows.Forms.ListBox()
         Me.bt_setperiode = New System.Windows.Forms.Button()
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.cal_front = New System.Windows.Forms.MonthCalendar()
@@ -37,8 +40,6 @@ Partial Class main
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_periode = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.lb_periodeselector = New System.Windows.Forms.ListBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
@@ -64,6 +65,7 @@ Partial Class main
         Me.SplitContainer.Panel1.BackColor = System.Drawing.Color.White
         Me.SplitContainer.Panel1.BackgroundImage = Global.Inventory.My.Resources.Resources.bg_stripes_gray
         Me.SplitContainer.Panel1.Controls.Add(Me.Label12)
+        Me.SplitContainer.Panel1.Controls.Add(Me.Label2)
         '
         'SplitContainer.Panel2
         '
@@ -74,15 +76,28 @@ Partial Class main
         '
         'Label12
         '
+        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.Orange
-        Me.Label12.Location = New System.Drawing.Point(3, 9)
+        Me.Label12.Location = New System.Drawing.Point(779, 15)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(443, 30)
+        Me.Label12.Size = New System.Drawing.Size(183, 31)
         Me.Label12.TabIndex = 137
-        Me.Label12.Text = "Sistem Informasi managemen inventory"
+        Me.Label12.Text = "CV. Catra Upaya"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.BackColor = System.Drawing.Color.Transparent
+        Me.Label2.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.ForeColor = System.Drawing.Color.Orange
+        Me.Label2.Location = New System.Drawing.Point(5, 15)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(119, 31)
+        Me.Label2.TabIndex = 137
+        Me.Label2.Text = "Inventory"
         '
         'tabcontrol
         '
@@ -129,6 +144,23 @@ Partial Class main
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(251, 560)
         Me.Panel1.TabIndex = 1
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(10, 190)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(69, 13)
+        Me.Label1.TabIndex = 4
+        Me.Label1.Text = "Periode Data"
+        '
+        'lb_periodeselector
+        '
+        Me.lb_periodeselector.FormattingEnabled = True
+        Me.lb_periodeselector.Location = New System.Drawing.Point(13, 206)
+        Me.lb_periodeselector.Name = "lb_periodeselector"
+        Me.lb_periodeselector.Size = New System.Drawing.Size(227, 95)
+        Me.lb_periodeselector.TabIndex = 3
         '
         'bt_setperiode
         '
@@ -198,23 +230,6 @@ Partial Class main
         Me.strip_periode.Size = New System.Drawing.Size(85, 20)
         Me.strip_periode.Text = "xxxxxxx 0000"
         '
-        'lb_periodeselector
-        '
-        Me.lb_periodeselector.FormattingEnabled = True
-        Me.lb_periodeselector.Location = New System.Drawing.Point(13, 206)
-        Me.lb_periodeselector.Name = "lb_periodeselector"
-        Me.lb_periodeselector.Size = New System.Drawing.Size(227, 95)
-        Me.lb_periodeselector.TabIndex = 3
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(10, 190)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(69, 13)
-        Me.Label1.TabIndex = 4
-        Me.Label1.Text = "Periode Data"
-        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -256,10 +271,11 @@ Partial Class main
     Friend WithEvents cal_front As System.Windows.Forms.MonthCalendar
     Friend WithEvents strip_periode As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents pnl_main As System.Windows.Forms.Panel
-    Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
     Friend WithEvents bt_setperiode As System.Windows.Forms.Button
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents lb_periodeselector As System.Windows.Forms.ListBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Panel1 As System.Windows.Forms.Panel
 
 End Class

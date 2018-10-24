@@ -49,6 +49,7 @@ Partial Class fr_piutang_awal
         Me.piutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bayar = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -135,7 +136,7 @@ Partial Class fr_piutang_awal
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(152, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(153, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Piutang"
         '
@@ -302,7 +303,7 @@ Partial Class fr_piutang_awal
         Me.dgv_hutang.AllowUserToAddRows = False
         Me.dgv_hutang.AllowUserToDeleteRows = False
         Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ket, Me.tgl, Me.piutang, Me.bayar, Me.ref})
+        Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ket, Me.tgl, Me.piutang, Me.bayar, Me.ref, Me.status})
         Me.dgv_hutang.Location = New System.Drawing.Point(11, 191)
         Me.dgv_hutang.Name = "dgv_hutang"
         Me.dgv_hutang.ReadOnly = True
@@ -347,6 +348,13 @@ Partial Class fr_piutang_awal
         Me.ref.Name = "ref"
         Me.ref.ReadOnly = True
         Me.ref.Width = 150
+        '
+        'status
+        '
+        Me.status.DataPropertyName = "piutang_status"
+        Me.status.HeaderText = "Status"
+        Me.status.Name = "status"
+        Me.status.ReadOnly = True
         '
         'Label8
         '
@@ -467,6 +475,7 @@ Partial Class fr_piutang_awal
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_piutang_awal"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "fr_piutang_awal"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
@@ -504,10 +513,11 @@ Partial Class fr_piutang_awal
     Friend WithEvents in_tgllunas As System.Windows.Forms.TextBox
     Friend WithEvents in_sisa As System.Windows.Forms.TextBox
     Friend WithEvents in_total As System.Windows.Forms.TextBox
+    Friend WithEvents bt_bayar As System.Windows.Forms.Button
     Friend WithEvents ket As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents tgl As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents piutang As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents bayar As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ref As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bt_bayar As System.Windows.Forms.Button
+    Friend WithEvents status As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

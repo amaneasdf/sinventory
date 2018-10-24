@@ -312,10 +312,10 @@ Module mdlControl
     }
     Private giro_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "tgl",
-        .HeaderText = "Tanggal",
+        .HeaderText = "Tanggal Terima",
         .Name = "tgl",
         .ReadOnly = True,
-        .MinimumWidth = 175
+        .Width = 100
     }
     Private giro_sales = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "sales",
@@ -343,7 +343,7 @@ Module mdlControl
         .HeaderText = "Bank",
         .Name = "bank",
         .ReadOnly = True,
-        .Width = 150
+        .Width = 225
     }
     Private giro_jml = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "jml",
@@ -943,12 +943,11 @@ Module mdlControl
             .DefaultCellStyle = dgvstyle_currency,
             .ReadOnly = True
             }
-    Private hutang_selisih = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "selisih",
-        .HeaderText = "Selisih",
-        .Name = "selisih",
-        .MinimumWidth = 150,
-        .DefaultCellStyle = dgvstyle_currency,
+    Private hutang_jenis = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
+        .DataPropertyName = "jenisbayar",
+        .HeaderText = "Jenis Bayar",
+        .Name = "jenisbayar",
+        .Width = 75,
         .ReadOnly = True
     }
 
@@ -1655,25 +1654,35 @@ Module mdlControl
                         .Columns.AddRange(x)
                     End With
                 End With
+
             Case "hutangawal"
                 With frmhutangawal
                     Dim hutang_faktur = New DataGridViewColumn()
                     Dim hutang_tgl = New DataGridViewColumn()
                     Dim hutang_supplier = New DataGridViewColumn()
                     Dim hutang_term = New DataGridViewColumn()
+                    Dim hutang_pending = New DataGridViewColumn()
                     hutang_faktur = beli_faktur.Clone()
                     hutang_tgl = beli_tgl.Clone()
                     hutang_supplier = beli_supplier.Clone()
                     hutang_term = beli_term.Clone()
+                    hutang_pending = hutang_bayar.Clone()
+
+                    hutang_pending.Name = "hutang_pending"
+                    hutang_pending.DataPropertyName = "hutang_pending"
+                    hutang_pending.HeaderText = "Pembayaran Pending"
 
                     .add_sw = False
 
+                    Dim x As DataGridViewColumn() = {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_awal, hutang_hutang, hutang_retur, hutang_bayar, hutang_sisa}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                    Next
+
                     With .dgv_list
                         .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_awal, hutang_hutang, hutang_retur, hutang_bayar, hutang_sisa})
-                        For i = 0 To .Columns.Count - 1
-                            .Columns(i).DisplayIndex = i
-                        Next
+                        .Columns.AddRange(x)
                     End With
                 End With
             Case "hutangbayar"
@@ -1684,18 +1693,21 @@ Module mdlControl
                     Dim hutang_it = New DataGridViewColumn()
                     Dim hutang_et = New DataGridViewColumn()
                     Dim hutang_user = New DataGridViewColumn()
+                    Dim hutang_status = New DataGridViewColumn()
                     hutang_bukti = retur_beli_bukti.Clone()
                     hutang_tgl = beli_tgl.Clone()
                     hutang_supplier = beli_supplier.Clone()
                     hutang_it = piutang_it.Clone()
                     hutang_et = piutang_et.Clone()
                     hutang_user = user_id.Clone()
+                    hutang_status = gudang_status.Clone()
 
                     hutang_tgl.HeaderText = "Tgl. Pembayaran"
 
                     .print_sw = False
 
-                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_it, hutang_et, hutang_user}
+                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_jenis,
+                                                     hutang_status, hutang_it, hutang_et, hutang_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                         consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -1713,6 +1725,7 @@ Module mdlControl
                     Dim hutangbgo_tglbgo = New DataGridViewColumn()
                     Dim hutangbgo_userid = New DataGridViewColumn()
                     Dim hutangbgo_ket = New DataGridViewColumn()
+                    Dim hutangbgo_supplier = New DataGridViewColumn()
                     hutangbgo_kode = giro_nobg.Clone()
                     hutangbgo_tgl = giro_tgl.Clone()
                     hutangbgo_bank = giro_bank.Clone()
@@ -1720,6 +1733,7 @@ Module mdlControl
                     hutangbgo_tglbgo = giro_tgl_bg.Clone()
                     hutangbgo_userid = user_id.Clone()
                     hutangbgo_ket = group_ket.Clone()
+                    hutangbgo_supplier = beli_supplier.Clone()
 
                     hutangbgo_ket.MinimumWidth = 100
                     hutangbgo_ket.Width = 100
@@ -1727,7 +1741,8 @@ Module mdlControl
                     .add_sw = False
 
                     With .dgv_list
-                        Dim x As DataGridViewColumn() = {hutangbgo_kode, hutangbgo_ket, hutangbgo_tgl, hutangbgo_bank, hutangbgo_tglbgo, hutangbgo_jml, hutangbgo_tglcair, hutangbgo_tgltolak, hutangbgo_userid}
+                        Dim x As DataGridViewColumn() = {hutangbgo_kode, hutangbgo_bank, hutangbgo_supplier, hutangbgo_jml, hutangbgo_tgl,
+                                                         hutangbgo_tglbgo, hutangbgo_ket, hutangbgo_tglcair, hutangbgo_tgltolak, hutangbgo_userid}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                         Next
@@ -1743,15 +1758,23 @@ Module mdlControl
                     Dim piutang_custo = New DataGridViewColumn()
                     Dim piutang_sales = New DataGridViewColumn()
                     Dim piutang_term = New DataGridViewColumn()
+                    Dim piutang_pending = New DataGridViewColumn()
                     piutang_faktur = beli_faktur.Clone()
                     piutang_tgl = beli_tgl.Clone()
                     piutang_custo = jual_custo.Clone()
                     piutang_sales = jual_sales.Clone()
                     piutang_term = beli_term.Clone()
+                    piutang_pending = piutang_bayar.Clone()
+
+                    piutang_pending.Name = "piutang_pending"
+                    piutang_pending.DataPropertyName = "piutang_pending"
+                    piutang_pending.HeaderText = "Pembayaran Pending"
 
                     .add_sw = False
+                    .bayar_sw = True
 
-                    Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_term, piutang_sales, piutang_awal, piutang_piutang, piutang_retur, piutang_bayar, piutang_sisa, piutang_tempo, piutang_lunas}
+                    Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_term, piutang_sales, piutang_awal,
+                                                    piutang_piutang, piutang_retur, piutang_bayar, piutang_pending, piutang_sisa, piutang_tempo, piutang_lunas}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                         consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -1760,24 +1783,31 @@ Module mdlControl
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
                 End With
+
             Case "piutangbayar"
                 With frmpiutangbayar
                     Dim piutang_bukti = New DataGridViewColumn()
                     Dim piutang_tgl = New DataGridViewColumn()
                     Dim piutang_sales = New DataGridViewColumn()
-                    Dim piutang_kredit = New DataGridViewColumn()
+                    Dim piutang_custo = New DataGridViewColumn()
                     Dim piutang_debet = New DataGridViewColumn()
                     Dim piutang_user = New DataGridViewColumn()
+                    Dim piutang_status = New DataGridViewColumn()
+                    Dim piutang_jenis = New DataGridViewColumn()
                     piutang_bukti = retur_beli_bukti.Clone()
                     piutang_tgl = beli_tgl.Clone()
                     piutang_sales = jual_sales.Clone()
+                    piutang_custo = jual_custo.Clone()
                     piutang_debet = hutang_debet.Clone()
                     piutang_user = user_id.Clone()
+                    piutang_status = gudang_status.Clone()
+                    piutang_jenis = hutang_jenis.Clone()
 
                     piutang_tgl.HeaderText = "Tanggal Pembayaran"
                     piutang_debet.HeaderText = "Total Pembayaran"
 
-                    Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_sales, piutang_debet, piutang_it, piutang_et, piutang_user}
+                    Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_custo, piutang_sales, piutang_debet, piutang_jenis,
+                                                     piutang_status, piutang_it, piutang_et, piutang_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                     Next
@@ -1793,26 +1823,32 @@ Module mdlControl
                     Dim bg_tglbg = New DataGridViewColumn()
                     Dim bg_jml = New DataGridViewColumn()
                     Dim bg_custo = New DataGridViewColumn()
-                    Dim bg_tgl = New DataGridViewColumn()
                     Dim bg_sales = New DataGridViewColumn()
+                    Dim bg_tgl = New DataGridViewColumn()
                     Dim bg_tglcair = New DataGridViewColumn()
                     Dim bg_tgltolak = New DataGridViewColumn()
                     Dim bg_userid = New DataGridViewColumn()
+                    Dim bg_ket = New DataGridViewColumn()
                     bg_no = giro_nobg.Clone()
                     bg_bank = giro_bank.Clone()
                     bg_tglbg = giro_tgl_bg.Clone()
+                    bg_tgl = giro_tgl.Clone()
                     bg_jml = giro_jml.Clone()
                     bg_custo = jual_custo.Clone()
-                    bg_tgl = beli_tgl.Clone()
                     bg_sales = jual_sales.Clone()
                     bg_tglcair = hutangbgo_tglcair.Clone()
                     bg_tgltolak = hutangbgo_tgltolak.Clone()
                     bg_userid = user_id.Clone()
+                    bg_ket = group_ket.Clone()
+
+                    bg_ket.MinimumWidth = 100
+                    bg_ket.Width = 100
 
                     .add_sw = False
 
                     With .dgv_list
-                        Dim x As DataGridViewColumn() = {bg_no, bg_bank, bg_tglbg, bg_jml, bg_custo, bg_tgl, bg_sales, piutangbgo_cairke, bg_tglcair, bg_tgltolak, bg_userid}
+                        Dim x As DataGridViewColumn() = {bg_no, bg_bank, bg_custo, bg_sales, bg_tgl, bg_tglbg, bg_jml, bg_ket,
+                                                         piutangbgo_cairke, bg_tglcair, bg_tgltolak, bg_userid}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                         Next
@@ -2073,7 +2109,7 @@ Module mdlControl
 
             Case "hutangbgo"
                 q = "getDataHutangTable('" & selectperiode.id & "','bgo')"
-                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tglcair LIKE '{0}%'"
+                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR supplier LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tglcair LIKE '{0}%'"
                 Dim pNumeric As String = "jml={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
@@ -2100,7 +2136,7 @@ Module mdlControl
 
             Case "piutangbgcair"
                 q = "getDataPiutangTable('" & selectperiode.id & "','bgi')"
-                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tglcair LIKE '{0}%'"
+                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR custo LIKE '{0}%' OR sales LIKE '{0}%' OR tglbg LIKE '{0}%' OR tglcair LIKE '{0}%'"
                 Dim pNumeric As String = "jml={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 

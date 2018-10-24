@@ -11,8 +11,9 @@
     <AssemblyName>Inventory</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>D:\mso\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -85,8 +86,9 @@
     </Reference>
     <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
-    <Reference Include="MySql.Data">
-      <HintPath>..\..\..\..\net lib\sql connector net\v4.5\MySql.Data.dll</HintPath>
+    <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\net lib\sql connector net\v4.0\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -483,16 +485,22 @@
     <Compile Include="mn_transaksi\fr_draft_tagihan.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="mn_transaksi\fr_giro.Designer.vb">
+    <Compile Include="mn_transaksi\giro\fr_giro.Designer.vb">
       <DependentUpon>fr_giro.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_transaksi\fr_giro.vb">
+    <Compile Include="mn_transaksi\giro\fr_giro.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_detail.Designer.vb">
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\giro\fr_giro_dialog.Designer.vb">
+      <DependentUpon>fr_giro_dialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\giro\fr_giro_dialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\ss\fr_jual_tagihan.Designer.vb">
@@ -748,11 +756,14 @@
     <EmbeddedResource Include="mn_transaksi\fr_draft_tagihan.resx">
       <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\fr_giro.resx">
+    <EmbeddedResource Include="mn_transaksi\giro\fr_giro.resx">
       <DependentUpon>fr_giro.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_detail.resx">
       <DependentUpon>fr_jual_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\giro\fr_giro_dialog.resx">
+      <DependentUpon>fr_giro_dialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\ss\fr_jual_tagihan.resx">
       <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
