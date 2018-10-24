@@ -52,34 +52,34 @@ Partial Class fr_user_detail
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_group = New System.Windows.Forms.ComboBox()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.ck_sales = New System.Windows.Forms.CheckBox()
+        Me.popPnl_barang = New System.Windows.Forms.Panel()
+        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.ck_edit_trans = New System.Windows.Forms.CheckBox()
+        Me.ck_edit_master = New System.Windows.Forms.CheckBox()
+        Me.ck_valid_trans = New System.Windows.Forms.CheckBox()
+        Me.ck_valid_master = New System.Windows.Forms.CheckBox()
         Me.in_sales_n = New System.Windows.Forms.TextBox()
+        Me.in_sales_t = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.in_sales = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.in_sales_t = New System.Windows.Forms.TextBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox3 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox4 = New System.Windows.Forms.CheckBox()
+        Me.ck_sales = New System.Windows.Forms.CheckBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_reset = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_actdeact = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.ResetPasswordToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeactivateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.CheckBox5 = New System.Windows.Forms.CheckBox()
-        Me.HapusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
-        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.Panel2.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
-        Me.Panel3.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.MenuStrip1.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         Me.SuspendLayout()
         '
         'in_pass
@@ -100,7 +100,7 @@ Partial Class fr_user_detail
         Me.bt_bataluser.Location = New System.Drawing.Point(554, 364)
         Me.bt_bataluser.Name = "bt_bataluser"
         Me.bt_bataluser.Size = New System.Drawing.Size(96, 30)
-        Me.bt_bataluser.TabIndex = 8
+        Me.bt_bataluser.TabIndex = 14
         Me.bt_bataluser.Text = "Keluar"
         Me.bt_bataluser.UseVisualStyleBackColor = True
         '
@@ -110,7 +110,7 @@ Partial Class fr_user_detail
         Me.bt_simpanuser.Location = New System.Drawing.Point(452, 364)
         Me.bt_simpanuser.Name = "bt_simpanuser"
         Me.bt_simpanuser.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpanuser.TabIndex = 7
+        Me.bt_simpanuser.TabIndex = 13
         Me.bt_simpanuser.Text = "Simpan"
         Me.bt_simpanuser.UseVisualStyleBackColor = True
         '
@@ -395,14 +395,14 @@ Partial Class fr_user_detail
         Me.Panel2.AutoScroll = True
         Me.Panel2.Controls.Add(Me.popPnl_barang)
         Me.Panel2.Controls.Add(Me.Label20)
-        Me.Panel2.Controls.Add(Me.CheckBox4)
+        Me.Panel2.Controls.Add(Me.ck_edit_trans)
         Me.Panel2.Controls.Add(Me.Label19)
         Me.Panel2.Controls.Add(Me.bt_bataluser)
-        Me.Panel2.Controls.Add(Me.CheckBox3)
+        Me.Panel2.Controls.Add(Me.ck_edit_master)
         Me.Panel2.Controls.Add(Me.bt_simpanuser)
         Me.Panel2.Controls.Add(Me.txtExpDate)
-        Me.Panel2.Controls.Add(Me.CheckBox5)
-        Me.Panel2.Controls.Add(Me.CheckBox2)
+        Me.Panel2.Controls.Add(Me.ck_valid_trans)
+        Me.Panel2.Controls.Add(Me.ck_valid_master)
         Me.Panel2.Controls.Add(Me.txtLastLogin)
         Me.Panel2.Controls.Add(Me.in_sales_n)
         Me.Panel2.Controls.Add(Me.in_sales_t)
@@ -439,19 +439,88 @@ Partial Class fr_user_detail
         Me.Panel2.Size = New System.Drawing.Size(662, 406)
         Me.Panel2.TabIndex = 0
         '
-        'ck_sales
+        'popPnl_barang
         '
-        Me.ck_sales.AutoSize = True
-        Me.ck_sales.Location = New System.Drawing.Point(36, 152)
-        Me.ck_sales.Name = "ck_sales"
-        Me.ck_sales.Size = New System.Drawing.Size(52, 17)
-        Me.ck_sales.TabIndex = 14
-        Me.ck_sales.Text = "Sales"
-        Me.ck_sales.UseVisualStyleBackColor = True
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(252, 128)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(375, 119)
+        Me.popPnl_barang.TabIndex = 481
+        Me.popPnl_barang.Visible = False
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 111)
+        Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 98)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.Visible = False
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'ck_edit_trans
+        '
+        Me.ck_edit_trans.AutoSize = True
+        Me.ck_edit_trans.Location = New System.Drawing.Point(201, 105)
+        Me.ck_edit_trans.Name = "ck_edit_trans"
+        Me.ck_edit_trans.Size = New System.Drawing.Size(133, 17)
+        Me.ck_edit_trans.TabIndex = 6
+        Me.ck_edit_trans.Text = "Edit/Update Transaksi"
+        Me.ck_edit_trans.UseVisualStyleBackColor = True
+        '
+        'ck_edit_master
+        '
+        Me.ck_edit_master.AutoSize = True
+        Me.ck_edit_master.Location = New System.Drawing.Point(36, 105)
+        Me.ck_edit_master.Name = "ck_edit_master"
+        Me.ck_edit_master.Size = New System.Drawing.Size(145, 17)
+        Me.ck_edit_master.TabIndex = 5
+        Me.ck_edit_master.Text = "Edit/Update Data Master"
+        Me.ck_edit_master.UseVisualStyleBackColor = True
+        '
+        'ck_valid_trans
+        '
+        Me.ck_valid_trans.AutoSize = True
+        Me.ck_valid_trans.Location = New System.Drawing.Point(201, 128)
+        Me.ck_valid_trans.Name = "ck_valid_trans"
+        Me.ck_valid_trans.Size = New System.Drawing.Size(137, 17)
+        Me.ck_valid_trans.TabIndex = 8
+        Me.ck_valid_trans.Text = "Validasi Data Transaksi"
+        Me.ck_valid_trans.UseVisualStyleBackColor = True
+        '
+        'ck_valid_master
+        '
+        Me.ck_valid_master.AutoSize = True
+        Me.ck_valid_master.Location = New System.Drawing.Point(36, 128)
+        Me.ck_valid_master.Name = "ck_valid_master"
+        Me.ck_valid_master.Size = New System.Drawing.Size(123, 17)
+        Me.ck_valid_master.TabIndex = 7
+        Me.ck_valid_master.Text = "Validasi Data Master"
+        Me.ck_valid_master.UseVisualStyleBackColor = True
         '
         'in_sales_n
         '
-        Me.in_sales_n.BackColor = System.Drawing.Color.White
+        Me.in_sales_n.BackColor = System.Drawing.SystemColors.Control
         Me.in_sales_n.Enabled = False
         Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_n.ForeColor = System.Drawing.Color.Black
@@ -459,30 +528,20 @@ Partial Class fr_user_detail
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_sales_n.TabIndex = 478
+        Me.in_sales_n.TabIndex = 11
         '
-        'in_sales
+        'in_sales_t
         '
-        Me.in_sales.BackColor = System.Drawing.Color.White
-        Me.in_sales.Enabled = False
-        Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sales.ForeColor = System.Drawing.Color.Black
-        Me.in_sales.Location = New System.Drawing.Point(109, 172)
-        Me.in_sales.MaxLength = 30
-        Me.in_sales.Name = "in_sales"
-        Me.in_sales.ReadOnly = True
-        Me.in_sales.Size = New System.Drawing.Size(121, 20)
-        Me.in_sales.TabIndex = 477
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(35, 177)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(53, 13)
-        Me.Label9.TabIndex = 479
-        Me.Label9.Text = "Salesman"
+        Me.in_sales_t.BackColor = System.Drawing.SystemColors.Control
+        Me.in_sales_t.Enabled = False
+        Me.in_sales_t.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_sales_t.ForeColor = System.Drawing.Color.Black
+        Me.in_sales_t.Location = New System.Drawing.Point(109, 194)
+        Me.in_sales_t.MaxLength = 30
+        Me.in_sales_t.Name = "in_sales_t"
+        Me.in_sales_t.ReadOnly = True
+        Me.in_sales_t.Size = New System.Drawing.Size(208, 20)
+        Me.in_sales_t.TabIndex = 12
         '
         'Label10
         '
@@ -494,48 +553,38 @@ Partial Class fr_user_detail
         Me.Label10.TabIndex = 479
         Me.Label10.Text = "Jenis"
         '
-        'in_sales_t
+        'in_sales
         '
-        Me.in_sales_t.BackColor = System.Drawing.Color.White
-        Me.in_sales_t.Enabled = False
-        Me.in_sales_t.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sales_t.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_t.Location = New System.Drawing.Point(109, 194)
-        Me.in_sales_t.MaxLength = 30
-        Me.in_sales_t.Name = "in_sales_t"
-        Me.in_sales_t.ReadOnly = True
-        Me.in_sales_t.Size = New System.Drawing.Size(208, 20)
-        Me.in_sales_t.TabIndex = 477
+        Me.in_sales.BackColor = System.Drawing.SystemColors.Control
+        Me.in_sales.Enabled = False
+        Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_sales.ForeColor = System.Drawing.Color.Black
+        Me.in_sales.Location = New System.Drawing.Point(109, 172)
+        Me.in_sales.MaxLength = 30
+        Me.in_sales.Name = "in_sales"
+        Me.in_sales.ReadOnly = True
+        Me.in_sales.Size = New System.Drawing.Size(121, 20)
+        Me.in_sales.TabIndex = 10
         '
-        'CheckBox2
+        'Label9
         '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(36, 128)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(123, 17)
-        Me.CheckBox2.TabIndex = 480
-        Me.CheckBox2.Text = "Validasi Data Master"
-        Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(35, 177)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(53, 13)
+        Me.Label9.TabIndex = 479
+        Me.Label9.Text = "Salesman"
         '
-        'CheckBox3
+        'ck_sales
         '
-        Me.CheckBox3.AutoSize = True
-        Me.CheckBox3.Location = New System.Drawing.Point(36, 105)
-        Me.CheckBox3.Name = "CheckBox3"
-        Me.CheckBox3.Size = New System.Drawing.Size(145, 17)
-        Me.CheckBox3.TabIndex = 480
-        Me.CheckBox3.Text = "Edit/Update Data Master"
-        Me.CheckBox3.UseVisualStyleBackColor = True
-        '
-        'CheckBox4
-        '
-        Me.CheckBox4.AutoSize = True
-        Me.CheckBox4.Location = New System.Drawing.Point(201, 105)
-        Me.CheckBox4.Name = "CheckBox4"
-        Me.CheckBox4.Size = New System.Drawing.Size(133, 17)
-        Me.CheckBox4.TabIndex = 480
-        Me.CheckBox4.Text = "Edit/Update Transaksi"
-        Me.CheckBox4.UseVisualStyleBackColor = True
+        Me.ck_sales.AutoSize = True
+        Me.ck_sales.Location = New System.Drawing.Point(36, 152)
+        Me.ck_sales.Name = "ck_sales"
+        Me.ck_sales.Size = New System.Drawing.Size(52, 17)
+        Me.ck_sales.TabIndex = 9
+        Me.ck_sales.Text = "Sales"
+        Me.ck_sales.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -548,7 +597,7 @@ Partial Class fr_user_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.ResetPasswordToolStripMenuItem, Me.DeactivateToolStripMenuItem, Me.HapusToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_reset, Me.mn_actdeact, Me.mn_del})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(662, 24)
@@ -563,6 +612,27 @@ Partial Class fr_user_detail
         Me.mn_save.Size = New System.Drawing.Size(59, 20)
         Me.mn_save.Text = "&Save"
         Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_reset
+        '
+        Me.mn_reset.Enabled = False
+        Me.mn_reset.Name = "mn_reset"
+        Me.mn_reset.Size = New System.Drawing.Size(100, 20)
+        Me.mn_reset.Text = "Reset Password"
+        '
+        'mn_actdeact
+        '
+        Me.mn_actdeact.Enabled = False
+        Me.mn_actdeact.Name = "mn_actdeact"
+        Me.mn_actdeact.Size = New System.Drawing.Size(74, 20)
+        Me.mn_actdeact.Text = "Deactivate"
+        '
+        'mn_del
+        '
+        Me.mn_del.Enabled = False
+        Me.mn_del.Name = "mn_del"
+        Me.mn_del.Size = New System.Drawing.Size(53, 20)
+        Me.mn_del.Text = "Hapus"
         '
         'Panel3
         '
@@ -615,78 +685,11 @@ Partial Class fr_user_detail
         Me.lbl_title.BackColor = System.Drawing.Color.Orange
         Me.lbl_title.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_title.ForeColor = System.Drawing.Color.White
-        Me.lbl_title.Location = New System.Drawing.Point(6, 4)
+        Me.lbl_title.Location = New System.Drawing.Point(6, 6)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(295, 31)
+        Me.lbl_title.Size = New System.Drawing.Size(117, 30)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Form Pembayaran Hutang"
-        '
-        'ResetPasswordToolStripMenuItem
-        '
-        Me.ResetPasswordToolStripMenuItem.Name = "ResetPasswordToolStripMenuItem"
-        Me.ResetPasswordToolStripMenuItem.Size = New System.Drawing.Size(100, 20)
-        Me.ResetPasswordToolStripMenuItem.Text = "Reset Password"
-        '
-        'DeactivateToolStripMenuItem
-        '
-        Me.DeactivateToolStripMenuItem.Name = "DeactivateToolStripMenuItem"
-        Me.DeactivateToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
-        Me.DeactivateToolStripMenuItem.Text = "Deactivate"
-        '
-        'CheckBox5
-        '
-        Me.CheckBox5.AutoSize = True
-        Me.CheckBox5.Location = New System.Drawing.Point(201, 128)
-        Me.CheckBox5.Name = "CheckBox5"
-        Me.CheckBox5.Size = New System.Drawing.Size(137, 17)
-        Me.CheckBox5.TabIndex = 480
-        Me.CheckBox5.Text = "Validasi Data Transaksi"
-        Me.CheckBox5.UseVisualStyleBackColor = True
-        '
-        'HapusToolStripMenuItem
-        '
-        Me.HapusToolStripMenuItem.Name = "HapusToolStripMenuItem"
-        Me.HapusToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
-        Me.HapusToolStripMenuItem.Text = "Hapus"
-        '
-        'popPnl_barang
-        '
-        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(252, 128)
-        Me.popPnl_barang.Name = "popPnl_barang"
-        Me.popPnl_barang.Size = New System.Drawing.Size(375, 119)
-        Me.popPnl_barang.TabIndex = 481
-        Me.popPnl_barang.Visible = False
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 98)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.Visible = False
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
-        '
-        'dgv_listbarang
-        '
-        Me.dgv_listbarang.AllowUserToAddRows = False
-        Me.dgv_listbarang.AllowUserToDeleteRows = False
-        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
-        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
-        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
-        Me.dgv_listbarang.MultiSelect = False
-        Me.dgv_listbarang.Name = "dgv_listbarang"
-        Me.dgv_listbarang.ReadOnly = True
-        Me.dgv_listbarang.RowHeadersVisible = False
-        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 111)
-        Me.dgv_listbarang.TabIndex = 0
+        Me.lbl_title.Text = "Data User"
         '
         'fr_user_detail
         '
@@ -704,13 +707,13 @@ Partial Class fr_user_detail
         Me.Text = "Detail User : "
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.popPnl_barang.ResumeLayout(False)
+        Me.popPnl_barang.PerformLayout()
+        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        Me.popPnl_barang.ResumeLayout(False)
-        Me.popPnl_barang.PerformLayout()
-        CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -746,25 +749,25 @@ Partial Class fr_user_detail
     Friend WithEvents cb_group As System.Windows.Forms.ComboBox
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents ck_sales As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox3 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_edit_trans As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_edit_master As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_valid_master As System.Windows.Forms.CheckBox
     Friend WithEvents in_sales_n As System.Windows.Forms.TextBox
     Friend WithEvents in_sales_t As System.Windows.Forms.TextBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents in_sales As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
-    Friend WithEvents CheckBox5 As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_valid_trans As System.Windows.Forms.CheckBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ResetPasswordToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents DeactivateToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_reset As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_actdeact As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
-    Friend WithEvents HapusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
     Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
