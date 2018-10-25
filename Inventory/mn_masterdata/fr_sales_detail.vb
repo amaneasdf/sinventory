@@ -95,7 +95,7 @@
             'GENERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(salesman_kode,4) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'P%' " _
+                readcommd("SELECT SUBSTRING(salesman_kode,2) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'P%' " _
                           & "ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1

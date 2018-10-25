@@ -62,6 +62,9 @@
         rd.Close()
 
         setStatus()
+        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Then
+            bt_simpanjual.Enabled = False
+        End If
     End Sub
 
     Private Sub loadDataBarang(faktur As String)

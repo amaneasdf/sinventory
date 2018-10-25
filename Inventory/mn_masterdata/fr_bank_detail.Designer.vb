@@ -148,6 +148,7 @@ Partial Class fr_bank_detail
         '
         'mn_deact
         '
+        Me.mn_deact.Enabled = False
         Me.mn_deact.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_deact.Name = "mn_deact"
         Me.mn_deact.Size = New System.Drawing.Size(90, 20)
@@ -156,6 +157,7 @@ Partial Class fr_bank_detail
         '
         'mn_del
         '
+        Me.mn_del.Enabled = False
         Me.mn_del.Name = "mn_del"
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"
@@ -352,8 +354,8 @@ Partial Class fr_bank_detail
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Location = New System.Drawing.Point(250, 148)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(323, 96)
@@ -385,7 +387,7 @@ Partial Class fr_bank_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(323, 73)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(323, 89)
         Me.dgv_listbarang.TabIndex = 0
         '
         'bt_perkiraan_add
