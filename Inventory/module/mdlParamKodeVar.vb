@@ -476,7 +476,7 @@
 
     '-----------dev purpose
     Public log_switch As New dblogwrite With {
-        .log_login = False,
+        .log_login = True,
         .log_stock = False,
         .log_trans = False,
         .log_act = False,

@@ -392,7 +392,7 @@
                                 .bt_simpanuser.Text = "Update"
                                 .Text += dgv_list.Rows(rowindex).Cells(1).Value
                                 .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .ShowDialog()
+                                .ShowDialog(main)
                             End With
                         End Using
                         'Case "pgjenisbarang"

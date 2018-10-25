@@ -34,13 +34,8 @@ Partial Class fr_group_detail
         Me.bt_tv_checkall_group = New System.Windows.Forms.Button()
         Me.bt_tv_reset = New System.Windows.Forms.Button()
         Me.tv_menu = New System.Windows.Forms.TreeView()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
-        Me.txtRegIP = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.txtUpdIp = New System.Windows.Forms.TextBox()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
         Me.txtRegdate = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -48,12 +43,20 @@ Partial Class fr_group_detail
         Me.Label18 = New System.Windows.Forms.Label()
         Me.txtUpdDate = New System.Windows.Forms.TextBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.GroupBox1.SuspendLayout()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_actdeact = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
+        Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'in_nama_group
@@ -61,7 +64,7 @@ Partial Class fr_group_detail
         Me.in_nama_group.BackColor = System.Drawing.Color.White
         Me.in_nama_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_nama_group.ForeColor = System.Drawing.Color.Black
-        Me.in_nama_group.Location = New System.Drawing.Point(11, 140)
+        Me.in_nama_group.Location = New System.Drawing.Point(12, 109)
         Me.in_nama_group.MaxLength = 30
         Me.in_nama_group.Name = "in_nama_group"
         Me.in_nama_group.Size = New System.Drawing.Size(252, 20)
@@ -72,10 +75,10 @@ Partial Class fr_group_detail
         Me.in_kode.BackColor = System.Drawing.Color.Gainsboro
         Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_kode.Location = New System.Drawing.Point(70, 88)
+        Me.in_kode.Location = New System.Drawing.Point(51, 31)
         Me.in_kode.Name = "in_kode"
         Me.in_kode.ReadOnly = True
-        Me.in_kode.Size = New System.Drawing.Size(93, 20)
+        Me.in_kode.Size = New System.Drawing.Size(112, 20)
         Me.in_kode.TabIndex = 19
         Me.in_kode.TabStop = False
         Me.in_kode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -84,7 +87,7 @@ Partial Class fr_group_detail
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(8, 121)
+        Me.Label3.Location = New System.Drawing.Point(9, 90)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(67, 13)
         Me.Label3.TabIndex = 17
@@ -94,7 +97,7 @@ Partial Class fr_group_detail
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 91)
+        Me.Label4.Location = New System.Drawing.Point(9, 35)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(32, 13)
         Me.Label4.TabIndex = 18
@@ -103,7 +106,7 @@ Partial Class fr_group_detail
         'bt_batal_group
         '
         Me.bt_batal_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batal_group.Location = New System.Drawing.Point(492, 506)
+        Me.bt_batal_group.Location = New System.Drawing.Point(497, 460)
         Me.bt_batal_group.Name = "bt_batal_group"
         Me.bt_batal_group.Size = New System.Drawing.Size(96, 30)
         Me.bt_batal_group.TabIndex = 21
@@ -113,7 +116,7 @@ Partial Class fr_group_detail
         'bt_simpan_group
         '
         Me.bt_simpan_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpan_group.Location = New System.Drawing.Point(390, 506)
+        Me.bt_simpan_group.Location = New System.Drawing.Point(395, 460)
         Me.bt_simpan_group.Name = "bt_simpan_group"
         Me.bt_simpan_group.Size = New System.Drawing.Size(96, 30)
         Me.bt_simpan_group.TabIndex = 20
@@ -124,7 +127,7 @@ Partial Class fr_group_detail
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(8, 165)
+        Me.Label1.Location = New System.Drawing.Point(9, 134)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(62, 13)
         Me.Label1.TabIndex = 17
@@ -135,7 +138,7 @@ Partial Class fr_group_detail
         Me.in_ket_group.BackColor = System.Drawing.Color.White
         Me.in_ket_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket_group.ForeColor = System.Drawing.Color.Black
-        Me.in_ket_group.Location = New System.Drawing.Point(11, 184)
+        Me.in_ket_group.Location = New System.Drawing.Point(12, 153)
         Me.in_ket_group.MaxLength = 300
         Me.in_ket_group.Multiline = True
         Me.in_ket_group.Name = "in_ket_group"
@@ -146,7 +149,7 @@ Partial Class fr_group_detail
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(270, 76)
+        Me.Label2.Location = New System.Drawing.Point(275, 34)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(66, 13)
         Me.Label2.TabIndex = 17
@@ -155,7 +158,7 @@ Partial Class fr_group_detail
         'bt_tv_checkall_group
         '
         Me.bt_tv_checkall_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tv_checkall_group.Location = New System.Drawing.Point(492, 74)
+        Me.bt_tv_checkall_group.Location = New System.Drawing.Point(497, 31)
         Me.bt_tv_checkall_group.Name = "bt_tv_checkall_group"
         Me.bt_tv_checkall_group.Size = New System.Drawing.Size(96, 20)
         Me.bt_tv_checkall_group.TabIndex = 20
@@ -165,7 +168,7 @@ Partial Class fr_group_detail
         'bt_tv_reset
         '
         Me.bt_tv_reset.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tv_reset.Location = New System.Drawing.Point(390, 74)
+        Me.bt_tv_reset.Location = New System.Drawing.Point(395, 31)
         Me.bt_tv_reset.Name = "bt_tv_reset"
         Me.bt_tv_reset.Size = New System.Drawing.Size(96, 20)
         Me.bt_tv_reset.TabIndex = 20
@@ -176,67 +179,15 @@ Partial Class fr_group_detail
         '
         Me.tv_menu.CheckBoxes = True
         Me.tv_menu.FullRowSelect = True
-        Me.tv_menu.Location = New System.Drawing.Point(273, 100)
+        Me.tv_menu.Location = New System.Drawing.Point(278, 54)
         Me.tv_menu.Name = "tv_menu"
         Me.tv_menu.Size = New System.Drawing.Size(315, 400)
         Me.tv_menu.TabIndex = 47
         '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.txtRegIP)
-        Me.GroupBox1.Controls.Add(Me.Label13)
-        Me.GroupBox1.Controls.Add(Me.Label8)
-        Me.GroupBox1.Controls.Add(Me.txtRegAlias)
-        Me.GroupBox1.Controls.Add(Me.Label12)
-        Me.GroupBox1.Controls.Add(Me.txtUpdIp)
-        Me.GroupBox1.Controls.Add(Me.txtUpdAlias)
-        Me.GroupBox1.Controls.Add(Me.txtRegdate)
-        Me.GroupBox1.Controls.Add(Me.Label17)
-        Me.GroupBox1.Controls.Add(Me.Label11)
-        Me.GroupBox1.Controls.Add(Me.Label18)
-        Me.GroupBox1.Controls.Add(Me.txtUpdDate)
-        Me.GroupBox1.Location = New System.Drawing.Point(15, 296)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(252, 204)
-        Me.GroupBox1.TabIndex = 133
-        Me.GroupBox1.TabStop = False
-        '
-        'txtRegIP
-        '
-        Me.txtRegIP.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegIP.Location = New System.Drawing.Point(98, 68)
-        Me.txtRegIP.Name = "txtRegIP"
-        Me.txtRegIP.ReadOnly = True
-        Me.txtRegIP.Size = New System.Drawing.Size(146, 20)
-        Me.txtRegIP.TabIndex = 117
-        Me.txtRegIP.TabStop = False
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(6, 68)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(40, 13)
-        Me.Label13.TabIndex = 120
-        Me.Label13.Text = "Reg IP"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(6, 162)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(55, 13)
-        Me.Label8.TabIndex = 126
-        Me.Label8.Text = "Update IP"
-        '
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(98, 42)
+        Me.txtRegAlias.Location = New System.Drawing.Point(54, 391)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(146, 20)
@@ -248,26 +199,16 @@ Partial Class fr_group_detail
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(6, 42)
+        Me.Label12.Location = New System.Drawing.Point(9, 394)
         Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(52, 13)
+        Me.Label12.Size = New System.Drawing.Size(39, 13)
         Me.Label12.TabIndex = 119
-        Me.Label12.Text = "Reg Alias"
-        '
-        'txtUpdIp
-        '
-        Me.txtUpdIp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdIp.Location = New System.Drawing.Point(98, 159)
-        Me.txtUpdIp.Name = "txtUpdIp"
-        Me.txtUpdIp.ReadOnly = True
-        Me.txtUpdIp.Size = New System.Drawing.Size(146, 20)
-        Me.txtUpdIp.TabIndex = 123
-        Me.txtUpdIp.TabStop = False
+        Me.Label12.Text = "RegBy"
         '
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(98, 133)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(54, 438)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(146, 20)
@@ -277,7 +218,7 @@ Partial Class fr_group_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(98, 16)
+        Me.txtRegdate.Location = New System.Drawing.Point(54, 413)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(146, 20)
@@ -289,38 +230,38 @@ Partial Class fr_group_detail
         Me.Label17.AutoSize = True
         Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label17.ForeColor = System.Drawing.Color.Black
-        Me.Label17.Location = New System.Drawing.Point(6, 136)
+        Me.Label17.Location = New System.Drawing.Point(9, 441)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(67, 13)
+        Me.Label17.Size = New System.Drawing.Size(39, 13)
         Me.Label17.TabIndex = 125
-        Me.Label17.Text = "Update Alias"
+        Me.Label17.Text = "UpdBy"
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(6, 16)
+        Me.Label11.Location = New System.Drawing.Point(18, 416)
         Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(53, 13)
+        Me.Label11.Size = New System.Drawing.Size(30, 13)
         Me.Label11.TabIndex = 118
-        Me.Label11.Text = "Reg Date"
+        Me.Label11.Text = "Date"
         '
         'Label18
         '
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label18.ForeColor = System.Drawing.Color.Black
-        Me.Label18.Location = New System.Drawing.Point(6, 110)
+        Me.Label18.Location = New System.Drawing.Point(18, 463)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(68, 13)
+        Me.Label18.Size = New System.Drawing.Size(30, 13)
         Me.Label18.TabIndex = 124
-        Me.Label18.Text = "Update Date"
+        Me.Label18.Text = "Date"
         '
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(98, 107)
+        Me.txtUpdDate.Location = New System.Drawing.Point(54, 460)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(146, 20)
@@ -336,17 +277,17 @@ Partial Class fr_group_detail
         Me.Panel1.Size = New System.Drawing.Size(600, 10)
         Me.Panel1.TabIndex = 347
         '
-        'Panel3
+        'Panel2
         '
-        Me.Panel3.BackColor = System.Drawing.Color.Orange
-        Me.Panel3.Controls.Add(Me.lbl_close)
-        Me.Panel3.Controls.Add(Me.bt_cl)
-        Me.Panel3.Controls.Add(Me.lbl_title)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(0, 0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(600, 42)
-        Me.Panel3.TabIndex = 346
+        Me.Panel2.BackColor = System.Drawing.Color.Orange
+        Me.Panel2.Controls.Add(Me.lbl_close)
+        Me.Panel2.Controls.Add(Me.bt_cl)
+        Me.Panel2.Controls.Add(Me.lbl_title)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(600, 42)
+        Me.Panel2.TabIndex = 346
         '
         'lbl_close
         '
@@ -389,9 +330,93 @@ Partial Class fr_group_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(188, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(189, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Group User"
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.Label6)
+        Me.Panel3.Controls.Add(Me.in_status)
+        Me.Panel3.Controls.Add(Me.txtUpdAlias)
+        Me.Panel3.Controls.Add(Me.txtRegAlias)
+        Me.Panel3.Controls.Add(Me.Label17)
+        Me.Panel3.Controls.Add(Me.txtRegdate)
+        Me.Panel3.Controls.Add(Me.Label18)
+        Me.Panel3.Controls.Add(Me.Label12)
+        Me.Panel3.Controls.Add(Me.txtUpdDate)
+        Me.Panel3.Controls.Add(Me.Label11)
+        Me.Panel3.Controls.Add(Me.MenuStrip1)
+        Me.Panel3.Controls.Add(Me.bt_tv_reset)
+        Me.Panel3.Controls.Add(Me.Label4)
+        Me.Panel3.Controls.Add(Me.Label3)
+        Me.Panel3.Controls.Add(Me.Label2)
+        Me.Panel3.Controls.Add(Me.tv_menu)
+        Me.Panel3.Controls.Add(Me.in_kode)
+        Me.Panel3.Controls.Add(Me.bt_tv_checkall_group)
+        Me.Panel3.Controls.Add(Me.Label1)
+        Me.Panel3.Controls.Add(Me.bt_batal_group)
+        Me.Panel3.Controls.Add(Me.in_nama_group)
+        Me.Panel3.Controls.Add(Me.in_ket_group)
+        Me.Panel3.Controls.Add(Me.bt_simpan_group)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel3.Location = New System.Drawing.Point(0, 42)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(600, 496)
+        Me.Panel3.TabIndex = 348
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_actdeact, Me.mn_del})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(600, 24)
+        Me.MenuStrip1.TabIndex = 344
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'mn_save
+        '
+        Me.mn_save.Image = Global.Inventory.My.Resources.Resources.toolbar_save_icon_s
+        Me.mn_save.Name = "mn_save"
+        Me.mn_save.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.mn_save.Size = New System.Drawing.Size(59, 20)
+        Me.mn_save.Text = "&Save"
+        Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_actdeact
+        '
+        Me.mn_actdeact.Enabled = False
+        Me.mn_actdeact.Name = "mn_actdeact"
+        Me.mn_actdeact.Size = New System.Drawing.Size(74, 20)
+        Me.mn_actdeact.Text = "Deactivate"
+        '
+        'mn_del
+        '
+        Me.mn_del.Enabled = False
+        Me.mn_del.Name = "mn_del"
+        Me.mn_del.Size = New System.Drawing.Size(53, 20)
+        Me.mn_del.Text = "Hapus"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(9, 55)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(37, 13)
+        Me.Label6.TabIndex = 346
+        Me.Label6.Text = "Status"
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(51, 54)
+        Me.in_status.MaxLength = 2
+        Me.in_status.Name = "in_status"
+        Me.in_status.Size = New System.Drawing.Size(112, 20)
+        Me.in_status.TabIndex = 345
         '
         'fr_group_detail
         '
@@ -399,32 +424,21 @@ Partial Class fr_group_detail
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(600, 548)
-        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Panel3)
-        Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.tv_menu)
-        Me.Controls.Add(Me.bt_tv_checkall_group)
-        Me.Controls.Add(Me.bt_batal_group)
-        Me.Controls.Add(Me.bt_tv_reset)
-        Me.Controls.Add(Me.bt_simpan_group)
-        Me.Controls.Add(Me.in_ket_group)
-        Me.Controls.Add(Me.in_nama_group)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.in_kode)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label4)
+        Me.Controls.Add(Me.Panel1)
+        Me.Controls.Add(Me.Panel2)
         Me.Cursor = System.Windows.Forms.Cursors.Default
-        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_group_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Detail User Group : "
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents in_nama_group As System.Windows.Forms.TextBox
@@ -439,13 +453,8 @@ Partial Class fr_group_detail
     Friend WithEvents bt_tv_checkall_group As System.Windows.Forms.Button
     Friend WithEvents bt_tv_reset As System.Windows.Forms.Button
     Friend WithEvents tv_menu As System.Windows.Forms.TreeView
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents txtRegIP As System.Windows.Forms.TextBox
-    Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents txtUpdIp As System.Windows.Forms.TextBox
     Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
     Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
     Friend WithEvents Label17 As System.Windows.Forms.Label
@@ -453,8 +462,15 @@ Partial Class fr_group_detail
     Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents Panel3 As System.Windows.Forms.Panel
+    Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
+    Friend WithEvents Panel3 As System.Windows.Forms.Panel
+    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_actdeact As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 End Class

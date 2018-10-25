@@ -252,7 +252,7 @@
                 'BASED periode,custo;OPT 
                 q = "SELECT customer_kode as pk_custo,customer_nama as pk_custo_n, customer_kabupaten as pk_custo_k,tgl as pk_tgl, bukti as pk_no_bukti, " _
                     & "ket as pk_ket, if(jenis='awal',0,debet) as pk_debet,kredit as pk_kredit, " _
-                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (kredit-debet)),(@csum:=(kredit-debet))),2) as pk_saldo, " _
+                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (debet-kredit)),(@csum:=(debet-kredit))),2) as pk_saldo, " _
                     & "@change_supplier:=customer_nama " _
                     & "FROM (" _
                     & "SELECT faktur_customer as custo, '{1}' as tgl, '' as bukti, 'SALDO AWAL' as ket, " _
@@ -292,7 +292,7 @@
                 q = "SELECT customer_kode as pk_custo,customer_nama as pk_custo_n, customer_kabupaten as pk_custo_k,tgl as pk_tgl, bukti as pk_no_bukti, " _
                     & "salesman_kode as pk_sales, salesman_nama as pk_sales_n, " _
                     & "ket as pk_ket, if(jenis='awal',0,debet) as pk_debet,kredit as pk_kredit, " _
-                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (kredit-debet)),(@csum:=(kredit-debet))),2) as pk_saldo, " _
+                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (debet-kredit)),(@csum:=(debet-kredit))),2) as pk_saldo, " _
                     & "@change_supplier:=customer_nama " _
                     & "FROM (" _
                     & "SELECT faktur_customer as custo, faktur_sales as sales, '{1}' as tgl, '' as bukti, 'SALDO AWAL' as ket, " _

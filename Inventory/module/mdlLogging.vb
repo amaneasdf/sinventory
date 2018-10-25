@@ -7,7 +7,9 @@
     End Sub
 
     'LOG LOGIN
-    Public Sub logUser()
+    Public Sub logUser(tipe As String)
+        Dim q As String = ""
+
         If log_switch.log_login = False Then
             Exit Sub
         End If
@@ -22,9 +24,16 @@
             consoleWriteLine(.user_mac)
         End With
         Try
-            With loggeduser
-                commnd("INSERT INTO log_login SET log_tanggal = NOW(), log_reg = CURDATE(), log_user = '" & .user_id & "', log_nama = '" & .user_nama & "', log_ip = '" & .user_ip & "', log_komputer = '" & .user_host & "', log_mac = '" & .user_mac & "', log_versi = '" & .user_ver & "'")
-            End With
+            Select Case LCase(tipe)
+                Case "login"
+                    q = "INSERT INTO log_login SET {0}"
+                    With loggeduser
+                        commnd("INSERT INTO log_login SET log_tanggal = NOW(), log_reg = CURDATE(), log_user = '" & .user_id & "', log_nama = '" & .user_nama & "', log_ip = '" & .user_ip & "', log_komputer = '" & .user_host & "', log_mac = '" & .user_mac & "', log_versi = '" & .user_ver & "'")
+                    End With
+                Case Else
+                    Exit Sub
+            End Select
+
         Catch ex As Exception
             consoleWriteLine(ex.Message)
         End Try

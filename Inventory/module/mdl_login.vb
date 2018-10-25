@@ -3,7 +3,7 @@
     Private salahlogin As Integer = 3
 
     Public Function checkuser(id As String, pass As String) As Boolean
-        Return checkdata("data_pengguna_alias","'" & id & "' AND user_pwd=MD5('" & pass & "')", "user_alias")
+        Return checkdata("data_pengguna_alias", "'" & id & "' AND user_pwd=MD5('" & pass & "') AND user_status <> 9", "user_alias")
     End Function
 
     Private Function cekuserexpired(tglExpUser As Date) As Integer
@@ -28,9 +28,11 @@
     End Sub
 
     Public Sub do_login(id As String, pass As String)
+        Dim q As String = ""
+
         op_con()
         If checkuser(id, pass) = False Then
-            MessageBox.Show("Username atau Password ada yang salah !")
+            MessageBox.Show("Username atau Password salah !")
             salahlogin -= 1
             If salahlogin = 0 Then
                 MessageBox.Show("Anda telah 3x salah login, aplikasi akan ditutup!")
@@ -45,7 +47,7 @@
             Dim user_stat As String = rd.Item("user_status")
             rd.Close()
             If user_stat <> "1" Then
-                If user_stat = "0" Then
+                If user_stat = "2" Then
                     'open set pass form
                 Else
                     MessageBox.Show("Akun anda terblokir, Aplikasi akan ditutup")
@@ -53,7 +55,9 @@
                 End If
             End If
 
-            readcommd("select user_group,user_nama from data_pengguna_alias where user_alias='" & id & "'")
+            q = "SELECT user_nama, user_group,user_allowedit_master, user_allowedit_trans, user_validasi_master, " _
+                & "user_validasi_trans FROM data_pengguna_alias WHERE user_alias='{0}'"
+            readcommd(String.Format(q, id))
 
             'Dim cek As Integer = cekuserexpired(rd.Item("user_exp_date"))
             'If cek = 1 Then
@@ -65,8 +69,12 @@
 
             With loggeduser
                 .user_id = id
-                .user_lev = rd.Item("user_group")
                 .user_nama = rd.Item("user_nama")
+                .user_lev = rd.Item("user_group")
+                .allowedit_master = IIf(rd.Item("user_allowedit_master") = 1, True, False)
+                .allowedit_transact = IIf(rd.Item("user_allowedit_trans") = 1, True, False)
+                .validasi_master = IIf(rd.Item("user_validasi_master") = 1, True, False)
+                .validasi_trans = IIf(rd.Item("user_validasi_trans") = 1, True, False)
                 .user_host = System.Net.Dns.GetHostName()
                 .user_ip = GetIPv4Address()
                 .user_mac = GetMac(.user_ip)
@@ -74,7 +82,7 @@
             End With
             rd.Close()
 
-            logUser()
+            logUser("login")
             updateUserLogin()
 
             main.strip_user.Text = loggeduser.user_id.ToString
@@ -83,7 +91,7 @@
             main.Opacity = 100
             main.MenuAkses()
             fr_login.clearLogin()
-            fr_login.Dispose()
+            fr_login.Close()
         End If
     End Sub
 

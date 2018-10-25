@@ -1968,12 +1968,27 @@ Module mdlControl
                 End With
             Case "user"
                 With frmuser
+                    Dim user_lastlogin = New DataGridViewColumn()
+                    Dim user_android = New DataGridViewColumn()
+                    Dim user_sales = New DataGridViewColumn()
+
+                    user_lastlogin = beli_tgl.Clone()
+                    user_android = gudang_status.Clone()
+                    user_sales = jual_sales.Clone()
+
+                    user_lastlogin.HeaderText = "Login Terakhir"
+                    user_lastlogin.DataPropertyName = "lastlogin"
+                    user_android.HeaderText = "Android"
+                    user_android.DataPropertyName = "androsales"
                     With .dgv_list
-                        .AutoGenerateColumns = False
-                        .Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {user_kode, user_id, user_nama, user_group, user_group_nama, user_logstat, user_status})
-                        For i = 0 To .Columns.Count - 1
-                            .Columns(i).DisplayIndex = i
+                        Dim x As DataGridViewColumn() = {user_id, user_nama, user_status, user_logstat, user_lastlogin, user_group, user_group_nama,
+                                                         user_android, user_sales}
+                        For i = 0 To x.Count - 1
+                            x(i).DisplayIndex = i
                         Next
+
+                        .AutoGenerateColumns = False
+                        .Columns.AddRange(x)
                     End With
                 End With
             Case Else
@@ -2176,7 +2191,16 @@ Module mdlControl
             Case "group"
                 bs = populateDGVUserConTemp("getDataMaster('group')", "nama LIKE '%" & param & "%'")
             Case "user"
-                bs = populateDGVUserConTemp("getDataMaster('user')", "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
+                q = "getDataMaster('user')"
+                Dim pDefault As String = "nama LIKE '{0}%' OR userid LIKE '{0}%' OR groupnama LIKE '{0}%' OR status LIKE '{0}%' " _
+                                         & "OR loginstat LIKE '{0}%' OR lastlogin LIKE '{0}%' OR sales LIKE '{0}%'"
+                Dim pNumeric As String = ""
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
+
+                consoleWriteLine(q)
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+                'bs = populateDGVUserConTemp(, "nama LIKE '%" & param & "%' or userid LIKE '%" & param & "%'")
             Case Else
                 Exit Sub
         End Select

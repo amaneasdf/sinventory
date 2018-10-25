@@ -8,12 +8,12 @@
     End Sub
 
     Private Sub fr_login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        lbl_judul.Text = Application.ProductName
+        lbl_judul.Text = "Login " & Application.ProductName
         loggeduser = usernull
         in_pass.UseSystemPasswordChar = True
         op_con()
         readcommd("SELECT CURDATE() AS tanggal")
-        out_tglserver.Text = Format(rd.Item("Tanggal"), "dd MMMM yyyy")
+        out_tglserver.Text = CDate(rd.Item("Tanggal")).ToString("dd MMMM yyyy", Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
         rd.Close()
         out_tglkomp.Text = tglkom.ToString("dd MMMM yyyy", Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
     End Sub
@@ -64,5 +64,6 @@
                 in_pass.UseSystemPasswordChar = True
             End If
         End With
+        in_pass.Focus()
     End Sub
 End Class

@@ -181,27 +181,29 @@
     End Sub
 
     Sub MenuAkses()
-        Dim group As String()
-        Dim _gr As String
-        Dim i As Integer = 0
-        Dim q As String = "SELECT menu_kode, menu_label FROM data_menu_master LEFT JOIN data_menu_group ON menu_kode=m_group_menu AND m_group_status=1 " _
-                          & "WHERE menu_status=1 AND m_group_kode IN ({0}) GROUP BY menu_kode ORDER BY menu_kode ASC"
+        'Dim group As String()
+        'Dim _gr As String
+        'Dim i As Integer = 0
+        'Dim q As String = "SELECT menu_kode, menu_label FROM data_menu_master LEFT JOIN data_menu_group ON menu_kode=m_group_menu AND m_group_status=1 " _
+        '                  & "WHERE menu_status=1 AND m_group_kode IN ({0}) GROUP BY menu_kode ORDER BY menu_kode ASC"
 
-        group = Split(loggeduser.user_lev, ":")
+        'group = Split(loggeduser.user_lev, ":")
 
-        For Each s As String In group
-            consoleWriteLine(s & "," & group(i))
-            group(i) = "'" & s & "'"
-            consoleWriteLine(group(i))
-            i += 1
-        Next
+        'For Each s As String In group
+        '    consoleWriteLine(s & "," & group(i))
+        '    group(i) = "'" & s & "'"
+        '    consoleWriteLine(group(i))
+        '    i += 1
+        'Next
 
-        _gr = String.Join(",", group)
-        consoleWriteLine(_gr & Environment.NewLine & String.Format(q, _gr))
-        'dbSelect(String.Format(q,_gr))
+        '_gr = String.Join(",", group)
+        'consoleWriteLine(_gr & Environment.NewLine & String.Format(q, _gr))
+        ''dbSelect(String.Format(q,_gr))
 
-        'dbSelect("SELECT * FROM kode_menu WHERE menu_group = '" & loggeduser.user_lev & "' ORDER BY menu_kode ASC ")
-        dbSelect("SELECT data_menu_master.menu_kode, data_menu_master.menu_label FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode WHERE menu_group='" & loggeduser.user_lev & "' AND menu_status=1 ORDER BY kode_menu.menu_kode ASC;")
+        Dim q As String = "SELECT data_menu_master.menu_kode, data_menu_master.menu_label " _
+                          & "FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode AND kode_menu.menu_status=1 " _
+                          & "WHERE menu_group='{0}' AND data_menu_master.menu_status=1 ORDER BY kode_menu.menu_kode ASC;"
+        dbSelect(String.Format(q, loggeduser.user_lev))
         Do While rd.Read
             MenuKode = rd.Item("menu_kode")
             MenuLabel = rd.Item("menu_label").ToString
@@ -676,8 +678,9 @@
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim x As cnction = loadCon("Catra")
         Me.Visible = False
+        Dim x As cnction = loadCon("Catra")
+
         Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")
 
@@ -690,6 +693,8 @@
             Exit Sub
         End If
 
+        fr_login.Show()
+
         selectperiode = getPeriode()
         currentperiode = selectperiode
 
@@ -699,9 +704,9 @@
         'strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
 
         bt_setperiode.Text = "Set Periode"
+        bt_setperiode.Enabled = False
 
-        cal_front.MaxDate = DateSerial(Today.Year, Today.Month + 1, 0)
-        fr_login.Show()
+        'cal_front.MaxDate = DateSerial(Today.Year, Today.Month + 1, 0)
 
         'MenuAkses()
         'test var

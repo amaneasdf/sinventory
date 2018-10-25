@@ -51,7 +51,7 @@ Partial Class fr_user_detail
         Me.in_login_status = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_group = New System.Windows.Forms.ComboBox()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
@@ -65,21 +65,21 @@ Partial Class fr_user_detail
         Me.in_sales = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.ck_sales = New System.Windows.Forms.CheckBox()
-        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_reset = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_actdeact = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.Panel2.SuspendLayout()
+        Me.Panel4.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
-        Me.Panel3.SuspendLayout()
+        Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
         '
         'in_pass
@@ -390,54 +390,54 @@ Partial Class fr_user_detail
         Me.cb_group.Size = New System.Drawing.Size(255, 21)
         Me.cb_group.TabIndex = 4
         '
-        'Panel2
+        'Panel4
         '
-        Me.Panel2.AutoScroll = True
-        Me.Panel2.Controls.Add(Me.popPnl_barang)
-        Me.Panel2.Controls.Add(Me.Label20)
-        Me.Panel2.Controls.Add(Me.ck_edit_trans)
-        Me.Panel2.Controls.Add(Me.Label19)
-        Me.Panel2.Controls.Add(Me.bt_bataluser)
-        Me.Panel2.Controls.Add(Me.ck_edit_master)
-        Me.Panel2.Controls.Add(Me.bt_simpanuser)
-        Me.Panel2.Controls.Add(Me.txtExpDate)
-        Me.Panel2.Controls.Add(Me.ck_valid_trans)
-        Me.Panel2.Controls.Add(Me.ck_valid_master)
-        Me.Panel2.Controls.Add(Me.txtLastLogin)
-        Me.Panel2.Controls.Add(Me.in_sales_n)
-        Me.Panel2.Controls.Add(Me.in_sales_t)
-        Me.Panel2.Controls.Add(Me.in_kode)
-        Me.Panel2.Controls.Add(Me.txtRegAlias)
-        Me.Panel2.Controls.Add(Me.Label4)
-        Me.Panel2.Controls.Add(Me.txtUpdAlias)
-        Me.Panel2.Controls.Add(Me.Label12)
-        Me.Panel2.Controls.Add(Me.Label17)
-        Me.Panel2.Controls.Add(Me.txtRegdate)
-        Me.Panel2.Controls.Add(Me.Label18)
-        Me.Panel2.Controls.Add(Me.Label10)
-        Me.Panel2.Controls.Add(Me.txtUpdDate)
-        Me.Panel2.Controls.Add(Me.Label11)
-        Me.Panel2.Controls.Add(Me.in_sales)
-        Me.Panel2.Controls.Add(Me.Label9)
-        Me.Panel2.Controls.Add(Me.ck_sales)
-        Me.Panel2.Controls.Add(Me.in_userid)
-        Me.Panel2.Controls.Add(Me.Label3)
-        Me.Panel2.Controls.Add(Me.Label7)
-        Me.Panel2.Controls.Add(Me.Label5)
-        Me.Panel2.Controls.Add(Me.cb_group)
-        Me.Panel2.Controls.Add(Me.Label6)
-        Me.Panel2.Controls.Add(Me.in_login_status)
-        Me.Panel2.Controls.Add(Me.in_pass)
-        Me.Panel2.Controls.Add(Me.in_status)
-        Me.Panel2.Controls.Add(Me.in_karyawan_nama)
-        Me.Panel2.Controls.Add(Me.Label1)
-        Me.Panel2.Controls.Add(Me.Label2)
-        Me.Panel2.Controls.Add(Me.in_group_kode)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(0, 66)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(662, 406)
-        Me.Panel2.TabIndex = 0
+        Me.Panel4.AutoScroll = True
+        Me.Panel4.Controls.Add(Me.popPnl_barang)
+        Me.Panel4.Controls.Add(Me.Label20)
+        Me.Panel4.Controls.Add(Me.ck_edit_trans)
+        Me.Panel4.Controls.Add(Me.Label19)
+        Me.Panel4.Controls.Add(Me.bt_bataluser)
+        Me.Panel4.Controls.Add(Me.ck_edit_master)
+        Me.Panel4.Controls.Add(Me.bt_simpanuser)
+        Me.Panel4.Controls.Add(Me.txtExpDate)
+        Me.Panel4.Controls.Add(Me.ck_valid_trans)
+        Me.Panel4.Controls.Add(Me.ck_valid_master)
+        Me.Panel4.Controls.Add(Me.txtLastLogin)
+        Me.Panel4.Controls.Add(Me.in_sales_n)
+        Me.Panel4.Controls.Add(Me.in_sales_t)
+        Me.Panel4.Controls.Add(Me.in_kode)
+        Me.Panel4.Controls.Add(Me.txtRegAlias)
+        Me.Panel4.Controls.Add(Me.Label4)
+        Me.Panel4.Controls.Add(Me.txtUpdAlias)
+        Me.Panel4.Controls.Add(Me.Label12)
+        Me.Panel4.Controls.Add(Me.Label17)
+        Me.Panel4.Controls.Add(Me.txtRegdate)
+        Me.Panel4.Controls.Add(Me.Label18)
+        Me.Panel4.Controls.Add(Me.Label10)
+        Me.Panel4.Controls.Add(Me.txtUpdDate)
+        Me.Panel4.Controls.Add(Me.Label11)
+        Me.Panel4.Controls.Add(Me.in_sales)
+        Me.Panel4.Controls.Add(Me.Label9)
+        Me.Panel4.Controls.Add(Me.ck_sales)
+        Me.Panel4.Controls.Add(Me.in_userid)
+        Me.Panel4.Controls.Add(Me.Label3)
+        Me.Panel4.Controls.Add(Me.Label7)
+        Me.Panel4.Controls.Add(Me.Label5)
+        Me.Panel4.Controls.Add(Me.cb_group)
+        Me.Panel4.Controls.Add(Me.Label6)
+        Me.Panel4.Controls.Add(Me.in_login_status)
+        Me.Panel4.Controls.Add(Me.in_pass)
+        Me.Panel4.Controls.Add(Me.in_status)
+        Me.Panel4.Controls.Add(Me.in_karyawan_nama)
+        Me.Panel4.Controls.Add(Me.Label1)
+        Me.Panel4.Controls.Add(Me.Label2)
+        Me.Panel4.Controls.Add(Me.in_group_kode)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel4.Location = New System.Drawing.Point(0, 66)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(662, 406)
+        Me.Panel4.TabIndex = 0
         '
         'popPnl_barang
         '
@@ -586,14 +586,14 @@ Partial Class fr_user_detail
         Me.ck_sales.Text = "Sales"
         Me.ck_sales.UseVisualStyleBackColor = True
         '
-        'Panel1
+        'Panel3
         '
-        Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 472)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(662, 10)
-        Me.Panel1.TabIndex = 345
+        Me.Panel3.BackColor = System.Drawing.Color.Orange
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel3.Location = New System.Drawing.Point(0, 472)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(662, 10)
+        Me.Panel3.TabIndex = 345
         '
         'MenuStrip1
         '
@@ -634,17 +634,17 @@ Partial Class fr_user_detail
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"
         '
-        'Panel3
+        'Panel2
         '
-        Me.Panel3.BackColor = System.Drawing.Color.Orange
-        Me.Panel3.Controls.Add(Me.lbl_close)
-        Me.Panel3.Controls.Add(Me.bt_cl)
-        Me.Panel3.Controls.Add(Me.lbl_title)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(0, 0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(662, 42)
-        Me.Panel3.TabIndex = 344
+        Me.Panel2.BackColor = System.Drawing.Color.Orange
+        Me.Panel2.Controls.Add(Me.lbl_close)
+        Me.Panel2.Controls.Add(Me.bt_cl)
+        Me.Panel2.Controls.Add(Me.lbl_title)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel2.Location = New System.Drawing.Point(0, 0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(662, 42)
+        Me.Panel2.TabIndex = 344
         '
         'lbl_close
         '
@@ -687,7 +687,7 @@ Partial Class fr_user_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 6)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(117, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(118, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data User"
         '
@@ -697,23 +697,23 @@ Partial Class fr_user_detail
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(662, 482)
-        Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.Panel4)
         Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_user_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Detail User : "
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout()
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel2.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -747,7 +747,7 @@ Partial Class fr_user_detail
     Friend WithEvents in_login_status As System.Windows.Forms.TextBox
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents cb_group As System.Windows.Forms.ComboBox
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents Panel4 As System.Windows.Forms.Panel
     Friend WithEvents ck_sales As System.Windows.Forms.CheckBox
     Friend WithEvents ck_edit_trans As System.Windows.Forms.CheckBox
     Friend WithEvents ck_edit_master As System.Windows.Forms.CheckBox
@@ -758,12 +758,12 @@ Partial Class fr_user_detail
     Friend WithEvents in_sales As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents ck_valid_trans As System.Windows.Forms.CheckBox
-    Friend WithEvents Panel1 As System.Windows.Forms.Panel
+    Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_reset As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_actdeact As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Panel3 As System.Windows.Forms.Panel
+    Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label

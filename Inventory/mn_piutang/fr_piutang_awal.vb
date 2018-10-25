@@ -40,6 +40,10 @@
             .Columns("piutang").DefaultCellStyle = dgvstyle_currency
         End With
         countTotal()
+
+        If removeCommaThousand(in_sisa.Text) = 0 Then
+            bt_bayar.Enabled = False
+        End If
     End Sub
 
     Private Sub countTotal()

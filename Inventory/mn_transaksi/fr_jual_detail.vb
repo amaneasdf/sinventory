@@ -66,7 +66,11 @@
 
     Private Sub loadDataBarang(faktur As String)
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_jual, trans_qty, trans_satuan, trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5, trans_disc_rupiah, trans_jumlah, trans_satuan_type, trans_hpp FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode = trans_barang WHERE trans_faktur='" & faktur & "' AND trans_status=1")
+        dt = getDataTablefromDB("SELECT trans_barang, barang_nama, trans_harga_jual, trans_qty, trans_satuan, " _
+                                & "trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5, " _
+                                & "trans_disc_rupiah, trans_jumlah, trans_satuan_type, trans_hpp " _
+                                & "FROM data_penjualan_trans INNER JOIN data_barang_master ON barang_kode = trans_barang " _
+                                & "WHERE trans_faktur='" & faktur & "' AND trans_status=1")
         With dgv_barang.Rows
             For Each rows As DataRow In dt.Rows
                 Dim x As Integer = .Add
@@ -76,8 +80,6 @@
                     .Cells("harga").Value = rows.ItemArray(2)
                     .Cells("qty").Value = rows.ItemArray(3)
                     .Cells("sat").Value = rows.ItemArray(4)
-                    .Cells("sat_type").Value = rows.ItemArray(12)
-                    .Cells("subtotal").Value = rows.ItemArray(2) * rows.ItemArray(3)
                     .Cells("disc1").Value = rows.ItemArray(5)
                     .Cells("disc2").Value = rows.ItemArray(6)
                     .Cells("disc3").Value = rows.ItemArray(7)
@@ -85,7 +87,9 @@
                     .Cells("disc5").Value = rows.ItemArray(9)
                     .Cells("discrp").Value = rows.ItemArray(10)
                     .Cells("jml").Value = rows.ItemArray(11)
-                    .Cells("brg_hpp").Value = rows.ItemArray(12)
+                    .Cells("sat_type").Value = rows.ItemArray(12)
+                    .Cells("subtotal").Value = rows.ItemArray(2) * rows.ItemArray(3)
+                    .Cells("brg_hpp").Value = rows.ItemArray(13)
                 End With
             Next
         End With
@@ -550,10 +554,14 @@
 
         '==========================================================================================================================
         'TODO : WRITE PIUTANG AWAL
+        q = "UPDATE data_piutang_awal SET piutang_status=9 WHERE piutang_faktur='{0}'"
+        queryArr.Add(String.Format(q, in_faktur.Text))
+
         If in_term.Value <> 0 Then
             Dim q6 As String = "INSERT INTO data_piutang_awal SET piutang_faktur='{0}', piutang_idperiode={4},{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
             dataBrg = {
-                "piutang_awal=" & removeCommaThousand(in_sisa.Text).ToString.Replace(",", ".")
+                "piutang_awal=" & removeCommaThousand(in_sisa.Text).ToString.Replace(",", "."),
+                "piutang_status=1"
               }
             data1 = {
                 "piutang_reg_date=NOW()",

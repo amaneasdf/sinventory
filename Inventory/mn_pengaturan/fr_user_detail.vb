@@ -3,14 +3,14 @@
     Private _popUpPos As String = "sales"
 
 
-    Private Sub loadDatauser(kode As Integer)
+    Private Sub loadDatauser(kode As String)
         Dim q As String = "SELECT user_id,user_alias, user_nama, user_group, user_sales, user_sales_kode, salesman_nama," _
                           & "(CASE " _
                           & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                           & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
-                          & " ELSE 'ERROR') AS salesman_jenis, user_validasi_master, user_validasi_trans, " _
+                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, " _
                           & "user_allowedit_master, user_allowedit_trans, IF(user_login_status=1,'ON','OFF') as user_login_status, " _
-                          & "user_login_terakhir, user_status " _
+                          & "user_login_terakhir, user_status, user_reg_date, user_reg_alias, user_upd_date, user_upd_alias " _
                           & "FROM data_pengguna_alias LEFT JOIN data_salesman_master ON salesman_kode=user_sales_kode " _
                           & "WHERE user_alias='{0}'"
 
@@ -63,7 +63,7 @@
                 txtUpdDate.Text = "00/00/0000 00:00:00"
             End Try
             txtUpdAlias.Text = rd.Item("user_upd_alias")
-            txtExpDate.Text = rd.Item("user_exp_date")
+            'txtExpDate.Text = rd.Item("user_exp_date")
         End If
 
         rd.Close()
@@ -74,10 +74,13 @@
         Select Case usrstatus
             Case 0
                 in_status.Text = "Non-Aktif"
+                mn_actdeact.Text = "Activate"
             Case 1
                 in_status.Text = "Aktif"
+                mn_actdeact.Text = "Deactivate"
             Case 9
                 in_status.Text = "Delete"
+                mn_actdeact.Enabled = False
             Case Else
                 Exit Sub
         End Select
@@ -116,7 +119,7 @@
                 q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman', (CASE " _
                     & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                     & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
-                    & " ELSE 'ERROR') AS 'Jenis' FROM data_salesman_master " _
+                    & " ELSE 'ERROR' END) AS 'Jenis' FROM data_salesman_master " _
                     & "WHERE salesman_status<>9 AND salesman_nama LIKE '{0}%'"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case Else
@@ -138,6 +141,9 @@
                     in_sales.Text = .Cells(0).Value
                     in_sales_n.Text = .Cells(1).Value
                     in_sales_t.Text = .Cells(2).Value
+                    If Trim(in_karyawan_nama.Text) = Nothing Then
+                        in_karyawan_nama.Text = in_sales_n.Text
+                    End If
                     in_sales_n.Focus()
                 Case Else
                     Exit Sub
@@ -148,31 +154,31 @@
     End Sub
 
     '------------drag form
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel2.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
     End Sub
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel2.MouseMove, lbl_title.MouseMove
         dragging(Me)
     End Sub
 
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel2.MouseUp, lbl_title.MouseUp
         stopdrag(Me)
     End Sub
 
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel2.DoubleClick, lbl_title.DoubleClick
         CenterToScreen()
     End Sub
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click
-        If MessageBox.Show("Tutup Form?", "Data User", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
+        If MessageBox.Show("Tutup Form?", "Data User", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        e.Cancel = True
+        'e.Cancel = True
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -190,6 +196,20 @@
     '------------- menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
         bt_simpanuser.PerformClick()
+    End Sub
+
+    Private Sub mn_actdeact_Click(sender As Object, e As EventArgs) Handles mn_actdeact.Click
+        If mn_actdeact.Text = "Deactivate" Then
+            usrstatus = 0
+            setStatus()
+        Else
+            usrstatus = 1
+            setStatus()
+        End If
+    End Sub
+
+    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+        'delData()
     End Sub
 
     Private Sub mn_reset_Click(sender As Object, e As EventArgs) Handles mn_reset.Click
@@ -235,12 +255,12 @@
             End If
 
             Dim pass As String = in_pass.Text
-            q = "INSERT INTO data_pengguna_alias SET user_alias='{0}', user_pass=MD5('" & pass & "'),{1},user_reg_date=NOW(),user_reg_alias='{2}'"
+            q = "INSERT INTO data_pengguna_alias SET user_alias='{0}', user_pwd=MD5('" & pass & "'),{1},user_reg_date=NOW(),user_reg_alias='{2}'"
         ElseIf bt_simpanuser.Text = "Update" Then
             q = "UPDATE data_pengguna_alias SET {1},user_upd_alias='{2}', user_upd_date=NOW() WHERE user_alias='{0}'"
         End If
 
-        querycheck = commnd(String.Format(q, in_userid.Text, data, loggeduser.user_id))
+        querycheck = commnd(String.Format(q, in_userid.Text, String.Join(",", data), loggeduser.user_id))
 
         If querycheck = False Then
             Exit Sub
@@ -249,6 +269,11 @@
             doRefreshTab({pguser})
             Me.Close()
         End If
+    End Sub
+
+    'DELETE
+    Private Sub delData()
+
     End Sub
 
     'LOAD
@@ -273,6 +298,8 @@
                 End With
             Next
             loadDatauser(in_kode.Text)
+            mn_actdeact.Enabled = True
+            mn_reset.Enabled = True
         End If
     End Sub
 
@@ -370,6 +397,10 @@
 
     Private Sub cb_group_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_group.KeyUp
         keyshortenter(bt_simpanuser, e)
+    End Sub
+
+    Private Sub cb_group_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_group.SelectionChangeCommitted
+        in_group_kode.Text = cb_group.SelectedValue
     End Sub
 
     Private Sub in_sales_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales.KeyUp

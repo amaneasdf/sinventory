@@ -29,7 +29,7 @@
     Private Sub bt_tambah_user_Click(sender As Object, e As EventArgs) Handles bt_tambah_user.Click
         With fr_user_detail
             .bt_simpanuser.Text = "Simpan"
-            .bt_reset_user.Enabled = False
+            '.bt_reset_user.Enabled = False
             .ShowDialog()
         End With
     End Sub

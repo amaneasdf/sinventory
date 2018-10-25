@@ -95,14 +95,14 @@
             'GENERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(salesman_kode,6) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'SLS%' " _
+                readcommd("SELECT SUBSTRING(salesman_kode,4) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'P%' " _
                           & "ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
 
-                in_kode.Text = "SLS" & CInt(cb_jenis.SelectedValue).ToString("D2") & no.ToString("D5")
+                in_kode.Text = "P" & CInt(cb_jenis.SelectedValue).ToString("D2") & no.ToString("D3")
             Else
                 If checkdata("data_salesman_master", "'" & in_kode.Text & "'", "salesman_kode") = True Then
                     MessageBox.Show("Kode " & in_kode.Text & " sudah ada")

@@ -1,5 +1,35 @@
 ﻿Public Class fr_group_detail
+    Private usrstatus As String = "1"
 
+    Private Sub getGroupData(kode As String)
+        Dim q As String = "SELECT group_kode, group_nama, group_keterangan, group_status, " _
+                          & "group_reg_alias, group_reg_date, group_upd_date, group_upd_alias " _
+                          & "FROM data_pengguna_group WHERE group_kode='{0}'"
+
+        op_con()
+        readcommd(String.Format(q, kode))
+        If rd.HasRows Then
+            in_kode.Text = rd.Item("group_kode")
+            in_nama_group.Text = rd.Item("group_nama")
+            in_ket_group.Text = rd.Item("group_keterangan")
+            usrstatus = rd.Item("group_status")
+
+            txtRegAlias.Text = rd.Item("group_reg_alias")
+            txtRegdate.Text = rd.Item("group_reg_date")
+            Try
+                txtUpdDate.Text = rd.Item("group_upd_date")
+            Catch ex As Exception
+                Console.WriteLine(ex.Message)
+                txtUpdDate.Text = "00/00/0000 00:00:00"
+            End Try
+            txtUpdAlias.Text = rd.Item("group_upd_alias")
+        End If
+        rd.Close()
+
+        setStatus()
+    End Sub
+
+    'menutree
     Private Sub populateTree()
         op_con()
 
@@ -36,24 +66,70 @@
     End Sub
 
     Private Sub treeviewCheck()
-        dbSelect("SELECT menu_kode FROM kode_menu WHERE menu_set = 1 AND menu_group = '" & in_kode.Text & "' ORDER BY menu_kode ASC ")
+        Dim fd As Boolean = False
+        Dim MenuKode As String
+
+        dbSelect("SELECT menu_kode FROM kode_menu WHERE menu_status=1 AND menu_group = '" & in_kode.Text & "' ORDER BY menu_kode ASC ")
 
         Do While rd.Read
+            fd = False
+            MenuKode = rd.Item("menu_kode").ToString
             For Each item As TreeNode In tv_menu.Nodes
-                Dim NodeName As String = "mn" & SplitText(item.Text, ".", 0)
-                Dim MenuKode As String = rd.Item("menu_kode").ToString
-                If NodeName = MenuKode Then item.Checked = True
-                For Each ChildNode As TreeNode In item.Nodes
-                    Dim ChildName As String = "mn" & SplitText(ChildNode.Text, ".", 0)
-                    If ChildName = MenuKode Then ChildNode.Checked = True
-                    For Each Child2 As TreeNode In ChildNode.Nodes
-                        Dim Child2Name As String = "mn" & SplitText(ChildNode.Text, ".", 0)
-                        If Child2Name = MenuKode Then Child2.Checked = True
+                If treeCK(item, MenuKode) = True Then Exit For
+                If MenuKode.Length > 4 Then
+                    For Each ChildNode As TreeNode In item.Nodes
+                        fd = treeCK(ChildNode, MenuKode)
+                        If fd = True Then
+                            Exit For
+                        End If
+                        If MenuKode.Length > 6 Then
+                            For Each Child2 As TreeNode In ChildNode.Nodes
+                                fd = treeCK(Child2, MenuKode)
+                                If fd = True Then
+                                    Exit For
+                                End If
+                            Next
+                        End If
+                        If fd = True Then
+                            Exit For
+                        End If
                     Next
-                Next
+                End If
+                If fd = True Then
+                    Exit For
+                End If
             Next
+            'consoleWriteLine(MenuKode & IIf(fd = True, "sss", "nnnn"))
         Loop
         rd.Close()
+    End Sub
+
+    Private Function treeCK(nodes As TreeNode, menukode As String) As Boolean
+        Dim fd As Boolean = False
+        Dim NodesName As String = "mn" & SplitText(nodes.Text, ".", 0)
+        'consoleWriteLine(Child2Name & ";" & MenuKode)
+        If NodesName = menukode Then
+            nodes.Checked = True
+            fd = True
+        End If
+
+        Return fd
+    End Function
+
+    Private Sub setStatus()
+        Select Case usrstatus
+            Case 0
+                in_status.Text = "Non-Aktif"
+                mn_actdeact.Text = "Activate"
+            Case 1
+                in_status.Text = "Aktif"
+                mn_actdeact.Text = "Deactivate"
+            Case 9
+                in_status.Text = "Delete"
+                mn_actdeact.Enabled = False
+            Case Else
+                Exit Sub
+        End Select
     End Sub
 
     Private Sub treeviewAllCheckSwitch(state As Boolean)
@@ -68,11 +144,23 @@
         Next
     End Sub
 
-    Private Sub processtreeview()
-        op_con()
-        commnd("DELETE FROM kode_menu WHERE menu_group = '" & in_kode.Text & "'")
-
+    'SAVE
+    Private Function processtreeview() As Boolean
+        Dim q As String = ""
+        Dim data As String()
+        Dim queryCheck As Boolean = False
+        Dim queryArr As New List(Of String)
         Dim listview As New ListView
+
+        op_con()
+        Me.Cursor = Cursors.WaitCursor
+        '======================================================================================================================
+        q = "UPDATE kode_menu SET menu_status=9 WHERE menu_group='{0}'"
+        queryArr.Add(String.Format(q, in_kode.Text))
+        'commnd("DELETE FROM kode_menu WHERE menu_group = '" & in_kode.Text & "'")
+        '======================================================================================================================
+
+        '======================================================================================================================
         For Each item As TreeNode In tv_menu.Nodes
             Dim MenuKode As String = "mn" & SplitText(item.Text, ".", 0)
             Dim MenuNama As String = SplitText(item.Text, ".", 1)
@@ -110,50 +198,144 @@
         For i = 0 To listview.Items.Count - 1
             Dim ItemKode As String = listview.Items(i).SubItems(1).Text
             Dim ItemLabel As String = Trim(listview.Items(i).SubItems(2).Text)
-            commnd("INSERT INTO kode_menu SET  menu_kode = '" & ItemKode & "', menu_group = '" & in_kode.Text & _
-                    "', menu_label = '" & ItemLabel & "', menu_set = 1, menu_parent = '" & sLeft(ItemKode, 4) & "', menu_reg_date = NOW(), menu_reg_ip = '" & loggeduser.user_ip & "', menu_reg_alias = '" & loggeduser.user_id & "'")
+
+            consoleWriteLine(ItemKode)
+
+            data = {
+                "menu_kode='" & ItemKode & "'",
+                "menu_status='1'"
+                }
+            q = "INSERT INTO kode_menu SET menu_group='{0}',{1},menu_reg_date=NOW(),menu_reg_alias='{2}' " _
+                & "ON DUPLICATE KEY UPDATE {1},menu_upd_date=NOW(),menu_upd_alias='{2}'"
+            queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data), loggeduser.user_id))
+            'commnd("INSERT INTO kode_menu SET  menu_kode = '" & ItemKode & "', menu_group = '" & in_kode.Text & "', " _
+            '        & "menu_label = '" & ItemLabel & "', menu_set = 1, menu_parent = '" & sLeft(ItemKode, 4) & "', " _
+            '        & "menu_reg_date = NOW(), menu_reg_ip = '" & loggeduser.user_ip & "', menu_reg_alias = '" & loggeduser.user_id & "'")
         Next
-    End Sub
+        '======================================================================================================================
 
-    Private Sub getGroupData(kode As String)
+        '==========================================================================================================================
+        'BEGIN TRANSACTION
+        queryCheck = startTrans(queryArr)
+        '==========================================================================================================================
+        Me.Cursor = Cursors.Default
+
+        Return queryCheck
+    End Function
+
+    Private Sub saveData()
+        Dim q As String = ""
+        Dim data As String()
+        Dim queryCheck As Boolean = False
+        Dim queryArr As New List(Of String)
+
+        Me.Cursor = Cursors.WaitCursor
+        data = {
+            "group_nama='" & in_nama_group.Text & "'",
+            "group_keterangan='" & mysqlQueryFriendlyStringFeed(in_ket_group.Text) & "'",
+            "group_status='" & usrstatus & "'"
+            }
+
         op_con()
-        readcommd("SELECT * FROM data_pengguna_group WHERE group_kode='" & kode & "'")
-        If rd.HasRows Then
-            txtRegIP.Text = rd.Item("group_reg_ip")
-            txtRegAlias.Text = rd.Item("group_reg_alias")
-            txtRegdate.Text = rd.Item("group_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("group_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdIp.Text = rd.Item("group_upd_ip")
-            txtUpdAlias.Text = rd.Item("group_upd_alias")
+        If bt_simpan_group.Text = "Simpan" Then
+            readcommd("SELECT IFNULL(MAX(group_kode), '0') as Kode FROM data_pengguna_group")
+            If rd.HasRows Then
+                in_kode.Text = Val(rd.Item("Kode")) + 1
+            End If
+            rd.Close()
+
+            q = "INSERT INTO data_pengguna_group SET group_kode='{0}',{1},group_reg_date=NOW(),group_reg_alias='{2}'"
+        ElseIf bt_simpan_group.Text = "Update" Then
+            q = "UPDATE data_pengguna_group SET {1},group_upd_date=NOW(),group_upd_alias='{2}' WHERE group_kode='{0}'"
         End If
-        rd.Close()
+        queryCheck = commnd(String.Format(q, in_kode.Text, String.Join(",", data), loggeduser.user_id))
+        If queryCheck <> False Then
+            queryCheck = processtreeview()
+        End If
+
+        Me.Cursor = Cursors.Default
+
+        If queryCheck = False Then
+            Exit Sub
+        Else
+            MessageBox.Show("Data telah disimpan")
+            doRefreshTab({pguser, pggroup})
+            Me.Close()
+        End If
     End Sub
 
-    Private Sub bt_bataluser_Click(sender As Object, e As EventArgs) Handles bt_batal_group.Click
-        Me.Close()
+    '------------drag form
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel2.MouseDown, lbl_title.MouseDown
+        startdrag(Me, e)
     End Sub
 
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel2.MouseMove, lbl_title.MouseMove
+        dragging(Me)
+    End Sub
+
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel2.MouseUp, lbl_title.MouseUp
+        stopdrag(Me)
+    End Sub
+
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel2.DoubleClick, lbl_title.DoubleClick
+        CenterToScreen()
+    End Sub
+
+    '-------------close
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batal_group.Click
+        If MessageBox.Show("Tutup Form?", "Data User Group", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
+    End Sub
+
+    Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        'e.Cancel = True
+    End Sub
+
+    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        bt_batal_group.PerformClick()
+    End Sub
+
+    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
+        lbl_close.Visible = True
+    End Sub
+
+    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
+        lbl_close.Visible = False
+    End Sub
+
+    '------------- menu
+    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
+        bt_simpan_group.PerformClick()
+    End Sub
+
+    Private Sub mn_actdeact_Click(sender As Object, e As EventArgs) Handles mn_actdeact.Click
+        If mn_actdeact.Text = "Deactivate" Then
+            usrstatus = 0
+            setStatus()
+        Else
+            usrstatus = 1
+            setStatus()
+        End If
+    End Sub
+
+    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+        'delData()
+    End Sub
+
+
+    'LOAD
     Private Sub fr_group_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         populateTree()
+
         If bt_simpan_group.Text = "Update" Then
             treeviewCheck()
             getGroupData(in_kode.Text)
+            mn_actdeact.Enabled = True
         End If
     End Sub
 
-    Private Sub bt_tv_checkall_group_Click(sender As Object, e As EventArgs) Handles bt_tv_reset.Click
-        treeviewAllCheckSwitch(False)
-    End Sub
-
-    Private Sub bt_tv_checkall_group_Click_1(sender As Object, e As EventArgs) Handles bt_tv_checkall_group.Click
-        treeviewAllCheckSwitch(True)
-    End Sub
-
+    'SAVE
     Private Sub bt_simpan_group_Click(sender As Object, e As EventArgs) Handles bt_simpan_group.Click
         Dim querycheck As Boolean = False
 
@@ -169,36 +351,54 @@
             Exit Sub
         End If
 
-        op_con()
-        If bt_simpan_group.Text = "Simpan" Then
-            readcommd("SELECT IFNULL(MAX(group_kode), '0') as Kode FROM data_pengguna_group")
-            If rd.HasRows Then
-                in_kode.Text = Val(rd.Item("Kode")) + 1
-            End If
-            rd.Close()
-
-            querycheck = commnd("INSERT INTO data_pengguna_group VALUES('" & in_kode.Text & "', '" & in_nama_group.Text & "', 1, '', '" & in_ket_group.Text & "', now(), '" & loggeduser.user_ip & "', '" & loggeduser.user_id & "', '','','')")
-
-        ElseIf bt_simpan_group.Text = "Update" Then
-            querycheck = commnd("UPDATE data_pengguna_group SET group_nama = '" & in_nama_group.Text & "', group_keterangan = '" & in_ket_group.Text & "', group_upd_date = now(), group_upd_ip = '" & loggeduser.user_ip & "', group_upd_alias = '" & loggeduser.user_id & "' WHERE group_kode = '" & in_kode.Text & "'")
-
+        If MessageBox.Show("Simpan data user group?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            saveData()
         End If
 
-        Me.Cursor = Cursors.WaitCursor
 
-        If querycheck = False Then
-            Me.Cursor = Cursors.Default
-            Exit Sub
-        Else
-            processtreeview()
+        'op_con()
+        'If bt_simpan_group.Text = "Simpan" Then
+        '    readcommd("SELECT IFNULL(MAX(group_kode), '0') as Kode FROM data_pengguna_group")
+        '    If rd.HasRows Then
+        '        in_kode.Text = Val(rd.Item("Kode")) + 1
+        '    End If
+        '    rd.Close()
 
-            Me.Cursor = Cursors.Default
-            MessageBox.Show("Data telah disimpan")
+        '    querycheck = commnd("INSERT INTO data_pengguna_group VALUES('" & in_kode.Text & "', '" & in_nama_group.Text & "', 1, '', '" & in_ket_group.Text & "', now(), '" & loggeduser.user_ip & "', '" & loggeduser.user_id & "', '','','')")
 
-            populateDGVUserCon("group", "", frmgroup.dgv_list)
-            frmgroup.in_cari.Clear()
+        'ElseIf bt_simpan_group.Text = "Update" Then
+        '    querycheck = commnd("UPDATE data_pengguna_group SET group_nama = '" & in_nama_group.Text & "', group_keterangan = '" & in_ket_group.Text & "', group_upd_date = now(), group_upd_ip = '" & loggeduser.user_ip & "', group_upd_alias = '" & loggeduser.user_id & "' WHERE group_kode = '" & in_kode.Text & "'")
 
-            Me.Close()
-        End If
+        'End If
+
+        'Me.Cursor = Cursors.WaitCursor
+
+        'If querycheck = False Then
+        '    Me.Cursor = Cursors.Default
+        '    Exit Sub
+        'Else
+        '    processtreeview()
+
+        '    Me.Cursor = Cursors.Default
+        '    MessageBox.Show("Data telah disimpan")
+
+        '    populateDGVUserCon("group", "", frmgroup.dgv_list)
+        '    frmgroup.in_cari.Clear()
+
+        '    Me.Close()
+        'End If
+    End Sub
+
+    'UI
+    Private Sub in_nama_group_KeyUp(sender As Object, e As KeyEventArgs) Handles in_nama_group.KeyUp
+        keyshortenter(in_ket_group, e)
+    End Sub
+
+    Private Sub bt_tv_checkall_group_Click(sender As Object, e As EventArgs) Handles bt_tv_reset.Click
+        treeviewAllCheckSwitch(False)
+    End Sub
+
+    Private Sub bt_tv_checkall_group_Click_1(sender As Object, e As EventArgs) Handles bt_tv_checkall_group.Click
+        treeviewAllCheckSwitch(True)
     End Sub
 End Class

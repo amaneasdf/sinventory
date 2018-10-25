@@ -265,7 +265,7 @@ Module functional
             End With
         Catch ex As Exception
             logError(ex)
-            Console.WriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
+            consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
             'Application.Exit()
         End Try
 
