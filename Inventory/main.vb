@@ -401,19 +401,19 @@
                     End With
                 End Using
             Case "mn070401"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualNota",
-                    .Text = "Laporan Penjualan Per Nota"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Nota", "lapJualNota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070402"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualCusto",
-                    .Text = "Laporan Penjualan Per Customer"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Customer", "lapJualCusto")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070403"
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapJualSupplier",
@@ -429,19 +429,31 @@
                 x.Show()
                 x.do_load()
             Case "mn070407"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualSales",
-                    .Text = "Laporan Penjualan Per Salesman"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Salesman", "lapJualSales")
+                        .ShowDialog()
+                    End With
+                End Using
+                'Dim x As New fr_lap_beli_nota_view With {
+                '                    .inlap_type = "lapJualSales",
+                '                    .Text = "Laporan Penjualan Per Salesman"
+                '                    }
+                'x.Show()
+                'x.do_load()
             Case "mn070408"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualTgl",
-                    .Text = "Laporan Penjualan Per Tanggal"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Tanggal", "lapJualTgl")
+                        .ShowDialog()
+                    End With
+                End Using
+                'Dim x As New fr_lap_beli_nota_view With {
+                '                    .inlap_type = "lapJualTgl",
+                '                    .Text = "Laporan Penjualan Per Tanggal"
+                '                    }
+                'x.Show()
+                'x.do_load()
             Case "mn070409"
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapJualBarang",
@@ -457,12 +469,12 @@
                 x.Show()
                 x.do_load()
             Case "mn070412"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualSalesNota",
-                    .Text = "Laporan Penjualan Per Salesman Per Nota"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Salesman Per Nota", "lapJualSalesNota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070413"
                 Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = "lapJualTanggalNota",

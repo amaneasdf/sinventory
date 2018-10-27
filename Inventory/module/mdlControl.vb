@@ -1530,12 +1530,15 @@ Module mdlControl
             Case "jual"
                 With frmpenjualan
                     Dim jual_user = New DataGridViewColumn
+                    Dim jual_status = New DataGridViewColumn
                     jual_user = user_id.Clone()
+                    jual_status = gudang_status.Clone()
 
                     .print_sw = True
-                    .cancel_sw = True
+                    .cancel_sw = loggeduser.allowedit_transact
 
-                    Dim x As DataGridViewColumn() = {jual_pkp, jual_faktur, jual_tgl, jual_pajak, jual_custo, jual_sales, jual_gudang, jual_netto, jual_klaim, jual_total, jual_term, jual_batal, jual_user}
+                    Dim x As DataGridViewColumn() = {jual_pkp, jual_faktur, jual_status, jual_tgl, jual_pajak, jual_custo, jual_sales,
+                                                    jual_gudang, jual_netto, jual_klaim, jual_total, jual_term, jual_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                         consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -2077,7 +2080,7 @@ Module mdlControl
 
             Case "jual"
                 q = "getTableTrans('jual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR pajak LIKE '{0}%' OR batal LIKE '{0}%'"
+                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR pajak LIKE '{0}%' OR status LIKE '{0}%'"
                 Dim pNumeric As String = "bayar={0} OR total={0} OR term={0} OR klaim={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 

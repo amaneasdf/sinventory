@@ -175,25 +175,38 @@
     End Function
 
     'jenisperkiraan
-    Public Function jenisPerkiraan(tipe As String) As DataTable
+    Public Function jenisPerkiraan(tipe As String, Optional kodegol As String = "00") As DataTable
         Dim dt As New DataTable
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
 
         Select Case tipe
             Case "jenis"
-                dt.Rows.Add("Aktiva Lancar", "1")
-                dt.Rows.Add("Aktiva Tetap", "2")
-                dt.Rows.Add("Aktiva Lain-lain", "3")
-                dt.Rows.Add("Hutang", "4")
-                dt.Rows.Add("Modal", "5")
-                dt.Rows.Add("Pendapatan", "6")
-                dt.Rows.Add("Biaya", "7")
-                dt.Rows.Add("Biaya Operasional", "8")
+                dt.Rows.Add("Aktiva Lancar", "11")
+                dt.Rows.Add("Aktiva Tetap", "12")
+                dt.Rows.Add("Aktiva Lain-lain", "13")
+                dt.Rows.Add("Hutang", "21")
+                dt.Rows.Add("Modal", "22")
+                dt.Rows.Add("Pendapatan", "31")
+                dt.Rows.Add("Pendapatan Lain-Lain", "32")
+                dt.Rows.Add("Biaya Penjualan", "41")
+                dt.Rows.Add("Biaya Operasional", "42")
+                dt.Rows.Add("Biaya Lain-Lain", "43")
+                dt.Rows.Add("Biaya Klaim", "44")
+            Case "gol11"
+                dt.Rows.Add("Kas", "1101")
+                dt.Rows.Add("Bank", "1102")
+                dt.Rows.Add("Simpanan Berharga", "1103")
+                dt.Rows.Add("Piutang Dagang", "1104")
+                dt.Rows.Add("Piutang Karyawan", "1105")
+                dt.Rows.Add("Piutang Lain-Lain", "1106")
+                dt.Rows.Add("Piutang Giro", "1107")
+                dt.Rows.Add("Stok Barang", "1108")
+                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
+                '                        & "FROM ref_gol_perkiraan WHERE perk_gol_kode LIKE '11%' AND perk_gol_status=1")
             Case "gol"
-                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' FROM ref_gol_perkiraan")
-            Case "sub-gol"
-
+                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
+                '                        & "FROM ref_gol_perkiraan WHERE LEFT(perk_gol_kode,2) LIKE '" & kodegol & "' AND perk_gol_status=1")
         End Select
 
         Return dt

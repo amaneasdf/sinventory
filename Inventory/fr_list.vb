@@ -627,6 +627,7 @@
                 Dim chkdt As Boolean = False
                 Dim chkdt2 As Boolean = False
                 Dim kodefaktur As String = .Item(0).Cells(1).Value
+                Dim custo_n As String = .Item(0).Cells(5).Value
 
                 op_con()
                 chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "'", "p_trans_kode_piutang")
@@ -635,14 +636,21 @@
                 Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
                 If .Count > 0 And (chkdt = False And chkdt2 = False) Then
                     Dim msg As String = "Batalkan penjualan {0} untuk customer {1}?"
-                    If MessageBox.Show("Batalkan penjualan " & kodefaktur, "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    If MessageBox.Show(String.Format(q, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                         op_con()
                         If commnd(String.Format(q, kodefaktur)) = True Then
-                            .Item(0).Cells(11).Value = "Batal"
+                            q = "UPDATE data_jurnal_line SET line_status='9',line_reg_date=NOW(),line_reg_alias='{1}' " _
+                                & "WHERE line_kode='{0}'"
+                            .Item(0).Cells(2).Value = "Batal"
+                            commnd(String.Format(q, kodefaktur, loggeduser.user_id))
                         Else
                             MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)
                         End If
                     End If
+                ElseIf .Count > 0 And (chkdt = True And chkdt2 = True) Then
+                    Dim msg As String = "Penjualan {0} untuk customer {1} sudah pernah dilakukan transaksi pembayaran/retur penjualan"
+                    MessageBox.Show(String.Format(q, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.OK)
+
                 End If
 
             End With

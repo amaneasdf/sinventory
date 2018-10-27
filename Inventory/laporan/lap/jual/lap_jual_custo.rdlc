@@ -771,6 +771,9 @@
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -858,6 +861,7 @@
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -899,6 +903,7 @@
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1233,6 +1238,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_jual_custo</DataSetName>
+        <Top>0cm</Top>
         <Height>2.73542cm</Height>
         <Width>19.75cm</Width>
         <Style>
@@ -1537,7 +1543,7 @@
         </Field>
         <Field Name="lap_tunai">
           <DataField>lap_tunai</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
+          <rd:TypeName>System.Double</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>

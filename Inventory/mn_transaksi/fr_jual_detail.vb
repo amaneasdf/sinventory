@@ -62,7 +62,7 @@
         rd.Close()
 
         setStatus()
-        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Then
+        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Or (tjlStatus = 0 And loggeduser.validasi_trans = False) Then
             bt_simpanjual.Enabled = False
         End If
     End Sub
@@ -564,6 +564,7 @@
             Dim q6 As String = "INSERT INTO data_piutang_awal SET piutang_faktur='{0}', piutang_idperiode={4},{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
             dataBrg = {
                 "piutang_awal=" & removeCommaThousand(in_sisa.Text).ToString.Replace(",", "."),
+                "piutang_ref='" & in_custo.Text & "'",
                 "piutang_status=1"
               }
             data1 = {
@@ -723,6 +724,22 @@
         End If
 
         If MessageBox.Show("Simpan data penjualan?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            Dim piutang As Boolean = False
+            Dim q As String = "SELECT SUM(getSisaPiutang(piutang_faktur,piutang_ref)) " _
+                              & "FROM data_piutang_awal WHERE piutang_ref='{0}' AND piutang_status=1 AND piutang_faktur<>'{1}'"
+            If in_term.Value <> 0 And bt_simpanjual.Text = "Simpan" Then
+                readcommd(String.Format(q, in_custo.Text, in_faktur.Text))
+                If rd.HasRows And rd.Item(0) <> 0 Then
+                    piutang = True
+                End If
+                rd.Close()
+
+                If piutang = True Then
+                    MessageBox.Show("piutang")
+                    Exit Sub
+                    'DO SOMETHING
+                End If
+            End If
             saveData()
         End If
     End Sub
@@ -1011,7 +1028,7 @@
         in_subtotal.Text = commaThousand(total)
     End Sub
 
-    Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectedIndexChanged
+    Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectionChangeCommitted
         in_harga_beli.Value = countHarga(_satuanstate, in_harga_beli.Value, cb_sat.SelectedValue)
         _satuanstate = cb_sat.SelectedValue
     End Sub
