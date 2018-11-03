@@ -119,6 +119,11 @@ Module functional
     End Function
 
     Public Function removeCommaThousand(x As String) As Decimal
+        If x = Nothing Or IsNumeric(x) = False Then
+            Return 0
+            Exit Function
+        End If
+
         Dim s As String = 0
         s = Replace(Replace(x, ",00", ""), ".", "")
         Dim y = Split(s, ",")

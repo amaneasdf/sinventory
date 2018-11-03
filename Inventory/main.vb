@@ -247,6 +247,7 @@
 
     Private Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim mnName As String = DirectCast(sender, ToolStripItem).Name
+        Dim mnChld As Boolean = DirectCast(sender, ToolStripMenuItem).HasDropDownItems
         Console.WriteLine(mnName)
         Select Case mnName
             Case "mn0101"
@@ -415,19 +416,19 @@
                     End With
                 End Using
             Case "mn070403"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualSupplier",
-                    .Text = "Laporan Penjualan Per Supplier"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Supplier", "lapJualSupplier")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070404"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualTipe",
-                    .Text = "Laporan Penjualan Per Tipe Customer"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Tipe Customer", "lapJualTipe")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070407"
                 Using x As New fr_lap_filter_jual
                     With x
@@ -435,12 +436,6 @@
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '                    .inlap_type = "lapJualSales",
-                '                    .Text = "Laporan Penjualan Per Salesman"
-                '                    }
-                'x.Show()
-                'x.do_load()
             Case "mn070408"
                 Using x As New fr_lap_filter_jual
                     With x
@@ -448,26 +443,20 @@
                         .ShowDialog()
                     End With
                 End Using
-                'Dim x As New fr_lap_beli_nota_view With {
-                '                    .inlap_type = "lapJualTgl",
-                '                    .Text = "Laporan Penjualan Per Tanggal"
-                '                    }
-                'x.Show()
-                'x.do_load()
-            Case "mn070409"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualBarang",
-                    .Text = "Laporan Penjualan Per Barang"
-                    }
-                x.Show()
-                x.do_load()
+                'Case "mn070409"
+                '    'Dim x As New fr_lap_beli_nota_view With {
+                '    '    .inlap_type = "lapJualBarang",
+                '    '    .Text = "Laporan Penjualan Per Barang"
+                '    '    }
+                '    'x.Show()
+                '    'x.do_load()
             Case "mn070411"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualCustoNota",
-                    .Text = "Laporan Penjualan Per Customer Per Nota"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Customer Per Nota", "lapJualCustoNota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070412"
                 Using x As New fr_lap_filter_jual
                     With x
@@ -476,33 +465,33 @@
                     End With
                 End Using
             Case "mn070413"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualTanggalNota",
-                    .Text = "Laporan Penjualan Per Tanggal Per Nota"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Tanggal Per Nota", "lapJualTanggalNota")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070417"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualBarangSupplier",
-                    .Text = "Laporan Penjualan Per Barang Per Supplier"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Barang Per Supplier", "lapJualBarangSupplier")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070419"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualBarangSales",
-                    .Text = "Laporan Penjualan Per Barang Per Sales"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Penjualan Per Barang Per Sales", "lapJualBarangSales")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070420"
-                Dim x As New fr_lap_beli_nota_view With {
-                    .inlap_type = "lapJualSalesCustoBarang",
-                    .Text = "Laporan Penjualan Per Barang Per Sales"
-                    }
-                x.Show()
-                x.do_load()
+                Using x As New fr_lap_filter_jual
+                    With x
+                        .do_load("transjual", "Laporan Distribusi Per Sales", "lapJualSalesCustoBarang")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070506"
                 Using x As New fr_lap_filter_stok
                     With x
@@ -623,6 +612,20 @@
                         .ShowDialog()
                     End With
                 End Using
+            Case "mn070801"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Laporan Biaya Per Salesman", "k_biayasales")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070802"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Laporan Biaya Per Salesman Global", "k_biayasales_global")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")
@@ -685,7 +688,9 @@
             Case "mn0942"
                 Application.Exit()
             Case Else
-                MessageBox.Show("Under Construction")
+                If mnChld = False Then
+                    MessageBox.Show("Under Construction")
+                End If
         End Select
     End Sub
 
@@ -700,7 +705,6 @@
         op_con()
 
         If getConn.State <> 1 Then
-            'messagebox.show()
             Application.Exit()
             Exit Sub
         End If
@@ -713,12 +717,12 @@
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
         strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
-        'strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
 
         bt_setperiode.Text = "Set Periode"
         bt_setperiode.Enabled = False
 
-        'cal_front.MaxDate = DateSerial(Today.Year, Today.Month + 1, 0)
+        'Dim infpnl As New fr_infopanel With {.Dock = DockStyle.Fill}
+        'pnl_main.Controls.Add(infpnl)
 
         'MenuAkses()
         'test var

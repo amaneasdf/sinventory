@@ -53,6 +53,16 @@ Partial Class fr_jual_retur_detail
         Me.Label22 = New System.Windows.Forms.Label()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.diskon = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label20 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -94,15 +104,6 @@ Partial Class fr_jual_retur_detail
         Me.Label18 = New System.Windows.Forms.Label()
         Me.in_diskon = New System.Windows.Forms.NumericUpDown()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.diskon = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -458,7 +459,7 @@ Partial Class fr_jual_retur_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.diskon, Me.jml, Me.brg_hpp})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.subtotal, Me.diskon, Me.jml, Me.brg_hpp})
         Me.dgv_barang.Location = New System.Drawing.Point(11, 232)
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
@@ -466,6 +467,83 @@ Partial Class fr_jual_retur_detail
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_barang.Size = New System.Drawing.Size(786, 135)
         Me.dgv_barang.TabIndex = 20
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.MinimumWidth = 60
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 60
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sat_type"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.MinimumWidth = 60
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 60
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_retur"
+        Me.harga.HeaderText = "Harga Retur"
+        Me.harga.MinimumWidth = 110
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'diskon
+        '
+        Me.diskon.HeaderText = "Diskon"
+        Me.diskon.Name = "diskon"
+        Me.diskon.ReadOnly = True
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
+        '
+        'brg_hpp
+        '
+        Me.brg_hpp.HeaderText = "brg_hpp"
+        Me.brg_hpp.Name = "brg_hpp"
+        Me.brg_hpp.ReadOnly = True
+        Me.brg_hpp.Visible = False
         '
         'Label20
         '
@@ -912,82 +990,12 @@ Partial Class fr_jual_retur_detail
         Me.Label19.TabIndex = 478
         Me.Label19.Text = "Diskon"
         '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.MinimumWidth = 60
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 60
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sat_type"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.ReadOnly = True
-        Me.sat_type.Visible = False
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.MinimumWidth = 60
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 60
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_retur"
-        Me.harga.HeaderText = "Harga Retur"
-        Me.harga.MinimumWidth = 110
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'diskon
-        '
-        Me.diskon.HeaderText = "Diskon"
-        Me.diskon.Name = "diskon"
-        Me.diskon.ReadOnly = True
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
-        '
-        'brg_hpp
-        '
-        Me.brg_hpp.HeaderText = "brg_hpp"
-        Me.brg_hpp.Name = "brg_hpp"
-        Me.brg_hpp.ReadOnly = True
-        Me.brg_hpp.Visible = False
-        '
         'fr_jual_retur_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.CancelButton = Me.bt_batalreturbeli
         Me.ClientSize = New System.Drawing.Size(806, 536)
         Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.in_diskon)
@@ -1044,6 +1052,7 @@ Partial Class fr_jual_retur_detail
         Me.Controls.Add(Me.pnl_Menu)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_jual_retur_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -1144,6 +1153,7 @@ Partial Class fr_jual_retur_detail
     Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents subtotal As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents diskon As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_hpp As System.Windows.Forms.DataGridViewTextBoxColumn

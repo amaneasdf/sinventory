@@ -31,7 +31,6 @@ Partial Class fr_perkiraan_detail
         Me.bt_simpanperkiraan = New System.Windows.Forms.Button()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
-        Me.cb_jenis = New System.Windows.Forms.ComboBox()
         Me.Label30 = New System.Windows.Forms.Label()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
         Me.txtUpdDate = New System.Windows.Forms.TextBox()
@@ -55,15 +54,12 @@ Partial Class fr_perkiraan_detail
         Me.Label1 = New System.Windows.Forms.Label()
         Me.in_saldoawal = New System.Windows.Forms.NumericUpDown()
         Me.in_kode = New System.Windows.Forms.TextBox()
-        Me.in_kode_jenis = New System.Windows.Forms.TextBox()
         Me.in_kode_parent = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.in_cur_saldo = New System.Windows.Forms.TextBox()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.in_status = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
-        Me.Label9 = New System.Windows.Forms.Label()
+        Me.cb_jenis = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -75,11 +71,11 @@ Partial Class fr_perkiraan_detail
         Me.in_kode_akun.BackColor = System.Drawing.Color.White
         Me.in_kode_akun.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode_akun.ForeColor = System.Drawing.Color.Black
-        Me.in_kode_akun.Location = New System.Drawing.Point(239, 123)
+        Me.in_kode_akun.Location = New System.Drawing.Point(240, 127)
         Me.in_kode_akun.MaxLength = 2
         Me.in_kode_akun.Name = "in_kode_akun"
         Me.in_kode_akun.Size = New System.Drawing.Size(53, 20)
-        Me.in_kode_akun.TabIndex = 4
+        Me.in_kode_akun.TabIndex = 5
         Me.in_kode_akun.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'in_akun_n
@@ -87,17 +83,17 @@ Partial Class fr_perkiraan_detail
         Me.in_akun_n.BackColor = System.Drawing.Color.White
         Me.in_akun_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akun_n.ForeColor = System.Drawing.Color.Black
-        Me.in_akun_n.Location = New System.Drawing.Point(108, 146)
+        Me.in_akun_n.Location = New System.Drawing.Point(109, 150)
         Me.in_akun_n.MaxLength = 100
         Me.in_akun_n.Name = "in_akun_n"
         Me.in_akun_n.Size = New System.Drawing.Size(250, 20)
-        Me.in_akun_n.TabIndex = 5
+        Me.in_akun_n.TabIndex = 6
         '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 127)
+        Me.Label2.Location = New System.Drawing.Point(13, 131)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(60, 13)
         Me.Label2.TabIndex = 140
@@ -107,7 +103,7 @@ Partial Class fr_perkiraan_detail
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(12, 150)
+        Me.Label3.Location = New System.Drawing.Point(13, 154)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(35, 13)
         Me.Label3.TabIndex = 139
@@ -117,10 +113,10 @@ Partial Class fr_perkiraan_detail
         '
         Me.cb_posisi.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_posisi.FormattingEnabled = True
-        Me.cb_posisi.Location = New System.Drawing.Point(108, 191)
+        Me.cb_posisi.Location = New System.Drawing.Point(109, 173)
         Me.cb_posisi.Name = "cb_posisi"
-        Me.cb_posisi.Size = New System.Drawing.Size(150, 21)
-        Me.cb_posisi.TabIndex = 6
+        Me.cb_posisi.Size = New System.Drawing.Size(129, 21)
+        Me.cb_posisi.TabIndex = 7
         '
         'bt_batalperkiraan
         '
@@ -149,7 +145,7 @@ Partial Class fr_perkiraan_detail
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(12, 195)
+        Me.Label5.Location = New System.Drawing.Point(13, 177)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(57, 13)
         Me.Label5.TabIndex = 146
@@ -159,20 +155,11 @@ Partial Class fr_perkiraan_detail
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(12, 80)
+        Me.Label6.Location = New System.Drawing.Point(13, 84)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(31, 13)
         Me.Label6.TabIndex = 146
         Me.Label6.Text = "Jenis"
-        '
-        'cb_jenis
-        '
-        Me.cb_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_jenis.FormattingEnabled = True
-        Me.cb_jenis.Location = New System.Drawing.Point(108, 77)
-        Me.cb_jenis.Name = "cb_jenis"
-        Me.cb_jenis.Size = New System.Drawing.Size(150, 21)
-        Me.cb_jenis.TabIndex = 0
         '
         'Label30
         '
@@ -311,7 +298,7 @@ Partial Class fr_perkiraan_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(172, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(173, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Perkiraan"
         '
@@ -353,6 +340,7 @@ Partial Class fr_perkiraan_detail
         '
         'mn_deact
         '
+        Me.mn_deact.Enabled = False
         Me.mn_deact.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_deact.Name = "mn_deact"
         Me.mn_deact.Size = New System.Drawing.Size(90, 20)
@@ -361,6 +349,7 @@ Partial Class fr_perkiraan_detail
         '
         'mn_del
         '
+        Me.mn_del.Enabled = False
         Me.mn_del.Name = "mn_del"
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"
@@ -369,26 +358,26 @@ Partial Class fr_perkiraan_detail
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(12, 103)
+        Me.Label7.Location = New System.Drawing.Point(13, 107)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(38, 13)
+        Me.Label7.Size = New System.Drawing.Size(46, 13)
         Me.Label7.TabIndex = 146
-        Me.Label7.Text = "Parent"
+        Me.Label7.Text = "Kategori"
         '
         'cb_parent
         '
         Me.cb_parent.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_parent.FormattingEnabled = True
-        Me.cb_parent.Location = New System.Drawing.Point(108, 100)
+        Me.cb_parent.Location = New System.Drawing.Point(109, 104)
         Me.cb_parent.Name = "cb_parent"
         Me.cb_parent.Size = New System.Drawing.Size(250, 21)
-        Me.cb_parent.TabIndex = 1
+        Me.cb_parent.TabIndex = 3
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(12, 219)
+        Me.Label1.Location = New System.Drawing.Point(13, 201)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(60, 13)
         Me.Label1.TabIndex = 140
@@ -397,12 +386,12 @@ Partial Class fr_perkiraan_detail
         'in_saldoawal
         '
         Me.in_saldoawal.DecimalPlaces = 2
-        Me.in_saldoawal.Location = New System.Drawing.Point(108, 215)
+        Me.in_saldoawal.Location = New System.Drawing.Point(109, 197)
         Me.in_saldoawal.Maximum = New Decimal(New Integer() {-727379969, 232, 0, 0})
         Me.in_saldoawal.Minimum = New Decimal(New Integer() {-727379969, 232, 0, -2147483648})
         Me.in_saldoawal.Name = "in_saldoawal"
         Me.in_saldoawal.Size = New System.Drawing.Size(250, 20)
-        Me.in_saldoawal.TabIndex = 7
+        Me.in_saldoawal.TabIndex = 8
         Me.in_saldoawal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_saldoawal.ThousandsSeparator = True
         '
@@ -416,34 +405,20 @@ Partial Class fr_perkiraan_detail
         Me.in_kode.Name = "in_kode"
         Me.in_kode.ReadOnly = True
         Me.in_kode.Size = New System.Drawing.Size(128, 20)
-        Me.in_kode.TabIndex = 1
+        Me.in_kode.TabIndex = 9
         Me.in_kode.TabStop = False
-        '
-        'in_kode_jenis
-        '
-        Me.in_kode_jenis.BackColor = System.Drawing.Color.White
-        Me.in_kode_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_kode_jenis.ForeColor = System.Drawing.Color.Black
-        Me.in_kode_jenis.Location = New System.Drawing.Point(108, 123)
-        Me.in_kode_jenis.MaxLength = 20
-        Me.in_kode_jenis.Name = "in_kode_jenis"
-        Me.in_kode_jenis.ReadOnly = True
-        Me.in_kode_jenis.Size = New System.Drawing.Size(52, 20)
-        Me.in_kode_jenis.TabIndex = 2
-        Me.in_kode_jenis.TabStop = False
-        Me.in_kode_jenis.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'in_kode_parent
         '
         Me.in_kode_parent.BackColor = System.Drawing.Color.White
         Me.in_kode_parent.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode_parent.ForeColor = System.Drawing.Color.Black
-        Me.in_kode_parent.Location = New System.Drawing.Point(185, 123)
+        Me.in_kode_parent.Location = New System.Drawing.Point(109, 127)
         Me.in_kode_parent.MaxLength = 20
         Me.in_kode_parent.Name = "in_kode_parent"
         Me.in_kode_parent.ReadOnly = True
-        Me.in_kode_parent.Size = New System.Drawing.Size(52, 20)
-        Me.in_kode_parent.TabIndex = 3
+        Me.in_kode_parent.Size = New System.Drawing.Size(129, 20)
+        Me.in_kode_parent.TabIndex = 4
         Me.in_kode_parent.TabStop = False
         Me.in_kode_parent.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
@@ -467,19 +442,9 @@ Partial Class fr_perkiraan_detail
         Me.in_cur_saldo.Name = "in_cur_saldo"
         Me.in_cur_saldo.ReadOnly = True
         Me.in_cur_saldo.Size = New System.Drawing.Size(241, 20)
-        Me.in_cur_saldo.TabIndex = 1
+        Me.in_cur_saldo.TabIndex = 8
         Me.in_cur_saldo.TabStop = False
         Me.in_cur_saldo.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'Label4
-        '
-        Me.Label4.AutoSize = True
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(166, 125)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(13, 16)
-        Me.Label4.TabIndex = 342
-        Me.Label4.Text = "-"
         '
         'in_status
         '
@@ -491,7 +456,7 @@ Partial Class fr_perkiraan_detail
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(175, 20)
-        Me.in_status.TabIndex = 343
+        Me.in_status.TabIndex = 1
         Me.in_status.TabStop = False
         '
         'Label13
@@ -504,24 +469,14 @@ Partial Class fr_perkiraan_detail
         Me.Label13.TabIndex = 344
         Me.Label13.Text = "Status"
         '
-        'ComboBox1
+        'cb_jenis
         '
-        Me.ComboBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(108, 168)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(150, 21)
-        Me.ComboBox1.TabIndex = 345
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(12, 172)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(28, 13)
-        Me.Label9.TabIndex = 346
-        Me.Label9.Text = "Tipe"
+        Me.cb_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_jenis.FormattingEnabled = True
+        Me.cb_jenis.Location = New System.Drawing.Point(109, 81)
+        Me.cb_jenis.Name = "cb_jenis"
+        Me.cb_jenis.Size = New System.Drawing.Size(184, 21)
+        Me.cb_jenis.TabIndex = 2
         '
         'fr_perkiraan_detail
         '
@@ -530,11 +485,8 @@ Partial Class fr_perkiraan_detail
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(682, 341)
-        Me.Controls.Add(Me.ComboBox1)
-        Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.in_status)
         Me.Controls.Add(Me.Label13)
-        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.in_saldoawal)
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.pnl_Menu)
@@ -559,7 +511,6 @@ Partial Class fr_perkiraan_detail
         Me.Controls.Add(Me.in_cur_saldo)
         Me.Controls.Add(Me.in_kode)
         Me.Controls.Add(Me.in_kode_parent)
-        Me.Controls.Add(Me.in_kode_jenis)
         Me.Controls.Add(Me.in_kode_akun)
         Me.Controls.Add(Me.in_akun_n)
         Me.Controls.Add(Me.Label1)
@@ -590,7 +541,6 @@ Partial Class fr_perkiraan_detail
     Friend WithEvents bt_simpanperkiraan As System.Windows.Forms.Button
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
-    Friend WithEvents cb_jenis As System.Windows.Forms.ComboBox
     Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
@@ -614,13 +564,10 @@ Partial Class fr_perkiraan_detail
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents in_saldoawal As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_kode As System.Windows.Forms.TextBox
-    Friend WithEvents in_kode_jenis As System.Windows.Forms.TextBox
     Friend WithEvents in_kode_parent As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents in_cur_saldo As System.Windows.Forms.TextBox
-    Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents in_status As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
-    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents cb_jenis As System.Windows.Forms.ComboBox
 End Class

@@ -23,12 +23,14 @@
             lbl_sales.Visible = False
             in_sales.Visible = False
             in_sales_n.Visible = False
-        ElseIf sales_sw = "ON" Or sales_sw = "SUPPLIER" Then
+        ElseIf sales_sw = "ON" Or sales_sw = "SUPPLIER" Or sales_sw = "JENISCUSTO" Then
             lbl_sales.Visible = True
             in_sales.Visible = True
             in_sales_n.Visible = True
             If sales_sw = "SUPPLIER" Then
                 lbl_sales.Text = "Supplier"
+            ElseIf sales_sw = "JENISCUSTO" Then
+                lbl_sales.Text = "Jenis"
             End If
         End If
         'JENIS
@@ -46,17 +48,17 @@
                 sales_sw = "OFF"
                 prcessSW()
 
-            Case "lapJualCusto"
-                jenis_sw = False
+            Case "lapJualCusto", "lapJualCustoNota"
+                jenis_sw = IIf(tipe = "lapJualCustoNota", True, False)
                 barang_sw = False
                 sales_sw = "OFF"
                 prcessSW()
 
-                lbl_custo.Location = lbl_jenis.Location
-                in_custo.Location = cb_jenis.Location
-                in_custo_n.Location = New Point(in_custo_n.Left, cb_jenis.Top)
+                lbl_custo.Location = IIf(tipe = "lapJualCustoNota", lbl_sales.Location, lbl_jenis.Location)
+                in_custo.Location = IIf(tipe = "lapJualCustoNota", in_sales.Location, cb_jenis.Location)
+                in_custo_n.Location = IIf(tipe = "lapJualCustoNota", in_sales_n.Location, New Point(in_custo_n.Left, cb_jenis.Top))
 
-            Case "lapJualTgl"
+            Case "lapJualTgl", "lapJualTanggalNota"
                 jenis_sw = False
                 custo_sw = False
                 barang_sw = False
@@ -65,10 +67,23 @@
 
                 Me.Size = New Point(591, 189)
 
+            Case "lapJualTipe"
+                jenis_sw = False
+                custo_sw = False
+                barang_sw = False
+                sales_sw = "JENISCUSTO"
+                prcessSW()
+
             Case "lapJualSales"
                 barang_sw = False
                 custo_sw = False
                 sales_sw = "ON"
+                prcessSW()
+
+            Case "lapJualSupplier"
+                barang_sw = False
+                custo_sw = False
+                sales_sw = "SUPPLIER"
                 prcessSW()
 
             Case "lapJualSalesNota"
@@ -77,6 +92,25 @@
                 sales_sw = "ON"
                 prcessSW()
 
+            Case "lapJualBarangSupplier"
+                barang_sw = False
+                jenis_sw = False
+                custo_sw = False
+                sales_sw = "SUPPLIER"
+                prcessSW()
+
+            Case "lapJualBarangSales"
+                barang_sw = False
+                jenis_sw = False
+                custo_sw = False
+                sales_sw = "ON"
+                prcessSW()
+
+            Case "lapJualSalesCustoBarang"
+                barang_sw = False
+                jenis_sw = False
+                sales_sw = "ON"
+                prcessSW()
 
         End Select
     End Sub
@@ -90,6 +124,9 @@
                 q = "SELECT salesman_kode as 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
             Case "custo"
                 q = "SELECT customer_kode as 'Kode', customer_nama AS 'Nama' FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
+            Case "jenis"
+                q = "SELECT jenis_kode as 'Kode', CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) AS 'Nama Jenis' " _
+                    & "FROM data_customer_jenis WHERE jenis_status=1 AND jenis_nama LIKE '{0}%'"
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
             Case "barang"
@@ -110,7 +147,7 @@
     Private Sub setPopUpResult()
         With dgv_listbarang.SelectedRows.Item(0)
             Select Case popupstate
-                Case "supplier", "sales"
+                Case "supplier", "sales", "jenis"
                     in_sales.Text = .Cells(0).Value
                     in_sales_n.Text = .Cells(1).Value
                     bt_simpanbeli.Focus()
@@ -166,6 +203,7 @@
                             & " FROM data_penjualan_faktur LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
                             & " WHERE faktur_status=1 AND faktur_term=0 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
                             & ") jual {3} {4}"
+
         Dim qbarang As String = "SELECT {0} FROM (" _
                                 & " SELECT faktur_sales, faktur_customer,trans_barang, faktur_kode, faktur_tanggal_trans, " _
                                 & "  @subtot:=trans_harga_jual*trans_qty as subtot, " _
@@ -202,6 +240,45 @@
                                 & " WHERE faktur_status=1 AND faktur_jen_bayar=2 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
                                 & ") jual {3} {4}"
 
+        Dim qtransbrg As String = "SELECT {0},barang_kode as dlap_barang,barang_nama as dlap_barang_n," _
+                                  & "getQTYdetail(barang_kode,IFNULL(SUM(if(jenis='JUAL',qtyjual,NULL)),0),2) as dlap_qty_jual, " _
+                                  & "IFNULL(SUM(if(jenis='JUAL',totalnilai,NULL)),0) as dlap_nilai_jual," _
+                                  & "getQTYdetail(barang_kode,IFNULL(SUM(if(jenis='RETUR',qtyjual,NULL)),0),2) as dlap_qty_retur," _
+                                  & "IFNULL(SUM(if(jenis='RETUR',totalnilai,NULL)),0) as dlap_nilai_retur," _
+                                  & "getQTYdetail(barang_kode,IFNULL(SUM(if(jenis='JUAL',qtyjual,qtyjual*-1)),0),2) as dlap_qty_tot," _
+                                  & "IFNULL(SUM(if(jenis='JUAL',totalnilai,totalnilai*-1)),0) as dlap_nilai_tot " _
+                                  & "FROM( " _
+                                  & " SELECT faktur_sales, trans_barang," _
+                                  & "  countQTYItem(trans_barang, trans_qty, trans_satuan_type) as qtyjual, " _
+                                  & "  @subtot:=(trans_harga_jual*trans_qty) as subtot,@subtot-trans_jumlah as diskon, trans_jumlah as totalnilai," _
+                                  & "  'JUAL' as jenis " _
+                                  & " FROM data_penjualan_faktur LEFT JOIN data_penjualan_trans ON trans_status=1 AND trans_faktur=faktur_kode " _
+                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                                  & " UNION " _
+                                  & " SELECT faktur_sales, trans_barang," _
+                                  & "  countQTYItem(trans_barang, trans_qty, trans_satuan_type) as qtyretur," _
+                                  & "  @subtot:=trans_harga_retur*trans_qty as subtot,@diskon:=@subtot*(trans_diskon/100) as diskon, " _
+                                  & "  @subtot-@diskon as totalnilai, 'RETUR' " _
+                                  & " FROM data_penjualan_retur_faktur " _
+                                  & " LEFT JOIN data_penjualan_retur_trans ON faktur_kode_bukti=trans_faktur AND trans_status=1 " _
+                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                                  & ") trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
+                                  & "{3} {4}"
+
+        Dim qdist As String = "SELECT {0} customer_kode lap_custo, customer_nama lap_custo_n, customer_alamat as lap_custo_al, customer_kabupaten as lap_custo_kab, " _
+                              & "CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as lap_custo_jn, salesman_kode as lap_sales,salesman_nama as lap_sales_n, " _
+                              & "faktur_kode as lap_faktur, " _
+                              & "faktur_tanggal_trans as lap_tgl, barang_kode as lap_barang, barang_nama as lap_barang_n, trans_harga_jual as lap_harga_jual, " _
+                              & "trans_qty as lap_qty, trans_satuan as lap_satuan, trans_disc1 as lap_disc1, trans_disc2 as lap_disc2, trans_disc3 as lap_disc3, " _
+                              & "trans_disc4 AS lap_disc4, trans_disc5 as lap_disc5, trans_disc_rupiah as lap_discrp, " _
+                              & "(trans_harga_jual*trans_qty)-trans_jumlah as lap_disc_tot, trans_jumlah as lap_jml " _
+                              & "FROM data_penjualan_faktur " _
+                              & "LEFT join data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
+                              & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
+                              & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                              & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
+                              & "LEFT JOIN data_customer_jenis ON jenis_kode=Customer_jenis " _
+                              & "WHERE faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_status=1 {3} {4}"
 
         Select Case tipe
             Case "lapJualNota"
@@ -295,21 +372,41 @@
 
             Case "lapJualTipe"
                 qcolselect = {
-                    "jenis_nama as lap_custo_n",
+                    "CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as lap_custo_n",
                     "SUM(lap_tunai) as lap_tunai",
-                    "SUM(lap_kredit) as lap_kredit",
+                    "SUM(lap_kredit) as lap_brutto",
                     "SUM(lap_diskon) as lap_diskon",
                     "SUM(lap_ppn) as lap_ppn",
                     "SUM(lap_jumlah) as lap_jumlah",
                     "lap_jenis"
                     }
-                q = String.Format(qnota, String.Join(",", qcolselect), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"),
+                q = String.Format(qtk, String.Join(",", qcolselect), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"),
                                   "LEFT JOIN data_customer_master ON lap_custo=customer_kode LEFT JOIN data_customer_jenis ON customer_jenis=jenis_kode {0}",
                                   "GROUP BY jenis_kode,lap_jenis")
 
-            Case "lapJualBarang"
+                If in_sales.Text <> Nothing Then
+                    qwh = "WHERE jenis_kode='" & in_sales.Text & "' "
+                End If
+
+            Case "lapJualCustoNota"
                 qcolselect = {
                     }
+
+                q = String.Format(qnota, "*", date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}", "")
+
+                Dim whr As New List(Of String)
+                If cb_jenis.SelectedValue <> Nothing Or in_custo.Text <> Nothing Then
+                    qwh += "WHERE {0}"
+                End If
+                If cb_jenis.SelectedValue <> Nothing Then
+                    whr.Add("lap_jenis IN (" & cb_jenis.SelectedValue & ")")
+                End If
+                If in_custo.Text <> Nothing Then
+                    whr.Add("lap_custo='" & in_custo.Text & "'")
+                End If
+
+                qwh = String.Format(qwh, String.Join(" AND ", whr))
+
             Case "lapJualSalesNota"
                 q = String.Format(qnota, "*", date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}", "")
 
@@ -326,6 +423,55 @@
 
                 qwh = String.Format(qwh, String.Join(" AND ", whr))
 
+            Case "lapJualTanggalNota"
+                qcolselect = {
+                   "lap_tanggal",
+                   "lap_faktur",
+                   "SUM(lap_tunai) as lap_tunai",
+                   "SUM(lap_kredit) as lap_brutto",
+                   "SUM(lap_diskon) as lap_diskon",
+                   "SUM(lap_ppn) as lap_ppn",
+                   "SUM(lap_jumlah) as lap_jumlah",
+                   "lap_jenis"
+                   }
+                q = String.Format(qtk, String.Join(",", qcolselect), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"),
+                                  "{0}", "GROUP BY lap_tanggal,lap_faktur")
+
+            Case "lapJualBarangSupplier"
+                qcolselect = {
+                    "supplier_nama as dlap_supplier_n",
+                    "supplier_kode as dlap_supplier"
+                    }
+
+                q = String.Format(qtransbrg, String.Join(",", qcolselect), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"),
+                                  "LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier {0}", "GROUP BY barang_supplier,barang_kode")
+
+                If in_sales.Text <> Nothing Then
+                    qwh = "WHERE barang_supplier='" & in_sales.Text & "'"
+                End If
+
+            Case "lapJualBarangSales"
+                qcolselect = {
+                    "salesman_nama as dlap_supplier_n",
+                    "salesman_kode as dlap_supplier"
+                    }
+
+                q = String.Format(qtransbrg, String.Join(",", qcolselect), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"),
+                                  "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales {0}", "GROUP BY faktur_sales,barang_kode")
+
+                If in_sales.Text <> Nothing Then
+                    qwh = "WHERE salesman_kode='" & in_sales.Text & "'"
+                End If
+
+            Case "lapJualSalesCustoBarang"
+                q = String.Format(qdist, "", date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}", "")
+
+                If in_sales.Text <> Nothing Then
+                    qwh += "AND faktur_sales='" & in_sales.Text & "' "
+                End If
+                If in_custo.Text <> Nothing Then
+                    qwh += "AND faktur_customer='" & in_custo.Text & "' "
+                End If
         End Select
 
 
@@ -438,6 +584,8 @@
                     x = in_sales_n
                 Case "sales"
                     x = in_sales_n
+                Case "jenis"
+                    x = in_sales_n
                 Case "custo"
                     x = in_custo_n
                 Case "barang"
@@ -481,7 +629,15 @@
         If popPnl_barang.Visible = False Then
             popPnl_barang.Visible = True
         End If
-        popupstate = IIf(sales_sw = "SUPPLIER", "supplier", "sales")
+
+        If sales_sw = "SUPPLIER" Then
+            popupstate = "supplier"
+        ElseIf sales_sw = "JENISCUSTO" Then
+            popupstate = "jenis"
+        Else
+            popupstate = "sales"
+        End If
+
         loadDataBRGPopup(popupstate, in_sales_n.Text)
     End Sub
 
@@ -507,7 +663,7 @@
             If popPnl_barang.Visible = False Then
                 popPnl_barang.Visible = True
             End If
-            loadDataBRGPopup(IIf(sales_sw = "SUPPLIER", "supplier", "sales"), in_sales_n.Text)
+            loadDataBRGPopup(popupstate, in_sales_n.Text)
         End If
     End Sub
 

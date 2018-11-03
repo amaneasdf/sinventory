@@ -19,8 +19,13 @@
         loadDraftList(Trim(in_caridraft.Text))
     End Sub
 
+    'LOAD LIST FAKTUR
     Private Sub loadFaktur(param As String)
-        Dim query As String = "SELECT faktur_kode as kode, customer_nama as nama, faktur_tanggal_trans,faktur_netto, IFNULL(faktur_draft_rekap,'N') as faktur_draft_rekap FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer WHERE faktur_sales IN ({0}) AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
+        Dim query As String = "SELECT faktur_kode as kode, customer_nama as nama, faktur_tanggal_trans,faktur_netto, " _
+                              & "IF(faktur_draft_rekap='','N',faktur_draft_rekap) as faktur_draft_rekap, salesman_nama " _
+                              & "FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer " _
+                              & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
+                              & "WHERE faktur_sales IN ({0}) AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
         Dim bs As New BindingSource
@@ -38,8 +43,8 @@
             _tglakhir = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
             _tglawal = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Else
-            _tglawal = DateSerial(selectedperiode.Year, selectedperiode.Month, 1).ToString("yyyy-MM-dd")
-            _tglakhir = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, -1).ToString("yyyy-MM-dd")
+            _tglawal = selectperiode.tglawal.ToString("yyyy-MM-dd")
+            _tglakhir = selectperiode.tglakhir.ToString("yyyy-MM-dd")
         End If
 
         query = String.Format(query, String.Join(",", sales), _tglawal, _tglakhir)
@@ -51,24 +56,35 @@
         dgv_listfaktur.DataSource = bs
     End Sub
 
+    'LOAD LIST SALES
     Private Sub loadSales(param As String)
         Dim bs As New BindingSource
 
-        bs.DataSource = getDataTablefromDB("SELECT salesman_kode as kode, salesman_nama as nama FROM data_salesman_master")
-        bs.Filter = "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "'"
+        bs.DataSource = getDataTablefromDB("SELECT salesman_kode as kode, salesman_nama as nama FROM data_salesman_master WHERE salesman_status=1")
+        bs.Filter = "kode LIKE '%" & param & "%' OR nama LIKE '" & param & "%'"
 
         dgv_sales.DataSource = bs
     End Sub
 
+    'LOAD LIST DRAFT
     Private Sub loadDraftList(param As String)
         Dim bs As New BindingSource
+        Dim q As String = "SELECT draft_kode, draft_tanggal, GROUP_CONCAT(salesman_nama SEPARATOR ',') as draft_sales, (CASE " _
+                          & " WHEN draft_printstatus=0 THEN 'N' " _
+                          & " WHEN draft_printstatus=1 THEN 'Y' " _
+                          & " ELSE 'ERROR' END) as draft_print " _
+                          & "FROM data_draft_faktur LEFT JOIN data_draft_sales ON draft_kode=sales_draft AND sales_status=1 " _
+                          & "LEFT JOIN data_salesman_master ON salesman_kode=sales_sales " _
+                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}' GROUP BY draft_kode"
         'bs.DataSource = getDataTablefromDB("viewDraft('all','header')")
 
-        bs.DataSource = getDataTablefromDB("SELECT * FROM selectDraftRekapList WHERE draft_kode LIKE 'RS" & selectedperiode.ToString("yyyyMM") & "%'")
-        bs.Filter = "draft_kode LIKE '%" & param & "%' OR draft_sales LIKE '%" & param & "%'"
+        bs.DataSource = getDataTablefromDB(String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd")))
+        consoleWriteLine(String.Format(q, selectperiode.tglawal, selectperiode.tglakhir))
+        bs.Filter = "draft_kode LIKE '" & param & "%' OR draft_sales LIKE '%" & param & "%'"
         dgv_draft_list.DataSource = bs
     End Sub
 
+    'LOAD SAVED SALES
     Private Sub loadListedSales(kodedraft As String)
         Dim dt As New DataTable
         dt = getDataTablefromDB("viewDraft('" & kodedraft & "','sales')")
@@ -85,6 +101,7 @@
         bt_cari_faktur.PerformClick()
     End Sub
 
+    'LOAD SAVED FAKTUR
     Private Sub loadListedFaktur(kodedraft As String)
         'dgv_draft_list.DataSource = getDataTablefromDB("viewDraft('" & kodedraft & "','listfaktur')")
         Dim dt As New DataTable
@@ -97,16 +114,18 @@
                     .Cells("draft_custo").Value = x.ItemArray(0)
                     .Cells("draft_faktur").Value = x.ItemArray(1)
                     .Cells("draft_netto").Value = x.ItemArray(2)
+                    .Cells("draft_sales").Value = x.ItemArray(3)
                 End With
             Next
         End With
     End Sub
 
+    'LOAD DRAFT
     Private Sub loadDraft(kodedraft As String)
         ClearAll()
 
         op_con()
-        readcommd("SELECT * FROM data_draft_faktur WHERE draft_kode='" & kodedraft & "'")
+        readcommd("SELECT draft_kode,draft_tanggal FROM data_draft_faktur WHERE draft_kode='" & kodedraft & "'")
         If rd.HasRows Then
             in_kode_draft.Text = rd.Item("draft_kode")
             date_tgl_trans.Value = rd.Item("draft_tanggal")
@@ -116,9 +135,17 @@
 
         loadListedSales(kodedraft)
         loadListedFaktur(kodedraft)
+        bt_create_draft.Text = "Update Draft"
+        If loggeduser.allowedit_transact = False Then
+            bt_create_draft.Enabled = False
+        Else
+            bt_create_draft.Enabled = True
+        End If
     End Sub
 
+    'SAVE DRAFT
     Private Function createDraft() As Boolean
+        Dim q As String
         op_con()
         Try
             Dim kodedraft = "RS"
@@ -143,6 +170,7 @@
             Dim dataArr As String() = {
                 "draft_kode='" & kodedraftselected & "'",
                 "draft_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+                "draft_status='1'",
                 "draft_reg_date=NOW()",
                 "draft_reg_alias='" & loggeduser.user_id & "'"
                 }
@@ -186,6 +214,7 @@
         End Try
     End Function
 
+    'CLEAR
     Private Sub ClearAll()
         For Each x As TextBox In {in_cari_faktur, in_cari_sales, in_caridraft, in_kode_draft}
             x.Clear()
@@ -196,10 +225,12 @@
         For Each x As DataGridView In {dgv_draftfaktur, dgv_draftsales}
             x.Rows.Clear()
         Next
-        date_tgl_trans.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, Today.Day)
-        date_faktur_awal.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-        date_faktur_akhir.Value = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, -1)
+        date_tgl_trans.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        date_faktur_awal.Value = selectperiode.tglawal
+        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
         ck_tgl2.CheckState = CheckState.Unchecked
+        bt_create_draft.Enabled = True
+        bt_create_draft.Text = "Simpan Draft"
     End Sub
 
     '--------------resize dgv
@@ -231,11 +262,12 @@
     '----------------- load
     Private Sub fr_draft_rekap_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         For Each s As DateTimePicker In {date_tgl_trans, date_faktur_akhir, date_faktur_awal}
-            s.MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-            s.MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+            s.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+            s.MaxDate = selectperiode.tglakhir
+            s.MinDate = selectperiode.tglawal
         Next
-        date_faktur_awal.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-        date_faktur_akhir.Value = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+        date_faktur_awal.Value = selectperiode.tglawal
+        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
         loadSales("")
         loadDraftList("")
@@ -386,9 +418,21 @@
         End With
     End Sub
     Private Sub bt_remsales_Click(sender As Object, e As EventArgs) Handles bt_remsales.Click
+        Dim cksales As Boolean = False
         With dgv_draftsales
             For Each selected As DataGridViewRow In .SelectedRows
-                .Rows.RemoveAt(selected.Index)
+                For Each fkt As DataGridViewRow In dgv_draftfaktur.Rows
+                    If fkt.Cells("draft_sales").Value = selected.Cells("draft_sales_n").Value Then
+                        cksales = True
+                        Exit For
+                    End If
+                Next
+                If cksales = False Then
+                    .Rows.RemoveAt(selected.Index)
+                Else
+                    MessageBox.Show("Faktur untuk sales tsb sudah diinput, Hapus faktur yang berhubungan terlebih dahulu.")
+                    Exit Sub
+                End If
             Next
         End With
     End Sub

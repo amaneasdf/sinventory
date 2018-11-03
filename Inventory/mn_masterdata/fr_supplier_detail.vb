@@ -97,8 +97,8 @@
                 'GENERATE CODE
                 If in_kode.Text = Nothing Then
                     Dim no As Integer = 1
-                    readcommd("SELECT SUBSTRING(supplier_kode,2) as ss FROM data_supplier_master WHERE supplier_kode LIKE 'S%' " _
-                              & "ORDER BY ss DESC LIMIT 1")
+                    readcommd("SELECT RIGHT(supplier_kode,4) as ss FROM data_supplier_master WHERE supplier_kode LIKE 'S%' " _
+                              & "AND RIGHT(supplier_kode,4) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                     If rd.HasRows Then
                         no = CInt(rd.Item(0)) + 1
                     End If

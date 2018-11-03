@@ -90,6 +90,7 @@ Partial Class fr_setup_menu
         Me.bt_keluar_menu.BackColor = System.Drawing.Color.Orange
         Me.bt_keluar_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_keluar_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_keluar_menu.ForeColor = System.Drawing.Color.White
         Me.bt_keluar_menu.Location = New System.Drawing.Point(341, 542)
         Me.bt_keluar_menu.Name = "bt_keluar_menu"
         Me.bt_keluar_menu.Size = New System.Drawing.Size(96, 30)
@@ -103,6 +104,7 @@ Partial Class fr_setup_menu
         Me.bt_hapus_menu.Enabled = False
         Me.bt_hapus_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_hapus_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_hapus_menu.ForeColor = System.Drawing.Color.White
         Me.bt_hapus_menu.Location = New System.Drawing.Point(239, 150)
         Me.bt_hapus_menu.Name = "bt_hapus_menu"
         Me.bt_hapus_menu.Size = New System.Drawing.Size(96, 30)
@@ -115,6 +117,7 @@ Partial Class fr_setup_menu
         Me.bt_tambah_menu.BackColor = System.Drawing.Color.Orange
         Me.bt_tambah_menu.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_tambah_menu.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_tambah_menu.ForeColor = System.Drawing.Color.White
         Me.bt_tambah_menu.Location = New System.Drawing.Point(137, 150)
         Me.bt_tambah_menu.Name = "bt_tambah_menu"
         Me.bt_tambah_menu.Size = New System.Drawing.Size(96, 30)
@@ -213,6 +216,7 @@ Partial Class fr_setup_menu
         Me.Label9.AutoSize = True
         Me.Label9.BackColor = System.Drawing.Color.Orange
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.Color.White
         Me.Label9.Location = New System.Drawing.Point(9, 9)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(183, 20)
@@ -233,6 +237,7 @@ Partial Class fr_setup_menu
         Me.bt_batal.BackColor = System.Drawing.Color.Orange
         Me.bt_batal.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_batal.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batal.ForeColor = System.Drawing.Color.White
         Me.bt_batal.Location = New System.Drawing.Point(341, 150)
         Me.bt_batal.Name = "bt_batal"
         Me.bt_batal.Size = New System.Drawing.Size(96, 30)

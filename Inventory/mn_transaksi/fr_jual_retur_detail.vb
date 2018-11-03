@@ -42,6 +42,12 @@
         rd.Close()
         setStatus()
 
+        'If loggeduser.allowedit_transact = False Then
+        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Or (rtjstatus = 0 And loggeduser.validasi_trans = False) Then
+            bt_simpanreturbeli.Enabled = False
+        End If
+        'End If
+
         'setReadOnly()
     End Sub
 
@@ -60,9 +66,10 @@
                     .Cells("qty").Value = rows.ItemArray(3)
                     .Cells("sat_type").Value = rows.ItemArray(5)
                     .Cells("sat").Value = rows.ItemArray(4)
-                    .Cells("jml").Value = rows.ItemArray(3) * rows.ItemArray(2)
+                    .Cells("subtotal").Value = rows.ItemArray(3) * rows.ItemArray(2)
                     .Cells("brg_hpp").Value = rows.ItemArray(6)
                     .Cells("diskon").Value = rows.ItemArray(7)
+                    .Cells("jml").Value = .Cells("subtotal").Value * (1 - (rows.ItemArray(7) / 100))
                 End With
             Next
         End With
@@ -166,9 +173,9 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama', AVG(trans_harga_jual) as hpp " _
+                q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama', IF(trans_harga_jual=0,AVG(trans_harga_jual),trans_harga_jual) as harga_jual " _
                     & "FROM data_penjualan_trans LEFT JOIN data_penjualan_faktur ON faktur_kode=trans_faktur AND faktur_status=1 " _
-                    & "LEFT JOIN data_barang_master ON trans_barang=barang_kode AND trans_status=1" _
+                    & "LEFT JOIN data_barang_master ON trans_barang=barang_kode AND trans_status=1 " _
                     & "WHERE trans_status=1 AND faktur_customer='" & in_custo.Text & "' AND barang_nama LIKE '{0}%' " _
                     & "GROUP BY barang_kode LIMIT 250"
             Case "custo"
@@ -272,6 +279,8 @@
                 .Cells("sat").Value = cb_sat.Text
                 .Cells("sat_type").Value = cb_sat.SelectedValue
                 .Cells("harga").Value = in_harga_retur.Value
+                .Cells("subtotal").Value = in_harga_retur.Value * in_qty.Value
+                .Cells("diskon").Value = in_diskon.Value
                 .Cells("jml").Value = removeCommaThousand(in_subtotal.Text)
                 .Cells("brg_hpp").Value = hpp
             End With
@@ -292,6 +301,7 @@
             in_barang.Text = .Cells("kode").Value
             in_barang_nm.Text = .Cells("nama").Value
             in_qty.Value = .Cells("qty").Value
+            in_diskon.Value = .Cells("diskon").Value
             cb_sat.SelectedValue = .Cells("sat_type").Value
             in_harga_retur.Text = .Cells("harga").Value
         End With
@@ -514,7 +524,7 @@
                 & "p_titip_upd_alias='{2}',p_titip_upd_date=NOW()"
             data1 = {
                 "p_titip_ref='" & in_custo.Text & "'",
-                "p_titip_nilai='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", "."),
+                "p_titip_nilai=" & removeCommaThousand(in_netto.Text).ToString.Replace(",", "."),
                 "p_titip_idperiode='" & selectperiode.id & "'",
                 "p_titip_status='" & rtjstatus & "'"
                 }
@@ -629,11 +639,11 @@
         End With
 
         With date_tgl_trans
-            .Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_trans.Value.Day)
-            .MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-            .MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+            .MaxDate = selectperiode.tglakhir
+            .MinDate = selectperiode.tglawal
         End With
-        date_tgl_pajak.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_pajak.Value.Day)
+        date_tgl_pajak.Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
 
         For Each x As DataGridViewColumn In {qty, harga, jml, diskon}
             x.DefaultCellStyle = dgvstyle_commathousand
@@ -1000,7 +1010,12 @@
             indexrow = e.RowIndex
             dgvToTxt()
             dgv_barang.Rows.RemoveAt(indexrow)
+            countBiaya()
         End If
+    End Sub
+
+    Private Sub cb_ppn_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_ppn.SelectionChangeCommitted
+        countBiaya()
     End Sub
 
     Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click

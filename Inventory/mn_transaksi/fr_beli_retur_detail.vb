@@ -46,8 +46,11 @@
             txtRegdate.Text = rd.Item("faktur_reg_date")
         End If
         rd.Close()
-        setStatus()
 
+        setStatus()
+        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Then
+            bt_simpanreturbeli.Enabled = False
+        End If
         'setReadOnly()
     End Sub
 
@@ -66,9 +69,10 @@
                     .Cells("qty").Value = rows.ItemArray(3)
                     .Cells("sat").Value = rows.ItemArray(4)
                     .Cells("sat_type").Value = rows.ItemArray(5)
-                    .Cells("jml").Value = rows.ItemArray(3) * rows.ItemArray(2)
+                    .Cells("subtot").Value = rows.ItemArray(3) * rows.ItemArray(2)
                     .Cells("brg_hpp").Value = rows.ItemArray(6)
                     .Cells("diskon").Value = rows.ItemArray(7)
+                    .Cells("jml").Value = .Cells("subtot").Value * (1 - (rows.ItemArray(7) / 100))
                 End With
             Next
         End With
@@ -178,9 +182,8 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', AVG(trans_harga_beli) as harga_beli " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli as harga_beli " _
                     & "FROM data_barang_master LEFT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_status=1 " _
-                    & "LEFT JOIN data_pembelian_trans ON trans_barang=barang_kode AND trans_status=1" _
                     & "WHERE barang_nama LIKE '{0}%' AND stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
                     & "AND barang_supplier='" & in_supplier.Text & "' AND barang_status=1 LIMIT 250"
             Case "supplier"
@@ -279,6 +282,8 @@
                 .Cells("sat").Value = cb_sat.Text
                 .Cells("sat_type").Value = cb_sat.SelectedValue
                 .Cells("harga").Value = in_harga_retur.Value
+                .Cells("subtot").Value = in_qty.Value * in_harga_retur.Value
+                .Cells("diskon").Value = in_diskon.Value
                 .Cells("jml").Value = removeCommaThousand(in_subtotal.Text)
                 .Cells("brg_hpp").Value = hpp
             End With
@@ -303,9 +308,10 @@
             in_barang_nm.Text = .Cells("nama").Value
             in_qty.Value = .Cells("qty").Value
             cb_sat.SelectedValue = .Cells("sat_type").Value
+            in_diskon.Value = .Cells("diskon").Value
             in_harga_retur.Text = .Cells("harga").Value
         End With
-        countBiaya()
+
         If dgv_barang.RowCount = 0 Then
             in_supplier_n.ReadOnly = False
             in_gudang_n.ReadOnly = False
@@ -534,6 +540,7 @@
             data1 = {
                 "h_titip_ref='" & in_supplier.Text & "'",
                 "h_titip_nilai=" & removeCommaThousand(in_netto.Text).ToString.Replace(",", "."),
+                "h_titip_tipe='retur'",
                 "h_titip_idperiode='" & selectperiode.id & "'",
                 "h_titip_status='" & rtbStatus & "'"
                 }
@@ -639,11 +646,11 @@
         End With
 
         With date_tgl_trans
-            .Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_trans.Value.Day)
-            .MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-            .MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+            .MaxDate = selectperiode.tglakhir
+            .MinDate = selectperiode.tglawal
         End With
-        date_tgl_pajak.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_pajak.Value.Day)
+        date_tgl_pajak.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
         For Each x As DataGridViewColumn In {qty, harga, jml}
             x.DefaultCellStyle = dgvstyle_commathousand
@@ -732,11 +739,11 @@
     End Sub
 
     '--------------- numeric input
-    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_harga_retur.Enter
+    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_harga_retur.Enter, in_diskon.Enter
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty.Leave, in_harga_retur.Leave
+    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty.Leave, in_harga_retur.Leave, in_diskon.Leave
         Select Case sender.Name.ToString
             Case "in_qty"
                 numericLostFocus(sender, "N0")
@@ -775,7 +782,7 @@
 
     Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
         If in_supplier_n.ReadOnly = False And in_supplier_n.Enabled = True Then
-            popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
+            popPnl_barang.Location = New Point(in_supplier_n.Left - (popPnl_barang.Width - in_supplier_n.Width), in_supplier_n.Top + in_supplier_n.Height)
             If popPnl_barang.Visible = False Then
                 popPnl_barang.Visible = True
             End If
@@ -825,7 +832,7 @@
     End Sub
 
     Private Sub in_gudang_n_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
-        popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height)
+        popPnl_barang.Location = New Point(in_gudang_n.Left - (popPnl_barang.Width - in_gudang_n.Width), in_gudang_n.Top + in_gudang_n.Height)
         If popPnl_barang.Visible = False Then
             popPnl_barang.Visible = True
         End If
@@ -963,7 +970,12 @@
             indexrow = e.RowIndex
             dgvToTxt()
             dgv_barang.Rows.RemoveAt(indexrow)
+            countBiaya()
         End If
+    End Sub
+
+    Private Sub cb_ppn_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_ppn.SelectionChangeCommitted
+        countBiaya()
     End Sub
 
     Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click
@@ -971,5 +983,4 @@
             popPnl_barang.Visible = False
         End If
     End Sub
-
 End Class

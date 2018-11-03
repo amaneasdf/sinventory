@@ -88,6 +88,7 @@ Partial Class fr_beli_retur_detail
         Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.diskon = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -766,7 +767,7 @@ Partial Class fr_beli_retur_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.diskon, Me.jml, Me.brg_hpp})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty, Me.sat_type, Me.sat, Me.harga, Me.subtot, Me.diskon, Me.jml, Me.brg_hpp})
         Me.dgv_barang.Location = New System.Drawing.Point(11, 213)
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
@@ -825,6 +826,12 @@ Partial Class fr_beli_retur_detail
         Me.harga.Name = "harga"
         Me.harga.ReadOnly = True
         Me.harga.Width = 110
+        '
+        'subtot
+        '
+        Me.subtot.HeaderText = "SubTotal"
+        Me.subtot.Name = "subtot"
+        Me.subtot.ReadOnly = True
         '
         'diskon
         '
@@ -1094,15 +1101,16 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents in_gudang As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier_n As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier As System.Windows.Forms.TextBox
+    Friend WithEvents in_diskon As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Label18 As System.Windows.Forms.Label
     Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents harga As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents subtot As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents diskon As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_hpp As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents in_diskon As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label18 As System.Windows.Forms.Label
 End Class

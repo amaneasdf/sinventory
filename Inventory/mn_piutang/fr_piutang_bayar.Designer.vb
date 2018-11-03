@@ -311,7 +311,7 @@ Partial Class fr_piutang_bayar
         Me.bt_batalperkiraan.Location = New System.Drawing.Point(793, 498)
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalperkiraan.TabIndex = 14
+        Me.bt_batalperkiraan.TabIndex = 23
         Me.bt_batalperkiraan.Text = "Batal"
         Me.bt_batalperkiraan.UseVisualStyleBackColor = True
         '
@@ -322,7 +322,7 @@ Partial Class fr_piutang_bayar
         Me.bt_simpanperkiraan.Location = New System.Drawing.Point(631, 498)
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
         Me.bt_simpanperkiraan.Size = New System.Drawing.Size(156, 30)
-        Me.bt_simpanperkiraan.TabIndex = 13
+        Me.bt_simpanperkiraan.TabIndex = 22
         Me.bt_simpanperkiraan.Text = "Simpan Pembayaran"
         Me.bt_simpanperkiraan.UseVisualStyleBackColor = True
         '
@@ -345,7 +345,7 @@ Partial Class fr_piutang_bayar
         Me.in_no_bukti.MaxLength = 30
         Me.in_no_bukti.Name = "in_no_bukti"
         Me.in_no_bukti.Size = New System.Drawing.Size(188, 20)
-        Me.in_no_bukti.TabIndex = 3
+        Me.in_no_bukti.TabIndex = 2
         Me.in_no_bukti.TabStop = False
         '
         'date_tgl_trans
@@ -356,7 +356,7 @@ Partial Class fr_piutang_bayar
         Me.date_tgl_trans.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tgl_trans.Name = "date_tgl_trans"
         Me.date_tgl_trans.Size = New System.Drawing.Size(186, 20)
-        Me.date_tgl_trans.TabIndex = 2
+        Me.date_tgl_trans.TabIndex = 8
         Me.date_tgl_trans.TabStop = False
         '
         'in_sales
@@ -380,7 +380,7 @@ Partial Class fr_piutang_bayar
         Me.in_faktur.MaxLength = 30
         Me.in_faktur.Name = "in_faktur"
         Me.in_faktur.Size = New System.Drawing.Size(187, 20)
-        Me.in_faktur.TabIndex = 5
+        Me.in_faktur.TabIndex = 10
         '
         'in_bg_no
         '
@@ -388,11 +388,11 @@ Partial Class fr_piutang_bayar
         Me.in_bg_no.Enabled = False
         Me.in_bg_no.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_bg_no.ForeColor = System.Drawing.Color.Black
-        Me.in_bg_no.Location = New System.Drawing.Point(59, 388)
+        Me.in_bg_no.Location = New System.Drawing.Point(70, 388)
         Me.in_bg_no.MaxLength = 150
         Me.in_bg_no.Name = "in_bg_no"
         Me.in_bg_no.Size = New System.Drawing.Size(140, 20)
-        Me.in_bg_no.TabIndex = 8
+        Me.in_bg_no.TabIndex = 16
         '
         'Label22
         '
@@ -429,7 +429,7 @@ Partial Class fr_piutang_bayar
         Me.dgv_bayar.RowHeadersVisible = False
         Me.dgv_bayar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_bayar.Size = New System.Drawing.Size(882, 137)
-        Me.dgv_bayar.TabIndex = 12
+        Me.dgv_bayar.TabIndex = 15
         '
         'bayar_faktur
         '
@@ -473,7 +473,7 @@ Partial Class fr_piutang_bayar
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label5.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label5.Location = New System.Drawing.Point(205, 392)
+        Me.Label5.Location = New System.Drawing.Point(216, 392)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(36, 13)
         Me.Label5.TabIndex = 364
@@ -487,7 +487,7 @@ Partial Class fr_piutang_bayar
         Me.date_bg_tgl.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_bg_tgl.Name = "date_bg_tgl"
         Me.date_bg_tgl.Size = New System.Drawing.Size(186, 20)
-        Me.date_bg_tgl.TabIndex = 10
+        Me.date_bg_tgl.TabIndex = 9
         '
         'cb_bayar
         '
@@ -509,7 +509,7 @@ Partial Class fr_piutang_bayar
         Me.in_kredit.Maximum = New Decimal(New Integer() {1316134911, 2328, 0, 0})
         Me.in_kredit.Name = "in_kredit"
         Me.in_kredit.Size = New System.Drawing.Size(184, 20)
-        Me.in_kredit.TabIndex = 9
+        Me.in_kredit.TabIndex = 13
         Me.in_kredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_kredit.ThousandsSeparator = True
         '
@@ -535,7 +535,7 @@ Partial Class fr_piutang_bayar
         Me.bt_tbbayar.Location = New System.Drawing.Point(759, 219)
         Me.bt_tbbayar.Name = "bt_tbbayar"
         Me.bt_tbbayar.Size = New System.Drawing.Size(18, 18)
-        Me.bt_tbbayar.TabIndex = 11
+        Me.bt_tbbayar.TabIndex = 14
         Me.bt_tbbayar.UseVisualStyleBackColor = False
         '
         'in_custo_n
@@ -555,11 +555,11 @@ Partial Class fr_piutang_bayar
         Me.in_bank.Enabled = False
         Me.in_bank.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_bank.ForeColor = System.Drawing.Color.Black
-        Me.in_bank.Location = New System.Drawing.Point(247, 388)
+        Me.in_bank.Location = New System.Drawing.Point(258, 388)
         Me.in_bank.MaxLength = 150
         Me.in_bank.Name = "in_bank"
-        Me.in_bank.Size = New System.Drawing.Size(172, 20)
-        Me.in_bank.TabIndex = 7
+        Me.in_bank.Size = New System.Drawing.Size(161, 20)
+        Me.in_bank.TabIndex = 17
         '
         'in_custo
         '
@@ -682,13 +682,13 @@ Partial Class fr_piutang_bayar
         Me.in_ket.BackColor = System.Drawing.Color.White
         Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket.ForeColor = System.Drawing.Color.Black
-        Me.in_ket.Location = New System.Drawing.Point(59, 435)
+        Me.in_ket.Location = New System.Drawing.Point(70, 435)
         Me.in_ket.MaxLength = 30
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.in_ket.Size = New System.Drawing.Size(360, 40)
-        Me.in_ket.TabIndex = 370
+        Me.in_ket.Size = New System.Drawing.Size(349, 40)
+        Me.in_ket.TabIndex = 19
         '
         'in_total
         '
@@ -700,7 +700,7 @@ Partial Class fr_piutang_bayar
         Me.in_total.Name = "in_total"
         Me.in_total.ReadOnly = True
         Me.in_total.Size = New System.Drawing.Size(257, 26)
-        Me.in_total.TabIndex = 371
+        Me.in_total.TabIndex = 20
         Me.in_total.TabStop = False
         Me.in_total.Text = "0"
         Me.in_total.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -714,7 +714,7 @@ Partial Class fr_piutang_bayar
         Me.in_saldotitipan.MaxLength = 30
         Me.in_saldotitipan.Name = "in_saldotitipan"
         Me.in_saldotitipan.Size = New System.Drawing.Size(283, 20)
-        Me.in_saldotitipan.TabIndex = 376
+        Me.in_saldotitipan.TabIndex = 5
         '
         'Label11
         '
@@ -737,7 +737,7 @@ Partial Class fr_piutang_bayar
         Me.in_tgl_jtfaktur.Name = "in_tgl_jtfaktur"
         Me.in_tgl_jtfaktur.ReadOnly = True
         Me.in_tgl_jtfaktur.Size = New System.Drawing.Size(165, 20)
-        Me.in_tgl_jtfaktur.TabIndex = 378
+        Me.in_tgl_jtfaktur.TabIndex = 11
         Me.in_tgl_jtfaktur.TabStop = False
         '
         'Label12
@@ -761,7 +761,7 @@ Partial Class fr_piutang_bayar
         Me.in_sisafaktur.Name = "in_sisafaktur"
         Me.in_sisafaktur.ReadOnly = True
         Me.in_sisafaktur.Size = New System.Drawing.Size(195, 20)
-        Me.in_sisafaktur.TabIndex = 379
+        Me.in_sisafaktur.TabIndex = 12
         Me.in_sisafaktur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label13
@@ -804,7 +804,7 @@ Partial Class fr_piutang_bayar
         Me.in_potongan.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_potongan.Name = "in_potongan"
         Me.in_potongan.Size = New System.Drawing.Size(257, 20)
-        Me.in_potongan.TabIndex = 384
+        Me.in_potongan.TabIndex = 21
         Me.in_potongan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_potongan.ThousandsSeparator = True
         Me.in_potongan.Visible = False
@@ -830,7 +830,7 @@ Partial Class fr_piutang_bayar
         Me.cb_akun.Location = New System.Drawing.Point(375, 145)
         Me.cb_akun.Name = "cb_akun"
         Me.cb_akun.Size = New System.Drawing.Size(186, 21)
-        Me.cb_akun.TabIndex = 386
+        Me.cb_akun.TabIndex = 7
         '
         'Label16
         '
@@ -847,12 +847,12 @@ Partial Class fr_piutang_bayar
         Me.in_tglpencairan.BackColor = System.Drawing.Color.White
         Me.in_tglpencairan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_tglpencairan.ForeColor = System.Drawing.Color.Black
-        Me.in_tglpencairan.Location = New System.Drawing.Point(59, 411)
+        Me.in_tglpencairan.Location = New System.Drawing.Point(70, 411)
         Me.in_tglpencairan.MaxLength = 30
         Me.in_tglpencairan.Name = "in_tglpencairan"
         Me.in_tglpencairan.ReadOnly = True
-        Me.in_tglpencairan.Size = New System.Drawing.Size(360, 20)
-        Me.in_tglpencairan.TabIndex = 388
+        Me.in_tglpencairan.Size = New System.Drawing.Size(349, 20)
+        Me.in_tglpencairan.TabIndex = 18
         '
         'Label17
         '
@@ -861,9 +861,9 @@ Partial Class fr_piutang_bayar
         Me.Label17.ForeColor = System.Drawing.Color.MidnightBlue
         Me.Label17.Location = New System.Drawing.Point(7, 414)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(51, 13)
+        Me.Label17.Size = New System.Drawing.Size(64, 13)
         Me.Label17.TabIndex = 389
-        Me.Label17.Text = "Tgl.Cair"
+        Me.Label17.Text = "Pencairan"
         '
         'fr_piutang_bayar
         '

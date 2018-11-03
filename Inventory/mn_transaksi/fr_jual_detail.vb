@@ -105,10 +105,12 @@
                 in_status.Text = "Non-Aktif"
             Case 1
                 in_status.Text = "Aktif"
+            Case 2
+                in_status.Text = "Batal"
             Case 9
                 in_status.Text = "Delete"
             Case Else
-                Exit Sub
+                in_status.Text = "ERROR"
         End Select
     End Sub
 
@@ -486,7 +488,7 @@
 
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
-            Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & date_tgl_beli.Value.ToString("yyMM")
+            Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & selectperiode.id
             dataBrg = {
                "trans_barang='" & rows.Cells(0).Value & "'",
                "trans_harga_jual='" & rows.Cells("harga").Value & "'",
@@ -528,7 +530,7 @@
         Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
         Dim q5 As String = "DELETE FROM data_stok_kartustok WHERE trans_faktur='{0}' AND trans_stock NOT IN({1})"
         data1 = {
-                "trans_stock", "trans_index", "trans_jenis", "trans_faktur",
+                "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
                 "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
                 }
         Dim i As Integer = 0
@@ -538,6 +540,7 @@
                     "MAX(trans_index)+1",
                     "'so'",
                     "'" & in_faktur.Text & "'",
+                    "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                     "'PENJUALAN'",
                     qty.Item(i) * -1,
                     (nilai.Item(i) * -1).ToString.Replace(",", "."),
@@ -546,6 +549,7 @@
                     }
             dataBrg = {
                 "trans_qty=" & qty.Item(i) * -1,
+                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                 "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'"
@@ -601,8 +605,9 @@
             Exit Sub
         Else
             MessageBox.Show("Data tersimpan")
-            frmpembelian.in_cari.Clear()
-            populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
+            doRefreshTab({pgpenjualan})
+            'frmpembelian.in_cari.Clear()
+            'populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
             Me.Close()
         End If
     End Sub
@@ -673,9 +678,9 @@
         End With
 
         For Each x As DateTimePicker In {date_tgl_beli, date_tgl_pajak}
-            x.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, x.Value.Day)
-            x.MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-            x.MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            x.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+            x.MaxDate = selectperiode.tglakhir
+            x.MinDate = selectperiode.tglawal
         Next
 
         With dgv_barang
@@ -725,19 +730,35 @@
 
         If MessageBox.Show("Simpan data penjualan?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             Dim piutang As Boolean = False
-            Dim q As String = "SELECT SUM(getSisaPiutang(piutang_faktur,piutang_ref)) " _
+            Dim q As String = "SELECT IFNULL(SUM(getSisaPiutang(piutang_faktur,'{2}')),0) " _
                               & "FROM data_piutang_awal WHERE piutang_ref='{0}' AND piutang_status=1 AND piutang_faktur<>'{1}'"
             If in_term.Value <> 0 And bt_simpanjual.Text = "Simpan" Then
-                readcommd(String.Format(q, in_custo.Text, in_faktur.Text))
-                If rd.HasRows And rd.Item(0) <> 0 Then
+                readcommd(String.Format(q, in_custo.Text, in_faktur.Text, selectperiode.id))
+                If rd.HasRows And rd.Item(0) > 0 Then
                     piutang = True
                 End If
                 rd.Close()
 
                 If piutang = True Then
-                    MessageBox.Show("piutang")
-                    Exit Sub
-                    'DO SOMETHING
+                    If MessageBox.Show("Customer " & in_custo_n.Text & " masih memiliki piutang yang belum terbayar, lanjutkan transaksi?", "Penjualan",
+                                    MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                        Using x As New fr_jualconfirm_dialog
+                            With x
+                                If loggeduser.validasi_trans = True Then
+                                    .in_user.Text = loggeduser.user_id
+                                End If
+                                .do_load("jual")
+                                .ShowDialog()
+                                If .returnval = True Then
+                                    in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
+                                Else
+                                    Exit Sub
+                                End If
+                            End With
+                        End Using
+                    End If
+                    'Exit Sub
+                    ''DO SOMETHING
                 End If
             End If
             saveData()

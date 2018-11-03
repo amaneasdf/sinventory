@@ -3,6 +3,7 @@
     Private statuscair As Boolean = False
     Private datecairchange As Boolean = False
     Private statustolak As Boolean = False
+    Private bankpencairan As String = ""
 
     Private _statusgiro As String
     Private _akuncair As String
@@ -17,25 +18,34 @@
         On Error Resume Next
         Select Case tipe
             Case "OUT"
-                q = "SELECT giro_no, giro_nilai, giro_tglcair, g_cair_tglcair," _
+                q = "SELECT giro_no, giro_nilai, giro_tglbg, giro_tglcair, g_cair_tglcair, g_tolak_tanggal,giro_bank,perk_nama_akun, " _
                     & "h_bayar_supplier, supplier_nama, giro_ref, giro_ket, giro_status " _
-                    & "FROM data_giro LEFT JOIN data_giro_cair ON giro_no=g_cair_nobg AND g_cair_status=1 " _
+                    & "FROM data_giro  " _
                     & "left join data_hutang_bayar ON giro_ref=h_bayar_bukti AND h_bayar_status=1 " _
                     & "LEFT JOIN data_supplier_master ON h_bayar_supplier=supplier_kode " _
+                    & "LEFT JOIN data_giro_cair ON giro_no=g_cair_nobg AND g_cair_status=1 " _
+                    & "LEFT JOIN data_giro_tolak ON giro_no=g_tolak_nobg AND g_tolak_status=1 " _
+                    & "LEFT JOIN data_perkiraan ON perk_kode=giro_bank " _
                     & "WHERE giro_type='OUT' AND giro_no='{0}'"
                 q = String.Format(q, kode)
 
                 readcommd(q)
                 If rd.HasRows Then
                     in_nobg.Text = rd.Item("giro_no")
-                    'bank
+                    in_bank.Text = rd.Item("giro_bank")
+                    in_bank_n.Text = rd.Item("perk_nama_akun")
                     in_nilaibg.Text = commaThousand(rd.Item("giro_nilai"))
+                    in_tgl_penarikan.Text = CDate(rd.Item("giro_tglbg"))
                     in_tgl_bg.Text = CDate(rd.Item("giro_tglcair"))
-                    If IsDBNull(rd.Item("g_cair_tglcair")) = False Then
+                    _statusgiro = rd.Item("giro_status")
+                    If _statusgiro = 3 Then
+                        in_statusgiro.Text = "DITOLAK"
+                        _tglcairtolak = CDate(rd.Item("g_tolak_tanggal"))
+                        in_tglcair.Text = _tglcairtolak.ToShortDateString
+                    ElseIf _statusgiro = 2 And IsDBNull(rd.Item("g_cair_tglcair")) = False Then
                         statuscair = True
-                        _statusgiro = rd.Item("giro_status")
                         in_statusgiro.Text = "DICAIRKAN"
-                        _tglcairtolak = rd.Item("g_cair_tglcair")
+                        _tglcairtolak = CDate(rd.Item("g_cair_tglcair"))
                         in_tglcair.Text = _tglcairtolak.ToShortDateString
                     End If
                     in_ref.Text = rd.Item("h_bayar_supplier")
@@ -45,11 +55,13 @@
                 End If
                 rd.Close()
             Case "IN"
-                q = "SELECT giro_no, giro_nilai, giro_tglcair, g_cair_tglcair," _
-                    & "p_bayar_custo, customer_nama, giro_ref, giro_ket, giro_status,giro_bank " _
+                q = "SELECT giro_no, giro_nilai, giro_tglbg, giro_tglcair, g_cair_tglcair,p_bayar_akun,g_cair_tujuan,perk_nama_akun, " _
+                    & "p_bayar_custo, customer_nama, giro_ref, giro_ket, giro_status,giro_bank, g_tolak_tanggal " _
                     & "FROM data_giro LEFT JOIN data_giro_cair ON giro_no=g_cair_nobg AND g_cair_status=1 " _
                     & "left join data_piutang_bayar ON giro_ref=p_bayar_bukti AND p_bayar_status<>9 " _
+                    & "LEFT JOIN data_perkiraan ON g_cair_tujuan=perk_kode " _
                     & "LEFT JOIN data_customer_master ON p_bayar_custo=customer_kode " _
+                    & "LEFT JOIN data_giro_tolak ON g_tolak_nobg=giro_no AND g_tolak_status=1 " _
                     & "WHERE giro_type='IN' AND giro_no='{0}'"
                 q = String.Format(q, kode)
 
@@ -58,13 +70,22 @@
                     in_nobg.Text = rd.Item("giro_no")
                     'bank
                     in_nilaibg.Text = commaThousand(rd.Item("giro_nilai"))
+                    in_tgl_penarikan.Text = CDate(rd.Item("giro_tglbg"))
                     in_tgl_bg.Text = CDate(rd.Item("giro_tglcair"))
                     in_bank_n.Text = rd.Item("giro_bank")
-                    If IsDBNull(rd.Item("g_cair_tglcair")) = False Then
+                    _statusgiro = rd.Item("giro_status")
+                    bankpencairan = rd.Item("p_bayar_akun")
+                    If _statusgiro = 3 Then
+                        in_statusgiro.Text = "DITOLAK"
+                        _tglcairtolak = CDate(rd.Item("g_tolak_tanggal"))
+                        in_tglcair.Text = _tglcairtolak.ToShortDateString
+                    ElseIf _statusgiro = 2 And IsDBNull(rd.Item("g_cair_tglcair")) = False Then
                         statuscair = True
-                        _statusgiro = rd.Item("giro_status")
                         in_statusgiro.Text = "DICAIRKAN"
-                        _tglcairtolak = rd.Item("g_cair_tanggalcair")
+                        _tglcairtolak = CDate(rd.Item("g_cair_tglcair"))
+                        in_akuncair.Text = rd.Item("g_cair_tujuan")
+                        in_akuncair_n.Text = rd.Item("perk_nama_akun")
+                        consoleWriteLine(_tglcairtolak)
                         in_tglcair.Text = _tglcairtolak.ToShortDateString
                     End If
                     in_ref.Text = rd.Item("p_bayar_custo")
@@ -162,6 +183,9 @@
                     .Value = CDate(IIf(in_tglcair.Text = Nothing, in_tgl_bg.Text, in_tglcair.Text))
                     .MinDate = CDate(in_tgl_bg.Text)
                 End With
+                If bankpencairan <> Nothing Then
+                    .cb_akun.SelectedValue = bankpencairan
+                End If
                 .ShowDialog(Me)
                 If .returnval = True Then
                     in_statusgiro.Text = "DICAIRKAN"
@@ -266,7 +290,7 @@
 
         Dim tgltolak As String = CDate(in_tglcair.Text).ToString("yyyy-MM-dd")
 
-        q = "UPDATE INTO data_giro_tolak SET g_tolak_status=9 WHERE g_tolak_nobg='{0}'"
+        q = "UPDATE data_giro_tolak SET g_tolak_status=9 WHERE g_tolak_nobg='{0}'"
         queryArr.Add(String.Format(q, giro))
 
         q = "INSERT INTO data_giro_tolak SET g_tolak_nobg='{0}',{1}"
@@ -284,7 +308,7 @@
         '------------> UPDATE PEMBAYARAN HUTANG/PIUTANG
         Select Case UCase(tipegiro)
             Case "OUT"
-                q = "UPDATE data_hutang_bayar SET p_bayar_status=2 WHERE h_bayar_bukti='{0}'"
+                q = "UPDATE data_hutang_bayar SET h_bayar_status=2 WHERE h_bayar_bukti='{0}'"
             Case "IN"
                 q = "UPDATE data_piutang_bayar SET p_bayar_status=2 WHERE p_bayar_bukti='{0}'"
         End Select

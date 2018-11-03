@@ -134,6 +134,7 @@ Partial Class main
         '
         'Panel1
         '
+        Me.Panel1.AutoScroll = True
         Me.Panel1.Controls.Add(Me.Label1)
         Me.Panel1.Controls.Add(Me.lb_periodeselector)
         Me.Panel1.Controls.Add(Me.bt_setperiode)

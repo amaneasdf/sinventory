@@ -116,6 +116,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="fr_infopanel.Designer.vb">
+      <DependentUpon>fr_infopanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="fr_infopanel.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="fr_list.Designer.vb">
       <DependentUpon>fr_list.vb</DependentUpon>
     </Compile>
@@ -148,6 +154,11 @@
     <Compile Include="laporan\ds_hutangpiutang.vb">
       <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
     </Compile>
+    <Compile Include="laporan\ds_keuangan.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ds_keuangan.xsd</DependentUpon>
+    </Compile>
     <Compile Include="laporan\ds_master.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -167,6 +178,12 @@
       <DependentUpon>fr_lap_filter_jual.vb</DependentUpon>
     </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_jual.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_keuangan.Designer.vb">
+      <DependentUpon>fr_lap_filter_keuangan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\filter\fr_lap_filter_keuangan.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_stok.Designer.vb">
@@ -191,6 +208,12 @@
       <DependentUpon>fr_lap_filter_hutang.vb</DependentUpon>
     </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_hutang.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\view\fr_lap_keuangan.Designer.vb">
+      <DependentUpon>fr_lap_keuangan.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\view\fr_lap_keuangan.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="laporan\view\fr_lap_hutang.Designer.vb">
@@ -491,6 +514,12 @@
     <Compile Include="mn_transaksi\fr_draft_tagihan.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="mn_transaksi\fr_jualconfirm_dialog.Designer.vb">
+      <DependentUpon>fr_jualconfirm_dialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_jualconfirm_dialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_transaksi\giro\fr_giro.Designer.vb">
       <DependentUpon>fr_giro.vb</DependentUpon>
     </Compile>
@@ -551,6 +580,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="fr_infopanel.resx">
+      <DependentUpon>fr_infopanel.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="fr_list.resx">
       <DependentUpon>fr_list.vb</DependentUpon>
     </EmbeddedResource>
@@ -566,6 +598,9 @@
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_jual.resx">
       <DependentUpon>fr_lap_filter_jual.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="laporan\filter\fr_lap_filter_keuangan.resx">
+      <DependentUpon>fr_lap_filter_keuangan.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_stok.resx">
       <DependentUpon>fr_lap_filter_stok.vb</DependentUpon>
     </EmbeddedResource>
@@ -580,7 +615,14 @@
     </EmbeddedResource>
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnotabrg.rdlc" />
+    <EmbeddedResource Include="laporan\lap\keuangan\uang_bukubesar.rdlc" />
+    <EmbeddedResource Include="laporan\lap\keuangan\uang_biayasales_global.rdlc" />
+    <EmbeddedResource Include="laporan\lap\keuangan\uang_biayasales.rdlc" />
+    <EmbeddedResource Include="laporan\lap\keuangan\uang_jurnalumum.rdlc" />
     <EmbeddedResource Include="laporan\lap\piutang\piutang_detailbayar.rdlc" />
+    <EmbeddedResource Include="laporan\view\fr_lap_keuangan.resx">
+      <DependentUpon>fr_lap_keuangan.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\view\fr_lap_hutang.resx">
       <DependentUpon>fr_lap_hutang.vb</DependentUpon>
     </EmbeddedResource>
@@ -765,6 +807,9 @@
     <EmbeddedResource Include="mn_transaksi\fr_draft_tagihan.resx">
       <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_jualconfirm_dialog.resx">
+      <DependentUpon>fr_jualconfirm_dialog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\giro\fr_giro.resx">
       <DependentUpon>fr_giro.vb</DependentUpon>
     </EmbeddedResource>
@@ -802,6 +847,17 @@
     </None>
     <None Include="laporan\ds_hutangpiutang.xss">
       <DependentUpon>ds_hutangpiutang.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_keuangan.xsc">
+      <DependentUpon>ds_keuangan.xsd</DependentUpon>
+    </None>
+    <None Include="laporan\ds_keuangan.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>ds_keuangan.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="laporan\ds_keuangan.xss">
+      <DependentUpon>ds_keuangan.xsd</DependentUpon>
     </None>
     <None Include="laporan\ds_master.xsc">
       <DependentUpon>ds_master.xsd</DependentUpon>

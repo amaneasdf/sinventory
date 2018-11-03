@@ -149,13 +149,17 @@
                     bd.Show(main)
                     bd.do_load()
                 Case "pgreturbeli"
-                    fr_beli_retur_detail.Show(main)
+                    Dim rb As New fr_beli_retur_detail
+                    rb.Show(main)
                 Case "pgpenjualan"
-                    fr_jual_detail.Show(main)
+                    Dim jd As New fr_jual_detail
+                    jd.Show(main)
                 Case "pgreturjual"
-                    fr_jual_retur_detail.Show(main)
+                    Dim x As New fr_jual_retur_detail
+                    x.Show(main)
                 Case "pgstok"
-                    fr_stok_awal.ShowDialog(main)
+                    Dim x As fr_stok_awal
+                    x.ShowDialog(main)
                     'Case "pgmutasigudang"
                     '    fr_stok_mutasi.ShowDialog(main)
                     'Case "pgmutasistok"
@@ -628,29 +632,36 @@
                 Dim chkdt2 As Boolean = False
                 Dim kodefaktur As String = .Item(0).Cells(1).Value
                 Dim custo_n As String = .Item(0).Cells(5).Value
+                Dim queryArr As New List(Of String)
+                Dim querychk As Boolean = False
 
                 op_con()
-                chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "'", "p_trans_kode_piutang")
-                chkdt2 = checkdata("data_piutang_retur", "'" & kodefaktur & "'", "p_retur_faktur")
+                chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
+                chkdt2 = checkdata("data_piutang_retur", "'" & kodefaktur & "' AND p_retur_status<>9", "p_retur_faktur")
 
                 Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
                 If .Count > 0 And (chkdt = False And chkdt2 = False) Then
                     Dim msg As String = "Batalkan penjualan {0} untuk customer {1}?"
-                    If MessageBox.Show(String.Format(q, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                    If MessageBox.Show(String.Format(msg, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                         op_con()
-                        If commnd(String.Format(q, kodefaktur)) = True Then
-                            q = "UPDATE data_jurnal_line SET line_status='9',line_reg_date=NOW(),line_reg_alias='{1}' " _
-                                & "WHERE line_kode='{0}'"
-                            .Item(0).Cells(2).Value = "Batal"
-                            commnd(String.Format(q, kodefaktur, loggeduser.user_id))
+                        queryArr.Add(String.Format(q, kodefaktur))
+
+                        q = "UPDATE data_piutang_awal SET piutang_status=9, piutang_upd_date=NOW(),piutang_upd_alias='{1}' WHERE piutang_faktur='{0}'"
+                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
+
+                        q = "UPDATE data_jurnal_line SET line_status='9',line_reg_date=NOW(),line_reg_alias='{1}' WHERE line_kode='{0}'"
+                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
+
+                        querychk = startTrans(queryArr)
+                        If querychk = True Then
+                            .Item(0).Cells(2).Value = "BATAL"
                         Else
                             MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)
                         End If
                     End If
                 ElseIf .Count > 0 And (chkdt = True And chkdt2 = True) Then
                     Dim msg As String = "Penjualan {0} untuk customer {1} sudah pernah dilakukan transaksi pembayaran/retur penjualan"
-                    MessageBox.Show(String.Format(q, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.OK)
-
+                    MessageBox.Show(String.Format(msg, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.OK)
                 End If
 
             End With

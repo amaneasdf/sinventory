@@ -188,7 +188,7 @@
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
                 readcommd("SELECT SUBSTRING(barang_kode," & in_supplier.Text.Length & ") as ss FROM data_barang_master WHERE barang_kode LIKE '" & in_supplier.Text & "%' " _
-                          & "ORDER BY ss DESC LIMIT 1")
+                          & "AND SUBSTRING(barang_kode," & in_supplier.Text.Length & ") REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
@@ -288,11 +288,25 @@
     End Sub
 
     'NUMERIC
-    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_isi_tengah.Enter, in_isi_besar.Enter, in_harga_rita.Enter, in_harga_mt.Enter, in_harga_jual.Enter, in_harga_horeka.Enter, in_harga_beli.Enter
+    Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_isi_tengah.Enter, in_isi_besar.Enter
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_isi_tengah.Leave, in_isi_besar.Leave, in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave, in_harga_horeka.Leave, in_harga_beli.Leave
+    Private Sub in_stok_berat_Leave(sender As Object, e As EventArgs) Handles in_isi_tengah.Leave, in_isi_besar.Leave
+        numericLostFocus(sender, "N0")
+    End Sub
+
+    Private Sub in_harga_Enter(sender As Object, e As EventArgs) Handles in_harga_rita.Enter, in_harga_mt.Enter, in_harga_mt.Enter, in_harga_jual.Enter,
+        in_harga_horeka.Enter, in_harga_beli.Enter, in_jual_d5.Enter, in_jual_d4.Enter, in_jual_d3.Enter, in_jual_d2.Enter, in_jual_d1.Enter,
+        in_harga_disc.Enter, in_beli_klaim.Enter, in_beli_d3.Enter, in_beli_d2.Enter, in_beli_d1.Enter
+
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_harga_Leave(sender As Object, e As EventArgs) Handles in_harga_rita.Leave, in_harga_mt.Leave, in_harga_jual.Leave,
+        in_harga_horeka.Leave, in_harga_beli.Leave, in_jual_d5.Leave, in_jual_d4.Leave, in_jual_d3.Leave, in_jual_d2.Leave, in_jual_d1.Leave,
+        in_harga_disc.Leave, in_beli_klaim.Leave, in_beli_d3.Leave, in_beli_d2.Leave, in_beli_d1.Leave
+
         numericLostFocus(sender)
     End Sub
 
@@ -475,11 +489,11 @@
         keyshortenter(cb_sat_kecil, e)
     End Sub
 
-    Private Sub cb_sat_kecil_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_sat_kecil.KeyDown
+    Private Sub cb_sat_kecil_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_sat_kecil.KeyUp
         keyshortenter(cb_sat_tengah, e)
     End Sub
 
-    Private Sub cb_sat_tengah_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_sat_tengah.KeyDown
+    Private Sub cb_sat_tengah_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_sat_tengah.KeyUp
         keyshortenter(in_isi_tengah, e)
     End Sub
 
@@ -495,12 +509,12 @@
         keyshortenter(in_harga_beli, e)
     End Sub
 
-    Private Sub cb_sat_kecil_Leave(sender As Object, e As EventArgs) Handles cb_sat_kecil.Leave
-        lbl_satuan1.Text = cb_sat_kecil.Text
+    Private Sub cb_sat_kecil_Leave(sender As Object, e As EventArgs) Handles cb_sat_kecil.SelectionChangeCommitted
+        lbl_satuan1.Text = cb_sat_kecil.SelectedValue
     End Sub
 
-    Private Sub cb_sat_tengah_Leave(sender As Object, e As EventArgs) Handles cb_sat_tengah.Leave
-        lbl_satuan2.Text = cb_sat_tengah.Text
+    Private Sub cb_sat_tengah_Leave(sender As Object, e As EventArgs) Handles cb_sat_tengah.SelectionChangeCommitted
+        lbl_satuan2.Text = cb_sat_tengah.SelectedValue
     End Sub
 
     Private Sub in_harga_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown

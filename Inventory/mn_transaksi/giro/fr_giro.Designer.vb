@@ -65,6 +65,8 @@ Partial Class fr_giro
         Me.in_akuncair_n = New System.Windows.Forms.TextBox()
         Me.lbl_akun = New System.Windows.Forms.Label()
         Me.in_akuncair = New System.Windows.Forms.TextBox()
+        Me.in_tgl_penarikan = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -73,7 +75,7 @@ Partial Class fr_giro
         '
         Me.Panel3.BackColor = System.Drawing.Color.Orange
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel3.Location = New System.Drawing.Point(0, 433)
+        Me.Panel3.Location = New System.Drawing.Point(0, 461)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(637, 10)
         Me.Panel3.TabIndex = 413
@@ -82,7 +84,7 @@ Partial Class fr_giro
         '
         Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(534, 395)
+        Me.bt_batalbeli.Location = New System.Drawing.Point(534, 423)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbeli.TabIndex = 412
@@ -92,7 +94,7 @@ Partial Class fr_giro
         'bt_simpanbeli
         '
         Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(402, 395)
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(402, 423)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(126, 30)
         Me.bt_simpanbeli.TabIndex = 411
@@ -239,17 +241,17 @@ Partial Class fr_giro
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(9, 139)
+        Me.Label1.Location = New System.Drawing.Point(9, 161)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(43, 13)
+        Me.Label1.Size = New System.Drawing.Size(58, 13)
         Me.Label1.TabIndex = 415
-        Me.Label1.Text = "Tgl. BG"
+        Me.Label1.Text = "Tgl. Efektif"
         '
         'Label4
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(9, 240)
+        Me.Label4.Location = New System.Drawing.Point(9, 268)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(41, 13)
         Me.Label4.TabIndex = 421
@@ -260,7 +262,7 @@ Partial Class fr_giro
         Me.in_ref.BackColor = System.Drawing.Color.White
         Me.in_ref.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ref.ForeColor = System.Drawing.Color.Black
-        Me.in_ref.Location = New System.Drawing.Point(91, 236)
+        Me.in_ref.Location = New System.Drawing.Point(91, 264)
         Me.in_ref.MaxLength = 30
         Me.in_ref.Name = "in_ref"
         Me.in_ref.ReadOnly = True
@@ -272,7 +274,7 @@ Partial Class fr_giro
         Me.in_tgl_bg.BackColor = System.Drawing.Color.White
         Me.in_tgl_bg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_tgl_bg.ForeColor = System.Drawing.Color.Black
-        Me.in_tgl_bg.Location = New System.Drawing.Point(91, 135)
+        Me.in_tgl_bg.Location = New System.Drawing.Point(91, 157)
         Me.in_tgl_bg.MaxLength = 30
         Me.in_tgl_bg.Name = "in_tgl_bg"
         Me.in_tgl_bg.ReadOnly = True
@@ -284,7 +286,7 @@ Partial Class fr_giro
         Me.in_ref_n.BackColor = System.Drawing.Color.White
         Me.in_ref_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ref_n.ForeColor = System.Drawing.Color.Black
-        Me.in_ref_n.Location = New System.Drawing.Point(91, 258)
+        Me.in_ref_n.Location = New System.Drawing.Point(91, 286)
         Me.in_ref_n.MaxLength = 30
         Me.in_ref_n.Name = "in_ref_n"
         Me.in_ref_n.ReadOnly = True
@@ -296,7 +298,7 @@ Partial Class fr_giro
         Me.in_faktur.BackColor = System.Drawing.Color.White
         Me.in_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faktur.ForeColor = System.Drawing.Color.Black
-        Me.in_faktur.Location = New System.Drawing.Point(91, 280)
+        Me.in_faktur.Location = New System.Drawing.Point(91, 308)
         Me.in_faktur.MaxLength = 30
         Me.in_faktur.Name = "in_faktur"
         Me.in_faktur.ReadOnly = True
@@ -307,7 +309,7 @@ Partial Class fr_giro
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(9, 284)
+        Me.Label7.Location = New System.Drawing.Point(9, 312)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(59, 13)
         Me.Label7.TabIndex = 421
@@ -318,7 +320,7 @@ Partial Class fr_giro
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(205, 403)
+        Me.Label30.Location = New System.Drawing.Point(205, 431)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(30, 13)
         Me.Label30.TabIndex = 436
@@ -327,7 +329,7 @@ Partial Class fr_giro
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(50, 400)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(50, 428)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
@@ -337,7 +339,7 @@ Partial Class fr_giro
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(236, 400)
+        Me.txtUpdDate.Location = New System.Drawing.Point(236, 428)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
@@ -347,7 +349,7 @@ Partial Class fr_giro
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(50, 378)
+        Me.txtRegAlias.Location = New System.Drawing.Point(50, 406)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
@@ -359,7 +361,7 @@ Partial Class fr_giro
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(9, 403)
+        Me.Label28.Location = New System.Drawing.Point(9, 431)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 437
@@ -368,7 +370,7 @@ Partial Class fr_giro
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(236, 378)
+        Me.txtRegdate.Location = New System.Drawing.Point(236, 406)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
@@ -380,7 +382,7 @@ Partial Class fr_giro
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(9, 381)
+        Me.Label27.Location = New System.Drawing.Point(9, 409)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 434
@@ -391,7 +393,7 @@ Partial Class fr_giro
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(205, 381)
+        Me.Label29.Location = New System.Drawing.Point(205, 409)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(30, 13)
         Me.Label29.TabIndex = 433
@@ -402,7 +404,7 @@ Partial Class fr_giro
         Me.in_ket.BackColor = System.Drawing.Color.White
         Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket.ForeColor = System.Drawing.Color.Black
-        Me.in_ket.Location = New System.Drawing.Point(91, 305)
+        Me.in_ket.Location = New System.Drawing.Point(91, 333)
         Me.in_ket.MaxLength = 30
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
@@ -413,7 +415,7 @@ Partial Class fr_giro
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(9, 309)
+        Me.Label9.Location = New System.Drawing.Point(9, 337)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(62, 13)
         Me.Label9.TabIndex = 442
@@ -453,7 +455,7 @@ Partial Class fr_giro
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(9, 167)
+        Me.Label10.Location = New System.Drawing.Point(9, 195)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(59, 13)
         Me.Label10.TabIndex = 424
@@ -464,7 +466,7 @@ Partial Class fr_giro
         Me.in_statusgiro.BackColor = System.Drawing.Color.White
         Me.in_statusgiro.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_statusgiro.ForeColor = System.Drawing.Color.Black
-        Me.in_statusgiro.Location = New System.Drawing.Point(91, 164)
+        Me.in_statusgiro.Location = New System.Drawing.Point(91, 192)
         Me.in_statusgiro.MaxLength = 30
         Me.in_statusgiro.Name = "in_statusgiro"
         Me.in_statusgiro.ReadOnly = True
@@ -476,7 +478,7 @@ Partial Class fr_giro
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(9, 189)
+        Me.Label11.Location = New System.Drawing.Point(9, 217)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(46, 13)
         Me.Label11.TabIndex = 424
@@ -487,7 +489,7 @@ Partial Class fr_giro
         Me.in_tglcair.BackColor = System.Drawing.Color.White
         Me.in_tglcair.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_tglcair.ForeColor = System.Drawing.Color.Black
-        Me.in_tglcair.Location = New System.Drawing.Point(91, 186)
+        Me.in_tglcair.Location = New System.Drawing.Point(91, 214)
         Me.in_tglcair.MaxLength = 30
         Me.in_tglcair.Name = "in_tglcair"
         Me.in_tglcair.ReadOnly = True
@@ -500,7 +502,7 @@ Partial Class fr_giro
         Me.in_akuncair_n.BackColor = System.Drawing.Color.White
         Me.in_akuncair_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akuncair_n.ForeColor = System.Drawing.Color.Black
-        Me.in_akuncair_n.Location = New System.Drawing.Point(181, 208)
+        Me.in_akuncair_n.Location = New System.Drawing.Point(181, 236)
         Me.in_akuncair_n.MaxLength = 30
         Me.in_akuncair_n.Name = "in_akuncair_n"
         Me.in_akuncair_n.ReadOnly = True
@@ -512,7 +514,7 @@ Partial Class fr_giro
         '
         Me.lbl_akun.AutoSize = True
         Me.lbl_akun.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_akun.Location = New System.Drawing.Point(9, 211)
+        Me.lbl_akun.Location = New System.Drawing.Point(9, 239)
         Me.lbl_akun.Name = "lbl_akun"
         Me.lbl_akun.Size = New System.Drawing.Size(68, 13)
         Me.lbl_akun.TabIndex = 446
@@ -523,19 +525,44 @@ Partial Class fr_giro
         Me.in_akuncair.BackColor = System.Drawing.Color.White
         Me.in_akuncair.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akuncair.ForeColor = System.Drawing.Color.Black
-        Me.in_akuncair.Location = New System.Drawing.Point(91, 208)
+        Me.in_akuncair.Location = New System.Drawing.Point(91, 236)
         Me.in_akuncair.MaxLength = 30
         Me.in_akuncair.Name = "in_akuncair"
         Me.in_akuncair.ReadOnly = True
         Me.in_akuncair.Size = New System.Drawing.Size(88, 20)
         Me.in_akuncair.TabIndex = 448
         '
+        'in_tgl_penarikan
+        '
+        Me.in_tgl_penarikan.BackColor = System.Drawing.Color.White
+        Me.in_tgl_penarikan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_tgl_penarikan.ForeColor = System.Drawing.Color.Black
+        Me.in_tgl_penarikan.Location = New System.Drawing.Point(91, 135)
+        Me.in_tgl_penarikan.MaxLength = 30
+        Me.in_tgl_penarikan.Name = "in_tgl_penarikan"
+        Me.in_tgl_penarikan.ReadOnly = True
+        Me.in_tgl_penarikan.Size = New System.Drawing.Size(188, 20)
+        Me.in_tgl_penarikan.TabIndex = 449
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label5.Location = New System.Drawing.Point(9, 139)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(43, 13)
+        Me.Label5.TabIndex = 450
+        Me.Label5.Text = "Tgl. BG"
+        '
         'fr_giro
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(637, 443)
+        Me.CancelButton = Me.bt_batalbeli
+        Me.ClientSize = New System.Drawing.Size(637, 471)
+        Me.Controls.Add(Me.in_tgl_penarikan)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.in_akuncair)
         Me.Controls.Add(Me.in_akuncair_n)
         Me.Controls.Add(Me.lbl_akun)
@@ -574,6 +601,7 @@ Partial Class fr_giro
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "fr_giro"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Detail Giro"
@@ -627,4 +655,6 @@ Partial Class fr_giro
     Friend WithEvents in_akuncair_n As System.Windows.Forms.TextBox
     Friend WithEvents lbl_akun As System.Windows.Forms.Label
     Friend WithEvents in_akuncair As System.Windows.Forms.TextBox
+    Friend WithEvents in_tgl_penarikan As System.Windows.Forms.TextBox
+    Friend WithEvents Label5 As System.Windows.Forms.Label
 End Class

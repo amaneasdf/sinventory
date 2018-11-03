@@ -83,7 +83,7 @@
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
-                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), 0, " _
+                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), faktur_jumlah-faktur_netto, " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
@@ -170,8 +170,9 @@
                     & "SELECT supplier_kode,supplier_nama, trans_barang, barang_nama, " _
                     & "	SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), " _
                     & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
-                    & "	SUM(trans_qty*trans_harga_retur) as dlap_harga_beli, 0 as dlap_total_diskon, " _
-                    & "	SUM(trans_qty*trans_harga_retur) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & "	IFNULL(SUM(@subtot:=trans_qty*trans_harga_retur),0) as dlap_harga_beli, " _
+                    & " SUM(@disc:=@subtot*(trans_diskon/100)) as dlap_total_diskon, " _
+                    & "	SUM(@subtot-@disc) as dlap_jumlah, 'RETUR' as dlap_jenis " _
                     & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
@@ -197,8 +198,9 @@
                     & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y'),'', trans_barang, barang_nama, " _
                     & "	SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), " _
                     & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
-                    & "	SUM(trans_qty*trans_harga_retur) as dlap_harga_beli, 0 as dlap_total_diskon, " _
-                    & "	SUM(trans_qty*trans_harga_retur) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & "	IFNULL(SUM(@subtot:=trans_qty*trans_harga_retur),0) as dlap_harga_beli, " _
+                    & " SUM(@disc:=@subtot*(trans_diskon/100)) as dlap_total_diskon, " _
+                    & "	SUM(@subtot-@disc) as dlap_jumlah, 'RETUR' as dlap_jenis " _
                     & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _

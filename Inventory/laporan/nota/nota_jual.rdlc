@@ -9,34 +9,34 @@
               <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.225cm</Width>
+              <Width>5cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.5cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1.75cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1.5cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.25cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.5cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.75cm</Width>
@@ -970,7 +970,7 @@
         <DataSetName>ds_nota_jual</DataSetName>
         <Left>0.00034cm</Left>
         <Height>1.1cm</Height>
-        <Width>22.225cm</Width>
+        <Width>22.25cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -978,7 +978,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>0.47244in</Height>
+    <Height>0.97244in</Height>
     <Style>
       <Border>
         <Style>None</Style>
@@ -991,7 +991,7 @@
       </BottomBorder>
     </Style>
   </Body>
-  <Width>8.75013in</Width>
+  <Width>8.75998in</Width>
   <Page>
     <PageHeader>
       <Height>0.86019in</Height>
@@ -1439,7 +1439,6 @@
                   <Value>=Parameters!parNetto.Value</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
@@ -1479,7 +1478,6 @@
                   <Value>NETTO :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
@@ -1970,7 +1968,6 @@
                   <Value>=Parameters!parDiskon.Value</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
                     <NumeralLanguage>id-ID</NumeralLanguage>
@@ -2009,7 +2006,6 @@
                   <Value>DISCOUNT :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2045,7 +2041,6 @@
                   <Value>JUMLAH :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2081,7 +2076,6 @@
                   <Value>=Sum(Fields!jual_jml.Value, "ds_nota_jual") + Sum(Fields!jual_disctot.Value, "ds_nota_jual")</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
                     <NumeralLanguage>id-ID</NumeralLanguage>

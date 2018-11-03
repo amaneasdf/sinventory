@@ -748,7 +748,7 @@ Partial Class fr_hutang_bayar
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label14.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label14.Location = New System.Drawing.Point(9, 336)
+        Me.Label14.Location = New System.Drawing.Point(9, 340)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(44, 13)
         Me.Label14.TabIndex = 376
@@ -759,11 +759,11 @@ Partial Class fr_hutang_bayar
         Me.in_tglpencairan.BackColor = System.Drawing.Color.White
         Me.in_tglpencairan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_tglpencairan.ForeColor = System.Drawing.Color.Black
-        Me.in_tglpencairan.Location = New System.Drawing.Point(272, 332)
+        Me.in_tglpencairan.Location = New System.Drawing.Point(288, 336)
         Me.in_tglpencairan.MaxLength = 30
         Me.in_tglpencairan.Name = "in_tglpencairan"
         Me.in_tglpencairan.ReadOnly = True
-        Me.in_tglpencairan.Size = New System.Drawing.Size(165, 20)
+        Me.in_tglpencairan.Size = New System.Drawing.Size(149, 20)
         Me.in_tglpencairan.TabIndex = 15
         '
         'Label15
@@ -771,11 +771,11 @@ Partial Class fr_hutang_bayar
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label15.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label15.Location = New System.Drawing.Point(223, 336)
+        Me.Label15.Location = New System.Drawing.Point(223, 340)
         Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(51, 13)
+        Me.Label15.Size = New System.Drawing.Size(64, 13)
         Me.Label15.TabIndex = 378
-        Me.Label15.Text = "Tgl.Cair"
+        Me.Label15.Text = "Pencairan"
         '
         'in_no_bg
         '
@@ -783,7 +783,7 @@ Partial Class fr_hutang_bayar
         Me.in_no_bg.Enabled = False
         Me.in_no_bg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_no_bg.ForeColor = System.Drawing.Color.Black
-        Me.in_no_bg.Location = New System.Drawing.Point(55, 333)
+        Me.in_no_bg.Location = New System.Drawing.Point(55, 337)
         Me.in_no_bg.MaxLength = 30
         Me.in_no_bg.Name = "in_no_bg"
         Me.in_no_bg.Size = New System.Drawing.Size(165, 20)

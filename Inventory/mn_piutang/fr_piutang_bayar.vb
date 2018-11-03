@@ -13,6 +13,7 @@
     Private Sub loadData(kode As String)
         Dim nobg As String = ""
         Dim tglbgcair As String = ""
+        Dim akun As String = ""
         Dim q As String = "SELECT p_bayar_sales, salesman_nama, p_bayar_custo, customer_nama, p_bayar_jenisbayar, p_bayar_akun, p_bayar_tanggal_bayar, " _
                           & "p_bayar_tanggal_jt, IFNULL(giro_no,'') as giro_no, IFNULL(giro_bank,'') as giro_bank, IFNULL(g_cair_tglcair,'') as g_cair_tglcair, " _
                           & "IFNULL(giro_status,'') as giro_status, p_bayar_ket, p_bayar_potongan_nilai, p_bayar_reg_date,p_bayar_reg_alias,p_bayar_upd_date, " _
@@ -32,6 +33,7 @@
             in_custo_n.Text = rd.Item("customer_nama")
             in_saldotitipan.Text = commaThousand(rd.Item("titipan"))
             cb_bayar.SelectedValue = rd.Item("p_bayar_jenisbayar")
+            akun = rd.Item("p_bayar_akun")
             '-------akun
             date_tgl_trans.Value = rd.Item("p_bayar_tanggal_bayar")
             date_bg_tgl.Value = rd.Item("p_bayar_tanggal_jt")
@@ -50,6 +52,9 @@
             End Try
         End If
         rd.Close()
+
+        loadCBAkun(cb_bayar.SelectedValue)
+        cb_akun.SelectedValue = akun
 
         selectedcusto = in_custo.Text
         in_custo.ReadOnly = True
@@ -110,19 +115,21 @@
 
     'ADD INPUT FROM TEXTBOX TO DGV
     Private Sub textToDGV()
-        If in_custo.Text = "" Then
-            in_custo_n.Focus()
-            Exit Sub
-        End If
         If in_faktur.Text = "" Then
             in_faktur.Focus()
             Exit Sub
         End If
-        If cb_bayar.SelectedValue = Nothing Then
-            cb_bayar.Focus()
+        If in_kredit.Value = 0 Then
+            in_kredit.Focus()
             Exit Sub
         End If
-        If in_kredit.Value = 0 Then
+        If in_faktur.Text <> "" And in_sisafaktur.Text = Nothing Then
+            MessageBox.Show("Faktur tidak sesuai")
+            in_faktur.Focus()
+            Exit Sub
+        End If
+        If in_kredit.Value > removeCommaThousand(in_sisafaktur.Text) Then
+            MessageBox.Show("Saldo Pembayaran lebih besar dari sisa")
             in_kredit.Focus()
             Exit Sub
         End If
@@ -171,6 +178,26 @@
 
         Return res
     End Function
+
+    Private Sub loadCBAkun(kode As String)
+        Dim q As String = "SELECT perk_kode as 'Value',perk_nama_akun as 'Text' FROM data_perkiraan WHERE perk_status=1 AND perk_parent='{0}'"
+        Dim kodeparent As String = "1101"
+        With cb_akun
+            .DataSource = Nothing
+            Select Case kode
+                Case "TUNAI"
+                    kodeparent = "1101"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case "BG", "TRANSFER"
+                    kodeparent = "1102"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case Else
+                    Exit Sub
+            End Select
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+    End Sub
 
     'SAVE THE DATA
     Private Sub saveData()
@@ -334,7 +361,8 @@
                 q = "SELECT piutang_faktur as 'Kode Faktur', getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as 'Sisa Piutang', " _
                     & "ADDDATE(faktur_tanggal_trans, faktur_term) as 'Jatuh Tempo' " _
                     & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                    & "WHERE getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0 AND faktur_customer='{1}' AND piutang_faktur LIKE '{0}%'"
+                    & "WHERE getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0 AND faktur_customer='{1}' " _
+                    & "AND faktur_sales='" & in_sales.Text & "' AND piutang_faktur LIKE '{0}%'"
                 consoleWriteLine(String.Format(q, param, param2))
                 dt = getDataTablefromDB(String.Format(q, param, param2))
             Case Else
@@ -449,14 +477,12 @@
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
-        With cb_akun
-
-        End With
+        loadCBAkun(cb_bayar.SelectedValue)
 
         With date_tgl_trans
             .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
             .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
+            '.MinDate = selectperiode.tglawal
         End With
 
         For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisapiutang, bayar_totalpiutang}
@@ -483,6 +509,11 @@
         If dgv_bayar.RowCount = 0 Then
             MessageBox.Show("Pembayaran belum di input")
             in_custo_n.Focus()
+            Exit Sub
+        End If
+        If cb_bayar.SelectedValue = "BG" And Trim(in_bg_no.Text) = Nothing Then
+            MessageBox.Show("Nomor Giro belum di input")
+            in_bg_no.Focus()
             Exit Sub
         End If
 
@@ -683,6 +714,8 @@
             in_bank.Enabled = False
             in_bg_no.Enabled = False
         End If
+
+        loadCBAkun(cb_bayar.SelectedValue)
     End Sub
 
     Private Sub date_tgl_trans_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_trans.KeyDown

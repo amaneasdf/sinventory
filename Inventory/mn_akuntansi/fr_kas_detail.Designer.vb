@@ -34,14 +34,12 @@ Partial Class fr_kas_detail
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.Label30 = New System.Windows.Forms.Label()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
         Me.txtUpdDate = New System.Windows.Forms.TextBox()
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.txtRegdate = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.bt_batalperkiraan = New System.Windows.Forms.Button()
         Me.bt_simpanperkiraan = New System.Windows.Forms.Button()
         Me.dgv_kas = New System.Windows.Forms.DataGridView()
@@ -79,8 +77,10 @@ Partial Class fr_kas_detail
         Me.Label9 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.in_status = New System.Windows.Forms.TextBox()
+        Me.Label11 = New System.Windows.Forms.Label()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -142,6 +142,7 @@ Partial Class fr_kas_detail
         Me.mn_print.Size = New System.Drawing.Size(60, 20)
         Me.mn_print.Text = "&Print"
         Me.mn_print.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_print.Visible = False
         '
         'mn_proses
         '
@@ -150,6 +151,7 @@ Partial Class fr_kas_detail
         Me.mn_proses.Size = New System.Drawing.Size(69, 20)
         Me.mn_proses.Text = "P&roses"
         Me.mn_proses.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_proses.Visible = False
         '
         'Panel1
         '
@@ -204,25 +206,14 @@ Partial Class fr_kas_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(267, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(268, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Form Kas Masuk/Keluar"
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(164, 412)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(30, 13)
-        Me.Label30.TabIndex = 361
-        Me.Label30.Text = "Date"
         '
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(10, 428)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(50, 442)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
@@ -232,7 +223,7 @@ Partial Class fr_kas_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(166, 428)
+        Me.txtUpdDate.Location = New System.Drawing.Point(202, 442)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
@@ -242,7 +233,7 @@ Partial Class fr_kas_detail
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(11, 387)
+        Me.txtRegAlias.Location = New System.Drawing.Point(50, 416)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
@@ -254,7 +245,7 @@ Partial Class fr_kas_detail
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(7, 412)
+        Me.Label28.Location = New System.Drawing.Point(7, 446)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 362
@@ -263,7 +254,7 @@ Partial Class fr_kas_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(167, 387)
+        Me.txtRegdate.Location = New System.Drawing.Point(202, 416)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
@@ -275,22 +266,11 @@ Partial Class fr_kas_detail
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(8, 371)
+        Me.Label27.Location = New System.Drawing.Point(9, 419)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 359
         Me.Label27.Text = "RegBy"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(164, 371)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(30, 13)
-        Me.Label29.TabIndex = 358
-        Me.Label29.Text = "Date"
         '
         'bt_batalperkiraan
         '
@@ -308,9 +288,9 @@ Partial Class fr_kas_detail
         '
         Me.bt_simpanperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpanperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanperkiraan.Location = New System.Drawing.Point(568, 436)
+        Me.bt_simpanperkiraan.Location = New System.Drawing.Point(520, 436)
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
-        Me.bt_simpanperkiraan.Size = New System.Drawing.Size(96, 30)
+        Me.bt_simpanperkiraan.Size = New System.Drawing.Size(148, 30)
         Me.bt_simpanperkiraan.TabIndex = 19
         Me.bt_simpanperkiraan.Text = "Simpan"
         Me.bt_simpanperkiraan.UseVisualStyleBackColor = True
@@ -629,7 +609,6 @@ Partial Class fr_kas_detail
         Me.in_ket.Location = New System.Drawing.Point(564, 196)
         Me.in_ket.MaxLength = 150
         Me.in_ket.Name = "in_ket"
-        Me.in_ket.ReadOnly = True
         Me.in_ket.Size = New System.Drawing.Size(183, 20)
         Me.in_ket.TabIndex = 14
         '
@@ -694,25 +673,13 @@ Partial Class fr_kas_detail
         '
         'popPnl_barang
         '
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
         Me.popPnl_barang.Location = New System.Drawing.Point(233, 246)
         Me.popPnl_barang.Name = "popPnl_barang"
-        Me.popPnl_barang.Size = New System.Drawing.Size(329, 135)
+        Me.popPnl_barang.Size = New System.Drawing.Size(347, 135)
         Me.popPnl_barang.TabIndex = 386
         Me.popPnl_barang.Visible = False
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'dgv_listbarang
         '
@@ -727,8 +694,42 @@ Partial Class fr_kas_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(329, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(347, 127)
         Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(50, 387)
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(150, 20)
+        Me.in_status.TabIndex = 387
+        Me.in_status.TabStop = False
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label11.Location = New System.Drawing.Point(9, 390)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(37, 13)
+        Me.Label11.TabIndex = 388
+        Me.Label11.Text = "Status"
         '
         'fr_kas_detail
         '
@@ -737,6 +738,8 @@ Partial Class fr_kas_detail
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(773, 482)
+        Me.Controls.Add(Me.in_status)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.bt_tbkas)
         Me.Controls.Add(Me.in_kredit)
@@ -767,14 +770,12 @@ Partial Class fr_kas_detail
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.dgv_kas)
-        Me.Controls.Add(Me.Label30)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.txtUpdDate)
         Me.Controls.Add(Me.txtRegAlias)
         Me.Controls.Add(Me.Label28)
         Me.Controls.Add(Me.txtRegdate)
         Me.Controls.Add(Me.Label27)
-        Me.Controls.Add(Me.Label29)
         Me.Controls.Add(Me.bt_batalperkiraan)
         Me.Controls.Add(Me.bt_simpanperkiraan)
         Me.Controls.Add(Me.Panel2)
@@ -812,14 +813,12 @@ Partial Class fr_kas_detail
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
-    Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
     Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
     Friend WithEvents Label27 As System.Windows.Forms.Label
-    Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents bt_batalperkiraan As System.Windows.Forms.Button
     Friend WithEvents bt_simpanperkiraan As System.Windows.Forms.Button
     Friend WithEvents dgv_kas As System.Windows.Forms.DataGridView
@@ -859,4 +858,6 @@ Partial Class fr_kas_detail
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
     Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
 End Class

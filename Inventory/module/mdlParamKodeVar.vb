@@ -99,7 +99,7 @@
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("Penjualan", "'JUAL'")
                 dt.Rows.Add("Retur Penjualan", "'RETUR'")
-                dt.Rows.Add("Beli & Retur Jual", "'JUAL','RETUR'")
+                dt.Rows.Add("Jual & Retur Jual", "'JUAL','RETUR'")
             Case "periode"
                 dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
                                         & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
@@ -185,7 +185,7 @@
                 dt.Rows.Add("Aktiva Lancar", "11")
                 dt.Rows.Add("Aktiva Tetap", "12")
                 dt.Rows.Add("Aktiva Lain-lain", "13")
-                dt.Rows.Add("Hutang", "21")
+                dt.Rows.Add("Pasiva Lancar", "21")
                 dt.Rows.Add("Modal", "22")
                 dt.Rows.Add("Pendapatan", "31")
                 dt.Rows.Add("Pendapatan Lain-Lain", "32")
@@ -205,8 +205,8 @@
                 'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
                 '                        & "FROM ref_gol_perkiraan WHERE perk_gol_kode LIKE '11%' AND perk_gol_status=1")
             Case "gol"
-                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
-                '                        & "FROM ref_gol_perkiraan WHERE LEFT(perk_gol_kode,2) LIKE '" & kodegol & "' AND perk_gol_status=1")
+                dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
+                                        & "FROM data_perkiraan_gol WHERE perk_gol_kodejen='" & kodegol & "' AND perk_gol_status=1 ORDER by perk_gol_nama")
         End Select
 
         Return dt

@@ -22,6 +22,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>PageNumber</rd:DefaultName>
+        <Top>0cm</Top>
         <Left>0.00002cm</Left>
         <Height>0.52062cm</Height>
         <Width>5.14584cm</Width>
@@ -56,6 +57,7 @@
           </Paragraph>
         </Paragraphs>
         <rd:DefaultName>PageNumber</rd:DefaultName>
+        <Top>0cm</Top>
         <Left>5.14586cm</Left>
         <Height>0.52062cm</Height>
         <Width>9.57947cm</Width>
@@ -1304,7 +1306,6 @@
                   <Value>=Parameters!parJml.Value</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
                     <NumeralLanguage>id-ID</NumeralLanguage>
@@ -1342,7 +1343,6 @@
                   <Value>=Parameters!parDiskon.Value</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
                     <NumeralLanguage>id-ID</NumeralLanguage>
@@ -1381,7 +1381,6 @@
                   <Value>=Parameters!parNetto.Value</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                     <Format>#,0</Format>
                     <Language>id-ID</Language>
@@ -1421,7 +1420,6 @@
                   <Value>JUMLAH :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1456,7 +1454,6 @@
                   <Value>DISCOUNT :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1492,7 +1489,6 @@
                   <Value>TOTAL :</Value>
                   <Style>
                     <FontFamily>consolas</FontFamily>
-                    <FontSize>8pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>

@@ -102,6 +102,7 @@ Public Class fr_view_nota
                                 jml = rd.Item(3)
                                 ppn = rd.Item(4)
                                 netto = rd.Item(5)
+                                disk = jml - netto
                             End If
                             rd.Close()
                         Catch ex As Exception
@@ -120,8 +121,8 @@ Public Class fr_view_nota
                         repdatasource.Value = ds_transaksi.dt_nota_beli
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n, " _
-                            & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, " _
-                            & "trans_harga_retur*trans_qty as beli_jml " _
+                            & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, trans_diskon as beli_disc1, " _
+                            & "@subt:=trans_harga_retur*trans_qty as subtotal, @dsk:=@subt*(trans_diskon/100) as beli_disctot, @subt-@dsk as beli_jml " _
                             & "FROM data_pembelian_retur_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
 
@@ -220,8 +221,8 @@ Public Class fr_view_nota
                         repdatasource.Value = ds_transaksi.dt_nota_beli
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n, " _
-                            & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, " _
-                            & "trans_harga_retur*trans_qty as beli_jml, (trans_jumlah-trans_harga_retur*trans_qty)/100 as beli_disc " _
+                            & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, trans_diskon as beli_disc1, " _
+                            & "@subt:=trans_harga_retur*trans_qty as subtotal, @dsk:=@subt*(trans_diskon/100) as beli_disctot, @subt-@dsk as beli_jml " _
                             & "FROM data_penjualan_retur_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "'"
 

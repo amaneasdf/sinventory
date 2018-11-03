@@ -20,6 +20,7 @@
         loadDraftList(Trim(in_caridraft.Text))
     End Sub
 
+    'LOAD SALES
     Private Sub loadSales(Optional param As String = Nothing)
         Dim bs As New BindingSource
 
@@ -29,6 +30,7 @@
         dgv_sales.DataSource = bs
     End Sub
 
+    'LOAD FAKTUR
     Private Sub loadFaktur(sales As String, Optional param As String = Nothing)
         Dim bs As New BindingSource
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
@@ -38,41 +40,60 @@
         '                  & "FROM selectPiutangAwal LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
         '                  & "WHERE piutang_sales='{0}' {1} AND piutang_sisa<>0"
 
-        Dim q As String = "SELECT piutang_faktur, faktur_tanggal_trans as piutang_tgl, customer_nama as piutang_custo_n, " _
-                          & "getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as piutang_sisa, " _
-                          & "ADDDATE(faktur_tanggal_trans,faktur_term) as piutang_jt, " _
-                          & "customer_pasar, customer_kabupaten, customer_kecamatan " _
-                          & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                          & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
-                          & "WHERE piutang_idperiode='" & selectperiode.id & "' AND faktur_sales='{0}' {1} " _
-                          & "AND getSisaPiutang(piutang_faktur,'" & selectperiode.id & "')<>0"
-
-        If ck_tgl2.Checked = True And ck_tgl1.Checked = False Then
-            q = String.Format(q, in_sales.Text, "AND ADDDATE(faktur_tanggal_trans,faktur_term) BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'")
-        ElseIf ck_tgl1.Checked = True And ck_tgl2.Checked = False Then
-            q = String.Format(q, in_sales.Text, "AND ADDDATE(faktur_tanggal_trans,faktur_term) < '" & _tglawal & "'")
-        Else
-            q = String.Format(q, in_sales.Text, "")
+        Dim q As String = "SELECT piutang_faktur, @tgl:=faktur_tanggal_trans as piutang_tgl, getSisaPiutang(piutang_faktur,'{0}') as piutang_sisa, " _
+                          & "ADDDATE(@tgl,faktur_term) as piutang_jt, customer_nama As piutang_custo_n, customer_pasar, customer_kecamatan, " _
+                          & "customer_kabupaten, salesman_nama " _
+                          & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur AND faktur_status=1 " _
+                          & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
+                          & "LEFT JOIN data_salesman_master ON salesman_kode= faktur_sales " _
+                          & "WHERE piutang_status=1 AND piutang_idperiode='{0}' AND faktur_sales='{1}' {2}"
+        Dim qwh As String = ""
+        Dim whr As New List(Of String)
+        If in_kabupaten.Text <> Nothing Then
+            whr.Add("customer_kabupaten LIKE '" & in_kabupaten.Text & "'")
         End If
+        If in_kecamatan.Text <> Nothing Then
+            whr.Add("customer_kecamatan LIKE '" & in_kecamatan.Text & "'")
+        End If
+        If in_pasar.Text <> Nothing Then
+            whr.Add("customer_pasar LIKE '" & in_pasar.Text & "'")
+        End If
+        If ck_tgl2.Checked = True And ck_tgl1.Checked = False Then
+            whr.Add("ADDDATE(faktur_tanggal_trans,faktur_term) BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'")
+        ElseIf ck_tgl1.Checked = True And ck_tgl2.Checked = False Then
+            whr.Add("ADDDATE(faktur_tanggal_trans,faktur_term) < '" & _tglawal & "'")
+        End If
+        qwh = IIf(whr.Count > 0, "AND ", "") & String.Join(" AND ", whr)
+
+        q = String.Format(q, selectperiode.id, in_sales.Text, qwh)
         consoleWriteLine(q)
 
         bs.DataSource = getDataTablefromDB(q)
-        bs.Filter = "piutang_faktur LIKE '" & param & "%' OR piutang_custo_n LIKE '" & param & "%' OR customer_pasar LIKE '" & param & "%' OR customer_kecamatan LIKE '" & param & "%' OR customer_kabupaten LIKE '" & param & "%'"
+        bs.Filter = "piutang_faktur LIKE '" & param & "%' OR piutang_custo_n LIKE '" & param & "%'"
 
         dgv_listfaktur.DataSource = bs
     End Sub
 
     Private Sub loadDraftList(param As String)
+        Dim q As String = "SELECT draft_kode, draft_tanggal as draft_tgl, salesman_nama as draft_sales " _
+                          & "FROM data_tagihan_faktur LEFT JOIN data_salesman_master ON salesman_kode=draft_sales " _
+                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}'"
         Dim bs As New BindingSource
-        'bs.DataSource = getDataTablefromDB("viewDraft('all','header')")
-        bs.DataSource = getDataTablefromDB("SELECT * FROM selectDraftRekapList WHERE draft_kode LIKE 'DT" & selectedperiode.ToString("yyyyMM") & "%'")
+
+        bs.DataSource = getDataTablefromDB(String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd")))
         bs.Filter = "draft_kode LIKE '%" & param & "%' OR draft_sales LIKE '%" & param & "%'"
         dgv_draft_list.DataSource = bs
     End Sub
 
     Private Sub loadListedFaktur(kodedraft As String)
+        Dim q As String = "SELECT nota_faktur, customer_nama,nota_tagihan, salesman_nama FROM data_tagihan_nota " _
+                          & "LEFT JOIN data_penjualan_faktur ON nota_faktur=faktur_kode " _
+                          & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
+                          & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
+                          & "WHERE nota_draft='{0}'"
         Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT nota_faktur,piutang_custo_n,nota_tagihan FROM data_tagihan_nota LEFT JOIN selectPiutangAwal ON piutang_faktur=nota_faktur WHERE nota_draft='" & kodedraft & "'")
+        dt = getDataTablefromDB(String.Format(q, kodedraft))
+        consoleWriteLine(String.Format(q, kodedraft))
 
         With dgv_draftfaktur.Rows
             .Clear()
@@ -82,6 +103,7 @@
                     .Cells("draft_custo").Value = x.ItemArray(1)
                     .Cells("draft_faktur").Value = x.ItemArray(0)
                     .Cells("draft_sisa").Value = x.ItemArray(2)
+                    .Cells("draft_sales").Value = x.ItemArray(3)
                 End With
             Next
         End With
@@ -91,7 +113,7 @@
         ClearAll()
 
         op_con()
-        readcommd("SELECT draft_kode,draft_tanggal,draft_sales,salesman_nama, draft_status " _
+        readcommd("SELECT draft_kode,draft_tanggal,draft_sales,salesman_nama, draft_status, draft_printstatus " _
                   & "FROM data_tagihan_faktur LEFT JOIN data_salesman_master ON draft_sales=salesman_kode " _
                   & "WHERE draft_kode='" & kodedraft & "'")
         If rd.HasRows Then
@@ -99,7 +121,7 @@
             date_tgl_trans.Value = rd.Item("draft_tanggal")
             in_sales.Text = rd.Item("draft_sales")
             in_sales_n.Text = rd.Item("salesman_nama")
-            printedstat = rd.Item("draft_status")
+            printedstat = rd.Item("draft_printstatus")
             kodedraftselected = kodedraft
         End If
         rd.Close()
@@ -111,6 +133,7 @@
         End If
 
         loadListedFaktur(kodedraft)
+        loadFaktur(in_sales.Text)
     End Sub
 
     Private Function createDraft() As Boolean
@@ -185,12 +208,12 @@
             x.Refresh()
         Next
         For Each s As DateTimePicker In {date_tgl_trans}
-            s.MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-            s.MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+            s.MinDate = selectperiode.tglawal
+            s.MaxDate = selectperiode.tglakhir
         Next
-        date_tgl_trans.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, Today.Day)
-        date_faktur_awal.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
-        date_faktur_akhir.Value = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
+        date_tgl_trans.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        date_faktur_awal.Value = selectperiode.tglawal
+        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
         ck_tgl2.CheckState = CheckState.Unchecked
         ck_tgl1.CheckState = CheckState.Unchecked
         lbl_statprint.Visible = False
@@ -265,6 +288,10 @@
         ClearAll()
         loadSales()
         loadDraftList("")
+
+        For Each x As DataGridViewColumn In {list_sisa, draft_sisa}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
     End Sub
 
     '------------- menu
@@ -403,7 +430,8 @@
                     End If
                 Next
 
-                dgv_draftfaktur.Rows.Add(selected.Cells("list_custo").Value, selected.Cells("list_faktur").Value, selected.Cells("list_sisa").Value, selected.Cells("list_cicilan").Value, selected.Cells("list_tgl_cicilan").Value)
+                dgv_draftfaktur.Rows.Add(selected.Cells("list_custo").Value, selected.Cells("list_faktur").Value, selected.Cells("list_sisa").Value,
+                                         selected.Cells("list_sales").Value)
             Next
         End With
     End Sub
@@ -478,10 +506,17 @@
                         printedstat = 1
                         lbl_statprint.Visible = True
                         op_con()
-                        commnd("UPDATE data_tagihan_faktur SET draft_status=1 WHERE draft_kode='" & in_kode_draft.Text & "'")
+                        commnd("UPDATE data_tagihan_faktur SET draft_printstatus=1 WHERE draft_kode='" & in_kode_draft.Text & "'")
                     End If
                 End With
             End Using
+        End If
+    End Sub
+
+    Private Sub in_kecamatan_KeyUp(sender As Object, e As KeyEventArgs) Handles in_pasar.KeyUp, in_kecamatan.KeyUp, in_kabupaten.KeyUp
+        If e.KeyCode = Keys.Enter Then
+            sender.Text = Trim(sender.Text)
+            loadFaktur(in_sales.Text, in_cari_faktur.Text)
         End If
     End Sub
 End Class

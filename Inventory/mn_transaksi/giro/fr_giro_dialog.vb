@@ -2,6 +2,26 @@
     Private tipe As String = "IN"
     Public returnval As Boolean = False
 
+    Private Sub loadCBAkun(kode As String)
+        Dim q As String = "SELECT perk_kode as 'Value',perk_nama_akun as 'Text' FROM data_perkiraan WHERE perk_status=1 AND perk_parent='{0}'"
+        Dim kodeparent As String = "1101"
+        With cb_akun
+            .DataSource = Nothing
+            Select Case kode
+                Case "TUNAI"
+                    kodeparent = "1101"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case "BG", "TRANSFER"
+                    kodeparent = "1102"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case Else
+                    Exit Sub
+            End Select
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+    End Sub
+
     Public Sub do_load(tipegiro As String)
         tipe = UCase(tipegiro)
 
@@ -13,12 +33,7 @@
             cb_akun.Visible = False
         End If
 
-
-        With cb_akun
-            .DataSource = jenisBayar("hutang")
-            .ValueMember = "Value"
-            .DisplayMember = "Text"
-        End With
+        loadCBAkun("BG")
     End Sub
 
     '------------drag form

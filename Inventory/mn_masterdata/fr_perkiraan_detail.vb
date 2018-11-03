@@ -4,36 +4,50 @@
     Private tipeAkun As String = "ACC"
 
     Private Sub loadDataPerkiraan(kode As String)
-        readcommd("SELECT * FROM data_perkiraan WHERE perk_kode='" & kode & "'")
+        Dim q As String = "SELECT perk_nama_akun, perk_d_or_k, perk_saldo_awal, perk_tipe, perk_status, perk_reg_date, perk_reg_alias, " _
+                            & "perk_upd_date, perk_upd_alias FROM data_perkiraan WHERE perk_kode='{0}'"
+        Dim q2 As String = "SELECT perk_gol_nama, perk_gol_pos, perk_gol_status, perk_gol_reg_date, perk_gol_reg_alias " _
+                           & "FROM data_perkiraan_gol WHERE perk_gol_kode='{0}'"
+
+        readcommd(String.Format(IIf(kode.Length = 6, q, q2), kode))
         If rd.HasRows Then
-            in_kode.Text = rd.Item("perk_kode")
-            in_akun_n.Text = rd.Item("perk_nama_akun")
-            cb_posisi.SelectedValue = rd.Item("perk_d_or_k")
-            in_saldoawal.Value = rd.Item("perk_saldo_awal")
-            tipeAkun = rd.Item("perk_tipe")
-            prkStatus = rd.Item("perk_status")
-            txtRegAlias.Text = rd.Item("perk_reg_alias")
-            txtRegdate.Text = rd.Item("perk_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("perk_upd_date")
-            Catch ex As Exception
-                consoleWriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdAlias.Text = rd.Item("perk_upd_alias")
+            in_kode.Text = kode
+            If kode.Length = 6 Then
+                in_akun_n.Text = rd.Item("perk_nama_akun")
+                cb_posisi.SelectedValue = rd.Item("perk_d_or_k")
+                in_saldoawal.Value = rd.Item("perk_saldo_awal")
+                tipeAkun = rd.Item("perk_tipe")
+                prkStatus = rd.Item("perk_status")
+                txtRegAlias.Text = rd.Item("perk_reg_alias")
+                txtRegdate.Text = rd.Item("perk_reg_date")
+                Try
+                    txtUpdDate.Text = rd.Item("perk_upd_date")
+                Catch ex As Exception
+                    consoleWriteLine(ex.Message)
+                    txtUpdDate.Text = "00/00/0000 00:00:00"
+                End Try
+                txtUpdAlias.Text = rd.Item("perk_upd_alias")
+            Else
+                in_akun_n.Text = rd.Item("perk_gol_nama")
+                cb_posisi.SelectedValue = rd.Item("perk_gol_pos")
+                prkStatus = rd.Item("perk_gol_status")
+                txtRegAlias.Text = rd.Item("perk_gol_reg_alias")
+                txtRegdate.Text = rd.Item("perk_gol_reg_date")
+            End If
+
         End If
         rd.Close()
 
-        Dim sp As String()
-        sp = in_kode.Text.Split("-")
-        in_kode_jenis.Text = sp(1)
-        cb_jenis.SelectedValue = sp(1)
-        in_kode_parent.Text = sLeft(sp(2), sp(2).Length - 2)
-        in_kode_akun.Text = Strings.Right(sp(2), 2)
+        in_kode_parent.Text = sLeft(in_kode.Text, in_kode.Text.Length - 2)
+        in_kode_akun.Text = Strings.Right(in_kode.Text, 2)
+        cb_jenis.SelectedValue = Strings.Left(in_kode.Text, 2)
         cb_parent.SelectedValue = in_kode_parent.Text
+        'loadJenis(sLeft(in_kode.Text, 2))
+
 
         setStatus()
         inputSwitch(True)
+        bt_simpanperkiraan.Enabled = loggeduser.allowedit_master
     End Sub
 
     Private Sub setStatus()
@@ -56,28 +70,101 @@
         If sw = True Then
             cb_jenis.Enabled = False
             cb_parent.Enabled = False
+            in_saldoawal.Increment = 0
         Else
             cb_jenis.Enabled = True
             cb_parent.Enabled = True
+            in_saldoawal.Increment = 1000
         End If
         in_kode_akun.ReadOnly = sw
+        in_saldoawal.ReadOnly = sw
     End Sub
 
     Private Sub loadCbParent(kode As String)
-        Dim dt As New DataTable
-        Dim q As String = "SELECT SUBSTR(perk_kode,3,3) as 'Value', perk_nama_akun as 'Text' FROM data_perkiraan " _
-                          & "WHERE perk_tipe IN ('GOL','SGL') AND perk_status<> 9 AND perk_jenis_akun='{0}'"
-        dt = getDataTablefromDB(String.Format(q, kode))
+        'Dim dt As New DataTable
+        'Dim q As String = "SELECT SUBSTR(perk_kode,3,3) as 'Value', perk_nama_akun as 'Text' FROM data_perkiraan " _
+        '                  & "WHERE perk_tipe IN ('GOL','SGL') AND perk_status<> 9 AND perk_jenis_akun='{0}'"
+        'dt = getDataTablefromDB(String.Format(q, kode))
         With cb_parent
-            .DataSource = dt
+            .DataSource = jenisPerkiraan("gol", kode)
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
+        'loadJenis(kode)
     End Sub
+
+    'Private Sub loadJenis(kode As String)
+    '    Dim q As String = "SELECT perk_jen_nama FROM data_perkiraan_jenis WHERE perk_jen_kode='{0}'"
+    '    readcommd(String.Format(q, kode))
+    '    If rd.HasRows Then
+    '        in_jenis.Text = rd.Item(0)
+    '    End If
+    '    rd.Close()
+    'End Sub
 
     'SAVE DATA
     Private Sub saveData()
+        Dim queryCheck As Boolean = False
+        Dim queryArr As New List(Of String)
+        Dim q, qsaldo As String
+        Dim data1 As String()
 
+        Dim qsaldotemp As String = "INSERT INTO data_perkiraan_saldoawal SET perk_saldoawal_kodeakun='{0}', perk_saldoawal_idperiode='{3}', " _
+                                     & "{1},perk_saldoawal_reg_date=NOW(),perk_saldoawal_reg_alias='{2}' ON DUPLICATE KEY UPDATE " _
+                                     & "{1},perk_saldoawal_upd_date=NOW(),perk_saldoawal_upd_alias='{2}'"
+
+        data1 = {
+            "perk_parent='" & cb_parent.SelectedValue & "'",
+            "perk_nama_akun='" & in_akun_n.Text & "'",
+            "perk_d_or_k='" & cb_posisi.SelectedValue & "'",
+            "perk_tipe='" & sLeft(cb_parent.SelectedValue, 2) & "'",
+            "perk_saldo_awal='" & in_saldoawal.Value & "'",
+            "perk_status='" & prkStatus & "'"
+            }
+        If bt_simpanperkiraan.Text = "Simpan" Then
+            If Trim(in_kode_akun.Text) = Nothing Then
+                Dim no As Integer = 1
+                readcommd("SELECT IFNULL(MAX(RIGHT(perk_kode,2)),0) FROM data_perkiraan WHERE perk_kode LIKE '" & cb_parent.SelectedValue & "%'")
+                If rd.HasRows Then
+                    no = CInt(rd.Item(0)) + 1
+                End If
+                rd.Close()
+
+                in_kode_akun.Text = no.ToString("D2")
+            Else
+                If checkdata("data_perkiraan", "'" & in_kode.Text & "'", "perk_kode") = True Then
+                    MessageBox.Show("Akun perkiraan dg kode " & in_kode.Text & " sudah pernah diinput", "Akun Perkiraan", MessageBoxButtons.OK)
+                    Exit Sub
+                End If
+            End If
+            q = "INSERT INTO data_perkiraan SET perk_kode='{0}',{1},perk_reg_date=NOW(),perk_reg_alias='{2}'"
+            qsaldo = qsaldotemp
+        Else
+            q = "UPDATE data_perkiraan SET {1},perk_upd_date=NOW(),perk_upd_alias='{2}' WHERE perk_kode='{0}'"
+            If in_saldoawal.ReadOnly = False Then
+                qsaldo = qsaldotemp
+            End If
+        End If
+        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data1), loggeduser.user_id))
+        If qsaldo <> Nothing Then
+            data1 = {
+                "perk_saldoawal_nilai=" & in_saldoawal.Value,
+                "perk_saldoawal_status='" & prkStatus & "'"
+                }
+            queryArr.Add(String.Format(qsaldo, in_kode.Text, String.Join(",", data1), loggeduser.user_id, selectperiode.id))
+        End If
+
+        'BEGIN TRANSACTION
+        queryCheck = startTrans(queryArr)
+
+        If queryCheck = False Then
+            MessageBox.Show("Data tidak dapat tersimpan")
+            Exit Sub
+        Else
+            MessageBox.Show("Data tersimpan")
+            doRefreshTab({pgperkiraan})
+            Me.Close()
+        End If
     End Sub
 
     'DRAG FORM
@@ -99,7 +186,7 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalperkiraan.Click
-        If MessageBox.Show("Tutup Form?", "Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Tutup Form?", "Data Akun Perkiraan", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
     End Sub
@@ -142,7 +229,7 @@
             .DataSource = jenisPerkiraan("jenis")
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = -1
+            .SelectedIndex = 0
         End With
         With cb_posisi
             .DataSource = jenisDeb()
@@ -150,9 +237,19 @@
             .ValueMember = "Value"
             .SelectedIndex = 0
         End With
+        'With cb_parent
+        '    .DataSource = jenisPerkiraan("gol11")
+        '    .DisplayMember = "Text"
+        '    .ValueMember = "Value"
+        '    .SelectedIndex = 0
+        'End With
         loadCbParent(cb_jenis.SelectedValue)
 
         in_cur_saldo.Text = commaThousand(0)
+
+        If bt_simpanperkiraan.Text = "Update" Then
+            loadDataPerkiraan(in_kode.Text)
+        End If
     End Sub
 
     'SAVE
@@ -180,7 +277,7 @@
 
     'UI
     '------------------ cb prevent input
-    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_jenis.KeyPress, cb_parent.KeyPress, cb_posisi.KeyPress
+    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_parent.KeyPress, cb_posisi.KeyPress, cb_jenis.KeyPress
         If e.KeyChar <> ControlChars.Cr Then
             e.Handled = True
         End If
@@ -208,16 +305,15 @@
     Private Sub cb_jenis_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_jenis.SelectionChangeCommitted
         If cb_jenis.SelectedValue <> Nothing Then
             loadCbParent(cb_jenis.SelectedValue)
-            in_kode_jenis.Text = cb_jenis.SelectedValue
             in_kode_parent.Text = cb_parent.SelectedValue
-            in_kode.Text = in_kode_jenis.Text & "-" & in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
+            in_kode.Text = in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
         End If
     End Sub
 
     Private Sub cb_parent_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_parent.SelectionChangeCommitted
         If cb_jenis.SelectedValue <> Nothing Then
             in_kode_parent.Text = cb_parent.SelectedValue
-            in_kode.Text = in_kode_jenis.Text & "-" & in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
+            in_kode.Text = in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
         End If
     End Sub
 
@@ -247,6 +343,6 @@
 
     '--------kode
     Private Sub in_kode_akun_TextChanged(sender As Object, e As EventArgs) Handles in_kode_akun.TextChanged
-        in_kode.Text = in_kode_jenis.Text & "-" & in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
+        in_kode.Text = in_kode_parent.Text & IIf(Trim(in_kode_akun.Text) = Nothing, "00", in_kode_akun.Text)
     End Sub
 End Class

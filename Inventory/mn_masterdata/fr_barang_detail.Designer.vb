@@ -109,8 +109,8 @@ Partial Class fr_barang_detail
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label51 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.in_status = New System.Windows.Forms.TextBox()
         Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
@@ -645,6 +645,7 @@ Partial Class fr_barang_detail
         Me.bt_supplier_add.Size = New System.Drawing.Size(15, 15)
         Me.bt_supplier_add.TabIndex = 2
         Me.bt_supplier_add.UseVisualStyleBackColor = False
+        Me.bt_supplier_add.Visible = False
         '
         'in_suppliernama
         '
@@ -1097,18 +1098,6 @@ Partial Class fr_barang_detail
         Me.popPnl_barang.TabIndex = 493
         Me.popPnl_barang.Visible = False
         '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
-        '
         'dgv_listbarang
         '
         Me.dgv_listbarang.AllowUserToAddRows = False
@@ -1124,6 +1113,18 @@ Partial Class fr_barang_detail
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_listbarang.Size = New System.Drawing.Size(389, 127)
         Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'in_status
         '
@@ -1175,6 +1176,7 @@ Partial Class fr_barang_detail
         '
         'mn_del
         '
+        Me.mn_del.Enabled = False
         Me.mn_del.Name = "mn_del"
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"

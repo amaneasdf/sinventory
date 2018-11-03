@@ -12,6 +12,7 @@
     Private Sub loadData(kode As String)
         Dim nobg As String = ""
         Dim tglbgcair As String = ""
+        Dim akun As String = ""
         Dim q As String = "SELECT h_bayar_bukti, h_bayar_supplier, supplier_nama, h_bayar_jenis_bayar, h_bayar_akun, h_bayar_tgl_bayar, h_bayar_tgl_jt, " _
                           & "IFNULL(giro_no,'') as giro_no, IFNULL(g_cair_tglcair,'') as g_cair_tglcair, h_bayar_ket, h_bayar_potongan_nilai, " _
                           & "h_bayar_reg_alias,h_bayar_reg_date,h_bayar_upd_alias,h_bayar_upd_date, " _
@@ -29,7 +30,7 @@
             in_supplier_n.Text = rd.Item("supplier_nama")
             in_saldotitipan.Text = commaThousand(rd.Item("titipan"))
             cb_bayar.SelectedValue = rd.Item("h_bayar_jenis_bayar")
-            cb_akun.SelectedValue = rd.Item("h_bayar_akun")
+            akun = rd.Item("h_bayar_akun")
             date_tgl_trans.Value = rd.Item("h_bayar_tgl_bayar")
             date_bg_tgl.Value = rd.Item("h_bayar_tgl_jt")
             in_ket.Text = rd.Item("h_bayar_ket")
@@ -51,6 +52,9 @@
             'End If
         End If
         rd.Close()
+
+        loadCBAkun(cb_bayar.SelectedValue)
+        cb_akun.SelectedValue = akun
 
         selectedsup = in_supplier.Text
         in_supplier_n.ReadOnly = True
@@ -180,6 +184,7 @@
                     Return True
                 End If
             Else
+                rd.Close()
                 MessageBox.Show("No.Faktur yg diinput tidak sesuai")
                 Return False
             End If
@@ -195,7 +200,7 @@
         Dim _faktur_sw = True
         Dim _kredit_sw = True
 
-        If Trim(in_faktur.Text) = "" Then
+        If Trim(in_faktur.Text) = "" And in_kredit.Value <> 0 Then
             _faktur_sw = False
         ElseIf Trim(in_faktur.Text) <> "" And in_tgl_jtfaktur.Text = "" Then
             _faktur_sw = False
@@ -204,10 +209,14 @@
         End If
         If _faktur_sw = False Then
             in_faktur.Focus()
-
+            MessageBox.Show("Faktur tidak sesuai")
             Exit Sub
         End If
-
+        If in_kredit.Value > removeCommaThousand(in_sisafaktur.Text) Then
+            MessageBox.Show("Saldo Pembayaran lebih besar dari sisa")
+            in_kredit.Focus()
+            Exit Sub
+        End If
         If in_kredit.Value = 0 Then
             in_kredit.Focus()
             Exit Sub
@@ -225,7 +234,9 @@
     End Sub
 
     Private Sub dgvToText(tipe As String)
-        bt_tbbayar.PerformClick()
+        If in_faktur.Text <> Nothing And in_kredit.Value <> 0 Then
+            bt_tbbayar.PerformClick()
+        End If
         With dgv_bayar.Rows(indexrowbayar)
             in_faktur.Text = .Cells("bayar_faktur").Value
             in_tgl_jtfaktur.Text = .Cells("bayar_jt").Value
@@ -249,6 +260,26 @@
 
         Return res
     End Function
+
+    Private Sub loadCBAkun(kode As String)
+        Dim q As String = "SELECT perk_kode as 'Value',perk_nama_akun as 'Text' FROM data_perkiraan WHERE perk_status=1 AND perk_parent='{0}'"
+        Dim kodeparent As String = "1101"
+        With cb_akun
+            .DataSource = Nothing
+            Select Case kode
+                Case "TUNAI"
+                    kodeparent = "1101"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case "BG", "TRANSFER"
+                    kodeparent = "1102"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case Else
+                    Exit Sub
+            End Select
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+    End Sub
 
     Private Sub clearInput(tipe As String)
         Select Case tipe
@@ -546,11 +577,12 @@
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
+        loadCBAkun(cb_bayar.SelectedValue)
 
         With date_tgl_trans
             .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
             .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
+            '.MinDate = selectperiode.tglawal
         End With
 
         For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisahutang, bayar_saldoawal}
@@ -578,6 +610,16 @@
         If cb_bayar.SelectedValue = "BG" And Trim(in_no_bg.Text) = Nothing Then
             MessageBox.Show("Nomor Giro belum di input")
             in_no_bg.Focus()
+            Exit Sub
+        End If
+        If date_tgl_trans.Value < selectperiode.tglawal Then
+            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih")
+            date_tgl_trans.Focus()
+            Exit Sub
+        End If
+        If date_bg_tgl.Value < date_tgl_trans.Value Then
+            MessageBox.Show("Tanggal jatuhtempo/efektif BG lebih kecil daripada tanggal transaksi")
+            date_bg_tgl.Focus()
             Exit Sub
         End If
 
@@ -625,7 +667,7 @@
             End If
             keyshortenter(cb_bayar, e)
         Else
-            If sender.ReadOnly = False And sender.Ennabled = True Then
+            If sender.ReadOnly = False And sender.Enabled = True Then
                 If popPnl_barang.Visible = False Then
                     popPnl_barang.Visible = True
                 End If
@@ -644,6 +686,7 @@
         Else
             in_no_bg.Enabled = False
         End If
+        loadCBAkun(cb_bayar.SelectedValue)
     End Sub
 
     Private Sub cb_akun_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_akun.KeyDown

@@ -107,14 +107,14 @@
             'GENNERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(customer_kode,4) as ss FROM data_customer_master WHERE customer_kode LIKE 'CST%' " _
-                          & "ORDER BY ss DESC LIMIT 1")
+                readcommd("SELECT RIGHT(customer_kode,7) as ss FROM data_customer_master WHERE customer_kode LIKE 'CT%' " _
+                          & "AND RIGHT(customer_kode,7) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
 
-                in_kode.Text = "CST" & no.ToString("D7")
+                in_kode.Text = "CT" & no.ToString("D7")
             Else
                 in_kode.Text = Trim(in_kode.Text)
                 If checkdata("data_customer_master", "'" & in_kode.Text & "'", "customer_kode") Then

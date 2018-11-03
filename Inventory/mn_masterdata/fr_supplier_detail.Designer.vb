@@ -572,7 +572,7 @@ Partial Class fr_supplier_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(159, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(160, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Supplier"
         '
@@ -675,7 +675,7 @@ Partial Class fr_supplier_detail
         Me.Controls.Add(Me.Label3)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_supplier_detail"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Detail Supplier : "
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox1.PerformLayout()
