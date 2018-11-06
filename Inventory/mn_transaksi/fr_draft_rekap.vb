@@ -531,21 +531,29 @@
     '------------- save draft
     Private Sub bt_create_draft_Click(sender As Object, e As EventArgs) Handles bt_create_draft.Click
         If dgv_draftsales.Rows.Count = 0 Then
-            MessageBox.Show("Sales hasnt been inputed")
+            MessageBox.Show("Salesman belum di masukan")
             Exit Sub
         End If
 
         If dgv_draftfaktur.Rows.Count = 0 Then
-            MessageBox.Show("faktur hasnt been inputed")
+            MessageBox.Show("Faktur belum dimasukan")
             Exit Sub
         End If
 
         If createDraft() = True Then
-            MessageBox.Show("Draft Rekap Inputed")
+            MessageBox.Show("Draft Rekap Tersimpan")
             loadDraftList("")
         Else
             MessageBox.Show("Error has been occured when inputing data")
         End If
+    End Sub
+
+    Private Sub DraftBarangToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DraftBarangToolStripMenuItem.Click
+        bt_draft_barang.PerformClick()
+    End Sub
+
+    Private Sub DraftNotaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DraftNotaToolStripMenuItem.Click
+        bt_draft_nota.PerformClick()
     End Sub
 End Class
 

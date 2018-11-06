@@ -107,7 +107,7 @@
                         & "FROM data_supplier_master WHERE supplier_nama LIKE '" & param & "%' LIMIT 100"
                     q = String.Format(q, selectperiode.id)
                 Case "faktur"
-                    q = "SELECT hutang_faktur AS Faktur, getSisaHutang(hutang_faktur,{0}) as Sisa, faktur_netto, " _
+                    q = "SELECT hutang_faktur AS Faktur, getSisaHutang(hutang_faktur,{0}) as Sisa, hutang_awal, " _
                         & "DATE_FORMAT(ADDDATE(faktur_tanggal_trans,faktur_term),'%d/%m/%Y') as TglJatuhTempo " _
                         & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON faktur_kode= hutang_faktur AND faktur_status=1 " _
                         & "WHERE hutang_status=1 AND hutang_idperiode={0}  AND hutang_faktur LIKE '{1}%' AND faktur_supplier='{2}'"
@@ -273,6 +273,9 @@
                 Case "BG", "TRANSFER"
                     kodeparent = "1102"
                     .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case "PIUTSUPL"
+                    kodeparent = "1105"
+                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent) & " AND perk_kode='110502'")
                 Case Else
                     Exit Sub
             End Select

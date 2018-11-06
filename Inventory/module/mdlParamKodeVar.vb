@@ -416,6 +416,7 @@
     Public pgjurnalumum = New TabPage() With {.Name = "pgjurnalumum"}
     Public pgjurnalmemorial = New TabPage() With {.Name = "pgjurnalmemorial"}
     Public pgkartustok = New TabPage() With {.Name = "pgkartustok"}
+    Public pgtutupbuku = New TabPage() With {.Name = "pgtutupbuku"}
     Public pglap = New TabPage() With {.Name = "pglap"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
@@ -454,6 +455,7 @@
     Public frmjurnalmemorial As New fr_list With {.Dock = DockStyle.Fill}
     Public frmlap As New fr_lap_stok With {.Dock = DockStyle.Fill}
     Public frmkartustok As New fr_urut_kartustok With {.Dock = DockStyle.Fill}
+    Public frmtutupbuku As New fr_tutup_buku With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang

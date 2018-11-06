@@ -82,8 +82,8 @@ Partial Class fr_beli_detail
         Me.Label24 = New System.Windows.Forms.Label()
         Me.bt_tbbarang = New System.Windows.Forms.Button()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.Label25 = New System.Windows.Forms.Label()
         Me.in_harga_beli = New System.Windows.Forms.NumericUpDown()
         Me.in_disc1 = New System.Windows.Forms.NumericUpDown()
@@ -788,18 +788,6 @@ Partial Class fr_beli_detail
         Me.popPnl_barang.TabIndex = 263
         Me.popPnl_barang.Visible = False
         '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
-        '
         'dgv_listbarang
         '
         Me.dgv_listbarang.AllowUserToAddRows = False
@@ -815,6 +803,18 @@ Partial Class fr_beli_detail
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_listbarang.Size = New System.Drawing.Size(375, 127)
         Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'Label25
         '

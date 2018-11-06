@@ -94,6 +94,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Messaging" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -375,6 +376,12 @@
     </Compile>
     <Compile Include="mn_olahdata\fr_set_periode.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\fr_tutup_buku.Designer.vb">
+      <DependentUpon>fr_tutup_buku.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\fr_tutup_buku.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_olahdata\fr_urut_kartustok.Designer.vb">
       <DependentUpon>fr_urut_kartustok.vb</DependentUpon>
@@ -737,6 +744,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\fr_set_periode.resx">
       <DependentUpon>fr_set_periode.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\fr_tutup_buku.resx">
+      <DependentUpon>fr_tutup_buku.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\fr_urut_kartustok.resx">
       <DependentUpon>fr_urut_kartustok.vb</DependentUpon>

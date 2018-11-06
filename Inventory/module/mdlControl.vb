@@ -1269,6 +1269,11 @@ Module mdlControl
                     setDoubleBuffered(.dgv_barang, True)
                     .setpage(pgkartustok)
                 End With
+            Case "tutupbuku"
+                With frmtutupbuku
+                    setDoubleBuffered(.dgv_stock, True)
+                    .setpage(pgtutupbuku)
+                End With
             Case "group"
                 setListcode(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -1614,6 +1619,7 @@ Module mdlControl
 
                     .edit_sw = False
                     .del_sw = False
+                    .add_sw = False
 
                     With .dgv_list()
                         .AutoGenerateColumns = False
@@ -2141,6 +2147,7 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "stok"
+                'q = "CALL createDataStockTableTemp('" & selectperiode.id & "'); SELECT * FROM stock_temp;"
                 q = "getDataStockTable('" & selectperiode.id & "')"
                 Dim pAlphabet As String = "barang_nama LIKE '{0}%' OR gudang_nama LIKE '{0}%' OR stock_status LIKE '{0}%'"
                 Dim pNumeric As String = "stock_sisa ='{0}' OR stock_sisastockop={0}"
@@ -2149,11 +2156,28 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "mutasigudang"
-                bs = populateDGVUserConTemp("getStok('mutasigudang','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%' OR gudang2 LIKE '%" & param & "%'")
+                q = "getDataStockTransTable('mutasigudang','" & selectperiode.id & "')"
+                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR gudang2 LIKE '{0}%' OR userid LIKE '{0}%'"
+                Dim pNumeric As String = ""
+                p = pAlphabet
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "mutasistok"
-                bs = populateDGVUserConTemp("getStok('mutasibarang','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                q = "getDataStockTransTable('mutasibarang','" & selectperiode.id & "')"
+                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR userid LIKE '{0}%'"
+                Dim pNumeric As String = ""
+                p = pAlphabet
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
+
             Case "stockop"
-                bs = populateDGVUserConTemp("getStok('stockop','" & selectedperiode.ToString("yyyy-MM-dd") & "')", "gudang LIKE '%" & param & "%' OR kode LIKE '%" & param & "%'")
+                q = "getDataStockTransTable('stockop','" & selectperiode.id & "')"
+                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR userid LIKE '{0}%'"
+                Dim pNumeric As String = ""
+                p = pAlphabet
+
+                bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "hutangawal"
                 q = "getDataHutangTable('" & selectperiode.id & "','awal')"
@@ -2230,7 +2254,7 @@ Module mdlControl
                 '                  & "jurnal_uraian,jurnal_trans FROM data_jurnal WHERE DATE_FORMAT(jurnal_tanggal,'%Y-%m')='{0}' " _
                 '                  & "AND jurnal_status<>9 ORDER BY jurnal_tanggal,FIELD(jurnal_jenis,'BELI','RTBL','JUAL','RTJL'), " _
                 '                  & "jurnal_trans, jurnal_index"
-                q = "SELECT line_id, line_kode, line_tanggal, line_ref, line_type, line_status FROM data_jurnal_line WHERE line_status=1 AND line_tanggal BETWEEN '{0}' AND '{1}'"
+                q = "getDataAkunTable('jurnalumum','{0}','{1}')"
                 p = ""
                 bs = populateDGVUserConTemp(String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd")), p)
                 'Exit Sub

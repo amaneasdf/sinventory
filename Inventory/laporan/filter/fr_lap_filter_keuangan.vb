@@ -118,6 +118,9 @@
                                & "LEFT JOIN data_perkiraan ON k_trans_rek=perk_kode " _
                                & "LEFT JOIN data_salesman_master ON salesman_kode=kas_sales " _
                                & "WHERE kas_status=1 AND kas_tgl BETWEEN '{0}' AND '{1}' {2} GROUP BY {3}kas_sales,k_trans_rek"
+        Dim qbukubesar As String = "CALL createBukuBesarTableTemp('{0}'); " _
+                                   & "SELECT * FROM bukubesar_temp{1}; " _
+                                   & "DROP TEMPORARY TABLE IF EXISTS bukubesar_temp;"
 
         Select Case tipe
             Case "k_biayasales"
@@ -142,7 +145,11 @@
                 End If
 
             Case "k_bukubesar"
+                q = String.Format(qbukubesar, selectperiode.id, "{0}")
 
+                If in_akun.Text <> Nothing Then
+                    qwh += " WHERE bb_akun='" & in_akun.Text &""
+                End If
         End Select
 
         qreturn = String.Format(q, qwh)

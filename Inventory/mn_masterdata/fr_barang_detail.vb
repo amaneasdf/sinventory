@@ -62,6 +62,7 @@
 
         getSupplier(in_supplier.Text)
         setStatus()
+        in_suppliernama.ReadOnly = True
     End Sub
 
     'LOAD DATA SUPPLIER
@@ -420,12 +421,14 @@
     End Sub
 
     Private Sub in_suppliernama_Enter(sender As Object, e As EventArgs) Handles in_suppliernama.Enter
-        popPnl_barang.Location = New Point(in_suppliernama.Left, in_suppliernama.Top + in_suppliernama.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If in_suppliernama.ReadOnly = False Then
+            popPnl_barang.Location = New Point(in_suppliernama.Left, in_suppliernama.Top + in_suppliernama.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popState = "supplier"
+            loadDataBRGPopup(popState, in_suppliernama.Text)
         End If
-        popState = "supplier"
-        loadDataBRGPopup(popState, in_suppliernama.Text)
     End Sub
 
     Private Sub in_suppliernama_Leave(sender As Object, e As EventArgs) Handles in_suppliernama.Leave
@@ -450,10 +453,12 @@
             End If
             keyshortenter(in_kode, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If in_suppliernama.ReadOnly = False Then
+                If popPnl_barang.Visible = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popState, in_suppliernama.Text)
             End If
-            loadDataBRGPopup(popState, in_suppliernama.Text)
         End If
     End Sub
 

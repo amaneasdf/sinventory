@@ -165,7 +165,9 @@ Module dbproceduralstuff
 
     Public Function getDataTablefromDB(query As String) As DataTable
         op_con()
-        Dim data_adpt As New MySqlDataAdapter(query, conn)
+        consoleWriteLine(query)
+        Dim _cmd As New MySqlCommand(query, conn)
+        Dim data_adpt As New MySqlDataAdapter(_cmd)
         Dim dtable As New DataTable
         Try
             data_adpt.Fill(dtable)

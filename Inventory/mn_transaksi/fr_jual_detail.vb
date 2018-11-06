@@ -680,7 +680,7 @@
         For Each x As DateTimePicker In {date_tgl_beli, date_tgl_pajak}
             x.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
             x.MaxDate = selectperiode.tglakhir
-            x.MinDate = selectperiode.tglawal
+            'x.MinDate = selectperiode.tglawal
         Next
 
         With dgv_barang
@@ -725,6 +725,11 @@
         If in_term.Value = 0 And removeCommaThousand(in_sisa.Text) > 0 Then
             MessageBox.Show("Pembayaran secara tunai masih kurang. Harap cek kembali")
             in_term.Focus()
+            Exit Sub
+        End If
+        If date_tgl_beli.Value < selectperiode.tglawal Then
+            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih")
+            date_tgl_beli.Focus()
             Exit Sub
         End If
 

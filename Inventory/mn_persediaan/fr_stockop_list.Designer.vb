@@ -28,6 +28,8 @@ Partial Class fr_stockop_list
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.in_hpp = New System.Windows.Forms.NumericUpDown()
+        Me.Label7 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
@@ -64,6 +66,7 @@ Partial Class fr_stockop_list
         Me.qty_fis = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sat_fis = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.qty_sel = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -87,6 +90,7 @@ Partial Class fr_stockop_list
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
+        CType(Me.in_hpp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -164,7 +168,10 @@ Partial Class fr_stockop_list
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.AutoScroll = True
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer1.Panel1.Controls.Add(Me.in_hpp)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label7)
         Me.SplitContainer1.Panel1.Controls.Add(Me.popPnl_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_gudang_n)
@@ -203,6 +210,28 @@ Partial Class fr_stockop_list
         Me.SplitContainer1.Size = New System.Drawing.Size(964, 533)
         Me.SplitContainer1.SplitterDistance = 322
         Me.SplitContainer1.TabIndex = 249
+        '
+        'in_hpp
+        '
+        Me.in_hpp.BackColor = System.Drawing.Color.White
+        Me.in_hpp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_hpp.Location = New System.Drawing.Point(556, 96)
+        Me.in_hpp.Maximum = New Decimal(New Integer() {-727379969, 232, 0, 0})
+        Me.in_hpp.Name = "in_hpp"
+        Me.in_hpp.Size = New System.Drawing.Size(126, 20)
+        Me.in_hpp.TabIndex = 13
+        Me.in_hpp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label7.Location = New System.Drawing.Point(553, 80)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(32, 13)
+        Me.Label7.TabIndex = 327
+        Me.Label7.Text = "HPP"
         '
         'popPnl_barang
         '
@@ -247,7 +276,7 @@ Partial Class fr_stockop_list
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label1.Location = New System.Drawing.Point(550, 80)
+        Me.Label1.Location = New System.Drawing.Point(683, 80)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(72, 13)
         Me.Label1.TabIndex = 276
@@ -270,10 +299,10 @@ Partial Class fr_stockop_list
         Me.in_ket_brg.BackColor = System.Drawing.Color.White
         Me.in_ket_brg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket_brg.ForeColor = System.Drawing.Color.Black
-        Me.in_ket_brg.Location = New System.Drawing.Point(553, 96)
+        Me.in_ket_brg.Location = New System.Drawing.Point(686, 96)
         Me.in_ket_brg.Name = "in_ket_brg"
-        Me.in_ket_brg.Size = New System.Drawing.Size(228, 20)
-        Me.in_ket_brg.TabIndex = 275
+        Me.in_ket_brg.Size = New System.Drawing.Size(222, 20)
+        Me.in_ket_brg.TabIndex = 14
         '
         'bt_tbbarang
         '
@@ -283,7 +312,7 @@ Partial Class fr_stockop_list
         Me.bt_tbbarang.FlatAppearance.BorderSize = 0
         Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_tbbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tbbarang.Location = New System.Drawing.Point(787, 95)
+        Me.bt_tbbarang.Location = New System.Drawing.Point(914, 97)
         Me.bt_tbbarang.Name = "bt_tbbarang"
         Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
         Me.bt_tbbarang.TabIndex = 15
@@ -304,7 +333,7 @@ Partial Class fr_stockop_list
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(821, 200)
+        Me.txtRegAlias.Location = New System.Drawing.Point(938, 187)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(136, 20)
@@ -327,7 +356,7 @@ Partial Class fr_stockop_list
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(821, 184)
+        Me.Label27.Location = New System.Drawing.Point(938, 171)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 322
@@ -347,7 +376,7 @@ Partial Class fr_stockop_list
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(821, 285)
+        Me.txtUpdDate.Location = New System.Drawing.Point(938, 272)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(136, 20)
@@ -368,7 +397,7 @@ Partial Class fr_stockop_list
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(821, 263)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(938, 250)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(136, 20)
@@ -388,7 +417,7 @@ Partial Class fr_stockop_list
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(821, 224)
+        Me.txtRegdate.Location = New System.Drawing.Point(938, 211)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(136, 20)
@@ -413,7 +442,7 @@ Partial Class fr_stockop_list
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(821, 247)
+        Me.Label28.Location = New System.Drawing.Point(938, 234)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(59, 13)
         Me.Label28.TabIndex = 325
@@ -521,14 +550,14 @@ Partial Class fr_stockop_list
         Me.dgv_barang.AllowUserToAddRows = False
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_sys, Me.sat_sys, Me.qty_fis, Me.sat_fis, Me.qty_sel, Me.ket})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_sys, Me.sat_sys, Me.qty_fis, Me.sat_fis, Me.qty_sel, Me.hpp, Me.ket})
         Me.dgv_barang.Location = New System.Drawing.Point(11, 122)
         Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(804, 170)
+        Me.dgv_barang.Size = New System.Drawing.Size(921, 170)
         Me.dgv_barang.TabIndex = 264
         '
         'kode
@@ -590,6 +619,12 @@ Partial Class fr_stockop_list
         Me.qty_sel.ReadOnly = True
         Me.qty_sel.Width = 65
         '
+        'hpp
+        '
+        Me.hpp.HeaderText = "HPP"
+        Me.hpp.Name = "hpp"
+        Me.hpp.ReadOnly = True
+        '
         'ket
         '
         Me.ket.HeaderText = "Keterangan"
@@ -625,7 +660,7 @@ Partial Class fr_stockop_list
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 0)
         Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(964, 28)
+        Me.pnl_Menu.Size = New System.Drawing.Size(1074, 28)
         Me.pnl_Menu.TabIndex = 248
         '
         'MenuStrip1
@@ -633,7 +668,7 @@ Partial Class fr_stockop_list
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_hapus, Me.mn_save, Me.mn_proses, Me.mn_print, Me.mn_refresh, Me.mn_cari})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(964, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1074, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -777,6 +812,7 @@ Partial Class fr_stockop_list
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
+        CType(Me.in_hpp, System.ComponentModel.ISupportInitialize).EndInit()
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
@@ -837,6 +873,14 @@ Partial Class fr_stockop_list
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents in_cari As System.Windows.Forms.TextBox
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
+    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents in_ket_brg As System.Windows.Forms.TextBox
+    Friend WithEvents in_qty1 As System.Windows.Forms.TextBox
+    Friend WithEvents mn_proses As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
+    Friend WithEvents in_gudang As System.Windows.Forms.TextBox
+    Friend WithEvents in_hpp As System.Windows.Forms.NumericUpDown
+    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_sys As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -844,12 +888,7 @@ Partial Class fr_stockop_list
     Friend WithEvents qty_fis As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_fis As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_sel As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents hpp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ket As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents in_ket_brg As System.Windows.Forms.TextBox
-    Friend WithEvents in_qty1 As System.Windows.Forms.TextBox
-    Friend WithEvents mn_proses As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
-    Friend WithEvents in_gudang As System.Windows.Forms.TextBox
 
 End Class

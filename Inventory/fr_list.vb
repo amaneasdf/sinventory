@@ -652,6 +652,10 @@
                         q = "UPDATE data_jurnal_line SET line_status='9',line_reg_date=NOW(),line_reg_alias='{1}' WHERE line_kode='{0}'"
                         queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
 
+                        q = "UPDATE data_stok_kartustock SET trans_status='9',trans_upd_date=NOW(),trans_upd_alias='{1}' WHERE trans_faktur='{0}' " _
+                            & "AND trans_jenis='po'"
+                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
+
                         querychk = startTrans(queryArr)
                         If querychk = True Then
                             .Item(0).Cells(2).Value = "BATAL"

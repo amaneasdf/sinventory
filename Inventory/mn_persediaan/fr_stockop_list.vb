@@ -62,7 +62,7 @@
 
     Private Sub loadDataBrg(kode As String)
         Dim dt As New DataTable
-        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_keterangan " _
+        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_keterangan,trans_hpp " _
                           & "FROM data_stok_opname_trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
                           & "WHERE trans_status=1 AND trans_faktur='{0}'"
         dt = getDataTablefromDB(String.Format(q, kode))
@@ -78,6 +78,7 @@
                     .Cells("sat_fis").Value = x.ItemArray(3)
                     .Cells("qty_sel").Value = x.ItemArray(4) - x.ItemArray(2)
                     .Cells("ket").Value = x.ItemArray(5)
+                    .Cells("hpp").Value = x.ItemArray(6)
                 End With
             Next
         End With
@@ -145,6 +146,7 @@
                     in_qty1.Text = commaThousand(.Cells(2).Value)
                     in_sat1.Text = .Cells(4).Value
                     in_sat2.Text = in_sat1.Text
+                    in_hpp.Value = .Cells(3).Value
                     in_qty2.Focus()
                 Case "gudang"
                     in_gudang.Text = .Cells(0).Value
@@ -241,6 +243,7 @@
                     .Cells("qty_fis").Value = in_qty2.Value
                     .Cells("sat_fis").Value = in_sat2.Text
                     .Cells("qty_sel").Value = in_qty2.Value - CDbl(in_qty1.Text)
+                    .Cells("hpp").Value = in_hpp.Value
                     .Cells("ket").Value = in_ket_brg.Text
                 End With
             End With
@@ -261,6 +264,7 @@
             in_sat1.Text = .Cells("sat_sys").Value
             in_qty2.Value = .Cells("qty_fis").Value
             in_sat2.Text = .Cells("sat_fis").Value
+            in_hpp.Value = .Cells("hpp").Value
             in_ket_brg.Text = .Cells("ket").Value
         End With
         in_barang.Focus()
@@ -338,6 +342,7 @@
                 "trans_qty_fisik=" & rows.Cells("qty_fis").Value,
                 "trans_satuan='" & rows.Cells("sat_sys").Value & "'",
                 "trans_keterangan='" & rows.Cells("ket").Value & "'",
+                "trans_hpp=" & rows.Cells("hpp").Value.ToString.Replace(",", "."),
                 "trans_status=1"
                 }
             q = "INSERT INTO data_stok_opname_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
@@ -649,13 +654,12 @@
 
     'input
     'numeric input
-    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty2.Enter
-        Console.WriteLine(sender.Name & sender.Value)
+    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty2.Enter, in_hpp.Enter
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty2.Leave
-        numericLostFocus(sender, "N0")
+    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty2.Leave, in_hpp.Leave
+        numericLostFocus(sender, IIf(sender.Name = "in_hpp", "N2", "N0"))
     End Sub
 
     'HEADR
@@ -798,6 +802,10 @@
     End Sub
 
     Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyDown
+        keyshortenter(in_hpp, e)
+    End Sub
+
+    Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyDown
         keyshortenter(in_ket_brg, e)
     End Sub
 

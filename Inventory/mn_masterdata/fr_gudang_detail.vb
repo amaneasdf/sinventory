@@ -60,7 +60,7 @@
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
                 readcommd("SELECT SUBSTRING(gudang_kode,3) as ss FROM data_barang_gudang WHERE gudang_kode LIKE 'GD%' " _
-                          & "ORDER SUBSTRING(gudang_kode,3) REGEXP '^[0-9]+$' BY ss DESC LIMIT 1")
+                          & "SUBSTRING(gudang_kode,3) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If

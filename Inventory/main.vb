@@ -156,6 +156,20 @@
                         tabcontrol.SelectedTab = pgkartustok
                     End With
                 End If
+            Case "tutupbuku"
+                If tabcontrol.Contains(pgtutupbuku) Then
+                    tabcontrol.SelectedTab = pgtutupbuku
+                Else
+                    With pgtutupbuku
+                        .Text = "Penutupan Buku"
+                        tabcontrol.TabPages.Add(pgtutupbuku)
+                        setList(type)
+                        .Controls.Add(frmtutupbuku)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgtutupbuku
+                    End With
+                End If
             Case "group"
                 createTabPage(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -249,6 +263,9 @@
         Dim mnName As String = DirectCast(sender, ToolStripItem).Name
         Dim mnChld As Boolean = DirectCast(sender, ToolStripMenuItem).HasDropDownItems
         Console.WriteLine(mnName)
+
+        Me.Cursor = Cursors.WaitCursor
+
         Select Case mnName
             Case "mn0101"
                 Console.WriteLine("click master barang")
@@ -340,6 +357,9 @@
             Case "mn0801"
                 Console.WriteLine("click set periode")
                 fr_set_periode.ShowDialog()
+            Case "mn0803"
+                Console.WriteLine("click jurnal memorial")
+                openTab("tutupbuku")
             Case "mn070301"
                 Using x As New fr_lap_filter_beli
                     With x
@@ -626,6 +646,13 @@
                         .ShowDialog()
                     End With
                 End Using
+            Case "mn070809"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Buku Besar", "k_bukubesar")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")
@@ -692,6 +719,8 @@
                     MessageBox.Show("Under Construction")
                 End If
         End Select
+
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load

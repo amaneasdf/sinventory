@@ -41,6 +41,7 @@
         in_kode_parent.Text = sLeft(in_kode.Text, in_kode.Text.Length - 2)
         in_kode_akun.Text = Strings.Right(in_kode.Text, 2)
         cb_jenis.SelectedValue = Strings.Left(in_kode.Text, 2)
+        loadCbParent(cb_jenis.SelectedValue)
         cb_parent.SelectedValue = in_kode_parent.Text
         'loadJenis(sLeft(in_kode.Text, 2))
 
@@ -259,7 +260,7 @@
             cb_jenis.Focus()
             Exit Sub
         End If
-        If cb_parent.SelectedValue = Nothing Then
+        If cb_parent.Enabled = True And cb_parent.SelectedValue = Nothing Then
             MessageBox.Show("Parent belum di input")
             cb_parent.Focus()
             Exit Sub

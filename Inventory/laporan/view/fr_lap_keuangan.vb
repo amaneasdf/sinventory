@@ -14,7 +14,8 @@ Public Class fr_lap_keuangan
     Private Sub filldatatabel(query As String, dt As DataTable)
         op_con()
         Try
-            Dim data_adpt As New MySqlDataAdapter(query, getConn)
+            Dim _cmd As New MySqlCommand(query, getConn)
+            Dim data_adpt As New MySqlDataAdapter(_cmd)
             consoleWriteLine(query)
             data_adpt.Fill(dt)
             data_adpt.Dispose()
@@ -74,11 +75,17 @@ Public Class fr_lap_keuangan
                             filldatatabel(inquery, .dt_jurnalumum)
                         End With
                     Case "k_bukubesar"
-                        'repdatasource.Name = "ds_bukubesar"
-                        'repdatasource.Value = ds_keuangan.dt_biaya
+                        repdatasource.Name = "ds_bukubesar"
+                        repdatasource.Value = ds_keuangan.dt_bukubesar
 
-                        '.DataSources.Add(repdatasource)
-                        '.ReportEmbeddedResource = "Inventory.uang_biayasales.rdlc"
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_bukubesar.rdlc"
+
+                        With ds_keuangan
+                            .dt_bukubesar.Clear()
+                            filldatatabel(inquery, .dt_bukubesar)
+                        End With
+
                     Case Else
                         Exit Sub
                 End Select

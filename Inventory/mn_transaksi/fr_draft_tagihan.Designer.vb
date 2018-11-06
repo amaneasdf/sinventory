@@ -32,6 +32,10 @@ Partial Class fr_draft_tagihan
         Me.bt_remsales = New System.Windows.Forms.Button()
         Me.bt_addsales = New System.Windows.Forms.Button()
         Me.dgv_draftfaktur = New System.Windows.Forms.DataGridView()
+        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.in_caridraft = New System.Windows.Forms.TextBox()
         Me.bt_caridraft = New System.Windows.Forms.Button()
@@ -41,6 +45,15 @@ Partial Class fr_draft_tagihan
         Me.bt_remfaktur = New System.Windows.Forms.Button()
         Me.bt_addfaktur = New System.Windows.Forms.Button()
         Me.dgv_listfaktur = New System.Windows.Forms.DataGridView()
+        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_temp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_pasar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_kec = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_kab = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draft_list = New System.Windows.Forms.DataGridView()
         Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -62,7 +75,6 @@ Partial Class fr_draft_tagihan
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.DraftBarangToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DraftNotaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
@@ -81,19 +93,6 @@ Partial Class fr_draft_tagihan
         Me.Label11 = New System.Windows.Forms.Label()
         Me.in_pasar = New System.Windows.Forms.TextBox()
         Me.Label12 = New System.Windows.Forms.Label()
-        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_temp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_pasar = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_kec = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_kab = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2.SuspendLayout()
         CType(Me.dgv_draftfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_listfaktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -201,6 +200,39 @@ Partial Class fr_draft_tagihan
         Me.dgv_draftfaktur.Size = New System.Drawing.Size(340, 174)
         Me.dgv_draftfaktur.TabIndex = 316
         '
+        'draft_custo
+        '
+        Me.draft_custo.DataPropertyName = "customer_nama"
+        Me.draft_custo.HeaderText = "Customer"
+        Me.draft_custo.MinimumWidth = 100
+        Me.draft_custo.Name = "draft_custo"
+        Me.draft_custo.ReadOnly = True
+        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.draft_custo.Width = 120
+        '
+        'draft_faktur
+        '
+        Me.draft_faktur.DataPropertyName = "trans_faktur"
+        Me.draft_faktur.HeaderText = "No.Faktur"
+        Me.draft_faktur.Name = "draft_faktur"
+        Me.draft_faktur.ReadOnly = True
+        Me.draft_faktur.Width = 90
+        '
+        'draft_sisa
+        '
+        Me.draft_sisa.DataPropertyName = "trans_harga_retur"
+        Me.draft_sisa.HeaderText = "Sisa"
+        Me.draft_sisa.MinimumWidth = 50
+        Me.draft_sisa.Name = "draft_sisa"
+        Me.draft_sisa.ReadOnly = True
+        Me.draft_sisa.Width = 75
+        '
+        'draft_sales
+        '
+        Me.draft_sales.HeaderText = "Salesman"
+        Me.draft_sales.Name = "draft_sales"
+        Me.draft_sales.ReadOnly = True
+        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -296,6 +328,78 @@ Partial Class fr_draft_tagihan
         Me.dgv_listfaktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_listfaktur.Size = New System.Drawing.Size(519, 174)
         Me.dgv_listfaktur.TabIndex = 306
+        '
+        'list_faktur
+        '
+        Me.list_faktur.DataPropertyName = "piutang_faktur"
+        Me.list_faktur.HeaderText = "No.Faktur"
+        Me.list_faktur.Name = "list_faktur"
+        Me.list_faktur.ReadOnly = True
+        Me.list_faktur.Width = 90
+        '
+        'list_tanggal
+        '
+        Me.list_tanggal.DataPropertyName = "piutang_tgl"
+        Me.list_tanggal.HeaderText = "Tanggal"
+        Me.list_tanggal.MinimumWidth = 90
+        Me.list_tanggal.Name = "list_tanggal"
+        Me.list_tanggal.ReadOnly = True
+        Me.list_tanggal.Width = 90
+        '
+        'list_custo
+        '
+        Me.list_custo.DataPropertyName = "piutang_custo_n"
+        Me.list_custo.HeaderText = "Customer"
+        Me.list_custo.MinimumWidth = 160
+        Me.list_custo.Name = "list_custo"
+        Me.list_custo.ReadOnly = True
+        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.list_custo.Width = 160
+        '
+        'list_sisa
+        '
+        Me.list_sisa.DataPropertyName = "piutang_sisa"
+        Me.list_sisa.HeaderText = "Sisa"
+        Me.list_sisa.MinimumWidth = 95
+        Me.list_sisa.Name = "list_sisa"
+        Me.list_sisa.ReadOnly = True
+        Me.list_sisa.Width = 95
+        '
+        'list_temp
+        '
+        Me.list_temp.DataPropertyName = "piutang_jt"
+        Me.list_temp.HeaderText = "Tgl.Jt.Tempo"
+        Me.list_temp.Name = "list_temp"
+        Me.list_temp.ReadOnly = True
+        '
+        'list_pasar
+        '
+        Me.list_pasar.DataPropertyName = "customer_pasar"
+        Me.list_pasar.HeaderText = "Pasar"
+        Me.list_pasar.Name = "list_pasar"
+        Me.list_pasar.ReadOnly = True
+        '
+        'list_kec
+        '
+        Me.list_kec.DataPropertyName = "customer_kecamatan"
+        Me.list_kec.HeaderText = "Kecamatan"
+        Me.list_kec.Name = "list_kec"
+        Me.list_kec.ReadOnly = True
+        '
+        'list_kab
+        '
+        Me.list_kab.DataPropertyName = "customer_kabupaten"
+        Me.list_kab.HeaderText = "Kabupaten"
+        Me.list_kab.Name = "list_kab"
+        Me.list_kab.ReadOnly = True
+        '
+        'list_sales
+        '
+        Me.list_sales.DataPropertyName = "salesman_nama"
+        Me.list_sales.HeaderText = "Salesman"
+        Me.list_sales.Name = "list_sales"
+        Me.list_sales.ReadOnly = True
+        Me.list_sales.Width = 125
         '
         'dgv_draft_list
         '
@@ -490,10 +594,11 @@ Partial Class fr_draft_tagihan
         Me.mn_edit.ShortcutKeys = System.Windows.Forms.Keys.F2
         Me.mn_edit.Size = New System.Drawing.Size(84, 20)
         Me.mn_edit.Text = "Edit Draft"
+        Me.mn_edit.Visible = False
         '
         'mn_print
         '
-        Me.mn_print.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DraftBarangToolStripMenuItem, Me.DraftNotaToolStripMenuItem})
+        Me.mn_print.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DraftBarangToolStripMenuItem})
         Me.mn_print.Image = CType(resources.GetObject("mn_print.Image"), System.Drawing.Image)
         Me.mn_print.Name = "mn_print"
         Me.mn_print.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
@@ -504,14 +609,8 @@ Partial Class fr_draft_tagihan
         'DraftBarangToolStripMenuItem
         '
         Me.DraftBarangToolStripMenuItem.Name = "DraftBarangToolStripMenuItem"
-        Me.DraftBarangToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
-        Me.DraftBarangToolStripMenuItem.Text = "Draft Barang"
-        '
-        'DraftNotaToolStripMenuItem
-        '
-        Me.DraftNotaToolStripMenuItem.Name = "DraftNotaToolStripMenuItem"
-        Me.DraftNotaToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
-        Me.DraftNotaToolStripMenuItem.Text = "Draft Nota"
+        Me.DraftBarangToolStripMenuItem.Size = New System.Drawing.Size(145, 22)
+        Me.DraftBarangToolStripMenuItem.Text = "Draft Tagihan"
         '
         'mn_refresh
         '
@@ -718,111 +817,6 @@ Partial Class fr_draft_tagihan
         Me.Label12.TabIndex = 328
         Me.Label12.Text = "Pasar"
         '
-        'list_faktur
-        '
-        Me.list_faktur.DataPropertyName = "piutang_faktur"
-        Me.list_faktur.HeaderText = "No.Faktur"
-        Me.list_faktur.Name = "list_faktur"
-        Me.list_faktur.ReadOnly = True
-        Me.list_faktur.Width = 90
-        '
-        'list_tanggal
-        '
-        Me.list_tanggal.DataPropertyName = "piutang_tgl"
-        Me.list_tanggal.HeaderText = "Tanggal"
-        Me.list_tanggal.MinimumWidth = 90
-        Me.list_tanggal.Name = "list_tanggal"
-        Me.list_tanggal.ReadOnly = True
-        Me.list_tanggal.Width = 90
-        '
-        'list_custo
-        '
-        Me.list_custo.DataPropertyName = "piutang_custo_n"
-        Me.list_custo.HeaderText = "Customer"
-        Me.list_custo.MinimumWidth = 160
-        Me.list_custo.Name = "list_custo"
-        Me.list_custo.ReadOnly = True
-        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.list_custo.Width = 160
-        '
-        'list_sisa
-        '
-        Me.list_sisa.DataPropertyName = "piutang_sisa"
-        Me.list_sisa.HeaderText = "Sisa"
-        Me.list_sisa.MinimumWidth = 95
-        Me.list_sisa.Name = "list_sisa"
-        Me.list_sisa.ReadOnly = True
-        Me.list_sisa.Width = 95
-        '
-        'list_temp
-        '
-        Me.list_temp.DataPropertyName = "piutang_jt"
-        Me.list_temp.HeaderText = "Tgl.Jt.Tempo"
-        Me.list_temp.Name = "list_temp"
-        Me.list_temp.ReadOnly = True
-        '
-        'list_pasar
-        '
-        Me.list_pasar.DataPropertyName = "customer_pasar"
-        Me.list_pasar.HeaderText = "Pasar"
-        Me.list_pasar.Name = "list_pasar"
-        Me.list_pasar.ReadOnly = True
-        '
-        'list_kec
-        '
-        Me.list_kec.DataPropertyName = "customer_kecamatan"
-        Me.list_kec.HeaderText = "Kecamatan"
-        Me.list_kec.Name = "list_kec"
-        Me.list_kec.ReadOnly = True
-        '
-        'list_kab
-        '
-        Me.list_kab.DataPropertyName = "customer_kabupaten"
-        Me.list_kab.HeaderText = "Kabupaten"
-        Me.list_kab.Name = "list_kab"
-        Me.list_kab.ReadOnly = True
-        '
-        'list_sales
-        '
-        Me.list_sales.DataPropertyName = "salesman_nama"
-        Me.list_sales.HeaderText = "Salesman"
-        Me.list_sales.Name = "list_sales"
-        Me.list_sales.ReadOnly = True
-        Me.list_sales.Width = 125
-        '
-        'draft_custo
-        '
-        Me.draft_custo.DataPropertyName = "customer_nama"
-        Me.draft_custo.HeaderText = "Customer"
-        Me.draft_custo.MinimumWidth = 100
-        Me.draft_custo.Name = "draft_custo"
-        Me.draft_custo.ReadOnly = True
-        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.draft_custo.Width = 120
-        '
-        'draft_faktur
-        '
-        Me.draft_faktur.DataPropertyName = "trans_faktur"
-        Me.draft_faktur.HeaderText = "No.Faktur"
-        Me.draft_faktur.Name = "draft_faktur"
-        Me.draft_faktur.ReadOnly = True
-        Me.draft_faktur.Width = 90
-        '
-        'draft_sisa
-        '
-        Me.draft_sisa.DataPropertyName = "trans_harga_retur"
-        Me.draft_sisa.HeaderText = "Sisa"
-        Me.draft_sisa.MinimumWidth = 50
-        Me.draft_sisa.Name = "draft_sisa"
-        Me.draft_sisa.ReadOnly = True
-        Me.draft_sisa.Width = 75
-        '
-        'draft_sales
-        '
-        Me.draft_sales.HeaderText = "Salesman"
-        Me.draft_sales.Name = "draft_sales"
-        Me.draft_sales.ReadOnly = True
-        '
         'fr_draft_tagihan
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -921,7 +915,6 @@ Partial Class fr_draft_tagihan
     Friend WithEvents mn_edit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DraftBarangToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents DraftNotaToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_refresh As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label

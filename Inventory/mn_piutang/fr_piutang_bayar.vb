@@ -350,21 +350,21 @@
         Select Case tipe
             Case "sales"
                 q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman' FROM data_salesman_master " _
-                    & "WHERE salesman_status<>9 AND salesman_nama LIKE '{0}%'"
+                    & "WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case "custo"
                 q = "SELECT customer_kode as 'Kode', customer_nama as 'Customer', getSisaTitipan('piutang','{0}',customer_kode) as PiutangSupl FROM data_customer_master " _
-                    & "WHERE customer_status<>9 AND customer_nama LIKE '{1}%'"
+                    & "WHERE customer_status=1 AND customer_nama LIKE '{1}%'"
                 q = String.Format(q, selectperiode.id, "{0}")
                 dt = getDataTablefromDB(String.Format(q, param))
             Case "faktur"
                 q = "SELECT piutang_faktur as 'Kode Faktur', getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as 'Sisa Piutang', " _
-                    & "ADDDATE(faktur_tanggal_trans, faktur_term) as 'Jatuh Tempo' " _
+                    & "ADDDATE(faktur_tanggal_trans, faktur_term) as 'Jatuh Tempo', piutang_awal " _
                     & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
                     & "WHERE getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0 AND faktur_customer='{1}' " _
-                    & "AND faktur_sales='" & in_sales.Text & "' AND piutang_faktur LIKE '{0}%'"
-                consoleWriteLine(String.Format(q, param, param2))
-                dt = getDataTablefromDB(String.Format(q, param, param2))
+                    & "AND faktur_sales='" & in_sales.Text & "' AND piutang_faktur LIKE '{0}%' AND piutang_idperiode='{2}'"
+                consoleWriteLine(String.Format(q, param, param2, selectperiode.id))
+                dt = getDataTablefromDB(String.Format(q, param, param2, selectperiode.id))
             Case Else
                 Exit Sub
         End Select
@@ -397,7 +397,9 @@
                     in_custo_n.Focus()
                 Case "faktur"
                     in_faktur.Text = .Cells(0).Value
-                    in_kredit.Value = .Cells(1).Value
+                    in_sisafaktur.Text = commaThousand(.Cells(1).Value)
+                    _totalhutang = .Cells(2).Value
+                    in_tgl_jtfaktur.Text = .Cells(3).Value
                     'AND OTHER STUFF
                     cb_bayar.Focus()
                 Case Else

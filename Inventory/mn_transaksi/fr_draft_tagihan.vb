@@ -174,7 +174,7 @@
             queryArr.Add("INSERT INTO data_tagihan_faktur SET " & String.Join(",", dataArr) & " ON DUPLICATE KEY UPDATE " & String.Join(",", data1))
 
             '-------------- insert faktur -> delete removed faktur
-            Dim delquery As String = "DELETE FROM data_draft_nota WHERE nota_draft='" & kodedraftselected & "' AND nota_faktur NOT IN ({0})"
+            Dim delquery As String = "DELETE FROM data_tagihan_nota WHERE nota_draft='" & kodedraftselected & "' AND nota_faktur NOT IN ({0})"
             Dim koded As New List(Of String)
             For Each x As DataGridViewRow In dgv_draftfaktur.Rows
                 dataArr = {
@@ -361,6 +361,7 @@
                             bt_create_draft.PerformClick()
                             ClearAll()
                         ElseIf x = DialogResult.No Then
+                            in_kode_draft.Clear()
                             dgv_draftfaktur.Rows.Clear()
                             dgv_draftfaktur.Refresh()
                         ElseIf x = DialogResult.Cancel Then
@@ -453,12 +454,12 @@
     '------------ SAVE DRAFT
     Private Sub bt_create_draft_Click(sender As Object, e As EventArgs) Handles bt_create_draft.Click
         If in_sales.Text = Nothing Then
-            MessageBox.Show("Sales hasnt been inputed")
+            MessageBox.Show("Salesman belum di input")
             Exit Sub
         End If
 
         If dgv_draftfaktur.Rows.Count = 0 Then
-            MessageBox.Show("faktur hasnt been inputed")
+            MessageBox.Show("Faktur tertagih belum di input")
             Exit Sub
         End If
 
@@ -518,5 +519,9 @@
             sender.Text = Trim(sender.Text)
             loadFaktur(in_sales.Text, in_cari_faktur.Text)
         End If
+    End Sub
+
+    Private Sub DraftBarangToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DraftBarangToolStripMenuItem.Click
+        bt_draft_nota.PerformClick()
     End Sub
 End Class

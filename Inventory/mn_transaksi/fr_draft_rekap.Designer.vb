@@ -41,7 +41,14 @@ Partial Class fr_draft_rekap
         Me.sales_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sales_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draft_list = New System.Windows.Forms.DataGridView()
+        Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draftfaktur = New System.Windows.Forms.DataGridView()
+        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_netto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draft_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.in_cari_faktur = New System.Windows.Forms.TextBox()
         Me.bt_cari_faktur = New System.Windows.Forms.Button()
@@ -49,6 +56,12 @@ Partial Class fr_draft_rekap
         Me.bt_draft_nota = New System.Windows.Forms.Button()
         Me.bt_addfaktur = New System.Windows.Forms.Button()
         Me.dgv_listfaktur = New System.Windows.Forms.DataGridView()
+        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_netto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.list_draft = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.bt_loaddraft = New System.Windows.Forms.Button()
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
@@ -70,19 +83,6 @@ Partial Class fr_draft_rekap
         Me.bt_caridraft = New System.Windows.Forms.Button()
         Me.in_caridraft = New System.Windows.Forms.TextBox()
         Me.bt_create_draft = New System.Windows.Forms.Button()
-        Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_netto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draft_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_tanggal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_netto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.list_draft = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_sales, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_draft_list, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -301,6 +301,32 @@ Partial Class fr_draft_rekap
         Me.dgv_draft_list.Size = New System.Drawing.Size(236, 154)
         Me.dgv_draft_list.TabIndex = 278
         '
+        'draftlist_kode
+        '
+        Me.draftlist_kode.DataPropertyName = "draft_kode"
+        Me.draftlist_kode.HeaderText = "Kode Rekap"
+        Me.draftlist_kode.MinimumWidth = 100
+        Me.draftlist_kode.Name = "draftlist_kode"
+        Me.draftlist_kode.ReadOnly = True
+        Me.draftlist_kode.Width = 125
+        '
+        'draftlist_tgl
+        '
+        Me.draftlist_tgl.DataPropertyName = "draft_tanggal"
+        Me.draftlist_tgl.HeaderText = "Tgl.Rekap"
+        Me.draftlist_tgl.MinimumWidth = 50
+        Me.draftlist_tgl.Name = "draftlist_tgl"
+        Me.draftlist_tgl.ReadOnly = True
+        '
+        'draftlist_sales
+        '
+        Me.draftlist_sales.DataPropertyName = "draft_sales"
+        Me.draftlist_sales.HeaderText = "Salesman"
+        Me.draftlist_sales.MinimumWidth = 175
+        Me.draftlist_sales.Name = "draftlist_sales"
+        Me.draftlist_sales.ReadOnly = True
+        Me.draftlist_sales.Width = 175
+        '
         'dgv_draftfaktur
         '
         Me.dgv_draftfaktur.AllowUserToAddRows = False
@@ -315,6 +341,40 @@ Partial Class fr_draft_rekap
         Me.dgv_draftfaktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_draftfaktur.Size = New System.Drawing.Size(340, 174)
         Me.dgv_draftfaktur.TabIndex = 287
+        '
+        'draft_custo
+        '
+        Me.draft_custo.DataPropertyName = "customer_nama"
+        Me.draft_custo.HeaderText = "Customer"
+        Me.draft_custo.MinimumWidth = 140
+        Me.draft_custo.Name = "draft_custo"
+        Me.draft_custo.ReadOnly = True
+        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.draft_custo.Width = 140
+        '
+        'draft_faktur
+        '
+        Me.draft_faktur.DataPropertyName = "trans_faktur"
+        Me.draft_faktur.HeaderText = "No.Faktur"
+        Me.draft_faktur.Name = "draft_faktur"
+        Me.draft_faktur.ReadOnly = True
+        Me.draft_faktur.Width = 90
+        '
+        'draft_netto
+        '
+        Me.draft_netto.DataPropertyName = "trans_harga_retur"
+        Me.draft_netto.HeaderText = "Netto"
+        Me.draft_netto.MinimumWidth = 90
+        Me.draft_netto.Name = "draft_netto"
+        Me.draft_netto.ReadOnly = True
+        Me.draft_netto.Width = 90
+        '
+        'draft_sales
+        '
+        Me.draft_sales.DataPropertyName = "salesman_nama"
+        Me.draft_sales.HeaderText = "Salesman"
+        Me.draft_sales.Name = "draft_sales"
+        Me.draft_sales.ReadOnly = True
         '
         'Label4
         '
@@ -389,6 +449,58 @@ Partial Class fr_draft_rekap
         Me.dgv_listfaktur.Size = New System.Drawing.Size(519, 174)
         Me.dgv_listfaktur.TabIndex = 280
         '
+        'list_faktur
+        '
+        Me.list_faktur.DataPropertyName = "kode"
+        Me.list_faktur.HeaderText = "No.Faktur"
+        Me.list_faktur.Name = "list_faktur"
+        Me.list_faktur.ReadOnly = True
+        Me.list_faktur.Width = 90
+        '
+        'list_tanggal
+        '
+        Me.list_tanggal.DataPropertyName = "faktur_tanggal_trans"
+        Me.list_tanggal.HeaderText = "Tanggal"
+        Me.list_tanggal.MinimumWidth = 90
+        Me.list_tanggal.Name = "list_tanggal"
+        Me.list_tanggal.ReadOnly = True
+        Me.list_tanggal.Width = 90
+        '
+        'list_custo
+        '
+        Me.list_custo.DataPropertyName = "nama"
+        Me.list_custo.HeaderText = "Customer"
+        Me.list_custo.MinimumWidth = 160
+        Me.list_custo.Name = "list_custo"
+        Me.list_custo.ReadOnly = True
+        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.list_custo.Width = 160
+        '
+        'list_netto
+        '
+        Me.list_netto.DataPropertyName = "faktur_netto"
+        Me.list_netto.HeaderText = "Netto"
+        Me.list_netto.MinimumWidth = 95
+        Me.list_netto.Name = "list_netto"
+        Me.list_netto.ReadOnly = True
+        Me.list_netto.Width = 95
+        '
+        'list_draft
+        '
+        Me.list_draft.DataPropertyName = "faktur_draft_rekap"
+        Me.list_draft.HeaderText = "Draft"
+        Me.list_draft.Name = "list_draft"
+        Me.list_draft.ReadOnly = True
+        Me.list_draft.Width = 50
+        '
+        'sales
+        '
+        Me.sales.DataPropertyName = "salesman_nama"
+        Me.sales.HeaderText = "Sales"
+        Me.sales.Name = "sales"
+        Me.sales.ReadOnly = True
+        Me.sales.Width = 150
+        '
         'Label6
         '
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -441,6 +553,7 @@ Partial Class fr_draft_rekap
         Me.mn_edit.ShortcutKeys = System.Windows.Forms.Keys.F2
         Me.mn_edit.Size = New System.Drawing.Size(84, 20)
         Me.mn_edit.Text = "Edit Draft"
+        Me.mn_edit.Visible = False
         '
         'mn_print
         '
@@ -455,13 +568,13 @@ Partial Class fr_draft_rekap
         'DraftBarangToolStripMenuItem
         '
         Me.DraftBarangToolStripMenuItem.Name = "DraftBarangToolStripMenuItem"
-        Me.DraftBarangToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.DraftBarangToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.DraftBarangToolStripMenuItem.Text = "Draft Barang"
         '
         'DraftNotaToolStripMenuItem
         '
         Me.DraftNotaToolStripMenuItem.Name = "DraftNotaToolStripMenuItem"
-        Me.DraftNotaToolStripMenuItem.Size = New System.Drawing.Size(140, 22)
+        Me.DraftNotaToolStripMenuItem.Size = New System.Drawing.Size(152, 22)
         Me.DraftNotaToolStripMenuItem.Text = "Draft Nota"
         '
         'bt_addsales
@@ -588,118 +701,6 @@ Partial Class fr_draft_rekap
         Me.bt_create_draft.TabIndex = 290
         Me.bt_create_draft.Text = "Simpan Draft"
         Me.bt_create_draft.UseVisualStyleBackColor = True
-        '
-        'draftlist_kode
-        '
-        Me.draftlist_kode.DataPropertyName = "draft_kode"
-        Me.draftlist_kode.HeaderText = "Kode Rekap"
-        Me.draftlist_kode.MinimumWidth = 100
-        Me.draftlist_kode.Name = "draftlist_kode"
-        Me.draftlist_kode.ReadOnly = True
-        Me.draftlist_kode.Width = 125
-        '
-        'draftlist_tgl
-        '
-        Me.draftlist_tgl.DataPropertyName = "draft_tanggal"
-        Me.draftlist_tgl.HeaderText = "Tgl.Rekap"
-        Me.draftlist_tgl.MinimumWidth = 50
-        Me.draftlist_tgl.Name = "draftlist_tgl"
-        Me.draftlist_tgl.ReadOnly = True
-        '
-        'draftlist_sales
-        '
-        Me.draftlist_sales.DataPropertyName = "draft_sales"
-        Me.draftlist_sales.HeaderText = "Salesman"
-        Me.draftlist_sales.MinimumWidth = 175
-        Me.draftlist_sales.Name = "draftlist_sales"
-        Me.draftlist_sales.ReadOnly = True
-        Me.draftlist_sales.Width = 175
-        '
-        'draft_custo
-        '
-        Me.draft_custo.DataPropertyName = "customer_nama"
-        Me.draft_custo.HeaderText = "Customer"
-        Me.draft_custo.MinimumWidth = 140
-        Me.draft_custo.Name = "draft_custo"
-        Me.draft_custo.ReadOnly = True
-        Me.draft_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.draft_custo.Width = 140
-        '
-        'draft_faktur
-        '
-        Me.draft_faktur.DataPropertyName = "trans_faktur"
-        Me.draft_faktur.HeaderText = "No.Faktur"
-        Me.draft_faktur.Name = "draft_faktur"
-        Me.draft_faktur.ReadOnly = True
-        Me.draft_faktur.Width = 90
-        '
-        'draft_netto
-        '
-        Me.draft_netto.DataPropertyName = "trans_harga_retur"
-        Me.draft_netto.HeaderText = "Netto"
-        Me.draft_netto.MinimumWidth = 90
-        Me.draft_netto.Name = "draft_netto"
-        Me.draft_netto.ReadOnly = True
-        Me.draft_netto.Width = 90
-        '
-        'draft_sales
-        '
-        Me.draft_sales.DataPropertyName = "salesman_nama"
-        Me.draft_sales.HeaderText = "Salesman"
-        Me.draft_sales.Name = "draft_sales"
-        Me.draft_sales.ReadOnly = True
-        '
-        'list_faktur
-        '
-        Me.list_faktur.DataPropertyName = "kode"
-        Me.list_faktur.HeaderText = "No.Faktur"
-        Me.list_faktur.Name = "list_faktur"
-        Me.list_faktur.ReadOnly = True
-        Me.list_faktur.Width = 90
-        '
-        'list_tanggal
-        '
-        Me.list_tanggal.DataPropertyName = "faktur_tanggal_trans"
-        Me.list_tanggal.HeaderText = "Tanggal"
-        Me.list_tanggal.MinimumWidth = 90
-        Me.list_tanggal.Name = "list_tanggal"
-        Me.list_tanggal.ReadOnly = True
-        Me.list_tanggal.Width = 90
-        '
-        'list_custo
-        '
-        Me.list_custo.DataPropertyName = "nama"
-        Me.list_custo.HeaderText = "Customer"
-        Me.list_custo.MinimumWidth = 160
-        Me.list_custo.Name = "list_custo"
-        Me.list_custo.ReadOnly = True
-        Me.list_custo.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.list_custo.Width = 160
-        '
-        'list_netto
-        '
-        Me.list_netto.DataPropertyName = "faktur_netto"
-        Me.list_netto.HeaderText = "Netto"
-        Me.list_netto.MinimumWidth = 95
-        Me.list_netto.Name = "list_netto"
-        Me.list_netto.ReadOnly = True
-        Me.list_netto.Width = 95
-        '
-        'list_draft
-        '
-        Me.list_draft.DataPropertyName = "faktur_draft_rekap"
-        Me.list_draft.HeaderText = "Draft"
-        Me.list_draft.Name = "list_draft"
-        Me.list_draft.ReadOnly = True
-        Me.list_draft.Width = 50
-        '
-        'sales
-        '
-        Me.sales.DataPropertyName = "salesman_nama"
-        Me.sales.HeaderText = "Sales"
-        Me.sales.Name = "sales"
-        Me.sales.ReadOnly = True
-        Me.sales.Width = 150
         '
         'fr_draft_rekap
         '

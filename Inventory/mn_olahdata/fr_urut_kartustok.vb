@@ -19,7 +19,7 @@
     Private Sub loadGudang(Optional param As String = "")
         Dim bs As New BindingSource
 
-        bs.DataSource = getDataTablefromDB("SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang")
+        bs.DataSource = getDataTablefromDB("SELECT gudang_kode as kode, gudang_nama as nama FROM data_barang_gudang WHERE gudang_status=1")
         bs.Filter = "kode LIKE '" & param & "%' OR nama LIKE '" & param & "%'"
 
         dgv_gudang.DataSource = bs
@@ -30,7 +30,7 @@
         Dim bs As New BindingSource
         Dim q As String = "SELECT stock_barang as kode, barang_nama as nama " _
                           & "FROM data_stok_awal LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
-                          & "WHERE stock_gudang='" & gudang & "' AND stock_periode='" & selectperiode.id & "'"
+                          & "WHERE stock_gudang='" & gudang & "' AND stock_periode='" & selectperiode.id & "' AND stock_status=1"
 
         bs.DataSource = getDataTablefromDB(q)
         bs.Filter = "kode LIKE '" & param & "%' OR nama LIKE '" & param & "%'"

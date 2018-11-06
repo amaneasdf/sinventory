@@ -484,7 +484,7 @@
         'TODO : WRITE HUTANG AWAL
         Dim q6 As String = "INSERT INTO data_hutang_awal SET hutang_faktur='{0}', hutang_idperiode='{4}',{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
         dataBrg = {
-            "hutang_awal=" & removeCommaThousand(in_netto.Text)
+            "hutang_awal=" & removeCommaThousand(in_total_netto.Text).ToString.Replace(",", ".")
             }
         data1 = {
             "hutang_reg_date=NOW()",
@@ -599,11 +599,11 @@
         End With
 
         With date_tgl_beli
-            .Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_beli.Value.Day)
-            .MaxDate = DateSerial(selectedperiode.Year, selectedperiode.Month + 1, 0)
-            .MinDate = DateSerial(selectedperiode.Year, selectedperiode.Month, 1)
+            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+            .MaxDate = selectperiode.tglakhir
+            '.MinDate = selectperiode.tglawal
         End With
-        date_tgl_pajak.Value = DateSerial(selectedperiode.Year, selectedperiode.Month, date_tgl_beli.Value.Day)
+        date_tgl_pajak.Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
 
         For Each x As DataGridViewColumn In {harga, discrp, jml, subtot}
             x.DefaultCellStyle = dgvstyle_currency
@@ -636,6 +636,11 @@
         If dgv_barang.RowCount = 0 Then
             MessageBox.Show("Barang belum di input")
             in_barang.Focus()
+            Exit Sub
+        End If
+        If date_tgl_beli.Value < selectperiode.tglawal Then
+            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih")
+            date_tgl_beli.Focus()
             Exit Sub
         End If
 
@@ -904,5 +909,13 @@
             dgvTotxt()
             dgv_barang.Rows.RemoveAt(indexrow)
         End If
+    End Sub
+
+    Private Sub cb_ppn_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_ppn.SelectionChangeCommitted
+        countbiaya()
+    End Sub
+
+    Private Sub in_klaim_ValueChanged(sender As Object, e As EventArgs) Handles in_klaim.ValueChanged
+        countbiaya()
     End Sub
 End Class

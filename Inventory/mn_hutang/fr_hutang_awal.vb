@@ -26,15 +26,13 @@
     Private Sub loadDgv(kode As String)
         Dim dt As New DataTable
 
-        dt = getDataTablefromDB("SELECT ket AS 'Ket', faktur_tanggal_trans AS 'Tanggal', " _
-                                & "bayar AS 'Bayar/Retur', hutang_awal AS  'Hutang', ref AS 'Referensi' FROM selecthutangtransaksi " _
-                                & "LEFT JOIN data_supplier_master ON faktur_supplier=supplier_kode " _
-                                & "WHERE hutang_faktur='" & kode & "' ORDER BY hutang_awal DESC, faktur_tanggal_trans")
+        dt = getDataTablefromDB("getDataHutangTrans('" & selectperiode.id & "','" & kode & "')")
 
+        On Error Resume Next
         With dgv_hutang
             .DataSource = dt
-            .Columns(2).DefaultCellStyle = dgvstyle_currency
-            .Columns(3).DefaultCellStyle = dgvstyle_currency
+            .Columns("bayar").DefaultCellStyle = dgvstyle_currency
+            .Columns("hutang").DefaultCellStyle = dgvstyle_currency
         End With
         countTotal()
 
@@ -48,8 +46,8 @@
         Dim _hutang As Double = 0
         If dgv_hutang.Rows.Count > 0 Then
             For Each row As DataGridViewRow In dgv_hutang.Rows
-                _bayar += row.Cells(2).Value
-                _hutang += row.Cells(3).Value
+                _bayar += row.Cells("bayar").Value
+                _hutang += row.Cells("hutang").Value
             Next
         End If
         in_total.Text = commaThousand(_bayar)

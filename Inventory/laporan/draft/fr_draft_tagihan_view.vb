@@ -44,7 +44,7 @@ Public Class fr_draft_tagihan_view
         '                               & "LEFT JOIN data_customer_master ON customer_kode=piutang_custo " _
         '                               & "WHERE nota_draft='" & kodedraft & "'"
         Dim query2 As String = String.Format(q, selectperiode.id, kodedraft)
-        'consoleWriteLine(query2)
+        consoleWriteLine(query2)
 
         ds_transaksi.dt_rekap_tagihan_detail.Clear()
         filldatatabel(query2, ds_transaksi.dt_rekap_tagihan_detail)

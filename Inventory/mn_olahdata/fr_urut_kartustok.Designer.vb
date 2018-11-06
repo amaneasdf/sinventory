@@ -116,7 +116,7 @@ Partial Class fr_urut_kartustok
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(262, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(263, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Urutkan Transaksi Stok"
         '
@@ -127,13 +127,13 @@ Partial Class fr_urut_kartustok
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.brg_kode, Me.brg_kategori, Me.brg_n})
-        Me.dgv_barang.Location = New System.Drawing.Point(413, 100)
+        Me.dgv_barang.Location = New System.Drawing.Point(385, 100)
         Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(455, 100)
+        Me.dgv_barang.Size = New System.Drawing.Size(455, 145)
         Me.dgv_barang.TabIndex = 5
         '
         'brg_kode
@@ -173,7 +173,7 @@ Partial Class fr_urut_kartustok
         Me.dgv_gudang.ReadOnly = True
         Me.dgv_gudang.RowHeadersVisible = False
         Me.dgv_gudang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_gudang.Size = New System.Drawing.Size(359, 100)
+        Me.dgv_gudang.Size = New System.Drawing.Size(359, 145)
         Me.dgv_gudang.TabIndex = 2
         '
         'sales_kode
@@ -298,7 +298,7 @@ Partial Class fr_urut_kartustok
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(410, 81)
+        Me.Label1.Location = New System.Drawing.Point(382, 81)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(41, 13)
         Me.Label1.TabIndex = 280
@@ -309,7 +309,7 @@ Partial Class fr_urut_kartustok
         Me.in_cari_barang.BackColor = System.Drawing.Color.White
         Me.in_cari_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_cari_barang.ForeColor = System.Drawing.Color.Black
-        Me.in_cari_barang.Location = New System.Drawing.Point(467, 77)
+        Me.in_cari_barang.Location = New System.Drawing.Point(439, 77)
         Me.in_cari_barang.MaxLength = 30
         Me.in_cari_barang.Name = "in_cari_barang"
         Me.in_cari_barang.Size = New System.Drawing.Size(211, 20)
@@ -317,7 +317,7 @@ Partial Class fr_urut_kartustok
         '
         'bt_cari_barang
         '
-        Me.bt_cari_barang.Location = New System.Drawing.Point(684, 77)
+        Me.bt_cari_barang.Location = New System.Drawing.Point(656, 77)
         Me.bt_cari_barang.Name = "bt_cari_barang"
         Me.bt_cari_barang.Size = New System.Drawing.Size(38, 20)
         Me.bt_cari_barang.TabIndex = 4
@@ -326,11 +326,12 @@ Partial Class fr_urut_kartustok
         '
         'bt_load_kartu
         '
-        Me.bt_load_kartu.Location = New System.Drawing.Point(680, 206)
+        Me.bt_load_kartu.ImageAlign = System.Drawing.ContentAlignment.TopCenter
+        Me.bt_load_kartu.Location = New System.Drawing.Point(846, 100)
         Me.bt_load_kartu.Name = "bt_load_kartu"
-        Me.bt_load_kartu.Size = New System.Drawing.Size(188, 27)
+        Me.bt_load_kartu.Size = New System.Drawing.Size(55, 55)
         Me.bt_load_kartu.TabIndex = 6
-        Me.bt_load_kartu.Text = "Load KartuStok"
+        Me.bt_load_kartu.Text = "Load"
         Me.bt_load_kartu.UseVisualStyleBackColor = True
         '
         'in_kode_stok

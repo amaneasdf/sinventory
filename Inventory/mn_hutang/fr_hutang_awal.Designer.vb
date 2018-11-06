@@ -40,7 +40,6 @@ Partial Class fr_hutang_awal
         Me.in_hutang_awal = New System.Windows.Forms.TextBox()
         Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.in_tgl_term = New System.Windows.Forms.TextBox()
-        Me.dgv_hutang = New System.Windows.Forms.DataGridView()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.in_total = New System.Windows.Forms.TextBox()
         Me.in_sisa = New System.Windows.Forms.TextBox()
@@ -48,6 +47,13 @@ Partial Class fr_hutang_awal
         Me.in_tgllunas = New System.Windows.Forms.TextBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.bt_bayar = New System.Windows.Forms.Button()
+        Me.dgv_hutang = New System.Windows.Forms.DataGridView()
+        Me.ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.hutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -105,7 +111,7 @@ Partial Class fr_hutang_awal
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(147, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(148, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Hutang"
         '
@@ -254,18 +260,6 @@ Partial Class fr_hutang_awal
         Me.in_tgl_term.Size = New System.Drawing.Size(177, 20)
         Me.in_tgl_term.TabIndex = 2
         '
-        'dgv_hutang
-        '
-        Me.dgv_hutang.AllowUserToAddRows = False
-        Me.dgv_hutang.AllowUserToDeleteRows = False
-        Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_hutang.Location = New System.Drawing.Point(11, 164)
-        Me.dgv_hutang.Name = "dgv_hutang"
-        Me.dgv_hutang.ReadOnly = True
-        Me.dgv_hutang.RowHeadersVisible = False
-        Me.dgv_hutang.Size = New System.Drawing.Size(527, 241)
-        Me.dgv_hutang.TabIndex = 297
-        '
         'Label6
         '
         Me.Label6.AutoSize = True
@@ -351,12 +345,71 @@ Partial Class fr_hutang_awal
         Me.bt_bayar.Text = "Tambah Pembayaran"
         Me.bt_bayar.UseVisualStyleBackColor = True
         '
+        'dgv_hutang
+        '
+        Me.dgv_hutang.AllowUserToAddRows = False
+        Me.dgv_hutang.AllowUserToDeleteRows = False
+        Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ket, Me.tgl, Me.hutang, Me.bayar, Me.ref, Me.status})
+        Me.dgv_hutang.Location = New System.Drawing.Point(10, 164)
+        Me.dgv_hutang.Name = "dgv_hutang"
+        Me.dgv_hutang.ReadOnly = True
+        Me.dgv_hutang.RowHeadersVisible = False
+        Me.dgv_hutang.Size = New System.Drawing.Size(530, 241)
+        Me.dgv_hutang.TabIndex = 372
+        '
+        'ket
+        '
+        Me.ket.DataPropertyName = "Ket"
+        Me.ket.HeaderText = "Ket"
+        Me.ket.Name = "ket"
+        Me.ket.ReadOnly = True
+        Me.ket.Width = 75
+        '
+        'tgl
+        '
+        Me.tgl.DataPropertyName = "Tanggal"
+        Me.tgl.HeaderText = "Tanggal"
+        Me.tgl.Name = "tgl"
+        Me.tgl.ReadOnly = True
+        Me.tgl.Width = 85
+        '
+        'hutang
+        '
+        Me.hutang.DataPropertyName = "Hutang"
+        Me.hutang.HeaderText = "Hutang"
+        Me.hutang.Name = "hutang"
+        Me.hutang.ReadOnly = True
+        '
+        'bayar
+        '
+        Me.bayar.DataPropertyName = "Bayar"
+        Me.bayar.HeaderText = "Bayar"
+        Me.bayar.Name = "bayar"
+        Me.bayar.ReadOnly = True
+        '
+        'ref
+        '
+        Me.ref.DataPropertyName = "Ref"
+        Me.ref.HeaderText = "Ref"
+        Me.ref.Name = "ref"
+        Me.ref.ReadOnly = True
+        Me.ref.Width = 150
+        '
+        'status
+        '
+        Me.status.DataPropertyName = "piutang_status"
+        Me.status.HeaderText = "Status"
+        Me.status.Name = "status"
+        Me.status.ReadOnly = True
+        '
         'fr_hutang_awal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(550, 543)
+        Me.Controls.Add(Me.dgv_hutang)
         Me.Controls.Add(Me.bt_bayar)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label7)
@@ -364,7 +417,6 @@ Partial Class fr_hutang_awal
         Me.Controls.Add(Me.in_tgllunas)
         Me.Controls.Add(Me.in_sisa)
         Me.Controls.Add(Me.in_total)
-        Me.Controls.Add(Me.dgv_hutang)
         Me.Controls.Add(Me.in_term)
         Me.Controls.Add(Me.in_hutang_awal)
         Me.Controls.Add(Me.Label5)
@@ -410,7 +462,6 @@ Partial Class fr_hutang_awal
     Friend WithEvents in_hutang_awal As System.Windows.Forms.TextBox
     Friend WithEvents in_term As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_tgl_term As System.Windows.Forms.TextBox
-    Friend WithEvents dgv_hutang As System.Windows.Forms.DataGridView
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents in_total As System.Windows.Forms.TextBox
     Friend WithEvents in_sisa As System.Windows.Forms.TextBox
@@ -418,4 +469,11 @@ Partial Class fr_hutang_awal
     Friend WithEvents in_tgllunas As System.Windows.Forms.TextBox
     Friend WithEvents Label8 As System.Windows.Forms.Label
     Friend WithEvents bt_bayar As System.Windows.Forms.Button
+    Friend WithEvents dgv_hutang As System.Windows.Forms.DataGridView
+    Friend WithEvents ket As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents tgl As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents hutang As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ref As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents status As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class
