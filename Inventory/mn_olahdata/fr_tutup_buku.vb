@@ -83,6 +83,11 @@
         End If
     End Sub
 
+    Private Sub loadPiutang()
+        Dim q As String = ""
+
+    End Sub
+
     Private Sub doTutupBuku()
         'INSERT STOK AWAL FOR SELECTED ITEM IN dgv_barang WITH NEW IDPERIODE
         'CREATE KARTU STOCK FOR THE ONE INSERTED

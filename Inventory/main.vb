@@ -216,7 +216,7 @@
 
         Dim q As String = "SELECT data_menu_master.menu_kode, data_menu_master.menu_label " _
                           & "FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode AND kode_menu.menu_status=1 " _
-                          & "WHERE menu_group='{0}' AND data_menu_master.menu_status=1 ORDER BY kode_menu.menu_kode ASC;"
+                          & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY kode_menu.menu_kode ASC;"
         dbSelect(String.Format(q, loggeduser.user_lev))
         Do While rd.Read
             MenuKode = rd.Item("menu_kode")
@@ -653,6 +653,13 @@
                         .ShowDialog()
                     End With
                 End Using
+            Case "mn070811"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Jurnal Umum", "k_jurnalumum")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")
@@ -725,7 +732,7 @@
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Visible = False
-        Dim x As cnction = loadCon("Catra")
+        Dim x As cnction = loadCon("CatraDev")
 
         Me.Cursor = Cursors.AppStarting
         'setConn("localhost", "db-inventory", "root", "root")

@@ -15,6 +15,18 @@
     {
         "Entry"
         {
+        "MsmKey" = "8:_01581762065B48A293A24C9795D588E2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_016F3986029C43039BDA33A139945042"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -27,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_18A17AC1183041EC92E41D805B42CFC5"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1F1E3E3EA5EB6B8C698CD7BC3C6F9D48"
         "OwnerKey" = "8:_B263CE820B91B96487C668A402D9A20E"
         "MsmSig" = "8:_UNDEFINED"
@@ -35,6 +53,30 @@
         {
         "MsmKey" = "8:_1F1E3E3EA5EB6B8C698CD7BC3C6F9D48"
         "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_39C2C6A522A547C387E20117E0B1DAC9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4090C19B263C417DBE1BC1C3B703804B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5961885C6DD74C30BCCA32F20C89BD32"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8DFB71367048444E9220004AD141BAF5"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -63,8 +105,26 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A2BDE568A2D040A4AD9F3DAD491A86E8"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_A41532C5C2DE6C3741045D62B28BC460"
         "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A519D6A5FA1C4069A732BCF10C0934D9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A6B51B29B537458A851140DA3C0D65FA"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -77,6 +137,12 @@
         {
         "MsmKey" = "8:_B263CE820B91B96487C668A402D9A20E"
         "OwnerKey" = "8:_BB34CDBB012EFF22F099B530DA077F93"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BAA570E5E0504777B0546DFC92462CD2"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -99,6 +165,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CE864F3E194444FEBA50C6B165B13373"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D507A78A31444316B0DEE3E4B0BE7689"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E76C342D64664647BC4BE8D566A855B2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
         "MsmSig" = "8:_UNDEFINED"
@@ -106,13 +190,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_182A6D6AF262D42B660A035068EA163B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A41532C5C2DE6C3741045D62B28BC460"
+        "OwnerKey" = "8:_BF219750B1126CC8CE15E7872FDA4E6A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,19 +208,25 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_99B2C9991B1450D35F4ADAD6C15F07C6"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_1F1E3E3EA5EB6B8C698CD7BC3C6F9D48"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_BF219750B1126CC8CE15E7872FDA4E6A"
+        "OwnerKey" = "8:_182A6D6AF262D42B660A035068EA163B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_99B2C9991B1450D35F4ADAD6C15F07C6"
+        "OwnerKey" = "8:_A41532C5C2DE6C3741045D62B28BC460"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -240,6 +324,46 @@
         }
         "File"
         {
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_01581762065B48A293A24C9795D588E2"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-Regular.ttf"
+            "TargetName" = "8:SourceSansPro-Regular.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_016F3986029C43039BDA33A139945042"
+            {
+            "SourcePath" = "8:..\\..\\uninstall.bat"
+            "TargetName" = "8:uninstall.bat"
+            "Tag" = "8:"
+            "Folder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_182A6D6AF262D42B660A035068EA163B"
             {
             "AssemblyRegister" = "3:1"
@@ -271,6 +395,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_18A17AC1183041EC92E41D805B42CFC5"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-BlackItalic.ttf"
+            "TargetName" = "8:SourceSansPro-BlackItalic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1F1E3E3EA5EB6B8C698CD7BC3C6F9D48"
             {
             "AssemblyRegister" = "3:1"
@@ -300,6 +444,86 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_39C2C6A522A547C387E20117E0B1DAC9"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-SemiBold.ttf"
+            "TargetName" = "8:SourceSansPro-SemiBold.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_4090C19B263C417DBE1BC1C3B703804B"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-Light.ttf"
+            "TargetName" = "8:SourceSansPro-Light.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5961885C6DD74C30BCCA32F20C89BD32"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-ExtraLightItalic.ttf"
+            "TargetName" = "8:SourceSansPro-ExtraLightItalic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_8DFB71367048444E9220004AD141BAF5"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-Black.ttf"
+            "TargetName" = "8:SourceSansPro-Black.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_99B2C9991B1450D35F4ADAD6C15F07C6"
@@ -353,6 +577,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A2BDE568A2D040A4AD9F3DAD491A86E8"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-ExtraLight.ttf"
+            "TargetName" = "8:SourceSansPro-ExtraLight.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A41532C5C2DE6C3741045D62B28BC460"
             {
             "AssemblyRegister" = "3:1"
@@ -384,6 +628,46 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A519D6A5FA1C4069A732BCF10C0934D9"
+            {
+            "SourcePath" = "8:..\\Inventory\\favicon.ico"
+            "TargetName" = "8:favicon.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_1DA6CB762A484AFA80F4926727BF9757"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A6B51B29B537458A851140DA3C0D65FA"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-Bold.ttf"
+            "TargetName" = "8:SourceSansPro-Bold.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B263CE820B91B96487C668A402D9A20E"
             {
             "AssemblyRegister" = "3:1"
@@ -413,6 +697,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_BAA570E5E0504777B0546DFC92462CD2"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-BoldItalic.ttf"
+            "TargetName" = "8:SourceSansPro-BoldItalic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BB34CDBB012EFF22F099B530DA077F93"
@@ -477,6 +781,66 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE864F3E194444FEBA50C6B165B13373"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-SemiBoldItalic.ttf"
+            "TargetName" = "8:SourceSansPro-SemiBoldItalic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D507A78A31444316B0DEE3E4B0BE7689"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-LightItalic.ttf"
+            "TargetName" = "8:SourceSansPro-LightItalic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E76C342D64664647BC4BE8D566A855B2"
+            {
+            "SourcePath" = "8:D:\\Source_Sans_Pro\\SourceSansPro-Italic.ttf"
+            "TargetName" = "8:SourceSansPro-Italic.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:TRUE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -491,6 +855,28 @@
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Property" = "8:TARGETDIR"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_1DA6CB762A484AFA80F4926727BF9757"
+                    {
+                    "Name" = "8:data"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_C3F9DBA009E24B73BED18833DDC775D1"
+                        "Folders"
+                        {
+                        }
+                    }
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_274F58A11C0E4E779F12F6622428B153"
+            {
+            "Name" = "8:#1911"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:FontsFolder"
                 "Folders"
                 {
                 }
@@ -534,7 +920,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
         "ProductCode" = "8:{306F0FBE-A5DB-42D4-824E-B7DE452C08FC}"
-        "PackageCode" = "8:{4BAF3462-8BDE-4BF1-84E0-98DB4EE12F75}"
+        "PackageCode" = "8:{FCB16FD5-85E1-4FB0-B1A1-E77A31F3FE58}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -656,13 +1042,27 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_46D08D9AAB5A47018D915EA31D373310"
             {
-            "Name" = "8:Inventory"
+            "Name" = "8:Inventory CV.CatraUpaya"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
             "IconIndex" = "3:0"
             "Transitive" = "11:TRUE"
             "Target" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+            "Folder" = "8:_D336F3CA35A841F885CFDFF2DD168A9F"
+            "WorkingFolder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
+            "Icon" = "8:_A519D6A5FA1C4069A732BCF10C0934D9"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F40E15A13AFB4FCDA76CFD28E4965649"
+            {
+            "Name" = "8:Uninstall Inventory"
+            "Arguments" = "8:[ProductCode]"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_016F3986029C43039BDA33A139945042"
             "Folder" = "8:_D336F3CA35A841F885CFDFF2DD168A9F"
             "WorkingFolder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
             "Icon" = "8:"

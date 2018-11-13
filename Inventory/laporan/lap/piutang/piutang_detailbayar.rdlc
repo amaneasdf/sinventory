@@ -405,7 +405,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>PEMBELIAN</Value>
+                              <Value>PENJUALAN</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontWeight>Bold</FontWeight>

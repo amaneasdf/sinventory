@@ -119,7 +119,7 @@ Module functional
     End Function
 
     Public Function removeCommaThousand(x As String) As Decimal
-        If x = Nothing Or IsNumeric(x) = False Then
+        If x = Nothing Then
             Return 0
             Exit Function
         End If
@@ -275,6 +275,21 @@ Module functional
         End Try
 
         Return x
+    End Function
+
+    '--------------------Stream IMG-----------------------
+    Public Function streamImgUrl(imgurl As String) As Bitmap
+        Dim webClient As System.Net.WebClient = New System.Net.WebClient
+        Dim retImage As Bitmap
+        Try
+            retImage = Bitmap.FromStream(New System.IO.MemoryStream(webClient.DownloadData(imgurl)))
+
+        Catch ex As Exception
+            logError(ex)
+            retImage = Global.Inventory.My.Resources.Resources.close
+        End Try
+
+        Return retImage
     End Function
 
     '--------------------logging db-----------------------

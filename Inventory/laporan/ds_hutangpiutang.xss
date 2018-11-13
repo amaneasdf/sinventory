@@ -11,7 +11,7 @@
     <Shape ID="DesignTable:dt_piutang_bayar_sales_tanggal" ZOrder="10" X="231" Y="52" Height="28" Width="248" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="101" SplitterPosition="24" />
     <Shape ID="DesignTable:dt_piutang_sales_nota" ZOrder="11" X="22" Y="13" Height="28" Width="193" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="234" SplitterPosition="24" />
     <Shape ID="DesignTable:dt_piutang_sales_lengkap2" ZOrder="9" X="225" Y="12" Height="28" Width="220" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="253" SplitterPosition="24" />
-    <Shape ID="DesignTable:dt_piutang_sales_bayar" ZOrder="8" X="22" Y="54" Height="124" Width="199" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="24" SplitterPosition="120" />
+    <Shape ID="DesignTable:dt_piutang_sales_bayar" ZOrder="8" X="22" Y="54" Height="143" Width="199" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="24" SplitterPosition="120" />
     <Shape ID="DesignTable:dt_piutang_salesglobal" ZOrder="7" X="502" Y="51" Height="28" Width="198" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="215" SplitterPosition="24" />
     <Shape ID="DesignTable:dt_hutang_kartu" ZOrder="6" X="967" Y="9" Height="28" Width="160" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="196" SplitterPosition="24" />
     <Shape ID="DesignTable:dt_hutang_piutangsupplier" ZOrder="4" X="1069" Y="41" Height="28" Width="222" AdapterExpanded="true" DataTableExpanded="false" OldAdapterHeight="0" OldDataTableHeight="158" SplitterPosition="24" />

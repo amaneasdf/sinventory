@@ -241,7 +241,7 @@
             in_discrp.Value = .Cells("discrp").Value
         End With
 
-        countbiaya()
+        'countbiaya()
         in_qty.Focus()
     End Sub
 
@@ -254,7 +254,7 @@
         Dim diskon As Double = 0
 
         For Each row As DataGridViewRow In dgv_barang.Rows
-            diskon += row.Cells("subtot").Value - row.Cells("jml").Value
+            diskon += row.Cells(6).Value - row.Cells(11).Value
         Next
 
         y = x - diskon
@@ -324,9 +324,11 @@
         Dim queryArr As New List(Of String)
         Dim q As String = ""
 
+        Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+
         '==========================================================================================================================
         dataHead = {
-            "faktur_tanggal_trans='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "faktur_tanggal_trans='" & _tgltrans & "'",
             "faktur_pajak_no='" & in_pajak.Text & "'",
             "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
             "faktur_surat_jalan='" & in_suratjalan.Text & "'",
@@ -349,13 +351,14 @@
         If bt_simpanbeli.Text = "Simpan" Then
             'GENERATE KODE
             If in_faktur.Text = Nothing Then
+                Dim tgl = date_tgl_beli.Value.ToString("yyyyMMdd")
                 Dim no As Integer = 1
-                readcommd("SELECT COUNT(faktur_kode) FROM data_pembelian_faktur WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "' AND faktur_kode LIKE 'PO%'")
+                readcommd("SELECT COUNT(faktur_kode) FROM data_pembelian_faktur WHERE SUBSTRING(faktur_kode,3,8)='" & tgl & "' AND faktur_kode LIKE 'PO%'")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
-                in_faktur.Text = "PO" & date_tgl_beli.Value.ToString("yyyyMMdd") & no.ToString("D4")
+                in_faktur.Text = "PO" & tgl & no.ToString("D3")
             ElseIf in_faktur.Text <> Nothing And bt_simpanbeli.Text <> "Update" Then
                 If checkdata("data_pembelian_faktur", "'" & in_faktur.Text & "'", "faktur_kode") = True Then
                     MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernnah diinputkan", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -392,10 +395,11 @@
 
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
+            Dim _kdbrg As String = rows.Cells(0).Value
 
             'INSERT DATA BARANG
             dataBrg = {
-                "trans_barang='" & rows.Cells(0).Value & "'",
+                "trans_barang='" & _kdbrg & "'",
                 "trans_harga_beli='" & rows.Cells("harga").Value & "'",
                 "trans_qty='" & rows.Cells("qty").Value & "'",
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
@@ -418,7 +422,7 @@
 
             dataBrg = {
                 "stock_gudang='" & in_gudang.Text & "'",
-                "stock_barang='" & rows.Cells(0).Value & "'",
+                "stock_barang='" & _kdbrg & "'",
                 "stock_awal=0",
                 "stock_periode='" & selectperiode.id & "'",
                 "stock_reg_alias='" & loggeduser.user_id & "'",
@@ -429,19 +433,26 @@
 
             'COUNT QTY TOTAL PER ITEM
             Dim _qtytot As Integer = 0
-            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
+            readcommd("SELECT countQTYItem('" & _kdbrg & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
             If rd.HasRows Then
                 _qtytot = rd.Item(0)
             End If
             rd.Close()
 
-            q = "setHPP('" & rows.Cells(0).Value & "')"
+            'COUNT NILAI PERSEDIAAN
+            Dim _pers As Decimal = 0
+            Dim _ppnbrg As Decimal = 0
+            Dim _jml As Decimal = rows.Cells("subtot").Value
+            _ppnbrg = IIf(cb_ppn.SelectedValue = 1, _jml * (1 - 10 / 11), 0)
+            _pers = _jml - _ppnbrg
+
+            q = "setHPP('" & _kdbrg & "')"
             queryArr.Add(q)
 
             x.Add("'" & rows.Cells(0).Value & "'")
             qty.Add(_qtytot)
             x_kodestock.Add("'" & stockkode & "'")
-            nilai.Add(rows.Cells("jml").Value)
+            nilai.Add(_pers)
         Next
         '==========================================================================================================================
         '==========================================================================================================================
@@ -452,7 +463,7 @@
         Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
         Dim q5 As String = "DELETE FROM data_stok_kartustok WHERE trans_faktur='{0}' AND trans_stock NOT IN({1})"
         data1 = {
-                "trans_stock", "trans_index", "trans_jenis", "trans_faktur",
+                "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
                 "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
                 }
         Dim i As Integer = 0
@@ -462,6 +473,7 @@
                     "MAX(trans_index)+1",
                     "'po'",
                     "'" & in_faktur.Text & "'",
+                    "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                     "'PEMBELIAN'",
                     qty.Item(i),
                     nilai.Item(i).ToString.Replace(",", "."),
@@ -469,6 +481,7 @@
                     "NOW()"
                     }
             dataBrg = {
+                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                 "trans_qty=" & qty.Item(i),
                 "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
@@ -752,6 +765,11 @@
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
             End If
+            'ElseIf e.KeyCode = Keys.Left Then
+            '    consoleWriteLine(sender.SelectionStart)
+            '    If sender.SelectionStart = 0 Then
+            '        in_supplier.Focus()
+            '    End If
         ElseIf e.KeyCode = Keys.Enter Then
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
@@ -822,6 +840,15 @@
     End Sub
 
     '-----------------BARANG
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+        If e.KeyCode = Keys.Right Then
+            consoleWriteLine(sender.SelectionStart)
+            If sender.SelectionStart = sender.TextLength Then
+                in_barang_nm.Focus()
+            End If
+        End If
+    End Sub
+
     Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
         keyshortenter(in_barang_nm, e)
     End Sub
@@ -834,6 +861,20 @@
         popupstate = "barang"
         loadDataBRGPopup("barang", in_barang_nm.Text)
     End Sub
+
+    'Private Sub in_barang_nm_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyDown
+    '    If e.KeyCode = Keys.Left Then
+    '        consoleWriteLine(sender.SelectionStart)
+    '        If sender.SelectionStart = 0 Then
+    '            in_barang.Focus()
+    '        End If
+    '    ElseIf e.KeyCode = Keys.Right Then
+    '        consoleWriteLine(sender.SelectionStart)
+    '        If sender.SelectionStart = sender.TextLength Then
+    '            in_qty.Focus()
+    '        End If
+    '    End If
+    'End Sub
 
     Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
         If e.KeyCode = Keys.Down Then
@@ -854,11 +895,24 @@
     End Sub
 
     Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged
-        If in_barang_nm.Text = "" Then
+        If sender.Text = "" Then
             in_barang.Clear()
             'AND OTHER STUFF
         End If
     End Sub
+
+    'Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
+    '    If e.KeyCode = Keys.Left Then
+    '        If sender.SelectionStart = 0 Then
+    '            in_barang.Focus()
+    '        End If
+    '    ElseIf e.KeyCode = Keys.Right Then
+    '        consoleWriteLine(sender.SelectionStart)
+    '        If sender.SelectionStart = sender.TextLength Then
+    '            in_qty.Focus()
+    '        End If
+    '    End If
+    'End Sub
 
     Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyUp
         keyshortenter(cb_sat, e)
@@ -908,6 +962,7 @@
             indexrow = e.RowIndex
             dgvTotxt()
             dgv_barang.Rows.RemoveAt(indexrow)
+            countbiaya()
         End If
     End Sub
 

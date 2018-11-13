@@ -8,6 +8,7 @@
     Private tblstatus As String = ""
     Private popupstate As String = "barang"
     Private selectedgudang As String = ""
+    Private _hppbrg As Decimal = 0
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -61,7 +62,7 @@
     Private Sub loadBrg(kode As String)
         Dim dt As New DataTable
         Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_besar, barang_satuan_besar, trans_qty_tengah, " _
-                          & "barang_satuan_tengah, trans_qty_kecil, barang_satuan_kecil, trans_qty_tot " _
+                          & "barang_satuan_tengah, trans_qty_kecil, barang_satuan_kecil, trans_qty_tot,trans_hpp " _
                           & "FROM data_barang_stok_mutasi_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                           & "WHERE trans_faktur='{0}' AND trans_status=1"
         dt = getDataTablefromDB(String.Format(q, kode))
@@ -78,6 +79,7 @@
                     .Cells("qty_k").Value = x.ItemArray(6)
                     .Cells("sat_k").Value = x.ItemArray(7)
                     .Cells("qty_tot").Value = x.ItemArray(8)
+                    .Cells("hpp_brg").Value = x.ItemArray(9)
                 End With
             Next
         End With
@@ -104,7 +106,8 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getHPP(barang_kode) as 'HPP', barang_satuan_besar, " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', " _
+                    & "getHPPAVG(barang_kode,'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "','" & selectperiode.id & "') as 'HPP', barang_satuan_besar, " _
                     & "barang_satuan_besar_jumlah, barang_satuan_tengah, barang_satuan_tengah_jumlah, barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                     & "WHERE stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
@@ -151,6 +154,8 @@
                     in_sat2.Text = .Cells(5).Value
                     isisat_t = .Cells(6).Value
                     in_sat3.Text = .Cells(7).Value
+                    _hppbrg = .Cells(2).Value
+                    in_hpp.Text = commaThousand(_hppbrg)
                     in_qty1.Focus()
                 Case "gudang2"
                     in_gudang2.Text = .Cells(0).Value
@@ -258,6 +263,7 @@
                     .Cells("qty_k").Value = in_qty3.Value
                     .Cells("sat_k").Value = in_sat3.Text
                     .Cells("qty_tot").Value = qtytot
+                    .Cells("hpp_brg").Value = _hppbrg
                 End With
             End With
             clearInputBarang()
@@ -279,6 +285,8 @@
             in_sat2.Text = .Cells("sat_t").Value
             in_qty3.Value = .Cells("qty_k").Value
             in_sat3.Text = .Cells("sat_k").Value
+            _hppbrg = .Cells("hpp_brg").Value
+            in_hpp.Text = commaThousand(_hppbrg)
         End With
         'in_barang.Focus()
     End Sub
@@ -290,19 +298,23 @@
         Dim data, data2 As String()
         Dim q As String = ""
 
+        Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+
         Me.Cursor = Cursors.WaitCursor
 
         op_con()
         'GENERATE KODE
         If in_kode.Text = Nothing Then
             Dim no As Integer = 1
-            readcommd("SELECT RIGHT(faktur_kode,3) FROM data_barang_stok_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "'" _
+            Dim tgl As String = date_tgl_beli.Value.ToString("yyyyMMdd")
+
+            readcommd("SELECT RIGHT(faktur_kode,3) FROM data_barang_stok_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & tgl & "'" _
                       & "AND faktur_kode LIKE 'MG%' ORDER BY faktur_kode DESC LIMIT 1")
             If rd.HasRows Then
                 no = CInt(rd.Item(0)) + 1
             End If
             rd.Close()
-            in_kode.Text = "MG" & date_tgl_beli.Value.ToString("yyyyMMdd") & no.ToString("D3")
+            in_kode.Text = "MG" & tgl & no.ToString("D3")
         ElseIf in_kode.Text <> Nothing And mn_tambah.Text = "Batal" Then
             If checkdata("data_barang_stok_mutasi", "'" & in_kode.Text & "'", "faktur_kode") = True Then
                 MessageBox.Show("Nomor faktur " & in_kode.Text & " sudah pernnah diinputkan", "Mutasi Antar Gudang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -317,9 +329,10 @@
         '==========================================================================================================================
         'INSERT HEADER
         datafaktur = {
-                "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "faktur_tanggal='" & _tgltrans & "'",
                 "faktur_gudang_asal='" & in_gudang.Text & "'",
-                "faktur_gudang_tujuan='" & in_gudang2.Text & "'"
+                "faktur_gudang_tujuan='" & in_gudang2.Text & "'",
+                "faktur_status='1'"
                 }
         q = "INSERT INTO data_barang_stok_mutasi SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}' ON DUPLICATE KEY UPDATE {1},faktur_upd_date=NOW()," _
             & "faktur_upd_alias='{2}'"
@@ -331,6 +344,7 @@
         'INSERT BARANG
         Dim x As New List(Of String)
         Dim qty As New List(Of Integer)
+        Dim nilai As New List(Of Decimal)
 
         '==========================================================================================================================
         q = "UPDATE data_barang_stok_mutasi_trans SET trans_status=9 WHERE trans_faktur='{0}'"
@@ -342,22 +356,26 @@
 
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
+            Dim _qtytot As Integer = rows.Cells("qty_tot").Value
+            Dim _hpp As Decimal = rows.Cells("hpp_brg").Value
             dataBrg = {
                 "trans_barang='" & rows.Cells(0).Value & "'",
                 "trans_qty_besar=" & rows.Cells("qty_b").Value,
                 "trans_qty_tengah=" & rows.Cells("qty_t").Value,
                 "trans_qty_kecil=" & rows.Cells("qty_k").Value,
-                "trans_qty_tot=" & rows.Cells("qty_tot").Value,
+                "trans_qty_tot=" & _qtytot,
                 "trans_satuan_besar='" & rows.Cells("sat_b").Value & "'",
                 "trans_satuan_tengah='" & rows.Cells("sat_t").Value & "'",
                 "trans_satuan_kecil='" & rows.Cells("sat_k").Value & "'",
+                "trans_hpp=" & _hpp.ToString.Replace(",", "."),
                 "trans_status='1'"
                 }
             q = "INSERT INTO data_barang_stok_mutasi_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dataBrg)))
 
             x.Add("'" & rows.Cells(0).Value & "'")
-            qty.Add(rows.Cells("qty_tot").Value)
+            qty.Add(_qtytot)
+            nilai.Add(_qtytot * _hpp)
         Next
         '==========================================================================================================================
 
@@ -369,7 +387,7 @@
         data = Nothing
         data = {
             "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
-            "trans_ket", "trans_qty", "trans_reg_alias", "trans_reg_date", "trans_status"
+            "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
             }
         Dim i As Integer = 0
 
@@ -383,17 +401,19 @@
                 "MAX(trans_index)+1",
                 "'mg'",
                 "'" & in_kode.Text & "'",
-                "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "'" & _tgltrans & "'",
                 "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 qty.Item(i) * -1,
+                (nilai.Item(1) * -1).ToString.Replace(",", "."),
                 "'" & loggeduser.user_id & "'",
                 "NOW()",
                 "1"
                 }
             dataBrg = {
                 "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "trans_tgl='" & _tgltrans & "'",
                 "trans_qty=" & qty.Item(i) * -1,
+                "trans_nilai=" & (nilai.Item(1) * -1).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status=1"
@@ -431,17 +451,19 @@
                 "MAX(trans_index)+1",
                 "'mg'",
                 "'" & in_kode.Text & "'",
-                "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "'" & _tgltrans & "'",
                 "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 qty.Item(i),
+                nilai.Item(i).ToString.Replace(",", "."),
                 "'" & loggeduser.user_id & "'",
                 "NOW()",
                 "1"
                 }
             dataBrg = {
                 "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "trans_tgl='" & _tgltrans & "'",
                 "trans_qty=" & qty.Item(i),
+                "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status=1"
@@ -451,6 +473,29 @@
         '==========================================================================================================================
         '==========================================================================================================================
 
+        '==========================================================================================================================
+        'INPUT JURNAL
+        '----------HEAD
+        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MTGOUT',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
+        data2 = {
+            "line_ref='" & in_gudang.Text & "'",
+            "line_ref_type='GUDANG'",
+            "line_tanggal='" & _tgltrans & "'",
+            "line_status='1'"
+            }
+        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
+
+        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MTGIN',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
+        data2 = {
+            "line_ref='" & in_gudang2.Text & "'",
+            "line_ref_type='GUDANG'",
+            "line_tanggal='" & _tgltrans & "'",
+            "line_status='1'"
+            }
+        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
+        ''==========================================================================================================================
 
         '==========================================================================================================================
         'BEGIN TRANSACTION
@@ -482,9 +527,10 @@
         For Each x As NumericUpDown In {in_qty1, in_qty2, in_qty3}
             x.Value = 0
         Next
-        For Each x As TextBox In {in_barang, in_sat1, in_sat2, in_sat3}
+        For Each x As TextBox In {in_barang, in_sat1, in_sat2, in_sat3, in_hpp}
             x.Clear()
         Next
+        _hppbrg = 0
     End Sub
 
     Private Sub clearInputBarang()
@@ -494,7 +540,7 @@
 
     Private Sub clearAll()
         For Each x As TextBox In {in_kode, in_barang, in_barang_nm, in_sat1, in_sat2, in_sat3, txtRegAlias, txtRegdate, txtUpdAlias, txtUpdDate,
-                                    in_gudang_n, in_gudang, in_gudang2, in_gudang2_n, date_tgl_beli_r}
+                                    in_gudang_n, in_gudang, in_gudang2, in_gudang2_n, date_tgl_beli_r, in_hpp}
             x.Clear()
         Next
         For Each x As NumericUpDown In {in_qty1, in_qty2, in_qty3}
@@ -505,6 +551,8 @@
         Else
             date_tgl_beli.Value = selectperiode.tglakhir
         End If
+
+        _hppbrg = 0
 
         dgv_barang.Rows.Clear()
     End Sub

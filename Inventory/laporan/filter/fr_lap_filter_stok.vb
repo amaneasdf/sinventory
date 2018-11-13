@@ -95,7 +95,8 @@
                                 & "	WHERE stock_periode='{0}' AND stock_status=1 " _
                                 & ") stok LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON stock_gudang=gudang_kode " _
-                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {1}"
+                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {1} " _
+                                & "ORDER BY barang_kode"
 
         Select Case tipe
             Case "lapKartuStok"

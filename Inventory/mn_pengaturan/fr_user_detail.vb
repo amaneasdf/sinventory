@@ -4,11 +4,12 @@
 
 
     Private Sub loadDatauser(kode As String)
+        Dim url As String = Nothing
         Dim q As String = "SELECT user_id,user_alias, user_nama, user_group, user_sales, user_sales_kode, salesman_nama," _
                           & "(CASE " _
                           & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                           & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
-                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, " _
+                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, user_gambar, " _
                           & "user_allowedit_master, user_allowedit_trans, IF(user_login_status=1,'ON','OFF') as user_login_status, " _
                           & "user_login_terakhir, user_status, user_reg_date, user_reg_alias, user_upd_date, user_upd_alias " _
                           & "FROM data_pengguna_alias LEFT JOIN data_salesman_master ON salesman_kode=user_sales_kode " _
@@ -54,6 +55,8 @@
             Catch ex As Exception
                 txtLastLogin.Text = "00/00/0000 00:00:00"
             End Try
+            'usrimg
+            url = IIf(IsDBNull(rd.Item("user_gambar")) = False, rd.Item("user_gambar"), Nothing)
             'db
             txtRegdate.Text = rd.Item("user_reg_date")
             txtRegAlias.Text = rd.Item("user_reg_alias")
@@ -68,6 +71,9 @@
 
         rd.Close()
         setStatus()
+        If url <> Nothing Then
+            pb_usrimg.Image = streamImgUrl(url)
+        End If
     End Sub
 
     Private Sub setStatus()
@@ -101,6 +107,7 @@
             Next
         End If
     End Sub
+
     'OPEN FULL WINDOWS SEARCH
     Private Sub searchData(tipe As String)
         Dim q As String = ""

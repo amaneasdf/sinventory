@@ -6,46 +6,91 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.25cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>5cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1.5cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>2.25cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1.5cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>1cm</Width>
+              <Width>0.475cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.75cm</Width>
+              <Width>5.5cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.5cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2.25cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.5cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.75cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.75cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.75cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.75cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.75cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2.25cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>0.27558cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
             <TablixRow>
               <Height>0.6cm</Height>
               <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox16">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox16</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="Textbox8">
@@ -58,6 +103,7 @@
                               <Value>KD.BARANG</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -96,6 +142,7 @@
                               <Value>NAMA BARANG</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -134,6 +181,7 @@
                               <Value>QTY</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -174,6 +222,7 @@
                               <Value>HRG JUAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -214,6 +263,7 @@
                               <Value>DISCRP</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -254,6 +304,7 @@
                               <Value>D1</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -294,6 +345,7 @@
                               <Value>D2</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -334,6 +386,7 @@
                               <Value>D3</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -374,6 +427,7 @@
                               <Value>D4</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -414,6 +468,7 @@
                               <Value>D5</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -454,6 +509,7 @@
                               <Value>TOTALDISC</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -494,6 +550,7 @@
                               <Value>SUBTOTAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -522,11 +579,84 @@
                     </Textbox>
                   </CellContents>
                 </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox19">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox19</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Style>Solid</Style>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Style>Solid</Style>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
               </TablixCells>
             </TablixRow>
             <TablixRow>
               <Height>0.5cm</Height>
               <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox17">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox17</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="jual_barang">
@@ -538,6 +668,7 @@
                               <Value>=Fields!jual_barang.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -568,6 +699,7 @@
                               <Value>=Fields!jual_barang_n.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -598,6 +730,7 @@
                               <Value>=Fields!jual_qty.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -632,6 +765,7 @@
                               <Value>=Fields!jual_harga.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -667,6 +801,7 @@
                               <Value>=Fields!jual_discrp.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -702,6 +837,7 @@
                               <Value>=Fields!jual_d1.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -737,6 +873,7 @@
                               <Value>=Fields!jual_d2.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -772,6 +909,7 @@
                               <Value>=Fields!jual_d3.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -807,6 +945,7 @@
                               <Value>=Fields!jual_d4.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -842,6 +981,7 @@
                               <Value>=Fields!jual_d5.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>0.00</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -877,6 +1017,7 @@
                               <Value>=Fields!jual_disctot.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -912,6 +1053,7 @@
                               <Value>=Fields!jual_jml.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -924,6 +1066,42 @@
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>jual_jml</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <PaddingLeft>1pt</PaddingLeft>
+                        <PaddingRight>1pt</PaddingRight>
+                        <PaddingTop>1pt</PaddingTop>
+                        <PaddingBottom>1pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox22">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox22</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -954,6 +1132,8 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
@@ -968,9 +1148,8 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_nota_jual</DataSetName>
-        <Left>0.00034cm</Left>
         <Height>1.1cm</Height>
-        <Width>22.25cm</Width>
+        <Width>21.50058cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -978,7 +1157,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>0.97244in</Height>
+    <Height>0.43307in</Height>
     <Style>
       <Border>
         <Style>None</Style>
@@ -991,7 +1170,7 @@
       </BottomBorder>
     </Style>
   </Body>
-  <Width>8.75998in</Width>
+  <Width>8.4648in</Width>
   <Page>
     <PageHeader>
       <Height>0.86019in</Height>
@@ -1053,9 +1232,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Left>0.00004cm</Left>
+          <Left>0.475cm</Left>
           <Height>1.85889cm</Height>
-          <Width>5cm</Width>
+          <Width>4.52504cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1089,7 +1268,7 @@
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Left>5.03532cm</Left>
           <Height>0.82361cm</Height>
-          <Width>10.71468cm</Width>
+          <Width>10.29135cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1126,7 +1305,7 @@
           <Top>0.82361cm</Top>
           <Left>5.00004cm</Left>
           <Height>0.5cm</Height>
-          <Width>10.74996cm</Width>
+          <Width>10.32663cm</Width>
           <ZIndex>2</ZIndex>
           <Style>
             <Border>
@@ -1229,9 +1408,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox18</rd:DefaultName>
-          <Left>15.74998cm</Left>
+          <Left>15.36192cm</Left>
           <Height>0.57672cm</Height>
-          <Width>6.475cm</Width>
+          <Width>6.1384cm</Width>
           <ZIndex>5</ZIndex>
           <Style>
             <Border>
@@ -1264,9 +1443,9 @@
           </Paragraphs>
           <rd:DefaultName>Textbox9</rd:DefaultName>
           <Top>0.57672cm</Top>
-          <Left>15.75cm</Left>
+          <Left>15.36194cm</Left>
           <Height>1.60816cm</Height>
-          <Width>6.475cm</Width>
+          <Width>6.1384cm</Width>
           <ZIndex>6</ZIndex>
           <Style>
             <Border>
@@ -1301,7 +1480,7 @@
           <Top>1.35889cm</Top>
           <Left>12.50006cm</Left>
           <Height>0.5cm</Height>
-          <Width>3.24994cm</Width>
+          <Width>2.82661cm</Width>
           <ZIndex>7</ZIndex>
           <Style>
             <Border>
@@ -1453,7 +1632,7 @@
           </Paragraphs>
           <rd:DefaultName>parPPN</rd:DefaultName>
           <Top>1.44694cm</Top>
-          <Left>19.14855cm</Left>
+          <Left>18.42383cm</Left>
           <Height>0.6cm</Height>
           <Width>3.07675cm</Width>
           <ZIndex>2</ZIndex>
@@ -1489,7 +1668,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>1.44694cm</Top>
-          <Left>16.22534cm</Left>
+          <Left>15.50062cm</Left>
           <Height>0.6cm</Height>
           <Width>2.92321cm</Width>
           <ZIndex>3</ZIndex>
@@ -1838,7 +2017,7 @@
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
           <Top>2.4cm</Top>
-          <Left>19.14843cm</Left>
+          <Left>18.42371cm</Left>
           <Height>0.6cm</Height>
           <Width>3.07673cm</Width>
           <ZIndex>13</ZIndex>
@@ -1872,7 +2051,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>2.4cm</Top>
-          <Left>16.22522cm</Left>
+          <Left>15.5005cm</Left>
           <Height>0.6cm</Height>
           <Width>2.92321cm</Width>
           <ZIndex>14</ZIndex>
@@ -1908,7 +2087,7 @@
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
           <Top>3.25965cm</Top>
-          <Left>19.14833cm</Left>
+          <Left>18.42361cm</Left>
           <Height>0.6cm</Height>
           <Width>3.07673cm</Width>
           <ZIndex>15</ZIndex>
@@ -1943,7 +2122,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>3.25965cm</Top>
-          <Left>16.22512cm</Left>
+          <Left>15.5004cm</Left>
           <Height>0.6cm</Height>
           <Width>2.92321cm</Width>
           <ZIndex>16</ZIndex>
@@ -1981,7 +2160,7 @@
           </Paragraphs>
           <rd:DefaultName>parPPN</rd:DefaultName>
           <Top>0.57056cm</Top>
-          <Left>19.14843cm</Left>
+          <Left>18.42371cm</Left>
           <Height>0.5cm</Height>
           <Width>3.07675cm</Width>
           <ZIndex>17</ZIndex>
@@ -2016,7 +2195,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>0.57056cm</Top>
-          <Left>16.22522cm</Left>
+          <Left>15.5005cm</Left>
           <Height>0.5cm</Height>
           <Width>2.92321cm</Width>
           <ZIndex>18</ZIndex>
@@ -2051,7 +2230,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>0.07056cm</Top>
-          <Left>16.22522cm</Left>
+          <Left>15.5005cm</Left>
           <Height>0.5cm</Height>
           <Width>2.92321cm</Width>
           <ZIndex>19</ZIndex>
@@ -2089,7 +2268,7 @@
           </Paragraphs>
           <rd:DefaultName>parPPN</rd:DefaultName>
           <Top>0.07056cm</Top>
-          <Left>19.14843cm</Left>
+          <Left>18.42371cm</Left>
           <Height>0.5cm</Height>
           <Width>3.07675cm</Width>
           <ZIndex>20</ZIndex>
@@ -2112,9 +2291,6 @@
       </Style>
     </PageFooter>
     <PageHeight>5.5in</PageHeight>
-    <PageWidth>9.5in</PageWidth>
-    <LeftMargin>0.25in</LeftMargin>
-    <RightMargin>0.25in</RightMargin>
     <TopMargin>0.15in</TopMargin>
     <BottomMargin>0.15in</BottomMargin>
     <ColumnSpacing>0.05118in</ColumnSpacing>

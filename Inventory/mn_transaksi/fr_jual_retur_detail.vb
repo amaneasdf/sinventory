@@ -9,9 +9,9 @@
     Private _satuanstate As String = "kecil"
 
     Private Sub loadData(kode As String)
-        Dim q As String = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_pajak_no, faktur_pajak_tanggal, faktur_kode_faktur, " _
+        Dim q As String = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_pajak_no, faktur_pajak_tanggal, faktur_kode_faktur, faktur_jen_bayar, " _
                           & "faktur_kode_exfaktur,faktur_sebab, faktur_custo, customer_nama, faktur_gudang, gudang_nama, faktur_sales, salesman_nama, " _
-                          & "faktur_jumlah, faktur_ppn_persen, faktur_ppn_jenis, faktur_netto, faktur_status, faktur_reg_date, " _
+                          & "faktur_jumlah, faktur_ppn_persen, faktur_ppn_jenis, faktur_netto, faktur_status, faktur_reg_date, faktur_persediaan, " _
                           & "faktur_reg_alias, faktur_upd_date, faktur_upd_alias FROM data_penjualan_retur_faktur " _
                           & "LEFT JOIN data_customer_master ON customer_kode=faktur_custo " _
                           & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
@@ -31,6 +31,8 @@
             in_custo_n.Text = rd.Item("customer_nama")
             in_gudang.Text = rd.Item("faktur_gudang")
             in_gudang_n.Text = rd.Item("gudang_nama")
+            cb_bayar_jenis.SelectedValue = rd.Item("faktur_jen_bayar")
+            _persediaan = rd.Item("faktur_persediaan")
             in_jumlah.Text = commaThousand(rd.Item("faktur_jumlah"))
             in_ppn_tot.Text = commaThousand(rd.Item("faktur_ppn_persen"))
             cb_ppn.SelectedValue = rd.Item("faktur_ppn_jenis")
@@ -264,7 +266,8 @@
         Dim hpp As Double = 0
 
         op_con()
-        readcommd("SELECT getHPP('" & in_barang.Text & "')")
+        Dim q As String = "SELECT getHPPAVG('{0}','{1}','{2}')"
+        readcommd(String.Format(q, in_barang.Text, date_tgl_trans.Value.ToString("yyyy-MM-dd"), selectperiode.id))
         If rd.HasRows Then
             hpp = rd.Item(0)
         End If
@@ -374,10 +377,12 @@
         Dim data1, data2 As String()
         Dim queryArr As New List(Of String)
 
+        Dim _tgltrans As String = date_tgl_trans.Value.ToString("yyyy-MM-dd")
+
         '==========================================================================================================================
         'SAVE HEADER
         dataHead = {
-            "faktur_tanggal_trans='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+            "faktur_tanggal_trans='" & _tgltrans & "'",
             "faktur_pajak_no='" & in_pajak.Text & "'",
             "faktur_pajak_tanggal='" & date_tgl_pajak.Value.ToString("yyyy-MM-dd") & "'",
             "faktur_gudang='" & in_gudang.Text & "'",
@@ -399,14 +404,15 @@
             'GENERATE KODE
             If in_no_bukti.Text = Nothing Then
                 Dim no As Integer = 1
+                Dim tgl As String = date_tgl_trans.Value.ToString("yyyyMMdd")
 
-                readcommd("SELECT COUNT(faktur_kode_bukti) FROM data_penjualan_retur_faktur WHERE SUBSTRING(faktur_kode_bukti,3,8)='" & date_tgl_trans.Value.ToString("yyyyMMdd") & "' AND faktur_kode_bukti LIKE 'RJ%'")
+                readcommd("SELECT COUNT(faktur_kode_bukti) FROM data_penjualan_retur_faktur WHERE SUBSTRING(faktur_kode_bukti,3,8)='" & tgl & "' AND faktur_kode_bukti LIKE 'RJ%'")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
 
-                in_no_bukti.Text = "RJ" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
+                in_no_bukti.Text = "RJ" & tgl & no.ToString("D3")
             ElseIf in_no_bukti.Text <> Nothing And bt_simpanreturbeli.Text <> "Update" Then
                 If checkdata("data_penjualan_retur_faktur", "'" & in_no_bukti.Text & "'", "faktur_kode_bukti") = True Then
                     MessageBox.Show("Nomor faktur " & in_no_bukti.Text & " sudah pernah diinputkan", "Retur Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
@@ -441,6 +447,17 @@
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
             Dim _stock As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & selectperiode.id
+            Dim _hpp As Decimal = 0
+            Dim _kdbrg As String = rows.Cells(0).Value
+
+            'GET HPP
+            q = "SELECT getHPPAVG('{0}','{1}','{2}')"
+            readcommd(String.Format(q, _kdbrg, _tgltrans, selectperiode.id))
+            If rd.HasRows Then
+                _hpp = rd.Item(0)
+            End If
+            rd.Close()
+
             'INSERT DATA BARANG
             dataBrg = {
                 "trans_barang='" & rows.Cells(0).Value & "'",
@@ -448,7 +465,8 @@
                 "trans_qty='" & rows.Cells("qty").Value & "'",
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
-                "trans_hpp='" & rows.Cells("brg_hpp").Value.ToString.Replace(",", ".") & "'",
+                "trans_hpp='" & _hpp.ToString.Replace(",", ".") & "'",
+                "trans_diskon=" & rows.Cells("diskon").Value.ToString.Replace(",", "."),
                 "trans_status='" & rtjstatus & "'"
                 }
             q = "INSERT INTO data_penjualan_retur_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
@@ -465,7 +483,7 @@
             x.Add("'" & rows.Cells(0).Value & "'")
             qty.Add(_qtytot)
             x_kodestock.Add("'" & _stock & "'")
-            nilai.Add(rows.Cells("jml").Value)
+            nilai.Add(_qtytot * _hpp)
         Next
         '==========================================================================================================================
         '==========================================================================================================================
@@ -475,7 +493,7 @@
         'WRITE KARTU STOK
         Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
         data1 = {
-                "trans_stock", "trans_index", "trans_jenis", "trans_faktur",
+                "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
                 "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
                 }
         Dim i As Integer = 0
@@ -485,15 +503,17 @@
                     "MAX(trans_index)+1",
                     "'rj'",
                     "'" & in_no_bukti.Text & "'",
+                    "'" & _tgltrans & "'",
                     "'RETUR PENJUALAN'",
-                    qty.Item(i) * -1,
-                    (nilai.Item(i) * -1).ToString.Replace(",", "."),
+                    qty.Item(i),
+                    nilai.Item(i).ToString.Replace(",", "."),
                     "'" & loggeduser.user_id & "'",
                     "NOW()"
                     }
             dataBrg = {
-                "trans_qty=" & qty.Item(i) * -1,
-                "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
+                "trans_tgl='" & _tgltrans & "'",
+                "trans_qty=" & qty.Item(i),
+                "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status='" & rtjstatus & "'"
@@ -535,7 +555,7 @@
         '==========================================================================================================================
         'INPUT JURNAL
         '----------HEAD
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='RBELI',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='RJUAL',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
             & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
         data1 = {
             "line_ref='" & in_custo.Text & "'",
@@ -645,7 +665,7 @@
         End With
         date_tgl_pajak.Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
 
-        For Each x As DataGridViewColumn In {qty, harga, jml, diskon}
+        For Each x As DataGridViewColumn In {qty, harga, jml, diskon, subtotal}
             x.DefaultCellStyle = dgvstyle_commathousand
         Next
 

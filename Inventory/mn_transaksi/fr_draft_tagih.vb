@@ -1,4 +1,4 @@
-﻿Public Class fr_draft_tagihan
+﻿Public Class fr_draft_tagih
     Public tabpagename As TabPage
     Private list_row_faktur As Integer = 0
     Private list_row_sales As Integer = 0
@@ -6,6 +6,7 @@
     Private kodedraftselected As String = "all"
     Private edited As Boolean = False
     Private printedstat As Integer = 0
+    Private _popUpPos As String = "sales"
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -15,19 +16,11 @@
 
     Public Sub performRefresh()
         ClearAll()
-        bt_cari_sales.PerformClick()
         bt_cari_faktur.PerformClick()
         loadDraftList(Trim(in_caridraft.Text))
-    End Sub
-
-    'LOAD SALES
-    Private Sub loadSales(Optional param As String = Nothing)
-        Dim bs As New BindingSource
-
-        bs.DataSource = getDataTablefromDB("SELECT salesman_kode as kode, salesman_nama as nama FROM data_salesman_master")
-        bs.Filter = "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "'"
-
-        dgv_sales.DataSource = bs
+        in_sales.ReadOnly = False
+        in_sales_n.ReadOnly = False
+        pnl_content.VerticalScroll.Value = 0
     End Sub
 
     'LOAD FAKTUR
@@ -60,6 +53,9 @@
         If in_pasar.Text <> Nothing Then
             whr.Add("customer_pasar LIKE '" & in_pasar.Text & "'")
         End If
+        If ck_hidepaid.Checked = True Then
+            whr.Add("getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0")
+        End If
         If ck_tgl2.Checked = True Then
             whr_tgl.Add("ADDDATE(faktur_tanggal_trans,faktur_term) BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'")
         End If
@@ -88,9 +84,14 @@
     End Sub
 
     Private Sub loadDraftList(param As String)
-        Dim q As String = "SELECT draft_kode, draft_tanggal as draft_tgl, salesman_nama as draft_sales " _
-                          & "FROM data_tagihan_faktur LEFT JOIN data_salesman_master ON salesman_kode=draft_sales " _
-                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}'"
+        Dim q As String = "SELECT draft_kode, draft_tanggal as draft_tgl, salesman_nama as draft_sales, " _
+                          & "IF(draft_printstatus=1,'Y','N') as draft_printstatus,COUNT(nota_faktur) as draft_countfaktur, " _
+                          & "SUM(nota_tagihan) as draft_tottagih " _
+                          & "FROM data_tagihan_faktur " _
+                          & "LEFT JOIN data_tagihan_nota ON nota_draft=draft_kode AND nota_status=1 " _
+                          & "LEFT JOIN data_salesman_master ON salesman_kode=draft_sales " _
+                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}' " _
+                          & "GROUP BY draft_kode"
         Dim bs As New BindingSource
 
         bs.DataSource = getDataTablefromDB(String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd")))
@@ -145,12 +146,90 @@
             lbl_statprint.Visible = False
         End If
 
+        For Each x As TextBox In {in_sales, in_sales_n}
+            x.ReadOnly = True
+        Next
+
         loadListedFaktur(kodedraft)
         loadFaktur(in_sales.Text)
+        bt_draft_nota.Focus()
+        pnl_content.VerticalScroll.Value = 0
     End Sub
 
-    Private Sub loadHistoryTagih(kodefaktur As String)
-        Dim q As String = "SELECT "
+    Private Sub loadHistory(kodefaktur As String)
+        Dim dt As New DataTable
+        Dim q As String = "getDataPiutangHistoryTagihan('{1}','{0}')"
+
+        op_con()
+        dt = getDataTablefromDB(String.Format(q, kodefaktur, selectperiode.id))
+
+        With dgv_detail_tagihan.Rows
+            .Clear()
+            For Each rows As DataRow In dt.Rows
+                Dim x As Integer = .Add
+                With .Item(x)
+                    .Cells(0).Value = rows.ItemArray(0)
+                    .Cells(1).Value = rows.ItemArray(1)
+                    .Cells(2).Value = rows.ItemArray(2)
+                    .Cells(3).Value = rows.ItemArray(3)
+                    .Cells(4).Value = rows.ItemArray(4)
+                    .Cells(5).Value = rows.ItemArray(5)
+                    .Cells(6).Value = rows.ItemArray(6)
+                End With
+            Next
+        End With
+    End Sub
+
+    'OPEN FULL WINDOWS SEARCH
+    Private Sub searchData(tipe As String)
+        Dim q As String = ""
+        Using search As New fr_search_dialog
+
+        End Using
+    End Sub
+
+    'LOAD DATA TO DGV IN POPUP SEARCH PANEL
+    Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
+        Dim q As String
+        Dim dt As New DataTable
+        Dim autoco As New AutoCompleteStringCollection
+        Select Case tipe
+            Case "sales"
+                q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman'" _
+                    & "FROM data_salesman_master " _
+                    & "WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
+                dt = getDataTablefromDB(String.Format(q, param))
+            Case "saleskd"
+                q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman' " _
+                    & "FROM data_salesman_master " _
+                    & "WHERE salesman_status=1 AND salesman_kode LIKE '{0}%'"
+                dt = getDataTablefromDB(String.Format(q, param))
+            Case Else
+                Exit Sub
+        End Select
+
+        With dgv_listbarang
+            .DataSource = dt
+            .Columns(0).Width = 135
+            .Columns(1).Width = 200
+        End With
+    End Sub
+
+    'SET RESULT VALUE FROM DGV SEARCH
+    Private Sub setPopUpResult()
+        With dgv_listbarang.SelectedRows.Item(0)
+            Select Case _popUpPos
+                Case "sales", "saleskd"
+                    in_sales.Text = .Cells(0).Value
+                    in_sales_n.Text = .Cells(1).Value
+                    in_cari_faktur.Focus()
+                    loadFaktur(in_sales.Text, in_cari_faktur.Text)
+                Case Else
+                    Exit Sub
+            End Select
+
+        End With
+        popPnl_barang.Visible = False
     End Sub
 
     Private Function createDraft() As Boolean
@@ -214,13 +293,13 @@
     End Function
 
     Private Sub ClearAll()
-        For Each x As TextBox In {in_cari_faktur, in_cari_sales, in_caridraft, in_kode_draft, in_sales, in_sales_n}
+        For Each x As TextBox In {in_cari_faktur, in_caridraft, in_kode_draft, in_sales, in_sales_n}
             x.Clear()
         Next
         For Each x As Integer In {list_row_draft, list_row_faktur, list_row_sales}
             x = 0
         Next
-        For Each x As DataGridView In {dgv_draftfaktur}
+        For Each x As DataGridView In {dgv_draftfaktur, dgv_detail_tagihan}
             x.Rows.Clear()
             x.Refresh()
         Next
@@ -233,7 +312,19 @@
         date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
         ck_tgl2.CheckState = CheckState.Unchecked
         ck_tgl1.CheckState = CheckState.Unchecked
+        ck_hidepaid.CheckState = CheckState.Checked
         lbl_statprint.Visible = False
+
+        bt_create_draft.Enabled = True
+
+        Dim cols As DataGridViewColumn() = {list_faktur, list_tanggal, list_custo, list_sisa, list_temp, list_pasar, list_kec, list_kab, list_sales}
+        For i = 0 To cols.Count - 1
+            cols(i).DisplayIndex = i
+        Next
+        dgv_listfaktur.DataSource = Nothing
+        If dgv_listfaktur.Columns.Count = 0 Then
+            dgv_listfaktur.Columns.AddRange(cols)
+        End If
     End Sub
 
     '--------------resize dgv
@@ -267,14 +358,24 @@
         'If ck_tgl2.Checked = True Then
         '    ck_tgl1.Checked = False
         'End If
-        loadFaktur(in_sales.Text)
+        If in_sales.Text <> Nothing Then
+            loadFaktur(in_sales.Text)
+        End If
     End Sub
 
     Private Sub ck_tgl1_CheckedChanged(sender As Object, e As EventArgs) Handles ck_tgl1.CheckedChanged
         'If ck_tgl1.Checked = True Then
         '    ck_tgl2.Checked = False
         'End If
-        loadFaktur(in_sales.Text)
+        If in_sales.Text <> Nothing Then
+            loadFaktur(in_sales.Text)
+        End If
+    End Sub
+
+    Private Sub ck_hidepaid_CheckedChanged(sender As Object, e As EventArgs) Handles ck_hidepaid.CheckedChanged
+        If in_sales.Text <> Nothing Then
+            loadFaktur(in_sales.Text, in_cari_faktur.Text)
+        End If
     End Sub
 
     '------------ input
@@ -286,8 +387,15 @@
         keyshortenter(date_faktur_akhir, e)
     End Sub
 
+    Private Sub in_kecamatan_KeyUp(sender As Object, e As KeyEventArgs) Handles in_pasar.KeyUp, in_kecamatan.KeyUp, in_kabupaten.KeyUp
+        If e.KeyCode = Keys.Enter Then
+            sender.Text = Trim(sender.Text)
+            loadFaktur(in_sales.Text, in_cari_faktur.Text)
+        End If
+    End Sub
+
     Private Sub date_faktur_akhir_KeyDown(sender As Object, e As KeyEventArgs) Handles date_faktur_akhir.KeyDown
-        keyshortenter(in_cari_sales, e)
+        keyshortenter(in_sales, e)
     End Sub
 
     Private Sub date_faktur_awal_ValueChanged(sender As Object, e As EventArgs) Handles date_faktur_awal.ValueChanged
@@ -303,12 +411,15 @@
     '---------------- load
     Private Sub fr_draft_tagihan_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         ClearAll()
-        loadSales()
         loadDraftList("")
 
-        For Each x As DataGridViewColumn In {list_sisa, draft_sisa}
+        For Each x As DataGridViewColumn In {list_sisa, draft_sisa, hist_debet, hist_kredit, hist_saldo, hist_tagihan, draftlist_tottagih}
             x.DefaultCellStyle = dgvstyle_currency
         Next
+
+        With ck_hidepaid
+            .CheckState = CheckState.Checked
+        End With
     End Sub
 
     '------------- menu
@@ -320,10 +431,13 @@
         End If
         ClearAll()
         date_tgl_trans.Focus()
+        in_sales.ReadOnly = False
+        in_sales_n.ReadOnly = False
     End Sub
 
     Private Sub mn_edit_Click(sender As Object, e As EventArgs) Handles mn_edit.Click
         in_caridraft.Focus()
+        pnl_content.VerticalScroll.Value = pnl_content.VerticalScroll.Maximum
     End Sub
 
     Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
@@ -331,16 +445,6 @@
     End Sub
 
     '----------------- cari
-    Private Sub bt_cari_sales_Click(sender As Object, e As EventArgs) Handles bt_cari_sales.Click
-        loadSales(in_cari_sales.Text)
-    End Sub
-
-    Private Sub in_cari_sales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari_sales.KeyDown, in_kode_draft.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            bt_cari_sales.PerformClick()
-        End If
-    End Sub
-
     Private Sub bt_cari_faktur_Click(sender As Object, e As EventArgs) Handles bt_cari_faktur.Click
         loadFaktur(in_sales.Text, in_cari_faktur.Text)
     End Sub
@@ -361,71 +465,108 @@
         loadDraftList(Trim(in_caridraft.Text))
     End Sub
 
-    '------------- SELECT SALES
-    Private Sub dgv_sales_CellMouseDoubleClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv_sales.CellMouseDoubleClick
-        If e.RowIndex > -1 Then
-            bt_addsales.PerformClick()
+    'UI
+    '------------- POPUPSEARCH PANEL
+    Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
+        If Not in_sales_n.Focused Then
+            popPnl_barang.Visible = False
+        Else
+            popPnl_barang.Visible = True
         End If
     End Sub
 
-    Private Sub bt_addsales_Click(sender As Object, e As EventArgs) Handles bt_addsales.Click
-        If dgv_sales.SelectedRows.Count = 1 Then
-            With dgv_sales.SelectedRows.Item(0)
-                If printedstat = 0 Then
-                    If dgv_draftfaktur.Rows.Count > 0 Then
-                        Dim x As DialogResult = MessageBox.Show("Simpan draft tagihan sebelum mengganti sales?", "Draft Tagihan", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-                        If x = DialogResult.Yes Then
-                            bt_create_draft.PerformClick()
-                            ClearAll()
-                        ElseIf x = DialogResult.No Then
-                            in_kode_draft.Clear()
-                            dgv_draftfaktur.Rows.Clear()
-                            dgv_draftfaktur.Refresh()
-                        ElseIf x = DialogResult.Cancel Then
-                            Exit Sub
-                        End If
-                    End If
-                ElseIf printedstat = 1 Then
-                    If MessageBox.Show("Buat draft tagihan baru utk sales a.n. " & .Cells("sales_nama").Value & "?", "Draft Tagihan", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) = DialogResult.OK Then
-                        ClearAll()
-                    Else
-                        Exit Sub
-                    End If
-                End If
-
-                dgv_draftfaktur.Rows.Clear()
-                dgv_draftfaktur.Refresh()
-                in_sales.Text = .Cells("sales_kode").Value
-                in_sales_n.Text = .Cells("sales_nama").Value
-            End With
+    Private Sub dgv_listbarang_CellContentDBLClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_listbarang.CellDoubleClick
+        If e.RowIndex >= 0 Then
+            setPopUpResult()
         End If
-        loadFaktur(in_sales.Text, in_cari_faktur.Text)
     End Sub
 
-    Private Sub bt_remsales_Click(sender As Object, e As EventArgs) Handles bt_remsales.Click
-        If printedstat = 0 Then
-            If dgv_draftfaktur.Rows.Count > 0 Then
-                Dim x As DialogResult = MessageBox.Show("Simpan draft tagihan sebelum mengganti sales?", "Draft Tagihan", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
-                If x = DialogResult.Yes Then
-                    bt_create_draft.PerformClick()
-                    ClearAll()
-                ElseIf x = DialogResult.No Then
-                    dgv_draftfaktur.Rows.Clear()
-                    dgv_draftfaktur.Refresh()
-                ElseIf x = DialogResult.Cancel Then
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            setPopUpResult()
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
+        If Char.IsLetterOrDigit(e.KeyChar) Then
+            Dim x As TextBox
+            Select Case _popUpPos
+                Case "sales"
+                    x = in_sales_n
+                Case Else
+                    x = Nothing
+                    x.Dispose()
                     Exit Sub
-                End If
-            End If
-        ElseIf printedstat = 1 Then
-            MessageBox.Show("Tidak dapat mengganti sales pada draft yg sudah dicetak", "Draft Tagihan")
-            Exit Sub
+            End Select
+            x.Text += e.KeyChar
+            e.Handled = True
+            x.Focus()
+            x.Select(x.TextLength, x.TextLength)
         End If
+    End Sub
 
-        dgv_draftfaktur.Rows.Clear()
-        dgv_draftfaktur.Refresh()
-        in_sales.Clear()
-        in_sales_n.Clear()
-        loadFaktur(in_sales.Text, in_cari_faktur.Text)
+    Private Sub pnl_content_Click(sender As Object, e As EventArgs) Handles pnl_content.Click, MyBase.Click
+        If popPnl_barang.Visible = True Then
+            popPnl_barang.Visible = False
+        End If
+    End Sub
+
+    '------------- SELECT SALES
+    Private Sub in_sales_n_Enter(sender As Object, e As EventArgs) Handles in_sales_n.Enter, in_sales.Enter
+        If sender.ReadOnly = False Then
+            popPnl_barang.Location = New Point(sender.Left, sender.Top + sender.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            _popUpPos = IIf(sender.Name = "in_sales_n", "sales", "saleskd")
+            loadDataBRGPopup(_popUpPos, sender.Text)
+        End If
+    End Sub
+
+    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_sales_n.Leave, in_sales.Leave
+        If Not dgv_listbarang.Focused = True Then
+            popPnl_barang.Visible = False
+        Else
+            popPnl_barang.Visible = True
+        End If
+    End Sub
+
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_sales.KeyUp
+        If e.KeyCode = Keys.Down Then
+            If popPnl_barang.Visible = True Then
+                dgv_listbarang.Focus()
+            End If
+        ElseIf e.KeyCode = Keys.Enter Then
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
+                setPopUpResult()
+            End If
+            keyshortenter(in_cari_faktur, e)
+        Else
+            If in_sales_n.ReadOnly = False Then
+                If popPnl_barang.Visible = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(_popUpPos, sender.Text)
+            End If
+        End If
+    End Sub
+
+    Private Sub in_supplier_n_TextChanged(sender As Object, e As EventArgs) Handles in_sales_n.TextChanged, in_sales.TextChanged
+        If sender.Text = "" Then
+            in_sales_n.Clear()
+            in_sales.Clear()
+        End If
+    End Sub
+
+    '--------------- TAGIHAN
+    Private Sub dgv_listfaktur_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_listfaktur.CellClick
+        Dim kode As String = dgv_listfaktur.SelectedRows.Item(0).Cells(0).Value
+        loadHistory(kode)
+    End Sub
+
+    Private Sub dgv_draftfaktur_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_draftfaktur.CellClick
+        Dim kode As String = dgv_draftfaktur.SelectedRows.Item(0).Cells(1).Value
+        loadHistory(kode)
     End Sub
 
     '--------------- ADD FAKTUR
@@ -497,9 +638,11 @@
 
     '--------- LOAD DRAFT
     Private Sub bt_loaddraft_Click(sender As Object, e As EventArgs) Handles bt_loaddraft.Click
-        If list_row_draft > -1 Then
-            loadDraft(dgv_draft_list.Rows(list_row_draft).Cells(0).Value)
-        End If
+        'If list_row_draft > -1 Then
+        '    loadDraft(dgv_draft_list.Rows(list_row_draft).Cells(0).Value)
+        'End If
+        loadDraft(dgv_draft_list.SelectedRows.Item(0).Cells("draftlist_kode").Value)
+        bt_create_draft.Enabled = loggeduser.allowedit_transact
     End Sub
 
     Private Sub dgv_draft_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_draft_list.CellClick
@@ -535,13 +678,6 @@
                     End If
                 End With
             End Using
-        End If
-    End Sub
-
-    Private Sub in_kecamatan_KeyUp(sender As Object, e As KeyEventArgs) Handles in_pasar.KeyUp, in_kecamatan.KeyUp, in_kabupaten.KeyUp
-        If e.KeyCode = Keys.Enter Then
-            sender.Text = Trim(sender.Text)
-            loadFaktur(in_sales.Text, in_cari_faktur.Text)
         End If
     End Sub
 

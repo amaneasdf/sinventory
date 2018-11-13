@@ -1,6 +1,6 @@
 ﻿Public Class fr_list
     Public tabpagename As TabPage
-    Private rowindex As Integer = 0
+    'Private rowindex As Integer = 0
     Public edit_sw As Boolean = True
     Public add_sw As Boolean = True
     Public del_sw As Boolean = True
@@ -158,7 +158,7 @@
                     Dim x As New fr_jual_retur_detail
                     x.Show(main)
                 Case "pgstok"
-                    Dim x As fr_stok_awal
+                    Dim x As New fr_stok_awal
                     x.ShowDialog(main)
                     'Case "pgmutasigudang"
                     '    fr_stok_mutasi.ShowDialog(main)
@@ -197,7 +197,7 @@
 
     Private Sub editItem()
         If edit_sw = True Then
-            If dgv_list.RowCount > 0 Then
+            If dgv_list.RowCount > 0 And dgv_list.SelectedRows.Count > 0 Then
                 Me.Cursor = Cursors.AppStarting
                 consoleWriteLine(tabpagename.Name.ToString)
                 Select Case tabpagename.Name.ToString
@@ -231,8 +231,8 @@
                         Dim detail As New fr_sales_detail
                         With detail
                             .bt_simpansales.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show()
                         End With
                     Case "pgcusto"
@@ -263,8 +263,8 @@
                         Using detail As New fr_neracaawal_detail
                             With detail
                                 .bt_simpanmigrasi.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(4).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                                .Text += dgv_list.SelectedRows.Item(0).Cells(4).Value
+                                .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                                 .ShowDialog()
                             End With
                         End Using
@@ -272,8 +272,8 @@
                         Dim detail As New fr_beli_detail
                         With detail
                             .bt_simpanbeli.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                            .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show(main)
                             .do_load()
                         End With
@@ -281,31 +281,31 @@
                         Dim detail As New fr_beli_retur_detail
                         With detail
                             .bt_simpanreturbeli.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show(main)
                         End With
                     Case "pgpenjualan"
                         Dim detail As New fr_jual_detail
                         With detail
                             .bt_simpanjual.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                            .in_faktur.Text = dgv_list.Rows(rowindex).Cells(1).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
                             .Show(main)
                         End With
                     Case "pgreturjual"
                         Dim detail As New fr_jual_retur_detail
                         With detail
                             .bt_simpanreturbeli.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show(main)
                         End With
                     Case "pghutangawal"
                         Using detail As New fr_hutang_awal
                             With detail
                                 .bt_batalreturbeli.Text = "OK"
-                                .in_faktur.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                                .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                                 .ShowDialog(main)
                             End With
                         End Using
@@ -313,23 +313,23 @@
                         Dim detail As New fr_hutang_bayar
                         With detail
                             .bt_simpanperkiraan.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells("bukti").Value
-                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells("bukti").Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells("bukti").Value
+                            .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells("bukti").Value
                             .Show(main)
                             .do_load()
                         End With
                     Case "pghutangbgo"
                         Dim detail As New fr_giro
                         With detail
-                            .Text = "Detail Giro : " & dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text = "Detail Giro : " & dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show()
-                            .do_load("OUT", dgv_list.Rows(rowindex).Cells(0).Value)
+                            .do_load("OUT", dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         End With
                     Case "pgpiutangawal"
                         Using detail As New fr_piutang_awal
                             With detail
                                 .bt_batalreturbeli.Text = "OK"
-                                .in_faktur.Text = dgv_list.Rows(rowindex).Cells("faktur").Value
+                                .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells("faktur").Value
                                 .ShowDialog(main)
                             End With
                         End Using
@@ -337,16 +337,16 @@
                         Dim detail As New fr_piutang_bayar
                         With detail
                             .bt_simpanperkiraan.Text = "Update"
-                            .Text += dgv_list.Rows(rowindex).Cells(0).Value
-                            .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show(main)
                         End With
                     Case "pgpiutangbgcair"
                         Dim detail As New fr_giro
                         With detail
-                            .Text = "Detail Giro : " & dgv_list.Rows(rowindex).Cells(0).Value
+                            .Text = "Detail Giro : " & dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show()
-                            .do_load("IN", dgv_list.Rows(rowindex).Cells(0).Value)
+                            .do_load("IN", dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         End With
                     Case "pgpiutangbgtolak"
                         'Using detail As New fr_bg_tolak
@@ -360,7 +360,7 @@
                         Using detail As New fr_kas_detail
                             With detail
                                 .bt_simpanperkiraan.Text = "Update"
-                                .in_no_bukti.Text = dgv_list.Rows(rowindex).Cells(1).Value
+                                .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
                                 .ShowDialog(main)
                             End With
                         End Using
@@ -383,10 +383,10 @@
                         Using detail As New fr_group_detail
                             With detail
                                 .bt_simpan_group.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                                .in_nama_group.Text = dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_ket_group.Text = dgv_list.Rows(rowindex).Cells(2).Value
+                                .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                                .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                                .in_nama_group.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
+                                .in_ket_group.Text = dgv_list.SelectedRows.Item(0).Cells(2).Value
                                 .ShowDialog()
                             End With
                         End Using
@@ -394,8 +394,8 @@
                         Using detail As New fr_user_detail
                             With detail
                                 .bt_simpanuser.Text = "Update"
-                                .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                                .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
+                                .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                                .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                                 .ShowDialog(main)
                             End With
                         End Using
@@ -479,7 +479,7 @@
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
         If e.KeyData = Keys.Enter Then
             e.SuppressKeyPress = True
-            rowindex = 0
+            'rowindex = 0
             Console.WriteLine(tabpagename.Name.ToString)
             Select Case tabpagename.Name.ToString
                 Case "pgbarang"
@@ -561,28 +561,28 @@
     '---------------- CLOSE
     Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         main.tabcontrol.TabPages.Remove(tabpagename)
-        rowindex = 0
+        'rowindex = 0
     End Sub
 
     '---------------- DGV ITEM LIST
     Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellClick
-        rowindex = e.RowIndex
+        'rowindex = e.RowIndex
     End Sub
 
     Private Sub dgv_list_ColumnHeaderMouseClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv_list.ColumnHeaderMouseClick
         dgv_list.ClearSelection()
-        rowindex = 0
+        'rowindex = 0
     End Sub
 
     Private Sub dgv_list_ColumnHeaderMouseDoubleClick(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv_list.ColumnHeaderMouseDoubleClick
         dgv_list.ClearSelection()
-        rowindex = 0
+        'rowindex = 0
     End Sub
 
     Private Sub dgv_list_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellDoubleClick
         Try
             If e.RowIndex >= 0 Then
-                rowindex = e.RowIndex
+                'rowindex = e.RowIndex
                 editItem()
             End If
         Catch ex As Exception

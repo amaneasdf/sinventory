@@ -148,9 +148,9 @@ Partial Class fr_lap_filter_keuangan
         Me.lbl_title.Location = New System.Drawing.Point(5, 3)
         Me.lbl_title.MaximumSize = New System.Drawing.Size(490, 33)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(212, 33)
+        Me.lbl_title.Size = New System.Drawing.Size(240, 33)
         Me.lbl_title.TabIndex = 0
-        Me.lbl_title.Text = "Laporan Piutang"
+        Me.lbl_title.Text = "Laporan Keuangan"
         '
         'in_sales_n
         '

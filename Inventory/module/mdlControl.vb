@@ -1557,18 +1557,26 @@ Module mdlControl
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
                 End With
+
             Case "returbeli"
                 With frmreturbeli
                     Dim retur_beli_user = New DataGridViewColumn
+                    Dim retur_jnsbyr = New DataGridViewColumn
                     retur_beli_user = user_id.Clone()
+                    retur_jnsbyr = hutang_jenis.Clone()
 
                     .print_sw = True
 
-                    .dgv_list.AutoGenerateColumns = False
-                    .dgv_list.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_beli_bukti, retur_beli_faktur, retur_beli_tgl, retur_beli_supplier, retur_beli_gudang, retur_beli_jml, retur_beli_user})
-                    For i = 0 To .dgv_list.Columns.Count - 1
-                        .dgv_list.Columns(i).DisplayIndex = i
+                    Dim x As DataGridViewColumn() = {retur_beli_bukti, retur_jnsbyr, retur_beli_faktur, retur_beli_tgl, retur_beli_supplier,
+                                                     retur_beli_gudang, retur_beli_jml, retur_beli_user}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                     Next
+
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+
                 End With
             Case "jual"
                 With frmpenjualan
@@ -1595,17 +1603,23 @@ Module mdlControl
                     Dim retur_jual_gudang = New DataGridViewColumn
                     Dim retur_jual_user = New DataGridViewColumn
                     Dim retur_jual_jml = New DataGridViewColumn
+                    Dim retur_jnsbyr = New DataGridViewColumn
                     retur_jual_gudang = retur_beli_gudang.Clone()
                     retur_jual_user = user_id.Clone()
                     retur_jual_jml = retur_beli_jml.Clone()
+                    retur_jnsbyr = hutang_jenis.Clone()
 
                     .print_sw = True
 
-                    .dgv_list.AutoGenerateColumns = False
-                    .dgv_list.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {retur_jual_bukti, retur_jual_faktur, retur_jual_tgl, retur_jual_sales, retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_jual_user})
-                    For i = 0 To .dgv_list.Columns.Count - 1
-                        .dgv_list.Columns(i).DisplayIndex = i
+                    Dim x As DataGridViewColumn() = {retur_jual_bukti, retur_jnsbyr, retur_jual_faktur, retur_jual_tgl, retur_jual_sales,
+                                                     retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_jual_user}
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                     Next
+
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
                 End With
             Case "stok"
                 With frmstok
@@ -1962,8 +1976,10 @@ Module mdlControl
 
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
+
                 End With
-                Exit Sub
+                'Exit Sub
+
 
             Case "jurnalumum"
                 'With frmjurnalumum
@@ -2066,11 +2082,14 @@ Module mdlControl
         Dim bs As New BindingSource
         Dim q As String = ""
         Dim p As String = ""
+        Dim colsort As DataGridViewColumn
+        Dim dirsort As System.ComponentModel.ListSortDirection
+
         Select Case type
 
             Case "barang"
                 q = "getDataMaster('barang')"
-                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' OR kodesupplier LIKE '{0}%' OR supplier LIKE '%{0}%' OR status LIKE '{0}%'"
+                p = "nama LIKE '%{0}%' OR kode LIKE '{0}%' OR kodesupplier LIKE '{0}%' OR supplier LIKE '%{0}%' OR status LIKE '{0}%'"
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "gudang"
@@ -2248,6 +2267,9 @@ Module mdlControl
                 Dim pNumeric As String = "kredit={0} OR debet={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
+                colsort = dgv.Columns(3)
+                dirsort = System.ComponentModel.ListSortDirection.Descending
+
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
             Case "jurnalumum"
                 'q = "SELECT jurnal_jenis, jurnal_tanggal, jurnal_perkiraan, jurnal_debet, jurnal_kredit, " _
@@ -2280,6 +2302,9 @@ Module mdlControl
             .RowHeadersWidth = 20
             .DataSource = bs
             Console.WriteLine("dgv" & .RowCount)
+            If IsNothing(colsort) = False And dirsort <> Nothing Then
+                dgv.Sort(colsort, dirsort)
+            End If
         End With
     End Sub
 

@@ -130,7 +130,7 @@
                 'BASED periode,supplier;OPT saldo_sisa
                 q = "SELECT supplier_kode as hn_supplier,supplier_nama as hn_supplier_n, ADDDATE(faktur_tanggal_trans,faktur_term) as hn_jt, " _
                     & "hutang_faktur as hn_faktur, if(faktur_tanggal_trans<'{0}',hutang_awal,0) as hn_saldoawal, " _
-                    & "if(faktur_tanggal_trans>='{1}',hutang_awal,0) as hn_beli, IFNULL(h_trans_nilaibayar,0) as hn_bayar, " _
+                    & "if(faktur_tanggal_trans>='{0}',hutang_awal,0) as hn_beli, IFNULL(h_trans_nilaibayar,0) as hn_bayar, " _
                     & "IFNULL(h_retur_total,0) as hn_retur, hutang_awal-IFNULL(h_trans_nilaibayar,0)-IFNULL(h_retur_total,0) as hn_sisa " _
                     & "FROM data_hutang_awal " _
                     & "LEFT JOIN (" _
@@ -150,7 +150,7 @@
                     & "LEFT JOIN data_pembelian_faktur ON hutang_faktur=faktur_kode " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE hutang_status=1 {2}" _
-                    & "ORDER BY salesman_nama, customer_nama, faktur_tanggal_trans"
+                    & "ORDER BY supplier_nama, faktur_tanggal_trans"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
                 qwh += "AND hutang_idperiode='" & cb_periode.SelectedValue & "' "
@@ -174,7 +174,7 @@
                     & "FROM data_hutang_bayar_trans " _
                     & "LEFT JOIN data_hutang_bayar ON h_trans_bukti=h_bayar_bukti " _
                     & "AND h_bayar_tgl_bayar < '{0}' AND h_bayar_status=1 " _
-                    & "WHERE h_trans_status=1 AND h_trans_jenis_bayar='TITIP' GROUP BY h_bayar_bukti " _
+                    & "WHERE h_trans_status=1 AND h_trans_jenis_bayar='PIUTSUPL' GROUP BY h_bayar_bukti " _
                     & ") titipan " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "JOIN (SELECT @csum := 0, @change_supplier:='') para " _
@@ -232,7 +232,7 @@
                     & "		ELSE 0 END) as hbd_beli, " _
                     & "	if(jenis='retur',h_trans_nilaibayar,0) as hbd_retur, if(jenis='bayar',h_trans_nilaibayar,0) as hbd_bayar, " _
                     & "	TRUNCATE(@sisa:= @sisa-h_trans_nilaibayar,2) as hbd_sisa, " _
-                    & "	ket as hbd_ket,h_trans_tgl as hbd_tglbayar,h_trans_tgl,h_trans_tgl-faktur_tanggal_trans as hbd_hari,@faktur:=hutang_faktur " _
+                    & "	ket as hbd_ket,h_trans_tgl as hbd_tglbayar,DATEDIFF(h_trans_tgl,faktur_tanggal_trans) as hbd_hari,@faktur:=hutang_faktur " _
                     & "FROM ( " _
                     & "SELECT h_trans_faktur, h_trans_nilaibayar, h_bayar_tgl_bayar as h_trans_tgl, " _
                     & "	CONCAT(h_bayar_bukti,':',h_bayar_jenis_bayar) as ket, 'bayar' as jenis, h_bayar_reg_date as reg_date " _

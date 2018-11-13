@@ -1179,6 +1179,7 @@ Partial Class fr_beli_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.CancelButton = Me.bt_batalbeli
         Me.ClientSize = New System.Drawing.Size(1003, 601)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.cb_sat)
@@ -1255,6 +1256,7 @@ Partial Class fr_beli_detail
         Me.Controls.Add(Me.Panel2)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "fr_beli_detail"

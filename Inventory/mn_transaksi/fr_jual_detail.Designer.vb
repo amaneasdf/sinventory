@@ -83,21 +83,6 @@ Partial Class fr_jual_detail
         Me.in_barang_nm = New System.Windows.Forms.TextBox()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -129,6 +114,21 @@ Partial Class fr_jual_detail
         Me.Label33 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label35 = New System.Windows.Forms.Label()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -280,9 +280,9 @@ Partial Class fr_jual_detail
         Me.cb_ppn.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cb_ppn.FormattingEnabled = True
         Me.cb_ppn.Items.AddRange(New Object() {"ii", "ooo", "eeee"})
-        Me.cb_ppn.Location = New System.Drawing.Point(505, 146)
+        Me.cb_ppn.Location = New System.Drawing.Point(541, 146)
         Me.cb_ppn.Name = "cb_ppn"
-        Me.cb_ppn.Size = New System.Drawing.Size(203, 21)
+        Me.cb_ppn.Size = New System.Drawing.Size(177, 21)
         Me.cb_ppn.TabIndex = 11
         '
         'in_status
@@ -355,7 +355,7 @@ Partial Class fr_jual_detail
         Me.in_term.Location = New System.Drawing.Point(349, 146)
         Me.in_term.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
         Me.in_term.Name = "in_term"
-        Me.in_term.Size = New System.Drawing.Size(94, 20)
+        Me.in_term.Size = New System.Drawing.Size(101, 20)
         Me.in_term.TabIndex = 10
         Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -383,7 +383,7 @@ Partial Class fr_jual_detail
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(469, 150)
+        Me.Label14.Location = New System.Drawing.Point(508, 150)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(27, 13)
         Me.Label14.TabIndex = 320
@@ -800,131 +800,6 @@ Partial Class fr_jual_detail
         Me.dgv_barang.Size = New System.Drawing.Size(980, 186)
         Me.dgv_barang.TabIndex = 352
         '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sattype"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.ReadOnly = True
-        Me.sat_type.Visible = False
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.MinimumWidth = 50
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 65
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.MinimumWidth = 80
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 80
-        '
-        'brg_hpp
-        '
-        Me.brg_hpp.HeaderText = "hpp"
-        Me.brg_hpp.Name = "brg_hpp"
-        Me.brg_hpp.ReadOnly = True
-        Me.brg_hpp.Visible = False
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_jual"
-        Me.harga.HeaderText = "Harga Jual"
-        Me.harga.MinimumWidth = 100
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'subtotal
-        '
-        Me.subtotal.HeaderText = "Subtotal"
-        Me.subtotal.Name = "subtotal"
-        Me.subtotal.ReadOnly = True
-        '
-        'discrp
-        '
-        Me.discrp.DataPropertyName = "trans_disc_rupiah"
-        Me.discrp.HeaderText = "Disc Rp."
-        Me.discrp.MinimumWidth = 90
-        Me.discrp.Name = "discrp"
-        Me.discrp.ReadOnly = True
-        Me.discrp.Width = 90
-        '
-        'disc1
-        '
-        Me.disc1.DataPropertyName = "trans_disc1"
-        Me.disc1.HeaderText = "Disc1"
-        Me.disc1.MinimumWidth = 40
-        Me.disc1.Name = "disc1"
-        Me.disc1.ReadOnly = True
-        Me.disc1.Width = 45
-        '
-        'disc2
-        '
-        Me.disc2.DataPropertyName = "trans_disc2"
-        Me.disc2.HeaderText = "Disc2"
-        Me.disc2.MinimumWidth = 40
-        Me.disc2.Name = "disc2"
-        Me.disc2.ReadOnly = True
-        Me.disc2.Width = 45
-        '
-        'disc3
-        '
-        Me.disc3.DataPropertyName = "trans_disc3"
-        Me.disc3.HeaderText = "Disc3"
-        Me.disc3.MinimumWidth = 40
-        Me.disc3.Name = "disc3"
-        Me.disc3.ReadOnly = True
-        Me.disc3.Width = 45
-        '
-        'disc4
-        '
-        Me.disc4.DataPropertyName = "trans_disc4"
-        Me.disc4.HeaderText = "Disc4"
-        Me.disc4.MinimumWidth = 40
-        Me.disc4.Name = "disc4"
-        Me.disc4.ReadOnly = True
-        Me.disc4.Width = 45
-        '
-        'disc5
-        '
-        Me.disc5.DataPropertyName = "trans_disc5"
-        Me.disc5.HeaderText = "Disc5"
-        Me.disc5.MinimumWidth = 40
-        Me.disc5.Name = "disc5"
-        Me.disc5.ReadOnly = True
-        Me.disc5.Width = 45
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
-        '
         'Label31
         '
         Me.Label31.AutoSize = True
@@ -988,7 +863,7 @@ Partial Class fr_jual_detail
         Me.in_gudang_n.Location = New System.Drawing.Point(472, 124)
         Me.in_gudang_n.MaxLength = 200
         Me.in_gudang_n.Name = "in_gudang_n"
-        Me.in_gudang_n.Size = New System.Drawing.Size(236, 20)
+        Me.in_gudang_n.Size = New System.Drawing.Size(246, 20)
         Me.in_gudang_n.TabIndex = 9
         '
         'in_gudang
@@ -1011,7 +886,7 @@ Partial Class fr_jual_detail
         Me.in_sales_n.Location = New System.Drawing.Point(472, 80)
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
-        Me.in_sales_n.Size = New System.Drawing.Size(236, 20)
+        Me.in_sales_n.Size = New System.Drawing.Size(246, 20)
         Me.in_sales_n.TabIndex = 5
         '
         'in_sales
@@ -1034,7 +909,7 @@ Partial Class fr_jual_detail
         Me.in_custo_n.Location = New System.Drawing.Point(472, 102)
         Me.in_custo_n.MaxLength = 200
         Me.in_custo_n.Name = "in_custo_n"
-        Me.in_custo_n.Size = New System.Drawing.Size(236, 20)
+        Me.in_custo_n.Size = New System.Drawing.Size(246, 20)
         Me.in_custo_n.TabIndex = 7
         '
         'in_custo
@@ -1218,6 +1093,7 @@ Partial Class fr_jual_detail
         'in_bayar
         '
         Me.in_bayar.DecimalPlaces = 2
+        Me.in_bayar.Enabled = False
         Me.in_bayar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_bayar.Increment = New Decimal(New Integer() {100, 0, 0, 0})
         Me.in_bayar.Location = New System.Drawing.Point(793, 436)
@@ -1274,6 +1150,131 @@ Partial Class fr_jual_detail
         Me.Label35.Size = New System.Drawing.Size(67, 13)
         Me.Label35.TabIndex = 426
         Me.Label35.Text = "Status Pajak"
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.MinimumWidth = 50
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 65
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.MinimumWidth = 80
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 80
+        '
+        'brg_hpp
+        '
+        Me.brg_hpp.HeaderText = "hpp"
+        Me.brg_hpp.Name = "brg_hpp"
+        Me.brg_hpp.ReadOnly = True
+        Me.brg_hpp.Visible = False
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_jual"
+        Me.harga.HeaderText = "Harga Jual"
+        Me.harga.MinimumWidth = 100
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'discrp
+        '
+        Me.discrp.DataPropertyName = "trans_disc_rupiah"
+        Me.discrp.HeaderText = "Disc Rp."
+        Me.discrp.MinimumWidth = 90
+        Me.discrp.Name = "discrp"
+        Me.discrp.ReadOnly = True
+        Me.discrp.Width = 90
+        '
+        'disc1
+        '
+        Me.disc1.DataPropertyName = "trans_disc1"
+        Me.disc1.HeaderText = "Disc1"
+        Me.disc1.MinimumWidth = 40
+        Me.disc1.Name = "disc1"
+        Me.disc1.ReadOnly = True
+        Me.disc1.Width = 45
+        '
+        'disc2
+        '
+        Me.disc2.DataPropertyName = "trans_disc2"
+        Me.disc2.HeaderText = "Disc2"
+        Me.disc2.MinimumWidth = 40
+        Me.disc2.Name = "disc2"
+        Me.disc2.ReadOnly = True
+        Me.disc2.Width = 45
+        '
+        'disc3
+        '
+        Me.disc3.DataPropertyName = "trans_disc3"
+        Me.disc3.HeaderText = "Disc3"
+        Me.disc3.MinimumWidth = 40
+        Me.disc3.Name = "disc3"
+        Me.disc3.ReadOnly = True
+        Me.disc3.Width = 45
+        '
+        'disc4
+        '
+        Me.disc4.DataPropertyName = "trans_disc4"
+        Me.disc4.HeaderText = "Disc4"
+        Me.disc4.MinimumWidth = 40
+        Me.disc4.Name = "disc4"
+        Me.disc4.ReadOnly = True
+        Me.disc4.Width = 45
+        '
+        'disc5
+        '
+        Me.disc5.DataPropertyName = "trans_disc5"
+        Me.disc5.HeaderText = "Disc5"
+        Me.disc5.MinimumWidth = 40
+        Me.disc5.Name = "disc5"
+        Me.disc5.ReadOnly = True
+        Me.disc5.Width = 45
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
         '
         'fr_jual_detail
         '
@@ -1481,6 +1482,8 @@ Partial Class fr_jual_detail
     Friend WithEvents in_bayar As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_sisa As System.Windows.Forms.TextBox
     Friend WithEvents Label33 As System.Windows.Forms.Label
+    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
+    Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -1496,6 +1499,4 @@ Partial Class fr_jual_detail
     Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
-    Friend WithEvents Label35 As System.Windows.Forms.Label
 End Class

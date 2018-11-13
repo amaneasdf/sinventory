@@ -9,8 +9,9 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getHPP(barang_kode) AS 'HPP' FROM data_barang_master " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getHPPAVG(barang_kode,'{1}','{2}') AS 'HPP' FROM data_barang_master " _
                     & "WHERE barang_nama LIKE '{0}%' AND barang_status=1 ORDER BY barang_kode LIMIT 250"
+                q = String.Format(q, "{0}", selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.id)
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
             Case Else

@@ -34,13 +34,6 @@ Partial Class fr_urut_kartustok
         Me.sales_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sales_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_kartustok = New System.Windows.Forms.DataGridView()
-        Me.kartu_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_ket2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_debet = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kartu_saldo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bt_cari_gudang = New System.Windows.Forms.Button()
         Me.in_cari_gudang = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -57,6 +50,14 @@ Partial Class fr_urut_kartustok
         Me.in_gudang_n = New System.Windows.Forms.TextBox()
         Me.in_barang_n = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.kartu_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_ket2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_debet = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_nilai = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_saldo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_gudang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -199,7 +200,7 @@ Partial Class fr_urut_kartustok
         Me.dgv_kartustok.AllowUserToDeleteRows = False
         Me.dgv_kartustok.BackgroundColor = System.Drawing.Color.White
         Me.dgv_kartustok.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_kartustok.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kartu_tgl, Me.kartu_faktur, Me.kartu_ket, Me.kartu_ket2, Me.kartu_debet, Me.kartu_kredit, Me.kartu_saldo})
+        Me.dgv_kartustok.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kartu_tgl, Me.kartu_faktur, Me.kartu_ket, Me.kartu_ket2, Me.kartu_debet, Me.kartu_kredit, Me.kartu_nilai, Me.kartu_saldo})
         Me.dgv_kartustok.Location = New System.Drawing.Point(11, 277)
         Me.dgv_kartustok.MultiSelect = False
         Me.dgv_kartustok.Name = "dgv_kartustok"
@@ -207,62 +208,6 @@ Partial Class fr_urut_kartustok
         Me.dgv_kartustok.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_kartustok.Size = New System.Drawing.Size(857, 208)
         Me.dgv_kartustok.TabIndex = 8
-        '
-        'kartu_tgl
-        '
-        Me.kartu_tgl.HeaderText = "Tanggal"
-        Me.kartu_tgl.MinimumWidth = 50
-        Me.kartu_tgl.Name = "kartu_tgl"
-        Me.kartu_tgl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.kartu_tgl.Width = 75
-        '
-        'kartu_faktur
-        '
-        Me.kartu_faktur.DataPropertyName = "kode"
-        Me.kartu_faktur.HeaderText = "No.Faktur"
-        Me.kartu_faktur.Name = "kartu_faktur"
-        Me.kartu_faktur.ReadOnly = True
-        Me.kartu_faktur.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'kartu_ket
-        '
-        Me.kartu_ket.HeaderText = "Keterangan"
-        Me.kartu_ket.MinimumWidth = 100
-        Me.kartu_ket.Name = "kartu_ket"
-        Me.kartu_ket.ReadOnly = True
-        Me.kartu_ket.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.kartu_ket.Width = 200
-        '
-        'kartu_ket2
-        '
-        Me.kartu_ket2.HeaderText = "Nama"
-        Me.kartu_ket2.Name = "kartu_ket2"
-        Me.kartu_ket2.ReadOnly = True
-        Me.kartu_ket2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.kartu_ket2.Width = 200
-        '
-        'kartu_debet
-        '
-        Me.kartu_debet.HeaderText = "Debet"
-        Me.kartu_debet.Name = "kartu_debet"
-        Me.kartu_debet.ReadOnly = True
-        Me.kartu_debet.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.kartu_debet.Width = 75
-        '
-        'kartu_kredit
-        '
-        Me.kartu_kredit.HeaderText = "Kredit"
-        Me.kartu_kredit.Name = "kartu_kredit"
-        Me.kartu_kredit.ReadOnly = True
-        Me.kartu_kredit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.kartu_kredit.Width = 75
-        '
-        'kartu_saldo
-        '
-        Me.kartu_saldo.HeaderText = "Saldo"
-        Me.kartu_saldo.Name = "kartu_saldo"
-        Me.kartu_saldo.ReadOnly = True
-        Me.kartu_saldo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
         'bt_cari_gudang
         '
@@ -424,6 +369,68 @@ Partial Class fr_urut_kartustok
         Me.Button1.Text = ">>"
         Me.Button1.UseVisualStyleBackColor = True
         '
+        'kartu_tgl
+        '
+        Me.kartu_tgl.HeaderText = "Tanggal"
+        Me.kartu_tgl.MinimumWidth = 50
+        Me.kartu_tgl.Name = "kartu_tgl"
+        Me.kartu_tgl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_tgl.Width = 75
+        '
+        'kartu_faktur
+        '
+        Me.kartu_faktur.DataPropertyName = "kode"
+        Me.kartu_faktur.HeaderText = "No.Faktur"
+        Me.kartu_faktur.Name = "kartu_faktur"
+        Me.kartu_faktur.ReadOnly = True
+        Me.kartu_faktur.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'kartu_ket
+        '
+        Me.kartu_ket.HeaderText = "Keterangan"
+        Me.kartu_ket.MinimumWidth = 100
+        Me.kartu_ket.Name = "kartu_ket"
+        Me.kartu_ket.ReadOnly = True
+        Me.kartu_ket.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_ket.Width = 150
+        '
+        'kartu_ket2
+        '
+        Me.kartu_ket2.HeaderText = "Nama"
+        Me.kartu_ket2.Name = "kartu_ket2"
+        Me.kartu_ket2.ReadOnly = True
+        Me.kartu_ket2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_ket2.Width = 200
+        '
+        'kartu_debet
+        '
+        Me.kartu_debet.HeaderText = "Debet"
+        Me.kartu_debet.Name = "kartu_debet"
+        Me.kartu_debet.ReadOnly = True
+        Me.kartu_debet.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_debet.Width = 65
+        '
+        'kartu_kredit
+        '
+        Me.kartu_kredit.HeaderText = "Kredit"
+        Me.kartu_kredit.Name = "kartu_kredit"
+        Me.kartu_kredit.ReadOnly = True
+        Me.kartu_kredit.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_kredit.Width = 65
+        '
+        'kartu_nilai
+        '
+        Me.kartu_nilai.HeaderText = "Nilai"
+        Me.kartu_nilai.Name = "kartu_nilai"
+        '
+        'kartu_saldo
+        '
+        Me.kartu_saldo.HeaderText = "Saldo"
+        Me.kartu_saldo.Name = "kartu_saldo"
+        Me.kartu_saldo.ReadOnly = True
+        Me.kartu_saldo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.kartu_saldo.Width = 80
+        '
         'fr_urut_kartustok
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -495,6 +502,7 @@ Partial Class fr_urut_kartustok
     Friend WithEvents kartu_ket2 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_debet As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents kartu_nilai As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_saldo As System.Windows.Forms.DataGridViewTextBoxColumn
 
 End Class

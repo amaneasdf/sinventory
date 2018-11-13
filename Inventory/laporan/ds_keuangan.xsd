@@ -12,7 +12,7 @@
   <xs:element name="ds_keuangan" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="ds_keuangan" msprop:Generator_UserDSName="ds_keuangan">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="dt_biaya" msprop:Generator_TableClassName="dt_biayaDataTable" msprop:Generator_TableVarName="tabledt_biaya" msprop:Generator_RowChangedName="dt_biayaRowChanged" msprop:Generator_TablePropName="dt_biaya" msprop:Generator_RowDeletingName="dt_biayaRowDeleting" msprop:Generator_RowChangingName="dt_biayaRowChanging" msprop:Generator_RowEvHandlerName="dt_biayaRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_biayaRowDeleted" msprop:Generator_RowClassName="dt_biayaRow" msprop:Generator_UserTableName="dt_biaya" msprop:Generator_RowEvArgName="dt_biayaRowChangeEvent">
+        <xs:element name="dt_biaya" msprop:Generator_TableClassName="dt_biayaDataTable" msprop:Generator_TableVarName="tabledt_biaya" msprop:Generator_TablePropName="dt_biaya" msprop:Generator_RowDeletingName="dt_biayaRowDeleting" msprop:Generator_RowChangingName="dt_biayaRowChanging" msprop:Generator_RowEvHandlerName="dt_biayaRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_biayaRowDeleted" msprop:Generator_UserTableName="dt_biaya" msprop:Generator_RowChangedName="dt_biayaRowChanged" msprop:Generator_RowEvArgName="dt_biayaRowChangeEvent" msprop:Generator_RowClassName="dt_biayaRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="b_sales" msprop:Generator_ColumnVarNameInTable="columnb_sales" msprop:Generator_ColumnPropNameInRow="b_sales" msprop:Generator_ColumnPropNameInTable="b_salesColumn" msprop:Generator_UserColumnName="b_sales" type="xs:string" minOccurs="0" />
@@ -24,7 +24,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="dt_bukubesar" msprop:Generator_TableClassName="dt_bukubesarDataTable" msprop:Generator_TableVarName="tabledt_bukubesar" msprop:Generator_TablePropName="dt_bukubesar" msprop:Generator_RowDeletingName="dt_bukubesarRowDeleting" msprop:Generator_RowChangingName="dt_bukubesarRowChanging" msprop:Generator_RowEvHandlerName="dt_bukubesarRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_bukubesarRowDeleted" msprop:Generator_UserTableName="dt_bukubesar" msprop:Generator_RowChangedName="dt_bukubesarRowChanged" msprop:Generator_RowEvArgName="dt_bukubesarRowChangeEvent" msprop:Generator_RowClassName="dt_bukubesarRow">
+        <xs:element name="dt_bukubesar" msprop:Generator_TableClassName="dt_bukubesarDataTable" msprop:Generator_TableVarName="tabledt_bukubesar" msprop:Generator_RowChangedName="dt_bukubesarRowChanged" msprop:Generator_TablePropName="dt_bukubesar" msprop:Generator_RowDeletingName="dt_bukubesarRowDeleting" msprop:Generator_RowChangingName="dt_bukubesarRowChanging" msprop:Generator_RowEvHandlerName="dt_bukubesarRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_bukubesarRowDeleted" msprop:Generator_RowClassName="dt_bukubesarRow" msprop:Generator_UserTableName="dt_bukubesar" msprop:Generator_RowEvArgName="dt_bukubesarRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="bb_akun" msprop:Generator_ColumnVarNameInTable="columnbb_akun" msprop:Generator_ColumnPropNameInRow="bb_akun" msprop:Generator_ColumnPropNameInTable="bb_akunColumn" msprop:Generator_UserColumnName="bb_akun" type="xs:string" minOccurs="0" />
@@ -38,7 +38,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="dt_jurnalumum" msprop:Generator_TableClassName="dt_jurnalumumDataTable" msprop:Generator_TableVarName="tabledt_jurnalumum" msprop:Generator_TablePropName="dt_jurnalumum" msprop:Generator_RowDeletingName="dt_jurnalumumRowDeleting" msprop:Generator_RowChangingName="dt_jurnalumumRowChanging" msprop:Generator_RowEvHandlerName="dt_jurnalumumRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_jurnalumumRowDeleted" msprop:Generator_UserTableName="dt_jurnalumum" msprop:Generator_RowChangedName="dt_jurnalumumRowChanged" msprop:Generator_RowEvArgName="dt_jurnalumumRowChangeEvent" msprop:Generator_RowClassName="dt_jurnalumumRow">
+        <xs:element name="dt_jurnalumum" msprop:Generator_TableClassName="dt_jurnalumumDataTable" msprop:Generator_TableVarName="tabledt_jurnalumum" msprop:Generator_RowChangedName="dt_jurnalumumRowChanged" msprop:Generator_TablePropName="dt_jurnalumum" msprop:Generator_RowDeletingName="dt_jurnalumumRowDeleting" msprop:Generator_RowChangingName="dt_jurnalumumRowChanging" msprop:Generator_RowEvHandlerName="dt_jurnalumumRowChangeEventHandler" msprop:Generator_RowDeletedName="dt_jurnalumumRowDeleted" msprop:Generator_RowClassName="dt_jurnalumumRow" msprop:Generator_UserTableName="dt_jurnalumum" msprop:Generator_RowEvArgName="dt_jurnalumumRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ju_tgl" msprop:Generator_ColumnVarNameInTable="columnju_tgl" msprop:Generator_ColumnPropNameInRow="ju_tgl" msprop:Generator_ColumnPropNameInTable="ju_tglColumn" msprop:Generator_UserColumnName="ju_tgl" type="xs:dateTime" minOccurs="0" />
@@ -49,6 +49,7 @@
               <xs:element name="ju_akun_ket" msprop:Generator_ColumnVarNameInTable="columnju_akun_ket" msprop:Generator_ColumnPropNameInRow="ju_akun_ket" msprop:Generator_ColumnPropNameInTable="ju_akun_ketColumn" msprop:Generator_UserColumnName="ju_akun_ket" type="xs:string" minOccurs="0" />
               <xs:element name="ju_debet" msprop:Generator_ColumnVarNameInTable="columnju_debet" msprop:Generator_ColumnPropNameInRow="ju_debet" msprop:Generator_ColumnPropNameInTable="ju_debetColumn" msprop:Generator_UserColumnName="ju_debet" type="xs:decimal" minOccurs="0" />
               <xs:element name="ju_kredit" msprop:Generator_ColumnVarNameInTable="columnju_kredit" msprop:Generator_ColumnPropNameInRow="ju_kredit" msprop:Generator_ColumnPropNameInTable="ju_kreditColumn" msprop:Generator_UserColumnName="ju_kredit" type="xs:decimal" minOccurs="0" />
+              <xs:element name="ju_lineid" msprop:Generator_ColumnVarNameInTable="columnju_lineid" msprop:Generator_ColumnPropNameInRow="ju_lineid" msprop:Generator_ColumnPropNameInTable="ju_lineidColumn" msprop:Generator_UserColumnName="ju_lineid" type="xs:int" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

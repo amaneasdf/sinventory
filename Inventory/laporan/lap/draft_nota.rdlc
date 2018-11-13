@@ -30,7 +30,7 @@
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.25cm</Width>
+              <Width>1.349cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -734,7 +734,7 @@
                             </TextRun>
                           </TextRuns>
                           <Style>
-                            <TextAlign>Right</TextAlign>
+                            <TextAlign>Left</TextAlign>
                           </Style>
                         </Paragraph>
                       </Paragraphs>
@@ -926,6 +926,9 @@
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -967,6 +970,9 @@
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1008,7 +1014,9 @@
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>n0</Format>
+                                <Format>#,0</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -1433,7 +1441,7 @@
         <DataSetName>ds_draftnota_detail</DataSetName>
         <Top>0.01763cm</Top>
         <Height>3cm</Height>
-        <Width>19.751cm</Width>
+        <Width>19.85cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1951,7 +1959,7 @@
     <Height>2.2614in</Height>
     <Style />
   </Body>
-  <Width>19.75615cm</Width>
+  <Width>19.85cm</Width>
   <Page>
     <PageHeader>
       <Height>2.26399cm</Height>
@@ -1967,6 +1975,8 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>11pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2031,7 +2041,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>0.49099cm</Top>
-          <Left>5.41557cm</Left>
+          <Left>5.43323cm</Left>
           <Height>0.52944cm</Height>
           <Width>8.98354cm</Width>
           <ZIndex>1</ZIndex>
@@ -2067,7 +2077,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox9</rd:DefaultName>
           <Top>1.5937cm</Top>
-          <Left>5.41557cm</Left>
+          <Left>5.43323cm</Left>
           <Height>0.62619cm</Height>
           <Width>8.98354cm</Width>
           <ZIndex>2</ZIndex>
@@ -2102,7 +2112,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox18</rd:DefaultName>
           <Top>1.09099cm</Top>
-          <Left>5.41557cm</Left>
+          <Left>5.43323cm</Left>
           <Height>0.50271cm</Height>
           <Width>8.98354cm</Width>
           <ZIndex>3</ZIndex>
@@ -2136,9 +2146,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Left>17.54719cm</Left>
+          <Left>16.001cm</Left>
           <Height>0.46771cm</Height>
-          <Width>2.20896cm</Width>
+          <Width>3.849cm</Width>
           <ZIndex>4</ZIndex>
           <Style>
             <Border>

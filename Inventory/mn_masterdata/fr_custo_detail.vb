@@ -65,6 +65,61 @@
     End Sub
 
     'SAVE DATA
+    'Generate Kode
+    Private Function createKode(namakusto As String) As String
+        Dim ret As String = ""
+        Dim acceptedChars() As Char = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".ToCharArray
+        Dim chrGet As Boolean = False
+        Dim str As String = ""
+        Dim split As String()
+        Dim q As String = "SELECT RIGHT(customer_kode,2) as ss FROM data_customer_master " _
+                          & "WHERE customer_kode LIKE '{0}%' AND RIGHT(customer_kode,2) REGEXP '^[0-9]+$' " _
+                          & "ORDER BY ss DESC LIMIT 1"
+
+
+        str = (From ch As Char In namakusto Select ch Where acceptedChars.Contains(ch)).ToArray
+        split = str.Split(" ")
+
+        Dim i As Integer = 0
+        acceptedChars = "BCDFGHJKLMNPQRSTVWXYZ"
+        For Each sa As String In split
+            sa = sa.ToUpper
+            'If sa = "PT" Then
+            '    split(i) = "-"
+            'End If
+            If sa.Length >= 3 Then
+                ret = Strings.Left(sa, 3)
+                chrGet = True
+                Exit For
+            End If
+            i += 1
+        Next
+
+        If chrGet = False Then
+            str = Strings.Join(split, "").ToUpper
+            'str = Strings.Replace(str, "-", "")
+            ret = Strings.Left(str, 3)
+        End If
+
+        ret += cb_area.SelectedValue
+
+        Dim kd As Integer = 0
+        op_con()
+        readcommd(String.Format(q, ret))
+        If rd.HasRows Then
+            kd = CInt(rd.Item(0))
+        End If
+        rd.Close()
+
+        kd += 1
+
+        ret += kd.ToString("N2")
+
+        consoleWriteLine(ret)
+        Return ret
+    End Function
+
+    'Save
     Private Sub saveData()
         Dim data1 As String()
         Dim querycheck As Boolean = False

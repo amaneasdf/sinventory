@@ -60,7 +60,7 @@
         Dim dt As New DataTable
         Dim q As String = "SELECT trans_barang_asal, a.barang_nama, trans_qty_asal, trans_sat_asal, " _
                           & "trans_barang_tujuan, b.barang_nama, trans_qty_tujuan, trans_sat_tujuan, " _
-                          & "trans_hpp FROM data_barang_mutasi_trans " _
+                          & "trans_hpp_asal,trans_hpp_tujuan FROM data_barang_mutasi_trans " _
                           & "LEFT JOIN data_barang_master a ON a.barang_kode=trans_barang_asal " _
                           & "LEFT JOIN data_barang_master b ON b.barang_kode=trans_barang_tujuan " _
                           & "WHERE trans_faktur='{0}' AND trans_status=1"
@@ -78,6 +78,7 @@
                     .Cells("qty_b").Value = x.ItemArray(6)
                     .Cells("sat_b").Value = x.ItemArray(7)
                     .Cells("hpp").Value = x.ItemArray(8)
+                    .Cells("hpp_b").Value = x.ItemArray(9)
                 End With
             Next
         End With
@@ -103,7 +104,8 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barangasal", "barangtujuan"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getHPP(barang_kode) as 'HPP', " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', " _
+                    & "getHPPAVG(barang_kode,'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "','" & selectperiode.id & "') as 'HPP', " _
                     & "getSisaStock('" & selectperiode.id & "', barang_kode,'" & in_gudang.Text & "') as 'Jml.Stok', barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                     & "WHERE stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
@@ -142,20 +144,20 @@
                     in_barang.Text = .Cells(0).Value
                     in_barang_nm.Text = .Cells(1).Value
                     hppasal = .Cells(2).Value
+                    in_hpp.Text = commaThousand(hppasal)
                     in_qty1.Value = .Cells(3).Value
                     in_sat1.Text = .Cells(4).Value
+                    in_nilai1.Text = commaThousand(hppasal * in_qty1.Value)
                     in_qty1.Focus()
                 Case "barangtujuan"
                     in_barang2.Text = .Cells(0).Value
                     in_barang_nm2.Text = .Cells(1).Value
                     hpptujuan = .Cells(2).Value
-                    in_qty2.Value = .Cells(3).Value
+                    'in_qty2.Value = .Cells(3).Value
+                    in_qty2.Value = in_qty1.Value
                     in_sat2.Text = .Cells(4).Value
-                    If hppasal > 0 Then
-                        in_hpp.Text = (hppasal + hpptujuan) / 2
-                    Else
-                        in_hpp.Text = hpptujuan
-                    End If
+                    in_hpp2.Value = hpptujuan
+                    in_nilai2.Value = hpptujuan * in_qty2.Value
                     in_qty2.Focus()
                 Case "gudang"
                     in_gudang.Text = .Cells(0).Value
@@ -261,11 +263,12 @@
                     .Cells("nama").Value = in_barang_nm.Text
                     .Cells("qty_a").Value = in_qty1.Value
                     .Cells("sat_a").Value = in_sat1.Text
+                    .Cells("hpp").Value = hppasal
                     .Cells("kode_b").Value = in_barang2.Text
                     .Cells("nama_b").Value = in_barang_nm2.Text
                     .Cells("qty_b").Value = in_qty2.Value
                     .Cells("sat_b").Value = in_sat2.Text
-                    .Cells("hpp").Value = removeCommaThousand(in_hpp.Text)
+                    .Cells("hpp_b").Value = in_hpp2.Value
                 End With
             End With
         End If
@@ -279,15 +282,22 @@
 
     Private Sub dgvToTxt()
         With dgv_barang.SelectedRows.Item(0)
+
             in_barang.Text = .Cells("kode").Value
             in_barang_nm.Text = .Cells("nama").Value
             in_qty1.Value = .Cells("qty_a").Value
             in_sat1.Text = .Cells("sat_a").Value
+            in_hpp.Text = commaThousand(.Cells("hpp").Value)
+            hppasal = .Cells("hpp").Value
+            in_nilai1.Text = commaThousand(.Cells("hpp").Value * .Cells("qty_a").Value)
+
             in_barang2.Text = .Cells("kode_b").Value
             in_barang_nm2.Text = .Cells("nama_b").Value
             in_qty2.Value = .Cells("qty_b").Value
             in_sat2.Text = .Cells("sat_b").Value
-            in_hpp.Text = .Cells("hpp").Value
+            in_hpp2.Value = .Cells("hpp_b").Value
+            hpptujuan = .Cells("hpp_b").Value
+            in_nilai2.Value = .Cells("hpp_b").Value * .Cells("qty_b").Value
         End With
         in_barang.Focus()
     End Sub
@@ -299,18 +309,22 @@
         Dim data, data2 As String()
         Dim q As String = ""
 
+        Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+
         Me.Cursor = Cursors.WaitCursor
 
         op_con()
         'GENERATE KODE
         If in_kode.Text = Nothing Then
             Dim x As Integer = 1
-            readcommd("SELECT RIGHT(faktur_kode,3) FROM data_barang_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "' AND faktur_kode LIKE 'MB%' ORDER BY faktur_kode DESC LIMIT 1")
+            Dim tgl As String = date_tgl_beli.Value.ToString("yyyyMMdd")
+
+            readcommd("SELECT RIGHT(faktur_kode,3) FROM data_barang_mutasi WHERE SUBSTRING(faktur_kode,3,8)='" & tgl & "' AND faktur_kode LIKE 'MB%' ORDER BY faktur_kode DESC LIMIT 1")
             If rd.HasRows Then
                 x = CInt(rd.Item(0)) + 1
             End If
             rd.Close()
-            in_kode.Text = "MB" & date_tgl_beli.Value.ToString("yyyyMMdd") & x.ToString("D3")
+            in_kode.Text = "MB" & tgl & x.ToString("D3")
 
         ElseIf in_kode.Text <> Nothing And mn_tambah.Text = "Batal" Then
             If checkdata("data_barang_stok_mutasi", "'" & in_kode.Text & "'", "faktur_kode") = True Then
@@ -326,7 +340,7 @@
         '==========================================================================================================================
         'INSERT HEADER
         datafaktur = {
-            "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "faktur_tanggal='" & _tgltrans & "'",
             "faktur_gudang='" & in_gudang.Text & "'",
             "faktur_ket='" & in_ket.Text & "'",
             "faktur_status=1"
@@ -341,6 +355,7 @@
         'INSERT BARANG
         Dim x_asal, x_tujuan As New List(Of String)
         Dim qty_asal, qty_tujuan As New List(Of Integer)
+        Dim nilai_asal, nilai_tujuan As New List(Of Decimal)
 
         '==========================================================================================================================
         q = "UPDATE data_barang_mutasi_trans SET trans_status=9 WHERE trans_faktur='{0}'"
@@ -352,26 +367,35 @@
 
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
+            Dim _brgA As String = rows.Cells(0).Value
+            Dim _qtyA As Integer = rows.Cells("qty_a").Value
+            Dim _hppA As Decimal = rows.Cells("hpp").Value
+            Dim _brgB As String = rows.Cells("kode_b").Value
+            Dim _qtyB As Integer = rows.Cells("qty_b").Value
+            Dim _hppB As Decimal = rows.Cells("hpp_b").Value
             data = {
-                "trans_barang_asal='" & rows.Cells(0).Value & "'",
-                "trans_qty_asal=" & rows.Cells("qty_a").Value,
+                "trans_barang_asal='" & _brgA & "'",
+                "trans_qty_asal=" & _qtyA,
                 "trans_sat_asal='" & rows.Cells("sat_b").Value & "'",
-                "trans_barang_tujuan='" & rows.Cells("kode_b").Value & "'",
-                "trans_qty_tujuan=" & rows.Cells("qty_b").Value,
+                "trans_barang_tujuan='" & _brgB & "'",
+                "trans_qty_tujuan=" & _qtyB,
                 "trans_sat_tujuan='" & rows.Cells("sat_b").Value & "'",
-                "trans_hpp=" & rows.Cells("hpp").Value.ToString.Replace(",", "."),
+                "trans_hpp_asal=" & _hppA.ToString.Replace(",", "."),
+                "trans_hpp_tujuan=" & _hppB.ToString.Replace(",", "."),
                 "trans_status=1"
                 }
             q = "INSERT INTO data_barang_mutasi_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data)))
 
-            q = "UPDATE data_barang_master SET barang_hpp={1} WHERE barang_kode='{0}'"
-            queryArr.Add(String.Format(q, rows.Cells("kode_b").Value, rows.Cells("hpp").Value.ToString.Replace(",", ".")))
+            'q = "UPDATE data_barang_master SET barang_hpp={1} WHERE barang_kode='{0}'"
+            'queryArr.Add(String.Format(q, rows.Cells("kode_b").Value, rows.Cells("hpp").Value.ToString.Replace(",", ".")))
 
-            x_asal.Add("'" & rows.Cells(0).Value & "'")
-            qty_asal.Add(rows.Cells("qty_a").Value)
-            x_tujuan.Add("'" & rows.Cells("kode_b").Value & "'")
-            qty_tujuan.Add(rows.Cells("qty_b").Value)
+            x_asal.Add("'" & _brgA & "'")
+            qty_asal.Add(_qtyA)
+            nilai_asal.Add(_qtyA * _hppA)
+            x_tujuan.Add("'" & _brgB & "'")
+            qty_tujuan.Add(_qtyB)
+            nilai_tujuan.Add(_qtyB * _hppB)
         Next
         '==========================================================================================================================
 
@@ -381,7 +405,7 @@
         Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
         data = {
             "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
-            "trans_ket", "trans_qty", "trans_reg_alias", "trans_reg_date", "trans_status"
+            "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
             }
 
         'ASAL
@@ -397,6 +421,7 @@
                 "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                 "'MUTASI " & Replace(asal, "'", "") & " -> " & Replace(x_tujuan.Item(i), "'", "") & "'",
                 qty_asal.Item(i) * -1,
+                (nilai_asal.Item(i) * -1).ToString.Replace(",", "."),
                 "'" & loggeduser.user_id & "'",
                 "NOW()",
                 "1"
@@ -404,6 +429,7 @@
             dataBrg = {
                 "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                 "trans_qty=" & qty_asal.Item(i) * -1,
+                "trans_nilai=" & (nilai_asal.Item(i) * -1).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status=1"
@@ -426,6 +452,7 @@
                     "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                     "'MUTASI " & Replace(x_asal.Item(i), "'", "") & " -> " & Replace(tujuan, "'", "") & "'",
                     qty_tujuan.Item(i),
+                    nilai_tujuan.Item(i).ToString.Replace(",", "."),
                     "'" & loggeduser.user_id & "'",
                     "NOW()",
                     "1"
@@ -433,6 +460,7 @@
             dataBrg = {
                 "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
                 "trans_qty=" & qty_tujuan.Item(i),
+                "trans_nilai=" & nilai_tujuan.Item(i).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status=1"
@@ -442,6 +470,20 @@
             i += 1
         Next
         '==========================================================================================================================
+        '==========================================================================================================================
+
+        '==========================================================================================================================
+        'INPUT JURNAL
+        '----------HEAD
+        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MTBRG',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
+        data2 = {
+            "line_ref='" & in_gudang.Text & "'",
+            "line_ref_type='GUDANG'",
+            "line_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+            "line_status='1'"
+            }
+        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
         '==========================================================================================================================
 
 
@@ -473,12 +515,14 @@
         Select Case type
             Case "asal"
                 in_qty1.Value = 0
-                For Each x As TextBox In {in_barang, in_sat1, in_sat2, in_hpp}
+                For Each x As TextBox In {in_barang, in_sat1, in_hpp, in_nilai1}
                     x.Clear()
                 Next
             Case "tujuan"
-                in_qty2.Value = 0
-                For Each x As TextBox In {in_barang2, in_sat2, in_hpp}
+                For Each num As NumericUpDown In {in_qty2, in_hpp2, in_nilai2}
+                    num.Value = 0
+                Next
+                For Each x As TextBox In {in_barang2, in_sat2}
                     x.Clear()
                 Next
             Case Else
@@ -498,7 +542,7 @@
                                   in_sat1, in_sat2, in_hpp, txtRegAlias, txtRegdate, txtUpdAlias, txtUpdDate, date_tgl_beli_r}
             x.Clear()
         Next
-        For Each x As NumericUpDown In {in_qty1, in_qty2}
+        For Each x As NumericUpDown In {in_qty1, in_qty2, in_hpp2}
             x.Value = 0
         Next
 
@@ -515,7 +559,7 @@
         For Each x As TextBox In {in_barang_nm, in_barang_nm2, in_ket, in_gudang_n}
             x.ReadOnly = switch
         Next
-        For Each x As NumericUpDown In {in_qty1, in_qty2}
+        For Each x As NumericUpDown In {in_qty1, in_qty2, in_hpp2}
             x.ReadOnly = switch
         Next
         For Each x As Button In {bt_tbbarang}
@@ -577,6 +621,7 @@
             If MessageBox.Show("Batalkan Perubahan?", "Mutasi Barang", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
+                clearInputBarang()
                 clearAll()
                 disableAllSwitch(True)
                 mn_save.Enabled = False
@@ -614,6 +659,7 @@
             If MessageBox.Show("Batalkan Perubahan?", "Mutasi Barang", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
+                clearInputBarang()
                 disableAllSwitch(True)
                 loadData(in_kode.Text)
                 dgv_barang.Rows.Clear()
@@ -688,13 +734,17 @@
 
     'input
     'numeric input
-    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty1.Enter, in_qty2.Enter
+    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty1.Enter, in_qty2.Enter, in_hpp2.Enter, in_nilai2.Leave
         Console.WriteLine(sender.Name & sender.Value)
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty1.Leave, in_qty2.Leave
-        numericLostFocus(sender, "N0")
+    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty1.Leave, in_qty2.Leave, in_hpp2.Leave, in_nilai2.Leave
+        If sender.Name = "in_hpp2" Or sender.Name = "in_nilai2" Then
+            numericLostFocus(sender, "N2")
+        Else
+            numericLostFocus(sender, "N0")
+        End If
     End Sub
 
     '------------- POPUPSEARCH PANEL
@@ -889,6 +939,14 @@
     End Sub
 
     Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyDown
+        keyshortenter(in_hpp2, e)
+    End Sub
+
+    Private Sub in_hpp2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp2.KeyDown
+        keyshortenter(in_nilai2, e)
+    End Sub
+
+    Private Sub in_nilai2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nilai2.KeyDown
         keyshortenter(bt_tbbarang, e)
     End Sub
 
@@ -902,12 +960,30 @@
             rowindexbarang = e.RowIndex
             dgvToTxt()
             dgv_barang.Rows.RemoveAt(rowindexbarang)
+            If dgv_barang.Rows.Count = 0 Then
+                in_gudang_n.ReadOnly = False
+            End If
         End If
     End Sub
 
     Private Sub fr_stok_mutasi_list_Click(sender As Object, e As EventArgs) Handles Me.Click, SplitContainer1.Click
         If popPnl_barang.Visible = True Then
             popPnl_barang.Visible = False
+        End If
+    End Sub
+
+    'Count nilai
+    Private Sub in_qty1_ValueChanged(sender As Object, e As EventArgs) Handles in_qty1.ValueChanged
+        in_nilai1.Text = commaThousand(removeCommaThousand(in_hpp.Text) * in_qty1.Value)
+    End Sub
+
+    Private Sub in_qty2_ValueChanged(sender As Object, e As EventArgs) Handles in_qty2.ValueChanged, in_nilai2.ValueChanged, in_hpp2.ValueChanged
+        Dim nm As String = sender.Name
+
+        If nm = "in_qty2" Or nm = "in_hpp2" Then
+            in_nilai2.Value = in_qty2.Value * in_hpp2.Value
+        ElseIf nm = "in_nilai2" And in_qty2.Value <> 0 Then
+            in_hpp2.Value = in_nilai2.Value / in_qty2.Value
         End If
     End Sub
 End Class

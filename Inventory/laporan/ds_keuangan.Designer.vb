@@ -1029,6 +1029,8 @@ Partial Public Class ds_keuangan
 
         Private columnju_kredit As Global.System.Data.DataColumn
 
+        Private columnju_lineid As Global.System.Data.DataColumn
+
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
@@ -1129,6 +1131,14 @@ Partial Public Class ds_keuangan
         End Property
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property ju_lineidColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnju_lineid
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
          Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
@@ -1165,9 +1175,9 @@ Partial Public Class ds_keuangan
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
-        Public Overloads Function Adddt_jurnalumumRow(ByVal ju_tgl As Date, ByVal ju_kode As String, ByVal ju_ref As String, ByVal ju_akun As String, ByVal ju_akun_n As String, ByVal ju_akun_ket As String, ByVal ju_debet As Decimal, ByVal ju_kredit As Decimal) As dt_jurnalumumRow
+        Public Overloads Function Adddt_jurnalumumRow(ByVal ju_tgl As Date, ByVal ju_kode As String, ByVal ju_ref As String, ByVal ju_akun As String, ByVal ju_akun_n As String, ByVal ju_akun_ket As String, ByVal ju_debet As Decimal, ByVal ju_kredit As Decimal, ByVal ju_lineid As Integer) As dt_jurnalumumRow
             Dim rowdt_jurnalumumRow As dt_jurnalumumRow = CType(Me.NewRow, dt_jurnalumumRow)
-            Dim columnValuesArray() As Object = New Object() {ju_tgl, ju_kode, ju_ref, ju_akun, ju_akun_n, ju_akun_ket, ju_debet, ju_kredit}
+            Dim columnValuesArray() As Object = New Object() {ju_tgl, ju_kode, ju_ref, ju_akun, ju_akun_n, ju_akun_ket, ju_debet, ju_kredit, ju_lineid}
             rowdt_jurnalumumRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_jurnalumumRow)
             Return rowdt_jurnalumumRow
@@ -1198,6 +1208,7 @@ Partial Public Class ds_keuangan
             Me.columnju_akun_ket = MyBase.Columns("ju_akun_ket")
             Me.columnju_debet = MyBase.Columns("ju_debet")
             Me.columnju_kredit = MyBase.Columns("ju_kredit")
+            Me.columnju_lineid = MyBase.Columns("ju_lineid")
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -1219,6 +1230,8 @@ Partial Public Class ds_keuangan
             MyBase.Columns.Add(Me.columnju_debet)
             Me.columnju_kredit = New Global.System.Data.DataColumn("ju_kredit", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnju_kredit)
+            Me.columnju_lineid = New Global.System.Data.DataColumn("ju_lineid", GetType(Integer), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnju_lineid)
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -1895,6 +1908,21 @@ Partial Public Class ds_keuangan
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property ju_lineid() As Integer
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_jurnalumum.ju_lineidColumn), Integer)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'ju_lineid' in table 'dt_jurnalumum' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As Integer)
+                Me(Me.tabledt_jurnalumum.ju_lineidColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Isju_tglNull() As Boolean
             Return Me.IsNull(Me.tabledt_jurnalumum.ju_tglColumn)
         End Function
@@ -1987,6 +2015,18 @@ Partial Public Class ds_keuangan
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setju_kreditNull()
             Me(Me.tabledt_jurnalumum.ju_kreditColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isju_lineidNull() As Boolean
+            Return Me.IsNull(Me.tabledt_jurnalumum.ju_lineidColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setju_lineidNull()
+            Me(Me.tabledt_jurnalumum.ju_lineidColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
 

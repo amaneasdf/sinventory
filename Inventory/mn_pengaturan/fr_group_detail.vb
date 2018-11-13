@@ -38,7 +38,7 @@
         Dim MenuKode, MenuLabel As String
 
         tv_menu.Nodes.Clear()
-        dbSelect("SELECT menu_kode, menu_label FROM data_menu_master ORDER BY menu_kode")
+        dbSelect("SELECT menu_kode, menu_label FROM data_menu_master WHERE menu_status=1 ORDER BY menu_kode")
 
         Do While rd.Read
             MenuKode = rd.Item("menu_kode").ToString

@@ -27,7 +27,7 @@ Partial Class fr_tutup_buku
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.ck_stok = New System.Windows.Forms.CheckBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.ck_piutang = New System.Windows.Forms.CheckBox()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -41,15 +41,9 @@ Partial Class fr_tutup_buku
         Me.CheckBox4 = New System.Windows.Forms.CheckBox()
         Me.CheckBox5 = New System.Windows.Forms.CheckBox()
         Me.CheckBox6 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox7 = New System.Windows.Forms.CheckBox()
+        Me.ck_neraca = New System.Windows.Forms.CheckBox()
         Me.ck_proses = New System.Windows.Forms.CheckBox()
         Me.dgv_stock = New System.Windows.Forms.DataGridView()
-        Me.pnl_content = New System.Windows.Forms.Panel()
-        Me.DataGridView5 = New System.Windows.Forms.DataGridView()
-        Me.DataGridView4 = New System.Windows.Forms.DataGridView()
-        Me.DataGridView3 = New System.Windows.Forms.DataGridView()
-        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
-        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.brg_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.brg_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_brg = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -59,6 +53,12 @@ Partial Class fr_tutup_buku
         Me.brg_stockop = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_sisaop = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.brg_jenis = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.DataGridView5 = New System.Windows.Forms.DataGridView()
+        Me.DataGridView4 = New System.Windows.Forms.DataGridView()
+        Me.DataGridView3 = New System.Windows.Forms.DataGridView()
+        Me.DataGridView2 = New System.Windows.Forms.DataGridView()
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_stock, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl_content.SuspendLayout()
@@ -135,15 +135,15 @@ Partial Class fr_tutup_buku
         Me.ck_stok.Text = "Stok"
         Me.ck_stok.UseVisualStyleBackColor = True
         '
-        'CheckBox1
+        'ck_piutang
         '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(6, 205)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(62, 17)
-        Me.CheckBox1.TabIndex = 252
-        Me.CheckBox1.Text = "Piutang"
-        Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.ck_piutang.AutoSize = True
+        Me.ck_piutang.Location = New System.Drawing.Point(6, 205)
+        Me.ck_piutang.Name = "ck_piutang"
+        Me.ck_piutang.Size = New System.Drawing.Size(62, 17)
+        Me.ck_piutang.TabIndex = 252
+        Me.ck_piutang.Text = "Piutang"
+        Me.ck_piutang.UseVisualStyleBackColor = True
         '
         'in_kode
         '
@@ -269,15 +269,15 @@ Partial Class fr_tutup_buku
         Me.CheckBox6.Text = "Aktiva"
         Me.CheckBox6.UseVisualStyleBackColor = True
         '
-        'CheckBox7
+        'ck_neraca
         '
-        Me.CheckBox7.AutoSize = True
-        Me.CheckBox7.Location = New System.Drawing.Point(6, 967)
-        Me.CheckBox7.Name = "CheckBox7"
-        Me.CheckBox7.Size = New System.Drawing.Size(61, 17)
-        Me.CheckBox7.TabIndex = 266
-        Me.CheckBox7.Text = "Neraca"
-        Me.CheckBox7.UseVisualStyleBackColor = True
+        Me.ck_neraca.AutoSize = True
+        Me.ck_neraca.Location = New System.Drawing.Point(6, 967)
+        Me.ck_neraca.Name = "ck_neraca"
+        Me.ck_neraca.Size = New System.Drawing.Size(61, 17)
+        Me.ck_neraca.TabIndex = 266
+        Me.ck_neraca.Text = "Neraca"
+        Me.ck_neraca.UseVisualStyleBackColor = True
         '
         'ck_proses
         '
@@ -300,72 +300,8 @@ Partial Class fr_tutup_buku
         Me.dgv_stock.Name = "dgv_stock"
         Me.dgv_stock.RowHeadersVisible = False
         Me.dgv_stock.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToFirstHeader
-        Me.dgv_stock.Size = New System.Drawing.Size(515, 150)
+        Me.dgv_stock.Size = New System.Drawing.Size(554, 150)
         Me.dgv_stock.TabIndex = 268
-        '
-        'pnl_content
-        '
-        Me.pnl_content.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnl_content.AutoScroll = True
-        Me.pnl_content.Controls.Add(Me.DataGridView5)
-        Me.pnl_content.Controls.Add(Me.DataGridView4)
-        Me.pnl_content.Controls.Add(Me.DataGridView3)
-        Me.pnl_content.Controls.Add(Me.DataGridView2)
-        Me.pnl_content.Controls.Add(Me.DataGridView1)
-        Me.pnl_content.Controls.Add(Me.dgv_stock)
-        Me.pnl_content.Controls.Add(Me.CheckBox7)
-        Me.pnl_content.Controls.Add(Me.ck_stok)
-        Me.pnl_content.Controls.Add(Me.CheckBox6)
-        Me.pnl_content.Controls.Add(Me.ck_stok_bonus)
-        Me.pnl_content.Controls.Add(Me.CheckBox5)
-        Me.pnl_content.Controls.Add(Me.CheckBox1)
-        Me.pnl_content.Controls.Add(Me.CheckBox4)
-        Me.pnl_content.Controls.Add(Me.CheckBox3)
-        Me.pnl_content.Location = New System.Drawing.Point(6, 81)
-        Me.pnl_content.Name = "pnl_content"
-        Me.pnl_content.Size = New System.Drawing.Size(868, 385)
-        Me.pnl_content.TabIndex = 3
-        '
-        'DataGridView5
-        '
-        Me.DataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView5.Location = New System.Drawing.Point(6, 986)
-        Me.DataGridView5.Name = "DataGridView5"
-        Me.DataGridView5.Size = New System.Drawing.Size(515, 150)
-        Me.DataGridView5.TabIndex = 273
-        '
-        'DataGridView4
-        '
-        Me.DataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView4.Location = New System.Drawing.Point(6, 799)
-        Me.DataGridView4.Name = "DataGridView4"
-        Me.DataGridView4.Size = New System.Drawing.Size(515, 150)
-        Me.DataGridView4.TabIndex = 272
-        '
-        'DataGridView3
-        '
-        Me.DataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView3.Location = New System.Drawing.Point(6, 612)
-        Me.DataGridView3.Name = "DataGridView3"
-        Me.DataGridView3.Size = New System.Drawing.Size(515, 150)
-        Me.DataGridView3.TabIndex = 271
-        '
-        'DataGridView2
-        '
-        Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView2.Location = New System.Drawing.Point(6, 419)
-        Me.DataGridView2.Name = "DataGridView2"
-        Me.DataGridView2.Size = New System.Drawing.Size(515, 150)
-        Me.DataGridView2.TabIndex = 270
-        '
-        'DataGridView1
-        '
-        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(6, 228)
-        Me.DataGridView1.Name = "DataGridView1"
-        Me.DataGridView1.Size = New System.Drawing.Size(515, 150)
-        Me.DataGridView1.TabIndex = 269
         '
         'brg_ck
         '
@@ -425,6 +361,70 @@ Partial Class fr_tutup_buku
         Me.brg_jenis.Name = "brg_jenis"
         Me.brg_jenis.Width = 50
         '
+        'pnl_content
+        '
+        Me.pnl_content.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.DataGridView5)
+        Me.pnl_content.Controls.Add(Me.DataGridView4)
+        Me.pnl_content.Controls.Add(Me.DataGridView3)
+        Me.pnl_content.Controls.Add(Me.DataGridView2)
+        Me.pnl_content.Controls.Add(Me.DataGridView1)
+        Me.pnl_content.Controls.Add(Me.dgv_stock)
+        Me.pnl_content.Controls.Add(Me.ck_neraca)
+        Me.pnl_content.Controls.Add(Me.ck_stok)
+        Me.pnl_content.Controls.Add(Me.CheckBox6)
+        Me.pnl_content.Controls.Add(Me.ck_stok_bonus)
+        Me.pnl_content.Controls.Add(Me.CheckBox5)
+        Me.pnl_content.Controls.Add(Me.ck_piutang)
+        Me.pnl_content.Controls.Add(Me.CheckBox4)
+        Me.pnl_content.Controls.Add(Me.CheckBox3)
+        Me.pnl_content.Location = New System.Drawing.Point(6, 81)
+        Me.pnl_content.Name = "pnl_content"
+        Me.pnl_content.Size = New System.Drawing.Size(868, 385)
+        Me.pnl_content.TabIndex = 3
+        '
+        'DataGridView5
+        '
+        Me.DataGridView5.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView5.Location = New System.Drawing.Point(6, 986)
+        Me.DataGridView5.Name = "DataGridView5"
+        Me.DataGridView5.Size = New System.Drawing.Size(515, 150)
+        Me.DataGridView5.TabIndex = 273
+        '
+        'DataGridView4
+        '
+        Me.DataGridView4.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView4.Location = New System.Drawing.Point(6, 799)
+        Me.DataGridView4.Name = "DataGridView4"
+        Me.DataGridView4.Size = New System.Drawing.Size(515, 150)
+        Me.DataGridView4.TabIndex = 272
+        '
+        'DataGridView3
+        '
+        Me.DataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView3.Location = New System.Drawing.Point(6, 612)
+        Me.DataGridView3.Name = "DataGridView3"
+        Me.DataGridView3.Size = New System.Drawing.Size(515, 150)
+        Me.DataGridView3.TabIndex = 271
+        '
+        'DataGridView2
+        '
+        Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView2.Location = New System.Drawing.Point(6, 419)
+        Me.DataGridView2.Name = "DataGridView2"
+        Me.DataGridView2.Size = New System.Drawing.Size(515, 150)
+        Me.DataGridView2.TabIndex = 270
+        '
+        'DataGridView1
+        '
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView1.Location = New System.Drawing.Point(6, 228)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.Size = New System.Drawing.Size(554, 150)
+        Me.DataGridView1.TabIndex = 269
+        '
         'fr_tutup_buku
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -463,7 +463,7 @@ Partial Class fr_tutup_buku
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents ck_stok As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_piutang As System.Windows.Forms.CheckBox
     Friend WithEvents in_kode As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label2 As System.Windows.Forms.Label
@@ -477,7 +477,7 @@ Partial Class fr_tutup_buku
     Friend WithEvents CheckBox4 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox5 As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBox6 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox7 As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_neraca As System.Windows.Forms.CheckBox
     Friend WithEvents ck_proses As System.Windows.Forms.CheckBox
     Friend WithEvents dgv_stock As System.Windows.Forms.DataGridView
     Friend WithEvents pnl_content As System.Windows.Forms.Panel

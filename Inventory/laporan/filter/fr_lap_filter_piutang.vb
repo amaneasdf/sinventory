@@ -196,7 +196,7 @@
 
             Case "p_saleslengkap2"
                 q = "SELECT salesman_kode as psl2_sales,salesman_nama as psl2_sales_n, customer_kode as psl2_custo, customer_nama as psl2_sales_n, " _
-                    & "faktur_netto+faktur_disc_rupiah as psl2_brutto, faktur_disc_rupiah+faktur_bayar as psl2_brutto, faktur_tanggal_trans as pls2_tgl, " _
+                    & "faktur_netto+faktur_disc_rupiah as psl2_brutto, faktur_disc_rupiah+faktur_bayar as psl2_potongan, faktur_tanggal_trans as pls2_tgl, " _
                     & "piutang_faktur as psl2_faktur, if(faktur_tanggal_trans<'{0}',piutang_awal,0) as psl2_saldoawal, " _
                     & "if(faktur_tanggal_trans>='{0}',piutang_awal,0) as psl2_penjualan, IFNULL(p_trans_nilaibayar,0) as psl2_bayar, " _
                     & "IFNULL(p_retur_total,0) as psl2_retur, piutang_awal-IFNULL(p_trans_nilaibayar,0)-IFNULL(p_retur_total,0) as psl2_sisa " _
@@ -234,11 +234,11 @@
             Case "p_salesbayartanggal"
                 'BASED sales,jenisbayar, tgl ;OPT 
                 q = "SELECT p_bayar_sales as psb_sales, salesman_nama as psb_sales_n, p_bayar_tanggal_bayar as psb_tgl, " _
-                    & "sum(p_trans_nilaibayar) as psb_total, p_bayar_jenisbayar as psb_jenisbayar " _
+                    & "sum(p_trans_nilaibayar) as psb_total, p_bayar_jenisbayar as psb_jenisbayar, p_trans_kode_piutang as psb_faktur " _
                     & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_bayar_bukti=p_trans_bukti AND p_trans_status=1 " _
                     & "LEFT JOIN data_salesman_master ON p_bayar_sales=salesman_kode " _
                     & "WHERE p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}' {2} " _
-                    & "GROUP BY p_bayar_tanggal_bayar, p_bayar_sales, p_bayar_jenisbayar"
+                    & "GROUP BY p_bayar_tanggal_bayar, p_bayar_sales,p_trans_kode_piutang, p_bayar_jenisbayar"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
                 If in_sales.Text <> Nothing Then
@@ -340,7 +340,7 @@
             Case "p_bayarnota"
                 'BASED periode,custo,sales ;OPT 
                 q = "SELECT * FROM( " _
-                    & "SELECT salesman_kode as pbd_sales, salesman_nama as pbd_sales_n,customer_kode as pbd_custo, customer_nama as pbd_custo_n, " _
+                    & "SELECT salesman_kode as pbd_sales, salesman_nama as pbd_sales_n,customer_kode as pbd_custo, customer_nama as pdb_custo_n, " _
                     & "piutang_faktur as pbd_faktur, if(@faktur<>piutang_faktur,@ct:=0,@ct:=@ct+1) as count, " _
                     & " faktur_tanggal_trans as pbd_tanggal, " _
                     & "	(CASE WHEN @ct=0 THEN if(faktur_tanggal_trans<'{1}',@sisa:=piutang_awal,0) " _
@@ -349,10 +349,10 @@
                     & "		ELSE 0 END) as pbd_jual, " _
                     & "	if(jenis='retur',p_trans_nilaibayar,0) as pbd_retur, if(jenis='bayar',p_trans_nilaibayar,0) as pbd_bayar, " _
                     & "	TRUNCATE(@sisa:= @sisa-p_trans_nilaibayar,2) as pbd_sisa, " _
-                    & "	ket as pbd_ket,p_trans_tgl as pbd_tglbayar, p_trans_tgl-faktur_tanggal_trans as pbd_hari,@faktur:=piutang_faktur " _
+                    & "	ket as pbd_ket,p_trans_tgl as pbd_tglbayar, DATEDIFF(faktur_tanggal_trans,p_trans_tgl) as pbd_hari,@faktur:=piutang_faktur " _
                     & "FROM ( " _
                     & "SELECT p_trans_kode_piutang, p_trans_nilaibayar, p_bayar_tanggal_bayar as p_trans_tgl, " _
-                    & "	CONCAT(p_bayar_bukti,':',p_bayar_jenis_bayar) as ket, 'bayar' as jenis, p_bayar_reg_date as reg_date " _
+                    & "	CONCAT(p_bayar_bukti,':',p_bayar_jenisbayar) as ket, 'bayar' as jenis, p_bayar_reg_date as reg_date " _
                     & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_trans_status=1 AND p_trans_bukti=p_bayar_bukti " _
                     & "WHERE p_bayar_status=1 AND p_bayar_tanggal_bayar BETWEEN '{1}' AND '{2}' " _
                     & "UNION " _

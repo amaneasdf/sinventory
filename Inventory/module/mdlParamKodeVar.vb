@@ -85,6 +85,7 @@
     'jenissatuan
     Public Function jenis(tipe As String) As DataTable
         Dim dt As New DataTable
+        Dim q As String = ""
         Select Case tipe
             Case "satuan"
                 dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
@@ -121,6 +122,9 @@
                 dt.Rows.Add("Giro", "BG")
                 dt.Rows.Add("TransferBank", "TRANSFER")
                 dt.Rows.Add("ReturPenjualan", "RETUR")
+
+            Case "areacusto"
+
             Case Else
                 dt = Nothing
         End Select
@@ -438,7 +442,8 @@
     Public frmpenjualan As New fr_list With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list With {.Dock = DockStyle.Fill}
     Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
-    Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
+    'Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
+    Public frmtagihan As New fr_draft_tagih With {.Dock = DockStyle.Fill}
     Public frmstok As New fr_list With {.Dock = DockStyle.Fill}
     Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
     Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}

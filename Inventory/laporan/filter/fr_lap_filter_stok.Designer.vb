@@ -128,9 +128,9 @@ Partial Class fr_lap_filter_stok
         Me.lbl_title.Location = New System.Drawing.Point(5, 3)
         Me.lbl_title.MaximumSize = New System.Drawing.Size(490, 33)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(246, 33)
+        Me.lbl_title.Size = New System.Drawing.Size(315, 33)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Laporan Pembelian"
+        Me.lbl_title.Text = "Laporan Stok/Persediaan"
         '
         'Panel3
         '

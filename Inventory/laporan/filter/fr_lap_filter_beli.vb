@@ -483,7 +483,7 @@
         End If
     End Sub
 
-    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click
+    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click, pnl_content.Click
         If popPnl_barang.Visible = True Then
             popPnl_barang.Visible = False
         End If

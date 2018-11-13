@@ -98,6 +98,8 @@ Partial Class fr_custo_detail
         Me.Label23 = New System.Windows.Forms.Label()
         Me.in_status = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
+        Me.cb_area = New System.Windows.Forms.ComboBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -181,7 +183,7 @@ Partial Class fr_custo_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(172, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(173, 31)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Customer"
         '
@@ -240,7 +242,7 @@ Partial Class fr_custo_detail
         Me.in_kode.BackColor = System.Drawing.Color.White
         Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_kode.Location = New System.Drawing.Point(75, 81)
+        Me.in_kode.Location = New System.Drawing.Point(75, 80)
         Me.in_kode.MaxLength = 10
         Me.in_kode.Name = "in_kode"
         Me.in_kode.Size = New System.Drawing.Size(195, 20)
@@ -250,7 +252,7 @@ Partial Class fr_custo_detail
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(12, 84)
+        Me.Label4.Location = New System.Drawing.Point(12, 83)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(32, 13)
         Me.Label4.TabIndex = 315
@@ -644,7 +646,7 @@ Partial Class fr_custo_detail
         '
         Me.cb_tipe.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_tipe.FormattingEnabled = True
-        Me.cb_tipe.Location = New System.Drawing.Point(75, 125)
+        Me.cb_tipe.Location = New System.Drawing.Point(75, 124)
         Me.cb_tipe.Name = "cb_tipe"
         Me.cb_tipe.Size = New System.Drawing.Size(195, 21)
         Me.cb_tipe.TabIndex = 2
@@ -674,10 +676,10 @@ Partial Class fr_custo_detail
         Me.in_faxcusto.BackColor = System.Drawing.Color.White
         Me.in_faxcusto.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faxcusto.ForeColor = System.Drawing.Color.Black
-        Me.in_faxcusto.Location = New System.Drawing.Point(75, 170)
+        Me.in_faxcusto.Location = New System.Drawing.Point(259, 169)
         Me.in_faxcusto.MaxLength = 20
         Me.in_faxcusto.Name = "in_faxcusto"
-        Me.in_faxcusto.Size = New System.Drawing.Size(195, 20)
+        Me.in_faxcusto.Size = New System.Drawing.Size(145, 20)
         Me.in_faxcusto.TabIndex = 4
         '
         'in_telpcusto
@@ -685,10 +687,10 @@ Partial Class fr_custo_detail
         Me.in_telpcusto.BackColor = System.Drawing.Color.White
         Me.in_telpcusto.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_telpcusto.ForeColor = System.Drawing.Color.Black
-        Me.in_telpcusto.Location = New System.Drawing.Point(75, 148)
+        Me.in_telpcusto.Location = New System.Drawing.Point(75, 169)
         Me.in_telpcusto.MaxLength = 20
         Me.in_telpcusto.Name = "in_telpcusto"
-        Me.in_telpcusto.Size = New System.Drawing.Size(195, 20)
+        Me.in_telpcusto.Size = New System.Drawing.Size(145, 20)
         Me.in_telpcusto.TabIndex = 3
         '
         'in_cpcusto
@@ -706,7 +708,7 @@ Partial Class fr_custo_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(12, 173)
+        Me.Label10.Location = New System.Drawing.Point(226, 173)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(27, 13)
         Me.Label10.TabIndex = 347
@@ -716,7 +718,7 @@ Partial Class fr_custo_detail
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(12, 151)
+        Me.Label9.Location = New System.Drawing.Point(12, 173)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(31, 13)
         Me.Label9.TabIndex = 348
@@ -737,7 +739,7 @@ Partial Class fr_custo_detail
         Me.in_nama_custo.BackColor = System.Drawing.Color.White
         Me.in_nama_custo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_nama_custo.ForeColor = System.Drawing.Color.Black
-        Me.in_nama_custo.Location = New System.Drawing.Point(75, 103)
+        Me.in_nama_custo.Location = New System.Drawing.Point(75, 102)
         Me.in_nama_custo.MaxLength = 30
         Me.in_nama_custo.Name = "in_nama_custo"
         Me.in_nama_custo.Size = New System.Drawing.Size(329, 20)
@@ -899,6 +901,25 @@ Partial Class fr_custo_detail
         Me.Label13.TabIndex = 379
         Me.Label13.Text = "Status"
         '
+        'cb_area
+        '
+        Me.cb_area.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_area.FormattingEnabled = True
+        Me.cb_area.Location = New System.Drawing.Point(75, 146)
+        Me.cb_area.Name = "cb_area"
+        Me.cb_area.Size = New System.Drawing.Size(195, 21)
+        Me.cb_area.TabIndex = 380
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label2.Location = New System.Drawing.Point(12, 150)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(29, 13)
+        Me.Label2.TabIndex = 381
+        Me.Label2.Text = "Area"
+        '
         'fr_custo_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -906,6 +927,8 @@ Partial Class fr_custo_detail
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalcusto
         Me.ClientSize = New System.Drawing.Size(861, 501)
+        Me.Controls.Add(Me.cb_area)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.bt_batalcusto)
         Me.Controls.Add(Me.bt_simpancusto)
         Me.Controls.Add(Me.in_status)
@@ -1068,4 +1091,6 @@ Partial Class fr_custo_detail
     Friend WithEvents Label23 As System.Windows.Forms.Label
     Friend WithEvents in_status As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents cb_area As System.Windows.Forms.ComboBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
 End Class

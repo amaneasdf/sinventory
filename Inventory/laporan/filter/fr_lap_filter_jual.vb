@@ -183,7 +183,7 @@
                               & " UNION " _
                               & " SELECT salesman_kode, salesman_nama, customer_kode, customer_nama, faktur_kode_bukti, faktur_tanggal_trans," _
                               & "  if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah) as brutto," _
-                              & "  0, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
+                              & "  faktur_jumlah-faktur_netto, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
                               & " FROM data_penjualan_retur_faktur LEFT JOIN data_customer_master ON faktur_custo=customer_kode " _
                               & " LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                               & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _

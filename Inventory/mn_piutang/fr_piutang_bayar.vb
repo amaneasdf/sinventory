@@ -187,13 +187,15 @@
             Select Case kode
                 Case "TUNAI"
                     kodeparent = "1101"
-                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
                 Case "BG", "TRANSFER"
                     kodeparent = "1102"
-                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
+                Case "PIUTSUPL"
+                    kodeparent = "2103' AND perk_kode='210302"
                 Case Else
                     Exit Sub
             End Select
+            consoleWriteLine(String.Format(q, kodeparent))
+            .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
@@ -376,6 +378,7 @@
             If tipe = "faktur" Then
                 .Columns(2).Width = 175
                 .Columns(1).DefaultCellStyle = dgvstyle_currency
+                .Columns(3).Visible = False
             ElseIf tipe = "custo" Then
                 .Columns(2).Visible = False
             End If
@@ -398,8 +401,8 @@
                 Case "faktur"
                     in_faktur.Text = .Cells(0).Value
                     in_sisafaktur.Text = commaThousand(.Cells(1).Value)
-                    _totalhutang = .Cells(2).Value
-                    in_tgl_jtfaktur.Text = .Cells(3).Value
+                    _totalhutang = .Cells(3).Value
+                    in_tgl_jtfaktur.Text = .Cells(2).Value
                     'AND OTHER STUFF
                     cb_bayar.Focus()
                 Case Else

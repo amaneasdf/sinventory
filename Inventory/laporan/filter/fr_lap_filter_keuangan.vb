@@ -44,19 +44,21 @@
 
     Private Sub formSW(tipe As String)
         Select Case tipe
-            Case "k_biayasales"
+            Case "k_biayasales", "k_biayasales_global"
                 prcessSW()
-
-            Case "k_biayasales_global"
-                prcessSW()
-
-                date_tglawal.Enabled = False
-                date_tglakhir.Enabled = False
 
             Case "k_bukubesar"
                 sales_sw = "OFF"
                 prcessSW()
 
+            Case "k_jurnalumum"
+                sales_sw = "OFF"
+                akun_sw = False
+                prcessSW()
+        End Select
+
+        Select Case tipe
+            Case "k_biayasales_global", "k_bukubesar"
                 date_tglawal.Enabled = False
                 date_tglakhir.Enabled = False
 
@@ -76,6 +78,8 @@
                 Else
                     q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan WHERE perk_status=1 AND perk_nama_akun LIKE '{0}%'"
                 End If
+            Case "faktur"
+                Exit Sub
             Case Else
                 Exit Sub
         End Select
@@ -118,14 +122,22 @@
                                & "LEFT JOIN data_perkiraan ON k_trans_rek=perk_kode " _
                                & "LEFT JOIN data_salesman_master ON salesman_kode=kas_sales " _
                                & "WHERE kas_status=1 AND kas_tgl BETWEEN '{0}' AND '{1}' {2} GROUP BY {3}kas_sales,k_trans_rek"
+
         Dim qbukubesar As String = "CALL createBukuBesarTableTemp('{0}'); " _
                                    & "SELECT * FROM bukubesar_temp{1}; " _
                                    & "DROP TEMPORARY TABLE IF EXISTS bukubesar_temp;"
 
+        Dim qjurnalumum As String = "CALL createJurnalUmumTableTemp('{0}'); " _
+                                    & "SELECT * FROM jurnalumum_temp{1}; " _
+                                    & "DROP TEMPORARY TABLE IF EXISTS jurnalumum_temp;"
+
+
+        Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
+        Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
+
         Select Case tipe
             Case "k_biayasales"
-                q = String.Format(qbiaya, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}",
-                                  "kas_tgl,", "kas_tgl as b_tgl,")
+                q = String.Format(qbiaya, _tglawal, _tglakhir, "{0}", "kas_tgl,", "kas_tgl as b_tgl,")
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND salesman_kode='" & in_sales.Text & "'"
@@ -134,8 +146,7 @@
                     qwh += "AND perk_kode='" & in_akun.Text & "'"
                 End If
             Case "k_biayasales_global"
-                q = String.Format(qbiaya, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}",
-                                  "", "")
+                q = String.Format(qbiaya, -_tglawal, _tglakhir, "{0}", "", "")
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND salesman_kode='" & in_sales.Text & "'"
@@ -148,8 +159,14 @@
                 q = String.Format(qbukubesar, selectperiode.id, "{0}")
 
                 If in_akun.Text <> Nothing Then
-                    qwh += " WHERE bb_akun='" & in_akun.Text &""
+                    qwh += " WHERE bb_akun='" & in_akun.Text & "'"
                 End If
+
+            Case "k_jurnalumum"
+                q = String.Format(qjurnalumum, selectperiode.id, "{0}")
+                qwh += " WHERE ju_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'"
+
+
         End Select
 
         qreturn = String.Format(q, qwh)

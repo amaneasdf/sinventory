@@ -69,18 +69,28 @@
     'LOAD LIST DRAFT
     Private Sub loadDraftList(param As String)
         Dim bs As New BindingSource
-        Dim q As String = "SELECT draft_kode, draft_tanggal, GROUP_CONCAT(salesman_nama SEPARATOR ',') as draft_sales, (CASE " _
-                          & " WHEN draft_printstatus=0 THEN 'N' " _
-                          & " WHEN draft_printstatus=1 THEN 'Y' " _
-                          & " ELSE 'ERROR' END) as draft_print " _
+        Dim q As String = "SELECT DISTINCT draft_kode, DATE_FORMAT(draft_tanggal,'%d/%m/%Y') as draft_tanggal, " _
+                          & " GROUP_CONCAT(salesman_nama SEPARATOR ',') as draft_sales, " _
+                          & " (CASE " _
+                          & "  WHEN draft_printstatus=0 THEN 'N' " _
+                          & "  WHEN draft_printstatus=1 THEN 'Y' " _
+                          & " ELSE 'ERROR' END) as draft_print, draft_ctnota, draft_ctitem, draft_gudang " _
                           & "FROM data_draft_faktur LEFT JOIN data_draft_sales ON draft_kode=sales_draft AND sales_status=1 " _
+                          & "LEFT JOIN( " _
+                          & " SELECT nota_draft,COUNT(DISTINCT faktur_kode) as draft_ctnota, " _
+                          & "  COUNT(DISTINCT trans_barang) as draft_ctitem,GROUP_CONCAT(DISTINCT gudang_nama SEPARATOR ',') as draft_gudang " _
+                          & " FROM data_draft_nota LEFT JOIN data_penjualan_faktur ON nota_faktur=faktur_kode AND faktur_status=1 " _
+                          & " LEFT JOIN data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
+                          & " LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
+                          & " WHERE nota_status = 1	GROUP BY nota_draft " _
+                          & ")faktur ON nota_draft=draft_kode " _
                           & "LEFT JOIN data_salesman_master ON salesman_kode=sales_sales " _
-                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}' GROUP BY draft_kode"
+                          & "WHERE draft_status=1 AND draft_tanggal BETWEEN '{0}' AND '{1}' GROUP BY draft_kode "
         'bs.DataSource = getDataTablefromDB("viewDraft('all','header')")
 
         bs.DataSource = getDataTablefromDB(String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd")))
         consoleWriteLine(String.Format(q, selectperiode.tglawal, selectperiode.tglakhir))
-        bs.Filter = "draft_kode LIKE '" & param & "%' OR draft_sales LIKE '%" & param & "%'"
+        bs.Filter = String.Format("draft_kode LIKE '{0}%' OR draft_sales LIKE '%{0}%' OR draft_gudang LIKE '%{0}%'", param)
         dgv_draft_list.DataSource = bs
     End Sub
 
@@ -235,13 +245,13 @@
 
     '--------------resize dgv
     Private Sub fr_draft_rekap_SizeChanged(sender As Object, e As EventArgs) Handles MyBase.SizeChanged
-        If MyBase.Size.Width > 1170 Then
-            dgv_draft_list.Size = New System.Drawing.Size(236, 373)
-            bt_loaddraft.Location = New Point(dgv_draft_list.Left + (dgv_draft_list.Size.Width - bt_loaddraft.Size.Width), 486)
-        Else
-            dgv_draft_list.Size = New System.Drawing.Size(236, 154)
-            bt_loaddraft.Location = New Point(dgv_draft_list.Left + (dgv_draft_list.Size.Width - bt_loaddraft.Size.Width), 264)
-        End If
+        'If MyBase.Size.Width > 1170 Then
+        '    dgv_draft_list.Size = New System.Drawing.Size(236, 373)
+        '    bt_loaddraft.Location = New Point(dgv_draft_list.Left + (dgv_draft_list.Size.Width - bt_loaddraft.Size.Width), 486)
+        'Else
+        '    dgv_draft_list.Size = New System.Drawing.Size(236, 154)
+        '    bt_loaddraft.Location = New Point(dgv_draft_list.Left + (dgv_draft_list.Size.Width - bt_loaddraft.Size.Width), 264)
+        'End If
     End Sub
 
     '----------------- close
@@ -286,6 +296,7 @@
 
     Private Sub mn_edit_Click(sender As Object, e As EventArgs) Handles mn_edit.Click
         in_caridraft.Focus()
+        pnl_content.VerticalScroll.Value = pnl_content.VerticalScroll.Maximum
     End Sub
 
     Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
@@ -304,14 +315,14 @@
     End Sub
 
     Private Sub bt_cari_faktur_Click(sender As Object, e As EventArgs) Handles bt_cari_faktur.Click
-        Dim sales As New List(Of String)
-        If dgv_draftsales.Rows.Count > 0 Then
-            For Each x As DataGridViewRow In dgv_draftsales.Rows
-                sales.Add("'" & x.Cells("draft_sales_kode").Value & "'")
-            Next
-        Else
-            sales.Add("'all'")
-        End If
+        'Dim sales As New List(Of String)
+        'If dgv_draftsales.Rows.Count > 0 Then
+        '    For Each x As DataGridViewRow In dgv_draftsales.Rows
+        '        sales.Add("'" & x.Cells("draft_sales_kode").Value & "'")
+        '    Next
+        'Else
+        '    sales.Add("'all'")
+        'End If
         loadFaktur(in_cari_faktur.Text)
     End Sub
 
@@ -452,9 +463,14 @@
 
     '----------------- load draft
     Private Sub bt_loaddraft_Click(sender As Object, e As EventArgs) Handles bt_loaddraft.Click
-        If list_row_draft > -1 Then
-            loadDraft(dgv_draft_list.Rows(list_row_draft).Cells(0).Value)
-        End If
+        'If list_row_draft > -1 Then
+        '    loadDraft(dgv_draft_list.Rows(list_row_draft).Cells(0).Value)
+        'End If
+        With dgv_draft_list.SelectedRows
+            If .Count > 0 Then
+                loadDraft(.Item(0).Cells(0).Value)
+            End If
+        End With
     End Sub
 
     Private Sub dgv_draft_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_draft_list.CellClick

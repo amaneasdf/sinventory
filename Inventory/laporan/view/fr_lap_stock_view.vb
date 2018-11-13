@@ -17,6 +17,7 @@ Public Class fr_lap_stock_view
         Try
             Dim data_adpt As New MySqlDataAdapter(query, getConn)
             data_adpt.Fill(dt)
+            DataGridView1.DataSource = dt
             data_adpt.Dispose()
         Catch ex As Exception
             MessageBox.Show(String.Format("Error: {0}", ex.Message))

@@ -23,6 +23,7 @@ Partial Class fr_stok_mutasi_list
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_stok_mutasi_list))
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
@@ -61,15 +62,6 @@ Partial Class fr_stok_mutasi_list
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_tot = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.date_tgl_beli_r = New System.Windows.Forms.TextBox()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -87,6 +79,18 @@ Partial Class fr_stok_mutasi_list
         Me.in_countdata = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_cari = New System.Windows.Forms.TextBox()
+        Me.in_hpp = New System.Windows.Forms.TextBox()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_tot = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.hpp_brg = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -171,7 +175,10 @@ Partial Class fr_stok_mutasi_list
         '
         'SplitContainer1.Panel1
         '
+        Me.SplitContainer1.Panel1.AutoScroll = True
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer1.Panel1.Controls.Add(Me.in_hpp)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label9)
         Me.SplitContainer1.Panel1.Controls.Add(Me.popPnl_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.bt_addgudang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_gudang2_n)
@@ -325,7 +332,7 @@ Partial Class fr_stok_mutasi_list
         Me.bt_tbbarang.FlatAppearance.BorderSize = 0
         Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_tbbarang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tbbarang.Location = New System.Drawing.Point(690, 108)
+        Me.bt_tbbarang.Location = New System.Drawing.Point(862, 109)
         Me.bt_tbbarang.Name = "bt_tbbarang"
         Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
         Me.bt_tbbarang.TabIndex = 15
@@ -335,7 +342,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_sat3.BackColor = System.Drawing.Color.White
         Me.in_sat3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sat3.Location = New System.Drawing.Point(629, 109)
+        Me.in_sat3.Location = New System.Drawing.Point(614, 109)
         Me.in_sat3.Name = "in_sat3"
         Me.in_sat3.ReadOnly = True
         Me.in_sat3.Size = New System.Drawing.Size(55, 20)
@@ -346,7 +353,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_sat2.BackColor = System.Drawing.Color.White
         Me.in_sat2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sat2.Location = New System.Drawing.Point(502, 109)
+        Me.in_sat2.Location = New System.Drawing.Point(493, 109)
         Me.in_sat2.Name = "in_sat2"
         Me.in_sat2.ReadOnly = True
         Me.in_sat2.Size = New System.Drawing.Size(55, 20)
@@ -357,7 +364,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_sat1.BackColor = System.Drawing.Color.White
         Me.in_sat1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sat1.Location = New System.Drawing.Point(375, 109)
+        Me.in_sat1.Location = New System.Drawing.Point(373, 109)
         Me.in_sat1.Name = "in_sat1"
         Me.in_sat1.ReadOnly = True
         Me.in_sat1.Size = New System.Drawing.Size(55, 20)
@@ -379,7 +386,7 @@ Partial Class fr_stok_mutasi_list
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(811, 200)
+        Me.txtRegAlias.Location = New System.Drawing.Point(934, 197)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(146, 20)
@@ -403,7 +410,7 @@ Partial Class fr_stok_mutasi_list
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(811, 184)
+        Me.Label27.Location = New System.Drawing.Point(934, 181)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 322
@@ -413,7 +420,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_qty3.BackColor = System.Drawing.Color.White
         Me.in_qty3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_qty3.Location = New System.Drawing.Point(566, 109)
+        Me.in_qty3.Location = New System.Drawing.Point(551, 109)
         Me.in_qty3.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty3.Name = "in_qty3"
         Me.in_qty3.Size = New System.Drawing.Size(64, 20)
@@ -423,7 +430,7 @@ Partial Class fr_stok_mutasi_list
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(811, 285)
+        Me.txtUpdDate.Location = New System.Drawing.Point(934, 282)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(146, 20)
@@ -434,7 +441,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_qty2.BackColor = System.Drawing.Color.White
         Me.in_qty2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_qty2.Location = New System.Drawing.Point(439, 109)
+        Me.in_qty2.Location = New System.Drawing.Point(430, 109)
         Me.in_qty2.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty2.Name = "in_qty2"
         Me.in_qty2.Size = New System.Drawing.Size(64, 20)
@@ -444,7 +451,7 @@ Partial Class fr_stok_mutasi_list
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(811, 263)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(934, 260)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(146, 20)
@@ -455,7 +462,7 @@ Partial Class fr_stok_mutasi_list
         '
         Me.in_qty1.BackColor = System.Drawing.Color.White
         Me.in_qty1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_qty1.Location = New System.Drawing.Point(312, 109)
+        Me.in_qty1.Location = New System.Drawing.Point(310, 109)
         Me.in_qty1.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty1.Name = "in_qty1"
         Me.in_qty1.Size = New System.Drawing.Size(64, 20)
@@ -465,7 +472,7 @@ Partial Class fr_stok_mutasi_list
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(811, 224)
+        Me.txtRegdate.Location = New System.Drawing.Point(934, 221)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(146, 20)
@@ -477,7 +484,7 @@ Partial Class fr_stok_mutasi_list
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label8.Location = New System.Drawing.Point(563, 93)
+        Me.Label8.Location = New System.Drawing.Point(548, 93)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(58, 13)
         Me.Label8.TabIndex = 256
@@ -488,7 +495,7 @@ Partial Class fr_stok_mutasi_list
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(811, 247)
+        Me.Label28.Location = New System.Drawing.Point(934, 244)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(39, 13)
         Me.Label28.TabIndex = 325
@@ -499,7 +506,7 @@ Partial Class fr_stok_mutasi_list
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label6.Location = New System.Drawing.Point(436, 93)
+        Me.Label6.Location = New System.Drawing.Point(427, 93)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(73, 13)
         Me.Label6.TabIndex = 256
@@ -521,7 +528,7 @@ Partial Class fr_stok_mutasi_list
         Me.Label21.AutoSize = True
         Me.Label21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label21.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label21.Location = New System.Drawing.Point(309, 93)
+        Me.Label21.Location = New System.Drawing.Point(307, 93)
         Me.Label21.Name = "Label21"
         Me.Label21.Size = New System.Drawing.Size(62, 13)
         Me.Label21.TabIndex = 256
@@ -584,89 +591,15 @@ Partial Class fr_stok_mutasi_list
         Me.dgv_barang.AllowUserToAddRows = False
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot, Me.hpp_brg})
         Me.dgv_barang.Location = New System.Drawing.Point(11, 134)
         Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(787, 171)
+        Me.dgv_barang.Size = New System.Drawing.Size(920, 171)
         Me.dgv_barang.TabIndex = 16
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty_b
-        '
-        Me.qty_b.DataPropertyName = "trans_qty"
-        Me.qty_b.HeaderText = "QTY B"
-        Me.qty_b.MinimumWidth = 65
-        Me.qty_b.Name = "qty_b"
-        Me.qty_b.ReadOnly = True
-        Me.qty_b.Width = 65
-        '
-        'sat_b
-        '
-        Me.sat_b.DataPropertyName = "trans_satuan"
-        Me.sat_b.HeaderText = "Sat. B."
-        Me.sat_b.MinimumWidth = 65
-        Me.sat_b.Name = "sat_b"
-        Me.sat_b.ReadOnly = True
-        Me.sat_b.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat_b.Width = 65
-        '
-        'qty_t
-        '
-        Me.qty_t.HeaderText = "QTY T"
-        Me.qty_t.MinimumWidth = 65
-        Me.qty_t.Name = "qty_t"
-        Me.qty_t.ReadOnly = True
-        Me.qty_t.Width = 65
-        '
-        'sat_t
-        '
-        Me.sat_t.HeaderText = "Sat. T."
-        Me.sat_t.MinimumWidth = 65
-        Me.sat_t.Name = "sat_t"
-        Me.sat_t.ReadOnly = True
-        Me.sat_t.Width = 65
-        '
-        'qty_k
-        '
-        Me.qty_k.HeaderText = "QTY K"
-        Me.qty_k.MinimumWidth = 65
-        Me.qty_k.Name = "qty_k"
-        Me.qty_k.ReadOnly = True
-        Me.qty_k.Width = 65
-        '
-        'sat_k
-        '
-        Me.sat_k.HeaderText = "Sat. K."
-        Me.sat_k.MinimumWidth = 65
-        Me.sat_k.Name = "sat_k"
-        Me.sat_k.ReadOnly = True
-        Me.sat_k.Width = 65
-        '
-        'qty_tot
-        '
-        Me.qty_tot.HeaderText = "QTY"
-        Me.qty_tot.MinimumWidth = 65
-        Me.qty_tot.Name = "qty_tot"
-        Me.qty_tot.ReadOnly = True
         '
         'date_tgl_beli_r
         '
@@ -706,7 +639,7 @@ Partial Class fr_stok_mutasi_list
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 0)
         Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(964, 28)
+        Me.pnl_Menu.Size = New System.Drawing.Size(1080, 28)
         Me.pnl_Menu.TabIndex = 248
         '
         'MenuStrip1
@@ -714,7 +647,7 @@ Partial Class fr_stok_mutasi_list
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_hapus, Me.mn_save, Me.mn_print, Me.mn_refresh, Me.mn_cari})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(964, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(1080, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -836,6 +769,115 @@ Partial Class fr_stok_mutasi_list
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 18
         '
+        'in_hpp
+        '
+        Me.in_hpp.BackColor = System.Drawing.Color.White
+        Me.in_hpp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_hpp.ForeColor = System.Drawing.Color.Black
+        Me.in_hpp.Location = New System.Drawing.Point(672, 109)
+        Me.in_hpp.MaxLength = 150
+        Me.in_hpp.Name = "in_hpp"
+        Me.in_hpp.ReadOnly = True
+        Me.in_hpp.Size = New System.Drawing.Size(184, 20)
+        Me.in_hpp.TabIndex = 326
+        Me.in_hpp.TabStop = False
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label9.Location = New System.Drawing.Point(669, 93)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(32, 13)
+        Me.Label9.TabIndex = 327
+        Me.Label9.Text = "HPP"
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty_b
+        '
+        Me.qty_b.DataPropertyName = "trans_qty"
+        Me.qty_b.HeaderText = "QTY B"
+        Me.qty_b.MinimumWidth = 65
+        Me.qty_b.Name = "qty_b"
+        Me.qty_b.ReadOnly = True
+        Me.qty_b.Width = 65
+        '
+        'sat_b
+        '
+        Me.sat_b.DataPropertyName = "trans_satuan"
+        Me.sat_b.HeaderText = "Sat. B."
+        Me.sat_b.MinimumWidth = 65
+        Me.sat_b.Name = "sat_b"
+        Me.sat_b.ReadOnly = True
+        Me.sat_b.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat_b.Width = 65
+        '
+        'qty_t
+        '
+        Me.qty_t.HeaderText = "QTY T"
+        Me.qty_t.MinimumWidth = 65
+        Me.qty_t.Name = "qty_t"
+        Me.qty_t.ReadOnly = True
+        Me.qty_t.Width = 65
+        '
+        'sat_t
+        '
+        Me.sat_t.HeaderText = "Sat. T."
+        Me.sat_t.MinimumWidth = 65
+        Me.sat_t.Name = "sat_t"
+        Me.sat_t.ReadOnly = True
+        Me.sat_t.Width = 65
+        '
+        'qty_k
+        '
+        Me.qty_k.HeaderText = "QTY K"
+        Me.qty_k.MinimumWidth = 65
+        Me.qty_k.Name = "qty_k"
+        Me.qty_k.ReadOnly = True
+        Me.qty_k.Width = 65
+        '
+        'sat_k
+        '
+        Me.sat_k.HeaderText = "Sat. K."
+        Me.sat_k.MinimumWidth = 65
+        Me.sat_k.Name = "sat_k"
+        Me.sat_k.ReadOnly = True
+        Me.sat_k.Width = 65
+        '
+        'qty_tot
+        '
+        Me.qty_tot.HeaderText = "QTY"
+        Me.qty_tot.MinimumWidth = 30
+        Me.qty_tot.Name = "qty_tot"
+        Me.qty_tot.ReadOnly = True
+        Me.qty_tot.Width = 65
+        '
+        'hpp_brg
+        '
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        Me.hpp_brg.DefaultCellStyle = DataGridViewCellStyle1
+        Me.hpp_brg.HeaderText = "HPP"
+        Me.hpp_brg.Name = "hpp_brg"
+        Me.hpp_brg.ReadOnly = True
+        Me.hpp_brg.Width = 125
+        '
         'fr_stok_mutasi_list
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -916,6 +958,15 @@ Partial Class fr_stok_mutasi_list
     Friend WithEvents Label20 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
+    Friend WithEvents date_tgl_beli_r As System.Windows.Forms.TextBox
+    Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents in_gudang2_n As System.Windows.Forms.TextBox
+    Friend WithEvents in_gudang2 As System.Windows.Forms.TextBox
+    Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
+    Friend WithEvents in_gudang As System.Windows.Forms.TextBox
+    Friend WithEvents bt_addgudang As System.Windows.Forms.Button
+    Friend WithEvents in_hpp As System.Windows.Forms.TextBox
+    Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents nama As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_b As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -925,12 +976,6 @@ Partial Class fr_stok_mutasi_list
     Friend WithEvents qty_k As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_k As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_tot As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents date_tgl_beli_r As System.Windows.Forms.TextBox
-    Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents in_gudang2_n As System.Windows.Forms.TextBox
-    Friend WithEvents in_gudang2 As System.Windows.Forms.TextBox
-    Friend WithEvents in_gudang_n As System.Windows.Forms.TextBox
-    Friend WithEvents in_gudang As System.Windows.Forms.TextBox
-    Friend WithEvents bt_addgudang As System.Windows.Forms.Button
+    Friend WithEvents hpp_brg As System.Windows.Forms.DataGridViewTextBoxColumn
 
 End Class

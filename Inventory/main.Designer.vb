@@ -124,6 +124,7 @@ Partial Class main
         '
         'pnl_main
         '
+        Me.pnl_main.BackColor = System.Drawing.Color.White
         Me.pnl_main.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
         Me.pnl_main.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.pnl_main.Dock = System.Windows.Forms.DockStyle.Fill
@@ -240,7 +241,7 @@ Partial Class main
         Me.Controls.Add(Me.StatusStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(985, 720)
+        Me.MinimumSize = New System.Drawing.Size(600, 480)
         Me.Name = "main"
         Me.Opacity = 0.0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

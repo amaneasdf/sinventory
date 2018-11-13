@@ -71,6 +71,7 @@
                     .Cells("kartu_debet").Value = x.ItemArray(11)
                     .Cells("kartu_kredit").Value = x.ItemArray(12)
                     .Cells("kartu_saldo").Value = x.ItemArray(13)
+                    .Cells("kartu_nilai").Value = x.ItemArray(14)
                 End With
             Next
         End With
@@ -161,7 +162,7 @@
     Private Sub fr_urut_kartustok_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         loadGudang()
 
-        For Each x As DataGridViewColumn In {kartu_debet, kartu_kredit, kartu_saldo}
+        For Each x As DataGridViewColumn In {kartu_debet, kartu_kredit, kartu_saldo, kartu_nilai}
             x.DefaultCellStyle = dgvstyle_commathousand
         Next
     End Sub

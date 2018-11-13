@@ -114,6 +114,7 @@
                                      & "{1},perk_saldoawal_reg_date=NOW(),perk_saldoawal_reg_alias='{2}' ON DUPLICATE KEY UPDATE " _
                                      & "{1},perk_saldoawal_upd_date=NOW(),perk_saldoawal_upd_alias='{2}'"
 
+        op_con()
         data1 = {
             "perk_parent='" & cb_parent.SelectedValue & "'",
             "perk_nama_akun='" & in_akun_n.Text & "'",

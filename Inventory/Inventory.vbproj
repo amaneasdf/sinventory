@@ -389,6 +389,12 @@
     <Compile Include="mn_olahdata\fr_urut_kartustok.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="mn_pengaturan\fr_data_referensi.Designer.vb">
+      <DependentUpon>fr_data_referensi.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_data_referensi.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="mn_pengaturan\fr_group_detail.Designer.vb">
       <DependentUpon>fr_group_detail.vb</DependentUpon>
     </Compile>
@@ -513,6 +519,12 @@
       <DependentUpon>fr_draft_rekap.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_transaksi\fr_draft_rekap.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_draft_tagih.Designer.vb">
+      <DependentUpon>fr_draft_tagih.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_transaksi\fr_draft_tagih.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_draft_tagihan.Designer.vb">
@@ -751,6 +763,9 @@
     <EmbeddedResource Include="mn_olahdata\fr_urut_kartustok.resx">
       <DependentUpon>fr_urut_kartustok.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_data_referensi.resx">
+      <DependentUpon>fr_data_referensi.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_group_detail.resx">
       <DependentUpon>fr_group_detail.vb</DependentUpon>
     </EmbeddedResource>
@@ -813,6 +828,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_draft_rekap.resx">
       <DependentUpon>fr_draft_rekap.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_transaksi\fr_draft_tagih.resx">
+      <DependentUpon>fr_draft_tagih.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_draft_tagihan.resx">
       <DependentUpon>fr_draft_tagihan.vb</DependentUpon>

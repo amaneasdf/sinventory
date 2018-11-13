@@ -45,9 +45,11 @@ Partial Class fr_lap_filter_beli
         Me.in_barang_n = New System.Windows.Forms.TextBox()
         Me.in_barang = New System.Windows.Forms.TextBox()
         Me.lbl_barang = New System.Windows.Forms.Label()
+        Me.pnl_content = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnl_content.SuspendLayout()
         Me.SuspendLayout()
         '
         'bt_batalbeli
@@ -55,7 +57,7 @@ Partial Class fr_lap_filter_beli
         Me.bt_batalbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 210)
+        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 169)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbeli.TabIndex = 8
@@ -66,7 +68,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.bt_simpanbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 210)
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 169)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
         Me.bt_simpanbeli.TabIndex = 7
@@ -101,6 +103,7 @@ Partial Class fr_lap_filter_beli
         '
         'bt_cl
         '
+        Me.bt_cl.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_cl.BackColor = System.Drawing.Color.Transparent
         Me.bt_cl.BackgroundImage = Global.Inventory.My.Resources.Resources.close
         Me.bt_cl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
@@ -144,7 +147,7 @@ Partial Class fr_lap_filter_beli
         Me.bt_exportxl.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.bt_exportxl.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_exportxl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_exportxl.Location = New System.Drawing.Point(11, 210)
+        Me.bt_exportxl.Location = New System.Drawing.Point(8, 169)
         Me.bt_exportxl.Name = "bt_exportxl"
         Me.bt_exportxl.Size = New System.Drawing.Size(96, 30)
         Me.bt_exportxl.TabIndex = 9
@@ -154,7 +157,7 @@ Partial Class fr_lap_filter_beli
         'date_tglawal
         '
         Me.date_tglawal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglawal.Location = New System.Drawing.Point(82, 48)
+        Me.date_tglawal.Location = New System.Drawing.Point(79, 6)
         Me.date_tglawal.MaxDate = New Date(2050, 12, 31, 0, 0, 0, 0)
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
@@ -166,7 +169,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 52)
+        Me.Label4.Location = New System.Drawing.Point(5, 10)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(46, 13)
         Me.Label4.TabIndex = 412
@@ -176,7 +179,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(228, 52)
+        Me.Label1.Location = New System.Drawing.Point(225, 10)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(24, 13)
         Me.Label1.TabIndex = 414
@@ -185,7 +188,7 @@ Partial Class fr_lap_filter_beli
         'date_tglakhir
         '
         Me.date_tglakhir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglakhir.Location = New System.Drawing.Point(258, 48)
+        Me.date_tglakhir.Location = New System.Drawing.Point(255, 6)
         Me.date_tglakhir.MaxDate = New Date(2100, 12, 31, 0, 0, 0, 0)
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
@@ -200,7 +203,7 @@ Partial Class fr_lap_filter_beli
         Me.cb_jenis.BackColor = System.Drawing.Color.White
         Me.cb_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_jenis.FormattingEnabled = True
-        Me.cb_jenis.Location = New System.Drawing.Point(82, 71)
+        Me.cb_jenis.Location = New System.Drawing.Point(79, 29)
         Me.cb_jenis.Name = "cb_jenis"
         Me.cb_jenis.Size = New System.Drawing.Size(193, 21)
         Me.cb_jenis.TabIndex = 2
@@ -209,7 +212,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.lbl_jenis.AutoSize = True
         Me.lbl_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_jenis.Location = New System.Drawing.Point(8, 75)
+        Me.lbl_jenis.Location = New System.Drawing.Point(5, 33)
         Me.lbl_jenis.Name = "lbl_jenis"
         Me.lbl_jenis.Size = New System.Drawing.Size(64, 13)
         Me.lbl_jenis.TabIndex = 416
@@ -220,7 +223,7 @@ Partial Class fr_lap_filter_beli
         Me.in_supplier_n.BackColor = System.Drawing.Color.White
         Me.in_supplier_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_supplier_n.ForeColor = System.Drawing.Color.Black
-        Me.in_supplier_n.Location = New System.Drawing.Point(205, 95)
+        Me.in_supplier_n.Location = New System.Drawing.Point(202, 53)
         Me.in_supplier_n.MaxLength = 200
         Me.in_supplier_n.Name = "in_supplier_n"
         Me.in_supplier_n.Size = New System.Drawing.Size(322, 20)
@@ -231,7 +234,7 @@ Partial Class fr_lap_filter_beli
         Me.in_supplier.BackColor = System.Drawing.Color.White
         Me.in_supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_supplier.ForeColor = System.Drawing.Color.Black
-        Me.in_supplier.Location = New System.Drawing.Point(82, 95)
+        Me.in_supplier.Location = New System.Drawing.Point(79, 53)
         Me.in_supplier.MaxLength = 30
         Me.in_supplier.Name = "in_supplier"
         Me.in_supplier.ReadOnly = True
@@ -242,7 +245,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.lbl_supplier.AutoSize = True
         Me.lbl_supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_supplier.Location = New System.Drawing.Point(8, 99)
+        Me.lbl_supplier.Location = New System.Drawing.Point(5, 57)
         Me.lbl_supplier.Name = "lbl_supplier"
         Me.lbl_supplier.Size = New System.Drawing.Size(45, 13)
         Me.lbl_supplier.TabIndex = 419
@@ -251,7 +254,7 @@ Partial Class fr_lap_filter_beli
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(209, 118)
+        Me.popPnl_barang.Location = New System.Drawing.Point(212, 67)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 425
@@ -280,7 +283,7 @@ Partial Class fr_lap_filter_beli
         Me.in_barang_n.BackColor = System.Drawing.Color.White
         Me.in_barang_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang_n.ForeColor = System.Drawing.Color.Black
-        Me.in_barang_n.Location = New System.Drawing.Point(205, 118)
+        Me.in_barang_n.Location = New System.Drawing.Point(202, 76)
         Me.in_barang_n.MaxLength = 200
         Me.in_barang_n.Name = "in_barang_n"
         Me.in_barang_n.Size = New System.Drawing.Size(322, 20)
@@ -291,7 +294,7 @@ Partial Class fr_lap_filter_beli
         Me.in_barang.BackColor = System.Drawing.Color.White
         Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang.ForeColor = System.Drawing.Color.Black
-        Me.in_barang.Location = New System.Drawing.Point(82, 118)
+        Me.in_barang.Location = New System.Drawing.Point(79, 76)
         Me.in_barang.MaxLength = 30
         Me.in_barang.Name = "in_barang"
         Me.in_barang.ReadOnly = True
@@ -302,11 +305,36 @@ Partial Class fr_lap_filter_beli
         '
         Me.lbl_barang.AutoSize = True
         Me.lbl_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_barang.Location = New System.Drawing.Point(8, 122)
+        Me.lbl_barang.Location = New System.Drawing.Point(5, 80)
         Me.lbl_barang.Name = "lbl_barang"
         Me.lbl_barang.Size = New System.Drawing.Size(41, 13)
         Me.lbl_barang.TabIndex = 428
         Me.lbl_barang.Text = "Barang"
+        '
+        'pnl_content
+        '
+        Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.popPnl_barang)
+        Me.pnl_content.Controls.Add(Me.bt_simpanbeli)
+        Me.pnl_content.Controls.Add(Me.bt_batalbeli)
+        Me.pnl_content.Controls.Add(Me.bt_exportxl)
+        Me.pnl_content.Controls.Add(Me.Label4)
+        Me.pnl_content.Controls.Add(Me.in_barang_n)
+        Me.pnl_content.Controls.Add(Me.date_tglawal)
+        Me.pnl_content.Controls.Add(Me.in_barang)
+        Me.pnl_content.Controls.Add(Me.date_tglakhir)
+        Me.pnl_content.Controls.Add(Me.lbl_barang)
+        Me.pnl_content.Controls.Add(Me.Label1)
+        Me.pnl_content.Controls.Add(Me.in_supplier_n)
+        Me.pnl_content.Controls.Add(Me.lbl_jenis)
+        Me.pnl_content.Controls.Add(Me.in_supplier)
+        Me.pnl_content.Controls.Add(Me.cb_jenis)
+        Me.pnl_content.Controls.Add(Me.lbl_supplier)
+        Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnl_content.Location = New System.Drawing.Point(0, 42)
+        Me.pnl_content.Name = "pnl_content"
+        Me.pnl_content.Size = New System.Drawing.Size(591, 205)
+        Me.pnl_content.TabIndex = 429
         '
         'fr_lap_filter_beli
         '
@@ -315,23 +343,8 @@ Partial Class fr_lap_filter_beli
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalbeli
         Me.ClientSize = New System.Drawing.Size(591, 257)
-        Me.Controls.Add(Me.popPnl_barang)
-        Me.Controls.Add(Me.in_barang_n)
-        Me.Controls.Add(Me.in_barang)
-        Me.Controls.Add(Me.lbl_barang)
-        Me.Controls.Add(Me.in_supplier_n)
-        Me.Controls.Add(Me.in_supplier)
-        Me.Controls.Add(Me.lbl_supplier)
-        Me.Controls.Add(Me.cb_jenis)
-        Me.Controls.Add(Me.lbl_jenis)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.date_tglakhir)
-        Me.Controls.Add(Me.Label4)
-        Me.Controls.Add(Me.date_tglawal)
+        Me.Controls.Add(Me.pnl_content)
         Me.Controls.Add(Me.Panel3)
-        Me.Controls.Add(Me.bt_exportxl)
-        Me.Controls.Add(Me.bt_batalbeli)
-        Me.Controls.Add(Me.bt_simpanbeli)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -343,8 +356,9 @@ Partial Class fr_lap_filter_beli
         Me.Panel1.PerformLayout()
         Me.popPnl_barang.ResumeLayout(False)
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.pnl_content.ResumeLayout(False)
+        Me.pnl_content.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
     Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
@@ -369,4 +383,5 @@ Partial Class fr_lap_filter_beli
     Friend WithEvents in_barang_n As System.Windows.Forms.TextBox
     Friend WithEvents in_barang As System.Windows.Forms.TextBox
     Friend WithEvents lbl_barang As System.Windows.Forms.Label
+    Friend WithEvents pnl_content As System.Windows.Forms.Panel
 End Class
