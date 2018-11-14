@@ -1,10 +1,19 @@
 ﻿Public Class fr_stockop_list
+    Private Structure menu_sw
+        Dim sw As Boolean
+        Dim txt As String
+    End Structure
+
     Public tabpagename As TabPage
     Private rowindex As Integer = 0
     Private rowindexlist As Integer = 0
     Private rowindexbarang As Integer = 0
     Private tblStatus As String = 0
     Private popupstate As String = "gudang"
+    Private _hppsys As Decimal = 0
+    Private dgvallowed As Boolean = False
+
+    'FUCKING SPAGHETTI CODE, FUCK
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -12,24 +21,22 @@
         Console.WriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
 
-    Public Sub performRefresh()
+    Public Sub performRefresh(Optional pass As Boolean = False)
         in_cari.Clear()
-        searchData("")
+        tblStatus = 0
+        searchData("", pass)
         in_countdata.Text = dgv_list.Rows.Count
         With date_tgl_beli
             .MinDate = selectperiode.tglawal
             .MaxDate = selectperiode.tglakhir
-            If selectperiode.tglakhir >= Today Then
-                .Value = Today
-            Else
-                .Value = selectperiode.tglakhir
-            End If
         End With
+        clearAll()
     End Sub
 
     Private Sub loadData(kode As String)
-        Dim q As String = "SELECT faktur_bukti, faktur_tanggal, faktur_gudang, gudang_nama, faktur_status, faktur_reg_alias, faktur_reg_date, " _
-                         & "faktur_upd_date, faktur_upd_alias FROM data_stok_opname LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
+        Dim q As String = "SELECT faktur_bukti, faktur_tanggal, faktur_gudang, gudang_nama, faktur_status, faktur_ket, faktur_reg_alias, faktur_reg_date, " _
+                         & "faktur_upd_date, faktur_upd_alias, faktur_proc_date, faktur_proc_alias FROM data_stok_opname " _
+                         & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
                          & "WHERE faktur_bukti='{0}'"
         readcommd(String.Format(q, kode))
         If rd.HasRows Then
@@ -38,6 +45,7 @@
             date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
             in_gudang.Text = rd.Item("faktur_gudang")
             in_gudang_n.Text = rd.Item("gudang_nama")
+            in_ket.Text = rd.Item("faktur_ket")
             tblStatus = rd.Item("faktur_status")
             txtRegAlias.Text = rd.Item("faktur_reg_alias")
             txtRegdate.Text = rd.Item("faktur_reg_date")
@@ -48,21 +56,22 @@
                 txtUpdDate.Text = "00/00/0000 00:00:00"
             End Try
             txtUpdAlias.Text = rd.Item("faktur_upd_alias")
+            Try
+                txtProcDate.Text = rd.Item("faktur_proc_date")
+            Catch ex As Exception
+                Console.WriteLine(ex.Message)
+                txtProcDate.Text = "00/00/0000 00:00:00"
+            End Try
+            txtProcAlias.Text = rd.Item("faktur_proc_alias")
         End If
         rd.Close()
 
-        If tblStatus = 1 Then
-            mn_edit.Enabled = True
-            mn_proses.Enabled = True
-        Else
-            mn_edit.Enabled = False
-            mn_proses.Enabled = False
-        End If
+        setStatus()
     End Sub
 
     Private Sub loadDataBrg(kode As String)
         Dim dt As New DataTable
-        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_keterangan,trans_hpp " _
+        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_hpp,trans_hpp_fisik " _
                           & "FROM data_stok_opname_trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
                           & "WHERE trans_status=1 AND trans_faktur='{0}'"
         dt = getDataTablefromDB(String.Format(q, kode))
@@ -77,8 +86,8 @@
                     .Cells("qty_fis").Value = x.ItemArray(4)
                     .Cells("sat_fis").Value = x.ItemArray(3)
                     .Cells("qty_sel").Value = x.ItemArray(4) - x.ItemArray(2)
-                    .Cells("ket").Value = x.ItemArray(5)
-                    .Cells("hpp").Value = x.ItemArray(6)
+                    .Cells("hpp").Value = x.ItemArray(5)
+                    .Cells("hpp_fis").Value = x.ItemArray(6)
                 End With
             Next
         End With
@@ -87,11 +96,20 @@
     Private Sub setStatus()
         Select Case tblStatus
             Case 0
-                'in_status.Text = "Non-Aktif"
+                in_status.Text = "Pending"
+                mn_proses.Enabled = True
+                mn_hapus.Enabled = True
+                mn_edit.Enabled = True
             Case 1
-                'in_status.Text = "Aktif"
+                in_status.Text = "Terproses"
+                'mn_proses.Enabled = False
+                mn_hapus.Enabled = False
+                mn_edit.Enabled = False
             Case 9
-                'in_status.Text = "Delete"
+                in_status.Text = "Delete"
+                mn_proses.Enabled = False
+                mn_edit.Enabled = False
+                mn_hapus.Enabled = False
             Case Else
                 Exit Sub
         End Select
@@ -105,11 +123,11 @@
         Select Case tipe
             Case "barang"
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getSisaStock('{0}',barang_kode,'{1}') as 'SisaStok', " _
-                    & "getHPP(barang_kode) as 'HPP', barang_satuan_kecil " _
+                    & "getHPPAVG(barang_kode,'{2}','{0}') as 'HPP', barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                     & "WHERE stock_periode='{0}' AND stock_gudang='{1}' " _
-                    & "AND barang_nama LIKE '{2}%'"
-                q = String.Format(q, selectperiode.id, in_gudang.Text, "{0}")
+                    & "AND barang_nama LIKE '{3}%'"
+                q = String.Format(q, selectperiode.id, in_gudang.Text, date_tgl_beli.Value.ToString("yyyy-MM-dd"), "{0}")
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 " _
                     & "AND gudang_nama LIKE '{0}%'"
@@ -147,6 +165,7 @@
                     in_sat1.Text = .Cells(4).Value
                     in_sat2.Text = in_sat1.Text
                     in_hpp.Value = .Cells(3).Value
+                    _hppsys = .Cells(3).Value
                     in_qty2.Focus()
                 Case "gudang"
                     in_gudang.Text = .Cells(0).Value
@@ -159,13 +178,15 @@
         'popPnl_barang.Visible = False
     End Sub
 
-    Private Sub searchData(param As String)
-        If mn_save.Enabled = True Then
+    Private Sub searchData(param As String, Optional pass As Boolean = False)
+        If mn_save.Enabled = True And pass = False Then
             If MessageBox.Show("Batalkan Perubahan?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
                 mn_save.Enabled = False
             End If
+        ElseIf mn_save.Enabled = True And pass = True Then
+            mn_save.Enabled = False
         End If
         clearAll()
         disableAllSwitch(True)
@@ -243,8 +264,8 @@
                     .Cells("qty_fis").Value = in_qty2.Value
                     .Cells("sat_fis").Value = in_sat2.Text
                     .Cells("qty_sel").Value = in_qty2.Value - CDbl(in_qty1.Text)
-                    .Cells("hpp").Value = in_hpp.Value
-                    .Cells("ket").Value = in_ket_brg.Text
+                    .Cells("hpp").Value = _hppsys
+                    .Cells("hpp_fis").Value = in_hpp.Value
                 End With
             End With
             clearInputBarang()
@@ -262,10 +283,10 @@
             in_barang_nm.Text = .Cells("nama").Value
             in_qty1.Text = .Cells("qty_sys").Value
             in_sat1.Text = .Cells("sat_sys").Value
+            _hppsys = .Cells("hpp").Value
             in_qty2.Value = .Cells("qty_fis").Value
             in_sat2.Text = .Cells("sat_fis").Value
-            in_hpp.Value = .Cells("hpp").Value
-            in_ket_brg.Text = .Cells("ket").Value
+            in_hpp.Value = .Cells("hpp_fis").Value
         End With
         in_barang.Focus()
         If dgv_barang.RowCount = 0 Then
@@ -275,7 +296,7 @@
         End If
     End Sub
 
-    Private Sub saveData()
+    Private Sub saveData(tipe As String)
         Dim querycheck As String = False
         Dim queryArr As New List(Of String)
         Dim datafaktur, dataBrg As String()
@@ -287,34 +308,45 @@
         Me.Cursor = Cursors.WaitCursor
 
         op_con()
-        'GENERATE KODE
-        If in_kode.Text = Nothing Then
-            Dim st As Integer = 1
-            readcommd("SELECT RIGHT(faktur_bukti,3) FROM data_stok_opname WHERE SUBSTRING(faktur_bukti,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "' " _
-                       & "AND faktur_bukti LIKE 'OP%' ORDER BY faktur_bukti DESC LIMIT 1")
-            If rd.HasRows Then
-                st = CInt(rd.Item(0)) + 1
-            End If
-            rd.Close()
-            in_kode.Text = "OP" & date_tgl_beli.Value.ToString("yyyyMMdd") & st.ToString("D3")
-        ElseIf in_kode.Text <> Nothing And mn_tambah.Text = "Batal" Then
-            If checkdata("data_stok_opname", "'" & in_kode.Text & "'", "faktur_bukti") = True Then
-                MessageBox.Show("Nomor faktur " & in_kode.Text & " sudah pernah diinputkan", "Stok Opname", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                in_kode.Focus()
-                Exit Sub
-                'If MessageBox.Show("Update data faktur " & in_faktur.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
-                '    Exit Sub
-                'End If
-            End If
-        End If
 
+        Select Case tipe
+            Case "save"
+                'GENERATE KODE
+                If in_kode.Text = Nothing Then
+                    Dim st As Integer = 1
+                    readcommd("SELECT RIGHT(faktur_bukti,3) FROM data_stok_opname WHERE SUBSTRING(faktur_bukti,3,8)='" & date_tgl_beli.Value.ToString("yyyyMMdd") & "' " _
+                               & "AND faktur_bukti LIKE 'OP%' ORDER BY faktur_bukti DESC LIMIT 1")
+                    If rd.HasRows Then
+                        st = CInt(rd.Item(0)) + 1
+                    End If
+                    rd.Close()
+                    in_kode.Text = "OP" & date_tgl_beli.Value.ToString("yyyyMMdd") & st.ToString("D3")
+                ElseIf in_kode.Text <> Nothing And mn_tambah.Text = "Batal" Then
+                    If checkdata("data_stok_opname", "'" & in_kode.Text & "'", "faktur_bukti") = True Then
+                        MessageBox.Show("Nomor faktur " & in_kode.Text & " sudah pernah diinputkan", "Stok Opname", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                        in_kode.Focus()
+                        Exit Sub
+                        'If MessageBox.Show("Update data faktur " & in_faktur.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
+                        '    Exit Sub
+                        'End If
+                    End If
+                End If
+            Case "proc"
+                tblStatus = 1
+                setStatus()
+            Case Else
+                Exit Sub
+        End Select
+
+        Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
 
         '==========================================================================================================================
         'INSERT HEADER
         datafaktur = {
-                "faktur_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                "faktur_tanggal='" & _tgltrans & "'",
                 "faktur_gudang='" & in_gudang.Text & "'",
-                "faktur_status='1'"
+                "faktur_ket='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
+                "faktur_status='" & tblStatus & "'"
                 }
         q = "INSERT INTO data_stok_opname SET faktur_bukti='{0}',{1},faktur_reg_date=NOW(), faktur_reg_alias='{2}' " _
             & "ON DUPLICATE KEY UPDATE {1},faktur_upd_date=NOW(),faktur_upd_alias='{2}'"
@@ -325,6 +357,7 @@
         'INSERT BARANG
         Dim x As New List(Of String)
         Dim qty As New List(Of Integer)
+        Dim nilai As New List(Of Decimal)
 
         '==========================================================================================================================
         q = "UPDATE data_stok_opname_trans SET trans_status=9 WHERE trans_faktur='{0}'"
@@ -336,60 +369,90 @@
 
         '==========================================================================================================================
         For Each rows As DataGridViewRow In dgv_barang.Rows
+            Dim _hppsys As Decimal = rows.Cells("hpp").Value
+            Dim _hppfis As Decimal = rows.Cells("hpp_fis").Value
+            Dim _qtySel As Integer = rows.Cells("qty_sel").Value
+            Dim _nilaiSel As Decimal = _qtySel * IIf(_qtySel < 0, _hppsys, _hppfis)
+
             dataBrg = {
                 "trans_barang='" & rows.Cells(0).Value & "'",
                 "trans_qty_sys=" & rows.Cells("qty_sys").Value,
                 "trans_qty_fisik=" & rows.Cells("qty_fis").Value,
                 "trans_satuan='" & rows.Cells("sat_sys").Value & "'",
-                "trans_keterangan='" & rows.Cells("ket").Value & "'",
-                "trans_hpp=" & rows.Cells("hpp").Value.ToString.Replace(",", "."),
+                "trans_hpp=" & _hppsys.ToString.Replace(",", "."),
+                "trans_hpp_fisik=" & _hppfis.ToString.Replace(",", "."),
                 "trans_status=1"
                 }
             q = "INSERT INTO data_stok_opname_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dataBrg)))
 
             x.Add("'" & rows.Cells(0).Value & "'")
-            qty.Add(rows.Cells("qty_fis").Value - rows.Cells("qty_sys").Value)
+            qty.Add(_qtySel)
+            nilai.Add(_nilaiSel)
         Next
         '==========================================================================================================================
 
         '==========================================================================================================================
         'TODO : WRITE KARTU STOCK
         Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
-        Dim x_kodestok = New List(Of String)
+        'Dim x_kodestok = New List(Of String)
         data = {
             "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
-            "trans_ket", "trans_qty", "trans_reg_alias", "trans_reg_date", "trans_status"
+            "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
             }
         Dim i As Integer = 0
         For Each brg As String In x
-            Dim kd As String = in_gudang.Text & "-" & Replace(brg, "'", "") & "-" & selectperiode.id
+            If qty.Item(i) <> 0 Then
 
-            data2 = {
-                     "'" & kd & "'",
-                     "MAX(trans_index)+1",
-                     "'op'",
-                     "'" & in_kode.Text & "'",
-                     "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                     "'STOK OPNAME " & in_gudang_n.Text & "'",
-                     qty.Item(i),
-                     "'" & loggeduser.user_id & "'",
-                     "NOW()",
-                     "1"
-                     }
-            dataBrg = {
-                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                "trans_qty=" & qty.Item(i),
-                "trans_upd_date=NOW()",
-                "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status=1"
-                }
-            queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd, String.Join(",", dataBrg)))
+                Dim kd As String = in_gudang.Text & "-" & Replace(brg, "'", "") & "-" & selectperiode.id
 
-            x_kodestok.Add("'" & kd & "'")
+                data2 = {
+                         "'" & kd & "'",
+                         "MAX(trans_index)+1",
+                         "'op'",
+                         "'" & in_kode.Text & "'",
+                         "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                         "'STOK OPNAME " & in_gudang_n.Text & "'",
+                         qty.Item(i),
+                         nilai.Item(i).ToString.Replace(",", "."),
+                         "'" & loggeduser.user_id & "'",
+                         "NOW()",
+                         tblStatus
+                         }
+                dataBrg = {
+                    "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                    "trans_qty=" & qty.Item(i),
+                    "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
+                    "trans_upd_date=NOW()",
+                    "trans_upd_alias='" & loggeduser.user_id & "'",
+                    "trans_status=" & tblStatus
+                    }
+                queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd, String.Join(",", dataBrg)))
+
+                'x_kodestok.Add("'" & kd & "'")
+            End If
             i += 1
         Next
         '==========================================================================================================================
+        '==========================================================================================================================
+
+        '==========================================================================================================================
+        'INPUT JURNAL AND UPDATE PROC
+        '----------HEAD
+        If tipe = "proc" Then
+            q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MGOPN',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
+            data2 = {
+                "line_ref='" & in_gudang.Text & "'",
+                "line_ref_type='GUDANG'",
+                "line_tanggal='" & _tgltrans & "'",
+                "line_status='1'"
+                }
+            queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
+
+            q = "UPDATE data_stok_opname SET faktur_proc_date=NOW(),faktur_proc_alias='{0}' WHERE faktur_bukti='{1}'"
+            queryArr.Add(String.Format(q, txtProcAlias.Text, in_kode.Text))
+        End If
         '==========================================================================================================================
 
 
@@ -407,15 +470,10 @@
             'TODO: WRITE LOG AKTIVITAS
 
             MessageBox.Show("Data tersimpan")
-            frmstockop.in_cari.Clear()
-            populateDGVUserCon("stockop", "", frmstockop.dgv_list)
-            mn_edit.Enabled = True
-            mn_tambah.Enabled = True
-            mn_proses.Enabled = True
-            mn_edit.Text = "Edit"
-            mn_tambah.Text = "Tambah"
-            disableAllSwitch(True)
-            mn_save.Enabled = False
+            Dim _kode As String = in_kode.Text
+            performRefresh(True)
+            loadData(_kode)
+            loadDataBrg(_kode)
         End If
     End Sub
 
@@ -424,9 +482,10 @@
         'For Each x As NumericUpDown In {in_qty2}
         '    x.Value = 0
         'Next
-        For Each x As TextBox In {in_barang, in_sat1, in_sat2, in_ket_brg, in_qty1}
+        For Each x As TextBox In {in_barang, in_sat1, in_sat2, in_qty1}
             x.Clear()
         Next
+        in_hpp.Value = 0
     End Sub
 
     Private Sub clearInputBarang()
@@ -436,23 +495,24 @@
     End Sub
 
     Private Sub clearAll()
-        For Each x As TextBox In {in_kode, in_barang, in_barang_nm, in_sat1, in_sat2, txtRegAlias, txtRegdate, txtUpdAlias, txtUpdDate,
-                                  in_gudang, in_gudang_n, date_tgl_beli_r, in_ket_brg, in_qty1}
-            x.Clear()
-        Next
-        For Each x As NumericUpDown In {in_qty2}
-            x.Value = 0
-        Next
         If selectperiode.tglakhir >= Today Then
             date_tgl_beli.Value = Today
         Else
             date_tgl_beli.Value = selectperiode.tglakhir
         End If
+        For Each x As TextBox In {in_kode, in_barang, in_barang_nm, in_sat1, in_sat2, txtRegAlias, txtRegdate, txtUpdAlias, txtUpdDate,
+                                  txtProcAlias, txtProcDate, in_gudang, in_gudang_n, date_tgl_beli_r, in_ket, in_qty1, in_status}
+            x.Clear()
+        Next
+        For Each x As NumericUpDown In {in_qty2, in_hpp}
+            x.Value = 0
+        Next
+        _hppsys = 0
         dgv_barang.Rows.Clear()
     End Sub
 
     Private Sub disableAllSwitch(switch As Boolean)
-        For Each x As TextBox In {in_barang_nm, in_ket_brg, in_gudang_n}
+        For Each x As TextBox In {in_barang_nm, in_ket, in_gudang_n}
             x.ReadOnly = switch
         Next
         For Each x As NumericUpDown In {in_qty2}
@@ -467,10 +527,12 @@
         Next
         If switch = True Then
             date_tgl_beli.Visible = False
-            dgv_barang.Enabled = False
+            dgvallowed = False
+            'dgv_barang.Enabled = False
         Else
             date_tgl_beli.Visible = True
-            dgv_barang.Enabled = True
+            dgvallowed = True
+            'dgv_barang.Enabled = True
         End If
 
         date_tgl_beli_r.Visible = switch
@@ -510,24 +572,21 @@
             disableAllSwitch(False)
             mn_save.Enabled = True
             mn_edit.Enabled = False
+            mn_proses.Enabled = False
             in_gudang.Focus()
             mn_tambah.Text = "Batal"
         Else
             If MessageBox.Show("Batalkan Perubahan?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
-                clearAll()
-                disableAllSwitch(True)
-                mn_save.Enabled = False
-                mn_edit.Enabled = True
-                mn_tambah.Text = "Baru"
+                performRefresh(True)
             End If
         End If
     End Sub
 
     Private Sub mn_edit_Click(sender As Object, e As EventArgs) Handles mn_edit.Click
         If mn_edit.Text = "Edit" And in_kode.Text <> Nothing Then
-            in_kode.Text = dgv_list.Rows(rowindex).Cells("kode").Value
+            'in_kode.Text = dgv_list.Rows(rowindex).Cells("kode").Value
             Try
                 loadData(in_kode.Text)
                 dgv_barang.Rows.Clear()
@@ -539,18 +598,16 @@
             in_gudang.Focus()
             sender.Text = "Batal Edit"
             mn_tambah.Enabled = False
+            mn_proses.Enabled = False
             mn_save.Enabled = True
         ElseIf mn_edit.Text = "Batal Edit" Then
             If MessageBox.Show("Batalkan Perubahan?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
-                disableAllSwitch(True)
-                loadData(in_kode.Text)
-                dgv_barang.Rows.Clear()
-                loadDataBrg(in_kode.Text)
-                mn_edit.Text = "Edit"
-                mn_tambah.Enabled = True
-                mn_save.Enabled = False
+                Dim kode As String = in_kode.Text
+                performRefresh(True)
+                loadData(kode)
+                loadDataBrg(kode)
             End If
         End If
     End Sub
@@ -572,48 +629,31 @@
         End If
 
         If MessageBox.Show("Simpan Data?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-            saveData()
+            saveData("save")
         End If
     End Sub
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
-        'If in_kode.Text <> Nothing And statusop <> 2 Then
-        '    If MessageBox.Show("Proses Stock Opname No." & in_kode.Text & "?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-        '        Me.Cursor = Cursors.WaitCursor
-        '        Dim querycheck As Boolean = False
-        '        Dim queryArr As New List(Of String)
-        '        queryArr.Add("UPDATE data_barang_stok_opname SET faktur_status=2, faktur_tgl_proses=CURDATE(), faktur_upd_alias='" & loggeduser.user_id & "', faktur_upd_date=NOW() WHERE faktur_bukti='" & in_kode.Text & "'")
-        '        For Each rows As DataGridViewRow In dgv_barang.Rows
-        '            Dim kodestock As String
-        '            kodestock = cb_gudang.SelectedValue & "-" & rows.Cells("kode").Value & "-" & date_tgl_beli.Value.ToString("yyMM")
-        '            queryArr.Add("UPDATE data_stok_awal SET stock_fisik=" & rows.Cells("qty_fis").Value & " WHERE stock_kode='" & kodestock & "'")
+        Dim _konfirm As Boolean = False
+        If MessageBox.Show("Proses Stock Opname No." & in_kode.Text & "?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+            Using x As New fr_stockopconfirm_dialog
+                With x
+                    .do_load("opname")
+                    .ShowDialog()
+                    _konfirm = .returnval
+                    If .returnval = True Then
+                        in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
+                        txtProcAlias.Text = .in_user.Text
+                    Else
+                        Exit Sub
+                    End If
+                End With
+            End Using
 
-        '            'TODO : WRITE LOG
-        '        Next
+            If _konfirm = False Then Exit Sub
 
-        '        op_con()
-        '        querycheck = startTrans(queryArr)
-
-        '        If querycheck = False Then
-        '            MessageBox.Show("Data tidak dapat tersimpan")
-        '            Exit Sub
-        '        Else
-        '            MessageBox.Show("Data tersimpan")
-        '            statusop = 1
-        '            frmstockop.in_cari.Clear()
-        '            populateDGVUserCon("stockop", "", frmstockop.dgv_list)
-        '            mn_edit.Enabled = False
-        '            mn_proses.Enabled = False
-        '            mn_edit.Text = "Edit"
-        '            mn_tambah.Text = "Tambah"
-        '            disableAllSwitch(True)
-        '            mn_save.Enabled = False
-        '            mn_tambah.Enabled = True
-        '        End If
-
-        '        Me.Cursor = Cursors.Default
-        '    End If
-        'End If
+            saveData("proc")
+        End If
     End Sub
 
     Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
@@ -624,14 +664,29 @@
         in_cari.Focus()
     End Sub
 
+    '==========================================================================================================================
+    'LOAD
+    Private Sub fr_stockop_list_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        For Each x As DataGridViewColumn In {hpp, hpp_fis}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+    End Sub
+    '==========================================================================================================================
+
+    '==========================================================================================================================
     'cari
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
         If e.KeyCode = Keys.Enter Then
             e.SuppressKeyPress = True
+            If dgv_list.Visible = False Then
+                dgv_list.Visible = True
+            End If
             searchData(in_cari.Text)
         End If
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     'dgv list
     Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellClick
         If e.RowIndex >= 0 Then
@@ -651,7 +706,9 @@
             listToDetail()
         End If
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     'input
     'numeric input
     Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty2.Enter, in_hpp.Enter
@@ -661,7 +718,9 @@
     Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty2.Leave, in_hpp.Leave
         numericLostFocus(sender, IIf(sender.Name = "in_hpp", "N2", "N0"))
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     'HEADR
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(date_tgl_beli, e)
@@ -674,7 +733,9 @@
     Private Sub date_tgl_beli_ValueChanged(sender As Object, e As EventArgs) Handles date_tgl_beli.ValueChanged
         date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     '------------- POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
         If Not in_gudang_n.Focused Or in_barang_nm.Focused Then
@@ -715,7 +776,9 @@
             x.Select(x.TextLength, x.TextLength)
         End If
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     'gudang awal
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
         keyshortenter(in_gudang_n, e)
@@ -764,7 +827,9 @@
             popPnl_barang.Visible = True
         End If
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     '---------------input barang
     Private Sub in_barang_Enter(sender As Object, e As EventArgs) Handles in_barang_nm.Enter
         If mn_save.Enabled = True Then
@@ -806,29 +871,40 @@
     End Sub
 
     Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyDown
-        keyshortenter(in_ket_brg, e)
-    End Sub
-
-    Private Sub in_ket_brg_KeyDown(sender As Object, e As KeyEventArgs) Handles in_ket_brg.KeyDown
         keyshortenter(bt_tbbarang, e)
     End Sub
+    '==========================================================================================================================
 
+    '==========================================================================================================================
     'dgv barang
     Private Sub bt_tbbarang_Click(sender As Object, e As EventArgs) Handles bt_tbbarang.Click
         textToDGV()
     End Sub
 
     Private Sub dgv_barang_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
-        If e.RowIndex >= 0 Then
-            rowindexbarang = e.RowIndex
-            dgvToTxt()
-            dgv_barang.Rows.RemoveAt(rowindexbarang)
+        If dgvallowed = True Then
+            If e.RowIndex >= 0 Then
+                rowindexbarang = e.RowIndex
+                dgvToTxt()
+                dgv_barang.Rows.RemoveAt(rowindexbarang)
+            End If
         End If
     End Sub
+    '==========================================================================================================================
 
-    Private Sub fr_stok_mutasi_list_Click(sender As Object, e As EventArgs) Handles Me.Click, SplitContainer1.Click
+    Private Sub fr_stok_mutasi_list_Click(sender As Object, e As EventArgs) Handles Me.Click, pnl_container.Click, pnl_side.Click
         If popPnl_barang.Visible = True Then
             popPnl_barang.Visible = False
         End If
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_sidepnl_sw.Click
+        With dgv_list
+            If .Visible = False Then
+                .Visible = True
+            Else
+                .Visible = False
+            End If
+        End With
     End Sub
 End Class

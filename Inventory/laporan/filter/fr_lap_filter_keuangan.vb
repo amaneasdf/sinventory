@@ -146,7 +146,7 @@
                     qwh += "AND perk_kode='" & in_akun.Text & "'"
                 End If
             Case "k_biayasales_global"
-                q = String.Format(qbiaya, -_tglawal, _tglakhir, "{0}", "", "")
+                q = String.Format(qbiaya, _tglawal, _tglakhir, "{0}", "", "")
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND salesman_kode='" & in_sales.Text & "'"

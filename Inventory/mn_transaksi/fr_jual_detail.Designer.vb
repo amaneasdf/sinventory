@@ -83,6 +83,21 @@ Partial Class fr_jual_detail
         Me.in_barang_nm = New System.Windows.Forms.TextBox()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
@@ -114,21 +129,6 @@ Partial Class fr_jual_detail
         Me.Label33 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.Label35 = New System.Windows.Forms.Label()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -220,9 +220,9 @@ Partial Class fr_jual_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(243, 31)
+        Me.lbl_title.Size = New System.Drawing.Size(183, 31)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Order Penjualan"
+        Me.lbl_title.Text = "Form Penjualan"
         '
         'pnl_Menu
         '
@@ -800,6 +800,131 @@ Partial Class fr_jual_detail
         Me.dgv_barang.Size = New System.Drawing.Size(980, 186)
         Me.dgv_barang.TabIndex = 352
         '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.MinimumWidth = 50
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 65
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.MinimumWidth = 80
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 80
+        '
+        'brg_hpp
+        '
+        Me.brg_hpp.HeaderText = "hpp"
+        Me.brg_hpp.Name = "brg_hpp"
+        Me.brg_hpp.ReadOnly = True
+        Me.brg_hpp.Visible = False
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_jual"
+        Me.harga.HeaderText = "Harga Jual"
+        Me.harga.MinimumWidth = 100
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'discrp
+        '
+        Me.discrp.DataPropertyName = "trans_disc_rupiah"
+        Me.discrp.HeaderText = "Disc Rp."
+        Me.discrp.MinimumWidth = 90
+        Me.discrp.Name = "discrp"
+        Me.discrp.ReadOnly = True
+        Me.discrp.Width = 90
+        '
+        'disc1
+        '
+        Me.disc1.DataPropertyName = "trans_disc1"
+        Me.disc1.HeaderText = "Disc1"
+        Me.disc1.MinimumWidth = 40
+        Me.disc1.Name = "disc1"
+        Me.disc1.ReadOnly = True
+        Me.disc1.Width = 45
+        '
+        'disc2
+        '
+        Me.disc2.DataPropertyName = "trans_disc2"
+        Me.disc2.HeaderText = "Disc2"
+        Me.disc2.MinimumWidth = 40
+        Me.disc2.Name = "disc2"
+        Me.disc2.ReadOnly = True
+        Me.disc2.Width = 45
+        '
+        'disc3
+        '
+        Me.disc3.DataPropertyName = "trans_disc3"
+        Me.disc3.HeaderText = "Disc3"
+        Me.disc3.MinimumWidth = 40
+        Me.disc3.Name = "disc3"
+        Me.disc3.ReadOnly = True
+        Me.disc3.Width = 45
+        '
+        'disc4
+        '
+        Me.disc4.DataPropertyName = "trans_disc4"
+        Me.disc4.HeaderText = "Disc4"
+        Me.disc4.MinimumWidth = 40
+        Me.disc4.Name = "disc4"
+        Me.disc4.ReadOnly = True
+        Me.disc4.Width = 45
+        '
+        'disc5
+        '
+        Me.disc5.DataPropertyName = "trans_disc5"
+        Me.disc5.HeaderText = "Disc5"
+        Me.disc5.MinimumWidth = 40
+        Me.disc5.Name = "disc5"
+        Me.disc5.ReadOnly = True
+        Me.disc5.Width = 45
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
+        '
         'Label31
         '
         Me.Label31.AutoSize = True
@@ -1150,131 +1275,6 @@ Partial Class fr_jual_detail
         Me.Label35.Size = New System.Drawing.Size(67, 13)
         Me.Label35.TabIndex = 426
         Me.Label35.Text = "Status Pajak"
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sattype"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.ReadOnly = True
-        Me.sat_type.Visible = False
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.MinimumWidth = 50
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 65
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.MinimumWidth = 80
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 80
-        '
-        'brg_hpp
-        '
-        Me.brg_hpp.HeaderText = "hpp"
-        Me.brg_hpp.Name = "brg_hpp"
-        Me.brg_hpp.ReadOnly = True
-        Me.brg_hpp.Visible = False
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_jual"
-        Me.harga.HeaderText = "Harga Jual"
-        Me.harga.MinimumWidth = 100
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'subtotal
-        '
-        Me.subtotal.HeaderText = "Subtotal"
-        Me.subtotal.Name = "subtotal"
-        Me.subtotal.ReadOnly = True
-        '
-        'discrp
-        '
-        Me.discrp.DataPropertyName = "trans_disc_rupiah"
-        Me.discrp.HeaderText = "Disc Rp."
-        Me.discrp.MinimumWidth = 90
-        Me.discrp.Name = "discrp"
-        Me.discrp.ReadOnly = True
-        Me.discrp.Width = 90
-        '
-        'disc1
-        '
-        Me.disc1.DataPropertyName = "trans_disc1"
-        Me.disc1.HeaderText = "Disc1"
-        Me.disc1.MinimumWidth = 40
-        Me.disc1.Name = "disc1"
-        Me.disc1.ReadOnly = True
-        Me.disc1.Width = 45
-        '
-        'disc2
-        '
-        Me.disc2.DataPropertyName = "trans_disc2"
-        Me.disc2.HeaderText = "Disc2"
-        Me.disc2.MinimumWidth = 40
-        Me.disc2.Name = "disc2"
-        Me.disc2.ReadOnly = True
-        Me.disc2.Width = 45
-        '
-        'disc3
-        '
-        Me.disc3.DataPropertyName = "trans_disc3"
-        Me.disc3.HeaderText = "Disc3"
-        Me.disc3.MinimumWidth = 40
-        Me.disc3.Name = "disc3"
-        Me.disc3.ReadOnly = True
-        Me.disc3.Width = 45
-        '
-        'disc4
-        '
-        Me.disc4.DataPropertyName = "trans_disc4"
-        Me.disc4.HeaderText = "Disc4"
-        Me.disc4.MinimumWidth = 40
-        Me.disc4.Name = "disc4"
-        Me.disc4.ReadOnly = True
-        Me.disc4.Width = 45
-        '
-        'disc5
-        '
-        Me.disc5.DataPropertyName = "trans_disc5"
-        Me.disc5.HeaderText = "Disc5"
-        Me.disc5.MinimumWidth = 40
-        Me.disc5.Name = "disc5"
-        Me.disc5.ReadOnly = True
-        Me.disc5.Width = 45
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
         '
         'fr_jual_detail
         '

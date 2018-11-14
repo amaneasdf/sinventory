@@ -90,12 +90,12 @@
                                 & "FROM( " _
                                 & " SELECT stock_kode, stock_periode, stock_barang, stock_gudang, " _
                                 & "  getSisaStock(stock_periode,stock_barang,stock_gudang) as stock_qty, " _
-                                & "	 getHPP(stock_barang) as stock_hpp " _
+                                & "	 getHPPAVG(stock_barang,'{1}','{0}') as stock_hpp " _
                                 & "	FROM data_stok_awal " _
                                 & "	WHERE stock_periode='{0}' AND stock_status=1 " _
                                 & ") stok LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON stock_gudang=gudang_kode " _
-                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {1} " _
+                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {2} " _
                                 & "ORDER BY barang_kode"
 
         Select Case tipe
@@ -105,7 +105,7 @@
 
             Case "lapPersediaan", "lapStok", "lapStokSupplier"
                 q = qpersed
-                q = String.Format(q, selectperiode.id, "{0}")
+                q = String.Format(q, selectperiode.id, date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
                 Dim whr As New List(Of String)
                 If in_gudang.Text <> Nothing Or in_barang.Text <> Nothing Or in_supplier.Text <> Nothing Then

@@ -468,7 +468,7 @@
                 in_faktur.Text = "SO" & tgl & no.ToString("D4")
             ElseIf in_faktur.Text <> Nothing And bt_simpanjual.Text <> "Update" Then
                 If checkdata("data_penjualan_faktur", "'" & in_faktur.Text & "'", "faktur_kode") = True Then
-                    MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernnah diinputkan", "Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernah diinputkan", "Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     in_faktur.Focus()
                     Exit Sub
                 End If

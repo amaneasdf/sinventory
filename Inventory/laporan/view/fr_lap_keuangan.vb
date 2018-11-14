@@ -62,6 +62,7 @@ Public Class fr_lap_keuangan
                         End With
 
                     Case "k_daftarperk"
+                        Exit Sub
 
                     Case "k_jurnalumum"
                         repdatasource.Name = "ds_jurnalumum"

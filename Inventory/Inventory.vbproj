@@ -437,6 +437,12 @@
     <Compile Include="mn_pengaturan\fr_user_password.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.Designer.vb">
+      <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_persediaan\fr_stockop_list.Designer.vb">
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
     </Compile>
@@ -786,6 +792,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_persediaan\fr_stockopconfirm_dialog.resx">
+      <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stockop_list.resx">
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
