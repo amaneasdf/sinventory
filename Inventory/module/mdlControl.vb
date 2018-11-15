@@ -2094,7 +2094,7 @@ Module mdlControl
 
             Case "gudang"
                 q = "getDataMaster('gudang')"
-                p = "nama LIKE '{0}%' OR kode LIKE '{0}%' OR alamat LIKE '%{0}%' OR status LIKE '{0}%'"
+                p = "nama LIKE '%{0}%' OR kode LIKE '{0}%' OR alamat LIKE '%{0}%' OR status LIKE '{0}%'"
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "supplier"
@@ -2120,7 +2120,8 @@ Module mdlControl
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
             Case "perkiraan"
-                bs = populateDGVUserConTemp("getDataMaster('perkiraan')", "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
+                q = "getDataMaster('perkiraan')"
+                bs = populateDGVUserConTemp(q, "kode LIKE '%" & param & "%' OR nama LIKE '%" & param & "%'")
             Case "neracaawal"
                 Exit Sub
 

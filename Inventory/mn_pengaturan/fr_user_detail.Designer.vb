@@ -52,6 +52,7 @@ Partial Class fr_user_detail
         Me.Label7 = New System.Windows.Forms.Label()
         Me.cb_group = New System.Windows.Forms.ComboBox()
         Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.pb_usrimg = New System.Windows.Forms.PictureBox()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
@@ -75,13 +76,15 @@ Partial Class fr_user_detail
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.pb_usrimg = New System.Windows.Forms.PictureBox()
+        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.in_email = New System.Windows.Forms.TextBox()
+        Me.Label8 = New System.Windows.Forms.Label()
         Me.Panel4.SuspendLayout()
+        CType(Me.pb_usrimg, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        CType(Me.pb_usrimg, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'in_pass
@@ -194,7 +197,7 @@ Partial Class fr_user_detail
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(160, 83)
+        Me.Label2.Location = New System.Drawing.Point(160, 106)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(68, 13)
         Me.Label2.TabIndex = 12
@@ -321,7 +324,7 @@ Partial Class fr_user_detail
         Me.in_group_kode.BackColor = System.Drawing.Color.White
         Me.in_group_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_group_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_group_kode.Location = New System.Drawing.Point(250, 79)
+        Me.in_group_kode.Location = New System.Drawing.Point(250, 102)
         Me.in_group_kode.MaxLength = 2
         Me.in_group_kode.Name = "in_group_kode"
         Me.in_group_kode.Size = New System.Drawing.Size(68, 20)
@@ -387,7 +390,7 @@ Partial Class fr_user_detail
         Me.cb_group.BackColor = System.Drawing.Color.White
         Me.cb_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_group.FormattingEnabled = True
-        Me.cb_group.Location = New System.Drawing.Point(320, 79)
+        Me.cb_group.Location = New System.Drawing.Point(320, 102)
         Me.cb_group.Name = "cb_group"
         Me.cb_group.Size = New System.Drawing.Size(255, 21)
         Me.cb_group.TabIndex = 4
@@ -395,6 +398,9 @@ Partial Class fr_user_detail
         'Panel4
         '
         Me.Panel4.AutoScroll = True
+        Me.Panel4.Controls.Add(Me.in_email)
+        Me.Panel4.Controls.Add(Me.Label8)
+        Me.Panel4.Controls.Add(Me.CheckBox1)
         Me.Panel4.Controls.Add(Me.pb_usrimg)
         Me.Panel4.Controls.Add(Me.popPnl_barang)
         Me.Panel4.Controls.Add(Me.Label20)
@@ -442,11 +448,20 @@ Partial Class fr_user_detail
         Me.Panel4.Size = New System.Drawing.Size(779, 401)
         Me.Panel4.TabIndex = 0
         '
+        'pb_usrimg
+        '
+        Me.pb_usrimg.BackColor = System.Drawing.Color.Gainsboro
+        Me.pb_usrimg.Location = New System.Drawing.Point(12, 9)
+        Me.pb_usrimg.Name = "pb_usrimg"
+        Me.pb_usrimg.Size = New System.Drawing.Size(142, 182)
+        Me.pb_usrimg.TabIndex = 482
+        Me.pb_usrimg.TabStop = False
+        '
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
         Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(336, 129)
+        Me.popPnl_barang.Location = New System.Drawing.Point(387, 152)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(375, 119)
         Me.popPnl_barang.TabIndex = 481
@@ -484,7 +499,7 @@ Partial Class fr_user_detail
         'ck_edit_trans
         '
         Me.ck_edit_trans.AutoSize = True
-        Me.ck_edit_trans.Location = New System.Drawing.Point(352, 106)
+        Me.ck_edit_trans.Location = New System.Drawing.Point(352, 129)
         Me.ck_edit_trans.Name = "ck_edit_trans"
         Me.ck_edit_trans.Size = New System.Drawing.Size(133, 17)
         Me.ck_edit_trans.TabIndex = 6
@@ -494,7 +509,7 @@ Partial Class fr_user_detail
         'ck_edit_master
         '
         Me.ck_edit_master.AutoSize = True
-        Me.ck_edit_master.Location = New System.Drawing.Point(187, 106)
+        Me.ck_edit_master.Location = New System.Drawing.Point(187, 129)
         Me.ck_edit_master.Name = "ck_edit_master"
         Me.ck_edit_master.Size = New System.Drawing.Size(145, 17)
         Me.ck_edit_master.TabIndex = 5
@@ -504,7 +519,7 @@ Partial Class fr_user_detail
         'ck_valid_trans
         '
         Me.ck_valid_trans.AutoSize = True
-        Me.ck_valid_trans.Location = New System.Drawing.Point(352, 129)
+        Me.ck_valid_trans.Location = New System.Drawing.Point(352, 152)
         Me.ck_valid_trans.Name = "ck_valid_trans"
         Me.ck_valid_trans.Size = New System.Drawing.Size(137, 17)
         Me.ck_valid_trans.TabIndex = 8
@@ -514,7 +529,7 @@ Partial Class fr_user_detail
         'ck_valid_master
         '
         Me.ck_valid_master.AutoSize = True
-        Me.ck_valid_master.Location = New System.Drawing.Point(187, 129)
+        Me.ck_valid_master.Location = New System.Drawing.Point(187, 152)
         Me.ck_valid_master.Name = "ck_valid_master"
         Me.ck_valid_master.Size = New System.Drawing.Size(123, 17)
         Me.ck_valid_master.TabIndex = 7
@@ -527,7 +542,7 @@ Partial Class fr_user_detail
         Me.in_sales_n.Enabled = False
         Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_n.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_n.Location = New System.Drawing.Point(383, 173)
+        Me.in_sales_n.Location = New System.Drawing.Point(383, 196)
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(322, 20)
@@ -539,7 +554,7 @@ Partial Class fr_user_detail
         Me.in_sales_t.Enabled = False
         Me.in_sales_t.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_t.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_t.Location = New System.Drawing.Point(260, 195)
+        Me.in_sales_t.Location = New System.Drawing.Point(260, 218)
         Me.in_sales_t.MaxLength = 30
         Me.in_sales_t.Name = "in_sales_t"
         Me.in_sales_t.ReadOnly = True
@@ -550,7 +565,7 @@ Partial Class fr_user_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(186, 200)
+        Me.Label10.Location = New System.Drawing.Point(186, 223)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(31, 13)
         Me.Label10.TabIndex = 479
@@ -562,7 +577,7 @@ Partial Class fr_user_detail
         Me.in_sales.Enabled = False
         Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales.ForeColor = System.Drawing.Color.Black
-        Me.in_sales.Location = New System.Drawing.Point(260, 173)
+        Me.in_sales.Location = New System.Drawing.Point(260, 196)
         Me.in_sales.MaxLength = 30
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
@@ -573,7 +588,7 @@ Partial Class fr_user_detail
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(186, 178)
+        Me.Label9.Location = New System.Drawing.Point(186, 201)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(53, 13)
         Me.Label9.TabIndex = 479
@@ -582,7 +597,7 @@ Partial Class fr_user_detail
         'ck_sales
         '
         Me.ck_sales.AutoSize = True
-        Me.ck_sales.Location = New System.Drawing.Point(187, 153)
+        Me.ck_sales.Location = New System.Drawing.Point(187, 176)
         Me.ck_sales.Name = "ck_sales"
         Me.ck_sales.Size = New System.Drawing.Size(52, 17)
         Me.ck_sales.TabIndex = 9
@@ -694,14 +709,36 @@ Partial Class fr_user_detail
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data User"
         '
-        'pb_usrimg
+        'CheckBox1
         '
-        Me.pb_usrimg.BackColor = System.Drawing.Color.Gainsboro
-        Me.pb_usrimg.Location = New System.Drawing.Point(12, 9)
-        Me.pb_usrimg.Name = "pb_usrimg"
-        Me.pb_usrimg.Size = New System.Drawing.Size(142, 182)
-        Me.pb_usrimg.TabIndex = 482
-        Me.pb_usrimg.TabStop = False
+        Me.CheckBox1.AutoSize = True
+        Me.CheckBox1.Location = New System.Drawing.Point(517, 129)
+        Me.CheckBox1.Name = "CheckBox1"
+        Me.CheckBox1.Size = New System.Drawing.Size(133, 17)
+        Me.CheckBox1.TabIndex = 483
+        Me.CheckBox1.Text = "Edit/Update Transaksi"
+        Me.CheckBox1.UseVisualStyleBackColor = True
+        '
+        'in_email
+        '
+        Me.in_email.BackColor = System.Drawing.Color.White
+        Me.in_email.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_email.ForeColor = System.Drawing.Color.Black
+        Me.in_email.Location = New System.Drawing.Point(250, 79)
+        Me.in_email.Name = "in_email"
+        Me.in_email.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.in_email.Size = New System.Drawing.Size(325, 20)
+        Me.in_email.TabIndex = 484
+        '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(160, 82)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(32, 13)
+        Me.Label8.TabIndex = 485
+        Me.Label8.Text = "Email"
         '
         'fr_user_detail
         '
@@ -719,6 +756,7 @@ Partial Class fr_user_detail
         Me.Text = "Detail User : "
         Me.Panel4.ResumeLayout(False)
         Me.Panel4.PerformLayout()
+        CType(Me.pb_usrimg, System.ComponentModel.ISupportInitialize).EndInit()
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
@@ -726,7 +764,6 @@ Partial Class fr_user_detail
         Me.MenuStrip1.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        CType(Me.pb_usrimg, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -785,4 +822,7 @@ Partial Class fr_user_detail
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
     Friend WithEvents linkLbl_searchbarang As System.Windows.Forms.LinkLabel
     Friend WithEvents pb_usrimg As System.Windows.Forms.PictureBox
+    Friend WithEvents in_email As System.Windows.Forms.TextBox
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
 End Class

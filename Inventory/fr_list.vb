@@ -9,6 +9,7 @@
     Public search_sw As Boolean = True
     Public cancel_sw As Boolean = False
     Public bayar_sw As Boolean = False
+    Public valid_sw As Boolean = False
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -556,6 +557,7 @@
         mn_print.Visible = print_sw
         mn_bataljual.Visible = cancel_sw
         mn_bayar.Visible = bayar_sw
+        mn_validasi.Visible = valid_sw
     End Sub
 
     '---------------- CLOSE

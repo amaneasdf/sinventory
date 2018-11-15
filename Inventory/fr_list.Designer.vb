@@ -42,6 +42,7 @@ Partial Class fr_list
         Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_bayar = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -156,7 +157,7 @@ Partial Class fr_list
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual, Me.mn_bayar})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual, Me.mn_bayar, Me.mn_validasi})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
@@ -254,6 +255,12 @@ Partial Class fr_list
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
         Me.Panel2.TabIndex = 342
         '
+        'mn_validasi
+        '
+        Me.mn_validasi.Name = "mn_validasi"
+        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
+        Me.mn_validasi.Text = "Validasi"
+        '
         'fr_list
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -295,5 +302,6 @@ Partial Class fr_list
     Friend WithEvents mn_exportExcel As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_bayar As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_validasi As System.Windows.Forms.ToolStripMenuItem
 
 End Class

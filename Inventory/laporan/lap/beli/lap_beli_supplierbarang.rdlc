@@ -374,6 +374,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -413,6 +414,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -454,6 +456,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -495,6 +498,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -536,6 +540,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -577,6 +582,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -618,6 +624,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -907,6 +914,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -943,6 +951,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -981,6 +990,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1019,6 +1029,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1060,6 +1071,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1101,6 +1113,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1142,6 +1155,7 @@
                         <TopBorder>
                           <Style>Solid</Style>
                         </TopBorder>
+                        <BackgroundColor>LightGrey</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1153,7 +1167,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.2825cm</Height>
+              <Height>0.15cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -1444,6 +1458,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1482,6 +1497,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1520,6 +1536,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1558,6 +1575,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1599,6 +1617,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1640,6 +1659,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1681,6 +1701,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
+                        <BackgroundColor>Silver</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -2089,6 +2110,7 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -2232,7 +2254,7 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_beli_detail</DataSetName>
-        <Height>4.79146cm</Height>
+        <Height>4.65896cm</Height>
         <Width>19.82312cm</Width>
         <Style>
           <Border>
@@ -2241,7 +2263,7 @@
         </Style>
       </Tablix>
     </ReportItems>
-    <Height>1.8864in</Height>
+    <Height>1.83424in</Height>
     <Style />
   </Body>
   <Width>19.82312cm</Width>

@@ -403,6 +403,7 @@
     Public pgreturbeli = New TabPage() With {.Name = "pgreturbeli"}
     Public pgpenjualan = New TabPage() With {.Name = "pgpenjualan"}
     Public pgreturjual = New TabPage() With {.Name = "pgreturjual"}
+    Public pgpesanjual = New TabPage() With {.Name = "pgpesanjual"}
     Public pgdraftrekap = New TabPage() With {.Name = "pgdraftrekap"}
     Public pgdrafttagihan = New TabPage() With {.Name = "pgdrafttagihan"}
     Public pgstok = New TabPage() With {.Name = "pgstok"}
@@ -441,6 +442,7 @@
     Public frmreturbeli As New fr_list With {.Dock = DockStyle.Fill}
     Public frmpenjualan As New fr_list With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmpesanjual As New fr_list With {.Dock = DockStyle.Fill}
     Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
     'Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
     Public frmtagihan As New fr_draft_tagih With {.Dock = DockStyle.Fill}

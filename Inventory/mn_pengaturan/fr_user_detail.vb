@@ -9,7 +9,7 @@
                           & "(CASE " _
                           & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                           & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
-                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, user_gambar, " _
+                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, user_gambar, user_email, " _
                           & "user_allowedit_master, user_allowedit_trans, IF(user_login_status=1,'ON','OFF') as user_login_status, " _
                           & "user_login_terakhir, user_status, user_reg_date, user_reg_alias, user_upd_date, user_upd_alias " _
                           & "FROM data_pengguna_alias LEFT JOIN data_salesman_master ON salesman_kode=user_sales_kode " _
@@ -24,6 +24,7 @@
             in_pass.Text = "***********************"
             in_pass.UseSystemPasswordChar = True
             in_karyawan_nama.Text = rd.Item("user_nama")
+            in_email.Text = rd.Item("user_email")
             'level
             in_group_kode.Text = rd.Item("user_group")
             cb_group.SelectedValue = rd.Item("user_group")
@@ -71,9 +72,9 @@
 
         rd.Close()
         setStatus()
-        If url <> Nothing Then
-            pb_usrimg.Image = streamImgUrl(url)
-        End If
+        'If url <> Nothing Then
+        '    pb_usrimg.Image = streamImgUrl(url)
+        'End If
     End Sub
 
     Private Sub setStatus()
@@ -244,6 +245,7 @@
 
         data = {
             "user_nama='" & in_karyawan_nama.Text & "'",
+            "user_email='" & in_email.Text & "'",
             "user_group='" & in_group_kode.Text & "'",
             "user_validasi_master='" & IIf(ck_valid_master.Checked = True, 1, 0) & "'",
             "user_validasi_trans='" & IIf(ck_valid_trans.Checked = True, 1, 0) & "'",
