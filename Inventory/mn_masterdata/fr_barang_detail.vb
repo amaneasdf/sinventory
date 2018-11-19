@@ -188,8 +188,8 @@
             'GENNERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(barang_kode," & in_supplier.Text.Length & ") as ss FROM data_barang_master WHERE barang_kode LIKE '" & in_supplier.Text & "%' " _
-                          & "AND SUBSTRING(barang_kode," & in_supplier.Text.Length & ") REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
+                readcommd("SELECT SUBSTRING(barang_kode," & in_supplier.Text.Length + 1 & ") as ss FROM data_barang_master WHERE barang_kode LIKE '" & in_supplier.Text & "%' " _
+                          & "AND SUBSTRING(barang_kode," & in_supplier.Text.Length + 1 & ") REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If

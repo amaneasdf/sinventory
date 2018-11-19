@@ -46,7 +46,7 @@
     End Function
 
     Public Sub performRefresh()
-        Console.WriteLine(tabpagename.Name.ToString)
+        consoleWriteLine(tabpagename.Name.ToString)
         Me.Cursor = Cursors.AppStarting
         Select Case tabpagename.Name.ToString
             Case "pgbarang"
@@ -69,6 +69,8 @@
                 populateDGVUserCon("beli", "", frmpembelian.dgv_list)
             Case "pgreturbeli"
                 populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
+            Case "pgpesanjual"
+                populateDGVUserCon("pesanan", "", frmpesanjual.dgv_list)
             Case "pgpenjualan"
                 populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
             Case "pgreturjual"
@@ -152,6 +154,10 @@
                 Case "pgreturbeli"
                     Dim rb As New fr_beli_retur_detail
                     rb.Show(main)
+                Case "pgpesanjual"
+                    Dim rb As New fr_pesan_detail
+                    rb.Show(main)
+                    rb.doLoad(loggeduser.saleskode)
                 Case "pgpenjualan"
                     Dim jd As New fr_jual_detail
                     jd.Show(main)
@@ -285,6 +291,15 @@
                             .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
                             .Show(main)
+                        End With
+                    Case "pgpesanjual"
+                        Dim detail As New fr_pesan_detail
+                        With detail
+                            .bt_simpanjual.Text = "Update"
+                            .Text += "#" & dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                            .Show(main)
+                            .doLoad()
                         End With
                     Case "pgpenjualan"
                         Dim detail As New fr_jual_detail
@@ -503,6 +518,8 @@
                     populateDGVUserCon("beli", in_cari.Text, frmpembelian.dgv_list)
                 Case "pgreturbeli"
                     populateDGVUserCon("returbeli", in_cari.Text, frmreturbeli.dgv_list)
+                Case "pgpesanjual"
+                    populateDGVUserCon("pesanan", in_cari.Text, frmpesanjual.dgv_list)
                 Case "pgpenjualan"
                     populateDGVUserCon("jual", in_cari.Text, frmpenjualan.dgv_list)
                 Case "pgreturjual"
@@ -671,6 +688,24 @@
                 End If
 
             End With
+        End If
+    End Sub
+
+    Private Sub mn_validasi_Click(sender As Object, e As EventArgs) Handles mn_validasi.Click
+        If valid_sw = True Then
+            Select Case tabpagename.Name.ToString
+                Case "pgpesanjual"
+                    Dim detail As New fr_pesan_detail
+                    With detail
+                        .bt_simpanjual.Text = "Update"
+                        .lbl_title.Text = "Form Validasi Order Pembelian"
+                        .Text += "#" & dgv_list.SelectedRows.Item(0).Cells(0).Value
+                        .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                        .Show(main)
+                        .doLoad(, "valid")
+                    End With
+            End Select
+
         End If
     End Sub
 End Class

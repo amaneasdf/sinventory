@@ -41,8 +41,8 @@ Partial Class fr_list
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_bayar = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Panel2 = New System.Windows.Forms.Panel()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -243,6 +243,12 @@ Partial Class fr_list
         Me.mn_bayar.Text = "Bayar"
         Me.mn_bayar.Visible = False
         '
+        'mn_validasi
+        '
+        Me.mn_validasi.Name = "mn_validasi"
+        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
+        Me.mn_validasi.Text = "Validasi"
+        '
         'Panel2
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
@@ -254,12 +260,6 @@ Partial Class fr_list
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
         Me.Panel2.TabIndex = 342
-        '
-        'mn_validasi
-        '
-        Me.mn_validasi.Name = "mn_validasi"
-        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
-        Me.mn_validasi.Text = "Validasi"
         '
         'fr_list
         '

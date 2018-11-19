@@ -1197,6 +1197,8 @@ Module mdlControl
                 setListcode(pgpenjualan, type, frmpenjualan, "Daftar Data Penjualan")
             Case "returjual"
                 setListcode(pgreturjual, type, frmreturjual, "Daftar Data Retur Penjualan")
+            Case "pesanan"
+                setListcode(pgpesanjual, type, frmpesanjual, "Daftar Order Penjualan")
             Case "draftrekap"
                 With frmrekap
                     setDoubleBuffered(.dgv_listfaktur, True)
@@ -1578,6 +1580,65 @@ Module mdlControl
                     .dgv_list.Columns.AddRange(x)
 
                 End With
+
+            Case "pesanan"
+                With frmpesanjual
+                    Dim pesan_kode = New DataGridViewColumn
+                    Dim pesan_tanggal = New DataGridViewColumn
+                    Dim pesan_sales = New DataGridViewColumn
+                    Dim pesan_custo = New DataGridViewColumn
+                    Dim pesan_validstate = New DataGridViewColumn
+                    Dim pesan_total = New DataGridViewColumn
+                    Dim pesan_term = New DataGridViewColumn
+                    Dim pesan_user = New DataGridViewColumn
+                    Dim pesan_validdate = New DataGridViewColumn
+                    Dim pesan_validuser = New DataGridViewColumn
+                    Dim pesan_jualref = New DataGridViewColumn
+                    Dim pesan_andro = New DataGridViewColumn
+                    pesan_kode = gudang_kode.Clone()
+                    pesan_tanggal = jual_tgl.Clone()
+                    pesan_sales = jual_sales.Clone()
+                    pesan_custo = jual_custo.Clone()
+                    pesan_total = jual_total.Clone()
+                    pesan_term = gudang_status.Clone()
+                    pesan_validstate = gudang_status.Clone()
+                    pesan_validdate = jual_tgl.Clone()
+                    pesan_validuser = user_id.Clone()
+                    pesan_jualref = retur_jual_faktur.Clone()
+                    pesan_andro = gudang_status.Clone()
+                    pesan_user = user_id.Clone()
+
+                    pesan_kode.HeaderText = "ID Pesanan"
+                    pesan_total.HeaderText = "Nilai Pesanan"
+                    pesan_term.HeaderText = "Bayar"
+                    pesan_validdate.HeaderText = "Tgl Validasi"
+                    pesan_validuser.HeaderText = "By"
+                    pesan_andro.HeaderText = "InputFrom"
+
+                    pesan_term.DataPropertyName = "term"
+                    pesan_validdate.DataPropertyName = "valid_date"
+                    pesan_validuser.DataPropertyName = "valid_alias"
+                    pesan_andro.DataPropertyName = "input_source"
+
+                    pesan_kode.Width = 50
+                    pesan_term.Width = 60
+                    pesan_andro.Width = 60
+
+                    .valid_sw = loggeduser.validasi_trans
+                    .del_sw = False
+
+                    Dim x As DataGridViewColumn() = {pesan_kode, pesan_tanggal, pesan_sales, pesan_custo, pesan_total, pesan_term, pesan_validstate,
+                                                     pesan_validdate, pesan_validuser, pesan_andro, pesan_user}
+
+                    For i = 0 To x.Count - 1
+                        x(i).DisplayIndex = i
+                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
+                    Next
+
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
+                End With
+
             Case "jual"
                 With frmpenjualan
                     Dim jual_user = New DataGridViewColumn
@@ -2141,14 +2202,18 @@ Module mdlControl
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
-            Case "jualvalid"
-                q = "getTableTrans('jualvalid','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%'"
-                Dim pNumeric As String = "netto={0}"
+            Case "pesanan"
+                q = "getTableTrans('pesanan','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
+                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '%{0}%' OR tanggal LIKE '%{0}%' OR custo LIKE '%{0}%' OR valid_date LIKE '%{0}%' " _
+                                         & "OR input_source LIKE '{0}%' OR term LIKE '{0}%'"
+                Dim pNumeric As String = "total={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
-                Exit Sub
+
+                colsort = dgv.Columns(1)
+                dirsort = System.ComponentModel.ListSortDirection.Descending
+                'Exit Sub
 
             Case "jual"
                 q = "getTableTrans('jual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
@@ -2348,6 +2413,8 @@ Module mdlControl
                 fr = frmpembelian
             Case "pgreturbeli"
                 fr = frmreturbeli
+            Case "pgpesanjual"
+                fr = frmpesanjual
             Case "pgpenjualan"
                 fr = frmpenjualan
             Case "pgreturjual"

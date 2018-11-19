@@ -2,6 +2,7 @@
     Private cstStatus As String = "1"
 
     Private Sub loadDataCusto(kode As String)
+        Dim q As String = ""
         op_con()
         readcommd("SELECT * FROM data_customer_master WHERE customer_kode='" & kode & "'")
         If rd.HasRows Then
@@ -9,6 +10,7 @@
             in_nama_custo.Text = rd.Item("customer_nama")
             cstStatus = rd.Item("customer_status")
             cb_tipe.SelectedValue = rd.Item("customer_jenis")
+            cb_area.SelectedValue = rd.Item("customer_area")
             in_alamat_custo.Text = rd.Item("customer_alamat")
             in_alamat_blok.Text = rd.Item("customer_alamat_blok")
             in_alamat_no.Text = rd.Item("customer_alamat_nomor")
@@ -129,6 +131,7 @@
 
         data1 = {
             "customer_jenis='" & cb_tipe.SelectedValue & "'",
+            "customer_area='" & cb_area.SelectedValue & "'",
             "customer_nama='" & in_nama_custo.Text & "'",
             "customer_alamat='" & in_alamat_custo.Text & "'",
             "customer_alamat_blok='" & in_alamat_blok.Text & "'",
@@ -162,14 +165,14 @@
             'GENNERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
-                readcommd("SELECT RIGHT(customer_kode,7) as ss FROM data_customer_master WHERE customer_kode LIKE 'CT%' " _
-                          & "AND RIGHT(customer_kode,7) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
+                readcommd("SELECT RIGHT(customer_kode,6) as ss FROM data_customer_master WHERE customer_kode LIKE 'CT%' " _
+                          & "AND RIGHT(customer_kode,6) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If
                 rd.Close()
 
-                in_kode.Text = "CT" & no.ToString("D7")
+                in_kode.Text = "CT" & no.ToString("D6")
             Else
                 in_kode.Text = Trim(in_kode.Text)
                 If checkdata("data_customer_master", "'" & in_kode.Text & "'", "customer_kode") Then
@@ -278,6 +281,12 @@
             .SelectedIndex = 0
         End With
 
+        With cb_area
+            .DataSource = jenis("areacusto")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+
         setStatus()
 
         op_con()
@@ -304,6 +313,12 @@
             Exit Sub
         End If
 
+        If cb_area.SelectedValue = Nothing Or Trim(in_alamat_kabupaten.Text) = Nothing Then
+            MessageBox.Show("Area/Kabupaten belum di input")
+            cb_tipe.Focus()
+            Exit Sub
+        End If
+
         If MessageBox.Show("Simpan data customer?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             saveData()
         End If
@@ -320,7 +335,7 @@
     End Sub
 
     '----------------- cb disable input
-    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_diskon.KeyPress, cb_diskon.KeyPress
+    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_diskon.KeyPress, cb_diskon.KeyPress, cb_area.KeyPress
         If e.KeyChar <> ControlChars.Cr Then
             e.Handled = True
         End If
@@ -361,8 +376,31 @@
     End Sub
 
     Private Sub cb_tipe_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_tipe.KeyUp
+        keyshortenter(cb_area, e)
+    End Sub
+
+    Private Sub cb_area_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_area.SelectedValueChanged
+
+        Dim q As String = "SELECT ref_kab_nama FROM data_customer_area " _
+                          & "LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
+                          & "WHERE c_area_id='{0}'"
+        Dim _ret As String = ""
+
+        op_con()
+        readcommd(String.Format(q, cb_area.SelectedValue))
+        If rd.HasRows Then
+            _ret = rd.Item(0)
+        End If
+        rd.Close()
+
+        in_alamat_kabupaten.Text = _ret
+        in_alamat_kecamatan.Text = cb_area.Text
+    End Sub
+
+    Private Sub cb_area_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_area.KeyUp
         keyshortenter(in_telpcusto, e)
     End Sub
+
 
     Private Sub in_telpcusto_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telpcusto.KeyUp
         keyshortenter(in_faxcusto, e)

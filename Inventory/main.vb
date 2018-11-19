@@ -27,6 +27,8 @@
                 createTabPage(pgpembelian, type, frmpembelian, "Daftar Pembelian")
             Case "returbeli"
                 createTabPage(pgreturbeli, type, frmreturbeli, "Retur Pembelian")
+            Case "pesanan"
+                createTabPage(pgpesanjual, type, frmpesanjual, "Order Penjualan")
             Case "jual"
                 createTabPage(pgpenjualan, type, frmpenjualan, "Daftar Penjualan")
             Case "returjual"
@@ -221,7 +223,8 @@
         Do While rd.Read
             MenuKode = rd.Item("menu_kode")
             MenuLabel = rd.Item("menu_label").ToString
-            MenuText = Mid(MenuKode, 3, 20) & ". " & MenuLabel
+            'MenuText = Mid(MenuKode, 3, 20) & ". " & MenuLabel
+            MenuText = MenuLabel
             If Len(MenuKode) = 4 Then
                 Dim MenuItem As New ToolStripMenuItem(MenuLabel)
                 ParentMenu = MenuItem
@@ -312,6 +315,9 @@
             Case "mn020204"
                 Console.WriteLine("click draft rekap nota/barang")
                 openTab("draftrekap")
+            Case "mn020206"
+                Console.WriteLine("click pesanan")
+                openTab("pesanan")
             Case "mn0301"
                 Console.WriteLine("click stok awal")
                 openTab("stok")

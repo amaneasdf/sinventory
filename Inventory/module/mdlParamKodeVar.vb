@@ -89,22 +89,32 @@
         Select Case tipe
             Case "satuan"
                 dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
+
+            Case "term"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Cash", "0")
+                dt.Rows.Add("Tempo", "1")
+
             Case "transbeli"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("Pembelian", "'BELI'")
                 dt.Rows.Add("Retur Pembelian", "'RETUR'")
                 dt.Rows.Add("Beli & Retur Beli", "'BELI','RETUR'")
+
             Case "transjual"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("Penjualan", "'JUAL'")
                 dt.Rows.Add("Retur Penjualan", "'RETUR'")
                 dt.Rows.Add("Jual & Retur Jual", "'JUAL','RETUR'")
+
             Case "periode"
                 dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
                                         & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
                                         & "FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id<>0")
+
             Case "bayarhutang"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
@@ -114,6 +124,7 @@
                 dt.Rows.Add("TransferBank", "TRANSFER")
                 dt.Rows.Add("ReturPembelian", "RETUR")
                 dt.Rows.Add("PiutangSupplier", "PIUTSUPL")
+
             Case "bayarpiutang"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
@@ -123,7 +134,19 @@
                 dt.Rows.Add("TransferBank", "TRANSFER")
                 dt.Rows.Add("ReturPenjualan", "RETUR")
 
+            Case "validasi"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Approve", "1")
+                dt.Rows.Add("Tolak", "2")
+
+            Case "areacustokab"
+                q = "SELECT ref_kab_id as 'Value', ref_kab_nama as 'Text FROM ref_area_kabupaten WHERE ref_kab_status=1"
+                dt = getDataTablefromDB(q)
+
             Case "areacusto"
+                q = "SELECT c_area_id as 'Value',c_area_nama as 'Text' FROM data_customer_area WHERE c_area_status=1"
+                dt = getDataTablefromDB(q)
 
             Case Else
                 dt = Nothing
@@ -241,19 +264,6 @@
         Return dt
     End Function
 
-    'jenisBayarRetur
-    Public Function jenisBayarRetur() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Potong Nota", "1")
-        dt.Rows.Add("Tunai", "2")
-        dt.Rows.Add("Titip", "3")
-
-        Return dt
-    End Function
-
     'jenisBayar
     Public Function jenisBayar(tipe As String) As DataTable
         Dim dt As New DataTable
@@ -284,58 +294,6 @@
         Return dt
     End Function
 
-    'jenisJual -> gak guna, cuma untuk otomatisasi no.faktur
-    Public Function jenisJual() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Otomatis", "1")
-        dt.Rows.Add("Manual", "0")
-
-        Return dt
-    End Function
-
-    'statususer
-    Public Function statusUser() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        'dt.Rows.Add("Setup", 0)
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Blokir", 2)
-        dt.Rows.Add("Delete", 9)
-
-        Return dt
-    End Function
-
-    'statusgudang
-    Public Function statusGudang() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Non Aktif", 2)
-        dt.Rows.Add("Delete", 9)
-
-        Return dt
-    End Function
-
-    'statusbarang
-    Public Function statusBarang() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Non Aktif", 2)
-        dt.Rows.Add("Delete", 9)
-
-        Return dt
-    End Function
-
     'statuspajakbarang
     Public Function statusBarangPajak() As DataTable
         Dim dt As New DataTable
@@ -346,45 +304,6 @@
         dt.Rows.Add("PPn 10% Excluded", 2)
         'dt.Rows.Add("PPnBM", 2)
         dt.Rows.Add("Non Pajak", 0)
-
-        Return dt
-    End Function
-
-    'statussales
-    Public Function statusSales() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Non Aktif", 2)
-        dt.Rows.Add("Delete", 9)
-
-        Return dt
-    End Function
-
-    'statussupplier
-    Public Function statusSupplier() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Non Aktif", 2)
-        dt.Rows.Add("Delete", 9)
-
-        Return dt
-    End Function
-
-    'statuscusto
-    Public Function statusCusto() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("Aktif", 1)
-        dt.Rows.Add("Non Aktif", 2)
-        dt.Rows.Add("Delete", 9)
 
         Return dt
     End Function
@@ -425,6 +344,7 @@
     Public pglap = New TabPage() With {.Name = "pglap"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
+    Public pgref = New TabPage() With {.Name = "pgref"}
     'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
     'Public pgsatuanbarang = New TabPage() With {.Name = "pgsatuanbarang"}
 
@@ -465,6 +385,7 @@
     Public frmtutupbuku As New fr_tutup_buku With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmref As New fr_data_referensi With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang
     Public frmsatuanbarang As New fr_jenis_barang
 
