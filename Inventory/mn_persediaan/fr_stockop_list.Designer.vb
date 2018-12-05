@@ -84,6 +84,7 @@ Partial Class fr_stockop_list
         Me.Label2 = New System.Windows.Forms.Label()
         Me.in_cari = New System.Windows.Forms.TextBox()
         Me.pnl_container = New System.Windows.Forms.Panel()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.lbl_bttmpad = New System.Windows.Forms.Label()
         Me.in_ket = New System.Windows.Forms.TextBox()
@@ -94,7 +95,6 @@ Partial Class fr_stockop_list
         Me.bt_tbbarang = New System.Windows.Forms.Button()
         Me.bt_sidepnl_sw = New System.Windows.Forms.Button()
         Me.pnl_side = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.in_hpp, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.popPnl_barang.SuspendLayout()
@@ -253,10 +253,10 @@ Partial Class fr_stockop_list
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(87, 409)
+        Me.txtRegAlias.Location = New System.Drawing.Point(567, 339)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
-        Me.txtRegAlias.Size = New System.Drawing.Size(170, 20)
+        Me.txtRegAlias.Size = New System.Drawing.Size(107, 20)
         Me.txtRegAlias.TabIndex = 320
         Me.txtRegAlias.TabStop = False
         '
@@ -276,7 +276,7 @@ Partial Class fr_stockop_list
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(3, 412)
+        Me.Label27.Location = New System.Drawing.Point(508, 342)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(39, 13)
         Me.Label27.TabIndex = 322
@@ -296,10 +296,10 @@ Partial Class fr_stockop_list
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(259, 431)
+        Me.txtUpdDate.Location = New System.Drawing.Point(676, 361)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
-        Me.txtUpdDate.Size = New System.Drawing.Size(237, 20)
+        Me.txtUpdDate.Size = New System.Drawing.Size(178, 20)
         Me.txtUpdDate.TabIndex = 318
         Me.txtUpdDate.TabStop = False
         '
@@ -317,10 +317,10 @@ Partial Class fr_stockop_list
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(87, 431)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(567, 361)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
-        Me.txtUpdAlias.Size = New System.Drawing.Size(170, 20)
+        Me.txtUpdAlias.Size = New System.Drawing.Size(107, 20)
         Me.txtUpdAlias.TabIndex = 323
         Me.txtUpdAlias.TabStop = False
         '
@@ -337,10 +337,10 @@ Partial Class fr_stockop_list
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(259, 409)
+        Me.txtRegdate.Location = New System.Drawing.Point(676, 339)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
-        Me.txtRegdate.Size = New System.Drawing.Size(237, 20)
+        Me.txtRegdate.Size = New System.Drawing.Size(178, 20)
         Me.txtRegdate.TabIndex = 319
         Me.txtRegdate.TabStop = False
         '
@@ -362,7 +362,7 @@ Partial Class fr_stockop_list
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(3, 434)
+        Me.Label28.Location = New System.Drawing.Point(508, 364)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(59, 13)
         Me.Label28.TabIndex = 325
@@ -775,6 +775,17 @@ Partial Class fr_stockop_list
         Me.pnl_container.Size = New System.Drawing.Size(737, 467)
         Me.pnl_container.TabIndex = 0
         '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label1.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label1.Location = New System.Drawing.Point(9, 311)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(72, 13)
+        Me.Label1.TabIndex = 338
+        Me.Label1.Text = "Keterangan"
+        '
         'Label10
         '
         Me.Label10.AutoSize = True
@@ -791,7 +802,7 @@ Partial Class fr_stockop_list
         Me.lbl_bttmpad.AutoSize = True
         Me.lbl_bttmpad.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_bttmpad.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.lbl_bttmpad.Location = New System.Drawing.Point(564, 474)
+        Me.lbl_bttmpad.Location = New System.Drawing.Point(564, 409)
         Me.lbl_bttmpad.Name = "lbl_bttmpad"
         Me.lbl_bttmpad.Size = New System.Drawing.Size(0, 13)
         Me.lbl_bttmpad.TabIndex = 335
@@ -811,10 +822,10 @@ Partial Class fr_stockop_list
         'txtProcAlias
         '
         Me.txtProcAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtProcAlias.Location = New System.Drawing.Point(87, 453)
+        Me.txtProcAlias.Location = New System.Drawing.Point(567, 383)
         Me.txtProcAlias.Name = "txtProcAlias"
         Me.txtProcAlias.ReadOnly = True
-        Me.txtProcAlias.Size = New System.Drawing.Size(170, 20)
+        Me.txtProcAlias.Size = New System.Drawing.Size(107, 20)
         Me.txtProcAlias.TabIndex = 332
         Me.txtProcAlias.TabStop = False
         '
@@ -823,7 +834,7 @@ Partial Class fr_stockop_list
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(3, 456)
+        Me.Label8.Location = New System.Drawing.Point(508, 386)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(41, 13)
         Me.Label8.TabIndex = 333
@@ -832,10 +843,10 @@ Partial Class fr_stockop_list
         'txtProcDate
         '
         Me.txtProcDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtProcDate.Location = New System.Drawing.Point(259, 453)
+        Me.txtProcDate.Location = New System.Drawing.Point(676, 383)
         Me.txtProcDate.Name = "txtProcDate"
         Me.txtProcDate.ReadOnly = True
-        Me.txtProcDate.Size = New System.Drawing.Size(237, 20)
+        Me.txtProcDate.Size = New System.Drawing.Size(178, 20)
         Me.txtProcDate.TabIndex = 331
         Me.txtProcDate.TabStop = False
         '
@@ -888,17 +899,6 @@ Partial Class fr_stockop_list
         Me.pnl_side.Name = "pnl_side"
         Me.pnl_side.Size = New System.Drawing.Size(26, 467)
         Me.pnl_side.TabIndex = 249
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label1.Location = New System.Drawing.Point(9, 311)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(72, 13)
-        Me.Label1.TabIndex = 338
-        Me.Label1.Text = "Keterangan"
         '
         'fr_stockop_list
         '

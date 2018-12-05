@@ -30,9 +30,6 @@ Partial Class main
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.pnl_main = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.lb_periodeselector = New System.Windows.Forms.ListBox()
-        Me.bt_setperiode = New System.Windows.Forms.Button()
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.cal_front = New System.Windows.Forms.MonthCalendar()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
@@ -40,6 +37,7 @@ Partial Class main
         Me.strip_tgl = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_host = New System.Windows.Forms.ToolStripStatusLabel()
         Me.strip_periode = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.strip_status = New System.Windows.Forms.ToolStripStatusLabel()
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
@@ -136,9 +134,6 @@ Partial Class main
         'Panel1
         '
         Me.Panel1.AutoScroll = True
-        Me.Panel1.Controls.Add(Me.Label1)
-        Me.Panel1.Controls.Add(Me.lb_periodeselector)
-        Me.Panel1.Controls.Add(Me.bt_setperiode)
         Me.Panel1.Controls.Add(Me.ListView1)
         Me.Panel1.Controls.Add(Me.cal_front)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Right
@@ -146,32 +141,6 @@ Partial Class main
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(251, 560)
         Me.Panel1.TabIndex = 1
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(10, 190)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(69, 13)
-        Me.Label1.TabIndex = 4
-        Me.Label1.Text = "Periode Data"
-        '
-        'lb_periodeselector
-        '
-        Me.lb_periodeselector.FormattingEnabled = True
-        Me.lb_periodeselector.Location = New System.Drawing.Point(13, 206)
-        Me.lb_periodeselector.Name = "lb_periodeselector"
-        Me.lb_periodeselector.Size = New System.Drawing.Size(227, 95)
-        Me.lb_periodeselector.TabIndex = 3
-        '
-        'bt_setperiode
-        '
-        Me.bt_setperiode.Location = New System.Drawing.Point(13, 303)
-        Me.bt_setperiode.Name = "bt_setperiode"
-        Me.bt_setperiode.Size = New System.Drawing.Size(227, 23)
-        Me.bt_setperiode.TabIndex = 2
-        Me.bt_setperiode.Text = "bt_setperiode"
-        Me.bt_setperiode.UseVisualStyleBackColor = True
         '
         'ListView1
         '
@@ -195,7 +164,7 @@ Partial Class main
         'StatusStrip1
         '
         Me.StatusStrip1.BackColor = System.Drawing.Color.White
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl, Me.strip_host, Me.strip_periode})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl, Me.strip_host, Me.strip_periode, Me.strip_status})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 656)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(969, 25)
@@ -232,6 +201,12 @@ Partial Class main
         Me.strip_periode.Size = New System.Drawing.Size(85, 20)
         Me.strip_periode.Text = "xxxxxxx 0000"
         '
+        'strip_status
+        '
+        Me.strip_status.Name = "strip_status"
+        Me.strip_status.Size = New System.Drawing.Size(99, 20)
+        Me.strip_status.Text = "Status Input : xxxx"
+        '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -255,7 +230,6 @@ Partial Class main
         Me.tabcontrol.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
-        Me.Panel1.PerformLayout()
         Me.StatusStrip1.ResumeLayout(False)
         Me.StatusStrip1.PerformLayout()
         Me.ResumeLayout(False)
@@ -274,10 +248,8 @@ Partial Class main
     Friend WithEvents strip_periode As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents pnl_main As System.Windows.Forms.Panel
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
-    Friend WithEvents bt_setperiode As System.Windows.Forms.Button
-    Friend WithEvents Label1 As System.Windows.Forms.Label
-    Friend WithEvents lb_periodeselector As System.Windows.Forms.ListBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
+    Friend WithEvents strip_status As System.Windows.Forms.ToolStripStatusLabel
 
 End Class

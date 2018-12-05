@@ -30,7 +30,7 @@
         Dim bs As New BindingSource
         Dim q As String = "SELECT stock_barang as kode, barang_nama as nama " _
                           & "FROM data_stok_awal LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
-                          & "WHERE stock_gudang='" & gudang & "' AND stock_periode='" & selectperiode.id & "' AND stock_status=1"
+                          & "WHERE stock_gudang='" & gudang & "' AND stock_status=1"
 
         bs.DataSource = getDataTablefromDB(q)
         bs.Filter = "kode LIKE '" & param & "%' OR nama LIKE '" & param & "%'"
@@ -64,14 +64,14 @@
             For Each x As DataRow In dt.Rows
                 Dim y As Integer = .Add
                 With .Item(y)
-                    .Cells("kartu_tgl").Value = x.ItemArray(3)
-                    .Cells("kartu_faktur").Value = x.ItemArray(8)
-                    .Cells("kartu_ket").Value = x.ItemArray(9)
-                    .Cells("kartu_ket2").Value = x.ItemArray(10)
-                    .Cells("kartu_debet").Value = x.ItemArray(11)
-                    .Cells("kartu_kredit").Value = x.ItemArray(12)
-                    .Cells("kartu_saldo").Value = x.ItemArray(13)
-                    .Cells("kartu_nilai").Value = x.ItemArray(14)
+                    .Cells("kartu_tgl").Value = x.ItemArray(2)
+                    .Cells("kartu_faktur").Value = x.ItemArray(7)
+                    .Cells("kartu_ket").Value = x.ItemArray(8)
+                    .Cells("kartu_ket2").Value = x.ItemArray(9)
+                    .Cells("kartu_debet").Value = x.ItemArray(10)
+                    .Cells("kartu_kredit").Value = x.ItemArray(11)
+                    .Cells("kartu_saldo").Value = x.ItemArray(12)
+                    .Cells("kartu_nilai").Value = x.ItemArray(13)
                 End With
             Next
         End With

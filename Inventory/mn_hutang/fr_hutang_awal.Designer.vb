@@ -394,11 +394,11 @@ Partial Class fr_hutang_awal
         Me.ref.HeaderText = "Ref"
         Me.ref.Name = "ref"
         Me.ref.ReadOnly = True
-        Me.ref.Width = 150
+        Me.ref.Width = 125
         '
         'status
         '
-        Me.status.DataPropertyName = "piutang_status"
+        Me.status.DataPropertyName = "hutang_status"
         Me.status.HeaderText = "Status"
         Me.status.Name = "status"
         Me.status.ReadOnly = True

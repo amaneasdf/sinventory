@@ -20,39 +20,6 @@
     '-----------------set periode
     Private Sub bt_set_periode_Click(sender As Object, e As EventArgs) Handles bt_set_periode.Click
         setperiode(cal_periode.SelectionRange.Start)
-        'Dim x As Date = cal_periode.SelectionRange.Start
-        'selectedperiode = DateSerial(x.Year, x.Month, 1)
-        'main.strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
-
-        ''TODO:REFRESH TAB
-        'Dim tbpg As TabPage() = {
-        '    pgstockop,
-        '    pgstok,
-        '    pgpembelian,
-        '    pgpenjualan,
-        '    pgreturbeli,
-        '    pgreturjual,
-        '    pgmutasigudang,
-        '    pgmutasistok,
-        '    pghutangawal,
-        '    pghutangbayar,
-        '    pghutangbgo,
-        '    pgpiutangawal,
-        '    pgpiutangbayar,
-        '    pgpiutangbgcair,
-        '    pgpiutangbgtolak,
-        '    pgkas,
-        '    pgjurnalmemorial,
-        '    pgjurnalumum,
-        '    pgkartustok
-        '    }
-        'For Each y As TabPage In tbpg
-        '    If main.tabcontrol.Contains(y) = True Then
-        '        refreshTabPage(y.Name.ToString)
-        '    End If
-        'Next
-
-        'TODO : SET MAX/MIN TANGGAL TRANSAKSI BASED ON PERIODE <- code on each form?
         Me.Close()
     End Sub
 End Class

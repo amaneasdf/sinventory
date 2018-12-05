@@ -23,6 +23,7 @@ Partial Class fr_lap_keuangan
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim ReportDataSource1 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_lap_keuangan))
         Me.rv_nota = New Microsoft.Reporting.WinForms.ReportViewer()
         Me.DataGridView1 = New System.Windows.Forms.DataGridView()
         Me.ds_keuangan = New Inventory.ds_keuangan()
@@ -68,6 +69,7 @@ Partial Class fr_lap_keuangan
         Me.ClientSize = New System.Drawing.Size(818, 524)
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.rv_nota)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "fr_lap_keuangan"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized

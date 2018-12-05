@@ -242,6 +242,7 @@ Partial Class fr_lap_filter_piutang
         Me.cb_periode.Name = "cb_periode"
         Me.cb_periode.Size = New System.Drawing.Size(316, 21)
         Me.cb_periode.TabIndex = 423
+        Me.cb_periode.Visible = False
         '
         'lbl_periode
         '
@@ -252,6 +253,7 @@ Partial Class fr_lap_filter_piutang
         Me.lbl_periode.Size = New System.Drawing.Size(43, 13)
         Me.lbl_periode.TabIndex = 424
         Me.lbl_periode.Text = "Periode"
+        Me.lbl_periode.Visible = False
         '
         'in_faktur
         '
@@ -359,10 +361,11 @@ Partial Class fr_lap_filter_piutang
         'lbl_periodedata
         '
         Me.lbl_periodedata.AutoSize = True
-        Me.lbl_periodedata.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.ForeColor = System.Drawing.Color.MidnightBlue
         Me.lbl_periodedata.Location = New System.Drawing.Point(8, 210)
         Me.lbl_periodedata.Name = "lbl_periodedata"
-        Me.lbl_periodedata.Size = New System.Drawing.Size(43, 13)
+        Me.lbl_periodedata.Size = New System.Drawing.Size(48, 15)
         Me.lbl_periodedata.TabIndex = 430
         Me.lbl_periodedata.Text = "Periode"
         '

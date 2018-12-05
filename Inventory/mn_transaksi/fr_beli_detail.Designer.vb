@@ -357,7 +357,7 @@ Partial Class fr_beli_detail
         Me.in_klaim.DecimalPlaces = 2
         Me.in_klaim.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_klaim.Increment = New Decimal(New Integer() {100, 0, 0, 0})
-        Me.in_klaim.Location = New System.Drawing.Point(798, 461)
+        Me.in_klaim.Location = New System.Drawing.Point(798, 464)
         Me.in_klaim.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_klaim.Name = "in_klaim"
         Me.in_klaim.Size = New System.Drawing.Size(198, 22)
@@ -368,10 +368,11 @@ Partial Class fr_beli_detail
         'Label19
         '
         Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.Location = New System.Drawing.Point(745, 464)
+        Me.Label19.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label19.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label19.Location = New System.Drawing.Point(745, 466)
         Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(46, 16)
+        Me.Label19.Size = New System.Drawing.Size(46, 18)
         Me.Label19.TabIndex = 342
         Me.Label19.Text = "Klaim"
         '
@@ -379,13 +380,13 @@ Partial Class fr_beli_detail
         '
         Me.in_total_netto.BackColor = System.Drawing.Color.White
         Me.in_total_netto.Cursor = System.Windows.Forms.Cursors.Default
-        Me.in_total_netto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_total_netto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_total_netto.ForeColor = System.Drawing.Color.Black
-        Me.in_total_netto.Location = New System.Drawing.Point(798, 486)
+        Me.in_total_netto.Location = New System.Drawing.Point(798, 489)
         Me.in_total_netto.MaxLength = 20
         Me.in_total_netto.Name = "in_total_netto"
         Me.in_total_netto.ReadOnly = True
-        Me.in_total_netto.Size = New System.Drawing.Size(198, 22)
+        Me.in_total_netto.Size = New System.Drawing.Size(198, 25)
         Me.in_total_netto.TabIndex = 32
         Me.in_total_netto.TabStop = False
         Me.in_total_netto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -393,10 +394,11 @@ Partial Class fr_beli_detail
         'Label18
         '
         Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.Location = New System.Drawing.Point(745, 489)
+        Me.Label18.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label18.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label18.Location = New System.Drawing.Point(745, 492)
         Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(39, 16)
+        Me.Label18.Size = New System.Drawing.Size(33, 18)
         Me.Label18.TabIndex = 343
         Me.Label18.Text = "Sisa"
         '
@@ -429,13 +431,13 @@ Partial Class fr_beli_detail
         '
         Me.in_netto.BackColor = System.Drawing.Color.White
         Me.in_netto.Cursor = System.Windows.Forms.Cursors.Default
-        Me.in_netto.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_netto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_netto.ForeColor = System.Drawing.Color.Black
         Me.in_netto.Location = New System.Drawing.Point(798, 436)
         Me.in_netto.MaxLength = 20
         Me.in_netto.Name = "in_netto"
         Me.in_netto.ReadOnly = True
-        Me.in_netto.Size = New System.Drawing.Size(198, 22)
+        Me.in_netto.Size = New System.Drawing.Size(198, 25)
         Me.in_netto.TabIndex = 30
         Me.in_netto.TabStop = False
         Me.in_netto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -443,10 +445,11 @@ Partial Class fr_beli_detail
         'Label17
         '
         Me.Label17.AutoSize = True
-        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.ForeColor = System.Drawing.Color.MidnightBlue
         Me.Label17.Location = New System.Drawing.Point(745, 439)
         Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(45, 16)
+        Me.Label17.Size = New System.Drawing.Size(47, 18)
         Me.Label17.TabIndex = 192
         Me.Label17.Text = "Netto"
         '
@@ -1179,7 +1182,6 @@ Partial Class fr_beli_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalbeli
         Me.ClientSize = New System.Drawing.Size(1003, 601)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.cb_sat)

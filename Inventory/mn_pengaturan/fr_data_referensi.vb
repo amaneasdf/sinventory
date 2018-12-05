@@ -22,6 +22,12 @@
                     & "FROM data_customer_area LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
                     & "WHERE c_area_status=1"
                 dgv = dgv_listarea
+            Case "satbrg"
+                q = "SELECT satuan_kode as 'Kode', satuan_nama as 'Nama Satuan', satuan_keterangan as 'Keterangan' " _
+                    & "FROM ref_satuan WHERE satuan_status=1"
+                dgv = dgv_listsat
+            Case Else
+                Exit Sub
         End Select
 
         dt = getDataTablefromDB(q)
@@ -33,14 +39,22 @@
         End With
     End Sub
 
+    '---------------- CLOSE
+    Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        main.tabcontrol.TabPages.Remove(tabpagename)
+    End Sub
+
     Public Sub doLoad()
-        If pnl_fl_container.Visible = True Then
+        If pnl_areacusto.Visible = True Then
             With cb_area
                 .DataSource = jenis("areacustokab")
                 .ValueMember = "Value"
                 .DisplayMember = "Text"
             End With
             loadDgv("custoarea")
+        End If
+        If pnl_satbrg.Visible = True Then
+            loadDgv("satbrg")
         End If
     End Sub
 End Class

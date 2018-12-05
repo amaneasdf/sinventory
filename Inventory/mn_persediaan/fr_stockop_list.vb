@@ -22,15 +22,21 @@
     End Sub
 
     Public Sub performRefresh(Optional pass As Boolean = False)
+        With date_tgl_beli
+            .MinDate = DateSerial(1990, 1, 1)
+            .MaxDate = DateSerial(2100, 12, 31)
+            .MinDate = selectperiode.tglawal
+            .MaxDate = selectperiode.tglakhir
+        End With
         in_cari.Clear()
         tblStatus = 0
         searchData("", pass)
         in_countdata.Text = dgv_list.Rows.Count
-        With date_tgl_beli
-            .MinDate = selectperiode.tglawal
-            .MaxDate = selectperiode.tglakhir
-        End With
-        clearAll()
+        If selectperiode.closed = True Then
+            mn_tambah.Enabled = False
+            mn_edit.Enabled = False
+            mn_proses.Enabled = False
+        End If
     End Sub
 
     Private Sub loadData(kode As String)
@@ -97,9 +103,9 @@
         Select Case tblStatus
             Case 0
                 in_status.Text = "Pending"
-                mn_proses.Enabled = True
-                mn_hapus.Enabled = True
-                mn_edit.Enabled = True
+                mn_proses.Enabled = If(selectperiode.closed = False, True, False)
+                mn_hapus.Enabled = If(selectperiode.closed = False, True, False)
+                mn_edit.Enabled = If(selectperiode.closed = False, True, False)
             Case 1
                 in_status.Text = "Terproses"
                 'mn_proses.Enabled = False
@@ -125,8 +131,7 @@
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getSisaStock('{0}',barang_kode,'{1}') as 'SisaStok', " _
                     & "getHPPAVG(barang_kode,'{2}','{0}') as 'HPP', barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
-                    & "WHERE stock_periode='{0}' AND stock_gudang='{1}' " _
-                    & "AND barang_nama LIKE '{3}%'"
+                    & "WHERE stock_gudang='{1}' AND barang_nama LIKE '{3}%'"
                 q = String.Format(q, selectperiode.id, in_gudang.Text, date_tgl_beli.Value.ToString("yyyy-MM-dd"), "{0}")
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 " _
@@ -296,6 +301,7 @@
         End If
     End Sub
 
+    'SAVE DATA
     Private Sub saveData(tipe As String)
         Dim querycheck As String = False
         Dim queryArr As New List(Of String)
@@ -397,14 +403,14 @@
         Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
         'Dim x_kodestok = New List(Of String)
         data = {
-            "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
+            "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl", "trans_periode",
             "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
             }
         Dim i As Integer = 0
         For Each brg As String In x
             If qty.Item(i) <> 0 Then
 
-                Dim kd As String = in_gudang.Text & "-" & Replace(brg, "'", "") & "-" & selectperiode.id
+                Dim kd As String = in_gudang.Text & "-" & Replace(brg, "'", "")
 
                 data2 = {
                          "'" & kd & "'",
@@ -412,6 +418,7 @@
                          "'op'",
                          "'" & in_kode.Text & "'",
                          "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                         "'" & selectperiode.id & "'",
                          "'STOK OPNAME " & in_gudang_n.Text & "'",
                          qty.Item(i),
                          nilai.Item(i).ToString.Replace(",", "."),
@@ -421,6 +428,7 @@
                          }
                 dataBrg = {
                     "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
+                    "trans_periode='" & selectperiode.id & "'",
                     "trans_qty=" & qty.Item(i),
                     "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
                     "trans_upd_date=NOW()",
@@ -477,7 +485,7 @@
         End If
     End Sub
 
-
+    'CLEAR
     Private Sub clearTextBarang()
         'For Each x As NumericUpDown In {in_qty2}
         '    x.Value = 0
@@ -635,24 +643,26 @@
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
         Dim _konfirm As Boolean = False
-        If MessageBox.Show("Proses Stock Opname No." & in_kode.Text & "?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
-            Using x As New fr_stockopconfirm_dialog
-                With x
-                    .do_load("opname")
-                    .ShowDialog()
-                    _konfirm = .returnval
-                    If .returnval = True Then
-                        in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
-                        txtProcAlias.Text = .in_user.Text
-                    Else
-                        Exit Sub
-                    End If
-                End With
-            End Using
+        If Trim(in_kode.Text) <> Nothing Then
+            If MessageBox.Show("Proses Stock Opname No." & in_kode.Text & "?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
+                Using x As New fr_stockopconfirm_dialog
+                    With x
+                        .do_load("opname")
+                        .ShowDialog()
+                        _konfirm = .returnval
+                        If .returnval = True Then
+                            in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
+                            txtProcAlias.Text = .in_user.Text
+                        Else
+                            Exit Sub
+                        End If
+                    End With
+                End Using
 
-            If _konfirm = False Then Exit Sub
+                If _konfirm = False Then Exit Sub
 
-            saveData("proc")
+                saveData("proc")
+            End If
         End If
     End Sub
 
@@ -670,6 +680,7 @@
         For Each x As DataGridViewColumn In {hpp, hpp_fis}
             x.DefaultCellStyle = dgvstyle_currency
         Next
+        performRefresh()
     End Sub
     '==========================================================================================================================
 
@@ -805,11 +816,21 @@
                 setPopUpResult()
             End If
             keyshortenter(in_barang_nm, e)
+        ElseIf e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            End If
         Else
             If popPnl_barang.Visible = False And in_gudang_n.ReadOnly = False Then
                 popPnl_barang.Visible = True
             End If
             loadDataBRGPopup("gudang", in_gudang_n.Text)
+        End If
+    End Sub
+
+    Private Sub in_sales_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_gudang_n.MouseClick, in_barang_nm.MouseClick
+        If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+            popPnl_barang.Visible = True
         End If
     End Sub
 
@@ -852,6 +873,10 @@
                 setPopUpResult()
             End If
             keyshortenter(in_qty2, e)
+        ElseIf e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            End If
         Else
             If popPnl_barang.Visible = False And in_barang_nm.ReadOnly = False Then
                 popPnl_barang.Visible = True

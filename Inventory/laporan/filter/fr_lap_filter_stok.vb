@@ -88,11 +88,11 @@
                                 & "barang_supplier as stock_supplier, supplier_nama As stock_supplier_n," _
                                 & "stock_qty, getQTYdetail(stock_barang, stock_qty, 1) as stock_qty_n, stock_hpp " _
                                 & "FROM( " _
-                                & " SELECT stock_kode, stock_periode, stock_barang, stock_gudang, " _
-                                & "  getSisaStock(stock_periode,stock_barang,stock_gudang) as stock_qty, " _
+                                & " SELECT stock_kode, stock_barang, stock_gudang, " _
+                                & "  getSisaStock('{0}',stock_barang,stock_gudang) as stock_qty, " _
                                 & "	 getHPPAVG(stock_barang,'{1}','{0}') as stock_hpp " _
                                 & "	FROM data_stok_awal " _
-                                & "	WHERE stock_periode='{0}' AND stock_status=1 " _
+                                & "	WHERE stock_status=1 " _
                                 & ") stok LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON stock_gudang=gudang_kode " _
                                 & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {2} " _

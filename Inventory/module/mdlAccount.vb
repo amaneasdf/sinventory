@@ -7,7 +7,7 @@
 
     Private Function inputLine(kode As String, tipeTrans As String)
         Dim q As String = "INSERT INTO data_jurnal_line SET line_trans='{0}',{1},{2} ON DUPLICATE KEY UPDATE {1},{2}"
-        Dim data1 As String()
+        'Dim data1 As String()
         Dim ret As Boolean = False
 
         Try

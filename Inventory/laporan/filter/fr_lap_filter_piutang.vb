@@ -29,29 +29,25 @@
         date_tglawal.Visible = tgltrans_sw
         date_tglakhir.Visible = tgltrans_sw
 
-        cb_periode.Visible = periode_sw
-        lbl_periode.Visible = periode_sw
+        cb_periode.Visible = False
+        lbl_periode.Visible = False
 
         Me.Text = lapwintext
     End Sub
 
     Private Sub formSW(tipe As String)
         Select Case LCase(tipe)
-            Case "p_salesnota", "p_saleslengkap2"
+            Case "p_salesnota", "p_saleslengkap2", "p_kartupiutangsales"
                 bayar_sw = False
                 faktur_sw = False
-                prcessSW()
-
-                date_tglawal.MinDate = selectperiode.tglawal
 
             Case "p_salesbayartanggal"
                 bayar_sw = False
                 faktur_sw = False
                 periode_sw = False
                 custo_sw = False
-                prcessSW()
 
-                date_tglawal.MinDate = selectperiode.tglawal
+                'date_tglawal.MinDate = selectperiode.tglawal
                 lbl_bayar.Location = New Point(lbl_custo.Left, lbl_custo.Top)
                 cb_bayar.Location = New Point(in_custo.Top, in_custo.Top)
 
@@ -59,34 +55,23 @@
                 bayar_sw = False
                 faktur_sw = False
                 sales_sw = False
-                prcessSW()
-
-                date_tglawal.Enabled = False
-
-            Case "p_kartupiutangsales"
-                bayar_sw = False
-                faktur_sw = False
-                prcessSW()
-
-                date_tglawal.Enabled = False
-
-            Case "p_bayarnota"
-                periode_sw = False
-                faktur_sw = True
-                bayar_sw = True
-                prcessSW()
-
-                date_tglawal.Enabled = False
 
             Case "p_salesglobal"
-                periode_sw = False
                 custo_sw = False
                 bayar_sw = False
-                prcessSW()
 
-                date_tglawal.Enabled = False
+            Case "p_bayarnota"
+                faktur_sw = True
+                bayar_sw = True
 
         End Select
+
+        Select Case LCase(tipe)
+            Case "p_kartupiutangsales", "p_kartupiutang"
+                date_tglawal.Enabled = False
+        End Select
+
+        prcessSW()
     End Sub
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
@@ -97,10 +82,10 @@
             Case "sales"
                 q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
             Case "custo"
-                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama' FROM data_customer_Master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
+                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama' FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
             Case "faktur"
                 q = "SELECT piutang_faktur as 'Kode Faktur', salesman_kode as 'Kode Sales', salesman_nama as 'Salesman', customer_kode as 'Kode Custo', " _
-                    & "customer_nama as 'Customer' FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1" _
+                    & "customer_nama as 'Customer' FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
                     & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                     & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
                     & "WHERE piutang_status=1 AND piutang_faktur LIKE '{0}%' {1}"
@@ -155,74 +140,73 @@
         Dim q As String = ""
         Dim qwh As String = ""
         Dim qreturn As String = ""
+        Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
+        Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
         Select Case LCase(tipe)
             Case "p_salesnota"
                 'BASED periode,sales,custo;OPT saldo_sisa
-                q = "SELECT salesman_kode as psn_sales,salesman_nama as psn_sales_n, customer_kode as psn_custo, customer_nama as psn_sales_n, " _
+                q = "SELECT salesman_kode as psn_sales,salesman_nama as psn_sales_n, customer_kode as psn_custo, customer_nama as psn_custo_n, " _
                     & "ADDDATE(faktur_tanggal_trans,faktur_term) as psn_jt, " _
-                    & "piutang_faktur as psn_faktur, if(faktur_tanggal_trans<'{0}',piutang_awal,0) as psn_saldoawal, " _
-                    & "if(faktur_tanggal_trans>='{0}',piutang_awal,0) as psn_penjualan, IFNULL(p_trans_nilaibayar,0) as psn_bayar, " _
-                    & "IFNULL(p_retur_total,0) as psn_retur, piutang_awal-IFNULL(p_trans_nilaibayar,0)-IFNULL(p_retur_total,0) as psn_sisa " _
-                    & "FROM data_piutang_awal " _
-                    & "LEFT JOIN ( " _
-                    & "SELECT SUM(IFNULL(p_retur_total,0)) as p_retur_total, p_retur_faktur " _
-                    & "FROM data_piutang_retur " _
-                    & "LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti " _
-                    & "WHERE faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND p_retur_status=1 " _
-                    & "GROUP BY p_retur_faktur " _
-                    & ") retur ON p_retur_faktur=piutang_faktur " _
-                    & "LEFT JOIN ( " _
-                    & "SELECT SUM(IFNULL(p_trans_nilaibayar,0)) as p_trans_nilaibayar, p_trans_kode_piutang " _
-                    & "FROM data_piutang_bayar_trans " _
-                    & "LEFT JOIN data_piutang_bayar ON p_trans_bukti=p_bayar_bukti " _
-                    & "AND p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}' AND p_bayar_status=1 " _
-                    & "WHERE p_trans_status=1 GROUP BY p_trans_kode_piutang " _
-                    & ") bayar ON p_trans_kode_piutang=piutang_faktur " _
-                    & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                    & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
-                    & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
-                    & "WHERE piutang_status=1 {2} " _
+                    & "p_trans_kode_piutang as psn_faktur, piutang_awal as psn_saldoawal, piutang_piutang as psn_penjualan, " _
+                    & "(piutang_bayar*-1)-piutang_tolak as psn_bayar, piutang_retur*-1 as psn_retur, " _
+                    & "piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psn_sisa " _
+                    & "FROM ( " _
+                    & " SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,piutang_tgl," _
+                    & "  SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) piutang_awal, " _
+                    & "  SUM(if(p_trans_jenis='jual',p_trans_nilai,0)) piutang_piutang, " _
+                    & "  SUM(if(p_trans_jenis='retur',p_trans_nilai,0)) piutang_retur, " _
+                    & "  SUM(if(p_trans_jenis='bayar',p_trans_nilai,0)) piutang_bayar, " _
+                    & "  SUM(if(p_trans_jenis='tolak',p_trans_nilai,0)) piutang_tolak, " _
+                    & "  MAX(p_trans_tgl) piutang_tglakhir " _
+                    & " FROM data_piutang_trans " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{2}' " _
+                    & " GROUP BY p_trans_kode_piutang " _
+                    & ")piutang " _
+                    & "LEFT JOIN data_penjualan_faktur ON p_trans_kode_piutang=faktur_kode AND faktur_status=1 " _
+                    & "LEFT JOIN data_customer_master ON customer_kode=piutang_custo " _
+                    & "LEFT JOIN data_salesman_master ON salesman_kode=piutang_sales " _
+                    & "WHERE piutang_tgl BETWEEN '{0}' AND '{1}' {4}" _
                     & "ORDER BY psn_jt, psn_faktur"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, selectperiode.tglawal.ToString("yyyy-MM-dd"), "{0}")
 
-                qwh += "AND piutang_idperiode='" & cb_periode.SelectedValue & "' "
+                'qwh += "AND piutang_idperiode='" & cb_periode.SelectedValue & "' "
 
                 If in_sales.Text <> Nothing Then
-                    qwh += "AND faktur_sales='" & in_sales.Text & "' "
+                    qwh += "AND piutang_sales='" & in_sales.Text & "' "
                 End If
                 If in_custo.Text <> Nothing Then
-                    qwh += "AND faktur_customer='" & in_custo.Text & "' "
+                    qwh += "AND piutang_custo='" & in_custo.Text & "' "
                 End If
 
             Case "p_saleslengkap2"
-                q = "SELECT salesman_kode as psl2_sales,salesman_nama as psl2_sales_n, customer_kode as psl2_custo, customer_nama as psl2_sales_n, " _
-                    & "faktur_netto+faktur_disc_rupiah as psl2_brutto, faktur_disc_rupiah+faktur_bayar as psl2_potongan, faktur_tanggal_trans as pls2_tgl, " _
-                    & "piutang_faktur as psl2_faktur, if(faktur_tanggal_trans<'{0}',piutang_awal,0) as psl2_saldoawal, " _
-                    & "if(faktur_tanggal_trans>='{0}',piutang_awal,0) as psl2_penjualan, IFNULL(p_trans_nilaibayar,0) as psl2_bayar, " _
-                    & "IFNULL(p_retur_total,0) as psl2_retur, piutang_awal-IFNULL(p_trans_nilaibayar,0)-IFNULL(p_retur_total,0) as psl2_sisa " _
-                    & "FROM data_piutang_awal " _
+                q = "SELECT salesman_kode as psl2_sales,salesman_nama as psl2_sales_n, customer_kode as psl2_custo, customer_nama as psl2_custo_n, " _
+                    & "faktur_netto+faktur_disc_rupiah as psl2_brutto, faktur_disc_rupiah+faktur_bayar as psl2_potongan, " _
+                    & "faktur_tanggal_trans as psl2_tgl, " _
+                    & "faktur_kode as psl2_faktur, " _
+                    & "piutang_piutang as psl2_penjualan, (piutang_bayar*-1)-piutang_tolak as psl2_bayar, " _
+                    & "piutang_retur*-1 as psl2_retur, piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psl2_sisa " _
+                    & "FROM data_penjualan_faktur " _
                     & "LEFT JOIN ( " _
-                    & "SELECT SUM(IFNULL(p_retur_total,0)) as p_retur_total, p_retur_faktur " _
-                    & "FROM data_piutang_retur " _
-                    & "LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti " _
-                    & "WHERE faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND p_retur_status=1 " _
-                    & "GROUP BY p_retur_faktur " _
-                    & ") retur ON p_retur_faktur=piutang_faktur " _
-                    & "LEFT JOIN ( " _
-                    & "SELECT SUM(IFNULL(p_trans_nilaibayar,0)) as p_trans_nilaibayar, p_trans_kode_piutang " _
-                    & "FROM data_piutang_bayar_trans " _
-                    & "LEFT JOIN data_piutang_bayar ON p_trans_bukti=p_bayar_bukti " _
-                    & "AND p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}' AND p_bayar_status=1 " _
-                    & "WHERE p_trans_status=1 GROUP BY p_trans_kode_piutang " _
-                    & ") bayar ON p_trans_kode_piutang=piutang_faktur " _
-                    & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
+                    & " SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,piutang_tgl," _
+                    & "  SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) piutang_awal, " _
+                    & "  SUM(if(p_trans_jenis='jual',p_trans_nilai,0)) piutang_piutang, " _
+                    & "  SUM(if(p_trans_jenis='retur',p_trans_nilai,0)) piutang_retur, " _
+                    & "  SUM(if(p_trans_jenis='bayar',p_trans_nilai,0)) piutang_bayar, " _
+                    & "  SUM(if(p_trans_jenis='tolak',p_trans_nilai,0)) piutang_tolak, " _
+                    & "  MAX(p_trans_tgl) piutang_tglakhir " _
+                    & " FROM data_piutang_trans " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{2}' " _
+                    & " GROUP BY p_trans_kode_piutang " _
+                    & ")piutang ON p_trans_kode_piutang=faktur_kode " _
                     & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
                     & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
-                    & "WHERE piutang_status=1 {2} " _
-                    & "ORDER BY salesman_nama, customer_nama, faktur_tanggal_trans"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' {3} " _
+                    & "ORDER BY customer_nama, faktur_tanggal_trans"
+                q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, "{0}")
 
-                qwh += "AND piutang_idperiode='" & cb_periode.SelectedValue & "' "
+                'qwh += "AND piutang_idperiode='" & cb_periode.SelectedValue & "' "
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND faktur_sales='" & in_sales.Text & "' "
@@ -250,83 +234,76 @@
 
             Case "p_kartupiutang"
                 'BASED periode,custo;OPT 
-                q = "SELECT customer_kode as pk_custo,customer_nama as pk_custo_n, customer_kabupaten as pk_custo_k,tgl as pk_tgl, bukti as pk_no_bukti, " _
-                    & "ket as pk_ket, if(jenis='awal',0,debet) as pk_debet,kredit as pk_kredit, " _
-                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (debet-kredit)),(@csum:=(debet-kredit))),2) as pk_saldo, " _
+                q = "SELECT hhh.*, customer_nama pk_custo_n, customer_kabupaten pk_custo_k," _
+                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (pk_kredit-pk_debet)),(@csum:=(pk_kredit-pk_debet))),2) pk_saldo, " _
                     & "@change_supplier:=customer_nama " _
-                    & "FROM (" _
-                    & "SELECT faktur_customer as custo, '{1}' as tgl, '' as bukti, 'SALDO AWAL' as ket, " _
-                    & "SUM(IF(faktur_tanggal_trans<'{2}',piutang_awal,0)) as debet, " _
-                    & "0 as kredit, 'awal' as jenis, faktur_reg_date as reg_date " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_status=1 AND faktur_kode=piutang_faktur " _
-                    & "WHERE piutang_status =1 AND piutang_idperiode={0} GROUP BY faktur_customer " _
-                    & "UNION " _
-                    & "SELECT faktur_customer as custo,faktur_tanggal_trans as tgl, piutang_faktur as bukti, 'PENJUALAN' as ket, " _
-                    & "piutang_awal as debet, 0 as kredit, 'piutang', faktur_reg_date " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode " _
-                    & "WHERE piutang_status = 1 AND faktur_tanggal_trans BETWEEN '{2}' AND '{3}' " _
-                    & "UNION " _
-                    & "SELECT faktur_custo as custo,faktur_tanggal_trans as tgl, faktur_kode_bukti as bukti, 'RETUR PENJUALAN' as ket, " _
-                    & "0 as debet, p_retur_total as kredit, 'retur', faktur_reg_date " _
-                    & "FROM data_piutang_retur LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti " _
-                    & "WHERE p_retur_status = 1 AND faktur_tanggal_trans BETWEEN '{2}' AND '{3}' " _
-                    & "UNION " _
-                    & "SELECT faktur_customer as custo, p_bayar_tanggal_bayar as tgl, p_bayar_bukti as bukti, " _
-                    & "CONCAT('PEMBAYARAN ', p_trans_kode_piutang) as ket,0 as debet,  SUM(p_trans_nilaibayar) as kredit, 'bayar', p_bayar_reg_date " _
-                    & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_trans_bukti=p_bayar_bukti AND p_trans_status =1 " _
-                    & "LEFT JOIN data_penjualan_faktur ON p_trans_kode_piutang=faktur_kode " _
-                    & "WHERE p_bayar_status = 1 AND p_bayar_tanggal_bayar BETWEEN '{2}' AND '{3}' " _
-                    & "GROUP BY p_bayar_bukti,custo " _
-                    & "ORDER BY custo, tgl ASC, reg_date ASC, FIELD(jenis,'awal','piutang','retur','bayar') " _
-                    & ") piutang JOIN (SELECT @csum:=0, @change_supplier:='') para " _
-                    & "LEFT JOIN data_customer_master ON customer_kode=custo " _
-                    & "{4} "
-                q = String.Format(q, cb_periode.SelectedValue, date_tglawal.Value.AddDays(-1).ToString("yyyy-MM-dd"), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "FROM( " _
+                    & " SELECT 0 p_trans_id,'' p_trans_kode_piutang,piutang_custo pk_custo,p_trans_tgl pk_tgl," _
+                    & "  '' pk_no_bukti,'SALDO AWAL' pk_ket,0 pk_debet,SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) pk_kredit " _
+                    & " FROM data_piutang_trans  " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{0}' AND p_trans_jenis='awal' " _
+                    & " GROUP BY piutang_custo " _
+                    & " UNION " _
+                    & " SELECT p_trans_id,p_trans_kode_piutang,piutang_custo,p_trans_tgl,p_trans_faktur, " _
+                    & "  (CASE p_trans_jenis " _
+                    & "     WHEN 'jual' THEN 'PENJUALAN' " _
+                    & "     WHEN 'retur' THEN 'RETUR PENJUALAN' " _
+                    & "     WHEN 'bayar' THEN CONCAT('PEMBAYARAN ',p_trans_faktur) " _
+                    & "     WHEN 'tolak' THEN CONCAT('TOLAK ',p_trans_faktur) " _
+                    & "     ELSE 'ERROR' " _
+                    & "  END) ket,if(p_trans_nilai<0,p_trans_nilai*-1,0) debet, " _
+                    & "  if(p_trans_nilai>0,p_trans_nilai,0) kredit " _
+                    & " FROM data_piutang_trans " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{0}' AND p_trans_jenis <> 'awal' " _
+                    & " ORDER BY pk_custo,pk_tgl,p_trans_id " _
+                    & ")hhh " _
+                    & "LEFT JOIN data_customer_master ON customer_kode=pk_custo " _
+                    & "JOIN (SELECT @change_supplier:='',@csum:=0) para " _
+                    & "WHERE pk_tgl BETWEEN '{1}' AND '{2}' {3}"
+                q = String.Format(q, cb_periode.SelectedValue, _tglawal, _tglakhir, "{0}")
 
                 If in_custo.Text <> Nothing Then
-                    qwh += "WHERE customer_kode='" & in_custo.Text & "' "
+                    qwh += "AND customer_kode='" & in_custo.Text & "' "
                 End If
 
             Case "p_kartupiutangsales"
                 'BASED periode,custo,sales;OPT 
-                q = "SELECT customer_kode as pk_custo,customer_nama as pk_custo_n, customer_kabupaten as pk_custo_k,tgl as pk_tgl, bukti as pk_no_bukti, " _
-                    & "salesman_kode as pk_sales, salesman_nama as pk_sales_n, " _
-                    & "ket as pk_ket, if(jenis='awal',0,debet) as pk_debet,kredit as pk_kredit, " _
-                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (debet-kredit)),(@csum:=(debet-kredit))),2) as pk_saldo, " _
+                q = "SELECT hhh.*, customer_nama pk_custo_n, customer_kabupaten pk_custo_k,salesman_nama pk_sales_n," _
+                    & "TRUNCATE(if(@change_supplier=customer_nama,(@csum := @csum + (pk_kredit-pk_debet)),(@csum:=(pk_kredit-pk_debet))),2) pk_saldo, " _
                     & "@change_supplier:=customer_nama " _
-                    & "FROM (" _
-                    & "SELECT faktur_customer as custo, faktur_sales as sales, '{1}' as tgl, '' as bukti, 'SALDO AWAL' as ket, " _
-                    & "SUM(IF(faktur_tanggal_trans<'{2}',piutang_awal,0)) as debet, " _
-                    & "0 as kredit, 'awal' as jenis, faktur_reg_date as reg_date " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_status=1 AND faktur_kode=piutang_faktur " _
-                    & "WHERE piutang_status =1 AND piutang_idperiode={0} GROUP BY faktur_customer, faktur_sales " _
-                    & "UNION " _
-                    & "SELECT faktur_customer as custo, faktur_sales as sales,faktur_tanggal_trans as tgl, piutang_faktur as bukti, 'PENJUALAN' as ket, " _
-                    & "piutang_awal as debet, 0 as kredit, 'piutang', faktur_reg_date " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode " _
-                    & "WHERE piutang_status = 1 AND faktur_tanggal_trans BETWEEN '{2}' AND '{3}' " _
-                    & "UNION " _
-                    & "SELECT faktur_custo as custo, faktur_sales as sales ,faktur_tanggal_trans as tgl, faktur_kode_bukti as bukti, 'RETUR PENJUALAN' as ket, " _
-                    & "0 as debet, p_retur_total as kredit, 'retur', faktur_reg_date " _
-                    & "FROM data_piutang_retur LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti " _
-                    & "WHERE p_retur_status = 1 AND faktur_tanggal_trans BETWEEN '{2}' AND '{3}' " _
-                    & "UNION " _
-                    & "SELECT faktur_customer as custo, faktur_sales as sales, p_bayar_tanggal_bayar as tgl, p_bayar_bukti as bukti, " _
-                    & "CONCAT('PEMBAYARAN ', p_trans_kode_piutang) as ket,0 as debet,  SUM(p_trans_nilaibayar) as kredit, 'bayar', p_bayar_reg_date " _
-                    & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_trans_bukti=p_bayar_bukti AND p_trans_status =1 " _
-                    & "LEFT JOIN data_penjualan_faktur ON p_trans_kode_piutang=faktur_kode " _
-                    & "WHERE p_bayar_status = 1 AND p_bayar_tanggal_bayar BETWEEN '{2}' AND '{3}' " _
-                    & "GROUP BY p_bayar_bukti,custo " _
-                    & "ORDER BY sales, custo, tgl ASC, reg_date ASC, FIELD(jenis,'awal','piutang','retur','bayar') " _
-                    & ") piutang JOIN (SELECT @csum:=0, @change_supplier:='') para " _
-                    & "LEFT JOIN data_customer_master ON customer_kode=custo " _
-                    & "LEFT JOIN data_salesman_master ON salesman_kode=sales " _
-                    & "{4} "
-                q = String.Format(q, cb_periode.SelectedValue, date_tglawal.Value.AddDays(-1).ToString("yyyy-MM-dd"), date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "FROM( " _
+                    & " SELECT 0 p_trans_id,'' p_trans_kode_piutang,piutang_custo pk_custo,piutang_sales pk_sales,p_trans_tgl pk_tgl," _
+                    & "  '' pk_no_bukti,'SALDO AWAL' pk_ket,0 pk_debet,SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) pk_kredit " _
+                    & " FROM data_piutang_trans  " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{0}' AND p_trans_jenis='awal' " _
+                    & " GROUP BY piutang_custo,piutang_sales " _
+                    & " UNION " _
+                    & " SELECT p_trans_id,p_trans_kode_piutang,piutang_custo,piutang_sales,p_trans_tgl,p_trans_faktur, " _
+                    & "  (CASE p_trans_jenis " _
+                    & "     WHEN 'jual' THEN 'PENJUALAN' " _
+                    & "     WHEN 'retur' THEN 'RETUR PENJUALAN' " _
+                    & "     WHEN 'bayar' THEN CONCAT('PEMBAYARAN ',p_trans_faktur) " _
+                    & "     WHEN 'tolak' THEN CONCAT('TOLAK ',p_trans_faktur) " _
+                    & "     ELSE 'ERROR' " _
+                    & "  END) ket,if(p_trans_nilai<0,p_trans_nilai*-1,0) debet, " _
+                    & "  if(p_trans_nilai>0,p_trans_nilai,0) kredit " _
+                    & " FROM data_piutang_trans " _
+                    & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & " WHERE p_trans_status = 1 And p_trans_periode ='{0}' AND p_trans_jenis <> 'awal' " _
+                    & " ORDER BY pk_custo,pk_sales,pk_tgl,p_trans_id " _
+                    & ")hhh " _
+                    & "LEFT JOIN data_salesman_master ON salesman_kode=pk_sales " _
+                    & "LEFT JOIN data_customer_master ON customer_kode=pk_custo " _
+                    & "JOIN (SELECT @change_supplier:='',@csum:=0) para " _
+                    & "WHERE pk_tgl BETWEEN '{1}' AND '{2}' {3}"
+                q = String.Format(q, cb_periode.SelectedValue, _tglawal, _tglakhir, "{0}")
 
                 Dim whr As New List(Of String)
                 If in_custo.Text <> Nothing Or in_sales.Text <> Nothing Then
-                    qwh += "WHERE {0}"
+                    qwh += "AND {0}"
                 End If
                 If in_custo.Text <> Nothing Then
                     whr.Add("customer_kode='" & in_custo.Text & "'")
@@ -339,85 +316,87 @@
 
             Case "p_bayarnota"
                 'BASED periode,custo,sales ;OPT 
-                q = "SELECT * FROM( " _
-                    & "SELECT salesman_kode as pbd_sales, salesman_nama as pbd_sales_n,customer_kode as pbd_custo, customer_nama as pdb_custo_n, " _
-                    & "piutang_faktur as pbd_faktur, if(@faktur<>piutang_faktur,@ct:=0,@ct:=@ct+1) as count, " _
-                    & " faktur_tanggal_trans as pbd_tanggal, " _
-                    & "	(CASE WHEN @ct=0 THEN if(faktur_tanggal_trans<'{1}',@sisa:=piutang_awal,0) " _
-                    & "		ELSE TRUNCATE(@sisa,2) END) as pbd_saldoawal, " _
-                    & "	(CASE WHEN @ct=0 THEN if(faktur_tanggal_trans>='{1}',@sisa:=piutang_awal,0) " _
-                    & "		ELSE 0 END) as pbd_jual, " _
-                    & "	if(jenis='retur',p_trans_nilaibayar,0) as pbd_retur, if(jenis='bayar',p_trans_nilaibayar,0) as pbd_bayar, " _
-                    & "	TRUNCATE(@sisa:= @sisa-p_trans_nilaibayar,2) as pbd_sisa, " _
-                    & "	ket as pbd_ket,p_trans_tgl as pbd_tglbayar, DATEDIFF(faktur_tanggal_trans,p_trans_tgl) as pbd_hari,@faktur:=piutang_faktur " _
-                    & "FROM ( " _
-                    & "SELECT p_trans_kode_piutang, p_trans_nilaibayar, p_bayar_tanggal_bayar as p_trans_tgl, " _
-                    & "	CONCAT(p_bayar_bukti,':',p_bayar_jenisbayar) as ket, 'bayar' as jenis, p_bayar_reg_date as reg_date " _
-                    & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_trans_status=1 AND p_trans_bukti=p_bayar_bukti " _
-                    & "WHERE p_bayar_status=1 AND p_bayar_tanggal_bayar BETWEEN '{1}' AND '{2}' " _
-                    & "UNION " _
-                    & "SELECT p_retur_faktur, p_retur_total, faktur_tanggal_trans, " _
-                    & "	CONCAT(faktur_kode_bukti, ':RETUR'), 'retur' as jenis, p_retur_reg_date " _
-                    & "FROM data_piutang_retur LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti AND faktur_status=1 " _
-                    & "WHERE p_retur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
-                    & "ORDER BY p_trans_tgl,reg_date " _
-                    & ")transaksi " _
-                    & "LEFT JOIN data_piutang_awal ON piutang_faktur=p_trans_kode_piutang AND piutang_status=1 AND piutang_idperiode={0} " _
-                    & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                    & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
-                    & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
-                    & "JOIN (SELECT @ct:=0, @sisa:=0, @faktur:='') para " _
-                    & "ORDER BY salesman_nama,customer_nama,piutang_faktur, p_trans_tgl,reg_date,count" _
-                    & ") hhh {3}"
-                q = String.Format(q, cb_periode.SelectedValue, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                q = "SELECT p_trans_kode_piutang pbd_faktur,piutang_custo pbd_custo,customer_nama pdb_custo_n,piutang_sales pbd_sales,salesman_nama pbd_sales_n," _
+                    & "faktur_tanggal_trans pbd_tanggal, piutang_awal pbd_saldoawal, piutang_retur * -1 pbd_retur, piutang_bayar * -1 pbd_bayar, piutang_tolak pbd_jual," _
+                    & "piutang_sisa pbd_sisa, ket pbd_ket, pbd_hari, p_trans_tgl pbd_tglbayar " _
+                    & "FROM( " _
+                    & "SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,p_trans_tgl,faktur_tanggal_trans," _
+                    & " if(@faktur<>p_trans_kode_piutang,@ct:=0,@ct:=@ct+1) as count," _
+                    & " p_trans_jenis," _
+                    & " if(@ct=0,@sisa:=if(p_trans_jenis='awal',p_trans_nilai,0),TRUNCATE(@sisa,2)) piutang_awal," _
+                    & " if(p_trans_jenis='jual',p_trans_nilai,0) piutang_piutang," _
+                    & " if(p_trans_jenis='retur',p_trans_nilai,0) piutang_retur," _
+                    & " if(p_trans_jenis='bayar',p_trans_nilai,0) piutang_bayar," _
+                    & " if(p_trans_jenis='tolak',p_trans_nilai,0) piutang_tolak," _
+                    & " TRUNCATE(@sisa:=@sisa+p_trans_nilai,2) piutang_sisa," _
+                    & " IF(p_trans_jenis NOT IN('awal','jual')," _
+                    & " CONCAT(p_trans_faktur,':',(CASE " _
+                    & "     WHEN p_trans_jenis='bayar' THEN p_bayar_jenisbayar " _
+                    & "     WHEN p_trans_jenis='retur' THEN 'RETUR' " _
+                    & "     WHEN p_trans_jenis='tolak' THEN 'BGTOLAK' " _
+                    & "     WHEN p_trans_jenis='cair' THEN 'BGCAIR' " _
+                    & "     Else '-' END)),'-')	ket,DATEDIFF(p_trans_tgl,faktur_tanggal_trans) as pbd_hari, " _
+                    & " @faktur:=p_trans_kode_piutang " _
+                    & "FROM data_piutang_trans " _
+                    & "RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                    & "LEFT JOIN data_penjualan_faktur ON faktur_kode=p_trans_kode_piutang AND faktur_status=1 " _
+                    & "LEFT JOIN data_piutang_bayar ON p_trans_faktur=p_bayar_bukti " _
+                    & "JOIN(SELECT @sisa:=0,@faktur:='') para " _
+                    & "WHERE p_trans_status = 1 And p_trans_periode = '{0}'" _
+                    & ")hhh " _
+                    & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+                    & "LEFT JOIN data_salesman_master ON piutang_sales=salesman_kode " _
+                    & "WHERE p_trans_jenis NOT IN ('awal','jual') {1}"
+
+                q = String.Format(q, cb_periode.SelectedValue, "{0}")
 
                 Dim whr As New List(Of String)
+                Dim op As Boolean = False
+
+                qwh += "AND p_trans_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "' {0}{1}"
                 If in_custo.Text <> Nothing Or in_sales.Text <> Nothing Or in_faktur.Text <> Nothing Or cb_bayar.SelectedValue <> "ALL" Then
-                    qwh += "WHERE {0}"
+                    op = True
                 End If
                 If in_custo.Text <> Nothing Then
-                    whr.Add("pbd_custo='" & in_custo.Text & "'")
+                    whr.Add("piutang_custo='" & in_custo.Text & "'")
                 End If
                 If in_sales.Text <> Nothing Then
-                    whr.Add("pbd_sales='" & in_sales.Text & "'")
+                    whr.Add("piutang_sales='" & in_sales.Text & "'")
                 End If
                 If in_faktur.Text <> Nothing Then
-                    whr.Add("pbd_faktur='" & in_faktur.Text & "'")
+                    whr.Add("p_trans_kode_piutang='" & in_faktur.Text & "'")
                 End If
                 If cb_bayar.SelectedValue <> "ALL" Then
                     whr.Add("SUBSTRING_INDEX(ket,':',-1)='" & cb_bayar.SelectedValue & "'")
                 End If
 
-                qwh = String.Format(qwh, String.Join(" AND ", whr))
+                qwh = String.Format(qwh, IIf(op, "AND ", ""), String.Join(" AND ", whr))
 
             Case "p_salesglobal"
                 'BASED periode,sales ;OPT _>FUK
-                q = "SELECT salesman_kode as psg, salesman_nama as psg_sales_n, COUNT(piutang_faktur)+COUNT(IF(faktur_netto-faktur_bayar<>0,faktur_kode,NULL)) as psg_jlFak, " _
-                    & "SUM(if(faktur_tanggal_trans<'{0}',piutang_awal,0)) as psg_saldoawal, " _
-                    & "SUM(if(faktur_tanggal_trans>='{0}',piutang_awal,0)) as psg_penjualan, " _
-                    & "SUM(IFNULL(p_trans_nilaibayar,0)) as psg_bayar, SUM(IFNULL(p_retur_total,0)) as psg_retur, " _
-                    & "SUM(piutang_awal)-SUM(IFNULL(p_trans_nilaibayar,0))-SUM(IFNULL(p_retur_total,0)) as psg_sisa, " _
-                    & "COUNT(IF(faktur_bayar<>0,faktur_kode,NULL)) as psg_jlFakT, SUM(faktur_bayar) as psg_tunai " _
-                    & "FROM data_piutang_awal " _
-                    & "LEFT JOIN (" _
-                    & "SELECT SUM(IFNULL(p_retur_total,0)) as p_retur_total, p_retur_faktur " _
-                    & "FROM data_piutang_retur " _
-                    & "LEFT JOIN data_penjualan_retur_faktur ON p_retur_bukti_retur=faktur_kode_bukti " _
-                    & "WHERE p_retur_tanggal < '{1}' AND p_retur_status=1 " _
-                    & "GROUP BY p_retur_faktur " _
-                    & ") retur ON p_retur_faktur=piutang_faktur " _
-                    & "LEFT JOIN (" _
-                    & "SELECT SUM(IFNULL(p_trans_nilaibayar,0)) as p_trans_nilaibayar, p_trans_kode_piutang " _
-                    & "FROM data_piutang_bayar_trans " _
-                    & "LEFT JOIN data_piutang_bayar ON p_trans_bukti=p_bayar_bukti " _
-                    & "AND p_bayar_tanggal_bayar < '{1}' AND p_bayar_status=1 " _
-                    & "WHERE p_trans_status=1 GROUP BY p_trans_kode_piutang " _
-                    & ") bayar ON p_trans_kode_piutang=piutang_faktur " _
-                    & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode " _
-                    & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
-                    & "WHERE piutang_status=1 AND faktur_status=1 AND faktur_tanggal_trans<'{1}' {2}" _
-                    & "GROUP BY salesman_kode "
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                q = "SELECT salesman_kode as psg, salesman_nama as psg_sales_n, COUNT(if(faktur_term<>0,faktur_kode,NULL)) as psg_jlFak, " _
+                                & "SUM(piutang_awal) as psg_saldoawal, SUM(piutang_piutang) as psg_penjualan, " _
+                                & "SUM(piutang_bayar+piutang_tolak) * -1 as psg_bayar, SUM(piutang_retur*-1) as psg_retur, " _
+                                & "SUM(piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak) as psg_sisa, " _
+                                & "COUNT(IF(faktur_term=0,faktur_kode,NULL)) as psg_jlFakT, SUM(faktur_bayar) as psg_tunai " _
+                                & "FROM data_penjualan_faktur " _
+                                & "LEFT JOIN ( " _
+                                & " SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,piutang_tgl," _
+                                & "  SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) piutang_awal, " _
+                                & "  SUM(if(p_trans_jenis='jual',p_trans_nilai,0)) piutang_piutang, " _
+                                & "  SUM(if(p_trans_jenis='retur',p_trans_nilai,0)) piutang_retur, " _
+                                & "  SUM(if(p_trans_jenis='bayar',p_trans_nilai,0)) piutang_bayar, " _
+                                & "  SUM(if(p_trans_jenis='tolak',p_trans_nilai,0)) piutang_tolak, " _
+                                & "  MAX(p_trans_tgl) piutang_tglakhir " _
+                                & " FROM data_piutang_trans " _
+                                & " RIGHT JOIN data_piutang_awal ON p_trans_kode_piutang=piutang_faktur AND piutang_status=1 " _
+                                & " WHERE p_trans_status = 1 And p_trans_tgl BETWEEN '{1}' AND '{2}' " _
+                                & " GROUP BY p_trans_kode_piutang " _
+                                & ")piutang ON p_trans_kode_piutang=faktur_kode " _
+                                & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
+                                & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' {3}" _
+                                & "GROUP BY salesman_kode "
+                            q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), _tglawal, _tglakhir, "{0}")
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND faktur_sales='" & in_sales.Text & "' "
@@ -486,6 +465,8 @@
         End With
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        date_tglawal.MinDate = selectperiode.tglawal
+        date_tglakhir.MaxDate = selectperiode.tglakhir
 
         lbl_periodedata.Text = main.strip_periode.Text
         formSW(tipeLap)
@@ -501,7 +482,17 @@
         Dim x As New fr_view_piutang With {
                     .Text = lapwintext
                 }
-        x.setVar(laptype, createQuery(laptype), date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy"))
+        Dim _periode As String = ""
+        Dim _tglawal As Date = date_tglawal.Value
+        Dim _tglakhir As Date = date_tglakhir.Value
+
+        If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") And _tglawal.Day = 1 And _tglakhir = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0) Then
+            _periode = _tglawal.ToString("MMMM yyyy")
+        Else
+            _periode = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
+        End If
+
+        x.setVar(laptype, createQuery(laptype), _periode)
         x.do_load()
         x.ShowDialog()
     End Sub

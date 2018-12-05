@@ -14,9 +14,35 @@
 
     Public Sub performRefresh()
         ClearAll()
-        bt_cari_sales.PerformClick()
-        bt_cari_faktur.PerformClick()
-        loadDraftList(Trim(in_caridraft.Text))
+        loadSales("")
+        loadFaktur("")
+        loadDraftList("")
+    End Sub
+
+    Public Sub setForm()
+        'Setting Datetime Picker =============================================================================================================
+        For Each dtpick As DateTimePicker In {date_tgl_trans, date_faktur_awal, date_faktur_akhir}
+            dtpick.MinDate = DateSerial(1990, 1, 1)
+            dtpick.MaxDate = DateSerial(2100, 12, 31)
+            dtpick.MinDate = selectperiode.tglawal
+            dtpick.MaxDate = selectperiode.tglakhir
+        Next
+        date_tgl_trans.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        date_faktur_awal.Value = selectperiode.tglawal
+        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        '======================================================================================================================================
+
+        'Setting EDIT Priviledge ==============================================================================================================
+        Dim _switch As Boolean = True
+        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Then
+            _switch = False
+        End If
+        For Each bt As Button In {bt_create_draft, bt_addfaktur, bt_addsales, bt_remfaktur, bt_remsales}
+            bt.Enabled = _switch
+        Next
+        date_tgl_trans.Enabled = _switch
+        mn_tambah.Visible = _switch
+        '======================================================================================================================================
     End Sub
 
     'LOAD LIST FAKTUR
@@ -146,16 +172,11 @@
         loadListedSales(kodedraft)
         loadListedFaktur(kodedraft)
         bt_create_draft.Text = "Update Draft"
-        If loggeduser.allowedit_transact = False Then
-            bt_create_draft.Enabled = False
-        Else
-            bt_create_draft.Enabled = True
-        End If
     End Sub
 
     'SAVE DRAFT
     Private Function createDraft() As Boolean
-        Dim q As String
+        'Dim q As String
         op_con()
         Try
             Dim kodedraft = "RS"
@@ -235,12 +256,13 @@
         For Each x As DataGridView In {dgv_draftfaktur, dgv_draftsales}
             x.Rows.Clear()
         Next
-        date_tgl_trans.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-        date_faktur_awal.Value = selectperiode.tglawal
-        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+
         ck_tgl2.CheckState = CheckState.Unchecked
-        bt_create_draft.Enabled = True
+
+        bt_create_draft.Enabled = If(selectperiode.closed = False, True, False)
         bt_create_draft.Text = "Simpan Draft"
+
+        setForm()
     End Sub
 
     '--------------resize dgv
@@ -264,20 +286,12 @@
     End Sub
 
     Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        ClearAll()
-        'disableAllSwitch(True)
         main.tabcontrol.TabPages.Remove(tabpagename)
     End Sub
 
     '----------------- load
     Private Sub fr_draft_rekap_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        For Each s As DateTimePicker In {date_tgl_trans, date_faktur_akhir, date_faktur_awal}
-            s.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            s.MaxDate = selectperiode.tglakhir
-            s.MinDate = selectperiode.tglawal
-        Next
-        date_faktur_awal.Value = selectperiode.tglawal
-        date_faktur_akhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        ClearAll()
 
         loadSales("")
         loadDraftList("")
@@ -315,20 +329,18 @@
     End Sub
 
     Private Sub bt_cari_faktur_Click(sender As Object, e As EventArgs) Handles bt_cari_faktur.Click
-        'Dim sales As New List(Of String)
-        'If dgv_draftsales.Rows.Count > 0 Then
-        '    For Each x As DataGridViewRow In dgv_draftsales.Rows
-        '        sales.Add("'" & x.Cells("draft_sales_kode").Value & "'")
-        '    Next
-        'Else
-        '    sales.Add("'all'")
-        'End If
         loadFaktur(in_cari_faktur.Text)
     End Sub
 
     Private Sub in_cari_faktur_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari_faktur.KeyDown, in_caridraft.KeyDown
         If e.KeyCode = Keys.Enter Then
             bt_cari_faktur.PerformClick()
+        End If
+    End Sub
+
+    Private Sub in_cari_draft_KeyDown(sender As Object, e As KeyEventArgs) Handles in_caridraft.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            bt_caridraft.PerformClick()
         End If
     End Sub
 
@@ -351,26 +363,10 @@
     End Sub
 
     Private Sub dgv_draftsales_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles dgv_draftsales.RowsAdded
-        Dim sales As New List(Of String)
-        If dgv_draftsales.Rows.Count > 0 Then
-            For Each x As DataGridViewRow In dgv_draftsales.Rows
-                sales.Add("'" & x.Cells("draft_sales_kode").Value & "'")
-            Next
-        Else
-            sales.Add("'all'")
-        End If
         loadFaktur("")
     End Sub
 
     Private Sub dgv_draftsales_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgv_draftsales.RowsRemoved
-        Dim sales As New List(Of String)
-        If dgv_draftsales.Rows.Count > 0 Then
-            For Each x As DataGridViewRow In dgv_draftsales.Rows
-                sales.Add("'" & x.Cells("draft_sales_kode").Value & "'")
-            Next
-        Else
-            sales.Add("'all'")
-        End If
         loadFaktur("")
     End Sub
 
@@ -428,6 +424,7 @@
             Next
         End With
     End Sub
+
     Private Sub bt_remsales_Click(sender As Object, e As EventArgs) Handles bt_remsales.Click
         Dim cksales As Boolean = False
         With dgv_draftsales

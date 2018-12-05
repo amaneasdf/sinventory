@@ -30,6 +30,9 @@ Partial Class fr_jual_detail
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.txtValDate = New System.Windows.Forms.TextBox()
+        Me.txtValAlias = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
@@ -67,7 +70,6 @@ Partial Class fr_jual_detail
         Me.cb_ppn = New System.Windows.Forms.ComboBox()
         Me.in_ppn_tot = New System.Windows.Forms.TextBox()
         Me.Label26 = New System.Windows.Forms.Label()
-        Me.Label30 = New System.Windows.Forms.Label()
         Me.in_ket = New System.Windows.Forms.TextBox()
         Me.in_diskon = New System.Windows.Forms.TextBox()
         Me.bt_tbbarang = New System.Windows.Forms.Button()
@@ -75,7 +77,6 @@ Partial Class fr_jual_detail
         Me.Label16 = New System.Windows.Forms.Label()
         Me.in_jumlah = New System.Windows.Forms.TextBox()
         Me.Label20 = New System.Windows.Forms.Label()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.Label21 = New System.Windows.Forms.Label()
         Me.Label18 = New System.Windows.Forms.Label()
         Me.Label22 = New System.Windows.Forms.Label()
@@ -150,7 +151,7 @@ Partial Class fr_jual_detail
         'bt_bataljual
         '
         Me.bt_bataljual.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_bataljual.Location = New System.Drawing.Point(896, 478)
+        Me.bt_bataljual.Location = New System.Drawing.Point(896, 500)
         Me.bt_bataljual.Name = "bt_bataljual"
         Me.bt_bataljual.Size = New System.Drawing.Size(96, 30)
         Me.bt_bataljual.TabIndex = 35
@@ -160,7 +161,7 @@ Partial Class fr_jual_detail
         'bt_simpanjual
         '
         Me.bt_simpanjual.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanjual.Location = New System.Drawing.Point(738, 478)
+        Me.bt_simpanjual.Location = New System.Drawing.Point(738, 500)
         Me.bt_simpanjual.Name = "bt_simpanjual"
         Me.bt_simpanjual.Size = New System.Drawing.Size(152, 30)
         Me.bt_simpanjual.TabIndex = 34
@@ -227,6 +228,9 @@ Partial Class fr_jual_detail
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.txtValDate)
+        Me.pnl_content.Controls.Add(Me.txtValAlias)
+        Me.pnl_content.Controls.Add(Me.Label29)
         Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.TextBox1)
         Me.pnl_content.Controls.Add(Me.MenuStrip1)
@@ -260,7 +264,6 @@ Partial Class fr_jual_detail
         Me.pnl_content.Controls.Add(Me.cb_ppn)
         Me.pnl_content.Controls.Add(Me.in_ppn_tot)
         Me.pnl_content.Controls.Add(Me.Label26)
-        Me.pnl_content.Controls.Add(Me.Label30)
         Me.pnl_content.Controls.Add(Me.in_ket)
         Me.pnl_content.Controls.Add(Me.in_diskon)
         Me.pnl_content.Controls.Add(Me.bt_tbbarang)
@@ -268,7 +271,6 @@ Partial Class fr_jual_detail
         Me.pnl_content.Controls.Add(Me.Label16)
         Me.pnl_content.Controls.Add(Me.in_jumlah)
         Me.pnl_content.Controls.Add(Me.Label20)
-        Me.pnl_content.Controls.Add(Me.Label29)
         Me.pnl_content.Controls.Add(Me.Label21)
         Me.pnl_content.Controls.Add(Me.Label18)
         Me.pnl_content.Controls.Add(Me.Label22)
@@ -309,8 +311,39 @@ Partial Class fr_jual_detail
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_content.Location = New System.Drawing.Point(0, 42)
         Me.pnl_content.Name = "pnl_content"
-        Me.pnl_content.Size = New System.Drawing.Size(1003, 531)
+        Me.pnl_content.Size = New System.Drawing.Size(1003, 545)
         Me.pnl_content.TabIndex = 0
+        '
+        'txtValDate
+        '
+        Me.txtValDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtValDate.Location = New System.Drawing.Point(191, 510)
+        Me.txtValDate.Name = "txtValDate"
+        Me.txtValDate.ReadOnly = True
+        Me.txtValDate.Size = New System.Drawing.Size(227, 20)
+        Me.txtValDate.TabIndex = 432
+        Me.txtValDate.TabStop = False
+        '
+        'txtValAlias
+        '
+        Me.txtValAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtValAlias.Location = New System.Drawing.Point(54, 510)
+        Me.txtValAlias.Name = "txtValAlias"
+        Me.txtValAlias.ReadOnly = True
+        Me.txtValAlias.Size = New System.Drawing.Size(135, 20)
+        Me.txtValAlias.TabIndex = 433
+        Me.txtValAlias.TabStop = False
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.ForeColor = System.Drawing.Color.Black
+        Me.Label29.Location = New System.Drawing.Point(9, 514)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(34, 13)
+        Me.Label29.TabIndex = 434
+        Me.Label29.Text = "ValBy"
         '
         'popPnl_barang
         '
@@ -355,7 +388,7 @@ Partial Class fr_jual_detail
         Me.TextBox1.BackColor = System.Drawing.Color.White
         Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TextBox1.ForeColor = System.Drawing.Color.Black
-        Me.TextBox1.Location = New System.Drawing.Point(499, 484)
+        Me.TextBox1.Location = New System.Drawing.Point(499, 492)
         Me.TextBox1.Name = "TextBox1"
         Me.TextBox1.ReadOnly = True
         Me.TextBox1.Size = New System.Drawing.Size(136, 20)
@@ -402,12 +435,13 @@ Partial Class fr_jual_detail
         Me.ProcessToolStripMenuItem.Name = "ProcessToolStripMenuItem"
         Me.ProcessToolStripMenuItem.Size = New System.Drawing.Size(59, 20)
         Me.ProcessToolStripMenuItem.Text = "Process"
+        Me.ProcessToolStripMenuItem.Visible = False
         '
         'Label35
         '
         Me.Label35.AutoSize = True
         Me.Label35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label35.Location = New System.Drawing.Point(426, 488)
+        Me.Label35.Location = New System.Drawing.Point(426, 496)
         Me.Label35.Name = "Label35"
         Me.Label35.Size = New System.Drawing.Size(67, 13)
         Me.Label35.TabIndex = 426
@@ -563,7 +597,7 @@ Partial Class fr_jual_detail
         Me.txtRegAlias.Location = New System.Drawing.Point(54, 466)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
-        Me.txtRegAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegAlias.Size = New System.Drawing.Size(135, 20)
         Me.txtRegAlias.TabIndex = 413
         Me.txtRegAlias.TabStop = False
         '
@@ -626,10 +660,10 @@ Partial Class fr_jual_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(246, 488)
+        Me.txtUpdDate.Location = New System.Drawing.Point(192, 488)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
-        Me.txtUpdDate.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdDate.Size = New System.Drawing.Size(226, 20)
         Me.txtUpdDate.TabIndex = 411
         Me.txtUpdDate.TabStop = False
         '
@@ -669,7 +703,7 @@ Partial Class fr_jual_detail
         Me.txtUpdAlias.Location = New System.Drawing.Point(54, 488)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
-        Me.txtUpdAlias.Size = New System.Drawing.Size(150, 20)
+        Me.txtUpdAlias.Size = New System.Drawing.Size(135, 20)
         Me.txtUpdAlias.TabIndex = 416
         Me.txtUpdAlias.TabStop = False
         '
@@ -708,17 +742,6 @@ Partial Class fr_jual_detail
         Me.Label26.Size = New System.Drawing.Size(82, 13)
         Me.Label26.TabIndex = 331
         Me.Label26.Text = "Catatan Invoice"
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(210, 492)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(30, 13)
-        Me.Label30.TabIndex = 417
-        Me.Label30.Text = "Date"
         '
         'in_ket
         '
@@ -765,10 +788,10 @@ Partial Class fr_jual_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(246, 466)
+        Me.txtRegdate.Location = New System.Drawing.Point(192, 466)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
-        Me.txtRegdate.Size = New System.Drawing.Size(150, 20)
+        Me.txtRegdate.Size = New System.Drawing.Size(226, 20)
         Me.txtRegdate.TabIndex = 412
         Me.txtRegdate.TabStop = False
         '
@@ -808,17 +831,6 @@ Partial Class fr_jual_detail
         Me.Label20.Size = New System.Drawing.Size(39, 13)
         Me.Label20.TabIndex = 363
         Me.Label20.Text = "Nama"
-        '
-        'Label29
-        '
-        Me.Label29.AutoSize = True
-        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(210, 470)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(30, 13)
-        Me.Label29.TabIndex = 414
-        Me.Label29.Text = "Date"
         '
         'Label21
         '
@@ -1088,7 +1100,6 @@ Partial Class fr_jual_detail
         Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
         Me.in_barang.TabIndex = 12
-        Me.in_barang.TabStop = False
         '
         'in_gudang_n
         '
@@ -1210,7 +1221,7 @@ Partial Class fr_jual_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(466, 459)
+        Me.in_status.Location = New System.Drawing.Point(466, 467)
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(169, 20)
@@ -1296,7 +1307,7 @@ Partial Class fr_jual_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(426, 463)
+        Me.Label10.Location = New System.Drawing.Point(426, 471)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(37, 13)
         Me.Label10.TabIndex = 242
@@ -1349,7 +1360,7 @@ Partial Class fr_jual_detail
         '
         Me.Panel3.BackColor = System.Drawing.Color.Orange
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel3.Location = New System.Drawing.Point(0, 563)
+        Me.Panel3.Location = New System.Drawing.Point(0, 577)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(1003, 10)
         Me.Panel3.TabIndex = 410
@@ -1359,8 +1370,7 @@ Partial Class fr_jual_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_cl
-        Me.ClientSize = New System.Drawing.Size(1003, 573)
+        Me.ClientSize = New System.Drawing.Size(1003, 587)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.pnl_content)
         Me.Controls.Add(Me.Panel1)
@@ -1471,9 +1481,7 @@ Partial Class fr_jual_detail
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
     Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
-    Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
-    Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents Label28 As System.Windows.Forms.Label
     Friend WithEvents in_netto As System.Windows.Forms.TextBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
@@ -1498,4 +1506,7 @@ Partial Class fr_jual_detail
     Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents txtValDate As System.Windows.Forms.TextBox
+    Friend WithEvents txtValAlias As System.Windows.Forms.TextBox
+    Friend WithEvents Label29 As System.Windows.Forms.Label
 End Class

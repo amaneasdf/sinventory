@@ -31,7 +31,8 @@ Module dbproceduralstuff
                 'Next
             Catch ex As Exception
                 'MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(ex)
             End Try
         End If
@@ -63,7 +64,8 @@ Module dbproceduralstuff
                 querycheck = True
             Catch ex As Exception
                 consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(ex)
                 querycheck = False
                 Exit For
@@ -75,19 +77,22 @@ Module dbproceduralstuff
                 transact.Commit()
             Catch ex As Exception
                 consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(ex)
                 querycheck = False
             End Try
         End If
 
         If querycheck = False Then
-            MessageBox.Show("transaksi tidak bisa disimpan")
+            MessageBox.Show(String.Format("Error. {0}", "Terjadi Kesalahan, Transaksi tidak dapat disimpan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             Try
                 transact.Rollback()
             Catch ex As Exception
                 consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"))
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(ex)
                 querycheck = False
             End Try
@@ -109,7 +114,8 @@ Module dbproceduralstuff
             check = True
         Catch ex As Exception
             consoleWriteLine(String.Format("Error: {0}", ex.Message))
-            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             logError(ex)
             'MessageBox.Show(String.Format("Error: {0}", ex.Message))
             check = False
@@ -127,31 +133,38 @@ Module dbproceduralstuff
             rd = cmd.ExecuteReader
         Catch ex As Exception
             consoleWriteLine(String.Format("Error: {0}", ex.Message))
-            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             logError(ex)
         End Try
     End Sub
 
     Public Sub readcommd(query As String)
         Try
-            'consoleWriteLine(query)
             dbSelect(query)
             If rd IsNot Nothing Then
                 rd.Read()
-                'consoleWriteLine(rd.Item(0))
             End If
         Catch ex As Exception
             consoleWriteLine(String.Format("Error: {0}", ex.Message))
-            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"))
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             logError(ex)
-            'MsgBox("Data tidak dapat ditemukan" & Environment.NewLine & ex.Message)
+            Try
+                If rd.IsClosed = False Then
+                    rd.Close()
+                End If
+            Catch ex2 As Exception
+                logError(ex2)
+            End Try
         End Try
     End Sub
 
     Public Function checkdata(table As String, param As String, paramCollumn As String) As Boolean
         Dim query As String = "select * from " & table & " where " & paramCollumn & "=" & param
         Dim x As Boolean = False
-        Console.WriteLine(query)
+        consoleWriteLine(query)
+
         op_con()
         readcommd(query)
         If rd.HasRows Then
@@ -159,7 +172,10 @@ Module dbproceduralstuff
         Else
             x = False
         End If
-        rd.Close()
+        If rd.IsClosed = False Then
+            rd.Close()
+        End If
+
         Return x
     End Function
 
@@ -174,7 +190,8 @@ Module dbproceduralstuff
             data_adpt.Dispose()
             conn.Close()
         Catch ex As Exception
-            MsgBox("Data tidak dapat ditemukan" & Environment.NewLine & ex.Message)
+            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan, data tidak dapat ditemukan"),
+                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             logError(ex)
         End Try
         Return dtable

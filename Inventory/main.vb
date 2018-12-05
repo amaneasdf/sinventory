@@ -253,9 +253,6 @@
             End If
             MainMenu.Items.Add(ParentMenu)
             MainMenu.BackColor = Color.Orange
-            If rd.Item("menu_kode") = "mn0801" Then
-                bt_setperiode.Visible = True
-            End If
         Loop
 
         rd.Close()
@@ -652,17 +649,45 @@
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn070809"
+            Case "mn070804"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Jurnal Umum", "k_jurnalumum")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070805"
                 Using x As New fr_lap_filter_keuangan
                     With x
                         .do_load("Buku Besar", "k_bukubesar")
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn070811"
+            Case "mn070806"
                 Using x As New fr_lap_filter_keuangan
                     With x
-                        .do_load("Jurnal Umum", "k_jurnalumum")
+                        .do_load("Neraca Lajur", "k_neracalajur")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070808"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Laba Rugi", "k_labarugi")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070809"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Jurnal Penutup", "k_jurnaltutup")
+                        .ShowDialog()
+                    End With
+                End Using
+            Case "mn070810"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Neraca", "k_neraca")
                         .ShowDialog()
                     End With
                 End Using
@@ -753,15 +778,11 @@
 
         fr_login.Show()
 
-        selectperiode = getPeriode()
+        setperiode(Today, False)
         currentperiode = selectperiode
 
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
-        strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
-
-        bt_setperiode.Text = "Set Periode"
-        bt_setperiode.Enabled = False
 
         'Dim infpnl As New fr_infopanel With {.Dock = DockStyle.Fill}
         'pnl_main.Controls.Add(infpnl)
@@ -812,11 +833,7 @@
     End Sub
 
     'SET PERIODE BT
-    Private Sub bt_setperiode_Click(sender As Object, e As EventArgs) Handles bt_setperiode.Click
+    Private Sub bt_setperiode_Click(sender As Object, e As EventArgs)
         setperiode(cal_front.SelectionStart)
-    End Sub
-
-    Private Sub cal_front_DateChanged(sender As Object, e As DateRangeEventArgs) Handles cal_front.DateChanged
-        bt_setperiode.Text = "Set Periode to " & cal_front.SelectionStart.ToString("MMMM yyyy")
     End Sub
 End Class

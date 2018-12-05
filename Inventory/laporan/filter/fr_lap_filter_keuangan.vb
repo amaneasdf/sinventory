@@ -43,6 +43,7 @@
     End Sub
 
     Private Sub formSW(tipe As String)
+        Dim closed_sw As Boolean = selectperiode.closed
         Select Case tipe
             Case "k_biayasales", "k_biayasales_global"
                 prcessSW()
@@ -51,17 +52,19 @@
                 sales_sw = "OFF"
                 prcessSW()
 
-            Case "k_jurnalumum"
+            Case "k_jurnalumum", "k_labarugi", "k_neraca", "k_neracalajur", "k_jurnaltutup"
                 sales_sw = "OFF"
                 akun_sw = False
                 prcessSW()
         End Select
 
         Select Case tipe
-            Case "k_biayasales_global", "k_bukubesar"
+            Case "k_biayasales_global", "k_bukubesar", "k_jurnaltutup"
                 date_tglawal.Enabled = False
                 date_tglakhir.Enabled = False
-
+            Case "k_Labarugi", "k_neraca", "k_neracalajur"
+                date_tglawal.Enabled = IIf(closed_sw = False, True, False)
+                date_tglakhir.Enabled = IIf(closed_sw = False, True, False)
         End Select
     End Sub
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
@@ -115,13 +118,15 @@
         Dim q As String = ""
         Dim qwh As String = ""
         Dim qreturn As String = ""
+        Dim qdaftperk As String = "SELECT perk_gol_kode, perk_gol_nama, perk_kode, perk_nama_akun"
+
         Dim qbiaya As String = "SELECT {4}kas_sales as b_sales, salesman_nama as b_sales_n, " _
                                & "k_trans_rek as b_akun,perk_nama_akun as b_akun_n, SUM(k_trans_debet) as b_saldo " _
-                               & "FROM data_kas_faktur " _
-                               & "LEFT JOIN data_kas_trans ON kas_kode=k_trans_faktur AND k_trans_status=1 AND k_trans_rek LIKE '4%' " _
-                               & "LEFT JOIN data_perkiraan ON k_trans_rek=perk_kode " _
+                               & "FROM data_perkiraan " _
+                               & "RIGHT JOIN data_kas_trans ON k_trans_rek=perk_kode AND k_trans_status=1 " _
+                               & "LEFT JOIN data_kas_faktur ON kas_kode=k_trans_faktur AND kas_status=1 AND kas_tgl BETWEEN '{0}' AND '{1}' " _
                                & "LEFT JOIN data_salesman_master ON salesman_kode=kas_sales " _
-                               & "WHERE kas_status=1 AND kas_tgl BETWEEN '{0}' AND '{1}' {2} GROUP BY {3}kas_sales,k_trans_rek"
+                               & "WHERE perk_kode LIKE '4%' {2} GROUP BY {3}kas_sales,k_trans_rek"
 
         Dim qbukubesar As String = "CALL createBukuBesarTableTemp('{0}'); " _
                                    & "SELECT * FROM bukubesar_temp{1}; " _
@@ -131,6 +136,43 @@
                                     & "SELECT * FROM jurnalumum_temp{1}; " _
                                     & "DROP TEMPORARY TABLE IF EXISTS jurnalumum_temp;"
 
+        Dim qjurnaltutup As String = "CALL createJurnalTutupTableTemp('{0}'); " _
+                                    & "SELECT * FROM jurnaltutup_temp{1}; " _
+                                    & "DROP TEMPORARY TABLE IF EXISTS jurnaltutup_temp;"
+
+        Dim qneracalajur As String = "SELECT n_kat, n_group,n_group_n, n_parent,n_parent_n,n_parent_pos,n_akun,n_akun_n,n_akun_pos," _
+                                     & "n_saldoawal, IFNULL(n_debet,0) n_debet,IFNULL(n_kredit,0) n_kredit, " _
+                                     & "@saldo:=IFNULL(IF(n_akun_pos='K',n_kredit-n_debet,n_debet-n_kredit),0) as n_saldo, " _
+                                     & "IF(n_kat IN ('1','2'),TRUNCATE(@saldo+n_saldoawal,2),0) n_neraca, " _
+                                     & "IF(n_kat IN ('1','2'),0,@saldo) n_labarugi " _
+                                     & "FROM( " _
+                                     & " SELECT perk_gol_kat n_kat, perk_tipe as n_group,perk_jen_nama as n_group_n," _
+                                     & "  perk_parent n_parent,perk_gol_nama n_parent_n,perk_gol_pos n_parent_pos, " _
+                                     & "  perk_kode n_akun,perk_nama_akun n_akun_n, perk_d_or_k n_akun_pos,IFNULL(perk_saldoawal_nilai,0) n_saldoawal " _
+                                     & " FROM data_perkiraan " _
+                                     & " LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
+                                     & " LEFT JOIN data_perkiraan_jenis ON perk_jen_kode= perk_gol_kodejen " _
+                                     & " LEFT JOIN data_perkiraan_saldoawal ON perk_saldoawal_kodeakun=perk_kode AND perk_saldoawal_status=1 AND perk_saldoawal_idperiode='{0}' " _
+                                     & " WHERE perk_status = 1 " _
+                                     & ")akun_det LEFT JOIN( " _
+                                     & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
+                                     & " FROM data_jurnal_line " _
+                                     & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
+                                     & " WHERE line_status=1 AND line_tanggal BETWEEN '{1}' AND '{2}' AND line_kat='UMUM' " _
+                                     & " GROUP BY jurnal_kode_perk " _
+                                     & ")akun_saldo ON jurnal_kode_perk=n_akun " _
+                                     & "JOIN (SELECT @saldo:=0) para"
+
+        Dim qlabarugi As String = "CALL createLabaRugiTemp('{0}','{1}','{2}'); " _
+                                  & "SELECT * FROM labarugi_temp; " _
+                                  & "DROP TEMPORARY TABLE IF EXISTS labarugi_temp;"
+        Dim qneraca As String = "CALL createNeracaTemp('{0}','{1}','{2}'); " _
+                                & "SELECT * FROM neraca_temp; " _
+                                & "DROP TEMPORARY TABLE IF EXISTS neraca_temp;"
+
+        Dim qneracalajur_perm As String = "CALL view_akun_neracalajur('{0}')"
+        Dim qlabarugi_perm As String = "CALL view_akun_labarugi('{0}')"
+        Dim qneraca_perm As String = "CALL view_akun_neraca('{0}')"
 
         Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
@@ -163,8 +205,27 @@
                 End If
 
             Case "k_jurnalumum"
+                'If selectperiode.closed = False Then
                 q = String.Format(qjurnalumum, selectperiode.id, "{0}")
+                'End If
                 qwh += " WHERE ju_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'"
+
+            Case "k_jurnaltutup"
+                'If selectperiode.closed = False Then
+                q = String.Format(qjurnaltutup, selectperiode.id, "{0}")
+                'End If
+                qwh += " WHERE ju_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'"
+
+            Case "k_labarugi"
+                q = String.Format(qlabarugi, selectperiode.id, _tglawal, _tglakhir)
+
+            Case "k_neraca"
+                q = String.Format(qneraca, selectperiode.id, _tglawal, _tglakhir)
+
+            Case "k_neracalajur"
+                q = String.Format(qneracalajur, selectperiode.id, _tglawal, _tglakhir)
+
+            Case "k_daftarperk"
 
 
         End Select
@@ -217,6 +278,7 @@
     Public Sub do_load(judulLap As String, tipeLap As String)
         laptype = tipeLap
         lapwintext = judulLap
+        Me.Text = judulLap
 
         With cb_periode
             .DataSource = jenis("periode")
@@ -224,10 +286,15 @@
             .ValueMember = "Value"
             .SelectedValue = selectperiode.id
         End With
+
+        date_tglawal.MinDate = selectperiode.tglawal
         date_tglawal.Value = selectperiode.tglawal
+        date_tglakhir.MaxDate = selectperiode.tglakhir
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
         lbl_periodedata.Text = main.strip_periode.Text
+        lbl_title2.Text = Me.Text
+
         formSW(tipeLap)
         'prcessSW()
     End Sub

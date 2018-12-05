@@ -17,18 +17,24 @@
     End Sub
 
     Public Sub performRefresh()
-        in_cari.Clear()
-        searchData("")
-        in_countdata.Text = dgv_list.Rows.Count
         With date_tgl_beli
-            .MinDate = selectperiode.tglawal
+            .MinDate = DateSerial(1990, 1, 1)
+            .MaxDate = DateSerial(2100, 12, 31)
             .MaxDate = selectperiode.tglakhir
+            .MinDate = selectperiode.tglawal
             If selectperiode.tglakhir >= Today Then
                 .Value = Today
             Else
                 .Value = selectperiode.tglakhir
             End If
         End With
+        in_cari.Clear()
+        searchData("")
+        in_countdata.Text = dgv_list.Rows.Count
+        If selectperiode.closed = True Then
+            mn_tambah.Enabled = False
+            mn_edit.Enabled = False
+        End If
     End Sub
 
     Private Sub loadData(kode As String)
@@ -110,7 +116,7 @@
                     & "getHPPAVG(barang_kode,'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "','" & selectperiode.id & "') as 'HPP', barang_satuan_besar, " _
                     & "barang_satuan_besar_jumlah, barang_satuan_tengah, barang_satuan_tengah_jumlah, barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
-                    & "WHERE stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
+                    & "WHERE stock_status=1 AND stock_gudang='" & in_gudang.Text & "' " _
                     & "AND barang_nama LIKE '{0}%'"
             Case "gudang2"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 " _
@@ -376,6 +382,7 @@
             x.Add("'" & rows.Cells(0).Value & "'")
             qty.Add(_qtytot)
             nilai.Add(_qtytot * _hpp)
+            consoleWriteLine(_qtytot & "-" & _hpp)
         Next
         '==========================================================================================================================
 
@@ -386,25 +393,27 @@
         Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
         data = Nothing
         data = {
-            "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
+            "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl", "trans_periode",
             "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
             }
         Dim i As Integer = 0
 
         For Each brg As String In x
             Dim kd, kd2 As String
+            consoleWriteLine(nilai.Item(i))
 
             'ASAL
-            kd = in_gudang.Text & "-" & Replace(brg, "'", "") & "-" & selectperiode.id
+            kd = in_gudang.Text & "-" & Replace(brg, "'", "")
             data2 = {
                 "'" & kd & "'",
                 "MAX(trans_index)+1",
                 "'mg'",
                 "'" & in_kode.Text & "'",
                 "'" & _tgltrans & "'",
+                "'" & selectperiode.id & "'",
                 "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 qty.Item(i) * -1,
-                (nilai.Item(1) * -1).ToString.Replace(",", "."),
+                (nilai.Item(i) * -1).ToString.Replace(",", "."),
                 "'" & loggeduser.user_id & "'",
                 "NOW()",
                 "1"
@@ -412,8 +421,9 @@
             dataBrg = {
                 "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 "trans_tgl='" & _tgltrans & "'",
+                "trans_periode='" & selectperiode.id & "'",
                 "trans_qty=" & qty.Item(i) * -1,
-                "trans_nilai=" & (nilai.Item(1) * -1).ToString.Replace(",", "."),
+                "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
                 "trans_upd_alias='" & loggeduser.user_id & "'",
                 "trans_status=1"
@@ -421,29 +431,19 @@
             queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd, String.Join(",", dataBrg)))
 
             'TUJUAN
-            kd2 = Nothing
-            readcommd(String.Format(q4, in_gudang2.Text, brg, selectperiode.id))
-            If rd.HasRows Then
-                kd2 = rd.Item(0)
-            End If
-            rd.Close()
-
-            If kd2 = Nothing Then
-                'DONE : TODO : CREATE STOK AWAL
-                kd2 = in_gudang2.Text & "-" & Replace(brg, "'", "") & "-" & selectperiode.id
-                q = "INSERT INTO data_stok_awal SET stock_kode='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
-
-                dataBrg = {
-                    "stock_gudang='" & in_gudang2.Text & "'",
-                    "stock_barang=" & brg,
-                    "stock_awal=0",
-                    "stock_periode='" & selectperiode.id & "'",
-                    "stock_reg_alias='" & loggeduser.user_id & "'",
-                    "stock_reg_date=NOW()",
-                    "stock_status='1'"
-                    }
-                queryArr.Add(String.Format(q, kd2, String.Join(",", dataBrg)))
-            End If
+            kd2 = in_gudang2.Text & "-" & Replace(brg, "'", "")
+            'CREATE SALDO AWAL
+            data2 = {
+                "'" & kd2 & "'", 0, "'sa'",
+                "''", "'" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "'",
+                "'" & selectperiode.id & "'", "'SALDO AWAL PERIODE'",
+                0, 0,
+                "'" & loggeduser.user_id & "'", "NOW()", "1"
+                }
+            dataBrg = {
+                "trans_id=trans_id"
+                }
+            queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd2, String.Join(",", dataBrg)))
 
             'DONE : TODO : WRITE KARTU STOK TUJUAN
             data2 = {
@@ -452,6 +452,7 @@
                 "'mg'",
                 "'" & in_kode.Text & "'",
                 "'" & _tgltrans & "'",
+                "'" & selectperiode.id & "'",
                 "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 qty.Item(i),
                 nilai.Item(i).ToString.Replace(",", "."),
@@ -462,6 +463,7 @@
             dataBrg = {
                 "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
                 "trans_tgl='" & _tgltrans & "'",
+                "trans_periode='" & selectperiode.id & "'",
                 "trans_qty=" & qty.Item(i),
                 "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
                 "trans_upd_date=NOW()",
@@ -469,6 +471,8 @@
                 "trans_status=1"
                 }
             queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd2, String.Join(",", dataBrg)))
+
+            i += 1
         Next
         '==========================================================================================================================
         '==========================================================================================================================
@@ -605,6 +609,11 @@
         mn_edit.Enabled = True
         main.tabcontrol.TabPages.Remove(tabpagename)
         rowindex = 0
+    End Sub
+
+    '---------------- form
+    Private Sub fr_stok_mutasi_list_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        performRefresh()
     End Sub
 
     '----------------- menu
@@ -837,11 +846,24 @@
                 setPopUpResult()
             End If
             keyshortenter(in_gudang2_n, e)
-        Else
-            If popPnl_barang.Visible = False And in_gudang_n.ReadOnly = False Then
-                popPnl_barang.Visible = True
+        ElseIf e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
             End If
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
+        Else
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And in_gudang_n.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                    loadDataBRGPopup("gudang", in_gudang_n.Text)
+                End If
+            End If
+        End If
+        e.SuppressKeyPress = True
+    End Sub
+
+    Private Sub in_sales_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_gudang_n.MouseClick, in_gudang2_n.MouseClick, in_barang_nm.MouseClick
+        If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+            popPnl_barang.Visible = True
         End If
     End Sub
 
@@ -851,7 +873,7 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_gudang2.Leave, in_gudang_n.Leave, in_barang_nm.Leave
+    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_gudang2_n.Leave, in_gudang_n.Leave, in_barang_nm.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
         Else
@@ -885,12 +907,19 @@
                 setPopUpResult()
             End If
             keyshortenter(in_barang_nm, e)
-        Else
-            If popPnl_barang.Visible = False And in_gudang2_n.ReadOnly = False Then
-                popPnl_barang.Visible = True
+        ElseIf e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
             End If
-            loadDataBRGPopup("gudang2", in_gudang2_n.Text)
+        Else
+            If e.KeyCode = Keys.Escape Then
+                If popPnl_barang.Visible = False And in_gudang2_n.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                    loadDataBRGPopup("gudang2", in_gudang2_n.Text)
+                End If
+            End If
         End If
+        e.SuppressKeyPress = True
     End Sub
 
     Private Sub in_gudang2_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang2_n.TextChanged
@@ -925,12 +954,17 @@
                 setPopUpResult()
             End If
             keyshortenter(in_qty1, e)
+        ElseIf e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            End If
         Else
             If popPnl_barang.Visible = False And in_barang_nm.ReadOnly = False Then
                 popPnl_barang.Visible = True
+                loadDataBRGPopup("barang", in_barang_nm.Text)
             End If
-            loadDataBRGPopup("barang", in_barang_nm.Text)
         End If
+        e.SuppressKeyPress = True
     End Sub
 
     Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged

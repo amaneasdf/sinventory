@@ -46,6 +46,7 @@
     End Function
 
     Public Sub performRefresh()
+        Dim _editmenutxt As String = "Edit Data"
         consoleWriteLine(tabpagename.Name.ToString)
         Me.Cursor = Cursors.AppStarting
         Select Case tabpagename.Name.ToString
@@ -71,10 +72,28 @@
                 populateDGVUserCon("returbeli", "", frmreturbeli.dgv_list)
             Case "pgpesanjual"
                 populateDGVUserCon("pesanan", "", frmpesanjual.dgv_list)
+                With frmpesanjual
+                    .valid_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
+                    .del_sw = False
+                    .add_sw = IIf(selectperiode.closed = True, False, True)
+                    .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+                End With
             Case "pgpenjualan"
                 populateDGVUserCon("jual", "", frmpenjualan.dgv_list)
+                With frmpenjualan
+                    .print_sw = True
+                    .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
+                    .add_sw = IIf(selectperiode.closed = True, False, True)
+                    .del_sw = False
+                    .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+                End With
             Case "pgreturjual"
                 populateDGVUserCon("returjual", "", frmreturjual.dgv_list)
+                With frmreturjual
+                    .print_sw = True
+                    .add_sw = IIf(selectperiode.closed = True, False, True)
+                    .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+                End With
             Case "pgstok"
                 populateDGVUserCon("stok", "", frmstok.dgv_list)
             Case "pgmutasigudang"
@@ -116,6 +135,21 @@
         Me.Cursor = Cursors.Default
         in_cari.Clear()
         in_countdata.Text = dgv_list.RowCount
+
+        'mn_edit.Text = "Edit Data"
+        setMenuSw()
+    End Sub
+
+    Private Sub setMenuSw()
+        'menu bar
+        mn_add.Visible = add_sw
+        mn_edit.Visible = edit_sw
+        mn_del.Visible = del_sw
+        mn_export.Visible = False
+        mn_print.Visible = print_sw
+        mn_bataljual.Visible = cancel_sw
+        mn_bayar.Visible = bayar_sw
+        mn_validasi.Visible = valid_sw
     End Sub
 
     Private Sub addItem()
@@ -381,12 +415,15 @@
                             End With
                         End Using
                     Case "pgjurnalumum"
-                        Using detail As New fr_jurnal_u_det
-                            With detail
-
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        Dim detail As New fr_jurnal_u_det
+                        Dim row As DataGridViewRow = dgv_list.SelectedRows.Item(0)
+                        Dim kode As String = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                        With detail
+                            .doLoad(kode, row.Cells(6).Value)
+                            .in_kode.Text = kode
+                            .Text += "#" & kode & " - " & row.Cells(2).Value
+                            .Show(main)
+                        End With
                     Case "pgjurnalmemorial"
                         Using detail As New fr_jurnal_mem
                             With detail
@@ -492,6 +529,105 @@
         End If
     End Sub
 
+    Private Sub delItem()
+        If del_sw = True Then
+            Dim tabpage As String = tabpagename.Name.ToString
+            Dim _allowdel As Boolean = False
+            Dim _valstate As String = ""
+            Select Case tabpage
+                Case "pgbarang"
+                    _allowdel = loggeduser.validasi_master
+                    _valstate = "master"
+                Case "pgpenjualan", "pgreturjual", "pgpembelian", "pgreturbeli"
+                    _allowdel = loggeduser.validasi_trans
+                    _valstate = "trans"
+                Case "pgkas"
+                    _allowdel = loggeduser.validasi_akun
+                    _valstate = "akun"
+            End Select
+
+            If _allowdel = False Then
+                MessageBox.Show("Anda tidak dapat meghapus data")
+                Exit Sub
+            Else
+                Dim _procdel As Boolean = False
+                Using validfr As New fr_stockopconfirm_dialog
+
+                End Using
+
+                If _procdel = False Then
+                    MessageBox.Show("Penghapusan data dibatalkan")
+                    Exit Sub
+                End If
+            End If
+
+            With dgv_list
+                If .Rows.Count > 0 And .SelectedRows.Count > 0 Then
+                    Dim q As String = ""
+                    Dim qcheck As String = ""
+                    Dim ckdata As Boolean = True
+                    Dim msg As String = "Hapus"
+                    Dim kode As String = ""
+                    Dim queryCk As Boolean = False
+
+                    consoleWriteLine(tabpagename.Name.ToString)
+                    Me.Cursor = Cursors.AppStarting
+                    Select Case tabpagename.Name.ToString
+                        Case "pgpejualan"
+                            kode = .SelectedRows.Item(0).Cells(1).Value
+                            ckdata = checkdata("data_piutang_trans", "'" & kode & "' AND p_trans_status<>9 AND p_trans_jenis NOT IN ('awal','jual')", "p_trans_kode_piutang")
+                            q = "UPDATE data_penjualan_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE faktur_kode='" & kode & "'"
+                        Case "pgreturjual"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            ckdata = False
+                            q = "UPDATE data_penjualan_retur_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE faktur_kode_bukti='" & kode & "'"
+
+                        Case "pgpembelian"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            ckdata = checkdata("data_hutang_trans", "'" & kode & "' AND h_trans_status<>9 AND h_trans_jenis NOT IN ('awal','beli')", "h_trans_kode_hutang")
+                            q = "UPDATE data_pembelian_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE faktur_kode='" & kode & "'; CALL transPembelianFin('" & kode & "','" & loggeduser.user_id & "');"
+                        Case "pgreturbeli"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            ckdata = False
+                            q = "UPDATE data_pembelian_retur_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE faktur_kode_bukti='" & kode & "'"
+
+                        Case "pghutangbayar"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            'ck bg
+                            q = "UPDATE data_hutang_bayar SET h_bayar_status=9, h_bayar_upd_date=NOW(), h_bayar_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE h_bayar_bukti='" & kode & "'; CALL transBayarHutangFin('" & kode & "','" & loggeduser.user_id & "');"
+
+                        Case "pgpiutangbayar"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            'ck bg
+                            q = "UPDATE data_piutang_bayar SET p_bayar_status=9, p_bayar_upd_date=NOW(), p_bayar_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE p_bayar_bukti='" & kode & "'; CALL transBayarPiutangFin('" & kode & "','" & loggeduser.user_id & "');"
+                    End Select
+
+                    If ckdata = False Then
+                        op_con()
+                        queryCk = commnd(q)
+                        If queryCk = True Then
+                            MessageBox.Show("SUCC")
+                        Else
+                            MessageBox.Show("NOPE")
+                        End If
+                    Else
+                        MessageBox.Show("NOPE V2")
+                    End If
+                Else
+                    MessageBox.Show("Data tidak ada")
+                End If
+
+                Me.Cursor = Cursors.Default
+            End With
+        End If
+    End Sub
+
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
         If e.KeyData = Keys.Enter Then
             e.SuppressKeyPress = True
@@ -566,15 +702,7 @@
 
     '---------------- LOAD
     Private Sub fr_list_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'menu bar
-        mn_add.Visible = add_sw
-        mn_edit.Visible = edit_sw
-        mn_del.Visible = del_sw
-        mn_export.Visible = False
-        mn_print.Visible = print_sw
-        mn_bataljual.Visible = cancel_sw
-        mn_bayar.Visible = bayar_sw
-        mn_validasi.Visible = valid_sw
+        setMenuSw()
     End Sub
 
     '---------------- CLOSE
@@ -632,6 +760,10 @@
         performRefresh()
     End Sub
 
+    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
+        'delItem()
+    End Sub
+
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
         printItem()
     End Sub
@@ -641,11 +773,7 @@
     End Sub
 
     Private Sub mn_bataljual_Click(sender As Object, e As EventArgs) Handles mn_bataljual.Click
-        'UPDATE STATUS FAKTUR TO '2'
-        'CEK TRANSAKSI->sudah dibayar/diretur
-        'IF YES -> stop
-        'IF NO -> UPDATE
-        If cancel_sw = True Then
+        If cancel_sw = True And dgv_list.Rows.Count > 0 Then
             With dgv_list.SelectedRows
                 Dim chkdt As Boolean = False
                 Dim chkdt2 As Boolean = False
@@ -655,25 +783,15 @@
                 Dim querychk As Boolean = False
 
                 op_con()
-                chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
-                chkdt2 = checkdata("data_piutang_retur", "'" & kodefaktur & "' AND p_retur_status<>9", "p_retur_faktur")
+                'chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
+                chkdt = checkdata("data_piutang_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
 
                 Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
-                If .Count > 0 And (chkdt = False And chkdt2 = False) Then
+                If .Count > 0 And chkdt = False Then
                     Dim msg As String = "Batalkan penjualan {0} untuk customer {1}?"
                     If MessageBox.Show(String.Format(msg, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                         op_con()
                         queryArr.Add(String.Format(q, kodefaktur))
-
-                        q = "UPDATE data_piutang_awal SET piutang_status=9, piutang_upd_date=NOW(),piutang_upd_alias='{1}' WHERE piutang_faktur='{0}'"
-                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
-
-                        q = "UPDATE data_jurnal_line SET line_status='9',line_reg_date=NOW(),line_reg_alias='{1}' WHERE line_kode='{0}'"
-                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
-
-                        q = "UPDATE data_stok_kartustock SET trans_status='9',trans_upd_date=NOW(),trans_upd_alias='{1}' WHERE trans_faktur='{0}' " _
-                            & "AND trans_jenis='po'"
-                        queryArr.Add(String.Format(q, kodefaktur, loggeduser.user_id))
 
                         querychk = startTrans(queryArr)
                         If querychk = True Then
@@ -688,6 +806,8 @@
                 End If
 
             End With
+        ElseIf dgv_list.Rows.Count = 0 Then
+            MessageBox.Show("Data tidak ada")
         End If
     End Sub
 

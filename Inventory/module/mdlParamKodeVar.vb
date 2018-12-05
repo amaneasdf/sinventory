@@ -14,8 +14,13 @@
         Dim user_lev As String
         Dim allowedit_transact As Boolean
         Dim allowedit_master As Boolean
+        Dim allowedit_akun As Boolean
         Dim validasi_trans As Boolean
         Dim validasi_master As Boolean
+        Dim validasi_akun As Boolean
+
+        Dim admin_pc As Boolean
+        Dim admin_andro As Boolean
 
         'app ver info
         Dim user_ver As String
@@ -32,6 +37,7 @@
         Dim id As String
         Dim tglawal As Date
         Dim tglakhir As Date
+        Dim closed As Boolean
     End Structure
 
     Public Structure dblogwrite
@@ -133,6 +139,8 @@
                 dt.Rows.Add("Giro", "BG")
                 dt.Rows.Add("TransferBank", "TRANSFER")
                 dt.Rows.Add("ReturPenjualan", "RETUR")
+                dt.Rows.Add("Titipan", "PIUTSUPL")
+                dt.Rows.Add("BG Ditolak", "BGTOLAK")
 
             Case "validasi"
                 dt.Columns.Add("Text", GetType(String))

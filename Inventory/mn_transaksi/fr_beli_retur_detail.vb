@@ -50,9 +50,6 @@
         rd.Close()
 
         setStatus()
-        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Then
-            bt_simpanreturbeli.Enabled = False
-        End If
         'setReadOnly()
     End Sub
 
@@ -97,6 +94,19 @@
             Case Else
                 Exit Sub
         End Select
+
+        If loggeduser.allowedit_transact = False Or currentperiode.id <> selectperiode.id Or selectperiode.closed = True Then
+            For Each txt As TextBox In {in_supplier_n, in_gudang_n, in_no_faktur_ex, in_no_faktur, in_barang_nm, in_pajak, in_ket}
+                txt.ReadOnly = True
+            Next
+
+            bt_tbbarang.Enabled = False
+            date_tgl_pajak.Enabled = False
+            date_tgl_trans.Enabled = False
+            bt_simpanreturbeli.Enabled = False
+            bt_batalreturbeli.Text = "OK"
+        End If
+
     End Sub
 
     'SET SATUAN BARANG
@@ -186,7 +196,7 @@
             Case "barang"
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli as harga_beli " _
                     & "FROM data_barang_master LEFT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_status=1 " _
-                    & "WHERE barang_nama LIKE '{0}%' AND stock_periode='" & selectperiode.id & "' AND stock_gudang='" & in_gudang.Text & "' " _
+                    & "WHERE barang_nama LIKE '{0}%' AND stock_gudang='" & in_gudang.Text & "' " _
                     & "AND barang_supplier='" & in_supplier.Text & "' AND barang_status=1 LIMIT 250"
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
@@ -195,9 +205,9 @@
             Case "faktur"
                 'q = "SELECT hutang_faktur As 'Faktur', hutang_tgl As 'Tanggal', hutang_sisa As 'Sisa' FROM selecthutangawal " _
                 '    & "WHERE hutang_supplier='" & in_supplier.Text & "' AND hutang_faktur LIKE '{0}%'"
-                q = "SELECT hutang_faktur AS 'Faktur', hutang_awal AS 'SaldoAwal', getSisaHutang(hutang_faktur,'" & selectperiode.id & "') as 'SisaHutang' " _
+                q = "SELECT hutang_faktur AS 'Faktur', getSisaHutang(hutang_faktur,'" & selectperiode.id & "') as 'SisaHutang' " _
                     & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON faktur_kode=hutang_faktur AND faktur_status=1 " _
-                    & "WHERE hutang_idperiode='" & selectperiode.id & "' AND hutang_status=1 AND faktur_supplier='" & in_supplier.Text & "' " _
+                    & "WHERE hutang_status=1 AND faktur_supplier='" & in_supplier.Text & "' " _
                     & "AND hutang_faktur LIKE '{0}%'"
             Case Else
                 Exit Sub
@@ -212,9 +222,8 @@
             If tipe = "barang" Then
                 .Columns(2).Visible = False
             ElseIf tipe = "faktur" Then
-                .Columns(1).Width = 80
-                .Columns(2).Width = 125
-                .Columns(2).DefaultCellStyle = dgvstyle_currency
+                .Columns(1).Width = 125
+                .Columns(1).DefaultCellStyle = dgvstyle_currency
             End If
         End With
     End Sub
@@ -390,7 +399,6 @@
         Dim q As String = ""
         Dim querycheck As Boolean = False
         Dim dataHead, dataBrg As String()
-        Dim data1, data2 As String()
         Dim queryArr As New List(Of String)
 
         Dim _tgltrans As String = date_tgl_trans.Value.ToString("yyyy-MM-dd")
@@ -453,9 +461,6 @@
         '==========================================================================================================================
         q = "UPDATE data_pembelian_retur_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_no_bukti.Text))
-
-        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}'"
-        queryArr.Add(String.Format(q, in_no_bukti.Text))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -485,105 +490,16 @@
                 }
             q = "INSERT INTO data_pembelian_retur_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", dataBrg)))
-
-            'COUNT QTY TOTAL PER ITEM
-            Dim _qtytot As Integer = 0
-            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
-            If rd.HasRows Then
-                _qtytot = rd.Item(0)
-            End If
-            rd.Close()
-
-            'COUNT NILAI PERSEDIAAN
-            Dim _pers As Decimal = 0
-            _pers = _qtytot * _hpp
-
-            x.Add("'" & rows.Cells(0).Value & "'")
-            qty.Add(_qtytot)
-            x_kodestock.Add("'" & _stock & "'")
-            nilai.Add(_pers)
         Next
         '==========================================================================================================================
         '==========================================================================================================================
 
 
         '==========================================================================================================================
-        'WRITE KARTU STOK
-        Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
-        data1 = {
-                "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
-                "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
-                }
-        Dim i As Integer = 0
-        For Each stock As String In x_kodestock
-            data2 = {
-                    stock,
-                    "MAX(trans_index)+1",
-                    "'rb'",
-                    "'" & in_no_bukti.Text & "'",
-                    "'" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-                    "'RETUR PEMBELIAN'",
-                    qty.Item(i) * -1,
-                    (nilai.Item(i) * -1).ToString.Replace(",", "."),
-                    "'" & loggeduser.user_id & "'",
-                    "NOW()"
-                    }
-            dataBrg = {
-                "trans_tgl='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-                "trans_qty=" & qty.Item(i) * -1,
-                "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
-                "trans_upd_date=NOW()",
-                "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status='" & rtbStatus & "'"
-                }
-            queryArr.Add(String.Format(q4, String.Join(",", data1), String.Join(",", data2), stock, String.Join(",", dataBrg)))
-            i += 1
-        Next
+        q = "CALL transReturBeliFin('{0}','{1}')"
+        queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
         '==========================================================================================================================
 
-        '==========================================================================================================================
-        'TODO : WRITE HUTANG/TITIP RETUR
-        q = "UPDATE data_hutang_retur SET h_retur_status=9 WHERE h_retur_bukti_retur='{0}'"
-        queryArr.Add(String.Format(q, kode))
-        q = "UPDATE data_hutang_titip SET h_titip_status=9 WHERE h_titip_faktur='{0}'"
-        queryArr.Add(String.Format(q, kode))
-
-        If cb_bayar_jenis.SelectedValue = 1 Then
-            Dim q6 As String = "INSERT INTO data_hutang_retur SET h_retur_faktur='{0}',h_retur_bukti_retur='{1}',{2} ON DUPLICATE KEY UPDATE {2}"
-            data1 = {
-                "h_retur_total=" & removeCommaThousand(in_netto.Text),
-                "h_retur_reg_date=NOW()",
-                "h_retur_reg_alias='" & loggeduser.user_id & "'",
-                "h_retur_status='" & rtbStatus & "'"
-                }
-            queryArr.Add(String.Format(q6, in_no_faktur.Text, in_no_bukti.Text, String.Join(",", data1)))
-        ElseIf cb_bayar_jenis.SelectedValue = 3 Then
-            q = "INSERT INTO data_hutang_titip SET h_titip_faktur='{0}',{1},h_titip_reg_date=NOW(),h_titip_reg_alias='{2}' ON DUPLICATE KEY UPDATE {1}," _
-                & "h_titip_upd_alias='{2}',h_titip_upd_date=NOW()"
-            data1 = {
-                "h_titip_ref='" & in_supplier.Text & "'",
-                "h_titip_nilai=" & removeCommaThousand(in_netto.Text).ToString.Replace(",", "."),
-                "h_titip_tipe='retur'",
-                "h_titip_idperiode='" & selectperiode.id & "'",
-                "h_titip_status='" & rtbStatus & "'"
-                }
-            queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
-        End If
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INPUT JURNAL
-        '----------HEAD
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='RBELI',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
-            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
-        data1 = {
-            "line_ref='" & in_supplier.Text & "'",
-            "line_ref_type='SUPPLIER'",
-            "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-            "line_status='" & rtbStatus & "'"
-            }
-        queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
-        '==========================================================================================================================
 
         '==========================================================================================================================
         'BEGIN TRANSACTION
@@ -594,7 +510,6 @@
         If querycheck = False Then
             Exit Sub
         Else
-            'TODO : WRITE LOG ACTIVITY
             MessageBox.Show("Data tersimpan")
             doRefreshTab({pgreturbeli, pgstok, pghutangawal})
             Me.Close()
@@ -635,6 +550,16 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_beli_retur_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            Else
+                bt_batalreturbeli.PerformClick()
+            End If
+        End If
     End Sub
 
     'MENU
@@ -684,6 +609,11 @@
             loadData(in_no_bukti.Text)
             loadDataBrg(in_no_bukti.Text)
             in_no_bukti.ReadOnly = True
+        End If
+
+        If selectperiode.closed = True Then
+            bt_simpanreturbeli.Enabled = False
+            bt_batalreturbeli.Text = "OK"
         End If
     End Sub
 
@@ -855,12 +785,14 @@
     End Sub
 
     Private Sub in_gudang_n_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
-        popPnl_barang.Location = New Point(in_gudang_n.Left - (popPnl_barang.Width - in_gudang_n.Width), in_gudang_n.Top + in_gudang_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False Then
+            popPnl_barang.Location = New Point(in_gudang_n.Left - (popPnl_barang.Width - in_gudang_n.Width), in_gudang_n.Top + in_gudang_n.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "gudang"
+            loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
-        popupstate = "gudang"
-        loadDataBRGPopup("gudang", in_gudang_n.Text)
     End Sub
 
     Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
@@ -874,7 +806,7 @@
             End If
             keyshortenter(in_no_faktur_ex, e)
         Else
-            If popPnl_barang.Visible = False Then
+            If popPnl_barang.Visible = False And sender.ReadOnly = False Then
                 popPnl_barang.Visible = True
             End If
             loadDataBRGPopup("gudang", in_gudang_n.Text)
@@ -987,13 +919,15 @@
 
     'DGV
     Private Sub dgv_barang_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
-        If e.RowIndex < 0 Then
-            indexrow = 0
-        Else
-            indexrow = e.RowIndex
-            dgvToTxt()
-            dgv_barang.Rows.RemoveAt(indexrow)
-            countBiaya()
+        If loggeduser.allowedit_transact = True And selectperiode.closed = False Then
+            If e.RowIndex < 0 Then
+                indexrow = 0
+            Else
+                indexrow = e.RowIndex
+                dgvToTxt()
+                dgv_barang.Rows.RemoveAt(indexrow)
+                countBiaya()
+            End If
         End If
     End Sub
 

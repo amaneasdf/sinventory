@@ -30,15 +30,15 @@ Partial Class fr_stok_mutasibarang_list
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.popPnl_barang = New System.Windows.Forms.Panel()
+        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
+        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.in_nilai1 = New System.Windows.Forms.TextBox()
         Me.Label14 = New System.Windows.Forms.Label()
         Me.in_nilai2 = New System.Windows.Forms.NumericUpDown()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.Label11 = New System.Windows.Forms.Label()
-        Me.popPnl_barang = New System.Windows.Forms.Panel()
-        Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
-        Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.in_hpp2 = New System.Windows.Forms.NumericUpDown()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.in_gudang_n = New System.Windows.Forms.TextBox()
@@ -104,9 +104,9 @@ Partial Class fr_stok_mutasibarang_list
         Me.SplitContainer1.Panel1.SuspendLayout()
         Me.SplitContainer1.Panel2.SuspendLayout()
         Me.SplitContainer1.SuspendLayout()
-        CType(Me.in_nilai2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.in_nilai2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_hpp2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -240,6 +240,44 @@ Partial Class fr_stok_mutasibarang_list
         Me.SplitContainer1.SplitterDistance = 322
         Me.SplitContainer1.TabIndex = 250
         '
+        'popPnl_barang
+        '
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(423, 153)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(370, 135)
+        Me.popPnl_barang.TabIndex = 263
+        Me.popPnl_barang.Visible = False
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(370, 127)
+        Me.dgv_listbarang.TabIndex = 20
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
         'in_nilai1
         '
         Me.in_nilai1.BackColor = System.Drawing.Color.White
@@ -309,44 +347,6 @@ Partial Class fr_stok_mutasibarang_list
         Me.Label11.Size = New System.Drawing.Size(47, 26)
         Me.Label11.TabIndex = 328
         Me.Label11.Text = "Barang" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Asal"
-        '
-        'popPnl_barang
-        '
-        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(423, 153)
-        Me.popPnl_barang.Name = "popPnl_barang"
-        Me.popPnl_barang.Size = New System.Drawing.Size(370, 135)
-        Me.popPnl_barang.TabIndex = 263
-        Me.popPnl_barang.Visible = False
-        '
-        'dgv_listbarang
-        '
-        Me.dgv_listbarang.AllowUserToAddRows = False
-        Me.dgv_listbarang.AllowUserToDeleteRows = False
-        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
-        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
-        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
-        Me.dgv_listbarang.MultiSelect = False
-        Me.dgv_listbarang.Name = "dgv_listbarang"
-        Me.dgv_listbarang.ReadOnly = True
-        Me.dgv_listbarang.RowHeadersVisible = False
-        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(370, 127)
-        Me.dgv_listbarang.TabIndex = 20
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
         '
         'in_hpp2
         '
@@ -885,7 +885,7 @@ Partial Class fr_stok_mutasibarang_list
         Me.bt_tbbarang.FlatAppearance.BorderSize = 0
         Me.bt_tbbarang.FlatStyle = System.Windows.Forms.FlatStyle.Popup
         Me.bt_tbbarang.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tbbarang.Location = New System.Drawing.Point(826, 101)
+        Me.bt_tbbarang.Location = New System.Drawing.Point(814, 101)
         Me.bt_tbbarang.Name = "bt_tbbarang"
         Me.bt_tbbarang.Size = New System.Drawing.Size(60, 40)
         Me.bt_tbbarang.TabIndex = 17
@@ -988,10 +988,10 @@ Partial Class fr_stok_mutasibarang_list
         Me.SplitContainer1.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer1.ResumeLayout(False)
-        CType(Me.in_nilai2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.in_nilai2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_hpp2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty1, System.ComponentModel.ISupportInitialize).EndInit()

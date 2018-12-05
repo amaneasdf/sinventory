@@ -85,6 +85,20 @@
             Case Else
                 Exit Sub
         End Select
+
+        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Then
+            For Each txt As TextBox In {in_supplier_n, in_gudang_n, in_suratjalan, in_barang_nm, in_pajak, in_ket}
+                txt.ReadOnly = True
+            Next
+
+            bt_simpanbeli.Visible = False
+            bt_batalbeli.Text = "OK"
+            bt_tbbarang.Enabled = False
+            date_tgl_beli.Enabled = False
+            date_tgl_pajak.Enabled = False
+            cb_ppn.Enabled = False
+            mn_save.Enabled = False
+        End If
     End Sub
 
     'SET SATUAN BARANG
@@ -319,7 +333,7 @@
         'SAVE HEADER -> LISTBARANG(GET QTY->UPD HPP->CHECK STOK AWAL(IFNULL INPUT->INPUT KARTU STOK)->INPUT BARANG->INPUT KARTU STOK) -> INPUT HUTANG AWAL
         'UPDATE
         'SAVE HEADER -> LISTBARANG(GET QTY->SAVEBARANG->UPD HPP-> UPD KARTUSTOK) -> UPD HUTANG AWAL
-        Dim dataHead, dataBrg, data1, data2 As String()
+        Dim dataHead, dataBrg As String()
         Dim querycheck As Boolean = False
         Dim queryArr As New List(Of String)
         Dim q As String = ""
@@ -388,9 +402,6 @@
         '==========================================================================================================================
         q = "UPDATE data_pembelian_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_faktur.Text))
-
-        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}' AND trans_jenis='po'"
-        queryArr.Add(String.Format(q, in_faktur.Text))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -413,130 +424,25 @@
                 }
             q = "INSERT INTO data_pembelian_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataBrg)))
-
-            'CHECK / INSERT DATA STOCK FOR GUDANG TUJUAN -> STOCK AWAL
-            'Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & date_tgl_beli.Value.ToString("yyMM")
-            Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & selectperiode.id
-
-            q = "INSERT INTO data_stok_awal SET stock_kode='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
-
-            dataBrg = {
-                "stock_gudang='" & in_gudang.Text & "'",
-                "stock_barang='" & _kdbrg & "'",
-                "stock_awal=0",
-                "stock_periode='" & selectperiode.id & "'",
-                "stock_reg_alias='" & loggeduser.user_id & "'",
-                "stock_reg_date=NOW()",
-                "stock_status='1'"
-                }
-            queryArr.Add(String.Format(q, stockkode, String.Join(",", dataBrg)))
-
-            'COUNT QTY TOTAL PER ITEM
-            Dim _qtytot As Integer = 0
-            readcommd("SELECT countQTYItem('" & _kdbrg & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
-            If rd.HasRows Then
-                _qtytot = rd.Item(0)
-            End If
-            rd.Close()
-
-            'COUNT NILAI PERSEDIAAN
-            Dim _pers As Decimal = 0
-            Dim _ppnbrg As Decimal = 0
-            Dim _jml As Decimal = rows.Cells("subtot").Value
-            _ppnbrg = IIf(cb_ppn.SelectedValue = 1, _jml * (1 - 10 / 11), 0)
-            _pers = _jml - _ppnbrg
-
-            q = "setHPP('" & _kdbrg & "')"
-            queryArr.Add(q)
-
-            x.Add("'" & rows.Cells(0).Value & "'")
-            qty.Add(_qtytot)
-            x_kodestock.Add("'" & stockkode & "'")
-            nilai.Add(_pers)
         Next
         '==========================================================================================================================
         '==========================================================================================================================
 
-
         '==========================================================================================================================
-        'WRITE KARTU STOK
-        Dim q4 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock={2} ON DUPLICATE KEY UPDATE {3}"
-        Dim q5 As String = "DELETE FROM data_stok_kartustok WHERE trans_faktur='{0}' AND trans_stock NOT IN({1})"
-        data1 = {
-                "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl",
-                "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date"
-                }
-        Dim i As Integer = 0
-        For Each stock As String In x_kodestock
-            data2 = {
-                    stock,
-                    "MAX(trans_index)+1",
-                    "'po'",
-                    "'" & in_faktur.Text & "'",
-                    "'" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                    "'PEMBELIAN'",
-                    qty.Item(i),
-                    nilai.Item(i).ToString.Replace(",", "."),
-                    "'" & loggeduser.user_id & "'",
-                    "NOW()"
-                    }
-            dataBrg = {
-                "trans_tgl='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-                "trans_qty=" & qty.Item(i),
-                "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
-                "trans_upd_date=NOW()",
-                "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status='1'"
-                }
-            queryArr.Add(String.Format(q4, String.Join(",", data1), String.Join(",", data2), stock, String.Join(",", dataBrg)))
-            i += 1
-        Next
+        q = "CALL transPembelianFin('{0}','{1}')"
+        queryArr.Add(String.Format(q, in_faktur.Text, loggeduser.user_id))
         '==========================================================================================================================
 
         '==========================================================================================================================
-        'TODO : WRITE HUTANG AWAL
-        Dim q6 As String = "INSERT INTO data_hutang_awal SET hutang_faktur='{0}', hutang_idperiode='{4}',{1},{2} ON DUPLICATE KEY UPDATE {1},{3}"
-        dataBrg = {
-            "hutang_awal=" & removeCommaThousand(in_total_netto.Text).ToString.Replace(",", ".")
-            }
-        data1 = {
-            "hutang_reg_date=NOW()",
-            "hutang_reg_alias='" & loggeduser.user_id & "'"
-            }
-        data2 = {
-            "hutang_upd_date=NOW()",
-            "hutang_upd_alias='" & loggeduser.user_id & "'"
-            }
-        queryArr.Add(String.Format(q6, in_faktur.Text, String.Join(",", dataBrg), String.Join(",", data1), String.Join(",", data2), selectperiode.id))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INPUT JURNAL
-        '----------HEAD
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='BELI',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
-            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
-        data1 = {
-            "line_ref='" & in_supplier.Text & "'",
-            "line_ref_type='SUPPLIER'",
-            "line_tanggal='" & date_tgl_beli.Value.ToString("yyyy-MM-dd") & "'",
-            "line_status='1'"
-            }
-        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", data1), loggeduser.user_id))
-        '==========================================================================================================================
-
-        '--------------------------------------------------------------------------------------------------------------
         'BEGIN TRANSACT
         querycheck = startTrans(queryArr)
+        '==========================================================================================================================
 
         If querycheck = False Then
             MessageBox.Show("Data tidak dapat tersimpan")
             Exit Sub
         Else
-            'TODO : ? : WRITE GENERAL LEDGER
-
             MessageBox.Show("Data tersimpan")
-            'frmpembelian.in_cari.Clear()
-            'populateDGVUserCon("beli", "", frmpembelian.dgv_list)
             doRefreshTab({pgpembelian, pgstok, pghutangawal})
             Me.Close()
         End If
@@ -576,6 +482,17 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_beli_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            Else
+                bt_batalbeli.PerformClick()
+            End If
+            e.SuppressKeyPress = True
+        End If
     End Sub
 
     'MENU
@@ -744,12 +661,14 @@
     End Sub
 
     Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
-        popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If in_supplier_n.ReadOnly = False Then
+            popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "supplier"
+            loadDataBRGPopup("supplier", in_supplier_n.Text)
         End If
-        popupstate = "supplier"
-        loadDataBRGPopup("supplier", in_supplier_n.Text)
     End Sub
 
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave, in_gudang_n.Leave, in_barang_nm.Leave
@@ -760,26 +679,29 @@
         End If
     End Sub
 
+    Private Sub in_custo_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_supplier_n.MouseClick, in_gudang_n.MouseClick, in_barang_nm.MouseClick
+        If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+            popPnl_barang.Visible = True
+        End If
+    End Sub
+
     Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
             End If
-            'ElseIf e.KeyCode = Keys.Left Then
-            '    consoleWriteLine(sender.SelectionStart)
-            '    If sender.SelectionStart = 0 Then
-            '        in_supplier.Focus()
-            '    End If
         ElseIf e.KeyCode = Keys.Enter Then
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
             keyshortenter(in_gudang_n, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                    loadDataBRGPopup("supplier", in_supplier_n.Text)
+                End If
             End If
-            loadDataBRGPopup("supplier", in_supplier_n.Text)
         End If
     End Sub
 
@@ -795,12 +717,14 @@
     End Sub
 
     Private Sub in_gudang_n_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
-        popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False Then
+            popPnl_barang.Location = New Point(in_gudang_n.Left, in_gudang_n.Top + in_gudang_n.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "gudang"
+            loadDataBRGPopup(popupstate, sender.Text)
         End If
-        popupstate = "gudang"
-        loadDataBRGPopup("gudang", in_gudang_n.Text)
     End Sub
 
     Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
@@ -814,10 +738,12 @@
             End If
             keyshortenter(in_suratjalan, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.Readonly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup("gudang", in_gudang_n.Text)
             End If
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
     End Sub
 
@@ -840,41 +766,29 @@
     End Sub
 
     '-----------------BARANG
-    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
-        If e.KeyCode = Keys.Right Then
-            consoleWriteLine(sender.SelectionStart)
-            If sender.SelectionStart = sender.TextLength Then
-                in_barang_nm.Focus()
-            End If
-        End If
-    End Sub
+    'Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+    '    If e.KeyCode = Keys.Right Then
+    '        consoleWriteLine(sender.SelectionStart)
+    '        If sender.SelectionStart = sender.TextLength Then
+    '            in_barang_nm.Focus()
+    '        End If
+    '    End If
+    'End Sub
 
     Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
         keyshortenter(in_barang_nm, e)
     End Sub
 
     Private Sub in_barang_nm_Enter(sender As Object, e As EventArgs) Handles in_barang_nm.Enter
-        popPnl_barang.Location = New Point(in_barang_nm.Left, in_barang_nm.Top + in_barang_nm.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False Then
+            popPnl_barang.Location = New Point(in_barang_nm.Left, in_barang_nm.Top + in_barang_nm.Height)
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            popupstate = "barang"
+            loadDataBRGPopup("barang", in_barang_nm.Text)
         End If
-        popupstate = "barang"
-        loadDataBRGPopup("barang", in_barang_nm.Text)
     End Sub
-
-    'Private Sub in_barang_nm_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyDown
-    '    If e.KeyCode = Keys.Left Then
-    '        consoleWriteLine(sender.SelectionStart)
-    '        If sender.SelectionStart = 0 Then
-    '            in_barang.Focus()
-    '        End If
-    '    ElseIf e.KeyCode = Keys.Right Then
-    '        consoleWriteLine(sender.SelectionStart)
-    '        If sender.SelectionStart = sender.TextLength Then
-    '            in_qty.Focus()
-    '        End If
-    '    End If
-    'End Sub
 
     Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
         If e.KeyCode = Keys.Down Then
@@ -887,10 +801,12 @@
             End If
             keyshortenter(in_qty, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup("barang", in_barang_nm.Text)
             End If
-            loadDataBRGPopup("barang", in_barang_nm.Text)
         End If
     End Sub
 
@@ -900,19 +816,6 @@
             'AND OTHER STUFF
         End If
     End Sub
-
-    'Private Sub in_qty_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
-    '    If e.KeyCode = Keys.Left Then
-    '        If sender.SelectionStart = 0 Then
-    '            in_barang.Focus()
-    '        End If
-    '    ElseIf e.KeyCode = Keys.Right Then
-    '        consoleWriteLine(sender.SelectionStart)
-    '        If sender.SelectionStart = sender.TextLength Then
-    '            in_qty.Focus()
-    '        End If
-    '    End If
-    'End Sub
 
     Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyUp
         keyshortenter(cb_sat, e)
@@ -956,13 +859,15 @@
 
     'DGV
     Private Sub dgv_barang_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
-        If e.RowIndex < 0 Then
-            indexrow = 0
-        Else
-            indexrow = e.RowIndex
-            dgvTotxt()
-            dgv_barang.Rows.RemoveAt(indexrow)
-            countbiaya()
+        If selectperiode.closed = False And loggeduser.allowedit_transact = True Then
+            If e.RowIndex < 0 Then
+                indexrow = 0
+            Else
+                indexrow = e.RowIndex
+                dgvTotxt()
+                dgv_barang.Rows.RemoveAt(indexrow)
+                countbiaya()
+            End If
         End If
     End Sub
 

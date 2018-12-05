@@ -75,6 +75,22 @@ Public Class fr_lap_keuangan
                             .dt_jurnalumum.Clear()
                             filldatatabel(inquery, .dt_jurnalumum)
                         End With
+
+                    Case "k_jurnaltutup"
+                        Dim parTitle As New ReportParameter("parTitle", "JURNAL PENUTUPAN")
+
+                        repdatasource.Name = "ds_jurnalumum"
+                        repdatasource.Value = ds_keuangan.dt_jurnalumum
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_jurnalumum.rdlc"
+
+                        With ds_keuangan
+                            .dt_jurnalumum.Clear()
+                            filldatatabel(inquery, .dt_jurnalumum)
+                        End With
+                        .SetParameters(New ReportParameter() {parTitle})
+
                     Case "k_bukubesar"
                         repdatasource.Name = "ds_bukubesar"
                         repdatasource.Value = ds_keuangan.dt_bukubesar
@@ -85,6 +101,42 @@ Public Class fr_lap_keuangan
                         With ds_keuangan
                             .dt_bukubesar.Clear()
                             filldatatabel(inquery, .dt_bukubesar)
+                        End With
+
+                    Case "k_labarugi"
+                        repdatasource.Name = "ds_labarugi"
+                        repdatasource.Value = ds_keuangan.dt_labarugi
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_labarugi.rdlc"
+
+                        With ds_keuangan
+                            .dt_labarugi.Clear()
+                            filldatatabel(inquery, .dt_labarugi)
+                        End With
+
+                    Case "k_neraca"
+                        repdatasource.Name = "ds_neraca"
+                        repdatasource.Value = ds_keuangan.dt_neraca
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_neraca.rdlc"
+
+                        With ds_keuangan
+                            .dt_neraca.Clear()
+                            filldatatabel(inquery, .dt_neraca)
+                        End With
+
+                    Case "k_neracalajur"
+                        repdatasource.Name = "ds_neracalajur"
+                        repdatasource.Value = ds_keuangan.dt_neracalajur
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_neracalajur.rdlc"
+
+                        With ds_keuangan
+                            .dt_neracalajur.Clear()
+                            filldatatabel(inquery, .dt_neracalajur)
                         End With
 
                     Case Else

@@ -187,8 +187,8 @@ Partial Class fr_list
         Me.mn_edit.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_edit.Name = "mn_edit"
         Me.mn_edit.ShortcutKeyDisplayString = "Ctrl+O"
-        Me.mn_edit.Size = New System.Drawing.Size(55, 20)
-        Me.mn_edit.Text = "Edit"
+        Me.mn_edit.Size = New System.Drawing.Size(82, 20)
+        Me.mn_edit.Text = "Edit Data"
         Me.mn_edit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'mn_del

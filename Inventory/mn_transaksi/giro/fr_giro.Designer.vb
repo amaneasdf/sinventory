@@ -67,8 +67,13 @@ Partial Class fr_giro
         Me.in_akuncair = New System.Windows.Forms.TextBox()
         Me.in_tgl_penarikan = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.dgv_hutang = New System.Windows.Forms.DataGridView()
+        Me.faktur_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_nilai = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
+        CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel3
@@ -77,14 +82,14 @@ Partial Class fr_giro
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel3.Location = New System.Drawing.Point(0, 461)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(637, 10)
+        Me.Panel3.Size = New System.Drawing.Size(772, 10)
         Me.Panel3.TabIndex = 413
         '
         'bt_batalbeli
         '
         Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(534, 423)
+        Me.bt_batalbeli.Location = New System.Drawing.Point(666, 418)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbeli.TabIndex = 412
@@ -94,7 +99,7 @@ Partial Class fr_giro
         'bt_simpanbeli
         '
         Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(402, 423)
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(534, 418)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(126, 30)
         Me.bt_simpanbeli.TabIndex = 411
@@ -110,7 +115,7 @@ Partial Class fr_giro
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(637, 42)
+        Me.Panel1.Size = New System.Drawing.Size(772, 42)
         Me.Panel1.TabIndex = 410
         '
         'lbl_close
@@ -120,7 +125,7 @@ Partial Class fr_giro
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
         Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(557, 8)
+        Me.lbl_close.Location = New System.Drawing.Point(692, 8)
         Me.lbl_close.Name = "lbl_close"
         Me.lbl_close.Size = New System.Drawing.Size(52, 22)
         Me.lbl_close.TabIndex = 138
@@ -139,7 +144,7 @@ Partial Class fr_giro
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(610, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(745, 9)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 137
@@ -426,7 +431,7 @@ Partial Class fr_giro
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cair, Me.mn_tolak})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(637, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(772, 24)
         Me.MenuStrip1.TabIndex = 443
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -554,13 +559,53 @@ Partial Class fr_giro
         Me.Label5.TabIndex = 450
         Me.Label5.Text = "Tgl. BG"
         '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.Location = New System.Drawing.Point(455, 72)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(37, 13)
+        Me.Label8.TabIndex = 451
+        Me.Label8.Text = "Faktur"
+        '
+        'dgv_hutang
+        '
+        Me.dgv_hutang.AllowUserToAddRows = False
+        Me.dgv_hutang.AllowUserToDeleteRows = False
+        Me.dgv_hutang.BackgroundColor = System.Drawing.Color.White
+        Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.faktur_kode, Me.faktur_nilai})
+        Me.dgv_hutang.Location = New System.Drawing.Point(458, 88)
+        Me.dgv_hutang.Name = "dgv_hutang"
+        Me.dgv_hutang.ReadOnly = True
+        Me.dgv_hutang.RowHeadersVisible = False
+        Me.dgv_hutang.Size = New System.Drawing.Size(304, 168)
+        Me.dgv_hutang.TabIndex = 452
+        '
+        'faktur_kode
+        '
+        Me.faktur_kode.HeaderText = "Kode Faktur"
+        Me.faktur_kode.Name = "faktur_kode"
+        Me.faktur_kode.ReadOnly = True
+        Me.faktur_kode.Width = 125
+        '
+        'faktur_nilai
+        '
+        Me.faktur_nilai.HeaderText = "Nilai Pembayaran"
+        Me.faktur_nilai.Name = "faktur_nilai"
+        Me.faktur_nilai.ReadOnly = True
+        Me.faktur_nilai.Width = 175
+        '
         'fr_giro
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalbeli
-        Me.ClientSize = New System.Drawing.Size(637, 471)
+        Me.ClientSize = New System.Drawing.Size(772, 471)
+        Me.Controls.Add(Me.dgv_hutang)
+        Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.in_tgl_penarikan)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.in_akuncair)
@@ -609,6 +654,7 @@ Partial Class fr_giro
         Me.Panel1.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -657,4 +703,8 @@ Partial Class fr_giro
     Friend WithEvents in_akuncair As System.Windows.Forms.TextBox
     Friend WithEvents in_tgl_penarikan As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
+    Friend WithEvents Label8 As System.Windows.Forms.Label
+    Friend WithEvents dgv_hutang As System.Windows.Forms.DataGridView
+    Friend WithEvents faktur_kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_nilai As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

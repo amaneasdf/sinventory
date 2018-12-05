@@ -21,6 +21,8 @@
         in_sales.ReadOnly = False
         in_sales_n.ReadOnly = False
         pnl_content.VerticalScroll.Value = 0
+
+        setForm()
     End Sub
 
     'LOAD FAKTUR
@@ -36,10 +38,11 @@
         Dim q As String = "SELECT piutang_faktur, @tgl:=faktur_tanggal_trans as piutang_tgl, getSisaPiutang(piutang_faktur,'{0}') as piutang_sisa, " _
                           & "ADDDATE(@tgl,faktur_term) as piutang_jt, customer_nama As piutang_custo_n, customer_pasar, customer_kecamatan, " _
                           & "customer_kabupaten, salesman_nama " _
-                          & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur AND faktur_status=1 " _
+                          & "FROM data_piutang_awal " _
+                          & "LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur AND faktur_status=1 " _
                           & "LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
                           & "LEFT JOIN data_salesman_master ON salesman_kode= faktur_sales " _
-                          & "WHERE piutang_status=1 AND piutang_idperiode='{0}' AND faktur_sales='{1}' " _
+                          & "WHERE piutang_status=1 AND faktur_sales='{1}' " _
                           & " {2}"
         Dim qwh As String = ""
         Dim whr As New List(Of String)
@@ -154,6 +157,8 @@
         loadFaktur(in_sales.Text)
         bt_draft_nota.Focus()
         pnl_content.VerticalScroll.Value = 0
+
+        setForm()
     End Sub
 
     Private Sub loadHistory(kodefaktur As String)
@@ -178,6 +183,20 @@
                 End With
             Next
         End With
+    End Sub
+
+    Private Sub setForm()
+        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Then
+            mn_tambah.Enabled = False
+            in_sales_n.ReadOnly = True
+            bt_create_draft.Enabled = False
+            bt_addfaktur.Enabled = False
+            bt_remfaktur.Enabled = False
+        End If
+
+        If loggeduser.validasi_trans = False Then
+            mn_canceprint.Enabled = False
+        End If
     End Sub
 
     'OPEN FULL WINDOWS SEARCH
@@ -678,6 +697,8 @@
                     End If
                 End With
             End Using
+        ElseIf printedstat = 1 Then
+            MessageBox.Show("Draft Tagihan sudah pernah dicetak")
         End If
     End Sub
 

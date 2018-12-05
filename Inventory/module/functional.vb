@@ -148,7 +148,7 @@ Module functional
 
         If kodeperiode = Nothing Then
             q = "SELECT IFNULL(MAX(tutupbk_id),1) FROM data_tutup_buku " _
-                & "WHERE {0} BETWEEN tutupbk_periode_tglawal AND IFNULL(tutupbk_periode_tglakhir,NOW()) AND tutupbk_status=1"
+                & "WHERE {0} BETWEEN tutupbk_periode_tglawal AND ADDDATE(tutupbk_periode_tglakhir,1) AND tutupbk_status=1"
             readcommd(String.Format(q, IIf(selecteddate = Nothing, "NOW()", "'" & selecteddate.ToString("yyyy-MM-dd") & "'")))
             If rd.HasRows Then
                 kodeperiode = rd.Item(0)
@@ -156,33 +156,37 @@ Module functional
             rd.Close()
         End If
 
-        q = "SELECT tutupbk_id,tutupbk_periode_tglawal, tutupbk_periode_tglakhir FROM data_tutup_buku " _
+        q = "SELECT tutupbk_id,tutupbk_periode_tglawal, tutupbk_periode_tglakhir, tutupbk_closed FROM data_tutup_buku " _
             & "WHERE tutupbk_status=1 AND tutupbk_id='{0}'"
         readcommd(String.Format(q, kodeperiode))
         If rd.HasRows Then
             selected.id = rd.Item(0)
             selected.tglawal = rd.Item(1)
             selected.tglakhir = rd.Item(2)
+            selected.closed = IIf(rd.Item(3) = 1, True, False)
         Else
             selected.id = "1"
             selected.tglawal = "1990-01-01"
             selected.tglakhir = "2100-12-01"
+            selected.closed = False
         End If
         rd.Close()
 
         Return selected
     End Function
 
-    Public Sub setperiode(selecteddate As Date)
+    Public Sub setperiode(selecteddate As Date, Optional ShowMsgBox As Boolean = True)
         Dim x As Date = selecteddate
         Dim lastperiod As String = selectperiode.id
+        Dim _text As String = "Periode has been changed to "
 
-        getPeriode(, selecteddate)
+        selectperiode = getPeriode(, selecteddate)
 
         If lastperiod <> selectperiode.id Then
             main.strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
-
+            main.strip_status.Text = "Status Input : " & IIf(selectperiode.closed = True, "Closed", "Open")
             Dim tbpg As TabPage() = {
+                pgperkiraan,
                 pgstockop,
                 pgstok,
                 pgpembelian,
@@ -200,42 +204,24 @@ Module functional
                 pgpiutangbgtolak,
                 pgkas,
                 pgjurnalmemorial,
-                pgjurnalumum
+                pgjurnalumum,
+                pgtutupbuku
                 }
             doRefreshTab(tbpg)
 
-            MessageBox.Show("Periode has been changed to " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString)
-        End If
+            If ShowMsgBox = True Then
+                Dim _tglawal As Date = selectperiode.tglawal
+                Dim _tglakhir As Date = selectperiode.tglakhir
+                Dim _periode As String
 
-        If x.ToString("MMMM yyyy") <> selectedperiode.ToString("MMMM yyyy") Then
-            selectedperiode = DateSerial(x.Year, x.Month, 1)
-            main.strip_periode.Text = "Periode data : " & selectedperiode.ToString("MMMM yyyy")
+                If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") And _tglawal.Day = 1 And _tglakhir = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0) Then
+                    _periode = _tglawal.ToString("MMMM yyyy")
+                Else
+                    _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
+                End If
 
-            'TODO:REFRESH TAB
-            Dim tbpg As TabPage() = {
-                pgstockop,
-                pgstok,
-                pgpembelian,
-                pgpenjualan,
-                pgreturbeli,
-                pgreturjual,
-                pgmutasigudang,
-                pgmutasistok,
-                pghutangawal,
-                pghutangbayar,
-                pghutangbgo,
-                pgpiutangawal,
-                pgpiutangbayar,
-                pgpiutangbgcair,
-                pgpiutangbgtolak,
-                pgkas,
-                pgjurnalmemorial,
-                pgjurnalumum
-                }
-            doRefreshTab(tbpg)
-
-            MessageBox.Show("Periode has been changed to " & selectedperiode.ToString("MMMM yyyy"))
-
+                MessageBox.Show(_text & _periode)
+            End If
         End If
     End Sub
 

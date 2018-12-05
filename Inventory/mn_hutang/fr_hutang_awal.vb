@@ -21,6 +21,10 @@
         in_tgl.Text = fak_date.ToLongDateString
         in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
         loadDgv(kode)
+
+        If selectperiode.closed = True Then
+            bt_bayar.Enabled = False
+        End If
     End Sub
 
     Private Sub loadDgv(kode As String)
@@ -30,6 +34,7 @@
 
         On Error Resume Next
         With dgv_hutang
+            .AutoGenerateColumns = False
             .DataSource = dt
             .Columns("bayar").DefaultCellStyle = dgvstyle_currency
             .Columns("hutang").DefaultCellStyle = dgvstyle_currency

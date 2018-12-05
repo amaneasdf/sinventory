@@ -1509,6 +1509,10 @@ Partial Public Class ds_stock
 
         Private columnpersediaan_rjual_nilai As Global.System.Data.DataColumn
 
+        Private columnpersediaan_stockop As Global.System.Data.DataColumn
+
+        Private columnpersediaan_stockop_nilai As Global.System.Data.DataColumn
+
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub New()
@@ -1705,6 +1709,22 @@ Partial Public Class ds_stock
         End Property
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property persediaan_stockopColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnpersediaan_stockop
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property persediaan_stockop_nilaiColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnpersediaan_stockop_nilai
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
          Global.System.ComponentModel.Browsable(False)> _
         Public ReadOnly Property Count() As Integer
@@ -1761,9 +1781,11 @@ Partial Public Class ds_stock
                     ByVal persediaan_rbeli_nilai As Decimal, _
                     ByVal persediaan_jual_nilai As Decimal, _
                     ByVal persediaan_keluar_nilai As Decimal, _
-                    ByVal persediaan_rjual_nilai As Decimal) As dt_persediaan_detailRow
+                    ByVal persediaan_rjual_nilai As Decimal, _
+                    ByVal persediaan_stockop As Integer, _
+                    ByVal persediaan_stockop_nilai As Decimal) As dt_persediaan_detailRow
             Dim rowdt_persediaan_detailRow As dt_persediaan_detailRow = CType(Me.NewRow, dt_persediaan_detailRow)
-            Dim columnValuesArray() As Object = New Object() {persediaan_barang, persediaan_barang_n, persediaan_gudang, persediaan_gudang_n, persediaan_awal, persediaan_beli, persediaan_masuk, persediaan_rbeli, persediaan_jual, persediaan_keluar, persediaan_rjual, persediaan_sisa, persediaan_hpp, persediaan_awal_nilai, persediaan_beli_nilai, persediaan_masuk_nilai, persediaan_rbeli_nilai, persediaan_jual_nilai, persediaan_keluar_nilai, persediaan_rjual_nilai}
+            Dim columnValuesArray() As Object = New Object() {persediaan_barang, persediaan_barang_n, persediaan_gudang, persediaan_gudang_n, persediaan_awal, persediaan_beli, persediaan_masuk, persediaan_rbeli, persediaan_jual, persediaan_keluar, persediaan_rjual, persediaan_sisa, persediaan_hpp, persediaan_awal_nilai, persediaan_beli_nilai, persediaan_masuk_nilai, persediaan_rbeli_nilai, persediaan_jual_nilai, persediaan_keluar_nilai, persediaan_rjual_nilai, persediaan_stockop, persediaan_stockop_nilai}
             rowdt_persediaan_detailRow.ItemArray = columnValuesArray
             Me.Rows.Add(rowdt_persediaan_detailRow)
             Return rowdt_persediaan_detailRow
@@ -1806,6 +1828,8 @@ Partial Public Class ds_stock
             Me.columnpersediaan_jual_nilai = MyBase.Columns("persediaan_jual_nilai")
             Me.columnpersediaan_keluar_nilai = MyBase.Columns("persediaan_keluar_nilai")
             Me.columnpersediaan_rjual_nilai = MyBase.Columns("persediaan_rjual_nilai")
+            Me.columnpersediaan_stockop = MyBase.Columns("persediaan_stockop")
+            Me.columnpersediaan_stockop_nilai = MyBase.Columns("persediaan_stockop_nilai")
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -1851,6 +1875,10 @@ Partial Public Class ds_stock
             MyBase.Columns.Add(Me.columnpersediaan_keluar_nilai)
             Me.columnpersediaan_rjual_nilai = New Global.System.Data.DataColumn("persediaan_rjual_nilai", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
             MyBase.Columns.Add(Me.columnpersediaan_rjual_nilai)
+            Me.columnpersediaan_stockop = New Global.System.Data.DataColumn("persediaan_stockop", GetType(Integer), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnpersediaan_stockop)
+            Me.columnpersediaan_stockop_nilai = New Global.System.Data.DataColumn("persediaan_stockop_nilai", GetType(Decimal), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnpersediaan_stockop_nilai)
         End Sub
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -3124,6 +3152,38 @@ Partial Public Class ds_stock
 
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property persediaan_stockop() As Integer
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_persediaan_detail.persediaan_stockopColumn), Integer)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'persediaan_stockop' in table 'dt_persediaan_detail' is DBNu" & _
+                            "ll.", e)
+                End Try
+            End Get
+            Set(value As Integer)
+                Me(Me.tabledt_persediaan_detail.persediaan_stockopColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property persediaan_stockop_nilai() As Decimal
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_persediaan_detail.persediaan_stockop_nilaiColumn), Decimal)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'persediaan_stockop_nilai' in table 'dt_persediaan_detail' i" & _
+                            "s DBNull.", e)
+                End Try
+            End Get
+            Set(value As Decimal)
+                Me(Me.tabledt_persediaan_detail.persediaan_stockop_nilaiColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Function Ispersediaan_barangNull() As Boolean
             Return Me.IsNull(Me.tabledt_persediaan_detail.persediaan_barangColumn)
         End Function
@@ -3360,6 +3420,30 @@ Partial Public Class ds_stock
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public Sub Setpersediaan_rjual_nilaiNull()
             Me(Me.tabledt_persediaan_detail.persediaan_rjual_nilaiColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Ispersediaan_stockopNull() As Boolean
+            Return Me.IsNull(Me.tabledt_persediaan_detail.persediaan_stockopColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setpersediaan_stockopNull()
+            Me(Me.tabledt_persediaan_detail.persediaan_stockopColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Ispersediaan_stockop_nilaiNull() As Boolean
+            Return Me.IsNull(Me.tabledt_persediaan_detail.persediaan_stockop_nilaiColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setpersediaan_stockop_nilaiNull()
+            Me(Me.tabledt_persediaan_detail.persediaan_stockop_nilaiColumn) = Global.System.Convert.DBNull
         End Sub
     End Class
     

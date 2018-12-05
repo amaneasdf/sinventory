@@ -604,13 +604,24 @@
         Dim term As Integer = 0
 
         op_con()
+        For Each row As DataGridViewRow In dgv_barang.Rows
+            'check qty dan hpp stock
+            Dim _kdbarang As String = row.Cells("kode").Value
+            Dim _qty As Integer = row.Cells("qty").Value
+            Dim _sattype As String = row.Cells("sat_type").Value
+
+            q = "SELECT"
+        Next
+
         If cb_term.SelectedValue = 1 Then
             q = "SELECT customer_term FROM data_customer_master WHERE customer_kode='{0}'"
             readcommd(String.Format(q, in_custo.Text))
             If rd.HasRows Then
                 term = rd.Item(0)
             End If
-            rd.Close()
+            If rd.IsClosed = False Then
+                rd.Close()
+            End If
         End If
 
         With newJual
@@ -691,6 +702,16 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            Else
+                bt_bataljual.PerformClick()
+            End If
+        End If
     End Sub
 
     'MENU

@@ -2,7 +2,7 @@
     Private fak_date As Date = Today
 
     Public Sub loadData(kode As String)
-        Dim q As String = "SELECT piutang_faktur, faktur_tanggal_trans as piutang_tgl, faktur_netto-faktur_bayar as piutang_awal, " _
+        Dim q As String = "SELECT piutang_faktur, piutang_tgl, faktur_netto-faktur_bayar as piutang_awal, " _
                           & "faktur_customer as piutang_custo, customer_nama as piutang_custo_n, faktur_sales as piutang_sales, " _
                           & "salesman_nama as piutang_sales_n, faktur_term FROM data_piutang_awal " _
                           & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
@@ -26,6 +26,10 @@
         in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
 
         loadDgv(kode)
+
+        If selectperiode.closed = True Then
+            bt_bayar.Enabled = False
+        End If
     End Sub
 
     Private Sub loadDgv(kode As String)
@@ -51,7 +55,7 @@
         Dim _hutang As Double = 0
         If dgv_hutang.Rows.Count > 0 Then
             For Each row As DataGridViewRow In dgv_hutang.Rows
-                _bayar += IIf(row.Cells("status").Value = "-", row.Cells("bayar").Value, 0)
+                _bayar += row.Cells("bayar").Value
                 _hutang += row.Cells("piutang").Value
             Next
         End If
@@ -89,6 +93,7 @@
         End With
         Me.Close()
     End Sub
+
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown, Panel2.MouseDown
         startdrag(Me, e)
@@ -108,9 +113,9 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        If MessageBox.Show("Tutup Form?", "Piutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Piutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        '    Me.Close()
+        'End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing

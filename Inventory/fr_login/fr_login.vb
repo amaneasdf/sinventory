@@ -40,15 +40,27 @@
 
     Private Sub in_user_KeyDown(sender As Object, e As KeyEventArgs) Handles in_user.KeyDown
         If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            in_pass.Focus()
+            If in_pass.Text = Nothing Then
+                If e.KeyCode = Keys.Enter Then
+                    e.SuppressKeyPress = True
+                    in_pass.Focus()
+                End If
+            Else
+                do_login(in_user.Text, in_pass.Text)
+            End If
         End If
     End Sub
 
     Private Sub in_pass_KeyDown(sender As Object, e As KeyEventArgs) Handles in_pass.KeyDown
         If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-            bt_login.PerformClick()
+            If in_user.Text = Nothing Then
+                If e.KeyCode = Keys.Enter Then
+                    e.SuppressKeyPress = True
+                    in_user.Focus()
+                End If
+            Else
+                do_login(in_user.Text, in_pass.Text)
+            End If
         End If
     End Sub
 

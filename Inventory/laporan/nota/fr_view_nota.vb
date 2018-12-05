@@ -136,7 +136,8 @@ Public Class fr_view_nota
 
                     Case "jual"
                         op_con()
-                        Dim sales, inputuser As String
+                        Dim sales As String = Nothing
+                        Dim inputuser As String = Nothing
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, customer_nama, " _
                                       & "customer_alamat, salesman_nama, if(faktur_upd_alias='',faktur_reg_alias,faktur_upd_alias), " _

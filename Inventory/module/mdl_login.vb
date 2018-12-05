@@ -55,8 +55,9 @@
                 End If
             End If
 
-            q = "SELECT user_nama, user_group,user_allowedit_master, user_allowedit_trans, user_validasi_master, " _
-                & "user_validasi_trans FROM data_pengguna_alias WHERE user_alias='{0}'"
+            q = "SELECT user_nama, user_group,user_allowedit_master, user_allowedit_trans, user_allowedit_akun, user_validasi_master, " _
+                & "user_validasi_trans, user_validasi_akun, user_admin_andro, user_admin_pc " _
+                & "FROM data_pengguna_alias WHERE user_alias='{0}'"
             readcommd(String.Format(q, id))
 
             'Dim cek As Integer = cekuserexpired(rd.Item("user_exp_date"))
@@ -71,10 +72,14 @@
                 .user_id = id
                 .user_nama = rd.Item("user_nama")
                 .user_lev = rd.Item("user_group")
-                .allowedit_master = IIf(rd.Item("user_allowedit_master") = 1, True, False)
                 .allowedit_transact = IIf(rd.Item("user_allowedit_trans") = 1, True, False)
+                .allowedit_master = IIf(rd.Item("user_allowedit_master") = 1, True, False)
+                .allowedit_akun = IIf(rd.Item("user_allowedit_akun") = 1, True, False)
                 .validasi_master = IIf(rd.Item("user_validasi_master") = 1, True, False)
                 .validasi_trans = IIf(rd.Item("user_validasi_trans") = 1, True, False)
+                .validasi_akun = IIf(rd.Item("user_validasi_akun") = 1, True, False)
+                .admin_andro = IIf(rd.Item("user_admin_andro") = 1, True, False)
+                .admin_pc = IIf(rd.Item("user_admin_pc") = 1, True, False)
                 .user_host = System.Net.Dns.GetHostName()
                 .user_ip = GetIPv4Address()
                 .user_mac = GetMac(.user_ip)

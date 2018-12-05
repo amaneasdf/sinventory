@@ -45,6 +45,6 @@
         st = New StackTrace(ex, True)
         er.Add(String.Format("ERR:{0}:{1}{5}--{2}:{3}:{4}", Date.Now.ToString("yyyyMMdd-hhmmss"), ex.Message, st.GetFrame(st.FrameCount - 1).GetMethod, st.GetFrame(st.FrameCount - 1).GetFileLineNumber, ex.TargetSite.ToString, Environment.NewLine))
         errLog(er)
-        MessageBox.Show("Error has bee occured" & Environment.NewLine & ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        MessageBox.Show("Error has been occured" & Environment.NewLine & ex.Message, "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
     End Sub
 End Module

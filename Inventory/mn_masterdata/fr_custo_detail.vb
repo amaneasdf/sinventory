@@ -47,6 +47,11 @@
         End If
         rd.Close()
         setStatus()
+
+        If loggeduser.allowedit_master = False Then
+            bt_simpancusto.Visible = False
+            bt_batalcusto.Text = "OK"
+        End If
     End Sub
 
     'SET STATUS

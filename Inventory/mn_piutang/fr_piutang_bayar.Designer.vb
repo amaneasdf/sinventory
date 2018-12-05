@@ -152,6 +152,7 @@ Partial Class fr_piutang_bayar
         Me.mn_proses.Size = New System.Drawing.Size(69, 20)
         Me.mn_proses.Text = "P&roses"
         Me.mn_proses.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.mn_proses.Visible = False
         '
         'Panel1
         '
@@ -588,7 +589,7 @@ Partial Class fr_piutang_bayar
         Me.popPnl_barang.BackColor = System.Drawing.Color.White
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
         Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(318, 258)
+        Me.popPnl_barang.Location = New System.Drawing.Point(448, 253)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(420, 135)
         Me.popPnl_barang.TabIndex = 366
@@ -713,6 +714,7 @@ Partial Class fr_piutang_bayar
         Me.in_saldotitipan.Location = New System.Drawing.Point(81, 123)
         Me.in_saldotitipan.MaxLength = 30
         Me.in_saldotitipan.Name = "in_saldotitipan"
+        Me.in_saldotitipan.ReadOnly = True
         Me.in_saldotitipan.Size = New System.Drawing.Size(283, 20)
         Me.in_saldotitipan.TabIndex = 5
         '
@@ -870,7 +872,6 @@ Partial Class fr_piutang_bayar
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(901, 544)
         Me.ControlBox = False
         Me.Controls.Add(Me.popPnl_barang)
