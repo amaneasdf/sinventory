@@ -730,14 +730,15 @@
                 '    openTab("jenisbarang")
             Case "mn0932"
                 Console.WriteLine("click satuan barang")
-                With frmsatuanbarang
-                    If .Visible = True Then
-                        .Focus()
-                    Else
-                        .setfor = "satuan"
-                        .Text += " Satuan"
-                        .Show(Me)
-                    End If
+                With fr_reference
+                    'If .Visible = True Then
+                    '    .Focus()
+                    'Else
+                    '    .setfor = "satuan"
+                    '    .Text += " Satuan"
+                    '    .Show(Me)
+                    'End If
+                    .Show()
                 End With
             Case "mn0941"
                 Console.WriteLine("click logout")
