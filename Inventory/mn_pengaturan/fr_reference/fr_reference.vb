@@ -1,26 +1,47 @@
 ﻿Public Class fr_reference
     Private selecteditem As String
     Private selectSatState As String
+    Private selectAreaId As String
+    Private selectAreaState As String
+    Private selectKabState As String
 
-    Private Sub loadDgv(jenis As String)
+    Private Sub loadDgv(type As String)
         Dim q As String = ""
         Dim dgv As DataGridView
         Dim dt As New DataTable
 
-        Select Case jenis
+        Select Case type
             Case "custokab"
-                q = "SELECT ref_kab_id,ref_kab_nama FROM ref_area_kabupaten WHERE ref_kab_status<>9"
+                q = "SELECT ref_kab_id as 'ID',ref_kab_nama 'Nama Kabupaten', ref_kab_status, " _
+                    & "(CASE ref_kab_status " _
+                    & " WHEN 1 THEN 'AKTIF' " _
+                    & " WHEN 0 THEN 'NON-AKTIF' " _
+                    & " ELSE 'ERROR' END) Status " _
+                    & "FROM ref_area_kabupaten WHERE ref_kab_status<>9"
                 dgv = dgv_kab
 
             Case "custoarea"
-                q = "SELECT c_area_id as 'ID', c_area_nama as 'Nama Area', ref_kab_nama as 'Kabupaten' " _
+                q = "SELECT c_area_id as 'ID', c_area_nama as 'Nama Area', ref_kab_nama as 'Kabupaten',c_area_kode_kab,c_area_status, " _
+                    & "(CASE c_area_status " _
+                    & " WHEN 1 THEN 'AKTIF' " _
+                    & " WHEN 0 THEN 'NON-AKTIF' " _
+                    & " ELSE 'ERROR' END) Status " _
                     & "FROM data_customer_area LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
-                    & "WHERE c_area_status=1"
+                    & "WHERE c_area_status<>9"
                 dgv = dgv_area
+                With cb_area_kab
+                    .DataSource = jenis("areacustokab")
+                    .ValueMember = "Value"
+                    .DisplayMember = "Text"
+                End With
 
             Case "satbrg"
-                q = "SELECT satuan_kode as 'Kode', satuan_nama as 'Nama Satuan', satuan_keterangan as 'Keterangan' " _
-                    & "FROM ref_satuan WHERE satuan_status=1"
+                q = "SELECT satuan_kode as 'Kode', satuan_nama as 'Nama Satuan', satuan_keterangan as 'Keterangan', satuan_status, " _
+                    & "(CASE satuan_status " _
+                    & " WHEN 1 THEN 'AKTIF' " _
+                    & " WHEN 0 THEN 'NON-AKTIF' " _
+                    & " ELSE 'ERROR' END) Status " _
+                    & "FROM ref_satuan WHERE satuan_status<>9"
                 dgv = dgv_sat
 
             Case Else
@@ -29,19 +50,47 @@
 
         dt = getDataTablefromDB(q)
 
+        setDoubleBuffered(dgv, True)
         dgv.DataSource = dt
+
+        Select Case type
+            Case "satbrg"
+                dgv.Columns(2).Width = 150
+                dgv.Columns(3).Visible = False
+                dgv.Sort(dgv.Columns(0), System.ComponentModel.ListSortDirection.Ascending)
+            Case "custoarea"
+                dgv.Columns(1).Width = 150
+                dgv.Columns(2).Width = 150
+                dgv.Columns(3).Visible = False
+                dgv.Columns(4).Visible = False
+            Case "custokab"
+                dgv.Columns(1).Width = 150
+                dgv.Columns(2).Visible = False
+        End Select
 
     End Sub
 
     Private Sub DgvToTxt(jenis As String)
         Select Case jenis
             Case "custoarea"
-
+                With dgv_area.SelectedRows.Item(0)
+                    in_area_id.Text = .Cells(0).Value
+                    in_area_n.Text = .Cells(1).Value
+                    cb_area_kab.SelectedValue = .Cells(3).Value
+                    selectAreaState = .Cells(4).Value
+                End With
+            Case "custokab"
+                With dgv_kab.SelectedRows.Item(0)
+                    in_kab_id.Text = .Cells(0).Value
+                    in_kab_n.Text = .Cells(1).Value
+                    selectKabState = .Cells(2).Value
+                End With
             Case "satbrg"
                 With dgv_sat.SelectedRows
                     in_sat_id.Text = .Item(0).Cells(0).Value
                     in_sat_nm.Text = .Item(0).Cells(1).Value
                     in_sat_ket.Text = .Item(0).Cells(2).Value
+                    selectSatState = .Item(0).Cells(3).Value
 
                     in_sat_id.ReadOnly = True
                 End With
@@ -65,13 +114,14 @@
                     "ref_kab_status='1'"
                     }
             Case "custoarea"
-                q = "INSERT INTO data_customer_area SET c_area_id='{0}',{1},c_area_reg_date=NOW(),c_area_reg_alias='{2}' " _
+                q = "INSERT INTO data_customer_area SET c_area_id={0},{1},c_area_reg_date=NOW(),c_area_reg_alias='{2}' " _
                     & "ON DUPLICATE KEY UPDATE {1},c_area_upd_date=NOW(),c_area_upd_alias='{2}'"
                 data = {
                     "c_area_nama='" & in_area_n.Text & "'",
                     "c_area_kode_kab='" & cb_area_kab.SelectedValue & "'",
                     "c_area_status='1'"
                     }
+                q = String.Format(q, IIf(in_area_id.Text = "", "NULL", "'" & in_area_id.Text & "'"), String.Join(",", data), loggeduser.user_id)
             Case "satbrg"
                 q = "INSERT INTO ref_satuan SET satuan_kode='{0}',{1},satuan_reg_date=NOW(),satuan_reg_alias='{2}' " _
                     & "ON DUPLICATE KEY UPDATE {1},satuan_upd_date=NOW(),satuan_upd_alias='{2}'"
@@ -95,37 +145,47 @@
         Return queryChk
     End Function
 
-    Private Function actDeactData(jenis As String, kode As String, newstate As Boolean) As Boolean
+    Private Function actDeactData(jenis As String, kode As String, newstate As String) As Boolean
         Dim q As String = ""
         Dim ckdata As Boolean = True
-        Dim _status As String = 1
         Dim retval As Boolean = False
-
-        If newstate = False Then
-            _status = 0
-        End If
 
         Select Case jenis
             Case "custokab"
-                ckdata = checkdata("data_customer_area", "' AND c_area_status<>9", "c_area_kodekab")
-                q = "UPDATE ref_area_kabupaten SET ref_kab_status='{1}',ref_kab_upd_date=NOW(), ref_kab_upd_alias='{2}' " _
-                    & "WHERE ref_kab_id='{0}'"
+                If selectKabState = "1" Then
+                    ckdata = checkdata("data_customer_area", "'" & kode & "' AND c_area_status<>9", "c_area_kode_kab")
+                Else
+                    ckdata = False
+                End If
+                q = "UPDATE ref_area_kabupaten SET ref_kab_status='{1}' WHERE ref_kab_id='{0}'"
+                q = String.Format(q, in_kab_id.Text, newstate)
 
             Case "custoarea"
-                ckdata = checkdata("data_customer_master", " AND customer_status<>9", "customer_area")
+                If selectAreaState = "1" Then
+                    ckdata = checkdata("data_customer_master", "'" & kode & "' AND customer_status<>9", "customer_area")
+                Else
+                    ckdata = False
+                End If
                 q = "UPDATE data_customer_area SET c_area_status='{1}',c_area_upd_date=NOW(),c_area_upd_alias='{2}' " _
                     & "WHERE c_area_id='{0}'"
+                q = String.Format(q, kode, newstate, loggeduser.user_id)
+
             Case "satbrg"
-                ckdata = checkdata("data_barang_satuan", "' AND b_satuan_status<>9", "b_satuan_barang")
+                If selectSatState = "1" Then
+                    ckdata = checkdata("data_barang_satuan", "'" & kode & "' AND b_satuan_status<>9", "b_satuan_barang")
+                Else
+                    ckdata = False
+                End If
                 q = "UPDATE ref_satuan SET satuan_status='{1}', satuan_upd_date=NOW(), satuan_upd_alias='{2}' " _
-                    & "WHERE satuan_kode='{0}'"
-                q = String.Format(q, _status, kode, loggeduser.user_id)
+                                     & "WHERE satuan_kode='{0}'"
+                q = String.Format(q, kode, newstate, loggeduser.user_id)
             Case Else
                 Return False
                 Exit Function
         End Select
-
-        retval = commnd(q)
+        If ckdata = False Then
+            retval = commnd(q)
+        End If
 
         Return retval
     End Function
@@ -134,16 +194,32 @@
         actDeactData(jenis, kode, "9")
     End Sub
 
-    Private Sub resetForm(jenis As String)
-        Select Case jenis
+    Private Sub resetForm(type As String)
+        Select Case type
             Case "satbrg"
                 in_sat_id.ReadOnly = False
                 selectSatState = 1
                 For Each txt As TextBox In {in_sat_id, in_sat_ket, in_sat_nm}
                     txt.Clear()
                 Next
+            Case "custoarea"
+                selectAreaId = ""
+                selectAreaState = 1
+                For Each txt As TextBox In {in_area_id, in_area_n}
+                    txt.Clear()
+                Next
+            Case "custokab"
+                With cb_area_kab
+                    .DataSource = jenis("areacustokab")
+                    .ValueMember = "Value"
+                    .DisplayMember = "Text"
+                End With
+                selectKabState = 1
+                For Each txt As TextBox In {in_kab_id, in_kab_n}
+                    txt.Clear()
+                Next
         End Select
-        loadDgv(jenis)
+        loadDgv(type)
     End Sub
 
     'DRAG FORM
@@ -172,8 +248,14 @@
         bt_simpanbeli.PerformClick()
     End Sub
 
+    Private Sub fr_reference_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        loadDgv("satbrg")
+        loadDgv("custoarea")
+        loadDgv("custokab")
+    End Sub
+
     'REF SATUAN =============================================================================================================================================
-    Private Sub bt_save_sat_Click(sender As Object, e As EventArgs) Handles bt_save_sat.Click, bt_save_area.Click
+    Private Sub bt_save_sat_Click(sender As Object, e As EventArgs) Handles bt_save_sat.Click, bt_save_area.Click, bt_save_kab.Click
         Dim _sndername As String = sender.Name.ToString
         Dim retval As Boolean = False
         Select Case _sndername
@@ -189,38 +271,116 @@
                     End If
                 End If
             Case "bt_save_area"
-
+                If Trim(in_area_n.Text) = Nothing Then
+                    MessageBox.Show("Area belum diinput")
+                ElseIf cb_area_kab.SelectedValue = Nothing Then
+                    MessageBox.Show("Kabupaten belum diinput")
+                Else
+                    retval = saveData("custoarea")
+                    If retval = True Then
+                        resetForm("custoarea")
+                    End If
+                End If
+            Case "bt_save_kab"
+                If Trim(in_kab_n.Text) = Nothing Then
+                    MessageBox.Show("Nama Kabupaten belum diinput")
+                Else
+                    retval = saveData("custokab")
+                    If retval = True Then
+                        resetForm("custokab")
+                        With cb_area_kab
+                            .DataSource = jenis("areacustokab")
+                            .ValueMember = "Value"
+                            .DisplayMember = "Text"
+                        End With
+                    End If
+                End If
         End Select
     End Sub
 
-    Private Sub dgv_sat_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_sat.CellClick
-        If dgv_sat.RowCount > 0 Then
-            DgvToTxt("satbrg")
+    Private Sub dgv_sat_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_sat.CellClick, dgv_area.CellClick, dgv_kab.CellClick
+        Dim _sndername As String = sender.Name.ToString
+        If sender.RowCount > 0 And e.RowIndex >= 0 Then
+            Select Case _sndername
+                Case "dgv_sat"
+                    DgvToTxt("satbrg")
+                    in_sat_nm.Focus()
+                Case "dgv_area"
+                    DgvToTxt("custoarea")
+                    in_area_n.Focus()
+                Case "dgv_kab"
+                    DgvToTxt("custokab")
+                    in_kab_n.Focus()
+            End Select
         End If
     End Sub
 
-    Private Sub fr_reference_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        loadDgv("satbrg")
+    Private Sub lk_sat_refresh_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lk_sat_refresh.LinkClicked, lk_area_refresh.LinkClicked, lk_kab_refresh.LinkClicked
+        Dim _sndername As String = sender.Name.ToString
+        Select Case _sndername
+            Case "lk_sat_refresh"
+                resetForm("satbrg")
+                in_sat_nm.Focus()
+            Case "lk_area_refresh"
+                resetForm("custoarea")
+                in_area_n.Focus()
+            Case "lk_kab_refresh"
+                resetForm("custokab")
+                in_kab_n.Focus()
+        End Select
     End Sub
 
-    Private Sub lk_sat_refresh_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lk_sat_refresh.LinkClicked
-        resetForm("satbrg")
-    End Sub
-
-    Private Sub bt_deact_sat_Click(sender As Object, e As EventArgs) Handles bt_deact_sat.Click
+    Private Sub bt_deact_sat_Click(sender As Object, e As EventArgs) Handles bt_deact_sat.Click, bt_deact_area.Click, bt_deact_kab.Click
         Dim _sndername As String = sender.Name.ToString
         Dim retval As Boolean = False
         Select Case _sndername
             Case "bt_deact_sat"
                 If in_sat_id.Text <> Nothing Then
-                    retval = actDeactData("satbrg", in_sat_id.Text, IIf(selectSatState = 1, False, True))
+                    retval = actDeactData("satbrg", in_sat_id.Text, IIf(selectSatState = 1, 0, 1))
                     If retval = True Then
+                        MessageBox.Show("Data tersimpan", "Ref. Satuan")
                         resetForm("satbrg")
                     End If
                 Else
 
                 End If
+            Case "bt_deact_area"
+                If in_area_id.Text <> Nothing Then
+                    retval = actDeactData("custoarea", in_area_id.Text, IIf(selectAreaState = 1, 0, 1))
+                    If retval Then
+                        MessageBox.Show("Data tersimpan", "Ref. Area Customer")
+                        resetForm("custoarea")
+                    Else
+                        MessageBox.Show("Data tidak dapat tersimpan", "Ref. Area Customer")
+                    End If
+                End If
 
+            Case "bt_deact_kab"
+                If in_kab_id.Text <> Nothing Then
+                    retval = actDeactData("custokab", in_kab_id.Text, IIf(selectKabState = 1, 0, 1))
+                    If retval Then
+                        MessageBox.Show("Data tersimpan", "Ref. Kabupaten")
+                        resetForm("custokab")
+                    Else
+                        MessageBox.Show("Data tidak dapat tersimpan", "Ref. Area Customer")
+                    End If
+                End If
+        End Select
+    End Sub
+
+    Private Sub bt_del_sat_Click(sender As Object, e As EventArgs) Handles bt_del_sat.Click
+
+    End Sub
+
+    Private Sub bt_satbrg_Click(sender As Object, e As EventArgs) Handles bt_satbrg.Click, bt_kodearea.Click, bt_kabupaten.Click
+        Dim _sndername As String = sender.Name.ToString
+        Select Case _sndername
+            Case "bt_satbrg"
+                pnl_satbrg.Focus()
+            Case "bt_kodearea"
+                pnl_area.Focus()
+            Case "bt_kabupaten"
+                pnl_kab.Focus()
         End Select
     End Sub
 End Class

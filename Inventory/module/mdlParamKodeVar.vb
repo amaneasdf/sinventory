@@ -149,7 +149,7 @@
                 dt.Rows.Add("Tolak", "2")
 
             Case "areacustokab"
-                q = "SELECT ref_kab_id as 'Value', ref_kab_nama as 'Text FROM ref_area_kabupaten WHERE ref_kab_status=1"
+                q = "SELECT ref_kab_id as 'Value', ref_kab_nama as 'Text' FROM ref_area_kabupaten WHERE ref_kab_status=1"
                 dt = getDataTablefromDB(q)
 
             Case "areacusto"

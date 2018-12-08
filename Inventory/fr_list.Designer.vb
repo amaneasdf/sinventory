@@ -196,8 +196,8 @@ Partial Class fr_list
         Me.mn_del.Name = "mn_del"
         Me.mn_del.ShortcutKeyDisplayString = "Ctrl+Del"
         Me.mn_del.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Delete), System.Windows.Forms.Keys)
-        Me.mn_del.Size = New System.Drawing.Size(53, 20)
-        Me.mn_del.Text = "Hapus"
+        Me.mn_del.Size = New System.Drawing.Size(81, 20)
+        Me.mn_del.Text = "De/Activate"
         '
         'mn_print
         '

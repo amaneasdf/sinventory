@@ -1531,6 +1531,7 @@ Module mdlControl
                     End With
                     .print_sw = True
                     .add_sw = IIf(selectperiode.closed = True, False, True)
+                    .del_sw = False
 
                     Dim x As DataGridViewColumn() = {beli_faktur, beli_tgl, beli_tglinvoice, beli_supplier, beli_pajak, beli_gudang, beli_netto, beli_klaim, beli_total, beli_term, beli_user}
                     For i = 0 To x.Count - 1

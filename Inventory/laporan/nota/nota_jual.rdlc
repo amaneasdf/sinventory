@@ -1970,7 +1970,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>TEXT</Value>
+                  <Value />
                   <Style>
                     <FontFamily>Consolas</FontFamily>
                   </Style>

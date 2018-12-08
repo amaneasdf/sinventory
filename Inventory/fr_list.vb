@@ -530,13 +530,13 @@
     End Sub
 
     'UNFINISHED complicated DELDATA PROCEDURE
-    Private Sub delItem()
+    Private Sub deactItem()
         If del_sw = True Then
             Dim tabpage As String = tabpagename.Name.ToString
             Dim _allowdel As Boolean = False
             Dim _valstate As String = ""
             Select Case tabpage
-                Case "pgbarang"
+                Case "pgbarang", "pgsupplier", "pgsales", "pgcusto", "pggudang"
                     _allowdel = loggeduser.validasi_master
                     _valstate = "master"
                 Case "pgpenjualan", "pgreturjual", "pgpembelian", "pgreturbeli"
@@ -548,18 +548,18 @@
             End Select
 
             If _allowdel = False Then
-                MessageBox.Show("Anda tidak dapat meghapus data")
+                MessageBox.Show("Anda tidak dapat menghapus data")
                 Exit Sub
-            Else
-                Dim _procdel As Boolean = False
-                Using validfr As New fr_stockopconfirm_dialog
+                'Else
+                '    Dim _procdel As Boolean = False
+                '    Using validfr As New fr_stockopconfirm_dialog
 
-                End Using
+                '    End Using
 
-                If _procdel = False Then
-                    MessageBox.Show("Penghapusan data dibatalkan")
-                    Exit Sub
-                End If
+                '    If _procdel = False Then
+                '        MessageBox.Show("Penghapusan data dibatalkan")
+                '        Exit Sub
+                '    End If
             End If
 
             With dgv_list
@@ -570,55 +570,90 @@
                     Dim msg As String = "Hapus"
                     Dim kode As String = ""
                     Dim queryCk As Boolean = False
+                    Dim _state As String = "1"
 
+                    op_con()
                     consoleWriteLine(tabpagename.Name.ToString)
                     Me.Cursor = Cursors.AppStarting
                     Select Case tabpagename.Name.ToString
-                        Case "pgpejualan"
-                            kode = .SelectedRows.Item(0).Cells(1).Value
-                            ckdata = checkdata("data_piutang_trans", "'" & kode & "' AND p_trans_status<>9 AND p_trans_jenis NOT IN ('awal','jual')", "p_trans_kode_piutang")
-                            q = "UPDATE data_penjualan_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE faktur_kode='" & kode & "'"
-                        Case "pgreturjual"
+                        Case "pgbarang"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            ckdata = checkdata("data_stok_awal", "'" & kode & "' AND stock_status=1", "stock_barang")
+                            qcheck = "SELECT barang_status FROM data_barang_master WHERE barang_kode='" & kode & "'"
+                            readcommd(qcheck)
+                            If rd.HasRows Then
+                                _state = rd.Item(0)
+                            End If
+                            rd.Close()
+
+                            q = "UPDATE data_barang_master SET barang_status='" & IIf(_state = 1, 0, 1) & "', barang_upd_date=NOW(),  " _
+                                & "barang_upd_alias='" & loggeduser.user_id & "' WHERE barang_kode='" & kode & "'"
+
+                        Case "pgsupplier"
                             kode = .SelectedRows.Item(0).Cells(0).Value
                             ckdata = False
-                            q = "UPDATE data_penjualan_retur_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE faktur_kode_bukti='" & kode & "'"
+                            qcheck = "SELECT supplier_status FROM data_supplier_master WHERE supplier_kode='" & kode & "'"
+                            readcommd(qcheck)
+                            If rd.HasRows Then
+                                _state = rd.Item(0)
+                            End If
+                            rd.Close()
 
-                        Case "pgpembelian"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = checkdata("data_hutang_trans", "'" & kode & "' AND h_trans_status<>9 AND h_trans_jenis NOT IN ('awal','beli')", "h_trans_kode_hutang")
-                            q = "UPDATE data_pembelian_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE faktur_kode='" & kode & "'; CALL transPembelianFin('" & kode & "','" & loggeduser.user_id & "');"
-                        Case "pgreturbeli"
+                            q = "UPDATE data_supplier_master SET supplier_status='{0}', supplier_upd_date=NOW(), supplier_upd_alias='{1}' WHERE supplier_kode='{2}'"
+                            q = String.Format(q, IIf(_state = 1, 0, 1), loggeduser.user_id, kode)
+
+                        Case "pggudang"
                             kode = .SelectedRows.Item(0).Cells(0).Value
                             ckdata = False
-                            q = "UPDATE data_pembelian_retur_faktur SET faktur_status=9, faktur_upd_date=NOW(), faktur_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE faktur_kode_bukti='" & kode & "'"
+                            qcheck = "SELECT gudang_status FROM data_barang_gudang WHERE gudang_kode='" & kode & "'"
+                            readcommd(qcheck)
+                            If rd.HasRows Then
+                                _state = rd.Item(0)
+                            End If
+                            rd.Close()
 
-                        Case "pghutangbayar"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            'ck bg
-                            q = "UPDATE data_hutang_bayar SET h_bayar_status=9, h_bayar_upd_date=NOW(), h_bayar_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE h_bayar_bukti='" & kode & "'; CALL transBayarHutangFin('" & kode & "','" & loggeduser.user_id & "');"
+                            q = "UPDATE data_barang_gudang SET gudang_status='" & IIf(_state = 1, 0, 1) & "', gudang_upd_date=NOW(), " _
+                                & "gudang_upd_alias='" & loggeduser.user_id & "' WHERE gudang_kode='" & kode & "'"
 
-                        Case "pgpiutangbayar"
+                        Case "pgcusto"
                             kode = .SelectedRows.Item(0).Cells(0).Value
-                            'ck bg
-                            q = "UPDATE data_piutang_bayar SET p_bayar_status=9, p_bayar_upd_date=NOW(), p_bayar_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE p_bayar_bukti='" & kode & "'; CALL transBayarPiutangFin('" & kode & "','" & loggeduser.user_id & "');"
+                            ckdata = False
+                            qcheck = "SELECT customer_status FROM data_customer_master WHERE customer_kode='" & kode & "'"
+                            readcommd(qcheck)
+                            If rd.HasRows Then
+                                _state = rd.Item(0)
+                            End If
+                            rd.Close()
+
+                            q = "UPDATE data_customer_master SET customer_status=0, customer_upd_date=NOW(), customer_upd_alias='" & loggeduser.user_id & "' " _
+                                & "WHERE customer_kode='" & kode & "'"
+
+                        Case "pgsales"
+                            kode = .SelectedRows.Item(0).Cells(0).Value
+                            ckdata = False
+                            qcheck = "SELECT salesman_status FROM data_salesman_master WHERE salesman_kode='" & kode & "'"
+                            readcommd(qcheck)
+                            If rd.HasRows Then
+                                _state = rd.Item(0)
+                            End If
+                            rd.Close()
+
+                            q = "UPDATE data_salesman_master SET salesman_status='{0}', salesman_upd_date=NOW(), salesman_upd_alias='{1}' WHERE salesman_kode='{2}'"
+                            q = String.Format(q, IIf(_state = 1, 0, 1), loggeduser.user_id, kode)
+
                     End Select
 
                     If ckdata = False Then
                         op_con()
                         queryCk = commnd(q)
                         If queryCk = True Then
-                            MessageBox.Show("SUCC")
+                            MessageBox.Show("Perubahan tersimpan", "De/Aktivasi Data")
+                            performRefresh()
                         Else
-                            MessageBox.Show("NOPE")
+                            MessageBox.Show("Perubahan tidak dapat tersimpan", "De/Aktivasi Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
                         End If
                     Else
-                        MessageBox.Show("NOPE V2")
+                        MessageBox.Show("Status data tidak dapat diubah", "De/Aktivasi Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     End If
                 Else
                     MessageBox.Show("Data tidak ada")
@@ -627,6 +662,86 @@
                 Me.Cursor = Cursors.Default
             End With
         End If
+    End Sub
+
+    Private Sub cancelItem()
+        Dim _tbpg As String = tabpagename.Name.ToString
+        Dim ckdata As Boolean = False
+        Dim _dataState As Boolean = True
+        Dim q As String = ""
+        Dim kode As String = ""
+        Dim queryCk As Boolean = False
+
+        op_con()
+        Select Case _tbpg
+            Case "pgpembelian"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                ckdata = checkdata("data_hutang_trans", "'" & kode & "' AND h_trans_status<>9 AND h_trans_jenis NOT IN ('awal','beli')", "h_trans_kode_hutang")
+                q = "UPDATE data_pembelian_faktur SET faktur_status=2, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'; " _
+                    & "CALL transPembelianFin('{0}','{1}');"
+                q = String.Format(q, kode, loggeduser.user_id)
+
+                readcommd("SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='" & kode & "'")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) = 0 Or rd.Item(0) = 1, True, False)
+                End If
+                rd.Close()
+
+            Case "pgreturbeli"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                'ckdata = checkdata("data_hutang_trans", "'" & kode & "' AND h_trans_status AND h_trans_jenis='retur'", "h_trans_kode_hutang")
+                q = "UPDATE data_pembelian_retur_faktur SET faktur_status=2, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'; " _
+                    & "CALL transReturBeli('{0}','{1}');"
+                q = String.Format(q, kode, loggeduser.user_id)
+
+                readcommd("SELECT faktur_status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='" & kode & "'")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) = 0 Or rd.Item(0) = 1, True, False)
+                End If
+                rd.Close()
+
+            Case "pgpenjualan"
+                kode = dgv_list.SelectedRows.Item(0).Cells(1).Value
+                ckdata = checkdata("data_piutang_trans", "'" & kode & "' AND p_trans_status<>9 AND p_trans_jenis NOT IN ('awal','jual')", "p_trans_kode_piutang")
+                q = "UPDATE data_penjualan_faktur SET faktur_status=2, faktur_upd_date=NOW(),faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
+                q = String.Format(q, kode, loggeduser.user_id)
+
+                readcommd("SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='" & kode & "'")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) = 0 Or rd.Item(0) = 1, True, False)
+                End If
+                rd.Close()
+
+            Case "pgreturjual"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+
+                q = "UPDATE data_penjualan_retur_faktur SET faktur_status=2, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'; " _
+                    & "CALL transReturJual('{0}','{1}');"
+                q = String.Format(q, kode, loggeduser.user_id)
+
+                readcommd("SELECT faktur_status FROM data_penjualan_retur_faktur WHERE faktur_kode_bukti='" & kode & "'")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) = 0 Or rd.Item(0) = 1, True, False)
+                End If
+                rd.Close()
+
+            Case Else
+                Exit Sub
+        End Select
+
+        If _dataState = True Then
+            If ckdata = False Then
+                queryCk = commnd(q)
+                If queryCk = True Then
+                    MessageBox.Show("Transaksi dibatalkan.")
+                Else
+                    MessageBox.Show("Error. Pembatalan transaksi gagal")
+                End If
+            Else
+                MessageBox.Show("Transaksi tidak dapat dibatalkan.")
+            End If
+        End If
+        performRefresh()
     End Sub
 
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
@@ -762,7 +877,7 @@
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-        'delItem()
+        deactItem()
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
@@ -785,7 +900,7 @@
 
                 op_con()
                 'chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
-                chkdt = checkdata("data_piutang_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
+                chkdt = checkdata("data_piutang_trans", "'" & kodefaktur & "' AND p_trans_status<>9 AND p_trans_jenis NOT IN ('awal','jual')", "p_trans_kode_piutang")
 
                 Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
                 If .Count > 0 And chkdt = False Then
@@ -801,7 +916,7 @@
                             MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)
                         End If
                     End If
-                ElseIf .Count > 0 And (chkdt = True And chkdt2 = True) Then
+                ElseIf .Count > 0 And chkdt = True Then
                     Dim msg As String = "Penjualan {0} untuk customer {1} sudah pernah dilakukan transaksi pembayaran/retur penjualan"
                     MessageBox.Show(String.Format(msg, kodefaktur, custo_n), "Batal Jual/Kirim", MessageBoxButtons.OK)
                 End If
@@ -825,6 +940,8 @@
                         .Show(main)
                         .doLoad(, "valid")
                     End With
+                Case Else
+                    Exit Sub
             End Select
 
         End If
