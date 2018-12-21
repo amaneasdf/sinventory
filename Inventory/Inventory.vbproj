@@ -377,6 +377,12 @@
     <Compile Include="mn_masterdata\fr_supplier_detail.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_olahdata\fr_export_efaktur.Designer.vb">
+      <DependentUpon>fr_export_efaktur.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\fr_export_efaktur.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="mn_olahdata\fr_set_periode.Designer.vb">
       <DependentUpon>fr_set_periode.vb</DependentUpon>
     </Compile>
@@ -780,6 +786,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_masterdata\fr_supplier_detail.resx">
       <DependentUpon>fr_supplier_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\fr_export_efaktur.resx">
+      <DependentUpon>fr_export_efaktur.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\fr_set_periode.resx">
       <DependentUpon>fr_set_periode.vb</DependentUpon>

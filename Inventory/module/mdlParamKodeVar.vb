@@ -145,6 +145,7 @@
             Case "validasi"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Pending", "0")
                 dt.Rows.Add("Approve", "1")
                 dt.Rows.Add("Tolak", "2")
 

@@ -123,11 +123,18 @@
                 in_status.Text = "ERROR"
         End Select
 
-        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Then
+        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Or ({0, 1}).Contains(tjlStatus) = False Then
             For Each txt As TextBox In {in_pajak, in_custo_n, in_sales_n, in_gudang_n, in_barang_nm, in_ket}
                 txt.ReadOnly = True
             Next
 
+            With dgv_barang
+                .Location = New Point(12, 127)
+                .Height = 227
+            End With
+
+            cb_ppn.Enabled = False
+            bt_tbbarang.Visible = False
             date_tgl_beli.Enabled = False
             date_tgl_pajak.Enabled = False
             bt_simpanjual.Enabled = False
@@ -214,8 +221,8 @@
                     & "FROM data_barang_master " _
                     & "RIGHT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_gudang='" & in_gudang.Text & "' " _
                     & "LEFT JOIN data_barang_hargajual ON barang_kode=b_hargajual_barang AND b_hargajual_jenisharga='{0}' " _
-                    & "WHERE barang_nama LIKE '{1}' GROUP BY barang_kode LIMIT 250"
-                q = String.Format(q, jeniscusto, "{0}%")
+                    & "WHERE barang_nama LIKE '{1}' AND getHPPAVG(barang_kode,'{2}','{3}')>-1 GROUP BY barang_kode LIMIT 250"
+                q = String.Format(q, jeniscusto, "{0}%", date_tgl_beli.Value.ToString("yyyy-MM-dd"), selectperiode.id)
             Case "custo"
                 q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama', customer_term, customer_kriteria_harga_jual FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
             Case "gudang"
@@ -367,7 +374,7 @@
         in_qty.Focus()
     End Sub
 
-    Private Sub countBiaya()
+    Public Sub countBiaya()
         Dim pajak As Double = 0
         Dim subtotal As Double = 0
         Dim y As Double = 0
@@ -390,7 +397,6 @@
             pajak = subtotal * 0.1
             netto += pajak
         ElseIf cb_ppn.SelectedValue = 1 Then
-            'pajak = x - (x / 1.1)
             pajak = subtotal * (1 - 10 / 11)
         Else
             pajak = 0
@@ -530,9 +536,11 @@
                "trans_disc_rupiah='" & rows.Cells("discrp").Value.ToString.Replace(",", ".") & "'",
                "trans_jumlah='" & rows.Cells("jml").Value.ToString.Replace(",", ".") & "'",
                "trans_hpp='" & _hpp.ToString.Replace(",", ".") & "'",
-               "trans_status=1"
+               "trans_status=1",
+               "trans_reg_date=NOW()",
+               "trans_reg_alias='" & loggeduser.user_id & "'"
                }
-            q = "INSERT INTO data_penjualan_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
+            q = "INSERT INTO data_penjualan_trans SET trans_faktur= '{0}',{1}"
             queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataBrg)))
 
         Next
@@ -808,7 +816,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -912,7 +927,22 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_custo_n.KeyUp, in_barang_nm.KeyUp, in_gudang_n.KeyUp
+        If sender.Text = "" Then
+            Select Case sender.Name.ToString
+                Case "in_sales_n"
+                    in_sales.Clear()
+                Case "in_custo_n"
+                    in_custo.Clear()
+                Case "in_barang_nm"
+                    in_barang.Clear()
+                Case "in_gudang_n"
+                    in_gudang.Clear()
+                Case Else
+                    Exit Sub
+            End Select
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -921,7 +951,18 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_custo_n, e)
+            Select Case sender.Name.ToString
+                Case "in_sales_n"
+                    keyshortenter(in_custo_n, e)
+                Case "in_custo_n"
+                    keyshortenter(in_gudang_n, e)
+                Case "in_barang_nm"
+                    keyshortenter(in_qty, e)
+                Case "in_gudang_n"
+                    keyshortenter(in_term, e)
+                Case Else
+                    Exit Sub
+            End Select
         Else
             If e.KeyCode <> Keys.Escape Then
                 If popPnl_barang.Visible = False And sender.ReadOnly = False Then
@@ -954,26 +995,6 @@
         End If
     End Sub
 
-    Private Sub in_custo_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_gudang_n, e)
-        Else
-            If e.KeyCode = Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup("custo", in_custo_n.Text)
-            End If
-        End If
-    End Sub
-
     Private Sub in_custo_n_TextChanged(sender As Object, e As EventArgs) Handles in_custo_n.TextChanged
         If in_custo_n.Text = "" Then
             in_custo_n.Clear()
@@ -996,26 +1017,6 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_term, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup("gudang", in_gudang_n.Text)
-            End If
-        End If
-    End Sub
-
     Private Sub in_gudang_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang_n.TextChanged
         If in_gudang_n.Text = "" Then
             in_gudang_n.Clear()
@@ -1024,11 +1025,11 @@
     End Sub
 
     Private Sub in_term_KeyUp(sender As Object, e As KeyEventArgs) Handles in_term.KeyUp
-        If sender.Value = 0 Then
-            in_bayar.Enabled = True
-        Else
-            in_bayar.Enabled = False
-        End If
+        'If sender.Value = 0 Then
+        '    in_bayar.Enabled = True
+        'Else
+        '    in_bayar.Enabled = False
+        'End If
         keyshortenter(cb_ppn, e)
     End Sub
 
@@ -1057,26 +1058,6 @@
             End If
             popupstate = "barang"
             loadDataBRGPopup("barang", in_barang_nm.Text)
-        End If
-    End Sub
-
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                    loadDataBRGPopup("barang", in_barang_nm.Text)
-                End If
-            End If
         End If
     End Sub
 
@@ -1158,7 +1139,7 @@
 
     'DGV
     Private Sub dgv_barang_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
-        If loggeduser.allowedit_transact = True And selectperiode.closed = False Then
+        If loggeduser.allowedit_transact = True And selectperiode.closed = False And ({0, 1}).Contains(tjlStatus) = True Then
             If e.RowIndex > -1 Then
                 dgvToTxt()
                 dgv_barang.Rows.RemoveAt(e.RowIndex)

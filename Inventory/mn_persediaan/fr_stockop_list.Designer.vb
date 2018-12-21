@@ -620,12 +620,10 @@ Partial Class fr_stockop_list
         '
         'mn_hapus
         '
-        Me.mn_hapus.Image = Global.Inventory.My.Resources.Resources.toolbar_list_icon1
         Me.mn_hapus.Name = "mn_hapus"
         Me.mn_hapus.ShortcutKeys = System.Windows.Forms.Keys.F3
-        Me.mn_hapus.Size = New System.Drawing.Size(69, 20)
-        Me.mn_hapus.Text = "Hapus"
-        Me.mn_hapus.Visible = False
+        Me.mn_hapus.Size = New System.Drawing.Size(115, 20)
+        Me.mn_hapus.Text = "Batalkan Transaksi"
         '
         'mn_save
         '

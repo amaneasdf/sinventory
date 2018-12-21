@@ -30,6 +30,7 @@ Partial Class main
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.pnl_main = New System.Windows.Forms.Panel()
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.bt_periode_main = New System.Windows.Forms.Button()
         Me.ListView1 = New System.Windows.Forms.ListView()
         Me.cal_front = New System.Windows.Forms.MonthCalendar()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
@@ -78,7 +79,7 @@ Partial Class main
         Me.Label12.AutoSize = True
         Me.Label12.BackColor = System.Drawing.Color.Transparent
         Me.Label12.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.Orange
+        Me.Label12.ForeColor = System.Drawing.Color.MidnightBlue
         Me.Label12.Location = New System.Drawing.Point(779, 15)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(183, 31)
@@ -90,7 +91,7 @@ Partial Class main
         Me.Label2.AutoSize = True
         Me.Label2.BackColor = System.Drawing.Color.Transparent
         Me.Label2.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.Orange
+        Me.Label2.ForeColor = System.Drawing.Color.MidnightBlue
         Me.Label2.Location = New System.Drawing.Point(5, 15)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(119, 31)
@@ -123,7 +124,6 @@ Partial Class main
         'pnl_main
         '
         Me.pnl_main.BackColor = System.Drawing.Color.White
-        Me.pnl_main.BackgroundImage = Global.Inventory.My.Resources.Resources.bg
         Me.pnl_main.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.pnl_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_main.Location = New System.Drawing.Point(3, 3)
@@ -134,6 +134,7 @@ Partial Class main
         'Panel1
         '
         Me.Panel1.AutoScroll = True
+        Me.Panel1.Controls.Add(Me.bt_periode_main)
         Me.Panel1.Controls.Add(Me.ListView1)
         Me.Panel1.Controls.Add(Me.cal_front)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Right
@@ -141,6 +142,15 @@ Partial Class main
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(251, 560)
         Me.Panel1.TabIndex = 1
+        '
+        'bt_periode_main
+        '
+        Me.bt_periode_main.Location = New System.Drawing.Point(103, 172)
+        Me.bt_periode_main.Name = "bt_periode_main"
+        Me.bt_periode_main.Size = New System.Drawing.Size(137, 31)
+        Me.bt_periode_main.TabIndex = 2
+        Me.bt_periode_main.Text = "Set Periode"
+        Me.bt_periode_main.UseVisualStyleBackColor = True
         '
         'ListView1
         '
@@ -153,7 +163,6 @@ Partial Class main
         '
         'cal_front
         '
-        Me.cal_front.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.cal_front.Location = New System.Drawing.Point(13, 9)
         Me.cal_front.MaxSelectionCount = 1
         Me.cal_front.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
@@ -251,5 +260,6 @@ Partial Class main
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents strip_status As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents bt_periode_main As System.Windows.Forms.Button
 
 End Class

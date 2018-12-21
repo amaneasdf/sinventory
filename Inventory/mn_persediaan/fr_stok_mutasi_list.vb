@@ -34,12 +34,13 @@
         If selectperiode.closed = True Then
             mn_tambah.Enabled = False
             mn_edit.Enabled = False
+            mn_hapus.Enabled = False
         End If
     End Sub
 
     Private Sub loadData(kode As String)
         Dim q As String = "SELECT faktur_kode, faktur_tanggal, faktur_gudang_asal, a.gudang_nama as gudang_asal, faktur_gudang_tujuan, " _
-                          & "b.gudang_nama as gudang_tujuan, faktur_reg_alias, faktur_reg_date, faktur_upd_alias, faktur_upd_date " _
+                          & "b.gudang_nama as gudang_tujuan, faktur_reg_alias, faktur_reg_date, faktur_upd_alias, faktur_upd_date, faktur_status " _
                           & "FROM data_barang_stok_mutasi LEFT JOIN data_barang_gudang a ON faktur_gudang_asal=a.gudang_kode " _
                           & "LEFT JOIN data_barang_gudang b ON faktur_gudang_tujuan=b.gudang_kode " _
                           & "WHERE faktur_kode='{0}'"
@@ -52,6 +53,7 @@
             in_gudang_n.Text = rd.Item("gudang_asal")
             in_gudang2.Text = rd.Item("faktur_gudang_tujuan")
             in_gudang2_n.Text = rd.Item("gudang_tujuan")
+            tblstatus = rd.Item("faktur_status")
             txtRegAlias.Text = rd.Item("faktur_reg_alias")
             txtRegdate.Text = rd.Item("faktur_reg_date")
             Try
@@ -390,7 +392,7 @@
         'WRITE KARTU STOK
         Dim x_kodestock As New List(Of String)
         Dim q4 As String = "SELECT stock_kode FROM data_stok_awal WHERE stock_gudang='{0}' AND stock_barang={1} AND stock_periode='{2}'"
-        Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
+        Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok bb WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
         data = Nothing
         data = {
             "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl", "trans_periode",
@@ -441,7 +443,7 @@
                 "'" & loggeduser.user_id & "'", "NOW()", "1"
                 }
             dataBrg = {
-                "trans_id=trans_id"
+                "data_stok_kartustok.trans_id = data_stok_kartustok.trans_id"
                 }
             queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd2, String.Join(",", dataBrg)))
 
@@ -524,7 +526,51 @@
             mn_tambah.Text = "Tambah"
             disableAllSwitch(True)
             mn_save.Enabled = False
+            'mn_hapus.Enabled = False
         End If
+    End Sub
+
+    Private Sub cancelData()
+        Dim queryCk As Boolean = False
+        Dim queryArr As New List(Of String)
+        Dim q As String = ""
+        Dim _confrm As Boolean = False
+
+        op_con()
+        If tblstatus = 1 Then
+            Using val As New fr_stockopconfirm_dialog
+                With val
+                    .lbl_title.Text = "Konfirmasi Pembatalan"
+                    .in_user.Text = loggeduser.user_id
+                    .in_user.ReadOnly = True
+                    .ShowDialog()
+                    _confrm = .returnval
+                End With
+            End Using
+
+            If _confrm = False Then
+                Exit Sub
+            End If
+
+            q = "UPDATE data_barang_stok_mutasi SET faktur_status=2, faktur_upd_date =NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_stok_kartustok SET trans_status=9, trans_upd_date=NOW(), trans_upd_alias='{1}' WHERE trans_faktur='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            queryCk = startTrans(queryArr)
+
+            If queryCk Then
+                MessageBox.Show("Transaksi Dibatalkan")
+                performRefresh()
+            Else
+                MessageBox.Show("Error. Transaksi gagal dibatalkan")
+            End If
+        End If
+
     End Sub
 
     Private Sub clearTextBarang()
@@ -678,7 +724,11 @@
     End Sub
 
     Private Sub mn_hapus_Click(sender As Object, e As EventArgs) Handles mn_hapus.Click
-        MessageBox.Show("Under Construction")
+        If in_kode.Text <> Nothing Then
+            If MessageBox.Show("Batalkan Transaksi mutasi stok?", "Mutasi Antar Gudang", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                cancelData()
+            End If
+        End If
     End Sub
 
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
@@ -792,7 +842,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If

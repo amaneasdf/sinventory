@@ -134,6 +134,30 @@
         Return qreturn
     End Function
 
+    Private Sub exportData(type As String)
+        Dim q As String = createQuery(type)
+        Dim _dt As New DataTable
+        Dim _colheader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
+        Dim _respond As Boolean = False
+        Dim _svdialog As New SaveFileDialog
+        Dim _title As String = ""
+
+        MyBase.Cursor = Cursors.AppStarting
+
+        Select Case type
+            Case "lapKartuStok"
+                '_colheader.AddRange({"Kode Gudang", "Nama Gudang", "Kode Barang", "Nama Barang", "Tgl.Transaksi", "Tgl.Jatuh Tempo", "Faktur", "Saldo Awal", "Pembayaran", "Retur", "Sisa"})
+                '_title = "Kartu Stok"
+                '_filename = "BiayaSales" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case Else
+
+        End Select
+
+    End Sub
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -200,7 +224,7 @@
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-
+        MessageBox.Show("Under Construction")
     End Sub
 
     'UI

@@ -51,6 +51,7 @@ Partial Class fr_urut_kartustok
         Me.in_barang_n = New System.Windows.Forms.TextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.kartu_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kartu_jenis = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.kartu_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.kartu_ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.kartu_ket2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -200,7 +201,7 @@ Partial Class fr_urut_kartustok
         Me.dgv_kartustok.AllowUserToDeleteRows = False
         Me.dgv_kartustok.BackgroundColor = System.Drawing.Color.White
         Me.dgv_kartustok.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_kartustok.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kartu_tgl, Me.kartu_faktur, Me.kartu_ket, Me.kartu_ket2, Me.kartu_debet, Me.kartu_kredit, Me.kartu_nilai, Me.kartu_saldo})
+        Me.dgv_kartustok.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kartu_tgl, Me.kartu_jenis, Me.kartu_faktur, Me.kartu_ket, Me.kartu_ket2, Me.kartu_debet, Me.kartu_kredit, Me.kartu_nilai, Me.kartu_saldo})
         Me.dgv_kartustok.Location = New System.Drawing.Point(11, 277)
         Me.dgv_kartustok.MultiSelect = False
         Me.dgv_kartustok.Name = "dgv_kartustok"
@@ -377,6 +378,12 @@ Partial Class fr_urut_kartustok
         Me.kartu_tgl.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.kartu_tgl.Width = 75
         '
+        'kartu_jenis
+        '
+        Me.kartu_jenis.HeaderText = "jenis"
+        Me.kartu_jenis.Name = "kartu_jenis"
+        Me.kartu_jenis.Visible = False
+        '
         'kartu_faktur
         '
         Me.kartu_faktur.DataPropertyName = "kode"
@@ -497,6 +504,7 @@ Partial Class fr_urut_kartustok
     Friend WithEvents in_barang_n As System.Windows.Forms.TextBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents kartu_tgl As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents kartu_jenis As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_ket As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kartu_ket2 As System.Windows.Forms.DataGridViewTextBoxColumn

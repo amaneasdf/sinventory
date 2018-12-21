@@ -24,25 +24,31 @@ Partial Class fr_view_nota
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim ReportDataSource1 As Microsoft.Reporting.WinForms.ReportDataSource = New Microsoft.Reporting.WinForms.ReportDataSource()
-        Me.dt_nota_beliBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.ds_transaksi = New Inventory.ds_transaksi()
-        Me.rv_nota = New Microsoft.Reporting.WinForms.ReportViewer()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_view_nota))
         Me.dt_lap_jual_notaBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        CType(Me.dt_nota_beliBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.ds_transaksi, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ds_transaksi = New Inventory.ds_transaksi()
+        Me.dt_nota_beliBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.rv_nota = New Microsoft.Reporting.WinForms.ReportViewer()
         CType(Me.dt_lap_jual_notaBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.ds_transaksi, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dt_nota_beliBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'dt_nota_beliBindingSource
+        'dt_lap_jual_notaBindingSource
         '
-        Me.dt_nota_beliBindingSource.DataMember = "dt_nota_beli"
-        Me.dt_nota_beliBindingSource.DataSource = Me.ds_transaksi
+        Me.dt_lap_jual_notaBindingSource.DataMember = "dt_lap_jual_nota"
+        Me.dt_lap_jual_notaBindingSource.DataSource = Me.ds_transaksi
         '
         'ds_transaksi
         '
         Me.ds_transaksi.DataSetName = "ds_transaksi"
         Me.ds_transaksi.Locale = New System.Globalization.CultureInfo("id-ID")
         Me.ds_transaksi.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema
+        '
+        'dt_nota_beliBindingSource
+        '
+        Me.dt_nota_beliBindingSource.DataMember = "dt_nota_beli"
+        Me.dt_nota_beliBindingSource.DataSource = Me.ds_transaksi
         '
         'rv_nota
         '
@@ -56,21 +62,18 @@ Partial Class fr_view_nota
         Me.rv_nota.Size = New System.Drawing.Size(818, 524)
         Me.rv_nota.TabIndex = 0
         '
-        'dt_lap_jual_notaBindingSource
-        '
-        Me.dt_lap_jual_notaBindingSource.DataMember = "dt_lap_jual_nota"
-        Me.dt_lap_jual_notaBindingSource.DataSource = Me.ds_transaksi
-        '
         'fr_view_nota
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(818, 524)
         Me.Controls.Add(Me.rv_nota)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "fr_view_nota"
-        CType(Me.dt_nota_beliBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.ds_transaksi, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         CType(Me.dt_lap_jual_notaBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.ds_transaksi, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dt_nota_beliBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub

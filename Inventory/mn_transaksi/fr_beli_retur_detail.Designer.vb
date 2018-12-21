@@ -487,7 +487,7 @@ Partial Class fr_beli_retur_detail
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.in_ket.Size = New System.Drawing.Size(232, 76)
+        Me.in_ket.Size = New System.Drawing.Size(396, 76)
         Me.in_ket.TabIndex = 19
         '
         'in_no_faktur_ex
@@ -627,7 +627,7 @@ Partial Class fr_beli_retur_detail
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
         Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(399, 232)
+        Me.popPnl_barang.Location = New System.Drawing.Point(399, 248)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
         Me.popPnl_barang.TabIndex = 424
@@ -961,6 +961,7 @@ Partial Class fr_beli_retur_detail
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(807, 536)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.dgv_barang)
         Me.Controls.Add(Me.in_diskon)
         Me.Controls.Add(Me.Label18)
         Me.Controls.Add(Me.Label13)
@@ -985,7 +986,6 @@ Partial Class fr_beli_retur_detail
         Me.Controls.Add(Me.in_harga_retur)
         Me.Controls.Add(Me.Label22)
         Me.Controls.Add(Me.in_qty)
-        Me.Controls.Add(Me.dgv_barang)
         Me.Controls.Add(Me.Label20)
         Me.Controls.Add(Me.Label16)
         Me.Controls.Add(Me.Label21)

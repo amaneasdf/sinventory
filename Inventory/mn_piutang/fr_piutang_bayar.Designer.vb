@@ -132,9 +132,8 @@ Partial Class fr_piutang_bayar
         'mn_delete
         '
         Me.mn_delete.Name = "mn_delete"
-        Me.mn_delete.Size = New System.Drawing.Size(52, 20)
-        Me.mn_delete.Text = "Delete"
-        Me.mn_delete.Visible = False
+        Me.mn_delete.Size = New System.Drawing.Size(115, 20)
+        Me.mn_delete.Text = "Batalkan Transaksi"
         '
         'mn_print
         '
@@ -152,7 +151,6 @@ Partial Class fr_piutang_bayar
         Me.mn_proses.Size = New System.Drawing.Size(69, 20)
         Me.mn_proses.Text = "P&roses"
         Me.mn_proses.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.mn_proses.Visible = False
         '
         'Panel1
         '

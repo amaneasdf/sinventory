@@ -146,10 +146,9 @@
             Case "p_salesnota"
                 'BASED periode,sales,custo;OPT saldo_sisa
                 q = "SELECT salesman_kode as psn_sales,salesman_nama as psn_sales_n, customer_kode as psn_custo, customer_nama as psn_custo_n, " _
-                    & "ADDDATE(faktur_tanggal_trans,faktur_term) as psn_jt, " _
-                    & "p_trans_kode_piutang as psn_faktur, piutang_awal as psn_saldoawal, piutang_piutang as psn_penjualan, " _
-                    & "(piutang_bayar*-1)-piutang_tolak as psn_bayar, piutang_retur*-1 as psn_retur, " _
-                    & "piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psn_sisa " _
+                    & "p_trans_kode_piutang as psn_faktur,faktur_tanggal_trans, ADDDATE(faktur_tanggal_trans,faktur_term) as psn_jt, " _
+                    & "piutang_awal as psn_saldoawal, piutang_piutang as psn_penjualan, (piutang_bayar*-1)-piutang_tolak as psn_bayar," _
+                    & "piutang_retur*-1 as psn_retur, piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psn_sisa " _
                     & "FROM ( " _
                     & " SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,piutang_tgl," _
                     & "  SUM(if(p_trans_jenis='awal',p_trans_nilai,0)) piutang_awal, " _
@@ -181,11 +180,10 @@
 
             Case "p_saleslengkap2"
                 q = "SELECT salesman_kode as psl2_sales,salesman_nama as psl2_sales_n, customer_kode as psl2_custo, customer_nama as psl2_custo_n, " _
+                    & "faktur_kode as psl2_faktur, faktur_tanggal_trans as psl2_tgl, " _
                     & "faktur_netto+faktur_disc_rupiah as psl2_brutto, faktur_disc_rupiah+faktur_bayar as psl2_potongan, " _
-                    & "faktur_tanggal_trans as psl2_tgl, " _
-                    & "faktur_kode as psl2_faktur, " _
-                    & "piutang_piutang as psl2_penjualan, (piutang_bayar*-1)-piutang_tolak as psl2_bayar, " _
-                    & "piutang_retur*-1 as psl2_retur, piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psl2_sisa " _
+                    & "piutang_piutang as psl2_penjualan, piutang_retur*-1 as psl2_retur, (piutang_bayar*-1)-piutang_tolak as psl2_bayar, " _
+                    & "piutang_awal+piutang_piutang+piutang_retur+piutang_bayar+piutang_tolak as psl2_sisa " _
                     & "FROM data_penjualan_faktur " _
                     & "LEFT JOIN ( " _
                     & " SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,piutang_tgl," _
@@ -217,11 +215,11 @@
 
             Case "p_salesbayartanggal"
                 'BASED sales,jenisbayar, tgl ;OPT 
-                q = "SELECT p_bayar_sales as psb_sales, salesman_nama as psb_sales_n, p_bayar_tanggal_bayar as psb_tgl, " _
-                    & "sum(p_trans_nilaibayar) as psb_total, p_bayar_jenisbayar as psb_jenisbayar, p_trans_kode_piutang as psb_faktur " _
+                q = "SELECT p_bayar_tanggal_bayar as psb_tgl, p_bayar_sales as psb_sales, salesman_nama as psb_sales_n, " _
+                    & "p_trans_kode_piutang as psb_faktur, p_bayar_jenisbayar as psb_jenisbayar, sum(p_trans_nilaibayar) as psb_total " _
                     & "FROM data_piutang_bayar LEFT JOIN data_piutang_bayar_trans ON p_bayar_bukti=p_trans_bukti AND p_trans_status=1 " _
                     & "LEFT JOIN data_salesman_master ON p_bayar_sales=salesman_kode " _
-                    & "WHERE p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}' {2} " _
+                    & "WHERE p_bayar_status<>9 AND p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}' {2} " _
                     & "GROUP BY p_bayar_tanggal_bayar, p_bayar_sales,p_trans_kode_piutang, p_bayar_jenisbayar"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
@@ -316,9 +314,9 @@
 
             Case "p_bayarnota"
                 'BASED periode,custo,sales ;OPT 
-                q = "SELECT p_trans_kode_piutang pbd_faktur,piutang_custo pbd_custo,customer_nama pdb_custo_n,piutang_sales pbd_sales,salesman_nama pbd_sales_n," _
-                    & "faktur_tanggal_trans pbd_tanggal, piutang_awal pbd_saldoawal, piutang_retur * -1 pbd_retur, piutang_bayar * -1 pbd_bayar, piutang_tolak pbd_jual," _
-                    & "piutang_sisa pbd_sisa, ket pbd_ket, pbd_hari, p_trans_tgl pbd_tglbayar " _
+                q = "SELECT p_trans_tgl pbd_tglbayar,piutang_custo pbd_custo,customer_nama pdb_custo_n,piutang_sales pbd_sales,salesman_nama pbd_sales_n," _
+                    & " p_trans_kode_piutang pbd_faktur,faktur_tanggal_trans pbd_tanggal, piutang_awal pbd_saldoawal, piutang_retur * -1 pbd_retur, " _
+                    & " piutang_bayar * -1 pbd_bayar,piutang_tolak pbd_jual,piutang_sisa pbd_sisa, ket pbd_ket, pbd_hari " _
                     & "FROM( " _
                     & "SELECT p_trans_kode_piutang,piutang_custo,piutang_sales,p_trans_tgl,faktur_tanggal_trans," _
                     & " if(@faktur<>p_trans_kode_piutang,@ct:=0,@ct:=@ct+1) as count," _
@@ -409,6 +407,92 @@
         Return qreturn
     End Function
 
+    Private Sub exportData(type As String)
+        Dim q As String = createQuery(type)
+        Dim _dt As New DataTable
+        Dim _colheader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
+        Dim _respond As Boolean = False
+        Dim _svdialog As New SaveFileDialog
+        Dim _title As String = ""
+
+        MyBase.Cursor = Cursors.WaitCursor
+
+        Select Case type
+            Case "p_salesnota"
+                _colheader.AddRange({"Kode Salesman", "Nama Salesman", "Kode Customer", "Nama Customer", "Faktur", "Tgl.Transaksi", "Tgl.Jatuh Tempo", "Saldo Awal",
+                                     "Penjualan", "Retur", "Pembayaran", "Sisa"})
+                _title = "LAPORAN PIUTANG PER SALESMAN PER NOTA"
+                _filename = "PiutangSalesNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "p_saleslengkap2"
+                _colheader.AddRange({"Kode Salesman", "Nama Salesman", "Kode Customer", "Nama Customer", "Faktur", "Tgl.Faktur",
+                                     "Brutto", "Potongan", "Piutang", "Retur", "Pembayaran", "Sisa"})
+                _title = "LAPORAN PIUTANG PER SALESMAN PER PENJUALAN"
+                _filename = "PiutangSales" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "p_salesbayartanggal"
+                _colheader.AddRange({"Tgl.Transaksi", "Kode Salesman", "Nama Salesman", "Faktur", "Jenis Pembayaran", "Jumlah"})
+                _title = "LAPORAN BAYAR PIUTANG PER SALESMAN & TANGGAL"
+                _filename = "PiutangPembayaranSalesTanggal" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "p_kartupiutang"
+                _colheader.AddRange({"Kode Customer", "Nama Customer", "Tgl. Transaksi", "No.Bukti Transaksi", "Keterangan", "Debit", "Kredit", "Saldo"})
+                _title = "KARTU PIUTANG PER CUSTOMER"
+                _filename = "KartuPiutang" & Today.ToString("yyyyMMdd") & ".xlsx"
+                q = "SELECT pk_custo, pk_custo_n, pk_tgl, pk_no_bukti, pk_ket, pk_debet, pk_kredit, pk_saldo FROM (" & q & ") kartuhutang"
+
+            Case "p_kartupiutangsales"
+                _colheader.AddRange({"Kode Salesman", "Nama Salesman", "Kode Customer", "Nama Customer", "Tgl. Transaksi", "No.Bukti Transaksi",
+                                     "Keterangan", "Debit", "Kredit", "Saldo"})
+                _title = "KARTU PIUTANG PER SALESMAN"
+                _filename = "KartuPiutangSales" & Today.ToString("yyyyMMdd") & ".xlsx"
+                q = "SELECT pk_sales, pk_sales_n, pk_custo, pk_custo_n, pk_tgl, pk_no_bukti, pk_ket, pk_debet, pk_kredit, pk_saldo FROM (" & q & ") kartuhutang"
+
+            Case "p_bayarnota"
+                _colheader.AddRange({"Tgl.Pembayaran", "Kode Customer", "Nama Customer", "Kode Salesman", "Nama Salesman", "No.Faktur Pembelian", "Tgl.Pembelian",
+                                      "Saldo Awal", "Retur", "Pembayaran", "Bayar Ditolak", "Sisa", "Keterangan", "Range Hari"})
+                _title = "LAPORAN HISTORI PEMBAYARAN PIUTANG"
+                _filename = "PembayaranHutang" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "p_salesglobal"
+                _colheader.AddRange({"Kode Salesman", "Nama Salesman", "Jml. Faktur", "Saldo Awal", "Penjualan", "Retur", "Pembayaran", "Sisa", "Jml.Faktur Tunai", "Tunai"})
+                _title = "LAPORAN PIUTANG GLOBAL PER SALESMAN"
+                _filename = "PiutangGlobalSales" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case Else
+                Exit Sub
+        End Select
+        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.FilterIndex = 1
+        _svdialog.FileName = _svdialog.InitialDirectory & _filename
+        _svdialog.RestoreDirectory = True
+        If _svdialog.ShowDialog = DialogResult.OK Then
+            If _svdialog.FileName <> Nothing Then
+                _outputdir = IO.Path.GetDirectoryName(_svdialog.FileName)
+                _filename = Strings.Replace(_svdialog.FileName, _outputdir, "")
+            Else
+                Exit Sub
+            End If
+        Else
+            Exit Sub
+        End If
+
+        _dt = getDataTablefromDB(q)
+
+        If exportXlsx(_colheader, _dt, _outputdir, _filename, _title) = True Then
+            MessageBox.Show("Export sukses")
+            If System.IO.File.Exists(_svdialog.FileName) = True Then
+                Process.Start(_svdialog.FileName)
+            End If
+        Else
+            MessageBox.Show("Export gagal")
+        End If
+
+        MyBase.Cursor = Cursors.Default
+    End Sub
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -498,7 +582,7 @@
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-
+        exportData(laptype)
     End Sub
 
     'UI

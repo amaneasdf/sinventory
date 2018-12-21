@@ -22,8 +22,8 @@ Partial Class fr_stok_mutasibarang_list
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_stok_mutasibarang_list))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
@@ -755,9 +755,9 @@ Partial Class fr_stok_mutasibarang_list
         'hpp
         '
         Me.hpp.DataPropertyName = "hpp"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        Me.hpp.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        Me.hpp.DefaultCellStyle = DataGridViewCellStyle3
         Me.hpp.HeaderText = "HPP Asal"
         Me.hpp.Name = "hpp"
         Me.hpp.ReadOnly = True
@@ -794,9 +794,9 @@ Partial Class fr_stok_mutasibarang_list
         '
         'hpp_b
         '
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "N2"
-        Me.hpp_b.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.Format = "N2"
+        Me.hpp_b.DefaultCellStyle = DataGridViewCellStyle4
         Me.hpp_b.HeaderText = "HPP Tujuan"
         Me.hpp_b.Name = "hpp_b"
         Me.hpp_b.ReadOnly = True
@@ -837,12 +837,10 @@ Partial Class fr_stok_mutasibarang_list
         '
         'mn_hapus
         '
-        Me.mn_hapus.Image = Global.Inventory.My.Resources.Resources.toolbar_list_icon1
         Me.mn_hapus.Name = "mn_hapus"
         Me.mn_hapus.ShortcutKeys = System.Windows.Forms.Keys.F3
-        Me.mn_hapus.Size = New System.Drawing.Size(69, 20)
-        Me.mn_hapus.Text = "Hapus"
-        Me.mn_hapus.Visible = False
+        Me.mn_hapus.Size = New System.Drawing.Size(115, 20)
+        Me.mn_hapus.Text = "Batalkan Transaksi"
         '
         'mn_save
         '

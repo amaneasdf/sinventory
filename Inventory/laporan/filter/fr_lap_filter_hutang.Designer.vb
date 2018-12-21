@@ -323,10 +323,11 @@ Partial Class fr_lap_filter_hutang
         'lbl_periodedata
         '
         Me.lbl_periodedata.AutoSize = True
-        Me.lbl_periodedata.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.ForeColor = System.Drawing.Color.MidnightBlue
         Me.lbl_periodedata.Location = New System.Drawing.Point(8, 210)
         Me.lbl_periodedata.Name = "lbl_periodedata"
-        Me.lbl_periodedata.Size = New System.Drawing.Size(43, 13)
+        Me.lbl_periodedata.Size = New System.Drawing.Size(48, 15)
         Me.lbl_periodedata.TabIndex = 430
         Me.lbl_periodedata.Text = "Periode"
         '

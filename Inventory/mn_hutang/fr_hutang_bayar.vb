@@ -5,6 +5,7 @@
 
     Private selectedsup As String = ""
     Private _totaltitipan As Double = 0
+    Private _status As String = Nothing
 
     Private _sisaHutang As Double = 0
     Public _totalhutang As Double = 0
@@ -17,7 +18,7 @@
                           & "IFNULL(giro_no,'') as giro_no, h_bayar_ket, h_bayar_potongan_nilai, " _
                           & "CONCAT((CASE giro_status_pencairan WHEN 1 THEN 'CAIR : ' WHEN 2 THEN 'TOLAK : ' ELSE '' END),IFNULL(DATE_FORMAT(giro_tgl_tolakcair,'%d/%m/%Y'),'')) tgl, " _
                           & "h_bayar_reg_alias,h_bayar_reg_date,h_bayar_upd_alias,h_bayar_upd_date, " _
-                          & "getSisaTitipan('hutang','" & selectperiode.id & "',h_bayar_supplier) as titipan " _
+                          & "getSisaTitipan('hutang','" & selectperiode.id & "',h_bayar_supplier) as titipan, h_bayar_status " _
                           & "FROM data_hutang_bayar LEFT JOIN data_supplier_master ON supplier_kode=h_bayar_supplier " _
                           & "LEFT JOIN data_giro ON giro_no=h_bayar_giro_no AND giro_status<>9 AND giro_type='OUT'" _
                           & "WHERE h_bayar_bukti='{0}'"
@@ -37,6 +38,7 @@
             nobg = rd.Item("giro_no")
             tglbgcair = rd.Item("tgl")
             in_potongan.Value = rd.Item("h_bayar_potongan_nilai")
+            _status = rd.Item("h_bayar_status")
             txtRegAlias.Text = rd.Item("h_bayar_reg_alias")
             txtRegdate.Text = rd.Item("h_bayar_reg_date")
             txtUpdAlias.Text = rd.Item("h_bayar_upd_alias")
@@ -70,7 +72,7 @@
         loadListedBayar(kode)
         in_supplier.Focus()
 
-        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Then
+        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Or _status = 2 Then
             For Each txt As TextBox In {in_supplier_n, in_faktur, in_no_bg, in_no_bukti, in_ket}
                 txt.ReadOnly = True
             Next
@@ -526,7 +528,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If

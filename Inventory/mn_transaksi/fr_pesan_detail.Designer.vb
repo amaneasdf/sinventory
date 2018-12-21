@@ -29,32 +29,16 @@ Partial Class fr_pesan_detail
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.TextBox1 = New System.Windows.Forms.TextBox()
+        Me.lbl_titipan = New System.Windows.Forms.Label()
+        Me.in_titipan = New System.Windows.Forms.TextBox()
+        Me.lbl_piutang = New System.Windows.Forms.Label()
+        Me.in_piutang = New System.Windows.Forms.TextBox()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
         Me.lbl_ref_faktur = New System.Windows.Forms.Label()
         Me.in_ref_faktur = New System.Windows.Forms.TextBox()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.valid_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cb_status = New System.Windows.Forms.ComboBox()
         Me.bt_createjual = New System.Windows.Forms.Button()
         Me.txtValDate = New System.Windows.Forms.TextBox()
@@ -119,8 +103,25 @@ Partial Class fr_pesan_detail
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_cancel = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_createjual = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.valid_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
@@ -217,10 +218,10 @@ Partial Class fr_pesan_detail
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
-        Me.pnl_content.Controls.Add(Me.Label15)
-        Me.pnl_content.Controls.Add(Me.TextBox2)
-        Me.pnl_content.Controls.Add(Me.Label14)
-        Me.pnl_content.Controls.Add(Me.TextBox1)
+        Me.pnl_content.Controls.Add(Me.lbl_titipan)
+        Me.pnl_content.Controls.Add(Me.in_titipan)
+        Me.pnl_content.Controls.Add(Me.lbl_piutang)
+        Me.pnl_content.Controls.Add(Me.in_piutang)
         Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.lbl_ref_faktur)
         Me.pnl_content.Controls.Add(Me.in_ref_faktur)
@@ -295,53 +296,57 @@ Partial Class fr_pesan_detail
         Me.pnl_content.Size = New System.Drawing.Size(1005, 477)
         Me.pnl_content.TabIndex = 0
         '
-        'Label15
+        'lbl_titipan
         '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(477, 55)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(69, 13)
-        Me.Label15.TabIndex = 437
-        Me.Label15.Text = "Saldo Titipan"
-        Me.Label15.Visible = False
+        Me.lbl_titipan.AutoSize = True
+        Me.lbl_titipan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_titipan.Location = New System.Drawing.Point(477, 55)
+        Me.lbl_titipan.Name = "lbl_titipan"
+        Me.lbl_titipan.Size = New System.Drawing.Size(69, 13)
+        Me.lbl_titipan.TabIndex = 437
+        Me.lbl_titipan.Text = "Saldo Titipan"
+        Me.lbl_titipan.Visible = False
         '
-        'TextBox2
+        'in_titipan
         '
-        Me.TextBox2.BackColor = System.Drawing.Color.White
-        Me.TextBox2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox2.ForeColor = System.Drawing.Color.Black
-        Me.TextBox2.Location = New System.Drawing.Point(556, 52)
-        Me.TextBox2.MaxLength = 30
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.ReadOnly = True
-        Me.TextBox2.Size = New System.Drawing.Size(182, 20)
-        Me.TextBox2.TabIndex = 436
-        Me.TextBox2.Visible = False
+        Me.in_titipan.BackColor = System.Drawing.Color.White
+        Me.in_titipan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_titipan.ForeColor = System.Drawing.Color.Black
+        Me.in_titipan.Location = New System.Drawing.Point(556, 51)
+        Me.in_titipan.MaxLength = 30
+        Me.in_titipan.Name = "in_titipan"
+        Me.in_titipan.ReadOnly = True
+        Me.in_titipan.Size = New System.Drawing.Size(182, 20)
+        Me.in_titipan.TabIndex = 436
+        Me.in_titipan.Text = "0"
+        Me.in_titipan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_titipan.Visible = False
         '
-        'Label14
+        'lbl_piutang
         '
-        Me.Label14.AutoSize = True
-        Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(477, 33)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(73, 13)
-        Me.Label14.TabIndex = 435
-        Me.Label14.Text = "Saldo Piutang"
-        Me.Label14.Visible = False
+        Me.lbl_piutang.AutoSize = True
+        Me.lbl_piutang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_piutang.Location = New System.Drawing.Point(477, 33)
+        Me.lbl_piutang.Name = "lbl_piutang"
+        Me.lbl_piutang.Size = New System.Drawing.Size(73, 13)
+        Me.lbl_piutang.TabIndex = 435
+        Me.lbl_piutang.Text = "Saldo Piutang"
+        Me.lbl_piutang.Visible = False
         '
-        'TextBox1
+        'in_piutang
         '
-        Me.TextBox1.BackColor = System.Drawing.Color.White
-        Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.ForeColor = System.Drawing.Color.Black
-        Me.TextBox1.Location = New System.Drawing.Point(556, 30)
-        Me.TextBox1.MaxLength = 30
-        Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.ReadOnly = True
-        Me.TextBox1.Size = New System.Drawing.Size(182, 20)
-        Me.TextBox1.TabIndex = 434
-        Me.TextBox1.Visible = False
+        Me.in_piutang.BackColor = System.Drawing.Color.White
+        Me.in_piutang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_piutang.ForeColor = System.Drawing.Color.Black
+        Me.in_piutang.Location = New System.Drawing.Point(556, 30)
+        Me.in_piutang.MaxLength = 30
+        Me.in_piutang.Name = "in_piutang"
+        Me.in_piutang.ReadOnly = True
+        Me.in_piutang.Size = New System.Drawing.Size(182, 20)
+        Me.in_piutang.TabIndex = 434
+        Me.in_piutang.Text = "0"
+        Me.in_piutang.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        Me.in_piutang.Visible = False
         '
         'popPnl_barang
         '
@@ -400,7 +405,7 @@ Partial Class fr_pesan_detail
         Me.in_ref_faktur.MaxLength = 30
         Me.in_ref_faktur.Name = "in_ref_faktur"
         Me.in_ref_faktur.ReadOnly = True
-        Me.in_ref_faktur.Size = New System.Drawing.Size(132, 20)
+        Me.in_ref_faktur.Size = New System.Drawing.Size(130, 20)
         Me.in_ref_faktur.TabIndex = 432
         '
         'dgv_barang
@@ -417,132 +422,6 @@ Partial Class fr_pesan_detail
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_barang.Size = New System.Drawing.Size(980, 163)
         Me.dgv_barang.TabIndex = 21
-        '
-        'valid_ck
-        '
-        Me.valid_ck.FalseValue = "0"
-        Me.valid_ck.HeaderText = "Stat"
-        Me.valid_ck.IndeterminateValue = "0"
-        Me.valid_ck.Name = "valid_ck"
-        Me.valid_ck.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.valid_ck.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.valid_ck.TrueValue = "1"
-        Me.valid_ck.Width = 40
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sattype"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.Visible = False
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 40
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.MinimumWidth = 80
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 80
-        '
-        'qty_sisa
-        '
-        Me.qty_sisa.HeaderText = "QtySisa"
-        Me.qty_sisa.Name = "qty_sisa"
-        Me.qty_sisa.ReadOnly = True
-        Me.qty_sisa.Width = 75
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_jual"
-        Me.harga.HeaderText = "Harga Jual"
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'subtotal
-        '
-        Me.subtotal.HeaderText = "Subtotal"
-        Me.subtotal.Name = "subtotal"
-        Me.subtotal.ReadOnly = True
-        '
-        'discrp
-        '
-        Me.discrp.DataPropertyName = "trans_disc_rupiah"
-        Me.discrp.HeaderText = "Disc Rp."
-        Me.discrp.Name = "discrp"
-        Me.discrp.Width = 80
-        '
-        'disc1
-        '
-        Me.disc1.DataPropertyName = "trans_disc1"
-        Me.disc1.HeaderText = "Disc1"
-        Me.disc1.MinimumWidth = 40
-        Me.disc1.Name = "disc1"
-        Me.disc1.Width = 45
-        '
-        'disc2
-        '
-        Me.disc2.DataPropertyName = "trans_disc2"
-        Me.disc2.HeaderText = "Disc2"
-        Me.disc2.MinimumWidth = 40
-        Me.disc2.Name = "disc2"
-        Me.disc2.Width = 45
-        '
-        'disc3
-        '
-        Me.disc3.DataPropertyName = "trans_disc3"
-        Me.disc3.HeaderText = "Disc3"
-        Me.disc3.MinimumWidth = 40
-        Me.disc3.Name = "disc3"
-        Me.disc3.Width = 45
-        '
-        'disc4
-        '
-        Me.disc4.DataPropertyName = "trans_disc4"
-        Me.disc4.HeaderText = "Disc4"
-        Me.disc4.MinimumWidth = 40
-        Me.disc4.Name = "disc4"
-        Me.disc4.Width = 45
-        '
-        'disc5
-        '
-        Me.disc5.DataPropertyName = "trans_disc5"
-        Me.disc5.HeaderText = "Disc5"
-        Me.disc5.MinimumWidth = 40
-        Me.disc5.Name = "disc5"
-        Me.disc5.Width = 45
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
         '
         'cb_status
         '
@@ -1212,7 +1091,7 @@ Partial Class fr_pesan_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cancel, Me.mn_createjual})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cancel, Me.mn_validasi, Me.mn_createjual})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1005, 24)
@@ -1235,6 +1114,12 @@ Partial Class fr_pesan_detail
         Me.mn_cancel.Text = "&Batalkan"
         Me.mn_cancel.Visible = False
         '
+        'mn_validasi
+        '
+        Me.mn_validasi.Name = "mn_validasi"
+        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
+        Me.mn_validasi.Text = "Validasi"
+        '
         'mn_createjual
         '
         Me.mn_createjual.Name = "mn_createjual"
@@ -1249,6 +1134,130 @@ Partial Class fr_pesan_detail
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(1005, 10)
         Me.Panel3.TabIndex = 410
+        '
+        'valid_ck
+        '
+        Me.valid_ck.FalseValue = "0"
+        Me.valid_ck.HeaderText = "Stat"
+        Me.valid_ck.IndeterminateValue = "0"
+        Me.valid_ck.Name = "valid_ck"
+        Me.valid_ck.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.valid_ck.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.valid_ck.TrueValue = "1"
+        Me.valid_ck.Width = 40
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.Visible = False
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 40
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 70
+        '
+        'qty_sisa
+        '
+        Me.qty_sisa.HeaderText = "QtySisa"
+        Me.qty_sisa.Name = "qty_sisa"
+        Me.qty_sisa.ReadOnly = True
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_jual"
+        Me.harga.HeaderText = "Harga Jual"
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'discrp
+        '
+        Me.discrp.DataPropertyName = "trans_disc_rupiah"
+        Me.discrp.HeaderText = "Disc Rp."
+        Me.discrp.Name = "discrp"
+        Me.discrp.Width = 80
+        '
+        'disc1
+        '
+        Me.disc1.DataPropertyName = "trans_disc1"
+        Me.disc1.HeaderText = "Disc1"
+        Me.disc1.MinimumWidth = 40
+        Me.disc1.Name = "disc1"
+        Me.disc1.Width = 45
+        '
+        'disc2
+        '
+        Me.disc2.DataPropertyName = "trans_disc2"
+        Me.disc2.HeaderText = "Disc2"
+        Me.disc2.MinimumWidth = 40
+        Me.disc2.Name = "disc2"
+        Me.disc2.Width = 45
+        '
+        'disc3
+        '
+        Me.disc3.DataPropertyName = "trans_disc3"
+        Me.disc3.HeaderText = "Disc3"
+        Me.disc3.MinimumWidth = 40
+        Me.disc3.Name = "disc3"
+        Me.disc3.Width = 45
+        '
+        'disc4
+        '
+        Me.disc4.DataPropertyName = "trans_disc4"
+        Me.disc4.HeaderText = "Disc4"
+        Me.disc4.MinimumWidth = 40
+        Me.disc4.Name = "disc4"
+        Me.disc4.Width = 45
+        '
+        'disc5
+        '
+        Me.disc5.DataPropertyName = "trans_disc5"
+        Me.disc5.HeaderText = "Disc5"
+        Me.disc5.MinimumWidth = 40
+        Me.disc5.Name = "disc5"
+        Me.disc5.Width = 45
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
         '
         'fr_pesan_detail
         '
@@ -1364,6 +1373,13 @@ Partial Class fr_pesan_detail
     Friend WithEvents bt_createjual As System.Windows.Forms.Button
     Friend WithEvents cb_status As System.Windows.Forms.ComboBox
     Friend WithEvents mn_createjual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents lbl_ref_faktur As System.Windows.Forms.Label
+    Friend WithEvents in_ref_faktur As System.Windows.Forms.TextBox
+    Friend WithEvents lbl_titipan As System.Windows.Forms.Label
+    Friend WithEvents in_titipan As System.Windows.Forms.TextBox
+    Friend WithEvents lbl_piutang As System.Windows.Forms.Label
+    Friend WithEvents in_piutang As System.Windows.Forms.TextBox
+    Friend WithEvents mn_validasi As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents valid_ck As System.Windows.Forms.DataGridViewCheckBoxColumn
     Friend WithEvents kode As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents sat_type As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -1380,10 +1396,4 @@ Partial Class fr_pesan_detail
     Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents lbl_ref_faktur As System.Windows.Forms.Label
-    Friend WithEvents in_ref_faktur As System.Windows.Forms.TextBox
-    Friend WithEvents Label15 As System.Windows.Forms.Label
-    Friend WithEvents TextBox2 As System.Windows.Forms.TextBox
-    Friend WithEvents Label14 As System.Windows.Forms.Label
-    Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
 End Class

@@ -77,19 +77,26 @@
     Private Sub setStatus()
         Select Case tblStatus
             Case 0
-                in_status.Text = "Non-Aktif"
+                in_status.Text = "Pending"
             Case 1
                 in_status.Text = "Aktif"
+            Case 2
+                in_status.Text = "Batal"
             Case 9
                 in_status.Text = "Delete"
             Case Else
                 Exit Sub
         End Select
 
-        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Then
+        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Or tblStatus = 2 Then
             For Each txt As TextBox In {in_supplier_n, in_gudang_n, in_suratjalan, in_barang_nm, in_pajak, in_ket}
                 txt.ReadOnly = True
             Next
+
+            With dgv_barang
+                .Location = New Point(8, 179)
+                .Height = 247
+            End With
 
             bt_simpanbeli.Visible = False
             bt_batalbeli.Text = "OK"
@@ -513,6 +520,7 @@
 
     'LOAD
     Private Sub fr_beli_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
     End Sub
 
     Public Sub do_load()
@@ -595,7 +603,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -699,8 +714,8 @@
             If e.KeyCode <> Keys.Escape Then
                 If popPnl_barang.Visible = False And sender.ReadOnly = False Then
                     popPnl_barang.Visible = True
-                    loadDataBRGPopup("supplier", in_supplier_n.Text)
                 End If
+                loadDataBRGPopup("supplier", in_supplier_n.Text)
             End If
         End If
     End Sub
@@ -859,7 +874,7 @@
 
     'DGV
     Private Sub dgv_barang_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
-        If selectperiode.closed = False And loggeduser.allowedit_transact = True Then
+        If selectperiode.closed = False And loggeduser.allowedit_transact = True And tblStatus <> 2 Then
             If e.RowIndex < 0 Then
                 indexrow = 0
             Else

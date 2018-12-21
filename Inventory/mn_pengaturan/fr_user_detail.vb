@@ -255,7 +255,7 @@
     End Sub
 
     Private Sub mn_reset_Click(sender As Object, e As EventArgs) Handles mn_reset.Click
-        Dim q As String = "UPDATE data_pengguna_alias SET user_password = MD5('123456'), " _
+        Dim q As String = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), " _
                           & "user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
         Dim queryCheck As Boolean = False
 

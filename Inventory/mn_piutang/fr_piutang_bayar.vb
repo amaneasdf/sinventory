@@ -5,6 +5,7 @@
     Private selectedsales As String = ""
     Private _totaltitipan As Double = 0
     Private _statusgiro As String = "1"
+    Private _status As String = Nothing
 
     Private _sisaHutang As Double = 0
     Public _totalhutang As Double = 0
@@ -18,7 +19,7 @@
                           & "p_bayar_tanggal_jt, IFNULL(giro_no,'') as giro_no, IFNULL(giro_bank,'') as giro_bank, " _
                           & "CONCAT((CASE giro_status_pencairan WHEN 1 THEN 'CAIR : ' WHEN 2 THEN 'TOLAK : ' ELSE '' END),IFNULL(DATE_FORMAT(giro_tgl_tolakcair,'%d/%m/%Y'),'')) tgl, " _
                           & "IFNULL(giro_status,'') as giro_status, p_bayar_ket, p_bayar_potongan_nilai, p_bayar_reg_date,p_bayar_reg_alias,p_bayar_upd_date, " _
-                          & "p_bayar_upd_alias, getSisaTitipan('piutang','" & selectperiode.id & "',p_bayar_custo) as titipan " _
+                          & "p_bayar_upd_alias, getSisaTitipan('piutang','" & selectperiode.id & "',p_bayar_custo) as titipan, p_bayar_status " _
                           & "FROM data_piutang_bayar LEFT JOIN data_salesman_master ON p_bayar_sales=salesman_kode " _
                           & "LEFT JOIN data_customer_master ON customer_kode=p_bayar_custo " _
                           & "LEFT JOIN data_giro ON giro_ref=p_bayar_bukti AND giro_status<>9 AND giro_type='IN'" _
@@ -34,9 +35,15 @@
             in_saldotitipan.Text = commaThousand(rd.Item("titipan"))
             cb_bayar.SelectedValue = rd.Item("p_bayar_jenisbayar")
             akun = rd.Item("p_bayar_akun")
+            _status = rd.Item("p_bayar_status")
             '-------akun
             date_tgl_trans.Value = rd.Item("p_bayar_tanggal_bayar")
-            date_bg_tgl.Value = rd.Item("p_bayar_tanggal_jt")
+            Try
+                date_bg_tgl.Value = rd.Item("p_bayar_tanggal_jt")
+            Catch ex As Exception
+                logError(ex, True)
+                date_bg_tgl.Value = rd.Item("p_bayar_tanggal_bayar")
+            End Try
             nobg = rd.Item("giro_no")
             in_bank.Text = rd.Item("giro_bank")
             tglbgcair = rd.Item("tgl")
@@ -74,9 +81,11 @@
             in_bank.ReadOnly = True
             bt_simpanperkiraan.Visible = False
             bt_batalperkiraan.Text = "OK"
+            mn_delete.Enabled = False
+            '_status = 2
         End If
 
-        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Then
+        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Or _status = 2 Then
             For Each txt As TextBox In {in_no_bukti, in_custo_n, in_sales_n, in_faktur, in_bg_no, in_bank, in_ket}
                 txt.ReadOnly = True
             Next
@@ -90,6 +99,14 @@
             bt_batalperkiraan.Text = "Tutup"
             mn_save.Enabled = False
             mn_delete.Enabled = False
+        End If
+
+        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Or _status <> 0 Then
+            mn_proses.Enabled = False
+        End If
+
+        If _status <> 1 Then
+            mn_print.Enabled = False
         End If
 
         loadListedBayar(kode)
@@ -236,7 +253,7 @@
             "p_bayar_akun='" & cb_akun.SelectedValue & "'",
             "p_bayar_potongan_nilai=" & in_potongan.Value.ToString.Replace(",", "."),
             "p_bayar_ket='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
-            "p_bayar_status='1'"
+            "p_bayar_status='" & _status & "'"
             }
         data2 = {
             "p_bayar_giro_no='" & in_bg_no.Text & "'",
@@ -315,6 +332,43 @@
             Me.Close()
         End If
     End Sub
+
+    'CANCEL TRANS
+    Private Sub cancelData(kode As String)
+        Dim q As String = ""
+        Dim queryArr As New List(Of String)
+        Dim queryCk As Boolean = False
+
+        If _status <> 2 Then
+            q = "UPDATE data_piutang_bayar SET p_bayar_status=2,p_bayar_upd_date=NOW(),p_bayar_upd_alias='{1}' WHERE p_bayar_bukti='{0}'"
+            queryArr.Add(String.Format(q, kode, loggeduser.user_id))
+
+            '==========================================================================================================================
+            q = "CALL transBayarPiutangFin('{0}','{1}')"
+            queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
+            '==========================================================================================================================
+
+            '==========================================================================================================================
+            'BEGIN TRANSACTION
+            queryCk = startTrans(queryArr)
+            '==========================================================================================================================
+
+            Me.Cursor = Cursors.Default
+
+            If queryCk = False Then
+                MessageBox.Show("Pembatalan transaksi gagal")
+                Exit Sub
+            Else
+                'TODO : WRITE LOG ACTIVITY
+                MessageBox.Show("Transaksi Dibatalkan")
+                doRefreshTab({pgpiutangbayar, pgpiutangawal})
+                Me.Close()
+            End If
+        Else
+            MessageBox.Show("Pembatalan transaksi tidak dapat dilakukan")
+        End If
+    End Sub
+
 
     'OPEN FULL WINDOWS SEARCH
     Private Sub searchData(tipe As String)
@@ -421,13 +475,13 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalperkiraan.Click
-        Me.Close()
+        If MessageBox.Show("Tutup Form?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Me.Close()
+        End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        If MessageBox.Show("Tutup Form?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.No Then
-            e.Cancel = True
-        End If
+        'e.Cancel = True
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -459,11 +513,31 @@
     End Sub
 
     Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
-
+        If in_no_bukti.Text <> Nothing Then
+            cancelData(in_no_bukti.Text)
+        End If
     End Sub
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
+        If in_no_bukti.Text <> Nothing And _status = 0 Then
+            If MessageBox.Show("Proses pembayaran?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+                Dim _cnfirm As New fr_jualconfirm_dialog
+                Dim cnfrmval As Boolean = False
 
+                With _cnfirm
+                    .lbl_title.Text = "Konfirmasi Pembayaran"
+                    .in_user.Text = loggeduser.user_id
+                    .in_user.ReadOnly = True
+                    .ShowDialog()
+                    cnfrmval = .returnval
+                End With
+
+                If cnfrmval = True Then
+                    _status = 1
+                    saveData()
+                End If
+            End If
+        End If
     End Sub
 
     '------------- load
@@ -689,7 +763,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -774,7 +855,7 @@
     End Sub
 
     Private Sub dgv_bayar_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_bayar.CellDoubleClick
-        If loggeduser.allowedit_transact = True And selectperiode.closed = False Then
+        If loggeduser.allowedit_transact = True And selectperiode.closed = False And _status <> 2 Then
             If e.RowIndex > -1 Then
                 dgvToText()
             End If

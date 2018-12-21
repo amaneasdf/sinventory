@@ -785,7 +785,7 @@ Partial Class fr_beli_detail
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
         Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(437, 272)
+        Me.popPnl_barang.Location = New System.Drawing.Point(528, 268)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
         Me.popPnl_barang.TabIndex = 263
@@ -1183,9 +1183,10 @@ Partial Class fr_beli_detail
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1003, 601)
+        Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.dgv_barang)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.cb_sat)
-        Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.Label23)
         Me.Controls.Add(Me.Label15)
         Me.Controls.Add(Me.Label24)
@@ -1214,7 +1215,6 @@ Partial Class fr_beli_detail
         Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.in_qty)
         Me.Controls.Add(Me.in_jumlah)
-        Me.Controls.Add(Me.dgv_barang)
         Me.Controls.Add(Me.Label31)
         Me.Controls.Add(Me.txtRegAlias)
         Me.Controls.Add(Me.Label22)

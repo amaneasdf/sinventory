@@ -43,6 +43,7 @@ Partial Class fr_list
         Me.mn_bayar = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.svdialog_export = New System.Windows.Forms.SaveFileDialog()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -233,8 +234,8 @@ Partial Class fr_list
         'mn_bataljual
         '
         Me.mn_bataljual.Name = "mn_bataljual"
-        Me.mn_bataljual.Size = New System.Drawing.Size(76, 20)
-        Me.mn_bataljual.Text = "Batal Kirim"
+        Me.mn_bataljual.Size = New System.Drawing.Size(115, 20)
+        Me.mn_bataljual.Text = "Batalkan Transaksi"
         '
         'mn_bayar
         '
@@ -303,5 +304,6 @@ Partial Class fr_list
     Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_bayar As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_validasi As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents svdialog_export As System.Windows.Forms.SaveFileDialog
 
 End Class

@@ -135,7 +135,7 @@
                     & "FROM ( " _
                     & " SELECT h_trans_kode_hutang,hutang_tgl, hutang_supplier, " _
                     & "  SUM(if(h_trans_jenis='awal',h_trans_nilai,0)) hutang_awal, " _
-                    & "  SUM(if(h_trans_jenis='jual',h_trans_nilai,0)) hutang_hutang, " _
+                    & "  SUM(if(h_trans_jenis='beli',h_trans_nilai,0)) hutang_hutang, " _
                     & "  SUM(if(h_trans_jenis='retur',h_trans_nilai,0)) hutang_retur, " _
                     & "  SUM(if(h_trans_jenis='bayar',h_trans_nilai,0)) hutang_bayar, " _
                     & "  SUM(if(h_trans_jenis='tolak',h_trans_nilai,0)) hutang_tolak, " _
@@ -145,9 +145,9 @@
                     & " WHERE h_trans_status = 1 And h_trans_periode ='{2}' " _
                     & " GROUP BY h_trans_kode_hutang " _
                     & ")hutang " _
-                    & "LEFT JOIN data_pembelian_faktur ON hutang_faktur=h_trans_kode_hutang " _
+                    & "LEFT JOIN data_pembelian_faktur ON faktur_kode=h_trans_kode_hutang " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
-                    & "WHERE hutang_status=1 AND hutang_tgl BETWEEN '{0}' AND '{1}' {3}" _
+                    & "WHERE hutang_tgl BETWEEN '{0}' AND '{1}' {3}" _
                     & "ORDER BY supplier_nama, faktur_tanggal_trans"
                 q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, "{0}")
 
@@ -161,11 +161,12 @@
                 'BASED supplier, tgl_akhir;OPT saldo_Sisa
                 q = "SELECT titipan.*, supplier_nama as hps_supplier_n, " _
                     & "TRUNCATE(if(@change_supplier=supplier_nama,(@csum := @csum + (hps_debet-hps_kredit)),(@csum:=(hps_debet-hps_kredit))),2) as hps_sisa, " _
+                    & "CONCAT_WS(' : ',h_titip_faktur, UCASE(h_titip_tipe)) hps_bukti, " _
                     & "@change_supplier:=supplier_nama " _
                     & "FROM(" _
                     & " SELECT h_titip_id,h_titip_ref hps_supplier,h_titip_tgl hps_tanggal, " _
                     & "  IF(h_titip_nilai>0,h_titip_nilai,0) as hps_debet, IF(h_titip_nilai<0,h_titip_nilai*-1,0) as hps_kredit, " _
-                    & "  CONCAT_WS(' : ',h_titip_faktur) hps_bukti " _
+                    & "  h_titip_faktur, h_titip_tipe " _
                     & " FROM data_hutang_titip WHERE h_titip_idperiode='{0}' AND h_titip_status=1 " _
                     & " ORDER BY h_titip_ref, h_titip_tgl, h_titip_id " _
                     & ") titipan " _
@@ -180,7 +181,7 @@
 
             Case "h_kartuhutang"
                 'BASED periode,supplier;OPT 
-                q = "SELECT hhh.*, supplier_kode as pk_custo,supplier_nama as pk_custo_n, supplier_alamat as pk_custo_k, " _
+                q = "SELECT hhh.*, supplier_nama as pk_custo_n, supplier_alamat as pk_custo_k, " _
                     & "TRUNCATE(if(@change_supplier=supplier_nama,(@csum := @csum + (pk_debet-pk_kredit)),(@csum:=(pk_debet-pk_kredit))),2) as pk_saldo, " _
                     & "@change_supplier:=supplier_nama " _
                     & "FROM( " _
@@ -214,10 +215,11 @@
                 If in_supplier.Text <> Nothing Then
                     qwh += "AND supplier_kode='" & in_supplier.Text & "' "
                 End If
+
             Case "h_bayarnota"
                 q = "SELECT h_trans_kode_hutang hbd_faktur,hutang_supplier hbd_supplier,supplier_nama hbd_supplier_n, " _
-                    & "faktur_tanggal_trans hbd_tanggal, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar, hutang_tolak hbd_beli," _
-                    & "hutang_sisa hbd_sisa, ket hbd_ket, hbd_hari, h_trans_tgl hbd_tglbayar " _
+                    & "faktur_tanggal_trans hbd_tanggal, h_trans_tgl hbd_tglbayar, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar," _
+                    & "hutang_tolak hbd_beli,hutang_sisa hbd_sisa, ket hbd_ket, hbd_hari " _
                     & "FROM( " _
                     & "SELECT h_trans_kode_hutang,hutang_supplier,h_trans_tgl,faktur_tanggal_trans," _
                     & " if(@faktur<>h_trans_kode_hutang,@ct:=0,@ct:=@ct+1) as count," _
@@ -286,6 +288,75 @@
 
         Return qreturn
     End Function
+
+    'EXPORT
+    Private Sub exportData(type As String)
+        Dim q As String = createQuery(type)
+        Dim _dt As New DataTable
+        Dim _colheader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
+        Dim _respond As Boolean = False
+        Dim _svdialog As New SaveFileDialog
+        Dim _title As String = ""
+
+        MyBase.Cursor = Cursors.AppStarting
+
+        Select Case type
+            Case "h_nota"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Tgl.Jatuh Tempo", "Faktur", "Saldo Awal", "Pembayaran", "Retur", "Sisa"})
+                _title = "LAPORAN HUTANG SUPPLIER PER NOTA"
+                _filename = "SupplierNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+            Case "h_titipsupplier"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "No.Bukti Transaksi", "Tanggal", "Jenis", "Debet", "Kredit"})
+                q = "SELECT hps_supplier, hps_supplier_n,h_titip_faktur, hps_tanggal,UCASE(h_titip_tipe),hps_debet, hps_kredit FROM (" & q & ") datatabl"
+                _title = "LAPORAN PIUTANG TITIPAN PER SUPPLIER"
+                _filename = "PiutangSupplier" & Today.ToString("yyyyMMdd") & ".xlsx"
+            Case "h_kartuhutang"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Tgl. Transaksi", "No.Bukti Transaksi", "Keterangan", "Debit", "Kredit", "Saldo"})
+                _title = "KARTU HUTANG PER SUPPLIER"
+                _filename = "KartuHutang" & Today.ToString("yyyyMMdd") & ".xlsx"
+                q = "SELECT pk_custo, pk_custo_n, pk_tgl, pk_no_bukti, pk_ket, pk_debet, pk_kredit, pk_saldo FROM (" & q & ") kartuhutang"
+
+            Case "h_bayarnota"
+                _colheader.AddRange({"No.Faktur Pembelian", "Kode Supplier", "Nama Supplier", "Tgl.Pembelian", "Tgl.Pembayaran", "Saldo Awal", "Retur",
+                                     "Pembayaran", "Bayar Ditolak", "Keterangan", "Range Hari"})
+                _title = "LAPORAN HISTORI PEMBAYARAN HUTANG"
+                _filename = "PembayaranHutang" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case Else
+                Exit Sub
+        End Select
+
+        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.FilterIndex = 1
+        _svdialog.FileName = _svdialog.InitialDirectory & _filename
+        _svdialog.RestoreDirectory = True
+        If _svdialog.ShowDialog = DialogResult.OK Then
+            If _svdialog.FileName <> Nothing Then
+                _outputdir = IO.Path.GetDirectoryName(_svdialog.FileName)
+                _filename = Strings.Replace(_svdialog.FileName, _outputdir, "")
+            Else
+                Exit Sub
+            End If
+        Else
+            Exit Sub
+        End If
+
+        _dt = getDataTablefromDB(q)
+
+        If exportXlsx(_colheader, _dt, _outputdir, _filename, _title) = True Then
+            MessageBox.Show("Export sukses")
+            If System.IO.File.Exists(_svdialog.FileName) = True Then
+                Process.Start(_svdialog.FileName)
+            End If
+        Else
+            MessageBox.Show("Export gagal")
+        End If
+
+        MyBase.Cursor = Cursors.Default
+    End Sub
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -345,6 +416,9 @@
 
         date_tglawal.MinDate = selectperiode.tglawal
         date_tglakhir.MaxDate = selectperiode.tglakhir
+
+        lbl_periodedata.Text = main.strip_periode.Text
+
         formSW(tipeLap)
         'prcessSW()
     End Sub
@@ -364,7 +438,7 @@
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-
+        exportData(laptype)
     End Sub
 
     'UI

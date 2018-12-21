@@ -15,12 +15,15 @@
 
     Private Sub loadDataFaktur(kode As String)
         Dim q As String = "SELECT j_order_kode,j_order_tanggal_trans,j_order_sales,salesman_nama,j_order_customer,customer_nama,customer_kriteria_harga_jual, " _
-                          & "j_order_term, j_order_catatan, j_order_status,j_order_gudang,gudang_nama,j_order_reg_date,j_order_reg_alias, " _
-                          & "j_order_upd_date,j_order_upd_alias,j_order_valid_date,j_order_valid_alias,j_order_ref_faktur " _
+                          & "j_order_term, j_order_catatan, j_order_status,j_order_gudang,gudang_nama,j_order_reg_date, " _
+                          & "IFNULL(aa.user_alias,j_order_reg_alias) j_order_reg_alias,j_order_upd_date,IFNULL(bb.user_alias,j_order_upd_alias) j_order_upd_alias," _
+                          & "j_order_valid_date,j_order_valid_alias,j_order_ref_faktur " _
                           & "FROM data_penjualan_order_faktur " _
                           & "LEFT JOIN data_customer_master ON j_order_customer=customer_kode " _
                           & "LEFT JOIN data_barang_gudang ON j_order_gudang=gudang_kode " _
                           & "LEFT JOIN data_salesman_master ON j_order_sales=salesman_kode " _
+                          & "LEFT JOIN data_pengguna_alias aa ON j_order_reg_alias=aa.user_id " _
+                          & "LEFT JOIN data_pengguna_alias bb ON j_order_upd_alias=bb.user_id " _
                           & "WHERE j_order_kode='{0}'"
 
         op_con()
@@ -43,7 +46,7 @@
             Try
                 txtUpdDate.Text = rd.Item("j_order_upd_date")
             Catch ex As Exception
-                txtUpdDate.Text = "00/00/0000 00:00:00"
+                txtUpdDate.Text = ""
             End Try
             txtUpdAlias.Text = rd.Item("j_order_upd_alias")
             Try
@@ -131,13 +134,29 @@
 
         If tjlStatus <> 0 Then
             savebt_sw = False
+            mn_validasi.Enabled = False
+            With dgv_barang
+                .Location = New Point(12, 101)
+                .Height = 208
+            End With
         End If
+
         If loggeduser.allowedit_transact = False And bt_simpanjual.Text <> "Update" Then
             savebt_sw = False
         End If
 
+        If loggeduser.validasi_trans = False Then
+            mn_validasi.Enabled = False
+        End If
+
+        For Each ttxt As TextBox In {in_barang_nm, in_custo_n, in_sales_n, in_gudang_n, in_ket}
+            ttxt.ReadOnly = IIf(savebt_sw, True, False)
+        Next
+
         bt_simpanjual.Enabled = savebt_sw
         bt_createjual.Enabled = savebt_sw
+        mn_save.Enabled = savebt_sw
+        cb_term.Enabled = savebt_sw
         in_status.Text = stattext
         cb_status.SelectedValue = tjlStatus
         cb_status.Enabled = savebt_sw
@@ -153,10 +172,14 @@
 
         Select Case _k
             Case "order"
-                With dgv_barang
-                    .Location = New Point(12, 146)
-                    .Height = 163
-                End With
+                If tjlStatus = 0 Then
+                    With dgv_barang
+                        .Location = New Point(12, 146)
+                        .Height = 163
+                    End With
+                Else
+                    _input_sw = True
+                End If
                 valid_ck.Visible = False
                 valid_ck.ReadOnly = True
                 bt_tbbarang.Visible = True
@@ -170,20 +193,39 @@
                     .Location = New Point(12, 101)
                     .Height = 208
                 End With
+                _input_sw = True
                 valid_ck.Visible = True
                 valid_ck.ReadOnly = False
                 bt_tbbarang.Visible = False
-                _input_sw = True
                 in_status.Visible = False
                 cb_status.Visible = True
                 bt_simpanjual.Visible = False
                 bt_createjual.Visible = True
                 qty_sisa.Visible = True
                 kode.Visible = False
+                mn_validasi.Visible = False
+
+                Dim q As String = "SELECT IFNULL(SUM(p_trans_nilai),0),getSisaTitipan('piutang','{1}',customer_kode) " _
+                                  & "FROM data_customer_master " _
+                                  & "LEFT JOIN data_piutang_awal ON piutang_custo=customer_kode AND piutang_status=1 " _
+                                  & "LEFT JOIN data_piutang_trans ON piutang_faktur=p_trans_kode_piutang AND p_trans_status=1 AND p_trans_jenis<>'awal' " _
+                                  & "WHERE customer_kode='{0}' GROUP BY customer_kode"
+                readcommd(String.Format(q, in_custo.Text, selectperiode.id))
+                If rd.HasRows Then
+                    in_piutang.Text = commaThousand(rd.Item(0))
+                    in_titipan.Text = commaThousand(rd.Item(1))
+                End If
+                rd.Close()
+
+                in_piutang.Visible = True
+                in_titipan.Visible = True
+                lbl_piutang.Visible = True
+                lbl_titipan.Visible = True
         End Select
         in_sales_n.ReadOnly = _input_sw
         in_custo_n.ReadOnly = _input_sw
         in_gudang_n.ReadOnly = _input_sw
+        in_ket.ReadOnly = _input_sw
         state = _k
     End Sub
 
@@ -267,7 +309,8 @@
                     & "WHERE barang_nama LIKE '{1}' GROUP BY barang_kode LIMIT 250"
                 q = String.Format(q, jeniscusto, "{0}%")
             Case "custo"
-                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama', customer_term, customer_kriteria_harga_jual FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
+                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama', customer_term, customer_kriteria_harga_jual " _
+                    & "FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
             Case "sales"
@@ -620,7 +663,14 @@
                 term = rd.Item(0)
             End If
             If rd.IsClosed = False Then
-                rd.Close()
+                Try
+                    rd.Close()
+                Catch ex As Exception
+                    logError(ex)
+                End Try
+            End If
+            If term = 0 Then
+                term = 1
             End If
         End If
 
@@ -665,6 +715,7 @@
                 End If
             Next
             .Show(main)
+            .countBiaya()
         End With
     End Sub
 
@@ -704,7 +755,7 @@
         lbl_close.Visible = False
     End Sub
 
-    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
         If e.KeyCode = Keys.Escape Then
             If popPnl_barang.Visible = True Then
                 popPnl_barang.Visible = False
@@ -736,6 +787,12 @@
                 createJual()
                 Me.Close()
             End If
+        End If
+    End Sub
+
+    Private Sub mn_validasi_Click(sender As Object, e As EventArgs) Handles mn_validasi.Click
+        If MessageBox.Show("Validasi order penjualan?", "Order Penjualan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            setForm("valid")
         End If
     End Sub
 
@@ -771,8 +828,6 @@
             Next
         End With
 
-        setForm(state)
-
         If bt_simpanjual.Text = "Update" Then
             loadDataFaktur(in_faktur.Text)
             loadDataBarang(in_faktur.Text)
@@ -782,6 +837,7 @@
         End If
 
         setStatus()
+        setForm(state)
     End Sub
 
     Private Function getSales(kode As String) As String
@@ -841,18 +897,20 @@
         End If
     End Sub
 
-    'CREATE DATA JUAL
+    'CREATE DATA JUAL/VALIDASI
     Private Sub bt_createjual_Click(sender As Object, e As EventArgs) Handles bt_createjual.Click
         Dim ck_valitem As Boolean = False
         Dim valid As Boolean = False
 
-        If tjlStatus <> cb_status.SelectedValue Then
-            tjlStatus = cb_status.SelectedValue
+        If tjlStatus = cb_status.SelectedValue Then
+            MessageBox.Show("Status Validasi belum terpilih")
+            cb_status.Focus()
+            Exit Sub
         End If
 
         If cb_status.SelectedValue = Nothing Then
             MessageBox.Show("Status Validasi belum terpilih")
-            dgv_barang.Focus()
+            cb_status.Focus()
             Exit Sub
         End If
 
@@ -869,36 +927,89 @@
         End If
 
         If MessageBox.Show("Simpan validasi pesanan?", "Validasi Order Penjualan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            Using x As New fr_jualconfirm_dialog
-                With x
-                    If loggeduser.validasi_trans = True Then
-                        .in_user.Text = loggeduser.user_id
-                    End If
-                    .do_load("jual")
-                    .in_user.Text = loggeduser.user_id
-                    .in_pass.Focus()
-                    .ShowDialog()
-                    If .returnval = True Then
-                        If loggeduser.user_id <> .in_user.Text Then
-                            MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
-                                            "Validasi Order Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                            Exit Sub
-                        Else
-                            in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
-                            txtValAlias.Text = loggeduser.user_id
-                            valid = .returnval
-                        End If
-                    Else
-                        Exit Sub
-                    End If
-                End With
-            End Using
+            Me.Cursor = Cursors.WaitCursor
+            tjlStatus = cb_status.SelectedValue
+
+            If tjlStatus = 1 Then
+                ck_valitem = ckItem()
+            Else
+                ck_valitem = True
+            End If
+
+            If ck_valitem = True Then
+                valid = valConfirm()
+            End If
+
             If valid = True Then
                 validOrder()
             End If
+
+            Me.Cursor = Cursors.Default
         End If
 
     End Sub
+
+    Private Function valConfirm() As Boolean
+        Dim valid As Boolean = False
+
+        Using x As New fr_jualconfirm_dialog
+            With x
+                If loggeduser.validasi_trans = True Then
+                    .in_user.Text = loggeduser.user_id
+                End If
+                .do_load("jual")
+                .in_user.Text = loggeduser.user_id
+                .in_pass.Focus()
+                .ShowDialog()
+                If .returnval = True Then
+                    If loggeduser.user_id <> .in_user.Text Then
+                        MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
+                                        "Validasi Order Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        valid = False
+                    Else
+                        in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
+                        txtValAlias.Text = loggeduser.user_id
+                        valid = .returnval
+                    End If
+                End If
+            End With
+        End Using
+        Return valid
+    End Function
+
+    Private Function ckItem() As Boolean
+        Dim ck_valitem As Boolean = False
+
+        For Each rows As DataGridViewRow In dgv_barang.Rows
+            If rows.Cells("valid_ck").Value = 1 Then
+                Dim kode As String = rows.Cells("kode").Value
+                Dim tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+                Dim q As String = "SELECT IFNULL(SUM(trans_qty),0),getHPPAVG('{0}','{1}','{2}') FROM data_stok_awal " _
+                                  & "LEFT JOIN data_stok_kartustok ON stock_kode=trans_stock AND trans_status=1 " _
+                                  & "WHERE stock_barang='{0}' AND stock_gudang='{3}' AND stock_status=1"
+                Dim qty As Integer = 0
+                Dim hpp As Double = -1
+
+                readcommd(String.Format(q, kode, tgltrans, selectperiode.id, in_gudang.Text))
+                If rd.HasRows Then
+                    qty = rd.Item(0)
+                    hpp = rd.Item(1)
+                End If
+                rd.Close()
+
+                If qty <= 0 Or hpp < 0 Then
+                    ck_valitem = False
+                    MessageBox.Show("Stok untuk item terpilih tidak dapat ditemukan/kosong." & Environment.NewLine & "Silahkan cek kembali.",
+                                    "Validasi Order Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    Exit For
+                Else
+                    ck_valitem = True
+                End If
+            End If
+        Next
+
+        Return ck_valitem
+    End Function
 
     'UI
     '------------- POPUPSEARCH PANEL
@@ -916,7 +1027,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -999,7 +1117,22 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_gudang_n.KeyUp, in_custo_n.KeyUp, in_barang_nm.KeyUp
+        If sender.Text = "" Then
+            Select Case sender.Name.ToString
+                Case "in_sales_n"
+                    in_sales.Clear()
+                Case "in_gudang_n"
+                    in_gudang.Clear()
+                Case "in_custo_n"
+                    in_custo.Clear()
+                Case "in_barang_nm"
+                    in_barang.Clear()
+                Case Else
+                    Exit Sub
+            End Select
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -1008,12 +1141,25 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(bt_simpanjual, e)
+            Select Case sender.Name.ToString
+                Case "in_sales_n"
+                    keyshortenter(bt_simpanjual, e)
+                Case "in_gudang_n"
+                    keyshortenter(cb_term, e)
+                Case "in_custo_n"
+                    keyshortenter(in_gudang_n, e)
+                Case "in_barang_nm"
+                    keyshortenter(in_qty, e)
+                Case Else
+                    Exit Sub
+            End Select
         Else
-            If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-            loadDataBRGPopup("sales", in_sales_n.Text)
         End If
     End Sub
 
@@ -1039,24 +1185,6 @@
         End If
     End Sub
 
-    Private Sub in_custo_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_gudang_n, e)
-        Else
-            If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("custo", in_custo_n.Text)
-        End If
-    End Sub
-
     Private Sub in_custo_n_TextChanged(sender As Object, e As EventArgs) Handles in_custo_n.TextChanged
         If in_custo_n.Text = "" Then
             in_custo_n.Clear()
@@ -1075,24 +1203,6 @@
                 popPnl_barang.Visible = True
             End If
             popupstate = "gudang"
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
-        End If
-    End Sub
-
-    Private Sub in_gudang_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(cb_term, e)
-        Else
-            If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
             loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
     End Sub
@@ -1129,24 +1239,6 @@
         End If
         popupstate = "barang"
         loadDataBRGPopup("barang", in_barang_nm.Text)
-    End Sub
-
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barang", in_barang_nm.Text)
-        End If
     End Sub
 
     Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged

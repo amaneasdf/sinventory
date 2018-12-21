@@ -22,7 +22,7 @@ Partial Class fr_stok_mutasi_list
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_stok_mutasi_list))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
@@ -702,9 +702,9 @@ Partial Class fr_stok_mutasi_list
         '
         'hpp_brg
         '
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "N2"
-        Me.hpp_brg.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        Me.hpp_brg.DefaultCellStyle = DataGridViewCellStyle1
         Me.hpp_brg.HeaderText = "HPP"
         Me.hpp_brg.Name = "hpp_brg"
         Me.hpp_brg.ReadOnly = True
@@ -778,12 +778,10 @@ Partial Class fr_stok_mutasi_list
         '
         'mn_hapus
         '
-        Me.mn_hapus.Image = Global.Inventory.My.Resources.Resources.toolbar_list_icon1
         Me.mn_hapus.Name = "mn_hapus"
         Me.mn_hapus.ShortcutKeys = System.Windows.Forms.Keys.F3
-        Me.mn_hapus.Size = New System.Drawing.Size(69, 20)
-        Me.mn_hapus.Text = "Hapus"
-        Me.mn_hapus.Visible = False
+        Me.mn_hapus.Size = New System.Drawing.Size(115, 20)
+        Me.mn_hapus.Text = "Batalkan Transaksi"
         '
         'mn_save
         '

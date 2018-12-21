@@ -1926,7 +1926,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>LAPORAN BAYAR PIUTANG PER SALESMAN &amp;TANGGAL</Value>
+                <Value>LAPORAN BAYAR PIUTANG PER SALESMAN &amp; TANGGAL</Value>
                 <Style>
                   <FontFamily>Consolas</FontFamily>
                   <FontSize>11pt</FontSize>

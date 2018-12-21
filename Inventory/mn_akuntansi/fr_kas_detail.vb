@@ -354,6 +354,16 @@
         lbl_close.Visible = False
     End Sub
 
+    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            Else
+                bt_batalperkiraan.PerformClick()
+            End If
+        End If
+    End Sub
+
     '------------- menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
         bt_simpanperkiraan.PerformClick()
@@ -404,7 +414,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -499,7 +516,27 @@
         loadDataBRGPopup(in_bank_n.Text)
     End Sub
 
-    Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_n.KeyUp
+    Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_n.KeyUp, in_sales_n.KeyUp, in_rek_n.KeyUp
+        Dim _nxtcntrol As Control = Nothing
+        Dim _kdcntrol As Control = Nothing
+        Select Case sender.Name.ToString
+            Case "in_bank_n"
+                _nxtcntrol = cb_jenis
+                _kdcntrol = in_bank
+            Case "in_sales_n"
+                _nxtcntrol = in_rek_n
+                _kdcntrol = in_sales
+            Case "in_rek_n"
+                _nxtcntrol = in_kredit
+                _kdcntrol = in_rek
+            Case Else
+                Exit Sub
+        End Select
+
+        If sender.Text = "" And IsNothing(_kdcntrol) = False Then
+            _kdcntrol.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -508,12 +545,14 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(cb_jenis, e)
+            keyshortenter(_nxtcntrol, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.Enabled = True And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(sender.Text)
             End If
-            loadDataBRGPopup(in_bank_n.Text)
         End If
     End Sub
 
@@ -554,24 +593,6 @@
         loadDataBRGPopup(in_sales_n.Text)
     End Sub
 
-    Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_rek, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup(in_sales_n.Text)
-        End If
-    End Sub
-
     Private Sub in_sales_n_TextChanged(sender As Object, e As EventArgs) Handles in_sales_n.TextChanged
         If in_sales_n.Text = "" Then
             in_sales.Clear()
@@ -590,24 +611,6 @@
             popPnl_barang.Visible = True
         End If
         loadDataBRGPopup()
-    End Sub
-
-    Private Sub in_rek_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_rek_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_kredit, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup(in_rek_n.Text)
-        End If
     End Sub
 
     Private Sub in_rek_n_TextChanged(sender As Object, e As EventArgs) Handles in_rek_n.TextChanged

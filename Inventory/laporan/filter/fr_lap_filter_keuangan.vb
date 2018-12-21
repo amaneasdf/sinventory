@@ -236,6 +236,70 @@
         Return qreturn
     End Function
 
+    Private Sub exportData(type As String)
+        Dim q As String = createQuery(type)
+        Dim _dt As New DataTable
+        Dim _colheader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
+        Dim _respond As Boolean = False
+        Dim _svdialog As New SaveFileDialog
+        Dim _title As String = ""
+
+        MyBase.Cursor = Cursors.AppStarting
+
+        Select Case type
+            Case "k_biayasales"
+                _colheader.AddRange({"Tgl.Transaksi", "Kode Salesman", "Nama Salesman", "Tgl.Jatuh Tempo", "Faktur", "Saldo Awal", "Pembayaran", "Retur", "Sisa"})
+                _title = "LAPORAN BIAYA SALES"
+                _filename = "BiayaSales" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "k_biayasales_global"
+                _colheader.AddRange({"Kode Salesman", "Nama Salesman", "Tgl.Jatuh Tempo", "Faktur", "Saldo Awal", "Pembayaran", "Retur", "Sisa"})
+                _title = "LAPORAN BIAYA SALES GLOBAL"
+                _filename = "BiayaSalesGlobal" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "k_neracalajur"
+                _colheader.AddRange({"No.Perkiraan", "Nama Perkiraan", "Parent/Group", "Saldo Awal Debet", "Saldo Awal Kredit", "Neraca Saldo Debet", "Neraca Saldo Kredit",
+                                     "Laba Rugi Debet", "Laba Rugi Kredit", "Neraca Debet", "Neraca Kredit"})
+                _title = "NERACA LAJUR"
+                _filename = "NeracaLajur" & Today.ToString("yyyyMMdd") & ".xlsx"
+                q = "SELECT n_akun, n_akun_n, n_parent_n, IF(n_akun_pos='D',n_saldoawal,0),IF(n_akun_pos='K',n_saldoawal,0),n_debet,n_kredit, " _
+                    & "IF(n_kat NOT IN (1,2),IF(n_akun_pos='D',n_labarugi,0),0),IF(n_kat NOT IN (1,2),IF(n_akun_pos='K',n_labarugi,0),0), " _
+                    & "IF(n_kat IN (1,2),IF(n_akun_pos='D',n_neraca,0),0),IF(n_kat IN (1,2),IF(n_akun_pos='K',n_neraca,0),0) " _
+                    & "FROM (" & q & ") neracalajur"
+        End Select
+
+
+        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.FilterIndex = 1
+        _svdialog.FileName = _svdialog.InitialDirectory & _filename
+        _svdialog.RestoreDirectory = True
+        If _svdialog.ShowDialog = DialogResult.OK Then
+            If _svdialog.FileName <> Nothing Then
+                _outputdir = IO.Path.GetDirectoryName(_svdialog.FileName)
+                _filename = Strings.Replace(_svdialog.FileName, _outputdir, "")
+            Else
+                Exit Sub
+            End If
+        Else
+            Exit Sub
+        End If
+
+        _dt = getDataTablefromDB(q)
+
+        If exportXlsx(_colheader, _dt, _outputdir, _filename, _title) = True Then
+            MessageBox.Show("Export sukses")
+            If System.IO.File.Exists(_svdialog.FileName) = True Then
+                Process.Start(_svdialog.FileName)
+            End If
+        Else
+            MessageBox.Show("Export gagal")
+        End If
+
+        MyBase.Cursor = Cursors.Default
+    End Sub
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -322,7 +386,7 @@
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-
+        exportData(laptype)
     End Sub
 
     'UI

@@ -122,7 +122,7 @@
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
             Case "lapBeliTglNota"
-                q = "SELECT * FROM( " _
+                q = "SELECT lap_tgl, lap_faktur,lap_supplier, lap_supplier_n,lap_brutto,lap_diskon,lap_ppn,lap_jumlah,lap_jenis FROM( " _
                     & "SELECT supplier_kode as lap_supplier, supplier_nama as lap_supplier_n, faktur_kode as lap_faktur, " _
                     & "faktur_tanggal_trans as lap_tgl,if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
                     & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah,  'BELI' as lap_jenis " _
@@ -154,16 +154,19 @@
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
             Case "lapBeliSupplierBarang"
-                q = "SELECT * FROM( " _
+                q = "SELECT dlap_supplier,dlap_supplier_n, dlap_barang, dlap_barang_n, dlap_qty, dlap_qty_n,dlap_harga_beli, dlap_total_diskon, " _
+                    & "TRUNCATE(dlap_ppn,2) dlap_ppn, dlap_jumlah, dlap_jenis FROM( " _
                     & "SELECT supplier_kode as dlap_supplier, supplier_nama as dlap_supplier_n, " _
                     & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
                     & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
                     & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
-                    & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
-                    & "SUM(trans_jumlah) as dlap_jumlah, 'BELI' as dlap_jenis " _
+                    & "SUM(@subtot:=trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
+                    & "SUM(@ppn:=(CASE faktur_ppn_jenis WHEN 1 THEN @subtot*(1-(10/11)) WHEN 0 THEN @subtot*0.1 ELSE 0 END)) dlap_ppn, " _
+                    & "SUM(trans_jumlah)+SUM(IF(faktur_ppn_jenis<>1,@ppn,0)) as dlap_jumlah, 'BELI' as dlap_jenis " _
                     & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "JOIN (SELECT @subtot:=0, @ppn:=0) para " _
                     & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "GROUP BY supplier_kode, trans_barang " _
                     & "UNION " _
@@ -172,46 +175,51 @@
                     & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
                     & "	IFNULL(SUM(@subtot:=trans_qty*trans_harga_retur),0) as dlap_harga_beli, " _
                     & " SUM(@disc:=@subtot*(trans_diskon/100)) as dlap_total_diskon, " _
-                    & "	SUM(@subtot-@disc) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & " SUM(@ppn:=(CASE faktur_ppn_jenis WHEN 1 THEN @subtot*(1-(10/11)) WHEN 0 THEN @subtot*1/10 ELSE 0 END)) dlap_ppn, " _
+                    & "	SUM(@subtot-@disc+IF(faktur_ppn_jenis<>1,@ppn,0)) as dlap_jumlah, 'RETUR' as dlap_jenis " _
                     & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "JOIN (SELECT @subtot:=0, @ppn:=0) para " _
                     & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "GROUP BY supplier_kode,trans_barang" _
-                    & ") beli {2} ORDER BY dlap_barang_n"
+                    & ") beli {2} ORDER BY dlap_jenis, dlap_supplier, dlap_barang"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
             Case "lapBeliTglBarang"
-                q = "SELECT * FROM( " _
+                q = "SELECT dlap_supplier,dlap_barang,dlap_barang_n,dlap_qty, dlap_qty_n,dlap_harga_beli, dlap_total_diskon, " _
+                    & "TRUNCATE(dlap_ppn,2) dlap_ppn, dlap_jumlah, dlap_jenis FROM( " _
                     & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y') as dlap_supplier, '' as dlap_supplier_n, " _
                     & "trans_barang as dlap_barang, barang_nama as dlap_barang_n," _
                     & "SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)) as dlap_qty, " _
                     & "getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2) as dlap_qty_n, " _
-                    & "SUM(trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
-                    & "SUM(trans_jumlah) as dlap_jumlah, 'BELI' as dlap_jenis " _
+                    & "SUM(@subtot:=trans_qty*trans_harga_beli) as dlap_harga_beli, SUM(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, " _
+                    & "SUM(@ppn:=(CASE faktur_ppn_jenis WHEN 1 THEN @subtot*(1-(10/11)) WHEN 0 THEN @subtot*0.1 ELSE 0 END)) dlap_ppn, " _
+                    & "SUM(trans_jumlah)+SUM(IF(faktur_ppn_jenis<>1,@ppn,0)) as dlap_jumlah, 'BELI' as dlap_jenis " _
                     & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                     & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & "GROUP BY supplier_kode, trans_barang " _
+                    & "GROUP BY faktur_tanggal_trans, trans_barang " _
                     & "UNION " _
                     & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y'),'', trans_barang, barang_nama, " _
                     & "	SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), " _
                     & "	getQTYdetail(trans_barang, SUM(countQTYItem(trans_barang, trans_qty, trans_satuan_type)), 2), " _
                     & "	IFNULL(SUM(@subtot:=trans_qty*trans_harga_retur),0) as dlap_harga_beli, " _
                     & " SUM(@disc:=@subtot*(trans_diskon/100)) as dlap_total_diskon, " _
-                    & "	SUM(@subtot-@disc) as dlap_jumlah, 'RETUR' as dlap_jenis " _
+                    & " SUM(@ppn:=(CASE faktur_ppn_jenis WHEN 1 THEN @subtot*(1-(10/11)) WHEN 0 THEN @subtot*1/10 ELSE 0 END)) dlap_ppn, " _
+                    & "	SUM(@subtot-@disc+IF(faktur_ppn_jenis<>1,@ppn,0)) as dlap_jumlah, 'RETUR' as dlap_jenis " _
                     & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                     & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & "GROUP BY supplier_kode,trans_barang" _
+                    & "GROUP BY faktur_tanggal_trans,trans_barang" _
                     & ") beli {2} ORDER BY dlap_barang_n"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
 
             Case "lapBeliTglNotaBarang"
-                q = "SELECT faktur_tanggal_trans as dlap_tgl, supplier_nama dlap_supplier_n, barang_nama as dlap_barang_n," _
-                    & "faktur_kode as dlap_faktur, CONCAT(trans_qty, ' ', trans_satuan) as dlap_qty, trans_harga_beli as dlap_harga_beli, " _
+                q = "SELECT faktur_kode as dlap_faktur, faktur_tanggal_trans as dlap_tgl,supplier_kode dlap_supplier, supplier_nama dlap_supplier_n, barang_kode dlap_barang, " _
+                    & "barang_nama as dlap_barang_n,CONCAT(trans_qty, ' ', trans_satuan) as dlap_qty, trans_harga_beli as dlap_harga_beli, " _
                     & "TRUNCATE(((trans_qty*trans_harga_beli-trans_jumlah)/(trans_qty*trans_harga_beli))*100,2) as dlap_total_diskon, " _
                     & "trans_jumlah as dlap_jumlah " _
                     & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
@@ -249,6 +257,93 @@
 
         Return qreturn
     End Function
+
+    Private Sub exportData(type As String)
+        Dim q As String = createQuery(type)
+        Dim _dt As New DataTable
+        Dim _colheader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
+        Dim _respond As Boolean = False
+        Dim _svdialog As New SaveFileDialog
+        Dim _title As String = ""
+
+        MyBase.Cursor = Cursors.AppStarting
+
+        Select Case type
+            Case "lapBeliNota"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER NOTA"
+                _filename = "BeliNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliTgl"
+                _colheader.AddRange({"Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER TANGGAL"
+                _filename = "BeliTanggal" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliSupplier"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER"
+                _filename = "BeliSupplier" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliTglNota"
+                _colheader.AddRange({"Tgl. Transaksi", "No.Faktur", "Kode Supplier", "Nama Supplier", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER TANGGAL PER NOTA"
+                _filename = "BeliTanggalNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliSupplierNota"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER NOTA"
+                _filename = "BeliSupplierNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliSupplierBarang"
+                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER BARANG"
+                _filename = "BeliSupplierBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case "lapBeliTglBarang"
+                _colheader.AddRange({"Tgl.Transaksi", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
+                _title = "LAPORAN PEMBELIAN PER TANGGAL PER BARANG"
+                _filename = "BeliTanggalBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+                'Case "lapBeliTglNotaBarang"
+                '    _colheader.AddRange({"Tgl.Transaksi", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
+                '    _title = "LAPORAN PEMBELIAN PER TANGGAL PER BARANG"
+                '    _filename = "BeliTanggalBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+
+            Case Else
+                Exit Sub
+        End Select
+
+
+        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.FilterIndex = 1
+        _svdialog.FileName = _svdialog.InitialDirectory & _filename
+        _svdialog.RestoreDirectory = True
+        If _svdialog.ShowDialog = DialogResult.OK Then
+            If _svdialog.FileName <> Nothing Then
+                _outputdir = IO.Path.GetDirectoryName(_svdialog.FileName)
+                _filename = Strings.Replace(_svdialog.FileName, _outputdir, "")
+            Else
+                Exit Sub
+            End If
+        Else
+            Exit Sub
+        End If
+
+        _dt = getDataTablefromDB(q)
+
+        If exportXlsx(_colheader, _dt, _outputdir, _filename, _title) = True Then
+            MessageBox.Show("Export sukses")
+            If System.IO.File.Exists(_svdialog.FileName) = True Then
+                Process.Start(_svdialog.FileName)
+            End If
+        Else
+            MessageBox.Show("Export gagal")
+        End If
+
+        MyBase.Cursor = Cursors.Default
+    End Sub
 
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
@@ -320,7 +415,7 @@
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-
+        exportData(laptype)
     End Sub
 
     'UI

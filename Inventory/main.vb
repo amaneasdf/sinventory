@@ -2,8 +2,9 @@
     Private MainMenu As New MenuStrip
     Private ParentMenu, ChildMenu, ChildMenu2 As ToolStripMenuItem
     Private MenuKode, MenuLabel, MenuText As String
+    Private listkodemenu As New List(Of String)
 
-    Private Sub openTab(type As String)
+    Public Sub openTab(type As String)
         Select Case type
             Case "barang"
                 createTabPage(pgbarang, type, frmbarang, "Data Master Barang")
@@ -127,13 +128,13 @@
             Case "hutangbayar"
                 createTabPage(pghutangbayar, type, frmhutangbayar, "Pembayaran Hutang")
             Case "hutangbgo"
-                createTabPage(pghutangbgo, type, frmhutangbgo, "BG Out Cair")
+                createTabPage(pghutangbgo, type, frmhutangbgo, "Hutang Giro")
             Case "piutangawal"
                 createTabPage(pgpiutangawal, type, frmpiutangawal, "Piutang")
             Case "piutangbayar"
                 createTabPage(pgpiutangbayar, type, frmpiutangbayar, "Pembayaran Piutang")
             Case "piutangbgcair"
-                createTabPage(pgpiutangbgcair, type, frmpiutangbgcair, "BG Cair")
+                createTabPage(pgpiutangbgcair, type, frmpiutangbgcair, "Piutang Giro")
             Case "piutangbgtolak"
                 createTabPage(pgpiutangbgtolak, type, frmpiutangbgTolak, "BG Tolak")
             Case "kas"
@@ -197,31 +198,13 @@
     End Sub
 
     Sub MenuAkses()
-        'Dim group As String()
-        'Dim _gr As String
-        'Dim i As Integer = 0
-        'Dim q As String = "SELECT menu_kode, menu_label FROM data_menu_master LEFT JOIN data_menu_group ON menu_kode=m_group_menu AND m_group_status=1 " _
-        '                  & "WHERE menu_status=1 AND m_group_kode IN ({0}) GROUP BY menu_kode ORDER BY menu_kode ASC"
-
-        'group = Split(loggeduser.user_lev, ":")
-
-        'For Each s As String In group
-        '    consoleWriteLine(s & "," & group(i))
-        '    group(i) = "'" & s & "'"
-        '    consoleWriteLine(group(i))
-        '    i += 1
-        'Next
-
-        '_gr = String.Join(",", group)
-        'consoleWriteLine(_gr & Environment.NewLine & String.Format(q, _gr))
-        ''dbSelect(String.Format(q,_gr))
-
         Dim q As String = "SELECT data_menu_master.menu_kode, data_menu_master.menu_label " _
                           & "FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode AND kode_menu.menu_status=1 " _
                           & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY kode_menu.menu_kode ASC;"
         dbSelect(String.Format(q, loggeduser.user_lev))
         Do While rd.Read
             MenuKode = rd.Item("menu_kode")
+            listkodemenu.Add(MenuKode)
             MenuLabel = rd.Item("menu_label").ToString
             'MenuText = Mid(MenuKode, 3, 20) & ". " & MenuLabel
             MenuText = MenuLabel
@@ -254,6 +237,8 @@
             MainMenu.Items.Add(ParentMenu)
             MainMenu.BackColor = Color.Orange
         Loop
+
+
 
         rd.Close()
         Me.Controls.Add(MainMenu)
@@ -715,29 +700,9 @@
                 'Else
                 '    Exit Sub
                 'End If
-            Case "mn0931"
-                Console.WriteLine("click jenis barang")
-                With frmjenisbarang
-                    If .Visible = True Then
-                        .Focus()
-                    Else
-                        .setfor = "jenisbarang"
-                        .Text += " Jenis Barang"
-                        .Show(Me)
-                    End If
-                End With
-
-                '    openTab("jenisbarang")
             Case "mn0932"
-                Console.WriteLine("click satuan barang")
+                consoleWriteLine("click satuan barang")
                 With fr_reference
-                    'If .Visible = True Then
-                    '    .Focus()
-                    'Else
-                    '    .setfor = "satuan"
-                    '    .Text += " Satuan"
-                    '    .Show(Me)
-                    'End If
                     .Show()
                 End With
             Case "mn0941"
@@ -749,8 +714,8 @@
                 Me.tabcontrol.TabPages.Clear()
                 Me.tabcontrol.TabPages.Add(TabPage1)
                 Me.Controls.Remove(MainMenu)
+                pnl_main.Controls.Clear()
                 fr_login.ShowDialog()
-                'MenuAkses()
             Case "mn0942"
                 Application.Exit()
             Case Else
@@ -760,6 +725,20 @@
         End Select
 
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Public Sub loadInfoPanel()
+        Dim infpnl As New fr_infopanel With {.Dock = DockStyle.Fill}
+        With infpnl
+            .giro_sw = listkodemenu.Contains("mn0503")
+            .pesan_sw = listkodemenu.Contains("mn020206")
+            .piutang_sw = listkodemenu.Contains("mn0501")
+            .piutang_sw_bayar = listkodemenu.Contains("mn0502")
+            .hutang_sw = listkodemenu.Contains("mn0401")
+            .hutang_sw_bayar = listkodemenu.Contains("mn0402")
+            .user_sw = listkodemenu.Contains("mn0921")
+        End With
+        pnl_main.Controls.Add(infpnl)
     End Sub
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -784,9 +763,6 @@
 
         Me.Cursor = Cursors.Default
         strip_host.Text = x.host
-
-        'Dim infpnl As New fr_infopanel With {.Dock = DockStyle.Fill}
-        'pnl_main.Controls.Add(infpnl)
 
         'MenuAkses()
         'test var
@@ -836,5 +812,21 @@
     'SET PERIODE BT
     Private Sub bt_setperiode_Click(sender As Object, e As EventArgs)
         setperiode(cal_front.SelectionStart)
+    End Sub
+
+    Private Sub bt_periode_main_Click(sender As Object, e As EventArgs) Handles bt_periode_main.Click
+        Dim _selectdate As Date = cal_front.SelectionStart
+        Dim _selectedperiode As periode = getPeriode(Nothing, _selectdate)
+
+        If _selectedperiode.id <> selectperiode.id Then
+            Dim textsa As String = "Ubah periode data ke periode '{0}' s.d. '{1}'?"
+
+            If MessageBox.Show(String.Format(textsa, _selectedperiode.tglawal.ToShortDateString, _selectedperiode.tglakhir.ToShortDateString),
+                               "Set Periode", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+                setperiode(_selectdate, True)
+            Else
+                Exit Sub
+            End If
+        End If
     End Sub
 End Class

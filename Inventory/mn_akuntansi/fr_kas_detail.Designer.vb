@@ -736,7 +736,6 @@ Partial Class fr_kas_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(773, 482)
         Me.Controls.Add(Me.in_status)
         Me.Controls.Add(Me.Label11)

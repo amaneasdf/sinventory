@@ -1,5 +1,6 @@
 ﻿Imports MadMilkman.Ini
 Imports System.IO
+Imports OfficeOpenXml
 
 Module functional
 
@@ -178,7 +179,7 @@ Module functional
     Public Sub setperiode(selecteddate As Date, Optional ShowMsgBox As Boolean = True)
         Dim x As Date = selecteddate
         Dim lastperiod As String = selectperiode.id
-        Dim _text As String = "Periode has been changed to "
+        Dim _text As String = "Periode has been changed to {0}" & Environment.NewLine & "Current periode is {1}"
 
         selectperiode = getPeriode(, selecteddate)
 
@@ -220,7 +221,8 @@ Module functional
                     _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
                 End If
 
-                MessageBox.Show(_text & _periode)
+                Dim curper As String = currentperiode.tglawal.ToString("dd/MM/yyyy") & " S.d " & currentperiode.tglawal.ToString("dd/MM/yyyy")
+                MessageBox.Show(String.Format(_text, _periode, curper))
             End If
         End If
     End Sub
@@ -232,6 +234,92 @@ Module functional
             End If
         Next
     End Sub
+
+    Public Function exportXlsx(colheader As List(Of String), datatbl As DataTable, outputDir As String, Optional workbookname As String = Nothing, Optional title As String = Nothing) As Boolean
+        If workbookname = Nothing Then
+            workbookname = "dataexport" & Today.ToString("yyyyMMdd")
+        End If
+
+        Try
+            Using xls As New ExcelPackage
+                Dim wrksht As ExcelWorksheet = xls.Workbook.Worksheets.Add("DataExport1")
+                Dim rows As Integer = 1
+                Dim firstrow As Integer = 1
+                Dim colcount As Integer = datatbl.Columns.Count
+                'CREATE HEADER
+                wrksht.Cells(1, 1).Value = "CV. Catra Upaya"
+                wrksht.Cells("A1:E1").Merge = True
+                wrksht.Cells(1, 1).Style.Font.Size = 14
+                wrksht.Cells(1, 1).Style.Font.Bold = True
+                wrksht.Cells(2, 1).Value = "Jl. Bima No.14 Jatiwinangun Purwokerto"
+                wrksht.Cells("A2:E2").Merge = True
+                wrksht.Cells(2, 1).Style.Font.Size = 12
+
+                If title <> Nothing Then
+                    wrksht.Cells(4, 1).Value = title
+                    wrksht.Cells(4, 1, 4, colcount).Merge = True
+                    wrksht.Cells(4, 1).Style.Font.Bold = True
+                    wrksht.Cells(4, 1).Style.Font.Size = 12
+                    wrksht.Cells(4, 1).Style.Font.Color.SetColor(Color.MidnightBlue)
+                    wrksht.Cells(4, 1).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Center
+                    rows += 1
+                End If
+                rows += 3
+
+                'ADD COLUMNS HEADER
+                Dim cols As Integer = 1
+                For Each colhdr As String In colheader
+                    wrksht.Cells(rows, cols).Value = colhdr
+                    cols += 1
+                Next
+                Using ch = wrksht.Cells(rows, 1, rows, colcount)
+                    ch.Style.Font.Bold = True
+                    ch.Style.Fill.PatternType = Style.ExcelFillStyle.Solid
+                    ch.Style.Fill.BackgroundColor.SetColor(Color.CornflowerBlue)
+                End Using
+                firstrow = rows
+                rows += 1
+
+                'ADD DATA
+                For Each dtrows As DataRow In datatbl.Rows
+                    cols = 1
+                    For i = 0 To colcount - 1
+                        If dtrows.ItemArray(i).GetType() = GetType(Date) Then
+                            Dim sd = CDate(dtrows.ItemArray(i)).ToShortDateString
+                            'consoleWriteLine(sd)
+                            wrksht.Cells(rows, cols).Value = sd
+                        Else
+                            wrksht.Cells(rows, cols).Value = dtrows.ItemArray(i)
+                        End If
+
+                        If dtrows.ItemArray(i).ToString.Contains(Environment.NewLine) = True Then
+                            wrksht.Cells(rows, cols).Style.WrapText = True
+                        End If
+                        cols += 1
+                    Next
+                    rows += 1
+                Next
+
+                'STYLE
+                Using vr = wrksht.Cells(firstrow, 1, rows - 1, colcount)
+                    vr.Style.Border.Top.Style = Style.ExcelBorderStyle.Thin
+                    vr.Style.Border.Bottom.Style = Style.ExcelBorderStyle.Thin
+                    vr.Style.Border.Left.Style = Style.ExcelBorderStyle.Thin
+                    vr.Style.Border.Right.Style = Style.ExcelBorderStyle.Thin
+                    vr.Style.VerticalAlignment = Style.ExcelVerticalAlignment.Top
+                    vr.AutoFitColumns(4)
+                End Using
+
+                xls.SaveAs(New FileInfo(outputDir & Strings.Replace(workbookname, ".xlsx", "") & ".xlsx"))
+            End Using
+            Return True
+        Catch ex As Exception
+            logError(ex)
+            consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
+            'Application.Exit()
+            Return False
+        End Try
+    End Function
 
     '-----------.ini file manipulation-------------
     'load connection
@@ -247,7 +335,7 @@ Module functional
 
         Try
             inifile.Load(Application.StartupPath & "\config.ini")
-            Console.WriteLine(Application.StartupPath & "\config.ini")
+            consoleWriteLine(Application.StartupPath & "\config.ini")
             With inifile.Sections(con_type)
                 x.host = .Keys("Host").Value
                 x.uid = .Keys("UID").Value
@@ -303,7 +391,7 @@ Module functional
         If querycheck = False Then
             Exit Sub
         Else
-            Console.WriteLine("log act added")
+            consoleWriteLine("log act added")
         End If
     End Sub
 

@@ -33,12 +33,13 @@
         If selectperiode.closed = True Then
             mn_tambah.Enabled = False
             mn_edit.Enabled = False
+            mn_hapus.Enabled = False
         End If
     End Sub
 
     Private Sub loadData(kode As String)
         Dim q As String = " SELECT faktur_kode, faktur_tanggal, faktur_gudang, gudang_nama, faktur_ket, faktur_reg_alias, " _
-                          & "faktur_reg_date, faktur_upd_date, faktur_upd_alias FROM data_barang_mutasi " _
+                          & "faktur_reg_date, faktur_upd_date, faktur_upd_alias, faktur_status FROM data_barang_mutasi " _
                           & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
                           & "WHERE faktur_kode ='{0}'"
         readcommd(String.Format(q, kode))
@@ -49,6 +50,7 @@
             in_gudang.Text = rd.Item("faktur_gudang")
             in_gudang_n.Text = rd.Item("gudang_nama")
             in_ket.Text = rd.Item("faktur_ket")
+            tblstatus = rd.Item("faktur_status")
             txtRegAlias.Text = rd.Item("faktur_reg_alias")
             txtRegdate.Text = rd.Item("faktur_reg_date")
             Try
@@ -521,6 +523,48 @@
         End If
     End Sub
 
+    Private Sub cancelData()
+        Dim queryCk As Boolean = False
+        Dim queryArr As New List(Of String)
+        Dim q As String = ""
+        Dim _confrm As Boolean = False
+
+        op_con()
+        If tblstatus = 1 Then
+            Using val As New fr_stockopconfirm_dialog
+                With val
+                    .lbl_title.Text = "Konfirmasi Pembatalan"
+                    .in_user.Text = loggeduser.user_id
+                    .in_user.ReadOnly = True
+                    .ShowDialog()
+                    _confrm = .returnval
+                End With
+            End Using
+
+            If _confrm = False Then
+                Exit Sub
+            End If
+
+            q = "UPDATE data_barang_mutasi SET faktur_status=2, faktur_upd_date =NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_stok_kartustok SET trans_status=9, trans_upd_date=NOW(), trans_upd_alias='{1}' WHERE trans_faktur='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            queryCk = startTrans(queryArr)
+
+            If queryCk Then
+                MessageBox.Show("Transaksi Dibatalkan")
+                performRefresh()
+            Else
+                MessageBox.Show("Error. Transaksi gagal dibatalkan")
+            End If
+        End If
+    End Sub
+
     Private Sub clearTextBarang(type As String)
         Select Case type
             Case "asal"
@@ -682,7 +726,11 @@
     End Sub
 
     Private Sub mn_hapus_Click(sender As Object, e As EventArgs) Handles mn_hapus.Click
-        MessageBox.Show("Under Construction")
+        If in_kode.Text <> Nothing Then
+            If MessageBox.Show("Batalkan Transaksi mutasi?", "Mutasi Stok", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                cancelData()
+            End If
+        End If
     End Sub
 
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
@@ -737,7 +785,7 @@
         End If
     End Sub
 
-    Private Sub dgv_list_KeyDown(sender As Object, e As KeyEventArgs) Handles dgv_list.KeyDown
+    Private Sub dgv_list_KeyDown(sender As Object, e As KeyEventArgs) Handles dgv_list.KeyUp
         If e.KeyCode = Keys.Enter And rowindex >= 0 Then
             listToDetail()
         End If
@@ -777,7 +825,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If

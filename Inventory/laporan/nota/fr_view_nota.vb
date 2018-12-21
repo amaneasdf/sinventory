@@ -15,10 +15,12 @@ Public Class fr_view_nota
         op_con()
         Try
             Dim data_adpt As New MySqlDataAdapter(query, getConn)
+            dt.Clear()
             data_adpt.Fill(dt)
             data_adpt.Dispose()
         Catch ex As Exception
             MessageBox.Show(String.Format("Error: {0}", ex.Message))
+            logError(ex)
         End Try
         cl_con()
     End Sub
@@ -30,19 +32,26 @@ Public Class fr_view_nota
 
         With Me.rv_nota
             With .LocalReport
+                Dim _parArr As ReportParameter()
+                Dim _repNm As String = ""
+                Dim _dt As DataTable
                 Dim tglfak As String = "1/1/1900"
                 Dim sup As String = "no"
                 Dim cus_n As String = "nope"
                 Dim sup_al As String = "nononono"
                 Dim term As Integer = 0
                 Dim ppn, disk, jml, netto As Double
+                Dim jenbyr As String = Nothing
+                Dim reffaktur As String = Nothing
+                Dim _fakstate As String = Nothing
+
                 Select Case inlap_type
                     Case "beli"
 
                         op_con()
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, supplier_nama, " _
-                                      & "supplier_alamat, faktur_jumlah,faktur_disc, faktur_netto " _
+                                      & "supplier_alamat, faktur_jumlah,faktur_disc, faktur_netto, faktur_status " _
                                       & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                                       & "WHERE faktur_kode='" & innofaktur & "'")
                             If rd.HasRows Then
@@ -53,12 +62,16 @@ Public Class fr_view_nota
                                 jml = rd.Item(4)
                                 disk = rd.Item(5)
                                 netto = rd.Item(6)
+                                _fakstate = rd.Item(7)
                             End If
-                            rd.Close()
                         Catch ex As Exception
                             logError(ex)
                             consoleWriteLine(ex.Message)
+                            Me.Close()
+                        Finally
+                            rd.Close()
                         End Try
+
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
                         Dim parTerm As New ReportParameter("parTerm", term)
                         Dim parSupplier As New ReportParameter("parSupplier", "A.N. " & sup)
@@ -67,8 +80,11 @@ Public Class fr_view_nota
                         Dim parDiskon As New ReportParameter("parDiskon", disk)
                         Dim parNetto As New ReportParameter("parNetto", netto)
 
+                        _parArr = {parSupplier, parSupplierAl, parTerm, parTglFaktur, parJml, parDiskon, parNetto}
+                        _repNm = "Inventory.nota_beli.rdlc"
+                        _dt = ds_transaksi.dt_nota_beli
                         repdatasource.Name = "ds_nota_beli"
-                        repdatasource.Value = ds_transaksi.dt_nota_beli
+                        repdatasource.Value = _dt
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n , " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_beli as beli_harga, " _
@@ -77,21 +93,13 @@ Public Class fr_view_nota
                             & "FROM data_pembelian_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
 
-                        consoleWriteLine(inquery)
-
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.nota_beli.rdlc"
-                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTerm, parTglFaktur, parJml, parDiskon, parNetto})
-                        With ds_transaksi
-                            .dt_lap_beli_nota.Clear()
-                            filldatatabel(inquery, .dt_nota_beli)
-                        End With
-
                     Case "returbeli"
                         op_con()
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'), supplier_nama, " _
-                                      & "supplier_alamat, faktur_jumlah, faktur_ppn, faktur_netto " _
+                                      & "supplier_alamat, faktur_jumlah, faktur_ppn, faktur_netto, " _
+                                      & "(CASE faktur_jen_bayar WHEN 1 THEN 'POTONG NOTA' WHEN 2 THEN 'TUNAI' WHEN 3 THEN 'TRANSFER' ELSE 'ERROR' END), " _
+                                      & "IF(faktur_jen_bayar=1,faktur_kode_faktur,''), faktur_status " _
                                       & "FROM data_pembelian_retur_faktur " _
                                       & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                                       & "WHERE faktur_kode_bukti='" & innofaktur & "'")
@@ -102,11 +110,17 @@ Public Class fr_view_nota
                                 jml = rd.Item(3)
                                 ppn = rd.Item(4)
                                 netto = rd.Item(5)
+                                jenbyr = rd.Item(6)
+                                reffaktur = rd.Item(7)
+                                _fakstate = rd.Item(8)
                                 disk = jml - netto
                             End If
-                            rd.Close()
                         Catch ex As Exception
+                            logError(ex)
                             consoleWriteLine(ex.Message)
+                            Me.Close()
+                        Finally
+                            rd.Close()
                         End Try
 
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
@@ -116,9 +130,14 @@ Public Class fr_view_nota
                         Dim parDiskon As New ReportParameter("parDiskon", disk)
                         Dim parPPN As New ReportParameter("parPPN", ppn)
                         Dim parNetto As New ReportParameter("parNetto", netto)
+                        Dim parJenBayar As New ReportParameter("parJenBayar", jenbyr)
+                        Dim parKodeOrder As New ReportParameter("parKodeOrder", reffaktur)
 
+                        _parArr = {parSupplier, parSupplierAl, parTglFaktur, parJml, parNetto, parJenBayar, parKodeOrder}
+                        _repNm = "Inventory.nota_returbeli.rdlc"
+                        _dt = ds_transaksi.dt_nota_beli
                         repdatasource.Name = "ds_nota_beli"
-                        repdatasource.Value = ds_transaksi.dt_nota_beli
+                        repdatasource.Value = _dt
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n, " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, trans_diskon as beli_disc1, " _
@@ -126,23 +145,18 @@ Public Class fr_view_nota
                             & "FROM data_pembelian_retur_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "' AND trans_status=1"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.nota_returbeli.rdlc"
-                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTglFaktur, parJml, parNetto})
-                        With ds_transaksi
-                            .dt_nota_beli.Clear()
-                            filldatatabel(inquery, .dt_nota_beli)
-                        End With
-
                     Case "jual"
                         op_con()
                         Dim sales As String = Nothing
                         Dim inputuser As String = Nothing
+                        Dim kodeorder As String = Nothing
+
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, customer_nama, " _
                                       & "customer_alamat, salesman_nama, if(faktur_upd_alias='',faktur_reg_alias,faktur_upd_alias), " _
-                                      & "faktur_disc_rupiah, faktur_netto " _
+                                      & "faktur_disc_rupiah, faktur_netto, IFNULL(j_order_kode,''), faktur_status " _
                                       & "FROM data_penjualan_faktur LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
+                                      & "LEFT JOIN data_penjualan_order_faktur ON j_order_ref_faktur=faktur_kode AND j_order_status=1 " _
                                       & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
                                       & "WHERE faktur_kode='" & innofaktur & "'")
                             If rd.HasRows Then
@@ -154,12 +168,17 @@ Public Class fr_view_nota
                                 inputuser = rd.Item(5)
                                 disk = rd.Item(6)
                                 netto = rd.Item(7)
+                                kodeorder = rd.Item(8)
+                                _fakstate = rd.Item(9)
                             End If
-                            rd.Close()
                         Catch ex As Exception
                             logError(ex)
                             consoleWriteLine(ex.Message)
+                            Me.Close()
+                        Finally
+                            rd.Close()
                         End Try
+
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
                         Dim parTerm As New ReportParameter("parTerm", CDate(tglfak).AddDays(term).ToString("dd/MM/yyyy"))
                         Dim parSales As New ReportParameter("parSales", If(sales = Nothing, "NONNONONONO", sales))
@@ -168,10 +187,13 @@ Public Class fr_view_nota
                         parUserId = New ReportParameter("parUserId", If(inputuser = Nothing, "NOPE", inputuser))
                         Dim parDiskon As New ReportParameter("parDiskon", disk)
                         Dim parNetto As New ReportParameter("parNetto", netto)
+                        Dim parKodeOrder As New ReportParameter("parKodeOrder", kodeorder)
 
+                        _parArr = {parCusto, parCustoAl, parTerm, parTglFaktur, parSales, parDiskon, parNetto, parKodeOrder}
+                        _repNm = "Inventory.nota_jual.rdlc"
+                        _dt = ds_transaksi.dt_nota_jual
                         repdatasource.Name = "ds_nota_jual"
-                        repdatasource.Value = ds_transaksi.dt_nota_jual
-
+                        repdatasource.Value = _dt
 
                         inquery = "SELECT trans_barang as jual_barang ,barang_nama as jual_barang_n, " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as Jual_qty , trans_harga_jual as jual_harga, " _
@@ -181,22 +203,17 @@ Public Class fr_view_nota
                             & "FROM data_penjualan_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "' AND trans_status<>9"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.nota_jual.rdlc"
-                        .SetParameters(New ReportParameter() {parCusto, parCustoAl, parTerm, parTglFaktur, parSales, parDiskon, parNetto})
-
-                        With ds_transaksi
-                            .dt_nota_jual.Clear()
-                            filldatatabel(inquery, .dt_nota_jual)
-                        End With
-
                     Case "returjual"
+                        Dim sales As String = Nothing
                         op_con()
                         Try
                             readcommd("SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'), customer_nama, " _
-                                      & "customer_alamat, faktur_jumlah, faktur_ppn_persen, faktur_netto " _
+                                      & "customer_alamat, faktur_jumlah, faktur_ppn_persen, faktur_netto, " _
+                                      & "(CASE faktur_jen_bayar WHEN 1 THEN 'POTONG NOTA' WHEN 2 THEN 'TUNAI' WHEN 3 THEN 'TRANSFER' ELSE 'ERROR' END), " _
+                                      & "IF(faktur_jen_bayar=1,faktur_kode_faktur,''), salesman_nama, faktur_status " _
                                       & "FROM data_penjualan_retur_faktur " _
                                       & "LEFT JOIN data_customer_master ON customer_kode=faktur_custo " _
+                                      & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                                       & "WHERE faktur_kode_bukti='" & innofaktur & "'")
                             If rd.HasRows Then
                                 tglfak = rd.Item(0)
@@ -205,11 +222,17 @@ Public Class fr_view_nota
                                 jml = rd.Item(3)
                                 ppn = rd.Item(4)
                                 netto = rd.Item(5)
+                                jenbyr = rd.Item(6)
+                                reffaktur = rd.Item(7)
+                                sales = rd.Item(8)
+                                _fakstate = rd.Item(9)
                             End If
                             rd.Close()
                         Catch ex As Exception
+                            logError(ex)
                             consoleWriteLine(ex.Message)
                         End Try
+
                         Dim parTglFaktur As New ReportParameter("parTglFaktur", tglfak)
                         Dim parSupplier As New ReportParameter("parSupplier", "A.N. " & sup)
                         Dim parSupplierAl As New ReportParameter("parSupplierAl", sup_al)
@@ -217,9 +240,15 @@ Public Class fr_view_nota
                         Dim parPPN As New ReportParameter("parPPN", ppn)
                         Dim parNetto As New ReportParameter("parNetto", netto)
                         Dim parTitle As New ReportParameter("parTitle", "NOTA RETUR")
+                        Dim parJenBayar As New ReportParameter("parJenBayar", jenbyr)
+                        Dim parKodeOrder As New ReportParameter("parKodeOrder", reffaktur)
+                        Dim parSales As New ReportParameter("parSales", sales)
 
+                        _parArr = {parSupplier, parSupplierAl, parTglFaktur, parJml, parPPN, parNetto, parTitle, parJenBayar, parKodeOrder, parSales}
+                        _repNm = "Inventory.nota_returbeli.rdlc"
+                        _dt = ds_transaksi.dt_nota_beli
                         repdatasource.Name = "ds_nota_beli"
-                        repdatasource.Value = ds_transaksi.dt_nota_beli
+                        repdatasource.Value = _dt
 
                         inquery = "SELECT trans_barang as beli_barang ,barang_nama as beli_brg_n, " _
                             & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as beli_qty , trans_harga_retur as beli_harga, trans_diskon as beli_disc1, " _
@@ -227,17 +256,30 @@ Public Class fr_view_nota
                             & "FROM data_penjualan_retur_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                             & "WHERE trans_faktur='" & innofaktur & "'"
 
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.nota_returbeli.rdlc"
-                        .SetParameters(New ReportParameter() {parSupplier, parSupplierAl, parTglFaktur, parJml, parPPN, parNetto, parTitle})
-                        With ds_transaksi
-                            .dt_nota_beli.Clear()
-                            filldatatabel(inquery, .dt_nota_beli)
-                        End With
                     Case Else
                         Exit Sub
                 End Select
+                If _fakstate <> 1 Then
+                    Dim resp As String = "Transaksi dg nomor faktur {0} {1}"
+                    Select Case _fakstate
+                        Case 0
+                            resp = String.Format(resp, innofaktur, "belum tervalidasi")
+                        Case 2
+                            resp = String.Format(resp, innofaktur, "sudah dibatalkan")
+                        Case 9
+                            resp = "Error this data shouldn't've avaliable in/from this app"
+                        Case Else
+                            resp = "Error this data shouldn't've avaliable in this app also wrong status or smthing else. wait, is this possible?"
+                    End Select
+                    MessageBox.Show("Faktur tidak dapat diprint." & Environment.NewLine & resp)
+                    Me.Close()
+                End If
+
+                .DataSources.Add(repdatasource)
+                .ReportEmbeddedResource = _repNm
+                .SetParameters(_parArr)
                 .SetParameters(New ReportParameter() {parUserId, parNoFaktur})
+                filldatatabel(inquery, _dt)
             End With
             .RefreshReport()
             .SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)

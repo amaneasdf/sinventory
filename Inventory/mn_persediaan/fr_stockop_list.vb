@@ -111,6 +111,11 @@
                 'mn_proses.Enabled = False
                 mn_hapus.Enabled = False
                 mn_edit.Enabled = False
+            Case 2
+                in_status.Text = "Batal"
+                mn_proses.Enabled = False
+                mn_hapus.Enabled = False
+                mn_edit.Enabled = False
             Case 9
                 in_status.Text = "Delete"
                 mn_proses.Enabled = False
@@ -485,6 +490,49 @@
         End If
     End Sub
 
+    'Cancel Data
+    Private Sub cancelData()
+        Dim q As String = ""
+        Dim queryArr As New List(Of String)
+        Dim queryCk As Boolean = False
+        Dim _confrm As Boolean = False
+
+        If tblStatus = 0 Then
+            Using vlid As New fr_stockopconfirm_dialog
+                With vlid
+                    .lbl_title.Text = "Konfirmasi Pembatalan"
+                    .Text = "Stok Opname"
+                    .in_user.Text = loggeduser.user_id
+                    .in_user.ReadOnly = True
+                    .ShowDialog()
+                    _confrm = .returnval
+                End With
+            End Using
+
+            If _confrm = False Then
+                Exit Sub
+            End If
+
+            q = "UPDATE data_stok_opname SET faktur_status=2, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_bukti='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_stok_kartustok SET trans_status=9, trans_upd_date=NOW(), trans_upd_alias='{1}' WHERE trans_faktur='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
+
+            queryCk = startTrans(queryArr)
+
+            If queryCk Then
+                MessageBox.Show("Transaksi Dibatalkan")
+                performRefresh()
+            Else
+                MessageBox.Show("Error. Transaksi gagal dibatalkan")
+            End If
+        End If
+    End Sub
+
     'CLEAR
     Private Sub clearTextBarang()
         'For Each x As NumericUpDown In {in_qty2}
@@ -621,7 +669,11 @@
     End Sub
 
     Private Sub mn_hapus_Click(sender As Object, e As EventArgs) Handles mn_hapus.Click
-        MessageBox.Show("Under Construction")
+        If in_kode.Text <> Nothing And tblStatus = 0 Then
+            If MessageBox.Show("Batalkan transaksi Stock Opname?", "Stock Opname", MessageBoxButtons.YesNo, MessageBoxIcon.Question) Then
+                cancelData()
+            End If
+        End If
     End Sub
 
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
@@ -762,7 +814,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If

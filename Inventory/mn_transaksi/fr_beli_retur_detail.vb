@@ -89,6 +89,8 @@
                 in_status.Text = "Non-Aktif"
             Case 1
                 in_status.Text = "Aktif"
+            Case 2
+                in_status.Text = "Batal"
             Case 9
                 in_status.Text = "Delete"
             Case Else
@@ -100,11 +102,20 @@
                 txt.ReadOnly = True
             Next
 
+            With dgv_barang
+                .Location = New Point(11, 172)
+                .Height = 195
+            End With
+
             bt_tbbarang.Enabled = False
             date_tgl_pajak.Enabled = False
             date_tgl_trans.Enabled = False
             bt_simpanreturbeli.Enabled = False
             bt_batalreturbeli.Text = "OK"
+            mn_save.Enabled = False
+            mn_cancelorder.Enabled = False
+            cb_ppn.Enabled = False
+            cb_bayar_jenis.Enabled = False
         End If
 
     End Sub
@@ -571,11 +582,15 @@
         Using nota As New fr_view_piutang
             Me.Cursor = Cursors.WaitCursor
             With nota
-                '.setVar("beli", in_faktur.Text, "")
-                '.ShowDialog()
+                .setVar("beli", in_no_bukti.Text, "")
+                .ShowDialog()
             End With
         End Using
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_cancelorder.Click
+
     End Sub
 
     'LOAD
@@ -661,7 +676,14 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
@@ -755,7 +777,30 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp, in_gudang_n.KeyUp, in_no_faktur.KeyUp, in_barang_nm.KeyUp
+        Dim _nxtcntrl As Control = Nothing
+        Dim _kdcntrl As Control = Nothing
+
+        Select Case sender.Name.ToString
+            Case "in_supplier_n"
+                _nxtcntrl = in_gudang_n
+                _kdcntrl = in_supplier
+            Case "in_gudang_n"
+                _nxtcntrl = in_no_faktur_ex
+                _kdcntrl = in_gudang
+            Case "in_no_faktur"
+                _nxtcntrl = in_barang_nm
+            Case "in_barang_nm"
+                _nxtcntrl = in_qty
+                _kdcntrl = in_barang
+            Case Else
+                Exit Sub
+        End Select
+
+        If sender.Text = "" And IsNothing(_kdcntrl) = False Then
+            _kdcntrl.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -764,19 +809,14 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_gudang_n, e)
+            keyshortenter(_nxtcntrl, e)
         Else
-            If popPnl_barang.Visible = False And sender.ReadOnly = False And sender.Enabled = True Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False And sender.Enabled = True Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-            loadDataBRGPopup("supplier", in_supplier_n.Text)
-        End If
-    End Sub
-
-    Private Sub in_supplier_n_TextChanged(sender As Object, e As EventArgs) Handles in_supplier_n.TextChanged
-        If in_supplier_n.Text = "" Then
-            in_supplier.Clear()
-            'AND OTHER STUFF
         End If
     End Sub
 
@@ -795,24 +835,6 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_no_faktur_ex, e)
-        Else
-            If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
-        End If
-    End Sub
-
     Private Sub in_gudang_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang_n.TextChanged
         If in_gudang_n.Text = "" Then
             in_gudang.Clear()
@@ -821,6 +843,11 @@
 
     Private Sub in_no_faktur_ex_KeyUp(sender As Object, e As KeyEventArgs) Handles in_no_faktur_ex.KeyUp
         keyshortenter(cb_bayar_jenis, e)
+    End Sub
+
+    Private Sub cb_bayar_jenis_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_bayar_jenis.SelectedIndexChanged
+        in_no_faktur.Enabled = IIf(cb_bayar_jenis.SelectedValue = 1, True, False)
+        in_no_faktur.Text = IIf(cb_bayar_jenis.SelectedValue = 1, in_no_faktur.Text, "")
     End Sub
 
     Private Sub cb_bayar_jenis_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_bayar_jenis.KeyUp
@@ -838,24 +865,6 @@
         End If
     End Sub
 
-    Private Sub in_no_faktur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_no_faktur.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_barang, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("faktur", in_no_faktur.Text)
-        End If
-    End Sub
-
     'BARANG
     Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
         keyshortenter(in_barang_nm, e)
@@ -868,24 +877,6 @@
         End If
         popupstate = "barang"
         loadDataBRGPopup("barang", in_barang_nm.Text)
-    End Sub
-
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barang", in_barang_nm.Text)
-        End If
     End Sub
 
     Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyUp

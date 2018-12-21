@@ -72,6 +72,7 @@
                     .Cells("kartu_kredit").Value = x.ItemArray(11)
                     .Cells("kartu_saldo").Value = x.ItemArray(12)
                     .Cells("kartu_nilai").Value = x.ItemArray(13)
+                    .Cells("kartu_jenis").Value = x.ItemArray(14)
                 End With
             Next
         End With
@@ -92,6 +93,11 @@
                 "trans_tgl='" & tgl & "'"
                 }
             queryArr.Add(String.Format(q, String.Join(",", data1), in_kode_stok.Text, rows.Cells("kartu_faktur").Value))
+
+            'Dim _jenis As String = rows.Cells("kartu_jenis").Value
+            'If _jenis = "po" Then
+            '    q = "UPDATE data_penjualan_faktur LEFT JOIN data_penjualan_"
+            'End If
         Next
 
         queryChk = startTrans(queryArr)

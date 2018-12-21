@@ -95,6 +95,7 @@
             main.Visible = True
             main.Opacity = 100
             main.MenuAkses()
+            main.loadInfoPanel()
             fr_login.clearLogin()
             fr_login.Close()
         End If

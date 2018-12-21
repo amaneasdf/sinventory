@@ -30,12 +30,28 @@ Partial Class fr_jual_detail
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
-        Me.txtValDate = New System.Windows.Forms.TextBox()
-        Me.txtValAlias = New System.Windows.Forms.TextBox()
-        Me.Label29 = New System.Windows.Forms.Label()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.dgv_barang = New System.Windows.Forms.DataGridView()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txtValDate = New System.Windows.Forms.TextBox()
+        Me.txtValAlias = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
@@ -83,22 +99,6 @@ Partial Class fr_jual_detail
         Me.Label28 = New System.Windows.Forms.Label()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
-        Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.brg_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.in_qty = New System.Windows.Forms.NumericUpDown()
         Me.in_barang_nm = New System.Windows.Forms.TextBox()
         Me.in_custo_n = New System.Windows.Forms.TextBox()
@@ -134,10 +134,10 @@ Partial Class fr_jual_detail
         Me.pnl_content.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.in_bayar, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_disc3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_disc2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -228,10 +228,11 @@ Partial Class fr_jual_detail
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.popPnl_barang)
+        Me.pnl_content.Controls.Add(Me.dgv_barang)
         Me.pnl_content.Controls.Add(Me.txtValDate)
         Me.pnl_content.Controls.Add(Me.txtValAlias)
         Me.pnl_content.Controls.Add(Me.Label29)
-        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.TextBox1)
         Me.pnl_content.Controls.Add(Me.MenuStrip1)
         Me.pnl_content.Controls.Add(Me.Label35)
@@ -277,7 +278,6 @@ Partial Class fr_jual_detail
         Me.pnl_content.Controls.Add(Me.Label28)
         Me.pnl_content.Controls.Add(Me.Label31)
         Me.pnl_content.Controls.Add(Me.Label19)
-        Me.pnl_content.Controls.Add(Me.dgv_barang)
         Me.pnl_content.Controls.Add(Me.in_qty)
         Me.pnl_content.Controls.Add(Me.in_barang_nm)
         Me.pnl_content.Controls.Add(Me.in_custo_n)
@@ -314,6 +314,186 @@ Partial Class fr_jual_detail
         Me.pnl_content.Size = New System.Drawing.Size(1003, 545)
         Me.pnl_content.TabIndex = 0
         '
+        'popPnl_barang
+        '
+        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
+        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
+        Me.popPnl_barang.Location = New System.Drawing.Point(386, 254)
+        Me.popPnl_barang.Name = "popPnl_barang"
+        Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
+        Me.popPnl_barang.TabIndex = 0
+        Me.popPnl_barang.Visible = False
+        '
+        'dgv_listbarang
+        '
+        Me.dgv_listbarang.AllowUserToAddRows = False
+        Me.dgv_listbarang.AllowUserToDeleteRows = False
+        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
+        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
+        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
+        Me.dgv_listbarang.MultiSelect = False
+        Me.dgv_listbarang.Name = "dgv_listbarang"
+        Me.dgv_listbarang.ReadOnly = True
+        Me.dgv_listbarang.RowHeadersVisible = False
+        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 127)
+        Me.dgv_listbarang.StandardTab = True
+        Me.dgv_listbarang.TabIndex = 0
+        '
+        'linkLbl_searchbarang
+        '
+        Me.linkLbl_searchbarang.AutoSize = True
+        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
+        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
+        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
+        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
+        Me.linkLbl_searchbarang.TabIndex = 1
+        Me.linkLbl_searchbarang.TabStop = True
+        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
+        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'dgv_barang
+        '
+        Me.dgv_barang.AllowUserToAddRows = False
+        Me.dgv_barang.AllowUserToDeleteRows = False
+        Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
+        Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.sat_type, Me.nama, Me.qty, Me.sat, Me.brg_hpp, Me.harga, Me.subtotal, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml})
+        Me.dgv_barang.Location = New System.Drawing.Point(12, 167)
+        Me.dgv_barang.MultiSelect = False
+        Me.dgv_barang.Name = "dgv_barang"
+        Me.dgv_barang.ReadOnly = True
+        Me.dgv_barang.RowHeadersVisible = False
+        Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_barang.Size = New System.Drawing.Size(980, 187)
+        Me.dgv_barang.TabIndex = 352
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.ReadOnly = True
+        Me.sat_type.Visible = False
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.MinimumWidth = 50
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 65
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.MinimumWidth = 80
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 80
+        '
+        'brg_hpp
+        '
+        Me.brg_hpp.HeaderText = "hpp"
+        Me.brg_hpp.Name = "brg_hpp"
+        Me.brg_hpp.ReadOnly = True
+        Me.brg_hpp.Visible = False
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_jual"
+        Me.harga.HeaderText = "Harga Jual"
+        Me.harga.MinimumWidth = 100
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'discrp
+        '
+        Me.discrp.DataPropertyName = "trans_disc_rupiah"
+        Me.discrp.HeaderText = "Disc Rp."
+        Me.discrp.MinimumWidth = 90
+        Me.discrp.Name = "discrp"
+        Me.discrp.ReadOnly = True
+        Me.discrp.Width = 90
+        '
+        'disc1
+        '
+        Me.disc1.DataPropertyName = "trans_disc1"
+        Me.disc1.HeaderText = "Disc1"
+        Me.disc1.MinimumWidth = 40
+        Me.disc1.Name = "disc1"
+        Me.disc1.ReadOnly = True
+        Me.disc1.Width = 45
+        '
+        'disc2
+        '
+        Me.disc2.DataPropertyName = "trans_disc2"
+        Me.disc2.HeaderText = "Disc2"
+        Me.disc2.MinimumWidth = 40
+        Me.disc2.Name = "disc2"
+        Me.disc2.ReadOnly = True
+        Me.disc2.Width = 45
+        '
+        'disc3
+        '
+        Me.disc3.DataPropertyName = "trans_disc3"
+        Me.disc3.HeaderText = "Disc3"
+        Me.disc3.MinimumWidth = 40
+        Me.disc3.Name = "disc3"
+        Me.disc3.ReadOnly = True
+        Me.disc3.Width = 45
+        '
+        'disc4
+        '
+        Me.disc4.DataPropertyName = "trans_disc4"
+        Me.disc4.HeaderText = "Disc4"
+        Me.disc4.MinimumWidth = 40
+        Me.disc4.Name = "disc4"
+        Me.disc4.ReadOnly = True
+        Me.disc4.Width = 45
+        '
+        'disc5
+        '
+        Me.disc5.DataPropertyName = "trans_disc5"
+        Me.disc5.HeaderText = "Disc5"
+        Me.disc5.MinimumWidth = 40
+        Me.disc5.Name = "disc5"
+        Me.disc5.ReadOnly = True
+        Me.disc5.Width = 45
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
+        '
         'txtValDate
         '
         Me.txtValDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -345,44 +525,6 @@ Partial Class fr_jual_detail
         Me.Label29.TabIndex = 434
         Me.Label29.Text = "ValBy"
         '
-        'popPnl_barang
-        '
-        Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(381, 200)
-        Me.popPnl_barang.Name = "popPnl_barang"
-        Me.popPnl_barang.Size = New System.Drawing.Size(375, 135)
-        Me.popPnl_barang.TabIndex = 0
-        Me.popPnl_barang.Visible = False
-        '
-        'dgv_listbarang
-        '
-        Me.dgv_listbarang.AllowUserToAddRows = False
-        Me.dgv_listbarang.AllowUserToDeleteRows = False
-        Me.dgv_listbarang.BackgroundColor = System.Drawing.Color.Gainsboro
-        Me.dgv_listbarang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listbarang.Dock = System.Windows.Forms.DockStyle.Top
-        Me.dgv_listbarang.Location = New System.Drawing.Point(0, 0)
-        Me.dgv_listbarang.MultiSelect = False
-        Me.dgv_listbarang.Name = "dgv_listbarang"
-        Me.dgv_listbarang.ReadOnly = True
-        Me.dgv_listbarang.RowHeadersVisible = False
-        Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 127)
-        Me.dgv_listbarang.TabIndex = 0
-        '
-        'linkLbl_searchbarang
-        '
-        Me.linkLbl_searchbarang.AutoSize = True
-        Me.linkLbl_searchbarang.LinkColor = System.Drawing.Color.DimGray
-        Me.linkLbl_searchbarang.Location = New System.Drawing.Point(3, 114)
-        Me.linkLbl_searchbarang.Name = "linkLbl_searchbarang"
-        Me.linkLbl_searchbarang.Size = New System.Drawing.Size(116, 13)
-        Me.linkLbl_searchbarang.TabIndex = 1
-        Me.linkLbl_searchbarang.TabStop = True
-        Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
-        Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
-        '
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.Color.White
@@ -394,6 +536,7 @@ Partial Class fr_jual_detail
         Me.TextBox1.Size = New System.Drawing.Size(136, 20)
         Me.TextBox1.TabIndex = 425
         Me.TextBox1.TabStop = False
+        Me.TextBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'MenuStrip1
         '
@@ -896,147 +1039,6 @@ Partial Class fr_jual_detail
         Me.Label19.TabIndex = 192
         Me.Label19.Text = "Discount"
         '
-        'dgv_barang
-        '
-        Me.dgv_barang.AllowUserToAddRows = False
-        Me.dgv_barang.AllowUserToDeleteRows = False
-        Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.sat_type, Me.nama, Me.qty, Me.sat, Me.brg_hpp, Me.harga, Me.subtotal, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml})
-        Me.dgv_barang.Location = New System.Drawing.Point(12, 168)
-        Me.dgv_barang.MultiSelect = False
-        Me.dgv_barang.Name = "dgv_barang"
-        Me.dgv_barang.ReadOnly = True
-        Me.dgv_barang.RowHeadersVisible = False
-        Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(980, 186)
-        Me.dgv_barang.TabIndex = 352
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sattype"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.ReadOnly = True
-        Me.sat_type.Visible = False
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.MinimumWidth = 50
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 65
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.MinimumWidth = 80
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 80
-        '
-        'brg_hpp
-        '
-        Me.brg_hpp.HeaderText = "hpp"
-        Me.brg_hpp.Name = "brg_hpp"
-        Me.brg_hpp.ReadOnly = True
-        Me.brg_hpp.Visible = False
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_jual"
-        Me.harga.HeaderText = "Harga Jual"
-        Me.harga.MinimumWidth = 100
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'subtotal
-        '
-        Me.subtotal.HeaderText = "Subtotal"
-        Me.subtotal.Name = "subtotal"
-        Me.subtotal.ReadOnly = True
-        '
-        'discrp
-        '
-        Me.discrp.DataPropertyName = "trans_disc_rupiah"
-        Me.discrp.HeaderText = "Disc Rp."
-        Me.discrp.MinimumWidth = 90
-        Me.discrp.Name = "discrp"
-        Me.discrp.ReadOnly = True
-        Me.discrp.Width = 90
-        '
-        'disc1
-        '
-        Me.disc1.DataPropertyName = "trans_disc1"
-        Me.disc1.HeaderText = "Disc1"
-        Me.disc1.MinimumWidth = 40
-        Me.disc1.Name = "disc1"
-        Me.disc1.ReadOnly = True
-        Me.disc1.Width = 45
-        '
-        'disc2
-        '
-        Me.disc2.DataPropertyName = "trans_disc2"
-        Me.disc2.HeaderText = "Disc2"
-        Me.disc2.MinimumWidth = 40
-        Me.disc2.Name = "disc2"
-        Me.disc2.ReadOnly = True
-        Me.disc2.Width = 45
-        '
-        'disc3
-        '
-        Me.disc3.DataPropertyName = "trans_disc3"
-        Me.disc3.HeaderText = "Disc3"
-        Me.disc3.MinimumWidth = 40
-        Me.disc3.Name = "disc3"
-        Me.disc3.ReadOnly = True
-        Me.disc3.Width = 45
-        '
-        'disc4
-        '
-        Me.disc4.DataPropertyName = "trans_disc4"
-        Me.disc4.HeaderText = "Disc4"
-        Me.disc4.MinimumWidth = 40
-        Me.disc4.Name = "disc4"
-        Me.disc4.ReadOnly = True
-        Me.disc4.Width = 45
-        '
-        'disc5
-        '
-        Me.disc5.DataPropertyName = "trans_disc5"
-        Me.disc5.HeaderText = "Disc5"
-        Me.disc5.MinimumWidth = 40
-        Me.disc5.Name = "disc5"
-        Me.disc5.ReadOnly = True
-        Me.disc5.Width = 45
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
-        '
         'in_qty
         '
         Me.in_qty.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -1227,6 +1229,7 @@ Partial Class fr_jual_detail
         Me.in_status.Size = New System.Drawing.Size(169, 20)
         Me.in_status.TabIndex = 11
         Me.in_status.TabStop = False
+        Me.in_status.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_disc4
         '
@@ -1386,11 +1389,11 @@ Partial Class fr_jual_detail
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         CType(Me.in_bayar, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_disc3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_disc2, System.ComponentModel.ISupportInitialize).EndInit()
