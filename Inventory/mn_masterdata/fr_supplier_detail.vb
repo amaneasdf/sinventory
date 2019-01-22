@@ -1,34 +1,61 @@
 ﻿Public Class fr_supplier_detail
     Private supStatus As String = 1
+    Private olddata As String = ""
 
     Private Sub loadDataSupplier(kode As String)
-        readcommd("SELECT * FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_kode.Text = kode
-            in_namasupplier.Text = rd.Item("supplier_nama")
-            in_alamatsupplier.Text = rd.Item("supplier_alamat")
-            in_telp1supplier.Text = rd.Item("supplier_telpon1")
-            in_telp2supplier.Text = rd.Item("supplier_telpon2")
-            in_faxsupplier.Text = rd.Item("supplier_fax")
-            in_cp.Text = rd.Item("supplier_cp")
-            in_emailsupplier.Text = rd.Item("supplier_email")
-            in_npwpsupplier.Text = rd.Item("supplier_npwp")
-            in_rek_bank.Text = rd.Item("supplier_rek_bank")
-            in_rek_giro.Text = rd.Item("supplier_rek_bg")
-            in_ket.Text = rd.Item("supplier_keterangan")
-            in_term.Text = rd.Item("supplier_term")
-            supStatus = rd.Item("supplier_status")
-            txtRegAlias.Text = rd.Item("supplier_reg_alias")
-            txtRegdate.Text = rd.Item("supplier_reg_date")
-            Try
+        Dim _data As New List(Of String)
+        Try
+            readcommd("SELECT supplier_nama,supplier_alamat,supplier_telpon1,supplier_telpon2,supplier_fax,supplier_cp,supplier_email,supplier_npwp,supplier_rek_bank, " _
+                  & "supplier_rek_bg,supplier_keterangan,supplier_term,supplier_status,IFNULL(supplier_reg_alias,'') supplier_reg_alias, " _
+                  & "IFNULL(supplier_reg_date,'00/00/0000 00:00:00') supplier_reg_date,IFNULL(supplier_upd_alias,'') supplier_upd_alias, " _
+                  & "IFNULL(supplier_upd_date,'00/00/0000 00:00:00') supplier_upd_date FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
+            If rd.HasRows Then
+                in_kode.Text = kode
+                in_namasupplier.Text = rd.Item("supplier_nama")
+                in_alamatsupplier.Text = rd.Item("supplier_alamat")
+                in_telp1supplier.Text = rd.Item("supplier_telpon1")
+                in_telp2supplier.Text = rd.Item("supplier_telpon2")
+                in_faxsupplier.Text = rd.Item("supplier_fax")
+                in_cp.Text = rd.Item("supplier_cp")
+                in_emailsupplier.Text = rd.Item("supplier_email")
+                in_npwpsupplier.Text = rd.Item("supplier_npwp")
+                in_rek_bank.Text = rd.Item("supplier_rek_bank")
+                in_rek_giro.Text = rd.Item("supplier_rek_bg")
+                in_ket.Text = rd.Item("supplier_keterangan")
+                in_term.Text = rd.Item("supplier_term")
+                supStatus = rd.Item("supplier_status")
+                txtRegAlias.Text = rd.Item("supplier_reg_alias")
+                txtRegdate.Text = rd.Item("supplier_reg_date")
                 txtUpdDate.Text = rd.Item("supplier_upd_date")
+                txtUpdAlias.Text = rd.Item("supplier_upd_alias")
+            End If
+            For i = 0 To rd.FieldCount - 1
+                _data.Add(rd.Item(i))
+            Next
+            olddata = String.Join(";", _data)
+            rd.Close()
+            setStatus()
+
+            If loggeduser.allowedit_master = False Then
+                bt_simpansupplier.Visible = False
+                bt_batalsupplier.Text = "OK"
+                mn_deact.Enabled = False
+                mn_save.Enabled = False
+                mn_del.Enabled = False
+            End If
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Supplier", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Me.Close()
+        Finally
+            Try
+                If rd.IsClosed = False Then
+                    rd.Close()
+                End If
             Catch ex As Exception
-                txtUpdDate.Text = "00/00/0000 00:00:00"
+                logError(ex, True)
             End Try
-            txtUpdAlias.Text = rd.Item("supplier_upd_alias")
-        End If
-        rd.Close()
-        setStatus()
+        End Try
     End Sub
 
     Private Sub setStatus()
@@ -52,6 +79,7 @@
     '-------------- load
     Private Sub fr_supplier_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         op_con()
+
         If bt_simpansupplier.Text = "Update" Then
             With in_kode
                 .ReadOnly = True
@@ -63,6 +91,8 @@
 
     '-------------- save
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpansupplier.Click
+        Dim _data As New List(Of String)
+        _data.AddRange({in_namasupplier.Text.Replace("'", "`"), in_alamatsupplier.Text.Replace("'", "`"), in_telp1supplier.Text})
         If in_namasupplier.Text = Nothing Then
             MessageBox.Show("Nama supplier belum di input")
             in_namasupplier.Focus()
@@ -70,7 +100,7 @@
         End If
 
         op_con()
-        If MessageBox.Show("Simpan data transaksi pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Simpan data supplier?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
 
             Dim data1 As String()
             Dim q As String = ""
@@ -185,6 +215,7 @@
             supStatus = "1"
         End If
         setStatus()
+        bt_simpansupplier.PerformClick()
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
@@ -200,11 +231,6 @@
 
     Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
         numericLostFocus(sender)
-    End Sub
-
-    '---------------- cb prevent input
-    Private Sub cb_status_KeyPress(sender As Object, e As KeyPressEventArgs)
-        e.Handled = True
     End Sub
 
     '--------------- textbox numeric

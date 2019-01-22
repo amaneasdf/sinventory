@@ -1,6 +1,11 @@
 ﻿Public Class fr_tutup_buku
     Public tabpagename As TabPage
     Private neracabalance As Boolean
+    Private Enum ckdatres
+        Valid
+        Invalid
+        Undefined
+    End Enum
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
@@ -116,6 +121,35 @@
     '    End If
     'End Sub
 
+    Private Function ckDataValid(ByVal tipe As String) As ckdatres
+        Dim _retval As ckdatres = ckdatres.Undefined
+        Dim q As String = ""
+
+        op_con()
+        If getConn.State = ConnectionState.Open Then
+            Select Case tipe
+                Case "piutangbayar"
+                    q = "SELECT COUNT(IF(p_bayar_status=0,1,NULL)) FROM data_piutang_bayar WHERE p_bayar_tanggal_bayar BETWEEN '{0} AND '{1}'"
+                    q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
+                Case "pesanan"
+                    q = "SELECT COUNT(IF(j_order_status=0,1,NULL)) FROM data_penjualan_order_faktur WHERE j_order_tanggal_trans BETWEEN '{0}' AND '{1}'"
+                    q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
+            End Select
+
+            readcommd(q)
+            If rd.HasRows Then
+                If rd.Item(0) > 0 Then
+                    _retval = ckdatres.Invalid
+                Else
+                    _retval = ckdatres.Valid
+                End If
+            End If
+            rd.Close()
+        End If
+
+        Return _retval
+    End Function
+
     Private Function checkuser() As Boolean
         Dim retrespond As Boolean = False
 
@@ -210,6 +244,28 @@
     End Sub
 
     Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpanperkiraan.Click
+        Dim ck As ckdatres = ckDataValid("piutangbayar")
+        If ck = ckdatres.Invalid Then
+            MessageBox.Show("Ada transaksi pembayaran piutang yang belum tervalidasi. Silahkan cek kembali.", "Tutup Periode", MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            Exit Sub
+        ElseIf ck = ckdatres.Undefined Then
+            MessageBox.Show("Terjadi Kesalahan. Sistem tidak dapat melakukan pengecekan data", "Tutup Periode", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
+        ck = ckDataValid("pesanan")
+        If ck = ckdatres.Invalid Then
+            Dim msgres As DialogResult = MessageBox.Show("Ada transaksi order penjualan yang belum divalidasi. Lanjutkan proses tutup buku?",
+                                                         "Tutup Periode", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If msgres = DialogResult.No Then
+                Exit Sub
+            End If
+        ElseIf ck = ckdatres.Undefined Then
+            MessageBox.Show("Terjadi Kesalahan. Sistem tidak dapat melakukan pengecekan data", "Tutup Periode", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
+
         If MessageBox.Show("Lakukan proses tutup buku?" & Environment.NewLine & "Pastikan semua transaksi pada periode yang akan di tutup telah selesai",
                            "Tutup Buku", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             Me.Cursor = Cursors.WaitCursor

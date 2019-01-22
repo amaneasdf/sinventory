@@ -250,7 +250,7 @@ Partial Class fr_supplier_detail
         Me.in_emailsupplier.BackColor = System.Drawing.Color.White
         Me.in_emailsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_emailsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_emailsupplier.Location = New System.Drawing.Point(81, 254)
+        Me.in_emailsupplier.Location = New System.Drawing.Point(81, 250)
         Me.in_emailsupplier.MaxLength = 100
         Me.in_emailsupplier.Name = "in_emailsupplier"
         Me.in_emailsupplier.Size = New System.Drawing.Size(314, 20)
@@ -294,7 +294,7 @@ Partial Class fr_supplier_detail
         Me.in_faxsupplier.BackColor = System.Drawing.Color.White
         Me.in_faxsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faxsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_faxsupplier.Location = New System.Drawing.Point(81, 206)
+        Me.in_faxsupplier.Location = New System.Drawing.Point(81, 204)
         Me.in_faxsupplier.MaxLength = 20
         Me.in_faxsupplier.Name = "in_faxsupplier"
         Me.in_faxsupplier.Size = New System.Drawing.Size(227, 20)
@@ -305,7 +305,7 @@ Partial Class fr_supplier_detail
         Me.in_npwpsupplier.BackColor = System.Drawing.Color.White
         Me.in_npwpsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_npwpsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_npwpsupplier.Location = New System.Drawing.Point(81, 301)
+        Me.in_npwpsupplier.Location = New System.Drawing.Point(81, 297)
         Me.in_npwpsupplier.MaxLength = 50
         Me.in_npwpsupplier.Name = "in_npwpsupplier"
         Me.in_npwpsupplier.Size = New System.Drawing.Size(314, 20)
@@ -314,12 +314,12 @@ Partial Class fr_supplier_detail
         'in_telp1supplier
         '
         Me.in_telp1supplier.BackColor = System.Drawing.Color.White
-        Me.in_telp1supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_telp1supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_telp1supplier.ForeColor = System.Drawing.Color.Black
         Me.in_telp1supplier.Location = New System.Drawing.Point(81, 158)
         Me.in_telp1supplier.MaxLength = 20
         Me.in_telp1supplier.Name = "in_telp1supplier"
-        Me.in_telp1supplier.Size = New System.Drawing.Size(227, 22)
+        Me.in_telp1supplier.Size = New System.Drawing.Size(227, 20)
         Me.in_telp1supplier.TabIndex = 2
         '
         'in_namasupplier
@@ -379,7 +379,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(8, 257)
+        Me.Label11.Location = New System.Drawing.Point(8, 253)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(32, 13)
         Me.Label11.TabIndex = 150
@@ -399,7 +399,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(8, 209)
+        Me.Label10.Location = New System.Drawing.Point(8, 207)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(27, 13)
         Me.Label10.TabIndex = 149
@@ -409,7 +409,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(8, 304)
+        Me.Label1.Location = New System.Drawing.Point(8, 300)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(40, 13)
         Me.Label1.TabIndex = 155
@@ -439,7 +439,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(8, 186)
+        Me.Label6.Location = New System.Drawing.Point(8, 184)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(40, 13)
         Me.Label6.TabIndex = 153
@@ -450,7 +450,7 @@ Partial Class fr_supplier_detail
         Me.in_telp2supplier.BackColor = System.Drawing.Color.White
         Me.in_telp2supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_telp2supplier.ForeColor = System.Drawing.Color.Black
-        Me.in_telp2supplier.Location = New System.Drawing.Point(81, 183)
+        Me.in_telp2supplier.Location = New System.Drawing.Point(81, 181)
         Me.in_telp2supplier.MaxLength = 20
         Me.in_telp2supplier.Name = "in_telp2supplier"
         Me.in_telp2supplier.Size = New System.Drawing.Size(227, 20)
@@ -483,7 +483,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(8, 281)
+        Me.Label12.Location = New System.Drawing.Point(8, 277)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(31, 13)
         Me.Label12.TabIndex = 170
@@ -493,7 +493,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(8, 234)
+        Me.Label15.Location = New System.Drawing.Point(8, 232)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(24, 13)
         Me.Label15.TabIndex = 149
@@ -502,18 +502,18 @@ Partial Class fr_supplier_detail
         'in_cp
         '
         Me.in_cp.BackColor = System.Drawing.Color.White
-        Me.in_cp.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_cp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_cp.ForeColor = System.Drawing.Color.Black
-        Me.in_cp.Location = New System.Drawing.Point(81, 229)
+        Me.in_cp.Location = New System.Drawing.Point(81, 227)
         Me.in_cp.MaxLength = 50
         Me.in_cp.Name = "in_cp"
-        Me.in_cp.Size = New System.Drawing.Size(314, 22)
+        Me.in_cp.Size = New System.Drawing.Size(314, 20)
         Me.in_cp.TabIndex = 5
         '
         'in_term
         '
         Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_term.Location = New System.Drawing.Point(81, 277)
+        Me.in_term.Location = New System.Drawing.Point(81, 273)
         Me.in_term.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.in_term.Name = "in_term"
         Me.in_term.Size = New System.Drawing.Size(87, 21)

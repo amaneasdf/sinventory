@@ -114,7 +114,7 @@
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, " _
-                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), 0, " _
+                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
@@ -130,7 +130,7 @@
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
-                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), 0, " _
+                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
@@ -146,7 +146,7 @@
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
-                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), 0, " _
+                    & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
@@ -227,6 +227,9 @@
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                     & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' {2}"
                 q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+            Case Else
+                Return Nothing
+                Exit Function
         End Select
 
         Select Case tipe
@@ -262,54 +265,57 @@
         Dim q As String = createQuery(type)
         Dim _dt As New DataTable
         Dim _colheader As New List(Of String)
-        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\Inventory\"
         Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
         Dim _respond As Boolean = False
         Dim _svdialog As New SaveFileDialog
         Dim _title As String = ""
+        Dim _tglawal As String = date_tglawal.Value.ToString("dd-MM-yyyy")
+        Dim _tglakhir As String = date_tglakhir.Value.ToString("dd-MM-yyyy")
+        Dim _datefile As String = "(" & date_tglawal.Value.ToString("yyyyMMdd") & "-" & date_tglakhir.Value.ToString("yyyyMMdd") & ")-" & Today.ToString("yyyyMMdd")
 
         MyBase.Cursor = Cursors.AppStarting
 
         Select Case type
             Case "lapBeliNota"
                 _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER NOTA"
-                _filename = "BeliNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER NOTA " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliNota" & _datefile & ".xlsx"
 
             Case "lapBeliTgl"
                 _colheader.AddRange({"Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER TANGGAL"
-                _filename = "BeliTanggal" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER TANGGAL " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliTanggal" & _datefile & ".xlsx"
 
             Case "lapBeliSupplier"
                 _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER SUPPLIER"
-                _filename = "BeliSupplier" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliSupplier" & _datefile & ".xlsx"
 
             Case "lapBeliTglNota"
                 _colheader.AddRange({"Tgl. Transaksi", "No.Faktur", "Kode Supplier", "Nama Supplier", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER TANGGAL PER NOTA"
-                _filename = "BeliTanggalNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER TANGGAL PER NOTA " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliTanggalNota" & _datefile & ".xlsx"
 
             Case "lapBeliSupplierNota"
                 _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Faktur", "Tgl. Transaksi", "Brutto", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER NOTA"
-                _filename = "BeliSupplierNota" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER NOTA " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliSupplierNota" & _datefile & ".xlsx"
 
             Case "lapBeliSupplierBarang"
                 _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER BARANG"
-                _filename = "BeliSupplierBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER SUPPLIER PER BARANG " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliSupplierBarang" & _datefile & ".xlsx"
 
             Case "lapBeliTglBarang"
                 _colheader.AddRange({"Tgl.Transaksi", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
-                _title = "LAPORAN PEMBELIAN PER TANGGAL PER BARANG"
-                _filename = "BeliTanggalBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+                _title = "LAPORAN PEMBELIAN PER TANGGAL PER BARANG " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliTanggalBarang" & _datefile & ".xlsx"
 
-                'Case "lapBeliTglNotaBarang"
-                '    _colheader.AddRange({"Tgl.Transaksi", "Kode Barang", "Nama Barang", "Qty", "Konversi", "Subtotal", "Diskon", "PPn", "Jumlah", "Jenis"})
-                '    _title = "LAPORAN PEMBELIAN PER TANGGAL PER BARANG"
-                '    _filename = "BeliTanggalBarang" & Today.ToString("yyyyMMdd") & ".xlsx"
+            Case "lapBeliTglNotaBarang"
+                _colheader.AddRange({"No.Faktur", "Tgl.Transaksi", "Kode Supplier", "Nama Supplier", "Kode Barang", "Nama Barang", "Qty", "Harga Beli", "Diskon", "Jumlah"})
+                _title = "LAPORAN PEMBELIAN PER TANGGAL NOTA BARANG " & _tglawal & " s.d. " & _tglakhir
+                _filename = "BeliTanggalBarang" & _datefile & ".xlsx"
 
             Case Else
                 Exit Sub
@@ -367,6 +373,13 @@
         Me.Close()
     End Sub
 
+    Private Sub fr_lap_filter_jual_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Dim _dialogres As Windows.Forms.DialogResult = MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _dialogres = Windows.Forms.DialogResult.No Then
+            e.Cancel = True
+        End If
+    End Sub
+
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         bt_batalbeli.PerformClick()
     End Sub
@@ -377,6 +390,16 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If e.KeyCode = Keys.Escape Then
+            If popPnl_barang.Visible = True Then
+                popPnl_barang.Visible = False
+            Else
+                bt_batalbeli.PerformClick()
+            End If
+        End If
     End Sub
 
     'LOAD
@@ -434,9 +457,16 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            'consoleWriteLine("fuck")
+            e.SuppressKeyPress = True
         End If
     End Sub
 
@@ -460,6 +490,7 @@
         End If
     End Sub
 
+    '------------- INPUT
     Private Sub date_tglawal_KeyUp(sender As Object, e As KeyEventArgs) Handles date_tglawal.KeyUp
         keyshortenter(date_tglakhir, e)
     End Sub
@@ -499,7 +530,7 @@
         loadDataBRGPopup("supplier", in_supplier_n.Text)
     End Sub
 
-    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave
+    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave, in_barang_n.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
         Else
@@ -507,7 +538,24 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp, in_barang_n.KeyUp
+        Dim _nxtcontrol As Object
+        Dim _kdcontrol As Object
+        Select Case sender.Name.ToString
+            Case "in_supplier_n"
+                _nxtcontrol = IIf(barang_sw = True, in_barang_n, bt_simpanbeli)
+                _kdcontrol = in_supplier
+            Case "in_barang_n"
+                _nxtcontrol = bt_simpanbeli
+                _kdcontrol = in_barang
+            Case Else
+                Exit Sub
+        End Select
+
+        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
+            _kdcontrol.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -516,19 +564,14 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(IIf(barang_sw = True, in_barang_n, bt_simpanbeli), e)
+            keyshortenter(_nxtcontrol, e)
         Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-            loadDataBRGPopup("supplier", in_supplier_n.Text)
-        End If
-    End Sub
-
-    Private Sub in_supplier_n_TextChanged(sender As Object, e As EventArgs) Handles in_supplier_n.TextChanged
-        If in_supplier_n.Text = "" Then
-            in_supplier.Clear()
-            'AND OTHER STUFF
         End If
     End Sub
 
@@ -543,39 +586,6 @@
         End If
         popupstate = "barang"
         loadDataBRGPopup("barang", in_barang_n.Text)
-    End Sub
-
-    Private Sub in_barang_n_Leave(sender As Object, e As EventArgs) Handles in_barang_n.Leave
-        If Not dgv_listbarang.Focused = True Then
-            popPnl_barang.Visible = False
-        Else
-            popPnl_barang.Visible = True
-        End If
-    End Sub
-
-    Private Sub in_barang_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(bt_simpanbeli, e)
-        Else
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barang", in_barang_n.Text)
-        End If
-    End Sub
-
-    Private Sub in_barang_n_TextChanged(sender As Object, e As EventArgs) Handles in_barang_n.TextChanged
-        If in_barang_n.Text = "" Then
-            in_barang.Clear()
-            'AND OTHER STUFF
-        End If
     End Sub
 
     Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click, pnl_content.Click

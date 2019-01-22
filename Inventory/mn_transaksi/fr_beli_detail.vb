@@ -2,6 +2,7 @@
     Private indexrow As Integer = 0
     Private popupstate As String = "barang"
     Private tblStatus As String = "1"
+    Private selectSupplier As String = ""
     Public add_sw As Boolean = True
     Public edit_sw As Boolean = True
 
@@ -22,6 +23,7 @@
             date_tgl_pajak.Value = rd.Item("faktur_pajak_tanggal")
             in_gudang.Text = rd.Item("faktur_gudang")
             in_gudang_n.Text = rd.Item("gudang_nama")
+            selectSupplier = rd.Item("faktur_supplier")
             in_supplier.Text = rd.Item("faktur_supplier")
             in_supplier_n.Text = rd.Item("supplier_nama")
             in_term.Value = rd.Item("faktur_term")
@@ -74,6 +76,7 @@
         End With
     End Sub
 
+    'SET STATUS
     Private Sub setStatus()
         Select Case tblStatus
             Case 0
@@ -105,7 +108,10 @@
             date_tgl_pajak.Enabled = False
             cb_ppn.Enabled = False
             mn_save.Enabled = False
+            mn_cancelorder.Enabled = False
         End If
+
+        mn_print.Enabled = IIf(tblStatus = 1, True, False)
     End Sub
 
     'SET SATUAN BARANG
@@ -136,7 +142,7 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli, barang_harga_beli_d1, " _
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli 'Harga Default', barang_harga_beli_d1, " _
                     & "barang_harga_beli_d2, barang_harga_beli_d3 FROM data_barang_master WHERE barang_nama LIKE '{0}%' " _
                     & "AND barang_supplier='" & in_supplier.Text & "' AND barang_status=1 LIMIT 250"
             Case "supplier"
@@ -154,7 +160,7 @@
             .Columns(0).Width = 135
             .Columns(1).Width = 200
             If tipe = "barang" Or tipe = "supplier" Then
-                For i = 2 To IIf(tipe = "supplier", 2, 5)
+                For i = IIf(tipe = "barang", 3, 2) To IIf(tipe = "supplier", 2, 5)
                     .Columns(i).Visible = False
                 Next
             End If
@@ -180,10 +186,14 @@
                     loadSatuanBrg(in_barang.Text)
                     in_qty.Focus()
                 Case "supplier"
-                    in_supplier.Text = .Cells(0).Value
-                    in_supplier_n.Text = .Cells(1).Value
-                    in_term.Value = .Cells(2).Value
+                    If ckSupplierChange() = True Then
+                        in_supplier.Text = .Cells(0).Value
+                        in_supplier_n.Text = .Cells(1).Value
+                        in_term.Value = .Cells(2).Value
+                        selectSupplier = in_supplier.Text
+                    End If
                     in_gudang_n.Focus()
+                    popPnl_barang.Visible = False
                 Case "gudang"
                     in_gudang.Text = .Cells(0).Value
                     in_gudang_n.Text = .Cells(1).Value
@@ -197,12 +207,30 @@
 
     'INPUT DATA TO DGV FR TEXTBOX
     Private Sub textToDgv()
+        Dim _supplier As String = ""
+        Dim q As String = ""
+
         If Trim(in_barang_nm.Text) = Nothing Then
             in_barang.Focus()
             Exit Sub
         End If
         If in_qty.Value = 0 Then
             in_qty.Focus()
+            Exit Sub
+        End If
+
+        op_con()
+        q = "SELECT barang_supplier FROM data_barang_master WHERE barang_kode='{0}'"
+        readcommd(String.Format(q, in_barang.Text))
+        If rd.HasRows Then
+            _supplier = rd.Item(0)
+        End If
+        rd.Close()
+
+        If in_supplier.Text <> _supplier Then
+            MessageBox.Show("Supplier barang berbeda dengan barang yang terpilih.", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang_nm.Focus()
+            popPnl_barang.Visible = False
             Exit Sub
         End If
 
@@ -264,6 +292,7 @@
 
         'countbiaya()
         in_qty.Focus()
+        selectSupplier = in_supplier.Text
     End Sub
 
 
@@ -334,6 +363,33 @@
         in_discrp.Value = 0
     End Sub
 
+    Private Function ckSupplierChange() As Boolean
+        Dim supcg As String = dgv_listbarang.SelectedRows.Item(0).Cells(0).Value
+        If supcg <> selectSupplier And dgv_barang.RowCount > 0 Then
+            Dim _msgRes As DialogResult = MessageBox.Show("Supplier yang terpilih berubah. Ubah data barang?", "Pembelian", MessageBoxButtons.YesNo, MessageBoxIcon.Warning)
+            Dim q As String = ""
+
+            If _msgRes = Windows.Forms.DialogResult.Yes Then
+                clearInputBarang()
+                Return True
+            Else
+                q = "SELECT supplier_nama FROM data_supplier_master WHERE supplier_kode='{0}'"
+                readcommd(String.Format(q, selectSupplier))
+                If rd.HasRows Then
+                    in_supplier_n.Text = rd.Item(0)
+                End If
+                rd.Close()
+                Return False
+            End If
+        ElseIf supcg = selectSupplier Then
+            Return True
+        ElseIf selectSupplier = "" Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     'SAVE
     Private Sub saveData()
         'INSERT
@@ -364,6 +420,7 @@
             "faktur_netto='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", ".") & "'",
             "faktur_klaim='" & in_klaim.Value & "'",
             "faktur_total_netto='" & removeCommaThousand(in_total_netto.Text).ToString.Replace(",", ".") & "'",
+            "faktur_ket='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
             "faktur_status='" & tblStatus & "'"
         }
 
@@ -385,9 +442,6 @@
                     MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernnah diinputkan", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     in_faktur.Focus()
                     Exit Sub
-                    'If MessageBox.Show("Update data faktur " & in_faktur.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
-                    '    Exit Sub
-                    'End If
                 End If
             End If
 
@@ -455,6 +509,50 @@
         End If
     End Sub
 
+    'CANCEL
+    Private Function cancelData() As Boolean
+        Dim _retval As Boolean = False
+        Dim _status As Integer = 2
+        Dim _ckdata As Boolean = False
+        Dim _kode As String = in_faktur.Text
+        Dim q As String = ""
+        Dim queryArr As New List(Of String)
+        Dim queryCk As Boolean = False
+
+        op_con()
+        _ckdata = checkdata("data_hutang_trans", "'" & _kode & "' AND h_trans_status<>9 AND h_trans_jenis NOT IN ('awal','beli')", "h_trans_kode_hutang")
+        If _ckdata = False Then
+            Dim _msg As String = "Batalkan transaksi pembelian {0}?"
+            If MessageBox.Show(String.Format(_msg, _kode), "Batal Pembelian", MessageBoxButtons.YesNo) Then
+                '==========================================================================================================================
+                q = "UPDATE data_pembelian_faktur SET faktur_status=2, faktur_upd_alias='{1}', faktur_upd_date=NOW() WHERE faktur_kode='{0}'"
+                queryArr.Add(String.Format(q, _kode, loggeduser.user_id))
+                '==========================================================================================================================
+
+                '==========================================================================================================================
+                q = "CALL transPembelianFin('{0}','{1}')"
+                queryArr.Add(String.Format(q, _kode, loggeduser.user_id))
+                '==========================================================================================================================
+
+                '==========================================================================================================================
+                'BEGIN TRANSACT
+                queryCk = startTrans(queryArr)
+                '==========================================================================================================================
+
+                _retval = queryCk
+                If queryCk = False Then
+                    MessageBox.Show("Pembatalan transaksi gagal", "Batal Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        Else
+            Dim msg As String = "Pembelian {0} untuk supplier {1} sudah pernah dilakukan transaksi pembayaran/retur pembelian. Pembatalan tidak dapat dilakukan."
+            MessageBox.Show(String.Format(msg, _kode, in_supplier_n.Text), "Batal Pembelian", MessageBoxButtons.OK)
+            _retval = False
+        End If
+
+        Return _retval
+    End Function
+
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -516,6 +614,18 @@
             End With
         End Using
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_cancelorder.Click
+        If MessageBox.Show("Batalkan Penjualan?", "Penjualan", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            Dim res As Boolean = cancelData()
+
+            If res = True Then
+                MessageBox.Show("Transaksi pembelian dibatalkan", "Batal Pembelian", MessageBoxButtons.OK)
+                doRefreshTab({pgpembelian, pgstok, pghutangawal})
+                Me.Close()
+            End If
+        End If
     End Sub
 
     'LOAD
@@ -651,23 +761,33 @@
     End Sub
 
     Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_qty.Leave, in_klaim.Leave, in_discrp.Leave, in_disc3.Leave, in_disc2.Leave, in_disc1.Leave, in_term.Leave, in_harga_beli.Leave
-        numericLostFocus(sender)
+        If sender.Name.ToString = "in_term" Then
+            numericLostFocus(sender, "N0")
+        Else
+            numericLostFocus(sender)
+        End If
     End Sub
 
     '----------------- HEADER
-    Private Sub in_faktur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_faktur.KeyUp
+    Private Sub in_supplier_n_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_supplier_n.KeyPress, in_gudang_n.KeyPress, in_barang_nm.KeyPress
+        If e.KeyChar = Chr(Keys.Return) Then
+            e.Handled = True
+        End If
+    End Sub
+
+    Private Sub in_faktur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_faktur.KeyDown
         keyshortenter(date_tgl_beli, e)
     End Sub
 
-    Private Sub date_tgl_beli_KeyUp(sender As Object, e As KeyEventArgs) Handles date_tgl_beli.KeyUp
+    Private Sub date_tgl_beli_KeyUp(sender As Object, e As KeyEventArgs) Handles date_tgl_beli.KeyDown
         keyshortenter(in_pajak, e)
     End Sub
 
-    Private Sub in_pajak_KeyUp(sender As Object, e As KeyEventArgs) Handles in_pajak.KeyUp
+    Private Sub in_pajak_KeyUp(sender As Object, e As KeyEventArgs) Handles in_pajak.KeyDown
         keyshortenter(date_tgl_pajak, e)
     End Sub
 
-    Private Sub date_tgl_pajak_KeyUp(sender As Object, e As KeyEventArgs) Handles date_tgl_pajak.KeyUp
+    Private Sub date_tgl_pajak_KeyUp(sender As Object, e As KeyEventArgs) Handles date_tgl_pajak.KeyDown
         keyshortenter(in_supplier_n, e)
     End Sub
 
@@ -700,7 +820,28 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp, in_gudang_n.KeyUp, in_barang_nm.KeyUp
+        Dim _nxtcontrol As Control
+        Dim _kdcontrol As Control
+        Select Case sender.Name.ToString
+            Case "in_supplier_n"
+                _nxtcontrol = in_gudang_n
+                _kdcontrol = in_supplier
+            Case "in_gudang_n"
+                _nxtcontrol = in_suratjalan
+                _kdcontrol = in_gudang
+            Case "in_barang_nm"
+                _nxtcontrol = in_qty
+            Case Else
+                Exit Sub
+        End Select
+
+        If IsNothing(_kdcontrol) = False And sender.Text = "" Then
+            _kdcontrol.Text = ""
+        ElseIf sender.Text = "" And sender.Name.ToString = "in_barang_nm" Then
+            clearTextBarang()
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -709,21 +850,14 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_gudang_n, e)
+            keyshortenter(_nxtcontrol, e)
         Else
             If e.KeyCode <> Keys.Escape Then
                 If popPnl_barang.Visible = False And sender.ReadOnly = False Then
                     popPnl_barang.Visible = True
                 End If
-                loadDataBRGPopup("supplier", in_supplier_n.Text)
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-        End If
-    End Sub
-
-    Private Sub in_supplier_n_TextChanged(sender As Object, e As EventArgs) Handles in_supplier_n.TextChanged
-        If in_supplier_n.Text = "" Then
-            in_supplier.Clear()
-            'AND OTHER STUFF
         End If
     End Sub
 
@@ -742,41 +876,15 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_suratjalan, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.Readonly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup("gudang", in_gudang_n.Text)
-            End If
-        End If
-    End Sub
-
-    Private Sub in_gudang_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang_n.TextChanged
-        If in_gudang_n.Text = "" Then
-            in_gudang.Clear()
-        End If
-    End Sub
-
-    Private Sub in_suratjalan_KeyUp(sender As Object, e As KeyEventArgs) Handles in_suratjalan.KeyUp
+    Private Sub in_suratjalan_KeyUp(sender As Object, e As KeyEventArgs) Handles in_suratjalan.KeyDown
         keyshortenter(in_term, e)
     End Sub
 
-    Private Sub in_term_KeyUp(sender As Object, e As KeyEventArgs) Handles in_term.KeyUp
+    Private Sub in_term_KeyUp(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
         keyshortenter(cb_ppn, e)
     End Sub
 
-    Private Sub cb_ppn_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_ppn.KeyUp
+    Private Sub cb_ppn_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_ppn.KeyDown
         keyshortenter(in_barang_nm, e)
     End Sub
 
@@ -790,7 +898,7 @@
     '    End If
     'End Sub
 
-    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
+    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         keyshortenter(in_barang_nm, e)
     End Sub
 
@@ -805,34 +913,7 @@
         End If
     End Sub
 
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup("barang", in_barang_nm.Text)
-            End If
-        End If
-    End Sub
-
-    Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged
-        If sender.Text = "" Then
-            in_barang.Clear()
-            'AND OTHER STUFF
-        End If
-    End Sub
-
-    Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyUp
+    Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
         keyshortenter(cb_sat, e)
     End Sub
 
@@ -840,31 +921,31 @@
         in_subtotal.Text = commaThousand(in_qty.Value * in_harga_beli.Value)
     End Sub
 
-    Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyUp
+    Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyDown
         keyshortenter(in_harga_beli, e)
     End Sub
 
-    Private Sub in_harga_beli_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyUp
+    Private Sub in_harga_beli_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown
         keyshortenter(in_disc1, e)
     End Sub
 
-    Private Sub in_subtotal_KeyUp(sender As Object, e As KeyEventArgs) Handles in_subtotal.KeyUp
+    Private Sub in_subtotal_KeyUp(sender As Object, e As KeyEventArgs) Handles in_subtotal.KeyDown
         keyshortenter(in_disc1, e)
     End Sub
 
-    Private Sub in_disc1_KeyUp(sender As Object, e As KeyEventArgs) Handles in_disc1.KeyUp
+    Private Sub in_disc1_KeyUp(sender As Object, e As KeyEventArgs) Handles in_disc1.KeyDown
         keyshortenter(in_disc2, e)
     End Sub
 
-    Private Sub in_disc2_KeyUp(sender As Object, e As KeyEventArgs) Handles in_disc2.KeyUp
+    Private Sub in_disc2_KeyUp(sender As Object, e As KeyEventArgs) Handles in_disc2.KeyDown
         keyshortenter(in_disc3, e)
     End Sub
 
-    Private Sub in_disc3_KeyDown(sender As Object, e As KeyEventArgs) Handles in_disc3.KeyUp
+    Private Sub in_disc3_KeyDown(sender As Object, e As KeyEventArgs) Handles in_disc3.KeyDown
         keyshortenter(in_discrp, e)
     End Sub
 
-    Private Sub in_discrp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_discrp.KeyUp
+    Private Sub in_discrp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_discrp.KeyDown
         keyshortenter(bt_tbbarang, e)
     End Sub
 

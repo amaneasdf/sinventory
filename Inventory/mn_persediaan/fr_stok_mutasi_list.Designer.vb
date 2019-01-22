@@ -178,6 +178,7 @@ Partial Class fr_stok_mutasi_list
         Me.SplitContainer1.Panel1.AutoScroll = True
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.White
         Me.SplitContainer1.Panel1.Controls.Add(Me.popPnl_barang)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.dgv_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_hpp)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label9)
         Me.SplitContainer1.Panel1.Controls.Add(Me.bt_addgudang)
@@ -209,7 +210,6 @@ Partial Class fr_stok_mutasi_list
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label16)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label3)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.dgv_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.date_tgl_beli_r)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_kode)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label5)
@@ -616,13 +616,13 @@ Partial Class fr_stok_mutasi_list
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot, Me.hpp_brg})
-        Me.dgv_barang.Location = New System.Drawing.Point(11, 134)
+        Me.dgv_barang.Location = New System.Drawing.Point(11, 82)
         Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
         Me.dgv_barang.ReadOnly = True
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(920, 171)
+        Me.dgv_barang.Size = New System.Drawing.Size(920, 223)
         Me.dgv_barang.TabIndex = 16
         '
         'kode

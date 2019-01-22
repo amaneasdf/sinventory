@@ -1,8 +1,9 @@
 ﻿Public Class main
-    Private MainMenu As New MenuStrip
+    Public MainMenu As New MenuStrip
     Private ParentMenu, ChildMenu, ChildMenu2 As ToolStripMenuItem
     Private MenuKode, MenuLabel, MenuText As String
-    Private listkodemenu As New List(Of String)
+    Public listkodemenu As New List(Of String)
+    Private mainConn As New cnction
 
     Public Sub openTab(type As String)
         Select Case type
@@ -159,6 +160,20 @@
                         tabcontrol.SelectedTab = pgkartustok
                     End With
                 End If
+            Case "exportEfak"
+                If tabcontrol.Contains(pgexportEFak) Then
+                    tabcontrol.SelectedTab = pgexportEFak
+                Else
+                    With pgexportEFak
+                        .Text = "Export E-Faktur"
+                        tabcontrol.TabPages.Add(pgexportEFak)
+                        setList(type)
+                        .Controls.Add(frmexportEfak)
+                        .Show()
+                        Console.WriteLine(.Name.ToString)
+                        tabcontrol.SelectedTab = pgexportEFak
+                    End With
+                End If
             Case "tutupbuku"
                 If tabcontrol.Contains(pgtutupbuku) Then
                     tabcontrol.SelectedTab = pgtutupbuku
@@ -242,6 +257,28 @@
 
         rd.Close()
         Me.Controls.Add(MainMenu)
+    End Sub
+
+    Public Sub logOut(logout As Boolean)
+        Dim _login As New fr_login
+
+        op_con()
+        commnd("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'")
+        commnd("UPDATE system_login_log SET log_status=1, log_end=NOW() WHERE log_id=" & loggeduser.user_session)
+
+        loggeduser = usernull
+
+        If logout = True Then
+            MainMenu.Items.Clear()
+            tabcontrol.TabPages.Clear()
+            tabcontrol.TabPages.Clear()
+            tabcontrol.TabPages.Add(TabPage1)
+            Controls.Remove(MainMenu)
+            pnl_main.Controls.Clear()
+            Visible = False
+
+            _login.Show()
+        End If
     End Sub
 
     Private Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
@@ -514,6 +551,13 @@
                         .ShowDialog()
                     End With
                 End Using
+            Case "mn070510"
+                Using x As New fr_lap_filter_stok
+                    With x
+                        .do_load("Laporan Stok Opname", "lapOpname")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn070511"
                 Using x As New fr_lap_filter_stok
                     With x
@@ -676,9 +720,22 @@
                         .ShowDialog()
                     End With
                 End Using
+            Case "mn070812"
+                Using x As New fr_lap_filter_keuangan
+                    With x
+                        .do_load("Daftar Perkiraan", "k_daftarperk")
+                        .ShowDialog()
+                    End With
+                End Using
             Case "mn0813"
                 Console.WriteLine("click kartustok")
                 openTab("kartustok")
+            Case "mn0822"
+                Dim x As New fr_import_data
+                x.ShowDialog()
+            Case "mn0831"
+                Console.WriteLine("click efak")
+                openTab("exportEfak")
             Case "mn0901"
                 Console.WriteLine("click ganti pass")
                 fr_user_password.ShowDialog()
@@ -691,31 +748,25 @@
             Case "mn0922"
                 Console.WriteLine("click daftar level")
                 openTab("group")
-            Case "mn0923"
-                MessageBox.Show("Under Construction")
-                'If MsgBox("Apakah yakin akan mereset user ini?", MsgBoxStyle.YesNo, Application.ProductName) = MsgBoxResult.Yes Then
-                '    commnd("UPDATE data_pengguna_alias SET user_password = Password('123456'), user_exp_date=DATE_ADD(CURDATE(),INTERVAL 3 MONTH) WHERE user_alias = '" & loggeduser.user_id & "'")
-                '    MsgBox("Password telah reset, password defaultnya: 123456 ", MsgBoxStyle.Information, Application.ProductName)
-                '    Me.Dispose()
-                'Else
-                '    Exit Sub
-                'End If
+                'Case "mn0923"
+                '    If MessageBox.Show("Anda yakin akan mereset akun anda?", "Reset Akun", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                '        Dim _result As Boolean = resetUser(loggeduser.user_id)
+                '        If _result = True Then
+                '            MessageBox.Show("Akun berhasil direset.")
+                '        Else
+                '            MessageBox.Show("Akun tidak dapat/gagal direset.")
+                '        End If
+                '    Else
+                '        Exit Sub
+                '    End If
             Case "mn0932"
                 consoleWriteLine("click satuan barang")
                 With fr_reference
                     .Show()
                 End With
             Case "mn0941"
-                Console.WriteLine("click logout")
-                commnd("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'")
-                loggeduser = usernull
-                Console.WriteLine(loggeduser.user_id)
-                Me.MainMenu.Items.Clear()
-                Me.tabcontrol.TabPages.Clear()
-                Me.tabcontrol.TabPages.Add(TabPage1)
-                Me.Controls.Remove(MainMenu)
-                pnl_main.Controls.Clear()
-                fr_login.ShowDialog()
+                consoleWriteLine("click logout")
+                logOut(True)
             Case "mn0942"
                 Application.Exit()
             Case Else
@@ -741,39 +792,54 @@
         pnl_main.Controls.Add(infpnl)
     End Sub
 
-    Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Visible = False
-        Dim x As cnction = loadCon("CatraDev")
+    Private Function setConnection() As Boolean
+        Dim _retval As Boolean = False
+        mainConn = loadCon("CatraDev", False)
+        'mainConn = loadCon("Catra", False)
 
-        Me.Cursor = Cursors.AppStarting
-        'setConn("localhost", "db-inventory", "root", "root")
-
-        setConn(x.host, x.db, x.uid, x.pass)
-        op_con()
-
-        If getConn.State <> 1 Then
+        If mainConn.db = Nothing Or mainConn.host = Nothing Then
+            MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            _retval = False
             Application.Exit()
-            Exit Sub
+        Else
+            setConn(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
+            'setConn(mainConn.host, mainConn.db, mainConn.uid, mainConn.pass)
+            op_con(True)
+
+            If getConn.State <> ConnectionState.Open Then
+                MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
+                                Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                _retval = False
+                Application.Exit()
+            Else
+                _retval = True
+            End If
         End If
 
-        fr_login.Show()
+        Return _retval
+    End Function
 
-        setperiode(Today, False)
-        currentperiode = selectperiode
+    Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim _login As New fr_login
+        Me.Visible = False
 
+        Me.Cursor = Cursors.AppStarting
+        If setConnection() = True Then
+            _login.Show()
+
+            setperiode(Today, False)
+            currentperiode = selectperiode
+            strip_host.Text = mainConn.host
+        End If
         Me.Cursor = Cursors.Default
-        strip_host.Text = x.host
-
-        'MenuAkses()
-        'test var
-        'insertData("ii", {"1", "2"}, {"3", "4"})
     End Sub
 
     Private Sub main_closing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If loggeduser.user_id <> Nothing Then
             Dim msg = MessageBox.Show("Apakah yakin akan menutup program ini?", Application.ProductName, MessageBoxButtons.YesNo)
             If msg = Windows.Forms.DialogResult.Yes Then
-                commnd("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'")
+                logOut(False)
             Else
                 e.Cancel = True
             End If
@@ -781,6 +847,18 @@
     End Sub
 
     Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If loggeduser.user_id = "dev" Then
+            If e.KeyCode = Keys.E And e.Control = True And e.Shift = True Then
+                Dim _inputstring As String = ""
+                _inputstring = InputBox("input text", "encrypt")
+                InputBox("cyphertext", "result", encryptString(_inputstring))
+            ElseIf e.KeyCode = Keys.D And e.Control = True And e.Shift = True Then
+                Dim _inputstring As String = ""
+                _inputstring = InputBox("input text", "decrypt")
+                InputBox("cyphertext", "result", decryptString(_inputstring))
+            End If
+
+        End If
         'If Not tabcontrol.SelectedTab Is TabPage1 Then
         '    If e.KeyCode = Keys.Escape Then
         '        Console.Write(tabcontrol.SelectedTab.Name)
@@ -823,6 +901,7 @@
 
             If MessageBox.Show(String.Format(textsa, _selectedperiode.tglawal.ToShortDateString, _selectedperiode.tglakhir.ToShortDateString),
                                "Set Periode", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+                op_con()
                 setperiode(_selectdate, True)
             Else
                 Exit Sub

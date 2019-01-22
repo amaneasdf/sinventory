@@ -363,6 +363,7 @@ Partial Class fr_lap_filter_stok
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "fr_lap_filter_stok"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Laporan "

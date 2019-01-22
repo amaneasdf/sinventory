@@ -326,7 +326,7 @@
         Else
             'TODO : WRITE LOG ACTIVITY
             MessageBox.Show("Data tersimpan")
-            doRefreshTab({pgpiutangbayar, pgpiutangawal})
+            doRefreshTab({pgpiutangbayar, pgpiutangawal, pgpiutangbgcair})
             'frmhutangbayar.in_cari.Clear()
             'populateDGVUserCon("piutangbayar", "", frmpiutangbayar.dgv_list)
             Me.Close()
@@ -338,6 +338,8 @@
         Dim q As String = ""
         Dim queryArr As New List(Of String)
         Dim queryCk As Boolean = False
+
+        op_con()
 
         If _status <> 2 Then
             q = "UPDATE data_piutang_bayar SET p_bayar_status=2,p_bayar_upd_date=NOW(),p_bayar_upd_alias='{1}' WHERE p_bayar_bukti='{0}'"
@@ -520,6 +522,36 @@
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
         If in_no_bukti.Text <> Nothing And _status = 0 Then
+            If in_sales.Text = "" Then
+                MessageBox.Show("Sales belum di input")
+                in_sales_n.Focus()
+                Exit Sub
+            End If
+            If in_custo_n.Text = "" Then
+                MessageBox.Show("Customer belum di input")
+                in_sales_n.Focus()
+                Exit Sub
+            End If
+            If dgv_bayar.RowCount = 0 Then
+                MessageBox.Show("Pembayaran belum di input")
+                in_custo_n.Focus()
+                Exit Sub
+            End If
+            If cb_bayar.SelectedValue = "BG" And Trim(in_bg_no.Text) = Nothing Then
+                MessageBox.Show("Nomor Giro belum di input")
+                in_bg_no.Focus()
+                Exit Sub
+            ElseIf cb_bayar.SelectedValue = "PIUTSUPL" And removeCommaThousand(in_total.Text) > removeCommaThousand(in_saldotitipan.Text) Then
+                MessageBox.Show("Saldo titipan customer lebih kecil daripada total pembayaran.")
+                dgv_bayar.Focus()
+                Exit Sub
+            End If
+            If cb_akun.SelectedValue = Nothing Then
+                MessageBox.Show("Pilih akun pembayaran terlebih dahulu")
+                cb_akun.Focus()
+                Exit Sub
+            End If
+
             If MessageBox.Show("Proses pembayaran?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
                 Dim _cnfirm As New fr_jualconfirm_dialog
                 Dim cnfrmval As Boolean = False
@@ -590,6 +622,11 @@
             dgv_bayar.Focus()
             Exit Sub
         End If
+        If cb_akun.SelectedValue = Nothing Then
+            MessageBox.Show("Pilih akun pembayaran terlebih dahulu")
+            cb_akun.Focus()
+            Exit Sub
+        End If
 
         If MessageBox.Show("Simpan data transaksi pembayaran piutang?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             Me.Cursor = Cursors.WaitCursor
@@ -621,7 +658,23 @@
         End If
     End Sub
 
-    Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
+    Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_custo_n.KeyUp
+        Dim _nxtcontrol As Object
+        Dim _kdcontrol As Object
+        Select Case sender.Name.ToString
+            Case "in_sales_n"
+                _nxtcontrol = in_custo_n
+                _kdcontrol = in_sales
+            Case "in_custo_n"
+                _nxtcontrol = cb_bayar
+                _kdcontrol = in_custo
+            Case Else
+                Exit Sub
+        End Select
+        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
+            _kdcontrol.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -630,13 +683,13 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_custo_n, e)
+            keyshortenter(_nxtcontrol, e)
         Else
             If e.KeyCode <> Keys.Escape Then
                 If popPnl_barang.Visible = False And sender.ReadOnly = False Then
                     popPnl_barang.Visible = True
                 End If
-                loadDataBRGPopup("sales", in_sales_n.Text)
+                loadDataBRGPopup(_popUpPos, sender.Text)
             End If
         End If
     End Sub
@@ -644,13 +697,6 @@
     Private Sub in_sales_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_sales_n.MouseClick
         If popPnl_barang.Visible = False And sender.ReadOnly = False Then
             popPnl_barang.Visible = True
-        End If
-    End Sub
-
-    Private Sub in_sales_n_TextChanged(sender As Object, e As EventArgs) Handles in_sales_n.TextChanged
-        If in_sales_n.Text = "" Then
-            'DO THING
-            in_sales.Clear()
         End If
     End Sub
 
@@ -666,26 +712,6 @@
             End If
             _popUpPos = "custo"
             loadDataBRGPopup("custo", in_custo_n.Text)
-        End If
-    End Sub
-
-    Private Sub in_custo_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(cb_bayar, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup("custo", in_custo_n.Text)
-            End If
         End If
     End Sub
 

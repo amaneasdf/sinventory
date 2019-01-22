@@ -3,7 +3,9 @@
 
     Private Sub loadDataGudang(kode As String)
         op_con()
-        readcommd("SELECT * FROM data_barang_gudang WHERE gudang_kode='" & kode & "'")
+        readcommd("SELECT gudang_nama,gudang_alamat,gudang_ket, gudang_status, IFNULL(gudang_reg_alias,'') gudang_reg_alias, " _
+                  & "IFNULL(gudang_reg_date,'00/00/0000 00:00:00') gudang_reg_date, IFNULL(gudang_upd_alias,'') gudang_upd_alias, " _
+                  & "IFNULL(gudang_upd_date,'00/00/0000 00:00:00') gudang_upd_date FROM data_barang_gudang WHERE gudang_kode='" & kode & "'")
         If rd.HasRows Then
             in_kode.Text = kode
             in_namagudang.Text = rd.Item("gudang_nama")
@@ -21,6 +23,14 @@
         End If
         rd.Close()
         setStatus()
+
+        If loggeduser.allowedit_master = False Then
+            bt_simpangudang.Visible = False
+            bt_batalgudang.Text = "OK"
+            mn_save.Enabled = False
+            mn_deact.Enabled = False
+            mn_del.Enabled = False
+        End If
     End Sub
 
     Private Sub setStatus()
@@ -60,7 +70,7 @@
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
                 readcommd("SELECT SUBSTRING(gudang_kode,3) as ss FROM data_barang_gudang WHERE gudang_kode LIKE 'GD%' " _
-                          & "SUBSTRING(gudang_kode,3) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
+                          & "AND SUBSTRING(gudang_kode,3) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
                 If rd.HasRows Then
                     no = CInt(rd.Item(0)) + 1
                 End If

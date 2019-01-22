@@ -24,8 +24,8 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>1</ApplicationRevision>
-    <ApplicationVersion>0.0.1.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.0.2.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -419,6 +419,12 @@
     <Compile Include="mn_pengaturan\fr_group_detail.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_pengaturan\fr_import_data.Designer.vb">
+      <DependentUpon>fr_import_data.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\fr_import_data.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_pengaturan\fr_jenis_barang.Designer.vb">
       <DependentUpon>fr_jenis_barang.vb</DependentUpon>
     </Compile>
@@ -606,6 +612,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="module\connection.vb" />
+    <Compile Include="module\DataRowExtensions.vb" />
+    <Compile Include="module\DataTableExtensions.vb" />
     <Compile Include="module\functional.vb" />
     <Compile Include="module\mdlAccount.vb" />
     <Compile Include="module\mdlControl.vb" />
@@ -668,6 +676,7 @@
     <EmbeddedResource Include="laporan\lap\keuangan\uang_biayasales_global.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_biayasales.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_jurnalumum.rdlc" />
+    <EmbeddedResource Include="laporan\lap\keuangan\uang_daftarakun.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_neracalajur.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_neraca.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_labarugi.rdlc" />
@@ -807,6 +816,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_group_detail.resx">
       <DependentUpon>fr_group_detail.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\fr_import_data.resx">
+      <DependentUpon>fr_import_data.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_jenis_barang.resx">
       <DependentUpon>fr_jenis_barang.vb</DependentUpon>
@@ -1070,6 +1082,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\minimize.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

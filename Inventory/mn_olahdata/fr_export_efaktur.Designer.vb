@@ -27,13 +27,28 @@ Partial Class fr_export_efaktur
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_judul = New System.Windows.Forms.Label()
         Me.pnl_container = New System.Windows.Forms.Panel()
+        Me.bt_samamasapajak = New System.Windows.Forms.Button()
+        Me.ck_faktur_all = New System.Windows.Forms.CheckBox()
+        Me.bt_kosongnopajak = New System.Windows.Forms.Button()
+        Me.bt_urutnopajak = New System.Windows.Forms.Button()
+        Me.bt_export = New System.Windows.Forms.Button()
+        Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.ck_pkp = New System.Windows.Forms.CheckBox()
+        Me.ck_no_nomorpajak = New System.Windows.Forms.CheckBox()
         Me.date_tglakhir = New System.Windows.Forms.DateTimePicker()
         Me.date_tglawal = New System.Windows.Forms.DateTimePicker()
         Me.dgv_faktur = New System.Windows.Forms.DataGridView()
+        Me.faktur_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.faktur_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_tgl_trans = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_tgl_pajak = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_nopajak = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_npwp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_dpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.faktur_ppn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_container.SuspendLayout()
         CType(Me.dgv_faktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -99,25 +114,96 @@ Partial Class fr_export_efaktur
         'pnl_container
         '
         Me.pnl_container.AutoScroll = True
+        Me.pnl_container.Controls.Add(Me.bt_samamasapajak)
+        Me.pnl_container.Controls.Add(Me.ck_faktur_all)
+        Me.pnl_container.Controls.Add(Me.bt_kosongnopajak)
+        Me.pnl_container.Controls.Add(Me.bt_urutnopajak)
+        Me.pnl_container.Controls.Add(Me.bt_export)
+        Me.pnl_container.Controls.Add(Me.bt_simpanbeli)
         Me.pnl_container.Controls.Add(Me.Label1)
         Me.pnl_container.Controls.Add(Me.CheckBox1)
         Me.pnl_container.Controls.Add(Me.Label2)
-        Me.pnl_container.Controls.Add(Me.ck_pkp)
+        Me.pnl_container.Controls.Add(Me.ck_no_nomorpajak)
         Me.pnl_container.Controls.Add(Me.date_tglakhir)
         Me.pnl_container.Controls.Add(Me.date_tglawal)
         Me.pnl_container.Controls.Add(Me.dgv_faktur)
         Me.pnl_container.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnl_container.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.pnl_container.Location = New System.Drawing.Point(0, 42)
         Me.pnl_container.Name = "pnl_container"
-        Me.pnl_container.Size = New System.Drawing.Size(890, 705)
+        Me.pnl_container.Size = New System.Drawing.Size(890, 575)
         Me.pnl_container.TabIndex = 342
+        '
+        'bt_samamasapajak
+        '
+        Me.bt_samamasapajak.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_samamasapajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_samamasapajak.Location = New System.Drawing.Point(712, 6)
+        Me.bt_samamasapajak.Name = "bt_samamasapajak"
+        Me.bt_samamasapajak.Size = New System.Drawing.Size(171, 30)
+        Me.bt_samamasapajak.TabIndex = 39
+        Me.bt_samamasapajak.Text = "Samakan Masa Pajak"
+        Me.bt_samamasapajak.UseVisualStyleBackColor = True
+        '
+        'ck_faktur_all
+        '
+        Me.ck_faktur_all.AutoSize = True
+        Me.ck_faktur_all.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ck_faktur_all.Location = New System.Drawing.Point(211, 14)
+        Me.ck_faktur_all.Name = "ck_faktur_all"
+        Me.ck_faktur_all.Size = New System.Drawing.Size(123, 19)
+        Me.ck_faktur_all.TabIndex = 38
+        Me.ck_faktur_all.Text = "Pilih Semua Faktur"
+        Me.ck_faktur_all.UseVisualStyleBackColor = True
+        '
+        'bt_kosongnopajak
+        '
+        Me.bt_kosongnopajak.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_kosongnopajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_kosongnopajak.Location = New System.Drawing.Point(535, 6)
+        Me.bt_kosongnopajak.Name = "bt_kosongnopajak"
+        Me.bt_kosongnopajak.Size = New System.Drawing.Size(171, 30)
+        Me.bt_kosongnopajak.TabIndex = 37
+        Me.bt_kosongnopajak.Text = "Kosongkan Nomor Pajak"
+        Me.bt_kosongnopajak.UseVisualStyleBackColor = True
+        '
+        'bt_urutnopajak
+        '
+        Me.bt_urutnopajak.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_urutnopajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_urutnopajak.Location = New System.Drawing.Point(358, 6)
+        Me.bt_urutnopajak.Name = "bt_urutnopajak"
+        Me.bt_urutnopajak.Size = New System.Drawing.Size(171, 30)
+        Me.bt_urutnopajak.TabIndex = 36
+        Me.bt_urutnopajak.Text = "Urutkan Nomor Pajak"
+        Me.bt_urutnopajak.UseVisualStyleBackColor = True
+        '
+        'bt_export
+        '
+        Me.bt_export.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_export.Location = New System.Drawing.Point(12, 203)
+        Me.bt_export.Name = "bt_export"
+        Me.bt_export.Size = New System.Drawing.Size(171, 30)
+        Me.bt_export.TabIndex = 35
+        Me.bt_export.Text = "Export"
+        Me.bt_export.UseVisualStyleBackColor = True
+        '
+        'bt_simpanbeli
+        '
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(12, 144)
+        Me.bt_simpanbeli.Name = "bt_simpanbeli"
+        Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
+        Me.bt_simpanbeli.TabIndex = 34
+        Me.bt_simpanbeli.Text = "Tampilkan Faktur"
+        Me.bt_simpanbeli.UseVisualStyleBackColor = True
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(154, 163)
+        Me.Label1.Location = New System.Drawing.Point(154, 38)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(23, 15)
         Me.Label1.TabIndex = 8
@@ -127,7 +213,7 @@ Partial Class fr_export_efaktur
         '
         Me.CheckBox1.AutoSize = True
         Me.CheckBox1.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CheckBox1.Location = New System.Drawing.Point(12, 244)
+        Me.CheckBox1.Location = New System.Drawing.Point(12, 119)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(81, 19)
         Me.CheckBox1.TabIndex = 7
@@ -139,45 +225,127 @@ Partial Class fr_export_efaktur
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(9, 140)
+        Me.Label2.Location = New System.Drawing.Point(9, 15)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(98, 15)
         Me.Label2.TabIndex = 5
         Me.Label2.Text = "Tanggal Transaksi"
         '
-        'ck_pkp
+        'ck_no_nomorpajak
         '
-        Me.ck_pkp.AutoSize = True
-        Me.ck_pkp.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ck_pkp.Location = New System.Drawing.Point(12, 219)
-        Me.ck_pkp.Name = "ck_pkp"
-        Me.ck_pkp.Size = New System.Drawing.Size(90, 19)
-        Me.ck_pkp.TabIndex = 6
-        Me.ck_pkp.Text = "Exclude PKP"
-        Me.ck_pkp.UseVisualStyleBackColor = True
+        Me.ck_no_nomorpajak.AutoSize = True
+        Me.ck_no_nomorpajak.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ck_no_nomorpajak.Location = New System.Drawing.Point(12, 94)
+        Me.ck_no_nomorpajak.Name = "ck_no_nomorpajak"
+        Me.ck_no_nomorpajak.Size = New System.Drawing.Size(186, 19)
+        Me.ck_no_nomorpajak.TabIndex = 6
+        Me.ck_no_nomorpajak.Text = "Exclude Faktur Tanpa No.Pajak"
+        Me.ck_no_nomorpajak.UseVisualStyleBackColor = True
         '
         'date_tglakhir
         '
-        Me.date_tglakhir.Location = New System.Drawing.Point(12, 184)
+        Me.date_tglakhir.Location = New System.Drawing.Point(12, 59)
         Me.date_tglakhir.Name = "date_tglakhir"
-        Me.date_tglakhir.Size = New System.Drawing.Size(136, 20)
+        Me.date_tglakhir.Size = New System.Drawing.Size(136, 22)
         Me.date_tglakhir.TabIndex = 1
         '
         'date_tglawal
         '
-        Me.date_tglawal.Location = New System.Drawing.Point(12, 158)
+        Me.date_tglawal.Location = New System.Drawing.Point(12, 33)
         Me.date_tglawal.Name = "date_tglawal"
-        Me.date_tglawal.Size = New System.Drawing.Size(136, 20)
+        Me.date_tglawal.Size = New System.Drawing.Size(136, 22)
         Me.date_tglawal.TabIndex = 1
         '
         'dgv_faktur
         '
+        Me.dgv_faktur.AllowUserToAddRows = False
+        Me.dgv_faktur.AllowUserToDeleteRows = False
+        Me.dgv_faktur.AllowUserToResizeRows = False
+        Me.dgv_faktur.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgv_faktur.BackgroundColor = System.Drawing.Color.White
         Me.dgv_faktur.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_faktur.Location = New System.Drawing.Point(211, 6)
+        Me.dgv_faktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.faktur_ck, Me.faktur_kode, Me.faktur_tgl_trans, Me.faktur_tgl_pajak, Me.faktur_nopajak, Me.faktur_npwp, Me.faktur_custo, Me.faktur_dpp, Me.faktur_ppn})
+        Me.dgv_faktur.Location = New System.Drawing.Point(211, 42)
         Me.dgv_faktur.Name = "dgv_faktur"
-        Me.dgv_faktur.Size = New System.Drawing.Size(672, 510)
+        Me.dgv_faktur.RowHeadersVisible = False
+        Me.dgv_faktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_faktur.Size = New System.Drawing.Size(672, 478)
         Me.dgv_faktur.TabIndex = 0
+        '
+        'faktur_ck
+        '
+        Me.faktur_ck.DataPropertyName = "faktur_select"
+        Me.faktur_ck.FalseValue = "0"
+        Me.faktur_ck.HeaderText = "Pilih"
+        Me.faktur_ck.Name = "faktur_ck"
+        Me.faktur_ck.TrueValue = "1"
+        Me.faktur_ck.Width = 50
+        '
+        'faktur_kode
+        '
+        Me.faktur_kode.DataPropertyName = "faktur_kode"
+        Me.faktur_kode.HeaderText = "Kode Transaksi"
+        Me.faktur_kode.Name = "faktur_kode"
+        Me.faktur_kode.ReadOnly = True
+        Me.faktur_kode.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.faktur_kode.Width = 150
+        '
+        'faktur_tgl_trans
+        '
+        Me.faktur_tgl_trans.DataPropertyName = "faktur_tanggal_trans"
+        Me.faktur_tgl_trans.HeaderText = "Tanggal Transaksi"
+        Me.faktur_tgl_trans.Name = "faktur_tgl_trans"
+        Me.faktur_tgl_trans.ReadOnly = True
+        Me.faktur_tgl_trans.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.faktur_tgl_trans.Width = 125
+        '
+        'faktur_tgl_pajak
+        '
+        Me.faktur_tgl_pajak.DataPropertyName = "faktur_pajak_tanggal"
+        Me.faktur_tgl_pajak.HeaderText = "Tanggal Pajak"
+        Me.faktur_tgl_pajak.Name = "faktur_tgl_pajak"
+        Me.faktur_tgl_pajak.ReadOnly = True
+        Me.faktur_tgl_pajak.Width = 125
+        '
+        'faktur_nopajak
+        '
+        Me.faktur_nopajak.DataPropertyName = "faktur_pajak_no"
+        Me.faktur_nopajak.HeaderText = "Nomor Pajak"
+        Me.faktur_nopajak.Name = "faktur_nopajak"
+        Me.faktur_nopajak.ReadOnly = True
+        Me.faktur_nopajak.Width = 175
+        '
+        'faktur_npwp
+        '
+        Me.faktur_npwp.DataPropertyName = "customer_npwp"
+        Me.faktur_npwp.HeaderText = "NPWP"
+        Me.faktur_npwp.Name = "faktur_npwp"
+        Me.faktur_npwp.ReadOnly = True
+        Me.faktur_npwp.Width = 150
+        '
+        'faktur_custo
+        '
+        Me.faktur_custo.DataPropertyName = "customer_nama"
+        Me.faktur_custo.HeaderText = "Customer"
+        Me.faktur_custo.Name = "faktur_custo"
+        Me.faktur_custo.ReadOnly = True
+        Me.faktur_custo.Width = 175
+        '
+        'faktur_dpp
+        '
+        Me.faktur_dpp.DataPropertyName = "faktur_dpp"
+        Me.faktur_dpp.HeaderText = "Total DPP"
+        Me.faktur_dpp.Name = "faktur_dpp"
+        Me.faktur_dpp.ReadOnly = True
+        '
+        'faktur_ppn
+        '
+        Me.faktur_ppn.DataPropertyName = "faktur_ppn"
+        Me.faktur_ppn.HeaderText = "Total PPN"
+        Me.faktur_ppn.Name = "faktur_ppn"
+        Me.faktur_ppn.ReadOnly = True
         '
         'fr_export_efaktur
         '
@@ -187,7 +355,7 @@ Partial Class fr_export_efaktur
         Me.Controls.Add(Me.pnl_container)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "fr_export_efaktur"
-        Me.Size = New System.Drawing.Size(890, 747)
+        Me.Size = New System.Drawing.Size(890, 617)
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.pnl_container.ResumeLayout(False)
@@ -207,6 +375,21 @@ Partial Class fr_export_efaktur
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents ck_pkp As System.Windows.Forms.CheckBox
+    Friend WithEvents ck_no_nomorpajak As System.Windows.Forms.CheckBox
+    Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
+    Friend WithEvents bt_export As System.Windows.Forms.Button
+    Friend WithEvents bt_urutnopajak As System.Windows.Forms.Button
+    Friend WithEvents bt_kosongnopajak As System.Windows.Forms.Button
+    Friend WithEvents ck_faktur_all As System.Windows.Forms.CheckBox
+    Friend WithEvents bt_samamasapajak As System.Windows.Forms.Button
+    Friend WithEvents faktur_ck As System.Windows.Forms.DataGridViewCheckBoxColumn
+    Friend WithEvents faktur_kode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_tgl_trans As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_tgl_pajak As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_nopajak As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_npwp As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_custo As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_dpp As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_ppn As System.Windows.Forms.DataGridViewTextBoxColumn
 
 End Class

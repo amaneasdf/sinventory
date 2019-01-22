@@ -2,26 +2,29 @@
 <Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
   <Body>
     <ReportItems>
-      <Tablix Name="Tablix1">
+      <Tablix Name="Tablix2">
         <TablixBody>
           <TablixColumns>
+            <TablixColumn>
+              <Width>0.5cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>2.25cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>6cm</Width>
+            </TablixColumn>
+            <TablixColumn>
+              <Width>1.5cm</Width>
+            </TablixColumn>
             <TablixColumn>
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>6.16097cm</Width>
+              <Width>4.75cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.44708cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>2.92333cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>2.34125cm</Width>
-            </TablixColumn>
-            <TablixColumn>
-              <Width>3.37737cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -30,553 +33,7 @@
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox18">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_supplier.Value &amp; " " &amp; Fields!stock_supplier_n.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox18</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                    <ColSpan>3</ColSpan>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell />
-                <TablixCell />
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_gudang_n">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_gudang_n.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_gudang_n</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                    <ColSpan>3</ColSpan>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell />
-                <TablixCell />
-              </TablixCells>
-            </TablixRow>
-            <TablixRow>
-              <Height>0.6cm</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox38">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>KD. BARANG</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox38</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox39">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>NM.BARANG</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox39</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox40">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>QTY (PCS)</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox40</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox41">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>QTY</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox41</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox42">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>HPP</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox42</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox43">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>JUMLAH</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <FontWeight>Bold</FontWeight>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox43</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Solid</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-              </TablixCells>
-            </TablixRow>
-            <TablixRow>
-              <Height>0.6cm</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_barang">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_barang.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_barang</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_barang_n">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_barang_n.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_barang_n</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_qty">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_qty.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>#,0</Format>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_qty</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_qty_n">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_qty_n.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_qty_n</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="stock_hpp">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_hpp.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>#,0.00</Format>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>stock_hpp</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox36">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Fields!stock_qty.Value * Fields!stock_hpp.Value</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Format>#,0.00</Format>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox36</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-              </TablixCells>
-            </TablixRow>
-            <TablixRow>
-              <Height>0.6cm</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox14">
+                    <Textbox Name="Textbox104">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
@@ -586,23 +43,26 @@
                               <Value />
                               <Style>
                                 <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox14</rd:DefaultName>
+                      <rd:DefaultName>Textbox104</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
+                          <Color>Black</Color>
                           <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Double</Style>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -622,26 +82,30 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>KODE AKUN</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
                           </TextRuns>
                           <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox15</rd:DefaultName>
+                      <rd:DefaultName>Textbox8</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
+                          <Color>Black</Color>
                           <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Double</Style>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -654,162 +118,209 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox30">
+                    <Textbox Name="Textbox17">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>NAMA AKUN</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox30</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Double</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox27">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox27</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Double</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox34">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox34</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <TopBorder>
-                          <Style>Solid</Style>
-                        </TopBorder>
-                        <BottomBorder>
-                          <Style>Double</Style>
-                        </BottomBorder>
-                        <BackgroundColor>CornflowerBlue</BackgroundColor>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox37">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value>=Sum(Fields!stock_hpp.Value*Fields!stock_qty.Value)</Value>
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
-                                <Format>#,0.00</Format>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox37</rd:DefaultName>
+                      <rd:DefaultName>Textbox9</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
+                          <Color>Black</Color>
                           <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </TopBorder>
                         <BottomBorder>
-                          <Style>Double</Style>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox18">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>POSISI</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox10</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox127">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>KODE PARENT</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox127</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox98">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>KETERANGAN</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox98</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox71">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>STATUS</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox71</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
                         </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
@@ -823,203 +334,466 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.2825cm</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox1">
+                    <Textbox Name="da_jenis">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value />
+                              <Value>=Fields!da_jenis.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox1</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox2">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox2</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox3">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox3</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox4">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox4</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox5">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox5</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox6">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_jenis</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>LightBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                    <ColSpan>6</ColSpan>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox72">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox72</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <BackgroundColor>LightBlue</BackgroundColor>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.6cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_gol">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_gol</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_gol1">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_gol.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_gol1</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                    <ColSpan>5</ColSpan>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell />
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox73">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <FontWeight>Bold</FontWeight>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox73</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Black</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.6cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox105">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox105</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_kode">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_kode.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_kode</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_akun_n">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_akun_n.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_akun_n</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_akun_pos">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_akun_pos.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <Format>#,0;(#,0)</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
+                          <Style />
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox6</rd:DefaultName>
+                      <rd:DefaultName>da_akun_pos</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_akun_parent">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_akun_parent.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                                <Format>#,0;(#,0)</Format>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_akun_parent</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_akun_ket">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_akun_ket.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_akun_ket</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="da_akun_status">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value>=Fields!da_akun_status.Value</Value>
+                              <Style>
+                                <FontFamily>consolas</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>da_akun_status</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1040,63 +814,58 @@
             <TablixMember />
             <TablixMember />
             <TablixMember />
+            <TablixMember />
           </TablixMembers>
         </TablixColumnHierarchy>
         <TablixRowHierarchy>
           <TablixMembers>
             <TablixMember>
-              <Group Name="stock_supplier">
+              <KeepWithGroup>After</KeepWithGroup>
+            </TablixMember>
+            <TablixMember>
+              <Group Name="n_kat">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!stock_supplier.Value</GroupExpression>
+                  <GroupExpression>=Left(Fields!da_kode.Value,1)</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!stock_supplier.Value</Value>
+                  <Value>=Left(Fields!da_kode.Value,1)</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixMembers>
                 <TablixMember>
-                  <Group Name="stock_gudang">
+                  <KeepWithGroup>After</KeepWithGroup>
+                </TablixMember>
+                <TablixMember>
+                  <Group Name="n_group">
                     <GroupExpressions>
-                      <GroupExpression>=Fields!stock_gudang.Value</GroupExpression>
+                      <GroupExpression>=Left(Fields!da_kode.Value,2)</GroupExpression>
                     </GroupExpressions>
                   </Group>
                   <SortExpressions>
                     <SortExpression>
-                      <Value>=Fields!stock_gudang.Value</Value>
+                      <Value>=Left(Fields!da_kode.Value,2)</Value>
                     </SortExpression>
                   </SortExpressions>
                   <TablixMembers>
                     <TablixMember>
                       <KeepWithGroup>After</KeepWithGroup>
-                      <RepeatOnNewPage>true</RepeatOnNewPage>
-                    </TablixMember>
-                    <TablixMember>
-                      <KeepWithGroup>After</KeepWithGroup>
-                      <RepeatOnNewPage>true</RepeatOnNewPage>
                     </TablixMember>
                     <TablixMember>
                       <Group Name="Details" />
-                      <TablixMembers>
-                        <TablixMember />
-                      </TablixMembers>
-                    </TablixMember>
-                    <TablixMember>
-                      <KeepWithGroup>Before</KeepWithGroup>
+                      <KeepTogether>true</KeepTogether>
                     </TablixMember>
                   </TablixMembers>
-                </TablixMember>
-                <TablixMember>
-                  <KeepWithGroup>Before</KeepWithGroup>
+                  <KeepTogether>true</KeepTogether>
                 </TablixMember>
               </TablixMembers>
             </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
-        <DataSetName>ds_lap_stock</DataSetName>
-        <Top>1.49986cm</Top>
-        <Height>2.6825cm</Height>
+        <DataSetName>ds_daftarakun</DataSetName>
+        <Top>0.89104cm</Top>
+        <Height>2.4cm</Height>
         <Width>19.75cm</Width>
         <Style>
           <Border>
@@ -1104,17 +873,17 @@
           </Border>
         </Style>
       </Tablix>
-      <Textbox Name="Textbox26">
+      <Textbox Name="Textbox23">
         <CanGrow>true</CanGrow>
         <KeepTogether>true</KeepTogether>
         <Paragraphs>
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>=Parameters!parLabelJudul.Value</Value>
+                <Value>Daftar Perkiraan</Value>
                 <Style>
                   <FontFamily>Consolas</FontFamily>
-                  <FontSize>14pt</FontSize>
+                  <FontSize>16pt</FontSize>
                   <FontWeight>SemiBold</FontWeight>
                 </Style>
               </TextRun>
@@ -1138,57 +907,8 @@
           <PaddingBottom>2pt</PaddingBottom>
         </Style>
       </Textbox>
-      <Textbox Name="Textbox28">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parPeriode.Value</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                  <FontWeight>SemiBold</FontWeight>
-                  <Color>Maroon</Color>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox21</rd:DefaultName>
-        <Top>0.71465cm</Top>
-        <Height>0.60882cm</Height>
-        <Width>19.75cm</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Rectangle Name="Rectangle1">
-        <KeepTogether>true</KeepTogether>
-        <Top>4.18236cm</Top>
-        <Left>2.5cm</Left>
-        <Height>1.92622cm</Height>
-        <Width>9.25cm</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-        </Style>
-      </Rectangle>
     </ReportItems>
-    <Height>2.4744in</Height>
+    <Height>1.37229in</Height>
     <Style />
   </Body>
   <Width>19.75cm</Width>
@@ -1248,9 +968,9 @@
         </Textbox>
         <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
-          <Left>15.25cm</Left>
+          <Left>15.23646cm</Left>
           <Height>1.25055cm</Height>
-          <Width>4.5cm</Width>
+          <Width>4.51354cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1277,7 +997,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"), "lapStokSupplier")</Value>
+                  <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"), "lapLabaRugi")</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
                     <FontSize>8pt</FontSize>
@@ -1289,9 +1009,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.1411cm</Top>
+          <Top>0.17639cm</Top>
           <Height>0.47653cm</Height>
-          <Width>7.57312cm</Width>
+          <Width>8.5cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1323,10 +1043,10 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Top>0.17639cm</Top>
-          <Left>16.37263cm</Left>
+          <Top>0.18521cm</Top>
+          <Left>16.75cm</Left>
           <Height>0.46771cm</Height>
-          <Width>3.37737cm</Width>
+          <Width>3cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -1356,62 +1076,58 @@
   </Page>
   <AutoRefresh>0</AutoRefresh>
   <DataSources>
-    <DataSource Name="ds_stock">
+    <DataSource Name="ds_keuangan">
       <ConnectionProperties>
         <DataProvider>System.Data.DataSet</DataProvider>
         <ConnectString>/* Local Connection */</ConnectString>
       </ConnectionProperties>
-      <rd:DataSourceID>a62be66c-3b8e-4669-bb89-e25ea3fe7696</rd:DataSourceID>
+      <rd:DataSourceID>dbb0cd4a-39a9-4832-b592-1b555ba9aeea</rd:DataSourceID>
     </DataSource>
   </DataSources>
   <DataSets>
-    <DataSet Name="ds_lap_stock">
+    <DataSet Name="ds_daftarakun">
       <Query>
-        <DataSourceName>ds_stock</DataSourceName>
+        <DataSourceName>ds_keuangan</DataSourceName>
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="stock_barang">
-          <DataField>stock_barang</DataField>
+        <Field Name="da_kode">
+          <DataField>da_kode</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_barang_n">
-          <DataField>stock_barang_n</DataField>
+        <Field Name="da_jenis">
+          <DataField>da_jenis</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_supplier">
-          <DataField>stock_supplier</DataField>
+        <Field Name="da_gol">
+          <DataField>da_gol</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_supplier_n">
-          <DataField>stock_supplier_n</DataField>
+        <Field Name="da_akun_n">
+          <DataField>da_akun_n</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_gudang">
-          <DataField>stock_gudang</DataField>
+        <Field Name="da_akun_pos">
+          <DataField>da_akun_pos</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_gudang_n">
-          <DataField>stock_gudang_n</DataField>
+        <Field Name="da_akun_status">
+          <DataField>da_akun_status</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_qty">
-          <DataField>stock_qty</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="stock_qty_n">
-          <DataField>stock_qty_n</DataField>
+        <Field Name="da_akun_parent">
+          <DataField>da_akun_parent</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="stock_hpp">
-          <DataField>stock_hpp</DataField>
-          <rd:TypeName>System.Double</rd:TypeName>
+        <Field Name="da_akun_ket">
+          <DataField>da_akun_ket</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
-        <rd:DataSetName>ds_stock</rd:DataSetName>
-        <rd:SchemaPath>D:\mso\Inventory\Inventory\laporan\ds_stock.xsd</rd:SchemaPath>
-        <rd:TableName>dt_persediaan_supplier</rd:TableName>
+        <rd:DataSetName>ds_keuangan</rd:DataSetName>
+        <rd:SchemaPath>D:\mso\inventory\sinventory\Inventory\laporan\ds_keuangan.xsd</rd:SchemaPath>
+        <rd:TableName>dt_akun</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />
@@ -1419,17 +1135,6 @@
     </DataSet>
   </DataSets>
   <ReportParameters>
-    <ReportParameter Name="parLabelJudul">
-      <DataType>String</DataType>
-      <Nullable>true</Nullable>
-      <DefaultValue>
-        <Values>
-          <Value>Laporan Stok Per Supplier</Value>
-        </Values>
-      </DefaultValue>
-      <AllowBlank>true</AllowBlank>
-      <Prompt>ReportParameter1</Prompt>
-    </ReportParameter>
     <ReportParameter Name="parPeriode">
       <DataType>String</DataType>
       <Nullable>true</Nullable>
@@ -1454,5 +1159,5 @@
     </ReportParameter>
   </ReportParameters>
   <rd:ReportUnitType>Cm</rd:ReportUnitType>
-  <rd:ReportID>8d57cae7-8b4a-46b4-bd34-668cb8d8266f</rd:ReportID>
+  <rd:ReportID>16186262-d342-4771-abcb-89aa72168350</rd:ReportID>
 </Report>

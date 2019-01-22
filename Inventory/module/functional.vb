@@ -1,6 +1,7 @@
 ﻿Imports MadMilkman.Ini
 Imports System.IO
 Imports OfficeOpenXml
+Imports System.Security.Cryptography
 
 Module functional
 
@@ -221,7 +222,7 @@ Module functional
                     _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
                 End If
 
-                Dim curper As String = currentperiode.tglawal.ToString("dd/MM/yyyy") & " S.d " & currentperiode.tglawal.ToString("dd/MM/yyyy")
+                Dim curper As String = currentperiode.tglawal.ToString("dd/MM/yyyy") & " S.d " & currentperiode.tglakhir.ToString("dd/MM/yyyy")
                 MessageBox.Show(String.Format(_text, _periode, curper))
             End If
         End If
@@ -235,6 +236,7 @@ Module functional
         Next
     End Sub
 
+    'EXPORT EXCEL
     Public Function exportXlsx(colheader As List(Of String), datatbl As DataTable, outputDir As String, Optional workbookname As String = Nothing, Optional title As String = Nothing) As Boolean
         If workbookname = Nothing Then
             workbookname = "dataexport" & Today.ToString("yyyyMMdd")
@@ -321,17 +323,41 @@ Module functional
         End Try
     End Function
 
+    'EXCEL TO DATATABLE
+    Public Function GetDataTablefromExcel(path As String, Optional hasheader As Boolean = True) As DataTable
+        Try
+            Using pck As New ExcelPackage
+                Using fs As FileStream = File.OpenRead(path)
+                    pck.Load(fs)
+                End Using
+                Dim ws As ExcelWorksheet = pck.Workbook.Worksheets.First()
+                Dim dt As New DataTable
+                For Each firstRowCell In ws.Cells(1, 1, 1, ws.Dimension.End.Column)
+                    dt.Columns.Add(IIf(hasheader, firstRowCell.Text, String.Format("Column {0}", firstRowCell.Start.Column)))
+                Next
+                Dim startrow As Integer = IIf(hasheader, 2, 1)
+                For rowNum = startrow To ws.Dimension.End.Row
+                    Dim wsRow = ws.Cells(rowNum, 1, rowNum, ws.Dimension.End.Column)
+                    Dim row As DataRow = dt.Rows.Add()
+                    For Each cell In wsRow
+                        row(cell.Start.Column - 1) = cell.Text
+                    Next
+                Next
+                Return dt
+            End Using
+        Catch ex As Exception
+            logError(ex)
+            consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
+            Return Nothing
+        End Try
+    End Function
+
     '-----------.ini file manipulation-------------
     'load connection
-    Public Function loadCon(con_type As String) As cnction
+    Public Function loadCon(con_type As String, Optional showErrMsg As Boolean = True) As cnction
         Dim options As New IniOptions()
         Dim inifile As New IniFile(options)
         Dim x As cnction
-
-        x.host = "localhost"
-        x.uid = "root"
-        x.pass = "root"
-        x.db = "db-inventory"
 
         Try
             inifile.Load(Application.StartupPath & "\config.ini")
@@ -343,7 +369,7 @@ Module functional
                 x.db = .Keys("DB").Value
             End With
         Catch ex As Exception
-            logError(ex)
+            logError(ex, IIf(showErrMsg = True, False, True))
             consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
             'Application.Exit()
         End Try
@@ -416,7 +442,7 @@ Module functional
     End Sub
 
     '--------------logging file
-    Private appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+    Private appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & Application.ProductName & "\"
     Private filename As String
 
     Private Sub createTXTfile(filedir As String, filenm As String, contain As List(Of String), append As Boolean)
@@ -446,4 +472,61 @@ Module functional
         createTXTfile(appSysDir & "log", file, errList, True)
         logErrToDb(errList)
     End Sub
+
+    '---------------Crytograph
+    Private KEY_128 As Byte() = {42, 1, 52, 67, 231, 13, 94, 101, 123, 6, 0, 12, 32, 91, 4, 111, 31, 70, 21, 141, 123, 142, 234, 82, 95, 129, 187, 162, 12, 55, 98, 23}
+    Private IV_128 As Byte() = {234, 12, 52, 44, 214, 222, 200, 109, 2, 98, 45, 76, 88, 53, 23, 78}
+    Private symmetricKey As RijndaelManaged = New RijndaelManaged() With {.Mode = CipherMode.CBC}
+    Private enc As New System.Text.UTF8Encoding
+    Private encryptor As ICryptoTransform = symmetricKey.CreateEncryptor(KEY_128, IV_128)
+    Private decryptor As ICryptoTransform = symmetricKey.CreateDecryptor(KEY_128, IV_128)
+
+    Public Function encryptString(ByVal inputString As String) As String
+        Dim _retString As String = ""
+
+        If Not String.IsNullOrEmpty(inputString) Then
+            Dim memoryStream As MemoryStream = New MemoryStream()
+            Dim cryptoStream As CryptoStream = New CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write)
+            cryptoStream.Write(enc.GetBytes(inputString), 0, inputString.Length)
+            cryptoStream.FlushFinalBlock()
+            _retString = Convert.ToBase64String(memoryStream.ToArray())
+            memoryStream.Close()
+            cryptoStream.Close()
+        End If
+
+        Return _retString
+    End Function
+
+    Public Function decryptString(ByVal cypherText As String) As String
+        Dim _retString As String = ""
+
+        If Not String.IsNullOrEmpty(cypherText) Then
+            Dim cypherTextBytes As Byte() = Convert.FromBase64String(cypherText)
+            Dim memoryStream As MemoryStream = New MemoryStream(cypherTextBytes)
+            Dim cryptoStream As CryptoStream = New CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read)
+            Dim plainTextBytes(cypherTextBytes.Length) As Byte
+            Dim decryptedByteCount As Integer = cryptoStream.Read(plainTextBytes, 0, plainTextBytes.Length)
+            memoryStream.Close()
+            cryptoStream.Close()
+            _retString = enc.GetString(plainTextBytes, 0, decryptedByteCount)
+        End If
+
+        Return _retString
+    End Function
+
+    'MD5 x2 compute hash
+    Public Function computeHash(ByVal inputstring As String) As String
+        Dim _retval As String = ""
+
+        If Not String.IsNullOrEmpty(inputstring) Then
+            Dim md5 As New MD5CryptoServiceProvider
+            Dim hasByte() As Byte = md5.ComputeHash(System.Text.Encoding.ASCII.GetBytes(inputstring))
+
+            For Each s In hasByte
+                _retval += s.ToString("x2")
+            Next
+        End If
+
+        Return _retval
+    End Function
 End Module

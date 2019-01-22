@@ -143,6 +143,8 @@
             mn_save.Enabled = False
             mn_cancelorder.Enabled = False
         End If
+
+        mn_print.Enabled = IIf(tjlStatus = 1, True, False)
     End Sub
 
     Private Sub loadSatuanBrg(kode As String)
@@ -578,12 +580,16 @@
         Dim piutang As Boolean = False
 
         'CEK PIUTANG
-        q = "SELECT IFNULL(SUM(getSisaPiutang(piutang_faktur,'{2}')),0) " _
-            & "FROM data_piutang_awal WHERE piutang_ref='{0}' AND piutang_status=1 AND piutang_faktur<>'{1}'"
+        q = "SELECT SUM(IFNULL(p_trans_nilai,0))+SUM(IFNULL(p_trans_giro,0)) piutang " _
+            & "FROM data_piutang_trans " _
+            & "RIGHT JOIN data_piutang_awal ON piutang_faktur=p_trans_kode_piutang AND piutang_status_lunas=0 AND piutang_status=1 " _
+            & "WHERE piutang_custo='{0}'"
         If in_term.Value <> 0 And bt_simpanjual.Text = "Simpan" Then
-            readcommd(String.Format(q, kode, in_faktur.Text, selectperiode.id))
-            If rd.HasRows And rd.Item(0) > 0 Then
-                piutang = True
+            readcommd(String.Format(q, kode))
+            If rd.HasRows Then
+                piutang = IIf(rd.Item(0) > 0, True, False)
+            Else
+                piutang = False
             End If
             rd.Close()
 
@@ -595,6 +601,8 @@
                     needValid = False
                     retVal = False
                 End If
+            Else
+                retVal = True
             End If
         End If
 
@@ -699,7 +707,7 @@
 
             op_con()
             'chkdt = checkdata("data_piutang_bayar_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
-            chkdt = checkdata("data_piutang_trans", "'" & kodefaktur & "' AND p_trans_status<>9", "p_trans_kode_piutang")
+            chkdt = checkdata("data_piutang_trans", "'" & kodefaktur & "' AND p_trans_status<>9 AND p_trans_jenis NOT IN ('awal','jual')", "p_trans_kode_piutang")
 
             Dim q As String = "UPDATE data_penjualan_faktur SET faktur_status=2 WHERE faktur_kode='{0}'"
             If chkdt = False Then
@@ -710,9 +718,9 @@
 
                     querychk = startTrans(queryArr)
                     If querychk = True Then
-                        MessageBox.Show("SUCCESS", "Batal Jual/Kirim", MessageBoxButtons.OK)
+                        MessageBox.Show("Transaksi Berhasil Dibatalkan", "Batal Jual/Kirim", MessageBoxButtons.OK)
                     Else
-                        MessageBox.Show("ERROR", "Batal Jual/Kirim", MessageBoxButtons.OK)
+                        MessageBox.Show("Transaksi gagal di batalkan. Terjadi kesalahan saat pembatalan transaksi.", "Batal Jual/Kirim", MessageBoxButtons.OK)
                     End If
                 End If
             Else

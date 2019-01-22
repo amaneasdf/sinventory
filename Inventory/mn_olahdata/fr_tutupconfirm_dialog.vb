@@ -113,4 +113,8 @@
         returnval = True
         Me.Close()
     End Sub
+
+    Private Sub fr_tutupconfirm_dialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        in_pass.UseSystemPasswordChar = True
+    End Sub
 End Class

@@ -49,6 +49,7 @@
         setStatus()
         inputSwitch(True)
         bt_simpanperkiraan.Enabled = loggeduser.allowedit_master
+        in_saldoawal.Enabled = False
     End Sub
 
     Private Sub setStatus()
@@ -143,7 +144,7 @@
             qsaldo = qsaldotemp
         Else
             q = "UPDATE data_perkiraan SET {1},perk_upd_date=NOW(),perk_upd_alias='{2}' WHERE perk_kode='{0}'"
-            If in_saldoawal.ReadOnly = False Then
+            If in_saldoawal.ReadOnly = False And in_saldoawal.Enabled = True Then
                 qsaldo = qsaldotemp
             End If
         End If

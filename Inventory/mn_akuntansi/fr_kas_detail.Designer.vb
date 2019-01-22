@@ -27,6 +27,7 @@ Partial Class fr_kas_detail
         Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cancel = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_proses = New System.Windows.Forms.ToolStripMenuItem()
@@ -111,7 +112,7 @@ Partial Class fr_kas_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_delete, Me.mn_print, Me.mn_proses})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cancel, Me.mn_delete, Me.mn_print, Me.mn_proses})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(773, 24)
@@ -126,6 +127,12 @@ Partial Class fr_kas_detail
         Me.mn_save.Size = New System.Drawing.Size(59, 20)
         Me.mn_save.Text = "&Save"
         Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_cancel
+        '
+        Me.mn_cancel.Name = "mn_cancel"
+        Me.mn_cancel.Size = New System.Drawing.Size(64, 20)
+        Me.mn_cancel.Text = "Batalkan"
         '
         'mn_delete
         '
@@ -302,13 +309,13 @@ Partial Class fr_kas_detail
         Me.dgv_kas.BackgroundColor = System.Drawing.Color.White
         Me.dgv_kas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_kas.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kas_rek, Me.kas_rek_n, Me.kas_debet, Me.kas_kredit, Me.kas_ket})
-        Me.dgv_kas.Location = New System.Drawing.Point(11, 222)
+        Me.dgv_kas.Location = New System.Drawing.Point(10, 221)
         Me.dgv_kas.MultiSelect = False
         Me.dgv_kas.Name = "dgv_kas"
         Me.dgv_kas.ReadOnly = True
         Me.dgv_kas.RowHeadersVisible = False
         Me.dgv_kas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_kas.Size = New System.Drawing.Size(753, 145)
+        Me.dgv_kas.Size = New System.Drawing.Size(756, 146)
         Me.dgv_kas.TabIndex = 16
         '
         'kas_rek
@@ -494,6 +501,7 @@ Partial Class fr_kas_detail
         Me.in_no_bukti.Name = "in_no_bukti"
         Me.in_no_bukti.Size = New System.Drawing.Size(188, 20)
         Me.in_no_bukti.TabIndex = 8
+        Me.in_no_bukti.TabStop = False
         '
         'date_tgl_trans
         '
@@ -504,6 +512,7 @@ Partial Class fr_kas_detail
         Me.date_tgl_trans.Name = "date_tgl_trans"
         Me.date_tgl_trans.Size = New System.Drawing.Size(188, 20)
         Me.date_tgl_trans.TabIndex = 9
+        Me.date_tgl_trans.TabStop = False
         '
         'bt_tbkas
         '
@@ -737,9 +746,10 @@ Partial Class fr_kas_detail
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(773, 482)
+        Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.dgv_kas)
         Me.Controls.Add(Me.in_status)
         Me.Controls.Add(Me.Label11)
-        Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.bt_tbkas)
         Me.Controls.Add(Me.in_kredit)
         Me.Controls.Add(Me.in_debet)
@@ -768,7 +778,6 @@ Partial Class fr_kas_detail
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.Label7)
-        Me.Controls.Add(Me.dgv_kas)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.txtUpdDate)
         Me.Controls.Add(Me.txtRegAlias)
@@ -781,10 +790,11 @@ Partial Class fr_kas_detail
         Me.Controls.Add(Me.pnl_Menu)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_kas_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "fr_kas_detail"
+        Me.Text = "Detail Tansaksi Kas :"
         Me.pnl_Menu.ResumeLayout(False)
         Me.pnl_Menu.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
@@ -859,4 +869,5 @@ Partial Class fr_kas_detail
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
     Friend WithEvents in_status As System.Windows.Forms.TextBox
     Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents mn_cancel As System.Windows.Forms.ToolStripMenuItem
 End Class

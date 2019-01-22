@@ -48,12 +48,12 @@ Partial Class fr_group_detail
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_actdeact = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Label6 = New System.Windows.Forms.Label()
-        Me.in_status = New System.Windows.Forms.TextBox()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -365,38 +365,6 @@ Partial Class fr_group_detail
         Me.Panel3.Size = New System.Drawing.Size(600, 496)
         Me.Panel3.TabIndex = 348
         '
-        'MenuStrip1
-        '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_actdeact, Me.mn_del})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(600, 24)
-        Me.MenuStrip1.TabIndex = 344
-        Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'mn_save
-        '
-        Me.mn_save.Image = Global.Inventory.My.Resources.Resources.toolbar_save_icon_s
-        Me.mn_save.Name = "mn_save"
-        Me.mn_save.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.mn_save.Size = New System.Drawing.Size(59, 20)
-        Me.mn_save.Text = "&Save"
-        Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'mn_actdeact
-        '
-        Me.mn_actdeact.Enabled = False
-        Me.mn_actdeact.Name = "mn_actdeact"
-        Me.mn_actdeact.Size = New System.Drawing.Size(74, 20)
-        Me.mn_actdeact.Text = "Deactivate"
-        '
-        'mn_del
-        '
-        Me.mn_del.Enabled = False
-        Me.mn_del.Name = "mn_del"
-        Me.mn_del.Size = New System.Drawing.Size(53, 20)
-        Me.mn_del.Text = "Hapus"
-        '
         'Label6
         '
         Me.Label6.AutoSize = True
@@ -417,6 +385,37 @@ Partial Class fr_group_detail
         Me.in_status.Name = "in_status"
         Me.in_status.Size = New System.Drawing.Size(112, 20)
         Me.in_status.TabIndex = 345
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_actdeact, Me.mn_del})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(600, 24)
+        Me.MenuStrip1.TabIndex = 344
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'mn_save
+        '
+        Me.mn_save.Image = Global.Inventory.My.Resources.Resources.toolbar_save_icon_s
+        Me.mn_save.Name = "mn_save"
+        Me.mn_save.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
+        Me.mn_save.Size = New System.Drawing.Size(59, 20)
+        Me.mn_save.Text = "&Save"
+        Me.mn_save.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'mn_actdeact
+        '
+        Me.mn_actdeact.Name = "mn_actdeact"
+        Me.mn_actdeact.Size = New System.Drawing.Size(74, 20)
+        Me.mn_actdeact.Text = "Deactivate"
+        '
+        'mn_del
+        '
+        Me.mn_del.Enabled = False
+        Me.mn_del.Name = "mn_del"
+        Me.mn_del.Size = New System.Drawing.Size(53, 20)
+        Me.mn_del.Text = "Hapus"
         '
         'fr_group_detail
         '

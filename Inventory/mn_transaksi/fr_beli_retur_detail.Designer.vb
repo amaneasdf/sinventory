@@ -496,7 +496,7 @@ Partial Class fr_beli_retur_detail
         Me.in_no_faktur_ex.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_no_faktur_ex.ForeColor = System.Drawing.Color.Black
         Me.in_no_faktur_ex.Location = New System.Drawing.Point(344, 117)
-        Me.in_no_faktur_ex.MaxLength = 30
+        Me.in_no_faktur_ex.MaxLength = 100
         Me.in_no_faktur_ex.Name = "in_no_faktur_ex"
         Me.in_no_faktur_ex.Size = New System.Drawing.Size(445, 20)
         Me.in_no_faktur_ex.TabIndex = 8

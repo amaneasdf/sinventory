@@ -7,7 +7,7 @@
 
     Private Sub loadData(kode As String)
         Dim q As String = "SELECT kas_kode, kas_tgl, kas_jenis, kas_bank,perk_nama_akun,kas_nobg,kas_status, " _
-                          & "kas_sales, salesman_nama, kas_reg_date,kas_reg_alias, kas_upd_date, kas_upd_alias " _
+                          & "kas_sales, IFNULL(salesman_nama,'') salesman_nama, kas_reg_date,kas_reg_alias, kas_upd_date, kas_upd_alias " _
                           & "FROM data_kas_faktur LEFT JOIN data_salesman_master ON kas_sales=salesman_kode " _
                           & "LEFT JOIN data_perkiraan ON perk_kode=kas_bank " _
                           & "WHERE kas_kode='{0}'"
@@ -36,8 +36,6 @@
         End If
         rd.Close()
 
-        'setBank(in_bank.Text)
-        'setSales(in_sales.Text)
         loadKas(kode)
         setStatus()
     End Sub
@@ -49,11 +47,33 @@
                 in_status.Text = "Non-Aktif"
             Case 1
                 in_status.Text = "Aktif"
+            Case 2
+                in_status.Text = "Batal"
             Case 9
                 in_status.Text = "Delete"
             Case Else
                 in_status.Text = "ERROR"
         End Select
+
+        If loggeduser.allowedit_akun = False Or selectperiode.closed = True Or tjlstatus = 2 Then
+            bt_simpanperkiraan.Visible = False
+            For Each x As TextBox In {in_bank_n, in_rek_n, in_sales_n, in_bg}
+                x.ReadOnly = True
+            Next
+
+            With dgv_kas
+                .Location = New Point(10, 181)
+                .Height = 186
+            End With
+
+            bt_batalperkiraan.Text = "OK"
+            cb_jenis.Enabled = False
+            date_tgl_trans.Enabled = False
+            mn_save.Enabled = False
+            mn_delete.Enabled = False
+            mn_proses.Enabled = False
+            mn_cancel.Enabled = False
+        End If
     End Sub
 
     'LOAD TABLE
@@ -213,7 +233,7 @@
     End Sub
 
     '------------------ SAVE
-    Private Sub saveData()
+    Private Function saveData() As Boolean
         Dim q As String = ""
         Dim data1 As String()
         Dim queryArr As New List(Of String)
@@ -245,8 +265,10 @@
                 in_no_bukti.Text = "KS" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
             ElseIf in_no_bukti.Text <> Nothing And bt_simpanperkiraan.Text <> "Update" Then
                 If checkdata("data_kas_faktur", "'" & in_no_bukti.Text & "'", "kas_kode") = True Then
-                    MessageBox.Show("Kode " & in_no_bukti.Text & " sudah Pernah diinput", "Kas", MessageBoxButtons.OK, MessageBoxIcon.Question)
-                    Exit Sub
+                    MessageBox.Show("Kode " & in_no_bukti.Text & " sudah pernah diinput. Silahkan ganti kode transaksi", "Kas",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Question)
+                    Return False
+                    Exit Function
                 End If
             End If
 
@@ -273,7 +295,7 @@
                 "k_trans_debet=" & rows.Cells("kas_debet").Value.ToString.Replace(",", "."),
                 "k_trans_kredit=" & rows.Cells("kas_kredit").Value.ToString.Replace(",", "."),
                 "k_trans_ket='" & rows.Cells("kas_ket").Value & "'",
-                "k_trans_status='" & tjlstatus & "'"
+                "k_trans_status='" & IIf(tjlstatus = 9, 9, 1) & "'"
                 }
             queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1)))
         Next
@@ -288,7 +310,7 @@
             "line_ref='" & in_bank.Text & "'",
             "line_ref_type='AKUN'",
             "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-            "line_status='" & tjlstatus & "'"
+            "line_status='" & IIf(tjlstatus = 1, 1, 9) & "'"
             }
         queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
         '==========================================================================================================================
@@ -302,14 +324,22 @@
 
         If querycheck = False Then
             MessageBox.Show("Data tidak dapat tersimpan")
-            Exit Sub
+            Return False
+            Exit Function
         Else
             MessageBox.Show("Data tersimpan")
             frmkas.in_cari.Clear()
             populateDGVUserCon("kas", "", frmkas.dgv_list)
+            Return True
             Me.Close()
         End If
-    End Sub
+    End Function
+
+    '------------------ CANCEL
+    Private Function cancelData() As Boolean
+        Dim _retval As Boolean = False
+
+    End Function
 
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
@@ -375,6 +405,19 @@
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
 
+    End Sub
+
+    Private Sub mn_cancel_Click(sender As Object, e As EventArgs) Handles mn_cancel.Click
+        If MessageBox.Show("Batalkan transaksi kas?", "Batalkan Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            Dim res As Boolean = False
+            tjlstatus = 2
+            setStatus()
+            res = saveData()
+            If res = False Then
+                tjlstatus = 1
+                setStatus()
+            End If
+        End If
     End Sub
 
     '------------- numeric
@@ -485,11 +528,11 @@
             cb_jenis.Focus()
             Exit Sub
         End If
-        If Trim(in_sales.Text) = Nothing Then
-            MessageBox.Show("Salesman belum di input")
-            in_sales_n.Focus()
-            Exit Sub
-        End If
+        'If Trim(in_sales.Text) = Nothing Then
+        '    MessageBox.Show("Salesman belum di input")
+        '    in_sales_n.Focus()
+        '    Exit Sub
+        'End If
         If dgv_kas.Rows.Count = 0 Then
             MessageBox.Show("Data kas belum di input")
             in_rek_n.Focus()
@@ -497,7 +540,10 @@
         End If
 
         If MessageBox.Show("Simpan data kas?", "Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
+            If saveData() = True Then
+                clstate = False
+                Me.Close()
+            End If
         End If
     End Sub
 
@@ -508,12 +554,14 @@
     End Sub
 
     Private Sub in_bank_n_Enter(sender As Object, e As EventArgs) Handles in_bank_n.Enter
-        popPnl_barang.Location = New Point(in_bank_n.Left, in_bank_n.Top + in_bank_n.Height)
-        popupstate = "bank"
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False And sender.Enabled = True Then
+            popPnl_barang.Location = New Point(in_bank_n.Left, in_bank_n.Top + in_bank_n.Height)
+            popupstate = "bank"
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup(sender.Text)
         End If
-        loadDataBRGPopup(in_bank_n.Text)
     End Sub
 
     Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_n.KeyUp, in_sales_n.KeyUp, in_rek_n.KeyUp
@@ -585,12 +633,14 @@
     End Sub
 
     Private Sub in_sales_n_Enter(sender As Object, e As EventArgs) Handles in_sales_n.Enter
-        popPnl_barang.Location = New Point(in_sales_n.Left, in_sales_n.Top + in_sales_n.Height)
-        popupstate = "sales"
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False And sender.Enabled = True Then
+            popPnl_barang.Location = New Point(in_sales_n.Left, in_sales_n.Top + in_sales_n.Height)
+            popupstate = "sales"
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup(in_sales_n.Text)
         End If
-        loadDataBRGPopup(in_sales_n.Text)
     End Sub
 
     Private Sub in_sales_n_TextChanged(sender As Object, e As EventArgs) Handles in_sales_n.TextChanged
@@ -605,12 +655,14 @@
     End Sub
 
     Private Sub in_rek_n_Enter(sender As Object, e As EventArgs) Handles in_rek_n.Enter
-        popPnl_barang.Location = New Point(in_rek_n.Left, in_rek_n.Top + in_rek_n.Height)
-        popupstate = "rek"
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+        If sender.ReadOnly = False And sender.Enabled = True Then
+            popPnl_barang.Location = New Point(in_rek_n.Left, in_rek_n.Top + in_rek_n.Height)
+            popupstate = "rek"
+            If popPnl_barang.Visible = False Then
+                popPnl_barang.Visible = True
+            End If
+            loadDataBRGPopup()
         End If
-        loadDataBRGPopup()
     End Sub
 
     Private Sub in_rek_n_TextChanged(sender As Object, e As EventArgs) Handles in_rek_n.TextChanged

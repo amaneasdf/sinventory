@@ -4,7 +4,13 @@
     Private Sub loadDataCusto(kode As String)
         Dim q As String = ""
         op_con()
-        readcommd("SELECT * FROM data_customer_master WHERE customer_kode='" & kode & "'")
+        readcommd("SELECT customer_nama,customer_status,customer_jenis,customer_area,customer_alamat,customer_alamat_blok,customer_alamat_nomor,customer_alamat_rt, " _
+                  & "customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi,customer_kodepos, " _
+                  & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp,customer_tanggal_pkp,customer_pajak_nama,customer_pajak_jabatan, " _
+                  & "customer_pajak_alamat,customer_max_piutang,Customer_kriteria_discount,Customer_kriteria_harga_jual,customer_term, " _
+                  & "IFNULL(customer_reg_alias,'') customer_reg_alias, IFNULL(customer_reg_date,'00/00/0000 00:00:00') customer_reg_date, " _
+                  & "IFNULL(customer_upd_alias,'') customer_upd_alias, IFNULL(customer_upd_date,'00/00/0000 00:00:00') customer_upd_date " _
+                  & "FROM data_customer_master WHERE customer_kode='" & kode & "'")
         If rd.HasRows Then
             in_kode.Text = kode
             in_nama_custo.Text = rd.Item("customer_nama")
@@ -37,21 +43,11 @@
             in_term.Value = rd.Item("customer_term")
             txtRegdate.Text = rd.Item("customer_reg_date")
             txtRegAlias.Text = rd.Item("customer_reg_alias")
-            Try
-                txtUpdDate.Text = rd.Item("customer_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
+            txtUpdDate.Text = rd.Item("customer_upd_date")
             txtUpdAlias.Text = rd.Item("customer_upd_alias")
         End If
         rd.Close()
         setStatus()
-
-        If loggeduser.allowedit_master = False Then
-            bt_simpancusto.Visible = False
-            bt_batalcusto.Text = "OK"
-        End If
     End Sub
 
     'SET STATUS
@@ -69,6 +65,23 @@
             Case Else
                 Exit Sub
         End Select
+
+        If loggeduser.allowedit_master = False Then
+            bt_simpancusto.Visible = False
+            bt_batalcusto.Text = "OK"
+
+            For Each cb As ComboBox In {cb_area, cb_tipe, cb_diskon, cb_harga}
+                cb.Enabled = False
+            Next
+            For Each x As TextBox In {in_nama_custo, in_alamat_custo, in_alamat_blok, in_alamat_kabupaten, in_alamat_kecamatan, in_alamat_kelurahan,
+                                      in_alamat_no, in_alamat_pasar, in_alamat_provinsi, in_alamat_rt, in_alamat_rw, in_cpcusto, in_faxcusto, in_telpcusto}
+                x.ReadOnly = True
+            Next
+
+            mn_save.Enabled = False
+            mn_deact.Enabled = False
+            mn_del.Enabled = False
+        End If
     End Sub
 
     'SAVE DATA
@@ -200,8 +213,6 @@
             Exit Sub
         Else
             MessageBox.Show("Data customer tersimpan")
-            'frmcusto.in_cari.Clear()
-            'populateDGVUserCon("custo", "", frmcusto.dgv_list)
             doRefreshTab({pgcusto})
             Me.Close()
         End If
@@ -266,7 +277,7 @@
     'LOAD
     Private Sub fr_custo_detail_Load(sender As Object, e As EventArgs) Handles Me.Load
         With cb_tipe
-            .DataSource = jenisCusto()
+            .DataSource = jenis("jenis_custo")
             .DisplayMember = "Text"
             .ValueMember = "Value"
             .SelectedIndex = 0
@@ -384,9 +395,9 @@
         keyshortenter(cb_area, e)
     End Sub
 
-    Private Sub cb_area_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_area.SelectedValueChanged
+    Private Sub cb_area_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_area.SelectionChangeCommitted
 
-        Dim q As String = "SELECT ref_kab_nama FROM data_customer_area " _
+        Dim q As String = "SELECT ref_kab_nama, c_area_nama FROM data_customer_area " _
                           & "LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
                           & "WHERE c_area_id='{0}'"
         Dim _ret As String = ""
@@ -395,11 +406,12 @@
         readcommd(String.Format(q, cb_area.SelectedValue))
         If rd.HasRows Then
             _ret = rd.Item(0)
+            in_alamat_kecamatan.Text = rd.Item(1)
         End If
         rd.Close()
 
         in_alamat_kabupaten.Text = _ret
-        in_alamat_kecamatan.Text = cb_area.Text
+        'in_alamat_kecamatan.Text = cb_area.Text
     End Sub
 
     Private Sub cb_area_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_area.KeyUp

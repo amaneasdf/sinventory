@@ -166,10 +166,9 @@ Partial Class fr_beli_detail
         '
         Me.mn_cancelorder.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_cancelorder.Name = "mn_cancelorder"
-        Me.mn_cancelorder.Size = New System.Drawing.Size(74, 20)
-        Me.mn_cancelorder.Text = "Validasi"
+        Me.mn_cancelorder.Size = New System.Drawing.Size(139, 20)
+        Me.mn_cancelorder.Text = "Batalkan Pembelian"
         Me.mn_cancelorder.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        Me.mn_cancelorder.Visible = False
         '
         'ProcessToolStripMenuItem
         '
@@ -537,7 +536,7 @@ Partial Class fr_beli_detail
         Me.cb_ppn.Location = New System.Drawing.Point(528, 146)
         Me.cb_ppn.Name = "cb_ppn"
         Me.cb_ppn.Size = New System.Drawing.Size(169, 21)
-        Me.cb_ppn.TabIndex = 325
+        Me.cb_ppn.TabIndex = 10
         '
         'in_status
         '
@@ -630,7 +629,7 @@ Partial Class fr_beli_detail
         Me.in_term.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
         Me.in_term.Name = "in_term"
         Me.in_term.Size = New System.Drawing.Size(121, 20)
-        Me.in_term.TabIndex = 324
+        Me.in_term.TabIndex = 9
         Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'date_tgl_pajak
@@ -641,7 +640,7 @@ Partial Class fr_beli_detail
         Me.date_tgl_pajak.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tgl_pajak.Name = "date_tgl_pajak"
         Me.date_tgl_pajak.Size = New System.Drawing.Size(188, 20)
-        Me.date_tgl_pajak.TabIndex = 327
+        Me.date_tgl_pajak.TabIndex = 3
         '
         'in_suratjalan
         '
@@ -649,10 +648,10 @@ Partial Class fr_beli_detail
         Me.in_suratjalan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_suratjalan.ForeColor = System.Drawing.Color.Black
         Me.in_suratjalan.Location = New System.Drawing.Point(338, 122)
-        Me.in_suratjalan.MaxLength = 10
+        Me.in_suratjalan.MaxLength = 255
         Me.in_suratjalan.Name = "in_suratjalan"
         Me.in_suratjalan.Size = New System.Drawing.Size(359, 20)
-        Me.in_suratjalan.TabIndex = 323
+        Me.in_suratjalan.TabIndex = 8
         '
         'Label8
         '
@@ -713,7 +712,7 @@ Partial Class fr_beli_detail
         Me.in_pajak.MaxLength = 20
         Me.in_pajak.Name = "in_pajak"
         Me.in_pajak.Size = New System.Drawing.Size(188, 20)
-        Me.in_pajak.TabIndex = 326
+        Me.in_pajak.TabIndex = 2
         '
         'Label3
         '
@@ -743,7 +742,7 @@ Partial Class fr_beli_detail
         Me.cb_sat.Location = New System.Drawing.Point(370, 195)
         Me.cb_sat.Name = "cb_sat"
         Me.cb_sat.Size = New System.Drawing.Size(61, 21)
-        Me.cb_sat.TabIndex = 16
+        Me.cb_sat.TabIndex = 14
         '
         'Label23
         '
@@ -778,7 +777,7 @@ Partial Class fr_beli_detail
         Me.bt_tbbarang.Location = New System.Drawing.Point(969, 195)
         Me.bt_tbbarang.Name = "bt_tbbarang"
         Me.bt_tbbarang.Size = New System.Drawing.Size(18, 18)
-        Me.bt_tbbarang.TabIndex = 23
+        Me.bt_tbbarang.TabIndex = 21
         Me.bt_tbbarang.UseVisualStyleBackColor = False
         '
         'popPnl_barang
@@ -839,7 +838,7 @@ Partial Class fr_beli_detail
         Me.in_harga_beli.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_harga_beli.Name = "in_harga_beli"
         Me.in_harga_beli.Size = New System.Drawing.Size(115, 20)
-        Me.in_harga_beli.TabIndex = 17
+        Me.in_harga_beli.TabIndex = 15
         Me.in_harga_beli.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_harga_beli.ThousandsSeparator = True
         '
@@ -849,7 +848,7 @@ Partial Class fr_beli_detail
         Me.in_disc1.Location = New System.Drawing.Point(691, 195)
         Me.in_disc1.Name = "in_disc1"
         Me.in_disc1.Size = New System.Drawing.Size(56, 20)
-        Me.in_disc1.TabIndex = 19
+        Me.in_disc1.TabIndex = 17
         Me.in_disc1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_discrp
@@ -861,7 +860,7 @@ Partial Class fr_beli_detail
         Me.in_discrp.Maximum = New Decimal(New Integer() {1410065407, 2, 0, 0})
         Me.in_discrp.Name = "in_discrp"
         Me.in_discrp.Size = New System.Drawing.Size(101, 20)
-        Me.in_discrp.TabIndex = 22
+        Me.in_discrp.TabIndex = 20
         Me.in_discrp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_discrp.ThousandsSeparator = True
         '
@@ -871,7 +870,7 @@ Partial Class fr_beli_detail
         Me.in_subtotal.Location = New System.Drawing.Point(553, 195)
         Me.in_subtotal.Name = "in_subtotal"
         Me.in_subtotal.Size = New System.Drawing.Size(133, 20)
-        Me.in_subtotal.TabIndex = 18
+        Me.in_subtotal.TabIndex = 16
         Me.in_subtotal.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_disc2
@@ -880,7 +879,7 @@ Partial Class fr_beli_detail
         Me.in_disc2.Location = New System.Drawing.Point(748, 195)
         Me.in_disc2.Name = "in_disc2"
         Me.in_disc2.Size = New System.Drawing.Size(56, 20)
-        Me.in_disc2.TabIndex = 20
+        Me.in_disc2.TabIndex = 18
         Me.in_disc2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_barang
@@ -892,7 +891,7 @@ Partial Class fr_beli_detail
         Me.in_barang.Name = "in_barang"
         Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(100, 20)
-        Me.in_barang.TabIndex = 13
+        Me.in_barang.TabIndex = 11
         Me.in_barang.TabStop = False
         '
         'in_disc3
@@ -901,7 +900,7 @@ Partial Class fr_beli_detail
         Me.in_disc3.Location = New System.Drawing.Point(805, 195)
         Me.in_disc3.Name = "in_disc3"
         Me.in_disc3.Size = New System.Drawing.Size(56, 20)
-        Me.in_disc3.TabIndex = 21
+        Me.in_disc3.TabIndex = 19
         Me.in_disc3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label32
@@ -924,7 +923,7 @@ Partial Class fr_beli_detail
         Me.in_barang_nm.MaxLength = 150
         Me.in_barang_nm.Name = "in_barang_nm"
         Me.in_barang_nm.Size = New System.Drawing.Size(188, 20)
-        Me.in_barang_nm.TabIndex = 14
+        Me.in_barang_nm.TabIndex = 12
         '
         'in_qty
         '
@@ -933,7 +932,7 @@ Partial Class fr_beli_detail
         Me.in_qty.Maximum = New Decimal(New Integer() {99999, 0, 0, 0})
         Me.in_qty.Name = "in_qty"
         Me.in_qty.Size = New System.Drawing.Size(64, 20)
-        Me.in_qty.TabIndex = 15
+        Me.in_qty.TabIndex = 13
         Me.in_qty.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'dgv_barang
@@ -950,7 +949,7 @@ Partial Class fr_beli_detail
         Me.dgv_barang.RowHeadersVisible = False
         Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_barang.Size = New System.Drawing.Size(988, 207)
-        Me.dgv_barang.TabIndex = 24
+        Me.dgv_barang.TabIndex = 22
         '
         'kode
         '
@@ -1131,7 +1130,7 @@ Partial Class fr_beli_detail
         Me.in_supplier_n.MaxLength = 200
         Me.in_supplier_n.Name = "in_supplier_n"
         Me.in_supplier_n.Size = New System.Drawing.Size(236, 20)
-        Me.in_supplier_n.TabIndex = 354
+        Me.in_supplier_n.TabIndex = 5
         '
         'in_supplier
         '
@@ -1143,7 +1142,7 @@ Partial Class fr_beli_detail
         Me.in_supplier.Name = "in_supplier"
         Me.in_supplier.ReadOnly = True
         Me.in_supplier.Size = New System.Drawing.Size(121, 20)
-        Me.in_supplier.TabIndex = 353
+        Me.in_supplier.TabIndex = 4
         '
         'in_gudang_n
         '
@@ -1154,7 +1153,7 @@ Partial Class fr_beli_detail
         Me.in_gudang_n.MaxLength = 200
         Me.in_gudang_n.Name = "in_gudang_n"
         Me.in_gudang_n.Size = New System.Drawing.Size(236, 20)
-        Me.in_gudang_n.TabIndex = 356
+        Me.in_gudang_n.TabIndex = 7
         '
         'in_gudang
         '
@@ -1166,7 +1165,7 @@ Partial Class fr_beli_detail
         Me.in_gudang.Name = "in_gudang"
         Me.in_gudang.ReadOnly = True
         Me.in_gudang.Size = New System.Drawing.Size(121, 20)
-        Me.in_gudang.TabIndex = 355
+        Me.in_gudang.TabIndex = 6
         '
         'Panel3
         '

@@ -336,7 +336,7 @@ Partial Class fr_sales_detail
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(274, 452)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(58, 475)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(152, 20)
@@ -346,7 +346,7 @@ Partial Class fr_sales_detail
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(58, 475)
+        Me.txtRegdate.Location = New System.Drawing.Point(252, 452)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(152, 20)
@@ -358,7 +358,7 @@ Partial Class fr_sales_detail
         Me.Label17.AutoSize = True
         Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label17.ForeColor = System.Drawing.Color.Black
-        Me.Label17.Location = New System.Drawing.Point(231, 455)
+        Me.Label17.Location = New System.Drawing.Point(15, 478)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(39, 13)
         Me.Label17.TabIndex = 125
@@ -369,7 +369,7 @@ Partial Class fr_sales_detail
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label18.ForeColor = System.Drawing.Color.Black
-        Me.Label18.Location = New System.Drawing.Point(15, 478)
+        Me.Label18.Location = New System.Drawing.Point(216, 455)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(30, 13)
         Me.Label18.TabIndex = 118
@@ -380,7 +380,7 @@ Partial Class fr_sales_detail
         Me.Label19.AutoSize = True
         Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label19.ForeColor = System.Drawing.Color.Black
-        Me.Label19.Location = New System.Drawing.Point(231, 478)
+        Me.Label19.Location = New System.Drawing.Point(216, 478)
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(30, 13)
         Me.Label19.TabIndex = 124
@@ -389,7 +389,7 @@ Partial Class fr_sales_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(274, 475)
+        Me.txtUpdDate.Location = New System.Drawing.Point(252, 475)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(152, 20)
@@ -488,9 +488,9 @@ Partial Class fr_sales_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(240, 30)
+        Me.lbl_title.Size = New System.Drawing.Size(173, 31)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Retur Penjualan"
+        Me.lbl_title.Text = "Data Salesman"
         '
         'in_target
         '

@@ -19,22 +19,25 @@ Module dbproceduralstuff
         Return conn
     End Function
 
-    Public Sub op_con()
+    Public Sub op_con(Optional skipErrMsg As Boolean = False)
         If conn.State = ConnectionState.Closed Then
-            Try
-                'For x = 0 To 2
-                conn.Open()
-                '    If conn.State = ConnectionState.Open Then
-                '        Exit For
-                '    End If
-                '    x += 1
-                'Next
-            Catch ex As Exception
-                'MessageBox.Show(String.Format("Error {1}: {0}", ex.Message, ex.GetType.ToString))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                logError(ex)
-            End Try
+            For x = 0 To 2
+                Try
+                    consoleWriteLine("try " & x)
+                    conn.Open()
+                    If conn.State = ConnectionState.Open Then
+                        Exit For
+                    End If
+                Catch ex As Exception
+                    If x = 2 Then
+                        If skipErrMsg = False Then
+                            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Tidak dapat terhubung ke server"),
+                                        Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        End If
+                        logError(ex, skipErrMsg)
+                    End If
+                End Try
+            Next
         End If
     End Sub
 
@@ -49,7 +52,7 @@ Module dbproceduralstuff
         End If
     End Sub
 
-    Public Function startTrans(queryArr As List(Of String)) As Boolean
+    Public Function startTrans(queryArr As List(Of String), Optional showErrMsg As Boolean = True) As Boolean
         Dim ctrans As New MySqlCommand
         Dim transact As MySqlTransaction = conn.BeginTransaction
         Dim querycheck As Boolean = False
@@ -63,9 +66,11 @@ Module dbproceduralstuff
                 ctrans.ExecuteNonQuery()
                 querycheck = True
             Catch ex As Exception
-                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If showErrMsg = True Then
+                    consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                    MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                                                 Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
                 logError(ex)
                 querycheck = False
                 Exit For
@@ -76,9 +81,11 @@ Module dbproceduralstuff
             Try
                 transact.Commit()
             Catch ex As Exception
-                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If showErrMsg = True Then
+                    consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                    MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
                 logError(ex)
                 querycheck = False
             End Try
@@ -90,9 +97,11 @@ Module dbproceduralstuff
             Try
                 transact.Rollback()
             Catch ex As Exception
-                consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
-                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                If showErrMsg = True Then
+                    consoleWriteLine(String.Format("{0}:{1}", ex.GetType.ToString, ex.Message))
+                    MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString, "Terjadi Kesalahan"),
+                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
                 logError(ex)
                 querycheck = False
             End Try
@@ -117,45 +126,43 @@ Module dbproceduralstuff
             MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
                             Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
             logError(ex)
-            'MessageBox.Show(String.Format("Error: {0}", ex.Message))
             check = False
         End Try
         Return check
     End Function
 
-    Public Sub dbSelect(query As String)
+    Public Sub dbSelect(query As String, Optional skipErrMsg As Boolean = False)
         op_con()
         Try
-            Console.WriteLine(query)
             cmd.Connection = conn
             cmd.CommandType = CommandType.Text
             cmd.CommandText = query
             rd = cmd.ExecuteReader
         Catch ex As Exception
             consoleWriteLine(String.Format("Error: {0}", ex.Message))
-            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            logError(ex)
+            If skipErrMsg = False Then
+                MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
+                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+            logError(ex, skipErrMsg)
         End Try
     End Sub
 
-    Public Sub readcommd(query As String)
+    Public Sub readcommd(query As String, Optional skipErrMsg As Boolean = False)
         Try
-            dbSelect(query)
+            dbSelect(query, skipErrMsg)
             If rd IsNot Nothing Then
                 rd.Read()
             End If
         Catch ex As Exception
             consoleWriteLine(String.Format("Error: {0}", ex.Message))
-            MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan"),
-                            Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            logError(ex)
+            logError(ex, skipErrMsg)
             Try
                 If rd.IsClosed = False Then
                     rd.Close()
                 End If
             Catch ex2 As Exception
-                logError(ex2)
+                logError(ex2, True)
             End Try
         End Try
     End Sub
@@ -179,7 +186,7 @@ Module dbproceduralstuff
         Return x
     End Function
 
-    Public Function getDataTablefromDB(query As String) As DataTable
+    Public Function getDataTablefromDB(query As String, Optional ErrorMsg As Boolean = False) As DataTable
         op_con()
         consoleWriteLine(query)
         Dim _cmd As New MySqlCommand(query, conn)
@@ -192,7 +199,7 @@ Module dbproceduralstuff
         Catch ex As Exception
             MessageBox.Show(String.Format("Error. {1}: {0}", ex.GetType.ToString & ex.Message, "Terjadi Kesalahan, data tidak dapat ditemukan"),
                             Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            logError(ex)
+            logError(ex, ErrorMsg)
         End Try
         Return dtable
     End Function

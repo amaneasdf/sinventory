@@ -98,46 +98,33 @@ Public Class fr_lap_beli_nota_view
                     Case "lapJualNota"
                         repdatasource.Name = "ds_jual_nota"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-                        'inquery = "SELECT * FROM selectJualNota ORDER BY lap_faktur"
-                        'inquery = "SELECT "
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_nota.rdlc"
 
                     Case "lapJualCusto"
                         repdatasource.Name = "ds_jual_custo"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-                        'inquery = "SELECT lap_custo_n, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_custo"
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
 
                     Case "lapJualSales"
                         repdatasource.Name = "ds_jual_custo"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-
-                        'inquery = "SELECT lap_jenis, lap_sales, lap_sales_n, SUM(lap_brutto) as lap_brutto, " _
-                        '    & "SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah " _
-                        '    & "FROM selectJualSales GROUP BY lap_sales,lap_jenis ORDER BY lap_sales"
-
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_sales.rdlc"
 
                     Case "lapJualTgl"
                         repdatasource.Name = "ds_jual_tgl"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-
-                        'inquery = "SELECT lap_tgl, SUM(lap_brutto) as lap_brutto, SUM(lap_diskon) as lap_diskon, SUM(lap_ppn) as lap_ppn, SUM(lap_jumlah) as lap_jumlah FROM selectJualNota GROUP BY lap_tgl"
-
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
+
                     Case "lapJualSupplier"
                         Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Supplier")
                         Dim parJudulKolom1 As New ReportParameter("parJudulKolom1", "SUPPLIER")
 
                         repdatasource.Name = "ds_jual_custo"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-
-                        'inquery = "SELECT IFNULL(supplier_kode,'-') as lap_custo, IFNULL(supplier_nama,'-') as lap_custo_n, SUM(dlap_brutto) as lap_brutto, SUM(dlap_brutto-dlap_jumlah) as lap_diskon, SUM(dlap_jumlah) as lap_jumlah FROM selectJualNotaWithDetail LEFT JOIN data_barang_master ON barang_kode=dlap_barang LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier GROUP BY supplier_kode"
-
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
                         .SetParameters(New ReportParameter() {parLabelJudul, parJudulKolom1})
@@ -166,7 +153,7 @@ Public Class fr_lap_beli_nota_view
                         '    .ReportEmbeddedResource = "Inventory.lap_jual_custo.rdlc"
 
                     Case "lapJualCustoNota"
-                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Custo Per Nota")
+                        Dim parLabelJudul As New ReportParameter("parLabelJudul", "Penjualan Per Customer Per Nota")
 
                         repdatasource.Name = "ds_jual_nota"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
@@ -180,8 +167,6 @@ Public Class fr_lap_beli_nota_view
 
                         repdatasource.Name = "ds_jual_nota"
                         repdatasource.Value = ds_transaksi.dt_lap_jual_nota
-
-                        'inquery = "SELECT * FROM selectJualNota ORDER BY lap_sales, lap_faktur"
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_jual_salesnota.rdlc"

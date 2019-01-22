@@ -37,6 +37,8 @@ Partial Public Class ds_keuangan
 
     Private tabledt_neracalajur As dt_neracalajurDataTable
 
+    Private tabledt_akun As dt_akunDataTable
+
     Private _schemaSerializationMode As Global.System.Data.SchemaSerializationMode = Global.System.Data.SchemaSerializationMode.IncludeSchema
 
     <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -83,6 +85,9 @@ Partial Public Class ds_keuangan
             End If
             If (Not (ds.Tables("dt_neracalajur")) Is Nothing) Then
                 MyBase.Tables.Add(New dt_neracalajurDataTable(ds.Tables("dt_neracalajur")))
+            End If
+            If (Not (ds.Tables("dt_akun")) Is Nothing) Then
+                MyBase.Tables.Add(New dt_akunDataTable(ds.Tables("dt_akun")))
             End If
             Me.DataSetName = ds.DataSetName
             Me.Prefix = ds.Prefix
@@ -158,6 +163,16 @@ Partial Public Class ds_keuangan
     Public ReadOnly Property dt_neracalajur() As dt_neracalajurDataTable
         Get
             Return Me.tabledt_neracalajur
+        End Get
+    End Property
+
+    <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
+     Global.System.ComponentModel.Browsable(False), _
+     Global.System.ComponentModel.DesignerSerializationVisibility(Global.System.ComponentModel.DesignerSerializationVisibility.Content)> _
+    Public ReadOnly Property dt_akun() As dt_akunDataTable
+        Get
+            Return Me.tabledt_akun
         End Get
     End Property
 
@@ -246,6 +261,9 @@ Partial Public Class ds_keuangan
             If (Not (ds.Tables("dt_neracalajur")) Is Nothing) Then
                 MyBase.Tables.Add(New dt_neracalajurDataTable(ds.Tables("dt_neracalajur")))
             End If
+            If (Not (ds.Tables("dt_akun")) Is Nothing) Then
+                MyBase.Tables.Add(New dt_akunDataTable(ds.Tables("dt_akun")))
+            End If
             Me.DataSetName = ds.DataSetName
             Me.Prefix = ds.Prefix
             Me.Namespace = ds.Namespace
@@ -314,6 +332,12 @@ Partial Public Class ds_keuangan
                 Me.tabledt_neracalajur.InitVars()
             End If
         End If
+        Me.tabledt_akun = CType(MyBase.Tables("dt_akun"), dt_akunDataTable)
+        If (initTable = True) Then
+            If (Not (Me.tabledt_akun) Is Nothing) Then
+                Me.tabledt_akun.InitVars()
+            End If
+        End If
     End Sub
 
     <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -336,6 +360,8 @@ Partial Public Class ds_keuangan
         MyBase.Tables.Add(Me.tabledt_neraca)
         Me.tabledt_neracalajur = New dt_neracalajurDataTable()
         MyBase.Tables.Add(Me.tabledt_neracalajur)
+        Me.tabledt_akun = New dt_akunDataTable()
+        MyBase.Tables.Add(Me.tabledt_akun)
     End Sub
 
     <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
@@ -371,6 +397,12 @@ Partial Public Class ds_keuangan
     <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
      Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
     Private Function ShouldSerializedt_neracalajur() As Boolean
+        Return False
+    End Function
+
+    <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+     Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+    Private Function ShouldSerializedt_akun() As Boolean
         Return False
     End Function
 
@@ -449,6 +481,9 @@ Partial Public Class ds_keuangan
 
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
     Public Delegate Sub dt_neracalajurRowChangeEventHandler(ByVal sender As Object, ByVal e As dt_neracalajurRowChangeEvent)
+
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+    Public Delegate Sub dt_akunRowChangeEventHandler(ByVal sender As Object, ByVal e As dt_akunRowChangeEvent)
 
     '''<summary>
     '''Represents the strongly named DataTable class.
@@ -2704,6 +2739,349 @@ Partial Public Class ds_keuangan
     End Class
 
     '''<summary>
+    '''Represents the strongly named DataTable class.
+    '''</summary>
+    <Global.System.Serializable(), _
+     Global.System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")> _
+    Partial Public Class dt_akunDataTable
+        Inherits Global.System.Data.TypedTableBase(Of dt_akunRow)
+
+        Private columnda_kode As Global.System.Data.DataColumn
+
+        Private columnda_jenis As Global.System.Data.DataColumn
+
+        Private columnda_gol As Global.System.Data.DataColumn
+
+        Private columnda_akun_n As Global.System.Data.DataColumn
+
+        Private columnda_akun_pos As Global.System.Data.DataColumn
+
+        Private columnda_akun_status As Global.System.Data.DataColumn
+
+        Private columnda_akun_parent As Global.System.Data.DataColumn
+
+        Private columnda_akun_ket As Global.System.Data.DataColumn
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub New()
+            MyBase.New()
+            Me.TableName = "dt_akun"
+            Me.BeginInit()
+            Me.InitClass()
+            Me.EndInit()
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Friend Sub New(ByVal table As Global.System.Data.DataTable)
+            MyBase.New()
+            Me.TableName = table.TableName
+            If (table.CaseSensitive <> table.DataSet.CaseSensitive) Then
+                Me.CaseSensitive = table.CaseSensitive
+            End If
+            If (table.Locale.ToString <> table.DataSet.Locale.ToString) Then
+                Me.Locale = table.Locale
+            End If
+            If (table.Namespace <> table.DataSet.Namespace) Then
+                Me.Namespace = table.Namespace
+            End If
+            Me.Prefix = table.Prefix
+            Me.MinimumCapacity = table.MinimumCapacity
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Sub New(ByVal info As Global.System.Runtime.Serialization.SerializationInfo, ByVal context As Global.System.Runtime.Serialization.StreamingContext)
+            MyBase.New(info, context)
+            Me.InitVars()
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_kodeColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_kode
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_jenisColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_jenis
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_golColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_gol
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_akun_nColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_akun_n
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_akun_posColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_akun_pos
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_akun_statusColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_akun_status
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_akun_parentColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_akun_parent
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property da_akun_ketColumn() As Global.System.Data.DataColumn
+            Get
+                Return Me.columnda_akun_ket
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0"), _
+         Global.System.ComponentModel.Browsable(False)> _
+        Public ReadOnly Property Count() As Integer
+            Get
+                Return Me.Rows.Count
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Default Public ReadOnly Property Item(ByVal index As Integer) As dt_akunRow
+            Get
+                Return CType(Me.Rows(index), dt_akunRow)
+            End Get
+        End Property
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Event dt_akunRowChanging As dt_akunRowChangeEventHandler
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Event dt_akunRowChanged As dt_akunRowChangeEventHandler
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Event dt_akunRowDeleting As dt_akunRowChangeEventHandler
+
+        <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Event dt_akunRowDeleted As dt_akunRowChangeEventHandler
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Overloads Sub Adddt_akunRow(ByVal row As dt_akunRow)
+            Me.Rows.Add(row)
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Overloads Function Adddt_akunRow(ByVal da_kode As String, ByVal da_jenis As String, ByVal da_gol As String, ByVal da_akun_n As String, ByVal da_akun_pos As String, ByVal da_akun_status As String, ByVal da_akun_parent As String, ByVal da_akun_ket As String) As dt_akunRow
+            Dim rowdt_akunRow As dt_akunRow = CType(Me.NewRow, dt_akunRow)
+            Dim columnValuesArray() As Object = New Object() {da_kode, da_jenis, da_gol, da_akun_n, da_akun_pos, da_akun_status, da_akun_parent, da_akun_ket}
+            rowdt_akunRow.ItemArray = columnValuesArray
+            Me.Rows.Add(rowdt_akunRow)
+            Return rowdt_akunRow
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Overrides Function Clone() As Global.System.Data.DataTable
+            Dim cln As dt_akunDataTable = CType(MyBase.Clone, dt_akunDataTable)
+            cln.InitVars()
+            Return cln
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Function CreateInstance() As Global.System.Data.DataTable
+            Return New dt_akunDataTable()
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Friend Sub InitVars()
+            Me.columnda_kode = MyBase.Columns("da_kode")
+            Me.columnda_jenis = MyBase.Columns("da_jenis")
+            Me.columnda_gol = MyBase.Columns("da_gol")
+            Me.columnda_akun_n = MyBase.Columns("da_akun_n")
+            Me.columnda_akun_pos = MyBase.Columns("da_akun_pos")
+            Me.columnda_akun_status = MyBase.Columns("da_akun_status")
+            Me.columnda_akun_parent = MyBase.Columns("da_akun_parent")
+            Me.columnda_akun_ket = MyBase.Columns("da_akun_ket")
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Private Sub InitClass()
+            Me.columnda_kode = New Global.System.Data.DataColumn("da_kode", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_kode)
+            Me.columnda_jenis = New Global.System.Data.DataColumn("da_jenis", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_jenis)
+            Me.columnda_gol = New Global.System.Data.DataColumn("da_gol", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_gol)
+            Me.columnda_akun_n = New Global.System.Data.DataColumn("da_akun_n", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_akun_n)
+            Me.columnda_akun_pos = New Global.System.Data.DataColumn("da_akun_pos", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_akun_pos)
+            Me.columnda_akun_status = New Global.System.Data.DataColumn("da_akun_status", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_akun_status)
+            Me.columnda_akun_parent = New Global.System.Data.DataColumn("da_akun_parent", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_akun_parent)
+            Me.columnda_akun_ket = New Global.System.Data.DataColumn("da_akun_ket", GetType(String), Nothing, Global.System.Data.MappingType.Element)
+            MyBase.Columns.Add(Me.columnda_akun_ket)
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Newdt_akunRow() As dt_akunRow
+            Return CType(Me.NewRow, dt_akunRow)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Function NewRowFromBuilder(ByVal builder As Global.System.Data.DataRowBuilder) As Global.System.Data.DataRow
+            Return New dt_akunRow(builder)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Function GetRowType() As Global.System.Type
+            Return GetType(dt_akunRow)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Sub OnRowChanged(ByVal e As Global.System.Data.DataRowChangeEventArgs)
+            MyBase.OnRowChanged(e)
+            If (Not (Me.dt_akunRowChangedEvent) Is Nothing) Then
+                RaiseEvent dt_akunRowChanged(Me, New dt_akunRowChangeEvent(CType(e.Row, dt_akunRow), e.Action))
+            End If
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Sub OnRowChanging(ByVal e As Global.System.Data.DataRowChangeEventArgs)
+            MyBase.OnRowChanging(e)
+            If (Not (Me.dt_akunRowChangingEvent) Is Nothing) Then
+                RaiseEvent dt_akunRowChanging(Me, New dt_akunRowChangeEvent(CType(e.Row, dt_akunRow), e.Action))
+            End If
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Sub OnRowDeleted(ByVal e As Global.System.Data.DataRowChangeEventArgs)
+            MyBase.OnRowDeleted(e)
+            If (Not (Me.dt_akunRowDeletedEvent) Is Nothing) Then
+                RaiseEvent dt_akunRowDeleted(Me, New dt_akunRowChangeEvent(CType(e.Row, dt_akunRow), e.Action))
+            End If
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Protected Overrides Sub OnRowDeleting(ByVal e As Global.System.Data.DataRowChangeEventArgs)
+            MyBase.OnRowDeleting(e)
+            If (Not (Me.dt_akunRowDeletingEvent) Is Nothing) Then
+                RaiseEvent dt_akunRowDeleting(Me, New dt_akunRowChangeEvent(CType(e.Row, dt_akunRow), e.Action))
+            End If
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Removedt_akunRow(ByVal row As dt_akunRow)
+            Me.Rows.Remove(row)
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Shared Function GetTypedTableSchema(ByVal xs As Global.System.Xml.Schema.XmlSchemaSet) As Global.System.Xml.Schema.XmlSchemaComplexType
+            Dim type As Global.System.Xml.Schema.XmlSchemaComplexType = New Global.System.Xml.Schema.XmlSchemaComplexType()
+            Dim sequence As Global.System.Xml.Schema.XmlSchemaSequence = New Global.System.Xml.Schema.XmlSchemaSequence()
+            Dim ds As ds_keuangan = New ds_keuangan()
+            Dim any1 As Global.System.Xml.Schema.XmlSchemaAny = New Global.System.Xml.Schema.XmlSchemaAny()
+            any1.Namespace = "http://www.w3.org/2001/XMLSchema"
+            any1.MinOccurs = New Decimal(0)
+            any1.MaxOccurs = Decimal.MaxValue
+            any1.ProcessContents = Global.System.Xml.Schema.XmlSchemaContentProcessing.Lax
+            sequence.Items.Add(any1)
+            Dim any2 As Global.System.Xml.Schema.XmlSchemaAny = New Global.System.Xml.Schema.XmlSchemaAny()
+            any2.Namespace = "urn:schemas-microsoft-com:xml-diffgram-v1"
+            any2.MinOccurs = New Decimal(1)
+            any2.ProcessContents = Global.System.Xml.Schema.XmlSchemaContentProcessing.Lax
+            sequence.Items.Add(any2)
+            Dim attribute1 As Global.System.Xml.Schema.XmlSchemaAttribute = New Global.System.Xml.Schema.XmlSchemaAttribute()
+            attribute1.Name = "namespace"
+            attribute1.FixedValue = ds.Namespace
+            type.Attributes.Add(attribute1)
+            Dim attribute2 As Global.System.Xml.Schema.XmlSchemaAttribute = New Global.System.Xml.Schema.XmlSchemaAttribute()
+            attribute2.Name = "tableTypeName"
+            attribute2.FixedValue = "dt_akunDataTable"
+            type.Attributes.Add(attribute2)
+            type.Particle = sequence
+            Dim dsSchema As Global.System.Xml.Schema.XmlSchema = ds.GetSchemaSerializable
+            If xs.Contains(dsSchema.TargetNamespace) Then
+                Dim s1 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
+                Dim s2 As Global.System.IO.MemoryStream = New Global.System.IO.MemoryStream()
+                Try
+                    Dim schema As Global.System.Xml.Schema.XmlSchema = Nothing
+                    dsSchema.Write(s1)
+                    Dim schemas As Global.System.Collections.IEnumerator = xs.Schemas(dsSchema.TargetNamespace).GetEnumerator
+                    Do While schemas.MoveNext
+                        schema = CType(schemas.Current, Global.System.Xml.Schema.XmlSchema)
+                        s2.SetLength(0)
+                        schema.Write(s2)
+                        If (s1.Length = s2.Length) Then
+                            s1.Position = 0
+                            s2.Position = 0
+
+                            Do While ((s1.Position <> s1.Length) _
+                                        AndAlso (s1.ReadByte = s2.ReadByte))
+
+
+                            Loop
+                            If (s1.Position = s1.Length) Then
+                                Return type
+                            End If
+                        End If
+
+                    Loop
+                Finally
+                    If (Not (s1) Is Nothing) Then
+                        s1.Close()
+                    End If
+                    If (Not (s2) Is Nothing) Then
+                        s2.Close()
+                    End If
+                End Try
+            End If
+            xs.Add(dsSchema)
+            Return type
+        End Function
+    End Class
+
+    '''<summary>
     '''Represents strongly named DataRow class.
     '''</summary>
     Partial Public Class dt_biayaRow
@@ -4501,6 +4879,238 @@ Partial Public Class ds_keuangan
     End Class
 
     '''<summary>
+    '''Represents strongly named DataRow class.
+    '''</summary>
+    Partial Public Class dt_akunRow
+        Inherits Global.System.Data.DataRow
+
+        Private tabledt_akun As dt_akunDataTable
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Friend Sub New(ByVal rb As Global.System.Data.DataRowBuilder)
+            MyBase.New(rb)
+            Me.tabledt_akun = CType(Me.Table, dt_akunDataTable)
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_kode() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_kodeColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_kode' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_kodeColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_jenis() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_jenisColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_jenis' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_jenisColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_gol() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_golColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_gol' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_golColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_akun_n() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_akun_nColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_akun_n' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_akun_nColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_akun_pos() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_akun_posColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_akun_pos' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_akun_posColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_akun_status() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_akun_statusColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_akun_status' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_akun_statusColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_akun_parent() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_akun_parentColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_akun_parent' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_akun_parentColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Property da_akun_ket() As String
+            Get
+                Try
+                    Return CType(Me(Me.tabledt_akun.da_akun_ketColumn), String)
+                Catch e As Global.System.InvalidCastException
+                    Throw New Global.System.Data.StrongTypingException("The value for column 'da_akun_ket' in table 'dt_akun' is DBNull.", e)
+                End Try
+            End Get
+            Set(value As String)
+                Me(Me.tabledt_akun.da_akun_ketColumn) = value
+            End Set
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_kodeNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_kodeColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_kodeNull()
+            Me(Me.tabledt_akun.da_kodeColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_jenisNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_jenisColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_jenisNull()
+            Me(Me.tabledt_akun.da_jenisColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_golNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_golColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_golNull()
+            Me(Me.tabledt_akun.da_golColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_akun_nNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_akun_nColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_akun_nNull()
+            Me(Me.tabledt_akun.da_akun_nColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_akun_posNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_akun_posColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_akun_posNull()
+            Me(Me.tabledt_akun.da_akun_posColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_akun_statusNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_akun_statusColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_akun_statusNull()
+            Me(Me.tabledt_akun.da_akun_statusColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_akun_parentNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_akun_parentColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_akun_parentNull()
+            Me(Me.tabledt_akun.da_akun_parentColumn) = Global.System.Convert.DBNull
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Function Isda_akun_ketNull() As Boolean
+            Return Me.IsNull(Me.tabledt_akun.da_akun_ketColumn)
+        End Function
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub Setda_akun_ketNull()
+            Me(Me.tabledt_akun.da_akun_ketColumn) = Global.System.Convert.DBNull
+        End Sub
+    End Class
+
+    '''<summary>
     '''Row event argument class
     '''</summary>
     <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
@@ -4702,6 +5312,42 @@ Partial Public Class ds_keuangan
         <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
          Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
         Public ReadOnly Property Row() As dt_neracalajurRow
+            Get
+                Return Me.eventRow
+            End Get
+        End Property
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property Action() As Global.System.Data.DataRowAction
+            Get
+                Return Me.eventAction
+            End Get
+        End Property
+    End Class
+
+    '''<summary>
+    '''Row event argument class
+    '''</summary>
+    <Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+    Public Class dt_akunRowChangeEvent
+        Inherits Global.System.EventArgs
+
+        Private eventRow As dt_akunRow
+
+        Private eventAction As Global.System.Data.DataRowAction
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public Sub New(ByVal row As dt_akunRow, ByVal action As Global.System.Data.DataRowAction)
+            MyBase.New()
+            Me.eventRow = row
+            Me.eventAction = action
+        End Sub
+
+        <Global.System.Diagnostics.DebuggerNonUserCodeAttribute(), _
+         Global.System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")> _
+        Public ReadOnly Property Row() As dt_akunRow
             Get
                 Return Me.eventRow
             End Get

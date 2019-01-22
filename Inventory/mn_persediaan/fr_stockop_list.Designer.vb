@@ -681,7 +681,6 @@ Partial Class fr_stockop_list
         Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_list.Size = New System.Drawing.Size(333, 467)
         Me.dgv_list.TabIndex = 17
-        Me.dgv_list.Visible = False
         '
         'Panel2
         '

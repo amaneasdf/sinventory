@@ -118,6 +118,7 @@
             cb_bayar_jenis.Enabled = False
         End If
 
+        mn_print.Enabled = IIf(rtbStatus = 1, True, False)
     End Sub
 
     'SET SATUAN BARANG
@@ -590,7 +591,11 @@
     End Sub
 
     Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_cancelorder.Click
-
+        If MessageBox.Show("Batalkan transaksi retur?", "Retur Pembelian", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            rtbStatus = 2
+            setStatus()
+            saveData()
+        End If
     End Sub
 
     'LOAD
@@ -845,7 +850,7 @@
         keyshortenter(cb_bayar_jenis, e)
     End Sub
 
-    Private Sub cb_bayar_jenis_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_bayar_jenis.SelectedIndexChanged
+    Private Sub cb_bayar_jenis_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_bayar_jenis.SelectionChangeCommitted
         in_no_faktur.Enabled = IIf(cb_bayar_jenis.SelectedValue = 1, True, False)
         in_no_faktur.Text = IIf(cb_bayar_jenis.SelectedValue = 1, in_no_faktur.Text, "")
     End Sub

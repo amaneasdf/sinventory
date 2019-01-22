@@ -62,7 +62,16 @@ Public Class fr_lap_keuangan
                         End With
 
                     Case "k_daftarperk"
-                        Exit Sub
+                        repdatasource.Name = "ds_daftarakun"
+                        repdatasource.Value = ds_keuangan.dt_akun
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.uang_daftarakun.rdlc"
+
+                        With ds_keuangan
+                            .dt_akun.Clear()
+                            filldatatabel(inquery, .dt_akun)
+                        End With
 
                     Case "k_jurnalumum"
                         repdatasource.Name = "ds_jurnalumum"

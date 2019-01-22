@@ -91,29 +91,23 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to [Connection]
-        '''Host = 10.201.7.2
-        '''DB = inventory
-        '''UID = usr_ata
-        '''Pass = ata**!
-        '''
-        '''[LocalTESTLOG]
-        '''Host = localhost
-        '''DB = inventory
-        '''UID = root
-        '''Pass = root
-        '''
-        '''[Local]
+        '''  Looks up a localized string similar to [Local]
         '''Host = localhost
         '''DB = db-inventory
-        '''UID = root
-        '''Pass = root
+        '''UID = wbQdhrzbauYbf3qRhG0x2w==
+        '''Pass =
         '''
         '''[Catra]
         '''Host = 17.5.16.21
         '''DB = db-inventory
-        '''UID = usr_inventory
-        '''Pass = inventory123!.
+        '''UID = AG0j230dxE9/Hh9+tj+Rqw==
+        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==
+        '''
+        '''[CatraDev]
+        '''Host = 17.5.16.21
+        '''DB = db-inventory_dev
+        '''UID = AG0j230dxE9/Hh9+tj+Rqw==
+        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==.
         '''</summary>
         Friend ReadOnly Property config() As String
             Get
@@ -147,6 +141,16 @@ Namespace My.Resources
         Friend ReadOnly Property logo5() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("logo5", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property minimize() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("minimize", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

@@ -513,7 +513,7 @@
                 Exit Sub
             End If
 
-            q = "UPDATE data_stok_opname SET faktur_status=2, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_bukti='{0}'"
+            q = "UPDATE data_stok_opname SET faktur_status=2, faktur_proc_date=NOW(), faktur_proc_alias='{1}' WHERE faktur_bukti='{0}'"
             queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
 
             q = "UPDATE data_stok_kartustok SET trans_status=9, trans_upd_date=NOW(), trans_upd_alias='{1}' WHERE trans_faktur='{0}'"
@@ -865,7 +865,25 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
+    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp, in_barang_nm.KeyUp
+        Dim _nxtcontrol As Object
+        Dim _kdcontrol As Object
+
+        Select Case sender.Name.ToString
+            Case "in_gudang_n"
+                _nxtcontrol = in_barang_nm
+                _kdcontrol = in_gudang
+            Case "in_barang_nm"
+                _nxtcontrol = in_qty2
+                _kdcontrol = in_barang
+            Case Else
+                Exit Sub
+        End Select
+
+        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
+            _kdcontrol.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -874,16 +892,18 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_barang_nm, e)
+            keyshortenter(_nxtcontrol, e)
         ElseIf e.KeyCode = Keys.Escape Then
             If popPnl_barang.Visible = True Then
                 popPnl_barang.Visible = False
             End If
         Else
-            If popPnl_barang.Visible = False And in_gudang_n.ReadOnly = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
     End Sub
 
@@ -922,39 +942,17 @@
         End If
     End Sub
 
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty2, e)
-        ElseIf e.KeyCode = Keys.Escape Then
-            If popPnl_barang.Visible = True Then
-                popPnl_barang.Visible = False
-            End If
-        Else
-            If popPnl_barang.Visible = False And in_barang_nm.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barang", in_barang_nm.Text)
-        End If
-    End Sub
-
     Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged
         If in_barang_nm.Text = "" Then
             clearTextBarang()
         End If
     End Sub
 
-    Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyDown
+    Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyUp
         keyshortenter(in_hpp, e)
     End Sub
 
-    Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyDown
+    Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyUp
         keyshortenter(bt_tbbarang, e)
     End Sub
     '==========================================================================================================================

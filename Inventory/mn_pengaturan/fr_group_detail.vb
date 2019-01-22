@@ -27,6 +27,13 @@
         rd.Close()
 
         setStatus()
+
+        If loggeduser.admin_pc = False Then
+            mn_actdeact.Enabled = False
+            mn_del.Enabled = False
+            mn_save.Enabled = False
+            bt_simpan_group.Enabled = False
+        End If
     End Sub
 
     'menutree
@@ -256,6 +263,7 @@
         Me.Cursor = Cursors.Default
 
         If queryCheck = False Then
+            MessageBox.Show("Data tidak dapat tersimpan")
             Exit Sub
         Else
             MessageBox.Show("Data telah disimpan")
@@ -331,7 +339,7 @@
         If bt_simpan_group.Text = "Update" Then
             treeviewCheck()
             getGroupData(in_kode.Text)
-            mn_actdeact.Enabled = True
+            'mn_actdeact.Enabled = True
         End If
     End Sub
 
@@ -354,39 +362,6 @@
         If MessageBox.Show("Simpan data user group?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             saveData()
         End If
-
-
-        'op_con()
-        'If bt_simpan_group.Text = "Simpan" Then
-        '    readcommd("SELECT IFNULL(MAX(group_kode), '0') as Kode FROM data_pengguna_group")
-        '    If rd.HasRows Then
-        '        in_kode.Text = Val(rd.Item("Kode")) + 1
-        '    End If
-        '    rd.Close()
-
-        '    querycheck = commnd("INSERT INTO data_pengguna_group VALUES('" & in_kode.Text & "', '" & in_nama_group.Text & "', 1, '', '" & in_ket_group.Text & "', now(), '" & loggeduser.user_ip & "', '" & loggeduser.user_id & "', '','','')")
-
-        'ElseIf bt_simpan_group.Text = "Update" Then
-        '    querycheck = commnd("UPDATE data_pengguna_group SET group_nama = '" & in_nama_group.Text & "', group_keterangan = '" & in_ket_group.Text & "', group_upd_date = now(), group_upd_ip = '" & loggeduser.user_ip & "', group_upd_alias = '" & loggeduser.user_id & "' WHERE group_kode = '" & in_kode.Text & "'")
-
-        'End If
-
-        'Me.Cursor = Cursors.WaitCursor
-
-        'If querycheck = False Then
-        '    Me.Cursor = Cursors.Default
-        '    Exit Sub
-        'Else
-        '    processtreeview()
-
-        '    Me.Cursor = Cursors.Default
-        '    MessageBox.Show("Data telah disimpan")
-
-        '    populateDGVUserCon("group", "", frmgroup.dgv_list)
-        '    frmgroup.in_cari.Clear()
-
-        '    Me.Close()
-        'End If
     End Sub
 
     'UI

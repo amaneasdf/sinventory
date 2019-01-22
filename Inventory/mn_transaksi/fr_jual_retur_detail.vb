@@ -88,7 +88,7 @@
         End Select
 
         'If loggeduser.allowedit_transact = False Then
-        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Or (rtjstatus = 0 And loggeduser.validasi_trans = False) Then
+        If loggeduser.allowedit_transact = False Or selectperiode.closed = True Or (rtjstatus = 0 And loggeduser.validasi_trans = False) Or rtjstatus = 2 Then
             For Each txt As TextBox In {in_pajak, in_custo_n, in_sales_n, in_gudang_n, in_barang_nm, in_ket, in_no_faktur, in_no_faktur_ex}
                 txt.ReadOnly = True
             Next
@@ -108,6 +108,7 @@
         End If
         'End If
 
+        mn_print.Enabled = IIf(rtjstatus = 1, True, False)
     End Sub
 
     'SET SATUAN BARANG
@@ -481,7 +482,7 @@
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
                 "trans_hpp='" & _hpp.ToString.Replace(",", ".") & "'",
                 "trans_diskon=" & rows.Cells("diskon").Value.ToString.Replace(",", "."),
-                "trans_status='" & rtjstatus & "'"
+                "trans_status='" & IIf(rtjstatus <> 9, 1, 9) & "'"
                 }
             q = "INSERT INTO data_penjualan_retur_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", dataBrg)))
@@ -580,6 +581,14 @@
             End With
         End Using
         Me.Cursor = Cursors.Default
+    End Sub
+
+    Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_cancelorder.Click
+        If MessageBox.Show("Batalkan transaksi retur?", "Retur Penjualan", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+            rtjstatus = 2
+            setStatus()
+            saveData()
+        End If
     End Sub
 
     'LOAD
@@ -705,7 +714,7 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_keyup(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If

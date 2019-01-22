@@ -321,7 +321,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -361,7 +361,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -401,7 +401,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -441,7 +441,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -483,7 +483,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -525,7 +525,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -567,7 +567,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -609,7 +609,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -632,7 +632,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=RunningValue(Fields!lap_faktur.Value,Count,Nothing)</Value>
+                              <Value>=RunningValue(Fields!lap_faktur.Value,Count,"lap_jenis")</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -946,7 +946,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -986,7 +986,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1026,7 +1026,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1068,7 +1068,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1113,7 +1113,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1156,7 +1156,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1201,7 +1201,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1246,7 +1246,7 @@
                         <BottomBorder>
                           <Style>Solid</Style>
                         </BottomBorder>
-                        <BackgroundColor>Silver</BackgroundColor>
+                        <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -1538,293 +1538,6 @@
                 </TablixCell>
               </TablixCells>
             </TablixRow>
-            <TablixRow>
-              <Height>0.6cm</Height>
-              <TablixCells>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox38">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox38</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox39">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox39</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox40">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style />
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox40</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox41">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Left</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox41</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox42">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox42</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox43">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox43</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox44">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox44</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-                <TablixCell>
-                  <CellContents>
-                    <Textbox Name="Textbox45">
-                      <CanGrow>true</CanGrow>
-                      <KeepTogether>true</KeepTogether>
-                      <Paragraphs>
-                        <Paragraph>
-                          <TextRuns>
-                            <TextRun>
-                              <Value />
-                              <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
-                                <Language>id-ID</Language>
-                                <NumeralLanguage>id-ID</NumeralLanguage>
-                              </Style>
-                            </TextRun>
-                          </TextRuns>
-                          <Style>
-                            <TextAlign>Right</TextAlign>
-                          </Style>
-                        </Paragraph>
-                      </Paragraphs>
-                      <rd:DefaultName>Textbox45</rd:DefaultName>
-                      <Style>
-                        <Border>
-                          <Color>LightGrey</Color>
-                          <Style>None</Style>
-                        </Border>
-                        <PaddingLeft>2pt</PaddingLeft>
-                        <PaddingRight>2pt</PaddingRight>
-                        <PaddingTop>2pt</PaddingTop>
-                        <PaddingBottom>2pt</PaddingBottom>
-                      </Style>
-                    </Textbox>
-                  </CellContents>
-                </TablixCell>
-              </TablixCells>
-            </TablixRow>
           </TablixRows>
         </TablixBody>
         <TablixColumnHierarchy>
@@ -1870,12 +1583,11 @@
                 </TablixMember>
               </TablixMembers>
             </TablixMember>
-            <TablixMember />
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_nota</DataSetName>
-        <Top>0.02646cm</Top>
-        <Height>3.17666cm</Height>
+        <Top>1.49986cm</Top>
+        <Height>2.57666cm</Height>
         <Width>19.70272cm</Width>
         <Style>
           <Border>
@@ -1883,14 +1595,101 @@
           </Border>
         </Style>
       </Tablix>
+      <Textbox Name="Textbox24">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>Pembelian Per Nota (Exclude PPN)</Value>
+                <Style>
+                  <FontFamily>Consolas</FontFamily>
+                  <FontSize>14pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox21</rd:DefaultName>
+        <Height>0.71465cm</Height>
+        <Width>19.75cm</Width>
+        <ZIndex>1</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Textbox Name="Textbox32">
+        <CanGrow>true</CanGrow>
+        <KeepTogether>true</KeepTogether>
+        <Paragraphs>
+          <Paragraph>
+            <TextRuns>
+              <TextRun>
+                <Value>=Parameters!parTglAwal.Value &amp; " s.d. " &amp; Parameters!parTglAkhir.Value</Value>
+                <Style>
+                  <FontFamily>Consolas</FontFamily>
+                  <FontSize>9pt</FontSize>
+                  <FontWeight>SemiBold</FontWeight>
+                  <Color>Maroon</Color>
+                </Style>
+              </TextRun>
+            </TextRuns>
+            <Style>
+              <TextAlign>Center</TextAlign>
+            </Style>
+          </Paragraph>
+        </Paragraphs>
+        <rd:DefaultName>Textbox21</rd:DefaultName>
+        <Top>0.71465cm</Top>
+        <Height>0.60882cm</Height>
+        <Width>19.75cm</Width>
+        <ZIndex>2</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+      </Textbox>
+      <Rectangle Name="Rectangle1">
+        <KeepTogether>true</KeepTogether>
+        <Top>4.14707cm</Top>
+        <Left>0.75846cm</Left>
+        <Height>1.92622cm</Height>
+        <Width>10.25cm</Width>
+        <ZIndex>3</ZIndex>
+        <Style>
+          <Border>
+            <Style>None</Style>
+          </Border>
+        </Style>
+      </Rectangle>
     </ReportItems>
-    <Height>1.26107in</Height>
-    <Style />
+    <Height>2.4694in</Height>
+    <Style>
+      <Border>
+        <Style>None</Style>
+      </Border>
+    </Style>
   </Body>
   <Width>19.75cm</Width>
   <Page>
     <PageHeader>
-      <Height>1.726cm</Height>
+      <Height>1.5cm</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -1904,37 +1703,34 @@
                   <Value>CV.Catra Upaya</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>16pt</FontSize>
+                    <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <Style />
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Jl. Bima No.14 Jatiwinangun</Value>
+                  <Value>Jl. Bima No.14 Jatiwinangun Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
+                    <FontSize>9pt</FontSize>
+                    <Color>Maroon</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
-              <Style />
-            </Paragraph>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Purwokerto</Value>
-                  <Style>
-                    <FontFamily>Consolas</FontFamily>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style />
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Height>1.726cm</Height>
-          <Width>5.41042cm</Width>
+          <Height>1.25055cm</Height>
+          <Width>11.75cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -1945,78 +1741,18 @@
             <PaddingBottom>2pt</PaddingBottom>
           </Style>
         </Textbox>
-        <Textbox Name="Textbox21">
-          <CanGrow>true</CanGrow>
+        <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>Pembelian Per Nota (Exclude PPN)</Value>
-                  <Style>
-                    <FontFamily>Consolas</FontFamily>
-                    <FontSize>11pt</FontSize>
-                    <FontWeight>SemiBold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>Center</TextAlign>
-              </Style>
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox21</rd:DefaultName>
-          <Top>0.43807cm</Top>
-          <Left>5.4457cm</Left>
-          <Height>0.60882cm</Height>
-          <Width>9.17742cm</Width>
+          <Left>15.25cm</Left>
+          <Height>1.25055cm</Height>
+          <Width>4.5cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
             </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
           </Style>
-        </Textbox>
-        <Textbox Name="Textbox22">
-          <CanGrow>true</CanGrow>
-          <KeepTogether>true</KeepTogether>
-          <Paragraphs>
-            <Paragraph>
-              <TextRuns>
-                <TextRun>
-                  <Value>= Parameters!parTglAwal.Value &amp; " s.d. " &amp; Parameters!parTglAkhir.Value</Value>
-                  <Style>
-                    <FontFamily>Consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
-                    <FontWeight>SemiBold</FontWeight>
-                  </Style>
-                </TextRun>
-              </TextRuns>
-              <Style>
-                <TextAlign>Center</TextAlign>
-              </Style>
-            </Paragraph>
-          </Paragraphs>
-          <rd:DefaultName>Textbox21</rd:DefaultName>
-          <Top>1.11718cm</Top>
-          <Left>5.4457cm</Left>
-          <Height>0.60882cm</Height>
-          <Width>9.17742cm</Width>
-          <ZIndex>2</ZIndex>
-          <Style>
-            <Border>
-              <Style>None</Style>
-            </Border>
-            <PaddingLeft>2pt</PaddingLeft>
-            <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
-          </Style>
-        </Textbox>
+        </Rectangle>
       </ReportItems>
       <Style>
         <Border>
@@ -2040,6 +1776,7 @@
                   <Style>
                     <FontFamily>Consolas</FontFamily>
                     <FontSize>8pt</FontSize>
+                    <Color>Orange</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2049,7 +1786,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Top>0.07055cm</Top>
+          <Top>0.14111cm</Top>
           <Left>16.90272cm</Left>
           <Height>0.46771cm</Height>
           <Width>2.8cm</Width>
@@ -2074,6 +1811,7 @@
                   <Style>
                     <FontFamily>Consolas</FontFamily>
                     <FontSize>8pt</FontSize>
+                    <Color>Orange</Color>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -2081,7 +1819,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.03528cm</Top>
+          <Top>0.13229cm</Top>
           <Height>0.47653cm</Height>
           <Width>7.57312cm</Width>
           <ZIndex>1</ZIndex>
@@ -2100,9 +1838,6 @@
         <Border>
           <Style>None</Style>
         </Border>
-        <TopBorder>
-          <Style>Solid</Style>
-        </TopBorder>
       </Style>
     </PageFooter>
     <PageHeight>33cm</PageHeight>

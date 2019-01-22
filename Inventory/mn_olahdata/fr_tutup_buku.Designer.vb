@@ -163,7 +163,7 @@ Partial Class fr_tutup_buku
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
         Me.bt_simpanperkiraan.Size = New System.Drawing.Size(156, 30)
         Me.bt_simpanperkiraan.TabIndex = 8
-        Me.bt_simpanperkiraan.Text = "Simpan Pembayaran"
+        Me.bt_simpanperkiraan.Text = "Proses Tutup Buku"
         Me.bt_simpanperkiraan.UseVisualStyleBackColor = True
         '
         'ck_proses

@@ -1193,6 +1193,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_CE5FE368009C4C3082B74D5A94B44F4C"
+                    {
+                    "Name" = "8:Inventory Catra Upaya"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_3F20611D8DC642E28A9751DCC8256551"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
             "{1525181F-901A-416C-8A58-119130FE478E}:_D336F3CA35A841F885CFDFF2DD168A9F"
@@ -1222,19 +1233,19 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
-        "ProductCode" = "8:{306F0FBE-A5DB-42D4-824E-B7DE452C08FC}"
-        "PackageCode" = "8:{3025B385-2C37-4F0D-B6DF-3B77E516EDCC}"
+        "ProductCode" = "8:{39F86574-6827-4FC8-9356-7FCC0EC4547E}"
+        "PackageCode" = "8:{C184B501-CA7F-4EAE-A1FF-B0BB10CCFF5C}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.2"
+        "ProductVersion" = "8:0.0.3"
         "Manufacturer" = "8:MSO"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:SIMInventory"
+        "Title" = "8:Inventory CV.CatraUpaya"
         "Subject" = "8:"
         "ARPCONTACT" = "8:ata@MSO"
         "Keywords" = "8:"
@@ -1366,7 +1377,7 @@
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_12C6DF635F0A4064B11679E5A82F9889"
-            "Folder" = "8:_37A480C2109E467DA9C8CFF62070E184"
+            "Folder" = "8:_CE5FE368009C4C3082B74D5A94B44F4C"
             "WorkingFolder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
             "Icon" = "8:_A519D6A5FA1C4069A732BCF10C0934D9"
             "Feature" = "8:"
@@ -1380,7 +1391,7 @@
             "IconIndex" = "3:0"
             "Transitive" = "11:FALSE"
             "Target" = "8:_016F3986029C43039BDA33A139945042"
-            "Folder" = "8:_37A480C2109E467DA9C8CFF62070E184"
+            "Folder" = "8:_CE5FE368009C4C3082B74D5A94B44F4C"
             "WorkingFolder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
             "Icon" = "8:"
             "Feature" = "8:"

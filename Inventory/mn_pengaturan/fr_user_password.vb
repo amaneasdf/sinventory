@@ -84,7 +84,10 @@
     End Sub
 
     Private Sub bt_simpanuser_Click(sender As Object, e As EventArgs) Handles bt_simpanuser.Click
+        Dim queryArr As New List(Of String)
         Dim querycheck As Boolean = False
+        Dim q As String = ""
+
         If in_passold.Text = Nothing Then
             MessageBox.Show("Password lama belum di input")
             in_passold.Focus()
@@ -96,21 +99,29 @@
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan password baru?", "Ubah Password", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            If checkdata("data_pengguna_alias", "'" & in_userid.Text & "' AND user_pwd=MD5('" & in_passold.Text & "')", "user_alias") = False Then
+        If MessageBox.Show("Simpan password baru?", "Ubah Password", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            If checkdata("data_pengguna_alias", "'" & in_userid.Text & "' AND user_pwd='" & computeHash(in_passold.Text) & "'", "user_alias") = False Then
                 MessageBox.Show("Password lama salah")
                 Exit Sub
             End If
 
-            querycheck = commnd("UPDATE data_pengguna_alias SET user_pwd=MD5('" & in_passnew.Text & "'), user_exp_date=DATE_ADD(CURDATE(),INTERVAL 3 MONTH) WHERE user_alias = '" & in_userid.Text & "'")
+            q = "UPDATE data_pengguna_alias SET user_pwd='{0}', user_status=1 WHERE user_alias = '{0}'"
+            queryArr.Add(String.Format(q, computeHash(in_passnew.Text), in_userid.Text))
+
+            q = "INSERT INTO system_pwdchange_log(log_alias1,log_alias2,log_ip,log_tanggal) VALUE({0})"
+            Dim data As String() = {"'" & in_userid.Text & "'", "'" & loggeduser.user_id & "'", "'" & loggeduser.user_ip & "'", "NOW()"}
+            queryArr.Add(String.Format(q, String.Join(",", data)))
+
+            querycheck = startTrans(queryArr)
         Else
             Exit Sub
         End If
-       
+
         If querycheck = False Then
+            MessageBox.Show("Password baru gagal tersimpan", "Ubah Password", MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
         Else
-            MessageBox.Show("Password baru tersimpan")
+            MessageBox.Show("Password baru tersimpan", "Ubah Password")
             Me.Close()
         End If
     End Sub

@@ -11,8 +11,6 @@
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
-        Console.WriteLine("pg" & page.Name.ToString)
-        Console.WriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
 
     Public Sub performRefresh()
@@ -39,29 +37,41 @@
 
     Private Sub loadData(kode As String)
         Dim q As String = " SELECT faktur_kode, faktur_tanggal, faktur_gudang, gudang_nama, faktur_ket, faktur_reg_alias, " _
-                          & "faktur_reg_date, faktur_upd_date, faktur_upd_alias, faktur_status FROM data_barang_mutasi " _
+                          & "faktur_reg_date, faktur_upd_alias, CAST(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%s') AS CHAR) faktur_upd_date, " _
+                          & "faktur_status FROM data_barang_mutasi " _
                           & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
                           & "WHERE faktur_kode ='{0}'"
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_kode.Text = rd.Item("faktur_kode")
-            date_tgl_beli.Value = rd.Item("faktur_tanggal")
-            date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
-            in_gudang.Text = rd.Item("faktur_gudang")
-            in_gudang_n.Text = rd.Item("gudang_nama")
-            in_ket.Text = rd.Item("faktur_ket")
-            tblstatus = rd.Item("faktur_status")
-            txtRegAlias.Text = rd.Item("faktur_reg_alias")
-            txtRegdate.Text = rd.Item("faktur_reg_date")
-            Try
+        Try
+            readcommd(String.Format(q, kode), True)
+            consoleWriteLine(String.Format(q, kode))
+            If rd.HasRows Then
+                in_kode.Text = rd.Item("faktur_kode")
+                date_tgl_beli.Value = rd.Item("faktur_tanggal")
+                date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
+                in_gudang.Text = rd.Item("faktur_gudang")
+                in_gudang_n.Text = rd.Item("gudang_nama")
+                in_ket.Text = rd.Item("faktur_ket")
+                tblstatus = rd.Item("faktur_status")
+                txtRegAlias.Text = rd.Item("faktur_reg_alias")
+                txtRegdate.Text = rd.Item("faktur_reg_date")
                 txtUpdDate.Text = rd.Item("faktur_upd_date")
+                txtUpdAlias.Text = rd.Item("faktur_upd_alias")
+            End If
+            rd.Close()
+
+            loadBrg(in_kode.Text)
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Barang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Finally
+            Try
+                If rd.IsClosed = False Then
+                    rd.Close()
+                End If
             Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
+                logError(ex, True)
             End Try
-            txtUpdAlias.Text = rd.Item("faktur_upd_alias")
-        End If
-        rd.Close()
+        End Try
     End Sub
 
     Private Sub loadBrg(kode As String)
@@ -209,7 +219,6 @@
         Try
             Me.Cursor = Cursors.AppStarting
             loadData(dgv_list.Rows(rowindex).Cells("kode").Value)
-            loadBrg(in_kode.Text)
         Catch ex As Exception
             Dim text As String = "Tidak dapat menampilkan data" & Environment.NewLine & ex.Message
             MessageBox.Show(text)
@@ -512,12 +521,14 @@
             'TODO:WRITE LOG
 
             MessageBox.Show("Data tersimpan")
+            date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
             frmmutasistok.in_cari.Clear()
             populateDGVUserCon("mutasistok", "", frmmutasistok.dgv_list)
             mn_edit.Enabled = True
             mn_tambah.Enabled = True
+            mn_hapus.Enabled = True
             mn_edit.Text = "Edit"
-            mn_tambah.Text = "Tambah"
+            mn_tambah.Text = "Baru"
             disableAllSwitch(True)
             mn_save.Enabled = False
         End If
@@ -627,9 +638,13 @@
         If switch = True Then
             date_tgl_beli.Visible = False
             dgv_barang.Enabled = False
+            dgv_barang.Height = 222
+            dgv_barang.Location = New Point(11, 82)
         Else
             date_tgl_beli.Visible = True
             dgv_barang.Enabled = True
+            dgv_barang.Height = 136
+            dgv_barang.Location = New Point(11, 168)
         End If
 
         date_tgl_beli_r.Visible = switch
@@ -669,6 +684,7 @@
             disableAllSwitch(False)
             mn_save.Enabled = True
             mn_edit.Enabled = False
+            mn_hapus.Enabled = False
             in_gudang_n.Focus()
             mn_tambah.Text = "Batal"
         Else
@@ -680,6 +696,7 @@
                 disableAllSwitch(True)
                 mn_save.Enabled = False
                 mn_edit.Enabled = True
+                mn_hapus.Enabled = True
                 mn_tambah.Text = "Baru"
             End If
         End If
@@ -707,6 +724,7 @@
 
             sender.Text = "Batal Edit"
             mn_tambah.Enabled = False
+            mn_hapus.Enabled = False
             mn_save.Enabled = True
 
         ElseIf mn_edit.Text = "Batal Edit" Then
@@ -720,6 +738,7 @@
                 loadBrg(in_kode.Text)
                 mn_edit.Text = "Edit"
                 mn_tambah.Enabled = True
+                mn_hapus.Enabled = True
                 mn_save.Enabled = False
             End If
         End If
@@ -827,7 +846,6 @@
 
     Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
-            'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
         End If
     End Sub
@@ -888,7 +906,27 @@
         End If
     End Sub
 
-    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp
+    Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp, in_barang_nm.KeyUp, in_barang_nm2.KeyUp
+        Dim _nxtcontrol As Object
+        Dim _kdcontrol As Object
+        Select Case sender.Name.ToString
+            Case "in_gudang_n"
+                _nxtcontrol = in_ket
+                _kdcontrol = in_gudang
+            Case "in_barang_nm"
+                _nxtcontrol = in_qty1
+                _kdcontrol = in_barang
+            Case "in_barang_nm2"
+                _nxtcontrol = in_qty2
+                _kdcontrol = in_barang2
+            Case Else
+                Exit Sub
+        End Select
+
+        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
+            _kdcontrol.Text = ""
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -897,16 +935,18 @@
             If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
                 setPopUpResult()
             End If
-            keyshortenter(in_ket, e)
+            keyshortenter(_nxtcontrol, e)
         ElseIf e.KeyCode = Keys.Escape Then
             If popPnl_barang.Visible = True Then
                 popPnl_barang.Visible = False
             End If
         Else
-            If popPnl_barang.Visible = False And in_gudang_n.ReadOnly = False Then
-                popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape Then
+                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
+                    popPnl_barang.Visible = True
+                End If
+                loadDataBRGPopup(popupstate, sender.Text)
             End If
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
         End If
         e.SuppressKeyPress = True
     End Sub
@@ -914,12 +954,6 @@
     Private Sub in_sales_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_gudang_n.MouseClick, in_barang_nm2.MouseClick, in_barang_nm.MouseClick
         If popPnl_barang.Visible = False And sender.ReadOnly = False Then
             popPnl_barang.Visible = True
-        End If
-    End Sub
-
-    Private Sub in_gudang_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang_n.TextChanged
-        If in_gudang_n.Text = "" Then
-            in_gudang.Clear()
         End If
     End Sub
 
@@ -931,12 +965,12 @@
         End If
     End Sub
 
-    Private Sub in_ket_KeyDown(sender As Object, e As KeyEventArgs) Handles in_ket.KeyDown
+    Private Sub in_ket_KeyDown(sender As Object, e As KeyEventArgs) Handles in_ket.KeyUp
         keyshortenter(in_barang_nm, e)
     End Sub
 
     'Barang
-    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
         keyshortenter(in_barang_nm, e)
     End Sub
 
@@ -949,29 +983,6 @@
                 loadDataBRGPopup("barangasal", in_barang_nm.Text)
             End If
         End If
-    End Sub
-
-    Private Sub in_barang_nm_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty1, e)
-        ElseIf e.KeyCode = Keys.Escape Then
-            If popPnl_barang.Visible = True Then
-                popPnl_barang.Visible = False
-            End If
-        Else
-            If popPnl_barang.Visible = False And in_barang_nm.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barangasal", in_barang_nm.Text)
-        End If
-        e.SuppressKeyPress = True
     End Sub
 
     Private Sub in_barang_nm_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm.TextChanged
@@ -995,29 +1006,6 @@
         End If
     End Sub
 
-    Private Sub in_barang_nm2_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang_nm2.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_qty2, e)
-        ElseIf e.KeyCode = Keys.Escape Then
-            If popPnl_barang.Visible = True Then
-                popPnl_barang.Visible = False
-            End If
-        Else
-            If popPnl_barang.Visible = False And in_barang_nm2.ReadOnly = False Then
-                popPnl_barang.Visible = True
-            End If
-            loadDataBRGPopup("barangtujuan", in_barang_nm2.Text)
-        End If
-        e.SuppressKeyPress = True
-    End Sub
-
     Private Sub in_barang2_TextChanged(sender As Object, e As EventArgs) Handles in_barang_nm2.TextChanged
         If in_barang_nm2.Text = "" Then
             clearTextBarang("tujuan")
@@ -1025,7 +1013,13 @@
     End Sub
 
     'input qty
-    Private Sub in_qty1_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty1.KeyDown
+    Private Sub in_qty1_KeyDown(sender As Object, e As KeyPressEventArgs) Handles in_qty1.KeyPress
+        If e.KeyChar = Chr(Keys.Enter) Then
+            e.Handled = True
+        End If
+    End Sub
+
+    Private Sub in_qty1_KeyUP(sender As Object, e As KeyEventArgs) Handles in_qty1.KeyUp
         keyshortenter(in_barang_nm2, e)
     End Sub
 

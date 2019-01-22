@@ -72,10 +72,7 @@
         Dim q As String = "SELECT j_order_trans_barang, barang_nama, j_order_trans_harga_jual, j_order_trans_qty, j_order_trans_satuan, " _
                             & "j_order_trans_disc1, j_order_trans_disc2, j_order_trans_disc3, j_order_trans_disc4, j_order_trans_disc5, " _
                             & "j_order_trans_disc_rupiah, j_order_trans_jumlah, j_order_trans_satuan_type,j_order_trans_valid_status, " _
-                            & "@qtypsn:=getStockPesan('{1}',j_order_trans_barang, j_order_gudang), " _
-                            & "@qtysys:=getSisaStock('{1}',j_order_trans_barang, j_order_gudang), " _
-                            & "getQTYDetail(j_order_trans_barang, @qtysys-@qtypsn, 1), " _
-                            & "getQTYDetail(j_order_trans_barang, @qtypsn, 1), " _
+                            & "@qtysys:=getStockBarang(j_order_trans_barang), " _
                             & "getQtyDetail(j_order_trans_barang, @qtysys, 1) " _
                             & "FROM data_penjualan_order_faktur " _
                             & "LEFT JOIN data_penjualan_order_trans ON j_order_trans_faktur=j_order_kode AND j_order_trans_status=1 " _
@@ -103,9 +100,9 @@
                     .Cells("sat_type").Value = rows.ItemArray(12)
                     .Cells("subtotal").Value = rows.ItemArray(2) * rows.ItemArray(3)
                     .Cells("valid_ck").Value = IIf(rows.ItemArray(13) = 0, 0, 1)
-                    .Cells("qty_sisa").Value = rows.ItemArray(16)
-                    .Cells("qty_sisa").ToolTipText = "Pesan : " & rows.ItemArray(17) & Environment.NewLine _
-                                                    & "Stock : " & rows.ItemArray(18)
+                    .Cells("qty_sisa").Value = rows.ItemArray(15)
+                    '.Cells("qty_sisa").ToolTipText = "Pesan : " & rows.ItemArray(17) & Environment.NewLine _
+                    '                                & "Stock : " & rows.ItemArray(18)
 
                 End With
             Next
@@ -986,7 +983,7 @@
                 Dim tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
                 Dim q As String = "SELECT IFNULL(SUM(trans_qty),0),getHPPAVG('{0}','{1}','{2}') FROM data_stok_awal " _
                                   & "LEFT JOIN data_stok_kartustok ON stock_kode=trans_stock AND trans_status=1 " _
-                                  & "WHERE stock_barang='{0}' AND stock_gudang='{3}' AND stock_status=1"
+                                  & "WHERE stock_barang='{0}' AND stock_status=1"
                 Dim qty As Integer = 0
                 Dim hpp As Double = -1
 

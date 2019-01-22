@@ -10,6 +10,7 @@
                           & "   WHEN line_ref_type='SUPPLIER' THEN supplier_nama " _
                           & "   WHEN line_ref_type='CUSTO' THEN customer_nama " _
                           & "   WHEN line_ref_type='AKUN' THEN refakun.perk_nama_akun " _
+                          & "   WHEN line_ref_type='PERIODE' THEN 'Transaksi Penyesuaian Saldo Awal Periode' " _
                           & "   ELSE '...' " _
                           & " END)) as ref_ket, SUM(jurnal_debet) as debet, SUM(jurnal_kredit) as kredit, " _
                           & "line_reg_date, line_reg_alias, line_upd_date, line_upd_alias " _

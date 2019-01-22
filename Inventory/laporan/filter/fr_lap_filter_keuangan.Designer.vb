@@ -337,7 +337,6 @@ Partial Class fr_lap_filter_keuangan
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalbeli
         Me.ClientSize = New System.Drawing.Size(591, 273)
         Me.Controls.Add(Me.lbl_title2)
         Me.Controls.Add(Me.popPnl_barang)

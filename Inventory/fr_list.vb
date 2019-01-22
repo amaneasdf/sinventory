@@ -99,6 +99,7 @@
             Case "pgstockop"
                 populateDGVUserCon("stockop", "", frmstockop.dgv_list)
             Case "pghutangawal"
+                frm = frmhutangawal
                 populateDGVUserCon("hutangawal", "", frmhutangawal.dgv_list)
             Case "pghutangbayar"
                 frm = frmhutangbayar
@@ -106,6 +107,7 @@
             Case "pghutangbgo"
                 populateDGVUserCon("hutangbgo", "", frmhutangbgo.dgv_list)
             Case "pgpiutangawal"
+                frm = frmpiutangawal
                 populateDGVUserCon("piutangawal", "", frmpiutangawal.dgv_list)
             Case "pgpiutangbayar"
                 frm = frmpiutangbayar
@@ -148,6 +150,23 @@
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .del_sw = False
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+                End With
+            Case "pghutangawal", "pgpiutangawal"
+                Dim _kdMn As String = ""
+
+                If tabpagename.Name.ToString = "pghutangawal" Then
+                    _kdMn = "mn0402"
+                Else
+                    _kdMn = "mn0502"
+                End If
+
+                With frm
+                    .add_sw = False
+                    .bayar_sw = IIf(selectperiode.closed = True, False, IIf(main.listkodemenu.Contains(_kdMn), True, False))
+                    .del_sw = False
+                    .cancel_sw = IIf(selectperiode.closed = True, False, True)
+                    .mn_edit.Text = "Tampilkan Detail"
+                    .bayar_sw = False
                 End With
         End Select
         'mn_edit.Text = "Edit Data"
@@ -233,7 +252,8 @@
                 Case "pgpiutangbgtolak"
                     'fr_bg_tolak.ShowDialog(main)
                 Case "pgkas"
-                    fr_kas_detail.ShowDialog(main)
+                    Dim frkas As New fr_kas_detail
+                    frkas.ShowDialog(main)
                 Case "pgjurnalmemorial"
                     fr_jurnal_mem.ShowDialog(main)
                 Case "pggroup"
@@ -421,13 +441,13 @@
                         '    End With
                         'End Using
                     Case "pgkas"
-                        Using detail As New fr_kas_detail
-                            With detail
-                                .bt_simpanperkiraan.Text = "Update"
-                                .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        Dim detail As New fr_kas_detail
+                        With detail
+                            .bt_simpanperkiraan.Text = "Update"
+                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
+                            .Show(main)
+                        End With
                     Case "pgjurnalumum"
                         Dim detail As New fr_jurnal_u_det
                         Dim row As DataGridViewRow = dgv_list.SelectedRows.Item(0)
@@ -466,24 +486,132 @@
                                 .ShowDialog(main)
                             End With
                         End Using
-                        'Case "pgjenisbarang"
-                        '    Using detail As New fr_jenis_barang
-                        '        With detail
-                        '            .setfor = "jenisbarang"
-                        '            .bt_simpan_jenis.Text = "Update"
-                        '            .Text += dgv_list.Rows(rowindex).Cells(1).Value
-                        '            .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
-                        '            .ShowDialog()
-                        '        End With
-                        '    End Using
                     Case Else
                         MessageBox.Show("Under Construction")
                 End Select
                 Me.Cursor = Cursors.Default
             Else
-                MessageBox.Show("Data tidak ada")
+                MessageBox.Show("Data tidak tersedia")
             End If
         End If
+    End Sub
+
+    Private Sub bayarItem()
+        Dim _kode As String = ""
+        Dim q As String = ""
+        Dim ck As Boolean = False
+
+        op_con()
+        Select Case tabpagename.Name.ToString
+            Case "pgpiutangawal"
+                Dim x As New fr_piutang_bayar
+                _kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+
+                q = "SELECT piutang_status_lunas, piutang_status_approve, SUM(p_trans_nilai), SUM(p_trans_nilai_giro) FROM data_piutang_awal " _
+                    & "LEFT JOIN data_piutang_trans ON piutang_faktur=p_trans_kode_piutang AND p_trans_periode='{1}'" _
+                    & "WHERE piutang_faktur='{0}' GROUP BY piutang_faktur"
+                readcommd(String.Format(q, _kode, selectperiode.id))
+                If rd.HasRows Then
+                    If rd.Item(0) = 1 Or (rd.Item(2) = 0 And rd.Item(3) = 0) Then
+                        ck = False
+                        MessageBox.Show("Piutang " & _kode & "sudah lunas.", "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ElseIf rd.Item(1) = 1 Then
+                        ck = False
+                        MessageBox.Show("Terdapat pembayaran yg belum diproses untuk piutang " & _kode & ". Harap cek kembali data transaksi pembayaran piutang.",
+                                        "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                    Else
+                        ck = True
+                    End If
+                Else
+                    ck = False
+                    MessageBox.Show("Data piutang " & _kode & "tidak dapat ditemukan.", "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+                rd.Close()
+                If ck = False Then
+                    Exit Sub
+                End If
+
+                With x
+                    q = "SELECT piutang_custo, customer_nama, piutang_sales, salesman_nama, getSisaTitipan('piutang','{1}',piutang_custo), " _
+                        & "getSisaPiutang(piutang_faktur,'{1}'), piutang_awal, piutang_jt " _
+                        & "FROM data_piutang_awal " _
+                        & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+                        & "LEFT JOIN data_salesman_master ON salesman_kode=piutang_sales " _
+                        & "WHERE piutang_faktur='{0}'"
+                    readcommd(String.Format(q, _kode, selectperiode.id))
+                    If rd.HasRows Then
+                        .in_custo.Text = rd.Item(0)
+                        .in_custo_n.Text = rd.Item(1)
+                        .in_sales.Text = rd.Item(2)
+                        .in_sales_n.Text = rd.Item(3)
+                        .in_saldotitipan.Text = commaThousand(rd.Item(4))
+
+                        .in_faktur.Text = _kode
+                        .in_tgl_jtfaktur.Text = CDate(rd.Item(7)).ToString("dd/MM/yyyy")
+                        .in_sisafaktur.Text = commaThousand(rd.Item(5))
+                        ._totalhutang = rd.Item(6)
+                    End If
+                    rd.Close()
+
+                    .Show()
+                End With
+            Case "pghutangawal"
+                Dim x As New fr_hutang_bayar
+                _kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+
+                q = "SELECT SUM(h_trans_nilai),SUM(h_trans_nilai_giro) FROM data_hutang_trans " _
+                    & "WHERE h_trans_periode='{1}' AND h_trans_kode_hutang='{0}' GROUP BY h_trans_kode_hutang"
+                readcommd(String.Format(q, _kode, selectperiode.id))
+                If rd.HasRows Then
+                    If rd.Item(0) = 0 And rd.Item(1) = 0 Then
+                        ck = False
+                        MessageBox.Show("Hutang " & _kode & "sudah lunas.", "Pembayaran Hutang", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    ElseIf rd.Item(1) > 0 Then
+                        Dim msgRes As DialogResult = MessageBox.Show("Terdapat BG untuk hutang " & _kode & " yang belum tercairkan. Lanjutkan proses pembayaran?",
+                                                                     "Pembayaran Hutang", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                        If msgRes = DialogResult.Yes Then
+                            ck = True
+                        Else
+                            ck = False
+                        End If
+                    Else
+                        ck = True
+                    End If
+                Else
+                    ck = False
+                    MessageBox.Show("Data hutang " & _kode & "tidak dapat ditemukan.", "Pembayaran Hutang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+                rd.Close()
+                If ck = False Then
+                    Exit Sub
+                End If
+
+                With x
+                    .do_load()
+                    q = "SELECT hutang_supplier, supplier_nama,getSisaTitipan('hutang','{1}',hutang_supplier), getSisaHutang(hutang_faktur,'{1}'),hutang_awal, " _
+                        & "hutang_tgl_jt " _
+                        & "FROM data_hutang_awal " _
+                        & "LEFT JOIN data_supplier_master ON hutang_supplier=supplier_kode " _
+                        & "WHERE hutang_faktur='{0}'"
+                    readcommd(String.Format(q, _kode, selectperiode.id))
+                    If rd.HasRows Then
+                        .in_supplier.Text = rd.Item(0)
+                        .in_supplier_n.Text = rd.Item(1)
+                        .in_saldotitipan.Text = commaThousand(rd.Item(2))
+
+                        .in_faktur.Text = _kode
+                        .in_tgl_jtfaktur.Text = CDate(rd.Item(5)).ToString("dd/MM/yyyy")
+                        .in_sisafaktur.Text = commaThousand(rd.Item(3))
+                        ._totalhutang = rd.Item(4)
+                    End If
+                    rd.Close()
+
+                    .Show()
+                End With
+            Case Else
+                Exit Sub
+        End Select
+
     End Sub
 
     Private Sub printItem()
@@ -924,6 +1052,30 @@
                 End If
                 rd.Close()
 
+            Case "pghutangawal"
+                Dim tgl As String = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value).ToString("yyyy-MM-dd")
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+
+                If CDate(tgl) < selectperiode.tglawal Then
+                    _dataState = False
+                    Exit Select
+                End If
+
+                readcommd("SELECT COUNT(h_trans_faktur) FROM data_hutang_trans WHERE h_trans_status=1 AND h_trans_jenis<>'beli' AND h_trans_kode_hutang='" & kode & "' " _
+                          & "AND h_trans_tgl BETWEEN '" & tgl & "' AND NOW()")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) > 0, False, True)
+                Else
+                    _dataState = False
+                    Exit Sub
+                End If
+                rd.Close()
+
+                q = "UPDATE data_hutang_awal LEFT JOIN data_pembelian_faktur ON faktur_kode=hutang_faktur AND faktur_status=1 " _
+                    & "SET faktur_status=2, hutang_status=9, hutang_upd_alias='{1}',faktur_upd_alias='{1}',hutang_upd_date=NOW(),faktur_upd_date=NOW() " _
+                    & "WHERE hutang_faktur='{0}'; CALL transPembelianFin('{0}','{1}');"
+                q = String.Format(q, kode, loggeduser.user_id)
+
             Case "pghutangbayar"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
                 readcommd("SELECT giro_status_pencairan FROM data_giro WHERE giro_ref='" & kode & "' AND giro_status=1")
@@ -941,6 +1093,30 @@
                     _dataState = IIf(rd.Item(0) = 0 Or rd.Item(0) = 1, True, False)
                 End If
                 rd.Close()
+
+            Case "pgpiutangawal"
+                Dim tgl As String = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value).ToString("yyyy-MM-dd")
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+
+                If CDate(tgl) < selectperiode.tglawal Then
+                    _dataState = False
+                    Exit Select
+                End If
+
+                readcommd("SELECT COUNT(p_trans_faktur) FROM data_piutang_trans WHERE p_trans_status=1 AND p_trans_jenis<>'jual' AND p_trans_kode_piutang='" & kode & "' " _
+                          & "AND p_trans_tgl BETWEEN '" & tgl & "' AND NOW()")
+                If rd.HasRows Then
+                    _dataState = IIf(rd.Item(0) > 0, False, True)
+                Else
+                    _dataState = False
+                    Exit Sub
+                End If
+                rd.Close()
+
+                q = "UPDATE data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur AND faktur_status=1 " _
+                    & "SET faktur_status=2, piutang_status=9, piutang_upd_alias='{1}',faktur_upd_alias='{1}',piutang_upd_date=NOW(),faktur_upd_date=NOW() " _
+                    & "WHERE piutang_faktur='{0}'"
+                q = String.Format(q, kode, loggeduser.user_id)
 
             Case "pgpiutangbayar"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
@@ -978,6 +1154,8 @@
                     MessageBox.Show("Transaksi tidak dapat dibatalkan.")
                 End If
             End If
+        Else
+            MessageBox.Show("Transaksi tidak dapat dibatalkan.")
         End If
     End Sub
 
@@ -1114,22 +1292,34 @@
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-        deactItem()
+        If del_sw = True And dgv_list.RowCount > 0 Then
+            deactItem()
+        ElseIf dgv_list.Rows.Count = 0 Then
+            MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
-        printItem()
+        If print_sw = True And dgv_list.RowCount > 0 Then
+            printItem()
+        ElseIf dgv_list.Rows.Count = 0 Then
+            MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub mn_exportExcel_Click(sender As Object, e As EventArgs) Handles mn_exportExcel.Click
-        exportItem()
+        If export_sw = True And dgv_list.RowCount > 0 Then
+            exportItem()
+        ElseIf dgv_list.Rows.Count = 0 Then
+            MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
     End Sub
 
     Private Sub mn_bataljual_Click(sender As Object, e As EventArgs) Handles mn_bataljual.Click
         If cancel_sw = True And dgv_list.Rows.Count > 0 Then
             cancelItem()
         ElseIf dgv_list.Rows.Count = 0 Then
-            MessageBox.Show("Data tidak ada")
+            MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
@@ -1146,12 +1336,20 @@
                         .Show(main)
                         .doLoad(, "valid")
                     End With
-                Case "pgpiutangbayar"
+                    'Case "pgpiutangbayar"
 
-                Case Else
-                    Exit Sub
+                    'Case Else
+                    '    Exit Sub
             End Select
 
+        End If
+    End Sub
+
+    Private Sub mn_bayar_Click(sender As Object, e As EventArgs) Handles mn_bayar.Click
+        If bayar_sw = True And dgv_list.RowCount > 0 Then
+            bayarItem()
+        ElseIf dgv_list.RowCount = 0 Then
+            MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 End Class

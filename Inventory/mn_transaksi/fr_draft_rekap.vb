@@ -51,7 +51,7 @@
                               & "IF(faktur_draft_rekap='','N',faktur_draft_rekap) as faktur_draft_rekap, salesman_nama " _
                               & "FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer " _
                               & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
-                              & "WHERE faktur_sales IN ({0}) AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
+                              & "WHERE faktur_sales IN ({0}) AND faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
         Dim bs As New BindingSource

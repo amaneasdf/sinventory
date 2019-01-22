@@ -19,34 +19,58 @@
     'End Sub
 
     Private Sub loadDataSales(kode As String)
-        readcommd("SELECT * FROM data_salesman_master WHERE salesman_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_kode.Text = kode
-            in_namasales.Text = rd.Item("salesman_nama")
-            in_alamatsales.Text = rd.Item("salesman_alamat")
-            date_kerja.Value = rd.Item("salesman_tanggal_masuk")
-            cb_jenis.SelectedValue = rd.Item("salesman_jenis")
-            in_lahir_kota.Text = rd.Item("salesman_lahir_kota")
-            date_lahir_tgl.Value = rd.Item("salesman_lahir_tanggal")
-            in_telpsales.Text = rd.Item("salesman_hp")
-            in_faxsales.Text = rd.Item("salesman_fax")
-            in_nik.Text = rd.Item("salesman_nik")
-            in_target.Value = rd.Item("salesman_target")
-            in_bank_nama.Text = rd.Item("salesman_bank_nama")
-            in_bank_rek.Text = rd.Item("salesman_bank_rekening")
-            in_bank_an.Text = rd.Item("salesman_bank_atasnama")
-            slsStatus = rd.Item("salesman_status")
-            txtRegAlias.Text = rd.Item("salesman_reg_alias")
-            txtRegdate.Text = rd.Item("salesman_reg_date")
-            Try
+        op_con()
+
+        Try
+            readcommd("SELECT salesman_nama,salesman_alamat,salesman_tanggal_masuk,salesman_jenis,salesman_lahir_kota,salesman_lahir_tanggal,salesman_hp, " _
+                      & "salesman_fax,salesman_nik,salesman_target,salesman_bank_nama,salesman_bank_rekening,salesman_bank_atasnama,salesman_status, " _
+                      & "IFNULL(salesman_reg_alias,'') salesman_reg_alias, IFNULL(salesman_reg_date,'00/00/0000 00:00:00') salesman_reg_date, " _
+                      & "IFNULL(salesman_upd_alias,'') salesman_upd_alias, IFNULL(salesman_upd_date,'00/00/0000 00:00:00') salesman_upd_date " _
+                      & "FROM data_salesman_master WHERE salesman_kode='" & kode & "'")
+            If rd.HasRows Then
+                in_kode.Text = kode
+                in_namasales.Text = rd.Item("salesman_nama")
+                in_alamatsales.Text = rd.Item("salesman_alamat")
+                date_kerja.Value = rd.Item("salesman_tanggal_masuk")
+                cb_jenis.SelectedValue = rd.Item("salesman_jenis")
+                in_lahir_kota.Text = rd.Item("salesman_lahir_kota")
+                date_lahir_tgl.Value = rd.Item("salesman_lahir_tanggal")
+                in_telpsales.Text = rd.Item("salesman_hp")
+                in_faxsales.Text = rd.Item("salesman_fax")
+                in_nik.Text = rd.Item("salesman_nik")
+                in_target.Value = rd.Item("salesman_target")
+                in_bank_nama.Text = rd.Item("salesman_bank_nama")
+                in_bank_rek.Text = rd.Item("salesman_bank_rekening")
+                in_bank_an.Text = rd.Item("salesman_bank_atasnama")
+                slsStatus = rd.Item("salesman_status")
+                txtRegAlias.Text = rd.Item("salesman_reg_alias")
+                txtRegdate.Text = rd.Item("salesman_reg_date")
                 txtUpdDate.Text = rd.Item("salesman_upd_date")
+                txtUpdAlias.Text = rd.Item("salesman_upd_alias")
+            End If
+            rd.Close()
+            setStatus()
+
+            If loggeduser.allowedit_master = False Then
+                bt_simpansales.Visible = False
+                bt_batalsales.Text = "OK"
+                mn_save.Enabled = False
+                mn_deact.Enabled = False
+                mn_del.Enabled = False
+            End If
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Salesman", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Me.Close()
+        Finally
+            Try
+                If rd.IsClosed = False Then
+                    rd.Close()
+                End If
             Catch ex As Exception
-                txtUpdDate.Text = "00/00/0000 00:00:00"
+                logError(ex, True)
             End Try
-            txtUpdAlias.Text = rd.Item("salesman_upd_alias")
-        End If
-        rd.Close()
-        setStatus()
+        End Try
     End Sub
 
     Private Sub setStatus()
@@ -149,7 +173,7 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalsales.Click
-        If MessageBox.Show("Tutup Form?", "Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Tutup Form?", "Detail Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
     End Sub

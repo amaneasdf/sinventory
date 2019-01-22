@@ -20,10 +20,12 @@
         Dim validasi_akun As Boolean
 
         Dim admin_pc As Boolean
-        Dim admin_andro As Boolean
 
         'app ver info
         Dim user_ver As String
+
+        'session id
+        Dim user_session As Integer
     End Structure
 
     Public Structure cnction
@@ -76,6 +78,21 @@
         Return dt
     End Function
 
+    'JENISIMPORT
+    Public Function jenisImport() As DataTable
+        Dim dt As New DataTable
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
+        dt.Rows.Add("Data Supplier", "master_supplier")
+        dt.Rows.Add("Data Barang", "master_barang")
+        dt.Rows.Add("Data Gudang", "master_gudang")
+        dt.Rows.Add("Data Salesman", "master_sales")
+        dt.Rows.Add("Data Customer", "master_customer")
+        'dt.Rows.Add("Data Pembelian", "trans_beli")
+
+        Return dt
+    End Function
+
     'jenisbarang
     Public Function jenisBarang() As DataTable
         Dim dt As New DataTable
@@ -94,7 +111,13 @@
         Dim q As String = ""
         Select Case tipe
             Case "satuan"
-                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan")
+                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1")
+
+            Case "kat_barang"
+                dt = getDataTablefromDB("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori WHERE kategori_status=1 ORDER BY kategori_kode")
+
+            Case "jenis_custo"
+                dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as Text, jenis_kode as `Value` FROM data_customer_jenis")
 
             Case "term"
                 dt.Columns.Add("Text", GetType(String))
@@ -175,22 +198,6 @@
         Return dt
     End Function
 
-    'jeniscusto
-    Public Function jenisCusto() As DataTable
-        Dim dt As New DataTable
-
-        'dt.Columns.Add("Text", GetType(String))
-        'dt.Columns.Add("Value", GetType(String))
-        'dt.Rows.Add("Ritel", "1")
-        'dt.Rows.Add("Grosir", "2")
-        'dt.Rows.Add("Modern", "3")
-        'dt.Rows.Add("Horeka", "4")
-        dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as Text, jenis_kode as `Value` FROM data_customer_jenis")
-        Console.WriteLine(dt.Rows.Count)
-
-        Return dt
-    End Function
-
     'jenisdiskon
     Public Function jenisDiskon() As DataTable
         Dim dt As New DataTable
@@ -213,11 +220,12 @@
     'jenisperkiraan
     Public Function jenisPerkiraan(tipe As String, Optional kodegol As String = "00") As DataTable
         Dim dt As New DataTable
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
 
         Select Case tipe
             Case "jenis"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+
                 dt.Rows.Add("Aktiva Lancar", "11")
                 dt.Rows.Add("Aktiva Tetap", "12")
                 dt.Rows.Add("Aktiva Lain-lain", "13")
@@ -229,17 +237,6 @@
                 dt.Rows.Add("Biaya Operasional", "42")
                 dt.Rows.Add("Biaya Lain-Lain", "43")
                 dt.Rows.Add("Biaya Klaim", "44")
-            Case "gol11"
-                dt.Rows.Add("Kas", "1101")
-                dt.Rows.Add("Bank", "1102")
-                dt.Rows.Add("Simpanan Berharga", "1103")
-                dt.Rows.Add("Piutang Dagang", "1104")
-                dt.Rows.Add("Piutang Karyawan", "1105")
-                dt.Rows.Add("Piutang Lain-Lain", "1106")
-                dt.Rows.Add("Piutang Giro", "1107")
-                dt.Rows.Add("Stok Barang", "1108")
-                'dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
-                '                        & "FROM ref_gol_perkiraan WHERE perk_gol_kode LIKE '11%' AND perk_gol_status=1")
             Case "gol"
                 dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
                                         & "FROM data_perkiraan_gol WHERE perk_gol_kodejen='" & kodegol & "' AND perk_gol_status=1 ORDER by perk_gol_nama")
@@ -289,7 +286,6 @@
                 dt.Rows.Add("Tunai", "TUNAI")
                 dt.Rows.Add("Giro", "BG")
                 dt.Rows.Add("TransferBank", "TRANSFER")
-                'dt.Rows.Add("Titipan", "TITIP")
                 dt.Rows.Add("PiutangSupl", "PIUTSUPL")
                 'dt.Rows.Add("PotongHarga", "PTGHARGA")
                 'dt.Rows.Add("Pendapatan", "PENDAPTN")
@@ -311,7 +307,7 @@
         dt.Columns.Add("Value", GetType(Integer))
         dt.Rows.Add("PPn 10% Included", 1)
         dt.Rows.Add("PPn 10% Excluded", 2)
-        'dt.Rows.Add("PPnBM", 2)
+        'dt.Rows.Add("PPnBM", 3)
         dt.Rows.Add("Non Pajak", 0)
 
         Return dt
@@ -351,6 +347,7 @@
     Public pgkartustok = New TabPage() With {.Name = "pgkartustok"}
     Public pgtutupbuku = New TabPage() With {.Name = "pgtutupbuku"}
     Public pglap = New TabPage() With {.Name = "pglap"}
+    Public pgexportEFak = New TabPage() With {.Name = "pgexportEFak"}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgref = New TabPage() With {.Name = "pgref"}
@@ -392,6 +389,7 @@
     Public frmlap As New fr_lap_stok With {.Dock = DockStyle.Fill}
     Public frmkartustok As New fr_urut_kartustok With {.Dock = DockStyle.Fill}
     Public frmtutupbuku As New fr_tutup_buku With {.Dock = DockStyle.Fill}
+    Public frmexportEfak As New fr_export_efaktur With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmref As New fr_data_referensi With {.Dock = DockStyle.Fill}

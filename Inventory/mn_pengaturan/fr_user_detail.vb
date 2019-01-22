@@ -9,9 +9,9 @@
                           & "(CASE " _
                           & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                           & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
-                          & " ELSE 'ERROR' END) AS salesman_jenis, user_validasi_master, user_validasi_trans, user_gambar, user_email, " _
+                          & " ELSE 'ERROR' END) AS salesman_jenis,user_pc,user_validasi_master, user_validasi_trans, user_gambar, user_email, " _
                           & "user_allowedit_master, user_allowedit_trans, IF(user_login_status=1,'ON','OFF') as user_login_status, " _
-                          & "user_allowedit_akun, user_validasi_akun, user_admin_andro,user_admin_pc, " _
+                          & "user_allowedit_akun, user_validasi_akun, user_admin_pc, " _
                           & "user_login_terakhir, user_status, user_reg_date, user_reg_alias, user_upd_date, user_upd_alias " _
                           & "FROM data_pengguna_alias LEFT JOIN data_salesman_master ON salesman_kode=user_sales_kode " _
                           & "WHERE user_alias='{0}'"
@@ -27,37 +27,43 @@
             in_karyawan_nama.Text = rd.Item("user_nama")
             in_email.Text = rd.Item("user_email")
             in_telp.Text = rd.Item("user_telp")
-            'level
-            in_group_kode.Text = rd.Item("user_group")
-            cb_group.SelectedValue = rd.Item("user_group")
-            'privilege
-            If rd.Item("user_validasi_master") = 1 Then
-                ck_valid_master.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_validasi_trans") = 1 Then
-                ck_valid_trans.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_validasi_akun") = 1 Then
-                ck_valid_akun.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_allowedit_trans") = 1 Then
-                ck_edit_trans.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_allowedit_master") = 1 Then
-                ck_edit_master.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_allowedit_akun") = 1 Then
-                ck_edit_akun.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_admin_andro") = 1 Then
-                ck_sales_admin.CheckState = CheckState.Checked
-            End If
-            If rd.Item("user_admin_pc") = 1 Then
-                ck_admin_pc.CheckState = CheckState.Checked
+            'PC
+            If rd.Item("user_pc") = 1 Then
+                ckPCSW(rd.Item("user_pc"))
+                'level
+                in_group_kode.Text = rd.Item("user_group")
+                cb_group.SelectedValue = rd.Item("user_group")
+                'privilege
+                If rd.Item("user_validasi_master") = 1 Then
+                    ck_valid_master.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_validasi_trans") = 1 Then
+                    ck_valid_trans.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_validasi_akun") = 1 Then
+                    ck_valid_akun.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_allowedit_trans") = 1 Then
+                    ck_edit_trans.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_allowedit_master") = 1 Then
+                    ck_edit_master.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_allowedit_akun") = 1 Then
+                    ck_edit_akun.CheckState = CheckState.Checked
+                End If
+                If rd.Item("user_admin_pc") = 1 Then
+                    ck_admin_pc.CheckState = CheckState.Checked
+                End If
             End If
             'sales
-            If rd.Item("user_sales") = 1 Then
-                ckSalesSW(rd.Item("user_sales"))
+            If {1, 2}.Contains(rd.Item("user_sales")) Then
+                ckSalesSW(1)
+                If rd.Item("user_sales") = 1 Then
+                    ck_sales.CheckState = CheckState.Checked
+                Else
+                    ck_adminandro.CheckState = CheckState.Checked
+                End If
                 in_sales.Text = rd.Item("user_sales_kode")
                 in_sales_n.Text = rd.Item("salesman_nama")
                 in_sales_t.Text = rd.Item("salesman_jenis")
@@ -102,7 +108,7 @@
             Case 0
                 in_status.Text = "Non-Aktif"
                 mn_actdeact.Text = "Activate"
-            Case 1
+            Case 1, 2
                 in_status.Text = "Aktif"
                 mn_actdeact.Text = "Deactivate"
             Case 9
@@ -113,22 +119,43 @@
         End Select
     End Sub
 
+    Private Sub ckPCSW(swch As String)
+        Dim ckPriv As CheckBox() = {ck_edit_akun, ck_edit_master, ck_edit_trans, ck_valid_akun, ck_valid_master, ck_valid_trans}
+        If swch = "1" Then
+            ck_pc.CheckState = CheckState.Checked
+            For Each ck As CheckBox In ckPriv
+                ck.Enabled = True
+            Next
+            cb_group.Enabled = True
+            ck_admin_pc.Enabled = True
+        Else
+            ck_pc.CheckState = CheckState.Unchecked
+            For Each ck As CheckBox In ckPriv
+                ck.CheckState = CheckState.Unchecked
+                ck.Enabled = False
+            Next
+            in_group_kode.Clear()
+            cb_group.SelectedIndex = -1
+            cb_group.Enabled = False
+            ck_admin_pc.CheckState = CheckState.Unchecked
+            ck_admin_pc.Enabled = False
+        End If
+    End Sub
+
     Private Sub ckSalesSW(swch As String)
         Dim tx As TextBox() = {in_sales, in_sales_n, in_sales_t}
         If swch = "1" Then
-            ck_sales.CheckState = CheckState.Checked
+            'ck_sales.CheckState = CheckState.Checked
             For Each x As TextBox In tx
                 x.Enabled = True
+                x.BackColor = Color.White
             Next
-            ck_sales_admin.Enabled = True
         Else
-            ck_sales.CheckState = CheckState.Unchecked
+            'ck_sales.CheckState = CheckState.Unchecked
             For Each x As TextBox In tx
                 x.Clear()
                 x.Enabled = False
             Next
-            ck_sales_admin.CheckState = CheckState.Unchecked
-            ck_sales_admin.Enabled = False
         End If
     End Sub
 
@@ -255,16 +282,26 @@
     End Sub
 
     Private Sub mn_reset_Click(sender As Object, e As EventArgs) Handles mn_reset.Click
-        Dim q As String = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), " _
-                          & "user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
+        Dim q As String = ""
+        Dim queryArr As New List(Of String)
         Dim queryCheck As Boolean = False
 
         If MsgBox("Apakah yakin akan mereset password user ini?", MsgBoxStyle.YesNo, "Data User") = MsgBoxResult.Yes Then
-            queryCheck = commnd(String.Format(q, in_userid.Text, loggeduser.user_id))
+            q = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), user_status=2, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
+            queryArr.Add(String.Format(q, in_userid.Text, loggeduser.user_id))
+
+            q = "INSERT INTO system_pwdchange_log(log_alias1,log_alias2,log_ip,log_tanggal) VALUE({0})"
+            Dim data As String() = {"'" & in_userid.Text & "'", "'" & loggeduser.user_id & "'", "'" & loggeduser.user_ip & "'", "NOW()"}
+            queryArr.Add(String.Format(q, String.Join(",", data)))
+
+            queryCheck = startTrans(queryArr, False)
+
 
             If queryCheck = True Then
-                MsgBox("Password telah reset, password defaultnya: 123456 ", MsgBoxStyle.Information, Application.ProductName)
+                MessageBox.Show("Password telah direset, password defaultnya: 123456 ", "Data User", MessageBoxButtons.OK)
                 Me.Close()
+            Else
+                MessageBox.Show("Telah terjadi kesalahan. Password gagal direset.", "Data User", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
         Else
             Exit Sub
@@ -281,6 +318,7 @@
             "user_nama='" & in_karyawan_nama.Text & "'",
             "user_email='" & in_email.Text & "'",
             "user_telp='" & in_telp.Text & "'",
+            "user_pc='" & IIf(ck_pc.Checked = True, 1, 0) & "'",
             "user_group='" & in_group_kode.Text & "'",
             "user_validasi_master='" & IIf(ck_valid_master.Checked = True, 1, 0) & "'",
             "user_validasi_trans='" & IIf(ck_valid_trans.Checked = True, 1, 0) & "'",
@@ -288,10 +326,9 @@
             "user_allowedit_master='" & IIf(ck_edit_master.Checked = True, 1, 0) & "'",
             "user_allowedit_trans='" & IIf(ck_edit_trans.Checked = True, 1, 0) & "'",
             "user_allowedit_akun='" & IIf(ck_edit_akun.Checked = True, 1, 0) & "'",
-            "user_admin_andro='" & IIf(ck_sales_admin.Checked = True, 1, 0) & "'",
             "user_admin_pc='" & IIf(ck_admin_pc.Checked = True, 1, 0) & "'",
             "user_status='" & usrstatus & "'",
-            "user_sales='" & IIf(ck_sales.Checked = True, 1, 0) & "'",
+            "user_sales='" & IIf(ck_sales.Checked = True, 1, IIf(ck_adminandro.Checked = True, 2, 0)) & "'",
             "user_sales_kode='" & in_sales.Text & "'"
             }
 
@@ -367,13 +404,13 @@
             End If
         End If
 
-        If in_group_kode.Text = Nothing Then
+        If ck_pc.CheckState = CheckState.Checked And in_group_kode.Text = Nothing Then
             MessageBox.Show("Group user belum di pilih")
             cb_group.Focus()
             Exit Sub
         End If
 
-        If ck_sales.CheckState = CheckState.Checked And (in_sales.Text = Nothing Or UCase(in_sales_t.Text) = "ERROR") Then
+        If (ck_sales.CheckState = CheckState.Checked Or ck_adminandro.CheckState = CheckState.Checked) And (in_sales.Text = Nothing Or UCase(in_sales_t.Text) = "ERROR") Then
             MessageBox.Show("Salesman belum di input")
             in_sales_n.Focus()
             Exit Sub
@@ -437,6 +474,15 @@
         keyshortenter(cb_group, e)
     End Sub
 
+    'PC
+    Private Sub ck_pc_CheckStateChanged(sender As Object, e As EventArgs) Handles ck_pc.CheckStateChanged
+        If ck_pc.CheckState = CheckState.Checked Then
+            ckPCSW(1)
+        Else
+            ckPCSW(0)
+        End If
+    End Sub
+
     Private Sub cb_group_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_group.KeyPress
         If e.KeyChar <> ControlChars.Cr Then
             e.Handled = True
@@ -456,9 +502,25 @@
     End Sub
 
     'Sales
-    Private Sub ck_sales_CheckStateChanged(sender As Object, e As EventArgs) Handles ck_sales.CheckStateChanged
-        If ck_sales.CheckState = CheckState.Checked Then
+    Private Sub ck_sales_CheckStateChanged(sender As Object, e As EventArgs) Handles ck_sales.CheckStateChanged, ck_adminandro.CheckStateChanged
+        If sender.CheckState = CheckState.Checked Then
+            Dim _prevslskd As String = in_sales.Text
+            Dim _prevslsnm As String = in_sales_n.Text
+            Dim _prevslstp As String = in_sales_t.Text
+            Dim move As Boolean = False
+            If sender.Name.ToString = "ck_sales" And ck_adminandro.CheckState = CheckState.Checked Then
+                ck_adminandro.CheckState = CheckState.Unchecked
+                move = True
+            ElseIf sender.Name.ToString = "ck_adminandro" And ck_sales.CheckState = CheckState.Checked Then
+                ck_sales.CheckState = CheckState.Unchecked
+                move = True
+            End If
             ckSalesSW(1)
+            If move = True Then
+                in_sales.Text = _prevslskd
+                in_sales_n.Text = _prevslsnm
+                in_sales_t.Text = _prevslstp
+            End If
         Else
             ckSalesSW(0)
         End If
