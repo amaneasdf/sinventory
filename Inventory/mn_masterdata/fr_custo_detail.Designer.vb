@@ -22,6 +22,7 @@ Partial Class fr_custo_detail
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_custo_detail))
         Me.bt_batalcusto = New System.Windows.Forms.Button()
         Me.bt_simpancusto = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -33,6 +34,7 @@ Partial Class fr_custo_detail
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cetakQr = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
@@ -47,11 +49,9 @@ Partial Class fr_custo_detail
         Me.Label29 = New System.Windows.Forms.Label()
         Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.cb_harga = New System.Windows.Forms.ComboBox()
-        Me.cb_diskon = New System.Windows.Forms.ComboBox()
         Me.Label31 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.Label33 = New System.Windows.Forms.Label()
-        Me.Label35 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label19 = New System.Windows.Forms.Label()
@@ -100,6 +100,8 @@ Partial Class fr_custo_detail
         Me.Label13 = New System.Windows.Forms.Label()
         Me.cb_area = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label35 = New System.Windows.Forms.Label()
+        Me.cb_diskon = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -198,7 +200,7 @@ Partial Class fr_custo_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del, Me.mn_cetakQr})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(861, 24)
@@ -227,6 +229,12 @@ Partial Class fr_custo_detail
         Me.mn_del.Name = "mn_del"
         Me.mn_del.Size = New System.Drawing.Size(53, 20)
         Me.mn_del.Text = "Hapus"
+        '
+        'mn_cetakQr
+        '
+        Me.mn_cetakQr.Name = "mn_cetakQr"
+        Me.mn_cetakQr.Size = New System.Drawing.Size(68, 20)
+        Me.mn_cetakQr.Text = "Cetak QR"
         '
         'Panel2
         '
@@ -375,16 +383,6 @@ Partial Class fr_custo_detail
         Me.cb_harga.Size = New System.Drawing.Size(170, 21)
         Me.cb_harga.TabIndex = 20
         '
-        'cb_diskon
-        '
-        Me.cb_diskon.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_diskon.FormattingEnabled = True
-        Me.cb_diskon.Location = New System.Drawing.Point(539, 125)
-        Me.cb_diskon.Name = "cb_diskon"
-        Me.cb_diskon.Size = New System.Drawing.Size(170, 21)
-        Me.cb_diskon.TabIndex = 19
-        Me.cb_diskon.Visible = False
-        '
         'Label31
         '
         Me.Label31.AutoSize = True
@@ -414,17 +412,6 @@ Partial Class fr_custo_detail
         Me.Label33.Size = New System.Drawing.Size(79, 13)
         Me.Label33.TabIndex = 362
         Me.Label33.Text = "Krit. Harga Jual"
-        '
-        'Label35
-        '
-        Me.Label35.AutoSize = True
-        Me.Label35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label35.Location = New System.Drawing.Point(449, 128)
-        Me.Label35.Name = "Label35"
-        Me.Label35.Size = New System.Drawing.Size(61, 13)
-        Me.Label35.TabIndex = 363
-        Me.Label35.Text = "Krit. Diskon"
-        Me.Label35.Visible = False
         '
         'Label6
         '
@@ -885,7 +872,7 @@ Partial Class fr_custo_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(539, 380)
+        Me.in_status.Location = New System.Drawing.Point(120, 462)
         Me.in_status.MaxLength = 10
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
@@ -897,7 +884,7 @@ Partial Class fr_custo_detail
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(449, 383)
+        Me.Label13.Location = New System.Drawing.Point(77, 465)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(37, 13)
         Me.Label13.TabIndex = 379
@@ -921,6 +908,27 @@ Partial Class fr_custo_detail
         Me.Label2.Size = New System.Drawing.Size(29, 13)
         Me.Label2.TabIndex = 381
         Me.Label2.Text = "Area"
+        '
+        'Label35
+        '
+        Me.Label35.AutoSize = True
+        Me.Label35.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label35.Location = New System.Drawing.Point(449, 128)
+        Me.Label35.Name = "Label35"
+        Me.Label35.Size = New System.Drawing.Size(61, 13)
+        Me.Label35.TabIndex = 363
+        Me.Label35.Text = "Krit. Diskon"
+        Me.Label35.Visible = False
+        '
+        'cb_diskon
+        '
+        Me.cb_diskon.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_diskon.FormattingEnabled = True
+        Me.cb_diskon.Location = New System.Drawing.Point(539, 125)
+        Me.cb_diskon.Name = "cb_diskon"
+        Me.cb_diskon.Size = New System.Drawing.Size(170, 21)
+        Me.cb_diskon.TabIndex = 19
+        Me.cb_diskon.Visible = False
         '
         'fr_custo_detail
         '
@@ -1001,6 +1009,7 @@ Partial Class fr_custo_detail
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_custo_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
@@ -1042,11 +1051,9 @@ Partial Class fr_custo_detail
     Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents in_term As System.Windows.Forms.NumericUpDown
     Friend WithEvents cb_harga As System.Windows.Forms.ComboBox
-    Friend WithEvents cb_diskon As System.Windows.Forms.ComboBox
     Friend WithEvents Label31 As System.Windows.Forms.Label
     Friend WithEvents Label32 As System.Windows.Forms.Label
     Friend WithEvents Label33 As System.Windows.Forms.Label
-    Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents Label1 As System.Windows.Forms.Label
     Friend WithEvents Label19 As System.Windows.Forms.Label
@@ -1095,4 +1102,7 @@ Partial Class fr_custo_detail
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents cb_area As System.Windows.Forms.ComboBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents mn_cetakQr As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Label35 As System.Windows.Forms.Label
+    Friend WithEvents cb_diskon As System.Windows.Forms.ComboBox
 End Class

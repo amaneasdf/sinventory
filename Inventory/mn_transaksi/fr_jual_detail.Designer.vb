@@ -1073,6 +1073,7 @@ Partial Class fr_jual_detail
         '
         'in_disc3
         '
+        Me.in_disc3.DecimalPlaces = 1
         Me.in_disc3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc3.Location = New System.Drawing.Point(711, 143)
         Me.in_disc3.Name = "in_disc3"
@@ -1116,6 +1117,7 @@ Partial Class fr_jual_detail
         '
         'in_disc2
         '
+        Me.in_disc2.DecimalPlaces = 1
         Me.in_disc2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc2.Location = New System.Drawing.Point(660, 143)
         Me.in_disc2.Name = "in_disc2"
@@ -1137,6 +1139,7 @@ Partial Class fr_jual_detail
         '
         'in_disc5
         '
+        Me.in_disc5.DecimalPlaces = 1
         Me.in_disc5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc5.Location = New System.Drawing.Point(813, 143)
         Me.in_disc5.Name = "in_disc5"
@@ -1178,6 +1181,7 @@ Partial Class fr_jual_detail
         '
         'in_disc1
         '
+        Me.in_disc1.DecimalPlaces = 1
         Me.in_disc1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc1.Location = New System.Drawing.Point(609, 143)
         Me.in_disc1.Name = "in_disc1"
@@ -1233,6 +1237,7 @@ Partial Class fr_jual_detail
         '
         'in_disc4
         '
+        Me.in_disc4.DecimalPlaces = 1
         Me.in_disc4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc4.Location = New System.Drawing.Point(762, 143)
         Me.in_disc4.Name = "in_disc4"

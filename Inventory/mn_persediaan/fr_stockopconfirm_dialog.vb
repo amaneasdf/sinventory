@@ -24,10 +24,11 @@
         Return rval
     End Function
 
-    Public Sub do_load(tipetrans As String)
-        tipe = UCase(tipetrans)
-
+    Public Sub do_loaddialog()
+        Me.Text = lbl_title.Text
         in_pass.UseSystemPasswordChar = True
+        ShowDialog()
+
         'If tipe = "IN" Then
         '    lbl_cair.Visible = True
         '    cb_akun.Visible = True
@@ -58,7 +59,7 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        If MessageBox.Show("Batalkan?", "Konfirmasi Penjualan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Batalkan?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             returnval = False
             Me.Close()
         End If

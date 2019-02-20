@@ -5,93 +5,153 @@
     Private tjlstatus As String = 1
     Private clstate As Boolean = False
 
-    Private Sub loadData(kode As String)
-        Dim q As String = "SELECT kas_kode, kas_tgl, kas_jenis, kas_bank,perk_nama_akun,kas_nobg,kas_status, " _
-                          & "kas_sales, IFNULL(salesman_nama,'') salesman_nama, kas_reg_date,kas_reg_alias, kas_upd_date, kas_upd_alias " _
-                          & "FROM data_kas_faktur LEFT JOIN data_salesman_master ON kas_sales=salesman_kode " _
-                          & "LEFT JOIN data_perkiraan ON perk_kode=kas_bank " _
-                          & "WHERE kas_kode='{0}'"
-        op_con()
+    Private formstate As InputState = InputState.Insert
 
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_no_bukti.Text = rd.Item("kas_kode")
-            date_tgl_trans.Value = rd.Item("kas_tgl")
-            in_bank.Text = rd.Item("kas_bank")
-            in_bank_n.Text = rd.Item("perk_nama_akun")
-            cb_jenis.SelectedValue = rd.Item("kas_jenis")
-            in_bg.Text = rd.Item("kas_nobg")
-            in_sales.Text = rd.Item("kas_sales")
-            in_sales_n.Text = rd.Item("salesman_nama")
-            tjlstatus = rd.Item("kas_status")
-            txtRegAlias.Text = rd.Item("kas_reg_alias")
-            txtRegdate.Text = rd.Item("kas_reg_date")
-            txtUpdAlias.Text = rd.Item("kas_upd_alias")
-            Try
-                txtUpdDate.Text = rd.Item("kas_upd_date")
-            Catch ex As Exception
-                consoleWriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-        End If
-        rd.Close()
+    Private Enum InputState
+        Insert
+        Edit
+        View
+    End Enum
 
-        loadKas(kode)
-        setStatus()
-    End Sub
+    'SETUP FORM
+    Private Sub SetUpForm(NoFaktur As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Kas Masuk/Keluar : ks20190810902"
 
-    'SET STATUS
-    Private Sub setStatus()
-        Select Case tjlStatus
-            Case 0
-                in_status.Text = "Non-Aktif"
-            Case 1
-                in_status.Text = "Aktif"
-            Case 2
-                in_status.Text = "Batal"
-            Case 9
-                in_status.Text = "Delete"
-            Case Else
-                in_status.Text = "ERROR"
-        End Select
+        formstate = FormSet
 
-        If loggeduser.allowedit_akun = False Or selectperiode.closed = True Or tjlstatus = 2 Then
-            bt_simpanperkiraan.Visible = False
-            For Each x As TextBox In {in_bank_n, in_rek_n, in_sales_n, in_bg}
-                x.ReadOnly = True
-            Next
-
-            With dgv_kas
-                .Location = New Point(10, 181)
-                .Height = 186
-            End With
-
-            bt_batalperkiraan.Text = "OK"
-            cb_jenis.Enabled = False
-            date_tgl_trans.Enabled = False
-            mn_save.Enabled = False
-            mn_delete.Enabled = False
-            mn_proses.Enabled = False
-            mn_cancel.Enabled = False
-        End If
-    End Sub
-
-    'LOAD TABLE
-    Private Sub loadKas(kode As String)
-        Dim dt As New DataTable
-        Dim q As String = "SELECT k_trans_rek, perk_nama_akun, k_trans_debet, k_trans_kredit, k_trans_ket " _
-                            & "FROM data_kas_trans LEFT JOIN data_perkiraan ON k_trans_rek=perk_kode " _
-                            & "WHERE k_trans_faktur='{0}'"
-
-        dt = getDataTablefromDB(String.Format(q, kode))
-
-        For Each rows As DataRow In dt.Rows
-            dgv_kas.Rows.Add(rows.ItemArray(0), rows.ItemArray(1), rows.ItemArray(2), rows.ItemArray(3), rows.ItemArray(4))
+        With cb_jenis
+            .DataSource = jenisBayar("kas")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+        With date_tgl_trans
+            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+            .MaxDate = selectperiode.tglakhir
+            .MinDate = selectperiode.tglawal
+        End With
+        For Each x As DataGridViewColumn In {kas_debet, kas_kredit}
+            x.DefaultCellStyle = dgvstyle_currency
         Next
-        dt.Dispose()
-        countDK()
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += NoFaktur
+            Me.lbl_title.Text += " : " & NoFaktur
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            loadData(NoFaktur)
+            If Not {0, 1}.Contains(tjlstatus) Then AllowEdit = False
+            in_no_bukti.ReadOnly = True
+            mn_print.Enabled = IIf(tjlstatus = 1, True, False)
+            mn_cancel.Enabled = IIf({0, 1}.Contains(tjlstatus), True, False)
+            bt_simpanperkiraan.Text = "Update"
+        End If
+
+        ControlSwitch(AllowEdit)
     End Sub
 
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_sales_n, in_bank_n, in_bg}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
+        For Each cbx As ComboBox In {cb_jenis}
+            cbx.Enabled = AllowInput
+        Next
+        For Each ctr As Control In {in_rek_n, in_kredit, in_debet, in_ket, bt_tbkas}
+            ctr.Visible = AllowInput
+        Next
+        For Each dtpick As DateTimePicker In {date_tgl_trans}
+            dtpick.Enabled = AllowInput
+        Next
+
+        bt_simpanperkiraan.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+
+        If AllowInput Then
+            dgv_kas.Location = New Point(10, 221) : dgv_kas.Height = 146
+            AddHandler dgv_kas.CellDoubleClick, AddressOf dgv_kas_CellDoubleClick
+        Else
+            dgv_kas.Location = New Point(8, 181) : dgv_kas.Height = 186
+            RemoveHandler dgv_kas.CellDoubleClick, AddressOf dgv_kas_CellDoubleClick
+        End If
+    End Sub
+
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+    End Sub
+
+    Public Sub doLoadView(NoFaktur As String)
+        SetUpForm(NoFaktur, InputState.View, Nothing)
+        Me.Show()
+    End Sub
+
+    'LOAD DATA
+    Private Sub loadData(kode As String)
+        Dim q As String = ""
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT kas_kode, kas_tgl, kas_jenis, kas_bank,perk_nama_akun, IFNULL(kas_nobg,'') kas_nobg, kas_status, " _
+                    & "kas_sales, IFNULL(salesman_nama,'') salesman_nama, " _
+                    & "DATE_FORMAT(kas_reg_date, '%d/%m/%Y %H:%i:%S') kas_reg_date, IFNULL(kas_reg_alias,'') kas_reg_alias, " _
+                    & "IFNULL(DATE_FORMAT(kas_upd_date, '%d/%m/%Y %H:%i:%S'),'') kas_upd_date, IFNULL(kas_upd_alias,'') kas_upd_alias " _
+                    & "FROM data_kas_faktur LEFT JOIN data_salesman_master ON kas_sales=salesman_kode " _
+                    & "LEFT JOIN data_perkiraan ON perk_kode=kas_bank " _
+                    & "WHERE kas_kode='{0}'"
+
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_no_bukti.Text = rdx.Item("kas_kode")
+                        date_tgl_trans.Value = rdx.Item("kas_tgl")
+                        in_bank.Text = rdx.Item("kas_bank")
+                        in_bank_n.Text = rdx.Item("perk_nama_akun")
+                        cb_jenis.SelectedValue = rdx.Item("kas_jenis")
+                        in_bg.Text = rdx.Item("kas_nobg")
+                        in_sales.Text = rdx.Item("kas_sales")
+                        in_sales_n.Text = rdx.Item("salesman_nama")
+                        tjlstatus = rdx.Item("kas_status")
+                        txtRegAlias.Text = rdx.Item("kas_reg_alias")
+                        txtRegdate.Text = rdx.Item("kas_reg_date")
+                        txtUpdAlias.Text = rdx.Item("kas_upd_alias")
+                        txtUpdDate.Text = rdx.Item("kas_upd_date")
+                    End If
+                End Using
+                q = "SELECT k_trans_rek, perk_nama_akun, k_trans_debet, k_trans_kredit, k_trans_ket " _
+                    & "FROM data_kas_trans LEFT JOIN data_perkiraan ON k_trans_rek=perk_kode " _
+                    & "WHERE k_trans_faktur='{0}' AND k_trans_status=1"
+                Using dt = x.GetDataTable(String.Format(q, kode))
+                    For Each rows As DataRow In dt.Rows
+                        dgv_kas.Rows.Add(rows.ItemArray(0), rows.ItemArray(1), rows.ItemArray(2), rows.ItemArray(3), rows.ItemArray(4))
+                    Next
+                End Using
+                countDK()
+                Select Case tjlstatus
+                    Case 0 : in_status.Text = "Pending"
+                    Case 1 : in_status.Text = "Aktif"
+                    Case 2 : in_status.Text = "Batal"
+                    Case 8 : in_status.Text = "On-Edit/NOT IMPLEMENTED!"
+                    Case 9 : in_status.Text = "Delete"
+                    Case Else : Exit Sub
+                End Select
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke server", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
+            End If
+        End Using
+    End Sub
+
+    'LOAD SEARCH POPPUP
     Private Sub loadDataBRGPopup(Optional param As String = "")
         Dim q As String = ""
         With dgv_listbarang
@@ -338,7 +398,44 @@
     '------------------ CANCEL
     Private Function cancelData() As Boolean
         Dim _retval As Boolean = False
+        Dim q As String = ""
+        Dim queryArr As New List(Of String)
 
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB Connection is empty")
+        End If
+
+        Using x As New fr_tutupconfirm_dialog
+            x.lbl_title.Text = "Konfirmasi Kas"
+            x.in_user.Text = loggeduser.user_id
+            x.in_user.ReadOnly = True
+            x.in_pass.Focus()
+            x.do_loaddialog()
+            _retval = x.returnval
+        End Using
+
+        If _retval Then
+            q = "UPDATE data_kas_faktur SET kas_status=2, kas_upd_date=NOW(), kas_upd_alias='{1}' WHERE kas_kode='{0}'"
+            queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
+
+            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
+
+            Using x = MainConnection
+                x.Open()
+                If x.ConnectionState = ConnectionState.Open Then
+                    _retval = x.TransactCommand(queryArr)
+
+                    If Not _retval Then
+                        MessageBox.Show("Pembatalan transaksi gagal.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                Else
+                    _retval = False
+                    MessageBox.Show("Pembatalan transaksi gagal. Tidak dapat terhubung ke server.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End Using
+        End If
+        Return _retval
     End Function
 
     '------------drag form
@@ -399,23 +496,18 @@
         bt_simpanperkiraan.PerformClick()
     End Sub
 
-    Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
-
-    End Sub
-
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
 
     End Sub
 
     Private Sub mn_cancel_Click(sender As Object, e As EventArgs) Handles mn_cancel.Click
         If MessageBox.Show("Batalkan transaksi kas?", "Batalkan Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            Dim res As Boolean = False
-            tjlstatus = 2
-            setStatus()
-            res = saveData()
-            If res = False Then
-                tjlstatus = 1
-                setStatus()
+            Dim res = cancelData()
+
+            If res Then
+                MessageBox.Show("Transaksi kas dibatalkan", "Batal Kas", MessageBoxButtons.OK)
+                doRefreshTab({pgkas})
+                Me.Close()
             End If
         End If
     End Sub
@@ -495,25 +587,7 @@
 
     '------------- load
     Private Sub fr_kas_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        With cb_jenis
-            .DataSource = jenisBayar("kas")
-            .ValueMember = "Value"
-            .DisplayMember = "Text"
-        End With
-        For Each x As DataGridViewColumn In {kas_debet, kas_kredit}
-            x.DefaultCellStyle = dgvstyle_currency
-        Next
-        With date_tgl_trans
-            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
-
-        in_bank.Focus()
-
-        If in_no_bukti.Text <> Nothing Then
-            loadData(in_no_bukti.Text)
-        End If
+        dgv_kas.ClearSelection()
     End Sub
 
     '------------- save
@@ -581,7 +655,7 @@
                 Exit Sub
         End Select
 
-        If sender.Text = "" And IsNothing(_kdcntrol) = False Then
+        If (sender.Text = "" Or e.KeyCode = Keys.Back) And IsNothing(_kdcntrol) = False Then
             _kdcntrol.Text = ""
         End If
 
@@ -687,7 +761,7 @@
         textToDgv()
     End Sub
 
-    Private Sub dgv_kas_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_kas.CellDoubleClick
+    Private Sub dgv_kas_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs)
         If e.RowIndex >= 0 Then
             rowindex = e.RowIndex
             If bt_simpanperkiraan.Enabled = True Then

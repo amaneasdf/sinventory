@@ -29,9 +29,22 @@ Partial Class fr_stok_mutasi_list
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
+        Me.dgv_barang = New System.Windows.Forms.DataGridView()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_tot = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.hpp_brg = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.in_hpp = New System.Windows.Forms.TextBox()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.bt_addgudang = New System.Windows.Forms.Button()
@@ -63,17 +76,6 @@ Partial Class fr_stok_mutasi_list
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
-        Me.dgv_barang = New System.Windows.Forms.DataGridView()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_b = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_t = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_k = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_tot = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.hpp_brg = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.date_tgl_beli_r = New System.Windows.Forms.TextBox()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -98,10 +100,10 @@ Partial Class fr_stok_mutasi_list
         Me.SplitContainer1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty3, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty2, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.in_qty1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -160,9 +162,9 @@ Partial Class fr_stok_mutasi_list
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(294, 31)
+        Me.lbl_title.Size = New System.Drawing.Size(193, 31)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Mutasi Antar Gudang"
+        Me.lbl_title.Text = "Data Mutasi Stok"
         '
         'SplitContainer1
         '
@@ -177,6 +179,8 @@ Partial Class fr_stok_mutasi_list
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label13)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.in_status)
         Me.SplitContainer1.Panel1.Controls.Add(Me.popPnl_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.dgv_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_hpp)
@@ -223,6 +227,28 @@ Partial Class fr_stok_mutasi_list
         Me.SplitContainer1.SplitterDistance = 322
         Me.SplitContainer1.TabIndex = 248
         '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label13.Location = New System.Drawing.Point(934, 140)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(37, 13)
+        Me.Label13.TabIndex = 329
+        Me.Label13.Text = "Status"
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(934, 156)
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(146, 20)
+        Me.in_status.TabIndex = 328
+        Me.in_status.TabStop = False
+        '
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
@@ -260,6 +286,106 @@ Partial Class fr_stok_mutasi_list
         Me.linkLbl_searchbarang.TabStop = True
         Me.linkLbl_searchbarang.Text = "Tampilkan Pencarian..."
         Me.linkLbl_searchbarang.VisitedLinkColor = System.Drawing.Color.DimGray
+        '
+        'dgv_barang
+        '
+        Me.dgv_barang.AllowUserToAddRows = False
+        Me.dgv_barang.AllowUserToDeleteRows = False
+        Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot, Me.hpp_brg})
+        Me.dgv_barang.Location = New System.Drawing.Point(11, 82)
+        Me.dgv_barang.MultiSelect = False
+        Me.dgv_barang.Name = "dgv_barang"
+        Me.dgv_barang.ReadOnly = True
+        Me.dgv_barang.RowHeadersVisible = False
+        Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgv_barang.Size = New System.Drawing.Size(920, 223)
+        Me.dgv_barang.TabIndex = 16
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty_b
+        '
+        Me.qty_b.DataPropertyName = "trans_qty"
+        Me.qty_b.HeaderText = "QTY B"
+        Me.qty_b.MinimumWidth = 65
+        Me.qty_b.Name = "qty_b"
+        Me.qty_b.ReadOnly = True
+        Me.qty_b.Width = 65
+        '
+        'sat_b
+        '
+        Me.sat_b.DataPropertyName = "trans_satuan"
+        Me.sat_b.HeaderText = "Sat. B."
+        Me.sat_b.MinimumWidth = 65
+        Me.sat_b.Name = "sat_b"
+        Me.sat_b.ReadOnly = True
+        Me.sat_b.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat_b.Width = 65
+        '
+        'qty_t
+        '
+        Me.qty_t.HeaderText = "QTY T"
+        Me.qty_t.MinimumWidth = 65
+        Me.qty_t.Name = "qty_t"
+        Me.qty_t.ReadOnly = True
+        Me.qty_t.Width = 65
+        '
+        'sat_t
+        '
+        Me.sat_t.HeaderText = "Sat. T."
+        Me.sat_t.MinimumWidth = 65
+        Me.sat_t.Name = "sat_t"
+        Me.sat_t.ReadOnly = True
+        Me.sat_t.Width = 65
+        '
+        'qty_k
+        '
+        Me.qty_k.HeaderText = "QTY K"
+        Me.qty_k.MinimumWidth = 65
+        Me.qty_k.Name = "qty_k"
+        Me.qty_k.ReadOnly = True
+        Me.qty_k.Width = 65
+        '
+        'sat_k
+        '
+        Me.sat_k.HeaderText = "Sat. K."
+        Me.sat_k.MinimumWidth = 65
+        Me.sat_k.Name = "sat_k"
+        Me.sat_k.ReadOnly = True
+        Me.sat_k.Width = 65
+        '
+        'qty_tot
+        '
+        Me.qty_tot.HeaderText = "QTY"
+        Me.qty_tot.MinimumWidth = 30
+        Me.qty_tot.Name = "qty_tot"
+        Me.qty_tot.ReadOnly = True
+        Me.qty_tot.Width = 65
+        '
+        'hpp_brg
+        '
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        Me.hpp_brg.DefaultCellStyle = DataGridViewCellStyle1
+        Me.hpp_brg.HeaderText = "HPP"
+        Me.hpp_brg.Name = "hpp_brg"
+        Me.hpp_brg.ReadOnly = True
+        Me.hpp_brg.Width = 125
         '
         'in_hpp
         '
@@ -610,106 +736,6 @@ Partial Class fr_stok_mutasi_list
         Me.Label3.TabIndex = 256
         Me.Label3.Text = "Gudang Asal"
         '
-        'dgv_barang
-        '
-        Me.dgv_barang.AllowUserToAddRows = False
-        Me.dgv_barang.AllowUserToDeleteRows = False
-        Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.kode, Me.nama, Me.qty_b, Me.sat_b, Me.qty_t, Me.sat_t, Me.qty_k, Me.sat_k, Me.qty_tot, Me.hpp_brg})
-        Me.dgv_barang.Location = New System.Drawing.Point(11, 82)
-        Me.dgv_barang.MultiSelect = False
-        Me.dgv_barang.Name = "dgv_barang"
-        Me.dgv_barang.ReadOnly = True
-        Me.dgv_barang.RowHeadersVisible = False
-        Me.dgv_barang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_barang.Size = New System.Drawing.Size(920, 223)
-        Me.dgv_barang.TabIndex = 16
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty_b
-        '
-        Me.qty_b.DataPropertyName = "trans_qty"
-        Me.qty_b.HeaderText = "QTY B"
-        Me.qty_b.MinimumWidth = 65
-        Me.qty_b.Name = "qty_b"
-        Me.qty_b.ReadOnly = True
-        Me.qty_b.Width = 65
-        '
-        'sat_b
-        '
-        Me.sat_b.DataPropertyName = "trans_satuan"
-        Me.sat_b.HeaderText = "Sat. B."
-        Me.sat_b.MinimumWidth = 65
-        Me.sat_b.Name = "sat_b"
-        Me.sat_b.ReadOnly = True
-        Me.sat_b.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat_b.Width = 65
-        '
-        'qty_t
-        '
-        Me.qty_t.HeaderText = "QTY T"
-        Me.qty_t.MinimumWidth = 65
-        Me.qty_t.Name = "qty_t"
-        Me.qty_t.ReadOnly = True
-        Me.qty_t.Width = 65
-        '
-        'sat_t
-        '
-        Me.sat_t.HeaderText = "Sat. T."
-        Me.sat_t.MinimumWidth = 65
-        Me.sat_t.Name = "sat_t"
-        Me.sat_t.ReadOnly = True
-        Me.sat_t.Width = 65
-        '
-        'qty_k
-        '
-        Me.qty_k.HeaderText = "QTY K"
-        Me.qty_k.MinimumWidth = 65
-        Me.qty_k.Name = "qty_k"
-        Me.qty_k.ReadOnly = True
-        Me.qty_k.Width = 65
-        '
-        'sat_k
-        '
-        Me.sat_k.HeaderText = "Sat. K."
-        Me.sat_k.MinimumWidth = 65
-        Me.sat_k.Name = "sat_k"
-        Me.sat_k.ReadOnly = True
-        Me.sat_k.Width = 65
-        '
-        'qty_tot
-        '
-        Me.qty_tot.HeaderText = "QTY"
-        Me.qty_tot.MinimumWidth = 30
-        Me.qty_tot.Name = "qty_tot"
-        Me.qty_tot.ReadOnly = True
-        Me.qty_tot.Width = 65
-        '
-        'hpp_brg
-        '
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        Me.hpp_brg.DefaultCellStyle = DataGridViewCellStyle1
-        Me.hpp_brg.HeaderText = "HPP"
-        Me.hpp_brg.Name = "hpp_brg"
-        Me.hpp_brg.ReadOnly = True
-        Me.hpp_brg.Width = 125
-        '
         'date_tgl_beli_r
         '
         Me.date_tgl_beli_r.BackColor = System.Drawing.Color.White
@@ -894,10 +920,10 @@ Partial Class fr_stok_mutasi_list
         Me.popPnl_barang.ResumeLayout(False)
         Me.popPnl_barang.PerformLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty3, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty2, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_qty1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnl_Menu.ResumeLayout(False)
         Me.pnl_Menu.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
@@ -975,5 +1001,7 @@ Partial Class fr_stok_mutasi_list
     Friend WithEvents sat_k As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents qty_tot As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents hpp_brg As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label13 As System.Windows.Forms.Label
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 
 End Class

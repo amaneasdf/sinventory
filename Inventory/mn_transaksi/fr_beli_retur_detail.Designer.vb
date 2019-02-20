@@ -101,6 +101,7 @@ Partial Class fr_beli_retur_detail
         Me.in_supplier = New System.Windows.Forms.TextBox()
         Me.in_diskon = New System.Windows.Forms.NumericUpDown()
         Me.Label18 = New System.Windows.Forms.Label()
+        Me.in_nilaihutang = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
@@ -198,6 +199,7 @@ Partial Class fr_beli_retur_detail
         '
         'mn_print
         '
+        Me.mn_print.Enabled = False
         Me.mn_print.Image = CType(resources.GetObject("mn_print.Image"), System.Drawing.Image)
         Me.mn_print.Name = "mn_print"
         Me.mn_print.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
@@ -207,6 +209,7 @@ Partial Class fr_beli_retur_detail
         '
         'mn_cancelorder
         '
+        Me.mn_cancelorder.Enabled = False
         Me.mn_cancelorder.Image = Global.Inventory.My.Resources.Resources.toolbar_cancel_icon
         Me.mn_cancelorder.Name = "mn_cancelorder"
         Me.mn_cancelorder.Size = New System.Drawing.Size(102, 20)
@@ -268,7 +271,7 @@ Partial Class fr_beli_retur_detail
         Me.GroupBox3.Location = New System.Drawing.Point(516, 373)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(273, 107)
-        Me.GroupBox3.TabIndex = 20
+        Me.GroupBox3.TabIndex = 21
         Me.GroupBox3.TabStop = False
         '
         'cb_ppn
@@ -462,10 +465,10 @@ Partial Class fr_beli_retur_detail
         Me.cb_bayar_jenis.BackColor = System.Drawing.Color.White
         Me.cb_bayar_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_bayar_jenis.FormattingEnabled = True
-        Me.cb_bayar_jenis.Location = New System.Drawing.Point(344, 138)
+        Me.cb_bayar_jenis.Location = New System.Drawing.Point(344, 116)
         Me.cb_bayar_jenis.Name = "cb_bayar_jenis"
-        Me.cb_bayar_jenis.Size = New System.Drawing.Size(149, 21)
-        Me.cb_bayar_jenis.TabIndex = 9
+        Me.cb_bayar_jenis.Size = New System.Drawing.Size(445, 21)
+        Me.cb_bayar_jenis.TabIndex = 8
         '
         'date_tgl_pajak
         '
@@ -482,51 +485,51 @@ Partial Class fr_beli_retur_detail
         Me.in_ket.BackColor = System.Drawing.Color.White
         Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket.ForeColor = System.Drawing.Color.Black
-        Me.in_ket.Location = New System.Drawing.Point(11, 386)
+        Me.in_ket.Location = New System.Drawing.Point(82, 408)
         Me.in_ket.MaxLength = 200
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.in_ket.Size = New System.Drawing.Size(396, 76)
-        Me.in_ket.TabIndex = 19
+        Me.in_ket.Size = New System.Drawing.Size(325, 54)
+        Me.in_ket.TabIndex = 20
         '
         'in_no_faktur_ex
         '
         Me.in_no_faktur_ex.BackColor = System.Drawing.Color.White
         Me.in_no_faktur_ex.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_no_faktur_ex.ForeColor = System.Drawing.Color.Black
-        Me.in_no_faktur_ex.Location = New System.Drawing.Point(344, 117)
+        Me.in_no_faktur_ex.Location = New System.Drawing.Point(82, 386)
         Me.in_no_faktur_ex.MaxLength = 100
         Me.in_no_faktur_ex.Name = "in_no_faktur_ex"
-        Me.in_no_faktur_ex.Size = New System.Drawing.Size(445, 20)
-        Me.in_no_faktur_ex.TabIndex = 8
+        Me.in_no_faktur_ex.Size = New System.Drawing.Size(325, 20)
+        Me.in_no_faktur_ex.TabIndex = 19
         '
         'in_no_faktur
         '
         Me.in_no_faktur.BackColor = System.Drawing.Color.White
         Me.in_no_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_no_faktur.ForeColor = System.Drawing.Color.Black
-        Me.in_no_faktur.Location = New System.Drawing.Point(562, 138)
-        Me.in_no_faktur.MaxLength = 30
+        Me.in_no_faktur.Location = New System.Drawing.Point(344, 138)
+        Me.in_no_faktur.MaxLength = 250
         Me.in_no_faktur.Name = "in_no_faktur"
-        Me.in_no_faktur.Size = New System.Drawing.Size(227, 20)
-        Me.in_no_faktur.TabIndex = 10
+        Me.in_no_faktur.Size = New System.Drawing.Size(265, 20)
+        Me.in_no_faktur.TabIndex = 9
         '
         'Label14
         '
         Me.Label14.AutoSize = True
         Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label14.Location = New System.Drawing.Point(8, 370)
+        Me.Label14.Location = New System.Drawing.Point(8, 412)
         Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(82, 13)
+        Me.Label14.Size = New System.Drawing.Size(44, 13)
         Me.Label14.TabIndex = 305
-        Me.Label14.Text = "Catatan Invoice"
+        Me.Label14.Text = "Catatan"
         '
         'Label8
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(270, 121)
+        Me.Label8.Location = New System.Drawing.Point(8, 390)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(69, 13)
         Me.Label8.TabIndex = 309
@@ -536,7 +539,7 @@ Partial Class fr_beli_retur_detail
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(270, 142)
+        Me.Label5.Location = New System.Drawing.Point(270, 120)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(61, 13)
         Me.Label5.TabIndex = 307
@@ -546,11 +549,11 @@ Partial Class fr_beli_retur_detail
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(499, 142)
+        Me.Label9.Location = New System.Drawing.Point(270, 142)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(57, 13)
+        Me.Label9.Size = New System.Drawing.Size(71, 13)
         Me.Label9.TabIndex = 308
-        Me.Label9.Text = "Faktur Beli"
+        Me.Label9.Text = "Nomor Faktur"
         '
         'Label7
         '
@@ -954,6 +957,19 @@ Partial Class fr_beli_retur_detail
         Me.Label18.TabIndex = 427
         Me.Label18.Text = "Diskon"
         '
+        'in_nilaihutang
+        '
+        Me.in_nilaihutang.BackColor = System.Drawing.Color.White
+        Me.in_nilaihutang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_nilaihutang.ForeColor = System.Drawing.Color.Black
+        Me.in_nilaihutang.Location = New System.Drawing.Point(615, 138)
+        Me.in_nilaihutang.MaxLength = 250
+        Me.in_nilaihutang.Name = "in_nilaihutang"
+        Me.in_nilaihutang.ReadOnly = True
+        Me.in_nilaihutang.Size = New System.Drawing.Size(174, 20)
+        Me.in_nilaihutang.TabIndex = 10
+        Me.in_nilaihutang.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'fr_beli_retur_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -961,6 +977,7 @@ Partial Class fr_beli_retur_detail
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(807, 536)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.in_nilaihutang)
         Me.Controls.Add(Me.dgv_barang)
         Me.Controls.Add(Me.in_diskon)
         Me.Controls.Add(Me.Label18)
@@ -1114,4 +1131,5 @@ Partial Class fr_beli_retur_detail
     Friend WithEvents diskon As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents brg_hpp As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents in_nilaihutang As System.Windows.Forms.TextBox
 End Class

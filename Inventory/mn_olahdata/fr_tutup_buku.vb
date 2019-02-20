@@ -122,31 +122,44 @@
     'End Sub
 
     Private Function ckDataValid(ByVal tipe As String) As ckdatres
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB Config is empty")
+        End If
+
         Dim _retval As ckdatres = ckdatres.Undefined
         Dim q As String = ""
 
-        op_con()
-        If getConn.State = ConnectionState.Open Then
-            Select Case tipe
-                Case "piutangbayar"
-                    q = "SELECT COUNT(IF(p_bayar_status=0,1,NULL)) FROM data_piutang_bayar WHERE p_bayar_tanggal_bayar BETWEEN '{0} AND '{1}'"
-                    q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
-                Case "pesanan"
-                    q = "SELECT COUNT(IF(j_order_status=0,1,NULL)) FROM data_penjualan_order_faktur WHERE j_order_tanggal_trans BETWEEN '{0}' AND '{1}'"
-                    q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), selectperiode.tglakhir.ToString("yyyy-MM-dd"))
-            End Select
-
-            readcommd(q)
-            If rd.HasRows Then
-                If rd.Item(0) > 0 Then
-                    _retval = ckdatres.Invalid
-                Else
-                    _retval = ckdatres.Valid
-                End If
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Select Case tipe
+                    Case "sisahutang"
+                        q = "SELECT IFNULL(COUNT(DISTINCT h_trans_kode_hutang),0) FROM data_hutang_trans  " _
+                            & "WHERE h_trans_status=1 AND h_trans_tgl BETWEEN '{0}' AND '{1}' GROUP BY h_trans_kode_hutang HAVING SUM(h_trans_nilai) < 0"
+                        q = String.Format(q, date_tgl_awal.Value.ToString("yyyy-MM-dd"), date_tgl_akhir.Value.ToString("yyyy-MM-dd"))
+                    Case "piutangbayar"
+                        q = "SELECT COUNT(IF(p_bayar_status=0,1,NULL)) FROM data_piutang_bayar WHERE p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}'"
+                        q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), date_tgl_akhir.Value.ToString("yyyy-MM-dd"))
+                    Case "sisapiutang"
+                        q = "SELECT IFNULL(COUNT(DISTINCT p_trans_kode_piutang),0) FROM data_piutang_trans " _
+                            & "WHERE p_trans_status=1 AND p_trans_tgl BETWEEN '{0}' AND '{1}' GROUP BY p_trans_kode_piutang HAVING SUM(p_trans_nilai) < 0"
+                        q = String.Format(q, date_tgl_awal.Value.ToString("yyyy-MM-dd"), date_tgl_akhir.Value.ToString("yyyy-MM-dd"))
+                    Case "pesanan"
+                        q = "SELECT COUNT(IF(j_order_status=0,1,NULL)) FROM data_penjualan_order_faktur WHERE j_order_tanggal_trans BETWEEN '{0}' AND '{1}'"
+                        q = String.Format(q, selectperiode.tglawal.ToString("yyyy-MM-dd"), date_tgl_akhir.Value.ToString("yyyy-MM-dd"))
+                End Select
+                Using rdx = x.ReadCommand(q)
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        _retval = IIf(rdx.Item(0) > 0, ckdatres.Valid, ckdatres.Invalid)
+                    Else
+                        _retval = ckdatres.Undefined
+                    End If
+                End Using
+            Else
+                _retval = ckdatres.Undefined
             End If
-            rd.Close()
-        End If
-
+        End Using
         Return _retval
     End Function
 
@@ -232,7 +245,7 @@
                     .in_user.Text = loggeduser.user_id
                     .in_user.ReadOnly = True
                     .in_pass.Focus()
-                    .ShowDialog()
+                    .do_loaddialog()
                     ckstate = .returnval
                 End With
             End Using

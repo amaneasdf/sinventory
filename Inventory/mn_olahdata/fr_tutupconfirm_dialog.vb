@@ -24,10 +24,10 @@
         Return rval
     End Function
 
-    Public Sub do_load(tipetrans As String)
-        tipe = UCase(tipetrans)
-
+    Public Sub do_loaddialog()
+        Me.Text = lbl_title.Text
         in_pass.UseSystemPasswordChar = True
+        ShowDialog()
         'If tipe = "IN" Then
         '    lbl_cair.Visible = True
         '    cb_akun.Visible = True

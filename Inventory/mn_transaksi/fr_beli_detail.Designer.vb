@@ -844,6 +844,7 @@ Partial Class fr_beli_detail
         '
         'in_disc1
         '
+        Me.in_disc1.DecimalPlaces = 1
         Me.in_disc1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc1.Location = New System.Drawing.Point(691, 195)
         Me.in_disc1.Name = "in_disc1"
@@ -875,6 +876,7 @@ Partial Class fr_beli_detail
         '
         'in_disc2
         '
+        Me.in_disc2.DecimalPlaces = 1
         Me.in_disc2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc2.Location = New System.Drawing.Point(748, 195)
         Me.in_disc2.Name = "in_disc2"
@@ -896,6 +898,7 @@ Partial Class fr_beli_detail
         '
         'in_disc3
         '
+        Me.in_disc3.DecimalPlaces = 1
         Me.in_disc3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_disc3.Location = New System.Drawing.Point(805, 195)
         Me.in_disc3.Name = "in_disc3"

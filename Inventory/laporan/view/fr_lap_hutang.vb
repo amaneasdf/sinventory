@@ -5,12 +5,14 @@ Public Class fr_lap_hutang
     Private inquery As String = ""
     Private inheadpar As String = ""
 
+    'FILL VARIABLE VALUE/CONSTUCTOR
     Public Sub setVar(laptipe As String, query As String, Optional headerparam1 As String = "...")
         inlap_type = LCase(laptipe)
         inquery = query
         inheadpar = headerparam1
     End Sub
 
+    'FILL TEMP DATA TABLE
     Private Sub filldatatabel(query As String, dt As DataTable)
         op_con()
         Try
@@ -26,6 +28,7 @@ Public Class fr_lap_hutang
         'DataGridView1.DataSource = dt
     End Sub
 
+    'SELECT LAPORAN
     Private Sub repViewerSelector(lap_type As String)
         Dim parUserId As New ReportParameter("parUserId", loggeduser.user_id)
         Dim parPeriode As New ReportParameter("parPeriode", inheadpar)
@@ -102,6 +105,7 @@ Public Class fr_lap_hutang
         End With
     End Sub
 
+    'LOAD FORM CONTROL
     Public Sub do_load()
         repViewerSelector(inlap_type)
 

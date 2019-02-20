@@ -2,6 +2,7 @@
     Private supStatus As String = 1
     Private olddata As String = ""
 
+    'LOAD DATA
     Private Sub loadDataSupplier(kode As String)
         Dim _data As New List(Of String)
         Try
@@ -235,11 +236,7 @@
 
     '--------------- textbox numeric
     Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telp2supplier.KeyPress, in_telp1supplier.KeyPress, in_npwpsupplier.KeyPress, in_faxsupplier.KeyPress
-        If Asc(e.KeyChar) <> 8 Then
-            If (e.KeyChar < "0" OrElse e.KeyChar > "9") AndAlso e.KeyChar <> ControlChars.Back AndAlso e.KeyChar <> "-" Then
-                e.Handled = True
-            End If
-        End If
+        e.Handled = Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "-"
     End Sub
 
     Private Sub in_namasupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasupplier.KeyDown
@@ -285,4 +282,15 @@
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(in_namasupplier, e)
     End Sub
+
+    'Private Sub bt_gambar_Click(sender As Object, e As EventArgs) Handles bt_gambar.Click
+    '    pic_supplier.Image = createQRString(in_kode.Text, 500)
+    'End Sub
+
+    'Private Sub pic_supplier_Click(sender As Object, e As EventArgs) Handles pic_supplier.Click
+    '    If Not pic_supplier.Image Is Nothing Then
+    '        Dim ss = decodeQR(pic_supplier.Image)
+    '        MessageBox.Show(ss.Key & " " & ss.Value)
+    '    End If
+    'End Sub
 End Class

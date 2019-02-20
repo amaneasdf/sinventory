@@ -28,6 +28,7 @@ Partial Class fr_hutang_bayar
         Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_proses = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cancel = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
@@ -87,6 +88,8 @@ Partial Class fr_hutang_bayar
         Me.in_saldotitipan = New System.Windows.Forms.TextBox()
         Me.Label16 = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_bayar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -99,7 +102,7 @@ Partial Class fr_hutang_bayar
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_delete, Me.mn_print, Me.mn_proses})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_delete, Me.mn_print, Me.mn_proses, Me.mn_cancel})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(901, 24)
@@ -139,6 +142,12 @@ Partial Class fr_hutang_bayar
         Me.mn_proses.Text = "P&roses"
         Me.mn_proses.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.mn_proses.Visible = False
+        '
+        'mn_cancel
+        '
+        Me.mn_cancel.Name = "mn_cancel"
+        Me.mn_cancel.Size = New System.Drawing.Size(124, 20)
+        Me.mn_cancel.Text = "Cancel Pembayaran"
         '
         'Panel1
         '
@@ -400,12 +409,12 @@ Partial Class fr_hutang_bayar
         Me.dgv_bayar.BackgroundColor = System.Drawing.Color.White
         Me.dgv_bayar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_bayar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bayar_faktur, Me.bayar_jt, Me.bayar_saldoawal, Me.bayar_sisahutang, Me.bayar_kredit})
-        Me.dgv_bayar.Location = New System.Drawing.Point(12, 157)
+        Me.dgv_bayar.Location = New System.Drawing.Point(12, 156)
         Me.dgv_bayar.Name = "dgv_bayar"
         Me.dgv_bayar.ReadOnly = True
         Me.dgv_bayar.RowHeadersVisible = False
         Me.dgv_bayar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_bayar.Size = New System.Drawing.Size(877, 144)
+        Me.dgv_bayar.Size = New System.Drawing.Size(877, 145)
         Me.dgv_bayar.TabIndex = 13
         '
         'bayar_faktur
@@ -510,7 +519,7 @@ Partial Class fr_hutang_bayar
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
         Me.popPnl_barang.Controls.Add(Me.linkLbl_searchbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(453, 166)
+        Me.popPnl_barang.Location = New System.Drawing.Point(453, 173)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(389, 135)
         Me.popPnl_barang.TabIndex = 366
@@ -803,9 +812,12 @@ Partial Class fr_hutang_bayar
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.Label17)
+        Me.pnl_content.Controls.Add(Me.in_status)
+        Me.pnl_content.Controls.Add(Me.popPnl_barang)
+        Me.pnl_content.Controls.Add(Me.dgv_bayar)
         Me.pnl_content.Controls.Add(Me.Label7)
         Me.pnl_content.Controls.Add(Me.Label30)
-        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.txtUpdAlias)
         Me.pnl_content.Controls.Add(Me.Label3)
         Me.pnl_content.Controls.Add(Me.txtUpdDate)
@@ -843,7 +855,6 @@ Partial Class fr_hutang_bayar
         Me.pnl_content.Controls.Add(Me.in_sisafaktur)
         Me.pnl_content.Controls.Add(Me.in_kredit)
         Me.pnl_content.Controls.Add(Me.Label10)
-        Me.pnl_content.Controls.Add(Me.dgv_bayar)
         Me.pnl_content.Controls.Add(Me.Label6)
         Me.pnl_content.Controls.Add(Me.cb_bayar)
         Me.pnl_content.Controls.Add(Me.Label8)
@@ -855,12 +866,33 @@ Partial Class fr_hutang_bayar
         Me.pnl_content.Size = New System.Drawing.Size(901, 468)
         Me.pnl_content.TabIndex = 0
         '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.Location = New System.Drawing.Point(662, 35)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(37, 13)
+        Me.Label17.TabIndex = 382
+        Me.Label17.Text = "Status"
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(721, 31)
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(168, 20)
+        Me.in_status.TabIndex = 381
+        Me.in_status.TabStop = False
+        '
         'fr_hutang_bayar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalperkiraan
         Me.ClientSize = New System.Drawing.Size(901, 544)
         Me.Controls.Add(Me.pnl_content)
         Me.Controls.Add(Me.MenuStrip1)
@@ -952,4 +984,7 @@ Partial Class fr_hutang_bayar
     Friend WithEvents in_saldotitipan As System.Windows.Forms.TextBox
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
+    Friend WithEvents mn_cancel As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents Label17 As System.Windows.Forms.Label
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 End Class

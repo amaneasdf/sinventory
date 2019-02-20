@@ -28,8 +28,9 @@
 
     Private Sub loadbarang(gudang As String, Optional param As String = "")
         Dim bs As New BindingSource
-        Dim q As String = "SELECT stock_barang as kode, barang_nama as nama " _
+        Dim q As String = "SELECT stock_barang as kode, kategori_nama as kategori, barang_nama as nama " _
                           & "FROM data_stok_awal LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
+                          & "LEFT JOIN ref_barang_kategori ON barang_kategori=kategori_kode " _
                           & "WHERE stock_gudang='" & gudang & "' AND stock_status=1"
 
         bs.DataSource = getDataTablefromDB(q)
@@ -57,7 +58,6 @@
         rd.Close()
 
         q = String.Format(q, selectperiode.id, barang, gudang)
-        Console.WriteLine(q)
         dt = getDataTablefromDB(q)
         With dgv_kartustok.Rows
             .Clear()
@@ -283,5 +283,9 @@
 
     Private Sub bt_save_Click(sender As Object, e As EventArgs) Handles bt_save.Click
         saveKartustok()
+    End Sub
+
+    Private Sub dgv_barang_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_barang.CellDoubleClick
+        bt_load_kartu.PerformClick()
     End Sub
 End Class

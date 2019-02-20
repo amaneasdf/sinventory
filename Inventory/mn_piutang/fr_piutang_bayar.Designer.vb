@@ -92,6 +92,8 @@ Partial Class fr_piutang_bayar
         Me.Label16 = New System.Windows.Forms.Label()
         Me.in_tglpencairan = New System.Windows.Forms.TextBox()
         Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -311,7 +313,7 @@ Partial Class fr_piutang_bayar
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalperkiraan.TabIndex = 23
-        Me.bt_batalperkiraan.Text = "Batal"
+        Me.bt_batalperkiraan.Text = "Tutup"
         Me.bt_batalperkiraan.UseVisualStyleBackColor = True
         '
         'bt_simpanperkiraan
@@ -865,6 +867,28 @@ Partial Class fr_piutang_bayar
         Me.Label17.TabIndex = 389
         Me.Label17.Text = "Pencairan"
         '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.Location = New System.Drawing.Point(647, 108)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(37, 13)
+        Me.Label9.TabIndex = 391
+        Me.Label9.Text = "Status"
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(706, 104)
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(188, 20)
+        Me.in_status.TabIndex = 390
+        Me.in_status.TabStop = False
+        '
         'fr_piutang_bayar
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -873,6 +897,9 @@ Partial Class fr_piutang_bayar
         Me.ClientSize = New System.Drawing.Size(901, 544)
         Me.ControlBox = False
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.dgv_bayar)
+        Me.Controls.Add(Me.Label9)
+        Me.Controls.Add(Me.in_status)
         Me.Controls.Add(Me.in_tglpencairan)
         Me.Controls.Add(Me.Label17)
         Me.Controls.Add(Me.cb_akun)
@@ -906,7 +933,6 @@ Partial Class fr_piutang_bayar
         Me.Controls.Add(Me.date_tgl_trans)
         Me.Controls.Add(Me.in_faktur)
         Me.Controls.Add(Me.Label30)
-        Me.Controls.Add(Me.dgv_bayar)
         Me.Controls.Add(Me.txtUpdAlias)
         Me.Controls.Add(Me.in_kredit)
         Me.Controls.Add(Me.txtUpdDate)
@@ -1017,4 +1043,6 @@ Partial Class fr_piutang_bayar
     Friend WithEvents bayar_totalpiutang As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents bayar_sisapiutang As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents bayar_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 End Class

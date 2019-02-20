@@ -37,70 +37,86 @@
         End If
     End Sub
 
+    'LOAD DATA
     Private Sub loadData(kode As String)
-        Dim q As String = "SELECT faktur_kode, faktur_tanggal, faktur_gudang_asal, a.gudang_nama as gudang_asal, faktur_gudang_tujuan, " _
-                          & "b.gudang_nama as gudang_tujuan, faktur_reg_alias, faktur_reg_date, faktur_upd_alias, faktur_upd_date, faktur_status " _
-                          & "FROM data_barang_stok_mutasi LEFT JOIN data_barang_gudang a ON faktur_gudang_asal=a.gudang_kode " _
-                          & "LEFT JOIN data_barang_gudang b ON faktur_gudang_tujuan=b.gudang_kode " _
-                          & "WHERE faktur_kode='{0}'"
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_kode.Text = rd.Item("faktur_kode")
-            date_tgl_beli.Value = rd.Item("faktur_tanggal")
-            date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
-            in_gudang.Text = rd.Item("faktur_gudang_asal")
-            in_gudang_n.Text = rd.Item("gudang_asal")
-            in_gudang2.Text = rd.Item("faktur_gudang_tujuan")
-            in_gudang2_n.Text = rd.Item("gudang_tujuan")
-            tblstatus = rd.Item("faktur_status")
-            txtRegAlias.Text = rd.Item("faktur_reg_alias")
-            txtRegdate.Text = rd.Item("faktur_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("faktur_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdAlias.Text = rd.Item("faktur_upd_alias")
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB connection is empty")
         End If
-        rd.Close()
+        Dim q As String = ""
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT faktur_kode, faktur_tanggal, faktur_gudang_asal, a.gudang_nama as gudang_asal, faktur_gudang_tujuan, " _
+                    & "b.gudang_nama as gudang_tujuan, IFNULL(faktur_reg_alias,'') faktur_reg_alias, DATE_FORMAT(faktur_reg_date,'%d/%m/%Y %H:%i:%S') faktur_reg_date, " _
+                    & "IFNULL(faktur_upd_alias,'') faktur_upd_alias, IFNULL(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%S'),'') faktur_upd_date, faktur_status " _
+                    & "FROM data_barang_stok_mutasi LEFT JOIN data_barang_gudang a ON faktur_gudang_asal=a.gudang_kode " _
+                    & "LEFT JOIN data_barang_gudang b ON faktur_gudang_tujuan=b.gudang_kode " _
+                    & "WHERE faktur_kode='{0}'"
+                Using rdx = x.ReadCommand(String.Format(q, kode), CommandBehavior.SingleRow)
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_kode.Text = rdx.Item("faktur_kode")
+                        date_tgl_beli.Value = rdx.Item("faktur_tanggal")
+                        date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
+                        in_gudang.Text = rdx.Item("faktur_gudang_asal")
+                        in_gudang_n.Text = rdx.Item("gudang_asal")
+                        in_gudang2.Text = rdx.Item("faktur_gudang_tujuan")
+                        in_gudang2_n.Text = rdx.Item("gudang_tujuan")
+                        tblstatus = rdx.Item("faktur_status")
+                        txtRegAlias.Text = rdx.Item("faktur_reg_alias")
+                        txtRegdate.Text = rdx.Item("faktur_reg_date")
+                        txtUpdDate.Text = rdx.Item("faktur_upd_date")
+                        txtUpdAlias.Text = rdx.Item("faktur_upd_alias")
+                    End If
+                End Using
+                q = "SELECT trans_barang, barang_nama, trans_qty_besar, barang_satuan_besar, trans_qty_tengah, " _
+                    & "barang_satuan_tengah, trans_qty_kecil, barang_satuan_kecil, trans_qty_tot,trans_hpp " _
+                    & "FROM data_barang_stok_mutasi_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
+                    & "WHERE trans_faktur='{0}' AND trans_status=1"
+                Using dt = x.GetDataTable(String.Format(q, kode))
+                    With dgv_barang.Rows
+                        For Each row As DataRow In dt.Rows
+                            Dim i = .Add
+                            .Item(i).Cells("kode").Value = row.ItemArray(0)
+                            .Item(i).Cells("nama").Value = row.ItemArray(1)
+                            .Item(i).Cells("qty_b").Value = row.ItemArray(2)
+                            .Item(i).Cells("sat_b").Value = row.ItemArray(3)
+                            .Item(i).Cells("qty_t").Value = row.ItemArray(4)
+                            .Item(i).Cells("sat_t").Value = row.ItemArray(5)
+                            .Item(i).Cells("qty_k").Value = row.ItemArray(6)
+                            .Item(i).Cells("sat_k").Value = row.ItemArray(7)
+                            .Item(i).Cells("qty_tot").Value = row.ItemArray(8)
+                            .Item(i).Cells("hpp_brg").Value = row.ItemArray(9)
+                        Next
+                    End With
+                End Using
+                'SET STATUS
+                Select Case tblstatus
+                    Case 0 : in_status.Text = "Pending"
+                    Case 1 : in_status.Text = "Aktif"
+                    Case 2 : in_status.Text = "Batal"
+                    Case 8 : in_status.Text = "On-Edit/NOT IMPLEMENTED!"
+                    Case 9 : in_status.Text = "Delete"
+                    Case Else : Exit Sub
+                End Select
+                setStatus()
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke server", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
     End Sub
-
-    Private Sub loadBrg(kode As String)
-        Dim dt As New DataTable
-        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_besar, barang_satuan_besar, trans_qty_tengah, " _
-                          & "barang_satuan_tengah, trans_qty_kecil, barang_satuan_kecil, trans_qty_tot,trans_hpp " _
-                          & "FROM data_barang_stok_mutasi_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                          & "WHERE trans_faktur='{0}' AND trans_status=1"
-        dt = getDataTablefromDB(String.Format(q, kode))
-        With dgv_barang.Rows
-            For Each x As DataRow In dt.Rows
-                Dim y As Integer = .Add
-                With .Item(y)
-                    .Cells("kode").Value = x.ItemArray(0)
-                    .Cells("nama").Value = x.ItemArray(1)
-                    .Cells("qty_b").Value = x.ItemArray(2)
-                    .Cells("sat_b").Value = x.ItemArray(3)
-                    .Cells("qty_t").Value = x.ItemArray(4)
-                    .Cells("sat_t").Value = x.ItemArray(5)
-                    .Cells("qty_k").Value = x.ItemArray(6)
-                    .Cells("sat_k").Value = x.ItemArray(7)
-                    .Cells("qty_tot").Value = x.ItemArray(8)
-                    .Cells("hpp_brg").Value = x.ItemArray(9)
-                End With
-            Next
-        End With
-    End Sub
-
 
     Private Sub setStatus()
-        Select Case tblStatus
-            Case 0
+        Select Case tblstatus
+            Case 0, 1
                 'in_status.Text = "Non-Aktif"
-            Case 1
-                'in_status.Text = "Aktif"
-            Case 9
-                'in_status.Text = "Delete"
+                mn_hapus.Enabled = If(selectperiode.closed = False, True, False)
+                mn_edit.Enabled = If(selectperiode.closed = False, True, False)
+                mn_print.Enabled = If(tblstatus = 1, True, False)
+            Case 2, 9
+                mn_hapus.Enabled = False
+                mn_edit.Enabled = False
+                mn_print.Enabled = False
             Case Else
                 Exit Sub
         End Select
@@ -210,7 +226,6 @@
         Try
             Me.Cursor = Cursors.AppStarting
             loadData(dgv_list.Rows(rowindex).Cells("kode").Value)
-            loadBrg(in_kode.Text)
         Catch ex As Exception
             Dim text As String = "Tidak dapat menampilkan data" & Environment.NewLine & ex.Message
             MessageBox.Show(text)
@@ -302,7 +317,6 @@
         Dim querycheck As String = False
         Dim queryArr As New List(Of String)
         Dim datafaktur, dataBrg As String()
-        Dim data, data2 As String()
         Dim q As String = ""
 
         Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
@@ -327,9 +341,6 @@
                 MessageBox.Show("Nomor faktur " & in_kode.Text & " sudah pernnah diinputkan", "Mutasi Antar Gudang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                 in_kode.Focus()
                 Exit Sub
-                'If MessageBox.Show("Update data faktur " & in_faktur.Text & "?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) = Windows.Forms.DialogResult.No Then
-                '    Exit Sub
-                'End If
             End If
         End If
 
@@ -356,9 +367,6 @@
         '==========================================================================================================================
         q = "UPDATE data_barang_stok_mutasi_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_kode.Text))
-
-        q = "UPDATE data_stok_kartustok SET trans_status=9 WHERE trans_faktur='{0}'"
-        queryArr.Add(String.Format(q, in_kode.Text))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -379,128 +387,14 @@
                 }
             q = "INSERT INTO data_barang_stok_mutasi_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
             queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dataBrg)))
-
-            x.Add("'" & rows.Cells(0).Value & "'")
-            qty.Add(_qtytot)
-            nilai.Add(_qtytot * _hpp)
-            consoleWriteLine(_qtytot & "-" & _hpp)
         Next
         '==========================================================================================================================
 
         '==========================================================================================================================
-        'WRITE KARTU STOK
-        Dim x_kodestock As New List(Of String)
-        Dim q4 As String = "SELECT stock_kode FROM data_stok_awal WHERE stock_gudang='{0}' AND stock_barang={1} AND stock_periode='{2}'"
-        Dim q5 As String = "INSERT INTO data_stok_kartustok({0}) SELECT {1} FROM data_stok_kartustok bb WHERE trans_stock='{2}' ON DUPLICATE KEY UPDATE {3}"
-        data = Nothing
-        data = {
-            "trans_stock", "trans_index", "trans_jenis", "trans_faktur", "trans_tgl", "trans_periode",
-            "trans_ket", "trans_qty", "trans_nilai", "trans_reg_alias", "trans_reg_date", "trans_status"
-            }
-        Dim i As Integer = 0
-
-        For Each brg As String In x
-            Dim kd, kd2 As String
-            consoleWriteLine(nilai.Item(i))
-
-            'ASAL
-            kd = in_gudang.Text & "-" & Replace(brg, "'", "")
-            data2 = {
-                "'" & kd & "'",
-                "MAX(trans_index)+1",
-                "'mg'",
-                "'" & in_kode.Text & "'",
-                "'" & _tgltrans & "'",
-                "'" & selectperiode.id & "'",
-                "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                qty.Item(i) * -1,
-                (nilai.Item(i) * -1).ToString.Replace(",", "."),
-                "'" & loggeduser.user_id & "'",
-                "NOW()",
-                "1"
-                }
-            dataBrg = {
-                "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                "trans_tgl='" & _tgltrans & "'",
-                "trans_periode='" & selectperiode.id & "'",
-                "trans_qty=" & qty.Item(i) * -1,
-                "trans_nilai=" & (nilai.Item(i) * -1).ToString.Replace(",", "."),
-                "trans_upd_date=NOW()",
-                "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status=1"
-                }
-            queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd, String.Join(",", dataBrg)))
-
-            'TUJUAN
-            kd2 = in_gudang2.Text & "-" & Replace(brg, "'", "")
-            'CREATE SALDO AWAL
-            data2 = {
-                "'" & kd2 & "'", 0, "'sa'",
-                "''", "'" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "'",
-                "'" & selectperiode.id & "'", "'SALDO AWAL PERIODE'",
-                0, 0,
-                "'" & loggeduser.user_id & "'", "NOW()", "1"
-                }
-            dataBrg = {
-                "data_stok_kartustok.trans_id = data_stok_kartustok.trans_id"
-                }
-            queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd2, String.Join(",", dataBrg)))
-
-            'DONE : TODO : WRITE KARTU STOK TUJUAN
-            data2 = {
-                "'" & kd2 & "'",
-                "MAX(trans_index)+1",
-                "'mg'",
-                "'" & in_kode.Text & "'",
-                "'" & _tgltrans & "'",
-                "'" & selectperiode.id & "'",
-                "'" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                qty.Item(i),
-                nilai.Item(i).ToString.Replace(",", "."),
-                "'" & loggeduser.user_id & "'",
-                "NOW()",
-                "1"
-                }
-            dataBrg = {
-                "trans_ket='" & in_gudang_n.Text & " -> " & in_gudang2_n.Text & "'",
-                "trans_tgl='" & _tgltrans & "'",
-                "trans_periode='" & selectperiode.id & "'",
-                "trans_qty=" & qty.Item(i),
-                "trans_nilai=" & nilai.Item(i).ToString.Replace(",", "."),
-                "trans_upd_date=NOW()",
-                "trans_upd_alias='" & loggeduser.user_id & "'",
-                "trans_status=1"
-                }
-            queryArr.Add(String.Format(q5, String.Join(",", data), String.Join(",", data2), kd2, String.Join(",", dataBrg)))
-
-            i += 1
-        Next
+        'OTHER PROCESS
+        q = "transMutasiStokFin('{0}','{1}')"
+        queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
         '==========================================================================================================================
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INPUT JURNAL
-        '----------HEAD
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MTGOUT',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
-            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
-        data2 = {
-            "line_ref='" & in_gudang.Text & "'",
-            "line_ref_type='GUDANG'",
-            "line_tanggal='" & _tgltrans & "'",
-            "line_status='1'"
-            }
-        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
-
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='MTGIN',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
-            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
-        data2 = {
-            "line_ref='" & in_gudang2.Text & "'",
-            "line_ref_type='GUDANG'",
-            "line_tanggal='" & _tgltrans & "'",
-            "line_status='1'"
-            }
-        queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data2), loggeduser.user_id))
-        ''==========================================================================================================================
 
         '==========================================================================================================================
         'BEGIN TRANSACTION
@@ -521,6 +415,7 @@
             in_countdata.Text = dgv_list.Rows.Count
             mn_edit.Enabled = True
             mn_tambah.Enabled = True
+            mn_hapus.Enabled = True
             mn_edit.Text = "Edit"
             mn_tambah.Text = "Baru"
             disableAllSwitch(True)
@@ -543,7 +438,7 @@
                     .lbl_title.Text = "Konfirmasi Pembatalan"
                     .in_user.Text = loggeduser.user_id
                     .in_user.ReadOnly = True
-                    .ShowDialog()
+                    .do_loaddialog()
                     _confrm = .returnval
                 End With
             End Using
@@ -555,10 +450,7 @@
             q = "UPDATE data_barang_stok_mutasi SET faktur_status=2, faktur_upd_date =NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
             queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
 
-            q = "UPDATE data_stok_kartustok SET trans_status=9, trans_upd_date=NOW(), trans_upd_alias='{1}' WHERE trans_faktur='{0}'"
-            queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
-
-            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            q = "transMutasiStokFin('{0}','{1}')"
             queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
 
             queryCk = startTrans(queryArr)
@@ -696,11 +588,11 @@
         If mn_edit.Text = "Edit" And in_kode.Text <> Nothing Then
             in_kode.Text = dgv_list.Rows(rowindex).Cells("kode").Value
             Try
-                loadData(in_kode.Text)
                 dgv_barang.Rows.Clear()
-                loadBrg(in_kode.Text)
+                loadData(in_kode.Text)
             Catch ex As Exception
-                Console.WriteLine(ex.Message)
+                consoleWriteLine(ex.Message)
+                logError(ex)
             End Try
             disableAllSwitch(False)
             in_gudang_n.Focus()
@@ -722,7 +614,6 @@
                 disableAllSwitch(True)
                 loadData(in_kode.Text)
                 dgv_barang.Rows.Clear()
-                loadBrg(in_kode.Text)
                 mn_edit.Text = "Edit"
                 mn_tambah.Enabled = True
                 mn_hapus.Enabled = True

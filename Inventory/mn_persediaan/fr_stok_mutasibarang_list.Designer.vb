@@ -30,6 +30,8 @@ Partial Class fr_stok_mutasibarang_list
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.in_status = New System.Windows.Forms.TextBox()
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.linkLbl_searchbarang = New System.Windows.Forms.LinkLabel()
@@ -170,9 +172,9 @@ Partial Class fr_stok_mutasibarang_list
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(193, 31)
+        Me.lbl_title.Size = New System.Drawing.Size(223, 31)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Data Mutasi Stok"
+        Me.lbl_title.Text = "Data Mutasi Barang"
         '
         'SplitContainer1
         '
@@ -187,6 +189,8 @@ Partial Class fr_stok_mutasibarang_list
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
         Me.SplitContainer1.Panel1.BackColor = System.Drawing.Color.White
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label15)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.in_status)
         Me.SplitContainer1.Panel1.Controls.Add(Me.popPnl_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.dgv_barang)
         Me.SplitContainer1.Panel1.Controls.Add(Me.in_nilai1)
@@ -239,6 +243,28 @@ Partial Class fr_stok_mutasibarang_list
         Me.SplitContainer1.Size = New System.Drawing.Size(964, 533)
         Me.SplitContainer1.SplitterDistance = 322
         Me.SplitContainer1.TabIndex = 250
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.Location = New System.Drawing.Point(1096, 142)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(37, 13)
+        Me.Label15.TabIndex = 335
+        Me.Label15.Text = "Status"
+        '
+        'in_status
+        '
+        Me.in_status.BackColor = System.Drawing.Color.White
+        Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_status.ForeColor = System.Drawing.Color.Black
+        Me.in_status.Location = New System.Drawing.Point(1096, 158)
+        Me.in_status.Name = "in_status"
+        Me.in_status.ReadOnly = True
+        Me.in_status.Size = New System.Drawing.Size(146, 20)
+        Me.in_status.TabIndex = 334
+        Me.in_status.TabStop = False
         '
         'popPnl_barang
         '
@@ -1078,5 +1104,7 @@ Partial Class fr_stok_mutasibarang_list
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents Label15 As System.Windows.Forms.Label
+    Friend WithEvents in_status As System.Windows.Forms.TextBox
 
 End Class

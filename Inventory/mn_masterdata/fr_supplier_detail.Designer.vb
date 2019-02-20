@@ -223,11 +223,10 @@ Partial Class fr_supplier_detail
         'pic_supplier
         '
         Me.pic_supplier.BackColor = System.Drawing.Color.LightGray
-        Me.pic_supplier.Enabled = False
         Me.pic_supplier.Location = New System.Drawing.Point(420, 137)
         Me.pic_supplier.Name = "pic_supplier"
         Me.pic_supplier.Size = New System.Drawing.Size(216, 129)
-        Me.pic_supplier.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pic_supplier.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
         Me.pic_supplier.TabIndex = 168
         Me.pic_supplier.TabStop = False
         Me.pic_supplier.Visible = False
@@ -269,7 +268,6 @@ Partial Class fr_supplier_detail
         '
         'bt_gambar
         '
-        Me.bt_gambar.Enabled = False
         Me.bt_gambar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_gambar.Location = New System.Drawing.Point(526, 270)
         Me.bt_gambar.Name = "bt_gambar"

@@ -88,8 +88,8 @@
             .in_sisafaktur.Text = in_sisa.Text
             ._totalhutang = removeCommaThousand(in_piutangawal.Text)
             .in_tgl_jtfaktur.Text = in_tgl_term.Text
-
-            .Show(main)
+            .Owner = main
+            .doLoadNew()
         End With
         Me.Close()
     End Sub

@@ -1,6 +1,7 @@
 ﻿Public Class fr_custo_detail
     Private cstStatus As String = "1"
 
+    'GET DATA
     Private Sub loadDataCusto(kode As String)
         Dim q As String = ""
         op_con()
@@ -48,6 +49,34 @@
         End If
         rd.Close()
         setStatus()
+    End Sub
+
+    'GET QR
+    Private Sub loadDataQRLabel()
+        Dim dt As New DataTable
+        Dim qr As Bitmap = createQR(in_kode.Text, 250, 4)
+        Dim _ms As New System.IO.MemoryStream
+
+        If qr Is Nothing Then
+            Exit Sub
+        End If
+
+        qr.Save(_ms, System.Drawing.Imaging.ImageFormat.Bmp)
+
+        'op_con()
+        'q = "UPDATE data_customer_master SET customer_qr='{0}' WHERE customer_kode='{1}'"
+        'commnd(String.Format(q, _ms.GetBuffer, in_kode.Text))
+
+        dt.Columns.Add("cust_kode", GetType(String))
+        dt.Columns.Add("cust_qr", GetType(Byte()))
+        dt.Columns.Add("cust_nama", GetType(String))
+
+        dt.Rows.Add(in_kode.Text, _ms.ToArray, in_nama_custo.Text)
+
+        Dim x As New fr_lap_master
+        x.setVar("m_custo_qr", dt)
+        x.do_load()
+        x.Show()
     End Sub
 
     'SET STATUS
@@ -151,7 +180,7 @@
             "customer_jenis='" & cb_tipe.SelectedValue & "'",
             "customer_area='" & cb_area.SelectedValue & "'",
             "customer_nama='" & in_nama_custo.Text & "'",
-            "customer_alamat='" & in_alamat_custo.Text & "'",
+            "customer_alamat='" & mysqlQueryFriendlyStringFeed(in_alamat_custo.Text) & "'",
             "customer_alamat_blok='" & in_alamat_blok.Text & "'",
             "customer_alamat_nomor='" & in_alamat_no.Text & "'",
             "customer_alamat_rt='" & in_alamat_rt.Text & "'",
@@ -203,7 +232,10 @@
             q = "INSERT INTO data_customer_master SET customer_kode='{0}',{1},customer_reg_date=NOW(),customer_reg_alias='{2}'"
         ElseIf bt_simpancusto.Text = "Update" Then
             q = "UPDATE data_customer_master SET {1}, customer_upd_date=NOW(), customer_upd_alias='{2}' WHERE customer_kode='{0}'"
+        Else
+            Exit Sub
         End If
+
         querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
 
 
@@ -272,6 +304,12 @@
         'brgStatus = 9
         'UPDATE STATUS TO 9
         'setStatus()
+    End Sub
+
+    Private Sub mn_cetakQr_Click(sender As Object, e As EventArgs) Handles mn_cetakQr.Click
+        If in_kode.Text <> "" Then
+            loadDataQRLabel()
+        End If
     End Sub
 
     'LOAD
@@ -351,7 +389,7 @@
     End Sub
 
     '----------------- cb disable input
-    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_diskon.KeyPress, cb_diskon.KeyPress, cb_area.KeyPress
+    Private Sub cb_tipe_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_tipe.KeyPress, cb_diskon.KeyPress, cb_area.KeyPress
         If e.KeyChar <> ControlChars.Cr Then
             e.Handled = True
         End If
@@ -359,27 +397,15 @@
 
     '------------------ txtbox numeric
     Private Sub in_telpsales_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_nik.KeyPress, in_alamat_no.KeyPress, in_alamat_rt.KeyPress, in_alamat_rw.KeyPress, in_kodepos.KeyPress
-        If Asc(e.KeyChar) <> 8 Then
-            If Asc(e.KeyChar) < 48 Or Asc(e.KeyChar) > 57 Then
-                e.Handled = True
-            End If
-        End If
+        e.Handled = Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar)
     End Sub
 
     Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telpcusto.KeyPress, in_faxcusto.KeyPress
-        If Asc(e.KeyChar) <> 8 Then
-            If (e.KeyChar < "0" OrElse e.KeyChar > "9") AndAlso e.KeyChar <> ControlChars.Back AndAlso e.KeyChar <> "-" Then
-                e.Handled = True
-            End If
-        End If
+        e.Handled = Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "-"
     End Sub
 
     Private Sub in_npwp_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_npwp.KeyPress
-        If Asc(e.KeyChar) <> 8 Then
-            If (e.KeyChar < "0" OrElse e.KeyChar > "9") AndAlso e.KeyChar <> ControlChars.Back AndAlso e.KeyChar <> "-" AndAlso e.KeyChar <> "." Then
-                e.Handled = True
-            End If
-        End If
+        e.Handled = Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "-" AndAlso e.KeyChar <> "."
     End Sub
 
     '----INPUT

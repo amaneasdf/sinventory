@@ -122,6 +122,7 @@ Partial Class fr_pesan_detail
         Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.trans_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
@@ -414,7 +415,7 @@ Partial Class fr_pesan_detail
         Me.dgv_barang.AllowUserToDeleteRows = False
         Me.dgv_barang.BackgroundColor = System.Drawing.Color.White
         Me.dgv_barang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.valid_ck, Me.kode, Me.sat_type, Me.nama, Me.qty, Me.sat, Me.qty_sisa, Me.harga, Me.subtotal, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml})
+        Me.dgv_barang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.valid_ck, Me.kode, Me.sat_type, Me.nama, Me.qty, Me.sat, Me.qty_sisa, Me.harga, Me.subtotal, Me.discrp, Me.disc1, Me.disc2, Me.disc3, Me.disc4, Me.disc5, Me.jml, Me.trans_status})
         Me.dgv_barang.Location = New System.Drawing.Point(12, 146)
         Me.dgv_barang.MultiSelect = False
         Me.dgv_barang.Name = "dgv_barang"
@@ -1259,6 +1260,12 @@ Partial Class fr_pesan_detail
         Me.jml.Name = "jml"
         Me.jml.ReadOnly = True
         '
+        'trans_status
+        '
+        Me.trans_status.HeaderText = "Status"
+        Me.trans_status.Name = "trans_status"
+        Me.trans_status.ReadOnly = True
+        '
         'fr_pesan_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1396,4 +1403,5 @@ Partial Class fr_pesan_detail
     Friend WithEvents disc4 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents disc5 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents jml As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents trans_status As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

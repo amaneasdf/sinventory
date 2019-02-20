@@ -99,6 +99,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_713D436C6A63482D73CCE74E14699719"
+        "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8DFB71367048444E9220004AD141BAF5"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -118,13 +124,13 @@
         "Entry"
         {
         "MsmKey" = "8:_99B2C9991B1450D35F4ADAD6C15F07C6"
-        "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
+        "OwnerKey" = "8:_B263CE820B91B96487C668A402D9A20E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_99B2C9991B1450D35F4ADAD6C15F07C6"
-        "OwnerKey" = "8:_B263CE820B91B96487C668A402D9A20E"
+        "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -286,6 +292,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_713D436C6A63482D73CCE74E14699719"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_182A6D6AF262D42B660A035068EA163B"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -388,7 +400,7 @@
                 {
                 "Name" = "8:.NET Framework"
                 "Message" = "8:[VSDNETMSG]"
-                "FrameworkVersion" = "8:.NETFramework,Version=v4.0"
+                "FrameworkVersion" = "8:.NETFramework,Version=v4.5"
                 "AllowLaterVersions" = "11:FALSE"
                 "InstallUrl" = "8:http://go.microsoft.com/fwlink/?LinkId=395269"
                 }
@@ -652,6 +664,37 @@
                     }
                 }
             "SourcePath" = "8:EPPlus.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_713D436C6A63482D73CCE74E14699719"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:zxing, Version=0.16.4.0, Culture=neutral, PublicKeyToken=4e88037ac681fe60, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_713D436C6A63482D73CCE74E14699719"
+                    {
+                    "Name" = "8:zxing.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:zxing.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_215895AF1BB54657BA6C2ECA680E508D"
@@ -1233,15 +1276,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
-        "ProductCode" = "8:{39F86574-6827-4FC8-9356-7FCC0EC4547E}"
-        "PackageCode" = "8:{C184B501-CA7F-4EAE-A1FF-B0BB10CCFF5C}"
+        "ProductCode" = "8:{8B8DF260-CBBF-48EE-846F-C134EDDE8F5C}"
+        "PackageCode" = "8:{880889FD-D2B4-4783-829D-7540BD11A095}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.3"
+        "ProductVersion" = "8:0.0.5"
         "Manufacturer" = "8:MSO"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

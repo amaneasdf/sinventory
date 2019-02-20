@@ -1,6 +1,7 @@
 ﻿Public Class fr_jualconfirm_dialog
     Private tipe As String = "IN"
     Public returnval As Boolean = False
+    Public RetVal As New KeyValuePair(Of Boolean, String)
     Private pass_switch As Boolean = True
 
     Public Function checkUser(uid As String, pass As String) As Boolean
@@ -23,19 +24,11 @@
         Return rval
     End Function
 
-    Public Sub do_load(tipetrans As String)
-        tipe = UCase(tipetrans)
-
+    Public Sub do_load(Optional tipetrans As String = "jual")
+        Me.Text = lbl_title.Text
+        in_user.ReadOnly = True
         in_pass.UseSystemPasswordChar = True
-        'If tipe = "IN" Then
-        '    lbl_cair.Visible = True
-        '    cb_akun.Visible = True
-        'Else
-        '    lbl_cair.Visible = False
-        '    cb_akun.Visible = False
-        'End If
-
-        'loadCBAkun("BG")
+        ShowDialog()
     End Sub
 
     '------------drag form
@@ -57,7 +50,7 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        If MessageBox.Show("Batalkan?", "Konfirmasi Penjualan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        If MessageBox.Show("Batalkan?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
             returnval = False
             Me.Close()
         End If
@@ -67,7 +60,7 @@
         bt_batalbeli.PerformClick()
     End Sub
 
-    'UI
+    'UI : TEXTBOX
     Private Sub in_user_KeyDown(sender As Object, e As KeyEventArgs) Handles in_user.KeyDown
         keyshortenter(in_pass, e)
     End Sub
@@ -76,6 +69,7 @@
         keyshortenter(in_ket, e)
     End Sub
 
+    'UI : BUTTON
     Private Sub bt_switch_Click(sender As Object, e As EventArgs) Handles bt_switch.Click
         With bt_switch
             If pass_switch = True Then
@@ -91,25 +85,25 @@
         in_pass.Focus()
     End Sub
 
-    'BUTTON
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
         If in_user.Text = "" Then
-            MessageBox.Show("Username belum di input")
+            MessageBox.Show("Username belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_user.Focus()
             Exit Sub
         End If
         If in_pass.Text = "" Then
-            MessageBox.Show("Password belum di input")
+            MessageBox.Show("Password belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_pass.Focus()
             Exit Sub
         End If
         If checkUser(in_user.Text, in_pass.Text) = False Then
-            MessageBox.Show("User salah atau tidak dapat melakukan konfirmasi")
+            MessageBox.Show("User salah atau tidak dapat melakukan konfirmasi", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
             in_user.Focus()
             Exit Sub
         End If
 
         returnval = True
+        RetVal = New KeyValuePair(Of Boolean, String)(True, in_ket.Text)
         Me.Close()
     End Sub
 End Class

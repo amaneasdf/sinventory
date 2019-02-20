@@ -4,6 +4,7 @@
     Private MenuKode, MenuLabel, MenuText As String
     Public listkodemenu As New List(Of String)
     Private mainConn As New cnction
+    Public isForcedClose As Boolean = False
 
     Public Sub openTab(type As String)
         Select Case type
@@ -198,6 +199,7 @@
     Private Sub createTabPage(tbpg As TabPage, type As String, frm As Object, text As String)
         If tabcontrol.Contains(tbpg) Then
             tabcontrol.SelectedTab = tbpg
+            doRefreshTab({tbpg})
         Else
             With tbpg
                 .Text = text
@@ -205,9 +207,8 @@
                 setList(type)
                 .Controls.Add(frm)
                 .Show()
-                Console.WriteLine(.Name.ToString)
+                consoleWriteLine(.Name.ToString)
                 tabcontrol.SelectedTab = tbpg
-                'frm.dgv_list.Focus()
             End With
         End If
     End Sub
@@ -218,8 +219,8 @@
                           & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY kode_menu.menu_kode ASC;"
         dbSelect(String.Format(q, loggeduser.user_lev))
         Do While rd.Read
-            MenuKode = rd.Item("menu_kode")
             listkodemenu.Add(MenuKode)
+            MenuKode = rd.Item("menu_kode")
             MenuLabel = rd.Item("menu_label").ToString
             'MenuText = Mid(MenuKode, 3, 20) & ". " & MenuLabel
             MenuText = MenuLabel
@@ -253,22 +254,29 @@
             MainMenu.BackColor = Color.Orange
         Loop
 
-
-
         rd.Close()
         Me.Controls.Add(MainMenu)
     End Sub
 
-    Public Sub logOut(logout As Boolean)
-        Dim _login As New fr_login
+    Public Async Function logOut(Optional showLoginForm As Boolean = True) As Task
+        Dim i As Integer = 0
+        Using x As MySqlThing = MainConnection
+            Try
+                x.Open()
+            Catch ex As Exception
+                logError(ex, True)
+            End Try
+            If x.Connection.State = ConnectionState.Open Then
+                i = Await x.ExecCommandAsync("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'; " _
+                                    & "UPDATE system_login_log SET log_status=1, log_end=NOW() WHERE log_id=" & loggeduser.user_session)
+            End If
+        End Using
 
-        op_con()
-        commnd("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'")
-        commnd("UPDATE system_login_log SET log_status=1, log_end=NOW() WHERE log_id=" & loggeduser.user_session)
+        loggeduser = New UserData
 
-        loggeduser = usernull
+        If showLoginForm = True Then
+            Dim _login As New fr_login
 
-        If logout = True Then
             MainMenu.Items.Clear()
             tabcontrol.TabPages.Clear()
             tabcontrol.TabPages.Clear()
@@ -279,9 +287,9 @@
 
             _login.Show()
         End If
-    End Sub
+    End Function
 
-    Private Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Async Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim mnName As String = DirectCast(sender, ToolStripItem).Name
         Dim mnChld As Boolean = DirectCast(sender, ToolStripMenuItem).HasDropDownItems
         Console.WriteLine(mnName)
@@ -289,108 +297,44 @@
         Me.Cursor = Cursors.WaitCursor
 
         Select Case mnName
-            Case "mn0101"
-                Console.WriteLine("click master barang")
-                openTab("barang")
-            Case "mn0102"
-                Console.WriteLine("click master supplier")
-                openTab("supplier")
-            Case "mn0103"
-                Console.WriteLine("click master gudang")
-                openTab("gudang")
-            Case "mn0104"
-                Console.WriteLine("click master sales")
-                openTab("sales")
-            Case "mn0105"
-                Console.WriteLine("click master custo")
-                openTab("custo")
-            Case "mn0106"
-                Console.WriteLine("click master bank")
-                openTab("bank")
-            Case "mn0107"
-                Console.WriteLine("click master giro")
-                openTab("giro")
-            Case "mn0108"
-                Console.WriteLine("click master perkiraan")
-                openTab("perkiraan")
-            Case "mn0109"
-                Console.WriteLine("click master neraca awal")
-                openTab("neracaawal")
-            Case "mn020101"
-                Console.WriteLine("click trans beli")
-                openTab("beli")
-            Case "mn020102"
-                Console.WriteLine("click trans retur beli")
-                openTab("returbeli")
-            Case "mn020201"
-                Console.WriteLine("click trans jual")
-                openTab("jual")
-            Case "mn020202"
-                Console.WriteLine("click trans retur jual")
-                openTab("returjual")
-            Case "mn020203"
-                Console.WriteLine("click draft tagihan")
-                openTab("drafttagihan")
-            Case "mn020204"
-                Console.WriteLine("click draft rekap nota/barang")
-                openTab("draftrekap")
-            Case "mn020206"
-                Console.WriteLine("click pesanan")
-                openTab("pesanan")
-            Case "mn0301"
-                Console.WriteLine("click stok awal")
-                openTab("stok")
-            Case "mn0302"
-                Console.WriteLine("click mutasi gudang")
-                openTab("mutasigudang")
-            Case "mn0303"
-                Console.WriteLine("click mutasi barang")
-                openTab("mutasistok")
-            Case "mn0304"
-                Console.WriteLine("click stock op")
-                openTab("stockop")
-            Case "mn0401"
-                Console.WriteLine("click hutang awal")
-                openTab("hutangawal")
-            Case "mn0402"
-                Console.WriteLine("click hutang bayar")
-                openTab("hutangbayar")
-            Case "mn0403"
-                Console.WriteLine("click hutang bgo")
-                openTab("hutangbgo")
-            Case "mn0501"
-                Console.WriteLine("click piutang awal")
-                openTab("piutangawal")
-            Case "mn0502"
-                Console.WriteLine("click piutang bayar")
-                openTab("piutangbayar")
-            Case "mn0503"
-                Console.WriteLine("click piutang bgcair")
-                openTab("piutangbgcair")
-            Case "mn0504"
-                Console.WriteLine("click piutang bgtolak")
-                openTab("piutangbgtolak")
-            Case "mn0601"
-                Console.WriteLine("click kas")
-                openTab("kas")
-            Case "mn0602"
-                Console.WriteLine("click jurnal umum")
-                openTab("jurnalumum")
-            Case "mn0603"
-                Console.WriteLine("click jurnal memorial")
-                openTab("jurnalmemorial")
-            Case "mn0801"
-                Console.WriteLine("click set periode")
-                fr_set_periode.ShowDialog()
-            Case "mn0803"
-                Console.WriteLine("click jurnal memorial")
-                openTab("tutupbuku")
+            Case "mn0101" : openTab("barang")
+            Case "mn0102" : openTab("supplier")
+            Case "mn0103" : openTab("gudang")
+            Case "mn0104" : openTab("sales")
+            Case "mn0105" : openTab("custo")
+            Case "mn0106" : openTab("bank")
+            Case "mn0107" : openTab("giro")
+            Case "mn0108" : openTab("perkiraan")
+            Case "mn0109" : openTab("neracaawal")
+            Case "mn020101" : openTab("beli")
+            Case "mn020102" : openTab("returbeli")
+            Case "mn020201" : openTab("jual")
+            Case "mn020202" : openTab("returjual")
+            Case "mn020203" : openTab("drafttagihan")
+            Case "mn020204" : openTab("draftrekap")
+            Case "mn020206" : openTab("pesanan")
+            Case "mn0301" : openTab("stok")
+            Case "mn0302" : openTab("mutasigudang")
+            Case "mn0303" : openTab("mutasistok")
+            Case "mn0304" : openTab("stockop")
+            Case "mn0401" : openTab("hutangawal")
+            Case "mn0402" : openTab("hutangbayar")
+            Case "mn0403" : openTab("hutangbgo")
+            Case "mn0501" : openTab("piutangawal")
+            Case "mn0502" : openTab("piutangbayar")
+            Case "mn0503" : openTab("piutangbgcair")
+            Case "mn0504" : openTab("piutangbgtolak")
+            Case "mn0601" : openTab("kas")
+            Case "mn0602" : openTab("jurnalumum")
+            Case "mn0603" : openTab("jurnalmemorial")
+            Case "mn0801" : fr_set_periode.ShowDialog()
+            Case "mn0803" : MessageBox.Show("Maaf fungsi ini masih dalam perbaikan/maintenance", "Tutup Periode", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                'openTab("tutupbuku")
+            Case "mn070205" : Dim x As New fr_QR_custo : x.do_load() : x.Show() '-> QRCODE CUSTOMER
             Case "mn070301"
                 Using x As New fr_lap_filter_beli
-                    With x
-                        .do_load("transbeli", "Laporan Pembelian Per Nota", "lapBeliNota")
-                        .ShowDialog()
-                    End With
+                    x.do_load("transbeli", "Laporan Pembelian Per Nota", "lapBeliNota")
+                    x.ShowDialog()
                 End Using
             Case "mn070302"
                 Using x As New fr_lap_filter_beli
@@ -727,27 +671,13 @@
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn0813"
-                Console.WriteLine("click kartustok")
-                openTab("kartustok")
-            Case "mn0822"
-                Dim x As New fr_import_data
-                x.ShowDialog()
-            Case "mn0831"
-                Console.WriteLine("click efak")
-                openTab("exportEfak")
-            Case "mn0901"
-                Console.WriteLine("click ganti pass")
-                fr_user_password.ShowDialog()
-            Case "mn0911"
-                Console.WriteLine("click set menu")
-                fr_setup_menu.ShowDialog()
-            Case "mn0921"
-                Console.WriteLine("click daftar user")
-                openTab("user")
-            Case "mn0922"
-                Console.WriteLine("click daftar level")
-                openTab("group")
+            Case "mn0813" : openTab("kartustok")
+            Case "mn0822" : Dim x As New fr_import_data : x.Show()
+            Case "mn0831" : openTab("exportEfak")
+            Case "mn0901" : Using x As New fr_user_password : x.ShowDialog() : End Using
+            Case "mn0911" : Using x As New fr_setup_menu : x.ShowDialog() : End Using
+            Case "mn0921" : openTab("user")
+            Case "mn0922" : openTab("group")
                 'Case "mn0923"
                 '    If MessageBox.Show("Anda yakin akan mereset akun anda?", "Reset Akun", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
                 '        Dim _result As Boolean = resetUser(loggeduser.user_id)
@@ -766,7 +696,17 @@
                 End With
             Case "mn0941"
                 consoleWriteLine("click logout")
-                logOut(True)
+                Try
+                    Dim x As Task = logOut()
+                    Await x
+                    If x.IsFaulted Then
+                        Throw New Exception("Terjadi error saat melakukan proses LogOut", x.Exception)
+                    End If
+                Catch ex As Exception
+                    logError(ex, False)
+                    isForcedClose = True
+                    Application.Exit()
+                End Try
             Case "mn0942"
                 Application.Exit()
             Case Else
@@ -800,9 +740,11 @@
         If mainConn.db = Nothing Or mainConn.host = Nothing Then
             MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
+            isForcedClose = True
             _retval = False
             Application.Exit()
         Else
+            MainConnection = New MySqlThing(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
             setConn(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
             'setConn(mainConn.host, mainConn.db, mainConn.uid, mainConn.pass)
             op_con(True)
@@ -810,6 +752,7 @@
             If getConn.State <> ConnectionState.Open Then
                 MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
                                 Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                isForcedClose = True
                 _retval = False
                 Application.Exit()
             Else
@@ -827,22 +770,22 @@
         Me.Cursor = Cursors.AppStarting
         If setConnection() = True Then
             _login.Show()
-
-            setperiode(Today, False)
-            currentperiode = selectperiode
             strip_host.Text = mainConn.host
         End If
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub main_closing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If loggeduser.user_id <> Nothing Then
+    Private Async Sub main_closing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If isForcedClose = False Then
             Dim msg = MessageBox.Show("Apakah yakin akan menutup program ini?", Application.ProductName, MessageBoxButtons.YesNo)
-            If msg = Windows.Forms.DialogResult.Yes Then
-                logOut(False)
-            Else
+            If msg = Windows.Forms.DialogResult.No Then
                 e.Cancel = True
             End If
+            Try
+                Await logOut(False)
+            Catch ex As Exception
+                logError(ex, False)
+            End Try
         End If
     End Sub
 
@@ -859,39 +802,9 @@
             End If
 
         End If
-        'If Not tabcontrol.SelectedTab Is TabPage1 Then
-        '    If e.KeyCode = Keys.Escape Then
-        '        Console.Write(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("close", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        '    If e.KeyCode = Keys.F2 Then
-        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("edit", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        '    If e.KeyCode = Keys.F1 Then
-        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("tambah", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        '    If e.KeyCode = Keys.F3 Then
-        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("hapus", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        '    If e.KeyCode = Keys.F5 Then
-        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("refresh", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        '    If e.KeyCode = Keys.F AndAlso e.Control = True Then
-        '        Console.WriteLine(tabcontrol.SelectedTab.Name)
-        '        keyshortcut("cari", tabcontrol.SelectedTab.Name.ToString)
-        '    End If
-        'End If
     End Sub
 
     'SET PERIODE BT
-    Private Sub bt_setperiode_Click(sender As Object, e As EventArgs)
-        setperiode(cal_front.SelectionStart)
-    End Sub
-
     Private Sub bt_periode_main_Click(sender As Object, e As EventArgs) Handles bt_periode_main.Click
         Dim _selectdate As Date = cal_front.SelectionStart
         Dim _selectedperiode As periode = getPeriode(Nothing, _selectdate)

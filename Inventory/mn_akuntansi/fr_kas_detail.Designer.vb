@@ -28,7 +28,6 @@ Partial Class fr_kas_detail
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_cancel = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_proses = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -112,7 +111,7 @@ Partial Class fr_kas_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cancel, Me.mn_delete, Me.mn_print, Me.mn_proses})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cancel, Me.mn_print, Me.mn_proses})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(773, 24)
@@ -133,13 +132,6 @@ Partial Class fr_kas_detail
         Me.mn_cancel.Name = "mn_cancel"
         Me.mn_cancel.Size = New System.Drawing.Size(64, 20)
         Me.mn_cancel.Text = "Batalkan"
-        '
-        'mn_delete
-        '
-        Me.mn_delete.Name = "mn_delete"
-        Me.mn_delete.Size = New System.Drawing.Size(52, 20)
-        Me.mn_delete.Text = "Delete"
-        Me.mn_delete.Visible = False
         '
         'mn_print
         '
@@ -213,9 +205,9 @@ Partial Class fr_kas_detail
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(6, 4)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(268, 31)
+        Me.lbl_title.Size = New System.Drawing.Size(206, 31)
         Me.lbl_title.TabIndex = 136
-        Me.lbl_title.Text = "Form Kas Masuk/Keluar"
+        Me.lbl_title.Text = "Kas Masuk/Keluar"
         '
         'txtUpdAlias
         '
@@ -644,6 +636,7 @@ Partial Class fr_kas_detail
         Me.in_debet_tot.Size = New System.Drawing.Size(180, 20)
         Me.in_debet_tot.TabIndex = 17
         Me.in_debet_tot.TabStop = False
+        Me.in_debet_tot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'in_kredit_tot
         '
@@ -657,6 +650,7 @@ Partial Class fr_kas_detail
         Me.in_kredit_tot.Size = New System.Drawing.Size(180, 20)
         Me.in_kredit_tot.TabIndex = 18
         Me.in_kredit_tot.TabStop = False
+        Me.in_kredit_tot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label9
         '
@@ -815,7 +809,6 @@ Partial Class fr_kas_detail
     Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_proses As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel1 As System.Windows.Forms.Panel

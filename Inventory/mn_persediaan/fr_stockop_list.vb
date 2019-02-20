@@ -13,15 +13,62 @@
     Private _hppsys As Decimal = 0
     Private dgvallowed As Boolean = False
 
+    Private formstate As InputState = InputState.Insert
+
+    Private Enum InputState
+        Blank
+        Insert
+        Edit
+        View
+    End Enum
+
     'FUCKING SPAGHETTI CODE, FUCK
 
+    'SET TAB PAGE
     Public Sub setpage(page As TabPage)
         tabpagename = page
-        Console.WriteLine("pg" & page.Name.ToString)
-        Console.WriteLine("pgset" & tabpagename.Name.ToString)
+    End Sub
+
+    'SETUP FORM
+    Private Sub SetUpForm(NoFaktur As String, FormSet As InputState, AllowEdit As Boolean)
+        With date_tgl_beli
+            .MinDate = DateSerial(1990, 1, 1)
+            .MaxDate = DateSerial(2100, 12, 31)
+            .MinDate = selectperiode.tglawal
+            .MaxDate = selectperiode.tglakhir
+        End With
+        date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
+
+        For Each x As DataGridViewColumn In {hpp, hpp_fis}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+
+        If Not NoFaktur Is Nothing Then
+            dgv_barang.Rows.Clear()
+            loadData(NoFaktur)
+        End If
+
+
+    End Sub
+
+    Private Sub ControlSwitch(AllowInput As Boolean)
+
+    End Sub
+
+    Public Sub doLoadNew()
+        SetUpForm(Nothing, InputState.Insert, True)
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+    End Sub
+
+    Public Sub doLoadView(NoFaktur As String)
+        SetUpForm(NoFaktur, InputState.View, False)
     End Sub
 
     Public Sub performRefresh(Optional pass As Boolean = False)
+        SetUpForm(Nothing, InputState.Blank, False)
         With date_tgl_beli
             .MinDate = DateSerial(1990, 1, 1)
             .MaxDate = DateSerial(2100, 12, 31)
@@ -39,64 +86,64 @@
         End If
     End Sub
 
+    'LOAD DATA
     Private Sub loadData(kode As String)
-        Dim q As String = "SELECT faktur_bukti, faktur_tanggal, faktur_gudang, gudang_nama, faktur_status, faktur_ket, faktur_reg_alias, faktur_reg_date, " _
-                         & "faktur_upd_date, faktur_upd_alias, faktur_proc_date, faktur_proc_alias FROM data_stok_opname " _
-                         & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
-                         & "WHERE faktur_bukti='{0}'"
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_kode.Text = rd.Item("faktur_bukti")
-            date_tgl_beli.Value = rd.Item("faktur_tanggal")
-            date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
-            in_gudang.Text = rd.Item("faktur_gudang")
-            in_gudang_n.Text = rd.Item("gudang_nama")
-            in_ket.Text = rd.Item("faktur_ket")
-            tblStatus = rd.Item("faktur_status")
-            txtRegAlias.Text = rd.Item("faktur_reg_alias")
-            txtRegdate.Text = rd.Item("faktur_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("faktur_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdAlias.Text = rd.Item("faktur_upd_alias")
-            Try
-                txtProcDate.Text = rd.Item("faktur_proc_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtProcDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtProcAlias.Text = rd.Item("faktur_proc_alias")
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB Connection is empty")
         End If
-        rd.Close()
+        Dim q As String = ""
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT faktur_bukti, faktur_tanggal, faktur_gudang, gudang_nama, faktur_status, faktur_ket, " _
+                     & "IFNULL(DATE_FORMAT(faktur_reg_date,'%d/%m/%Y %H:%i:%S'),'') faktur_reg_date, IFNULL(faktur_reg_alias,'') faktur_reg_alias, " _
+                     & "IFNULL(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%S'),'') faktur_upd_date, IFNULL(faktur_upd_alias,'') faktur_upd_alias, " _
+                     & "IFNULL(DATE_FORMAT(faktur_proc_date,'%d/%m/%Y %H:%i:%S'),'') faktur_proc_date, IFNULL(faktur_proc_alias,'') faktur_proc_alias " _
+                     & "FROM data_stok_opname " _
+                     & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
+                     & "WHERE faktur_bukti='{0}'"
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_kode.Text = rdx.Item("faktur_bukti")
+                        date_tgl_beli.Value = rdx.Item("faktur_tanggal")
+                        date_tgl_beli_r.Text = date_tgl_beli.Value.ToLongDateString
+                        in_gudang.Text = rdx.Item("faktur_gudang")
+                        in_gudang_n.Text = rdx.Item("gudang_nama")
+                        in_ket.Text = rdx.Item("faktur_ket")
+                        tblStatus = rdx.Item("faktur_status")
+                        txtRegAlias.Text = rdx.Item("faktur_reg_alias")
+                        txtRegdate.Text = rdx.Item("faktur_reg_date")
+                        txtUpdDate.Text = rdx.Item("faktur_upd_date")
+                        txtUpdAlias.Text = rdx.Item("faktur_upd_alias")
+                        txtProcDate.Text = rdx.Item("faktur_proc_date")
+                        txtProcAlias.Text = rdx.Item("faktur_proc_alias")
+                    End If
+                End Using
+            End If
+            q = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_hpp,trans_hpp_fisik " _
+                & "FROM data_stok_opname_trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
+                & "WHERE trans_status=1 AND trans_faktur='{0}'"
+            Using dt = x.GetDataTable(String.Format(q, kode))
+                With dgv_barang.Rows
+                    For Each y As DataRow In dt.Rows
+                        Dim i = .Add
+                        .Item(i).Cells("kode").Value = y.ItemArray(0)
+                        .Item(i).Cells("nama").Value = y.ItemArray(1)
+                        .Item(i).Cells("qty_sys").Value = y.ItemArray(2)
+                        .Item(i).Cells("sat_sys").Value = y.ItemArray(3)
+                        .Item(i).Cells("qty_fis").Value = y.ItemArray(4)
+                        .Item(i).Cells("sat_fis").Value = y.ItemArray(3)
+                        .Item(i).Cells("qty_sel").Value = y.ItemArray(4) - y.ItemArray(2)
+                        .Item(i).Cells("hpp").Value = y.ItemArray(5)
+                        .Item(i).Cells("hpp_fis").Value = y.ItemArray(6)
+                    Next
+                End With
+            End Using
+
+        End Using
 
         setStatus()
-    End Sub
-
-    Private Sub loadDataBrg(kode As String)
-        Dim dt As New DataTable
-        Dim q As String = "SELECT trans_barang, barang_nama, trans_qty_sys, trans_satuan, trans_qty_fisik, trans_hpp,trans_hpp_fisik " _
-                          & "FROM data_stok_opname_trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
-                          & "WHERE trans_status=1 AND trans_faktur='{0}'"
-        dt = getDataTablefromDB(String.Format(q, kode))
-        With dgv_barang.Rows
-            For Each x As DataRow In dt.Rows
-                Dim y As Integer = .Add
-                With .Item(y)
-                    .Cells("kode").Value = x.ItemArray(0)
-                    .Cells("nama").Value = x.ItemArray(1)
-                    .Cells("qty_sys").Value = x.ItemArray(2)
-                    .Cells("sat_sys").Value = x.ItemArray(3)
-                    .Cells("qty_fis").Value = x.ItemArray(4)
-                    .Cells("sat_fis").Value = x.ItemArray(3)
-                    .Cells("qty_sel").Value = x.ItemArray(4) - x.ItemArray(2)
-                    .Cells("hpp").Value = x.ItemArray(5)
-                    .Cells("hpp_fis").Value = x.ItemArray(6)
-                End With
-            Next
-        End With
     End Sub
 
     Private Sub setStatus()
@@ -208,11 +255,15 @@
     End Sub
 
     Private Sub listToDetail()
+        If formstate = InputState.Insert Or formstate = InputState.Edit Then
+
+        End If
         If mn_save.Enabled = True Then
             If MessageBox.Show("Batalkan Perubahan?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.No Then
                 Exit Sub
             Else
-                mn_save.Enabled = True
+                If mn_edit.Enabled Then : mn_edit.PerformClick() : Else : mn_tambah.PerformClick() : End If
+                mn_save.Enabled = False
             End If
         End If
         clearAll()
@@ -221,7 +272,6 @@
         Try
             Me.Cursor = Cursors.AppStarting
             loadData(dgv_list.Rows(rowindex).Cells("kode").Value)
-            loadDataBrg(in_kode.Text)
         Catch ex As Exception
             Dim text As String = "Tidak dapat menampilkan data" & Environment.NewLine & ex.Message
             MessageBox.Show(text)
@@ -235,10 +285,10 @@
             in_barang.Focus()
             Exit Sub
         End If
-        If in_qty2.Value = 0 Then
-            in_qty2.Focus()
-            Exit Sub
-        End If
+        'If in_qty2.Value = 0 Then
+        '    in_qty2.Focus()
+        '    Exit Sub
+        'End If
 
         Me.Cursor = Cursors.WaitCursor
 
@@ -486,7 +536,6 @@
             Dim _kode As String = in_kode.Text
             performRefresh(True)
             loadData(_kode)
-            loadDataBrg(_kode)
         End If
     End Sub
 
@@ -644,11 +693,11 @@
         If mn_edit.Text = "Edit" And in_kode.Text <> Nothing Then
             'in_kode.Text = dgv_list.Rows(rowindex).Cells("kode").Value
             Try
-                loadData(in_kode.Text)
                 dgv_barang.Rows.Clear()
-                loadDataBrg(in_kode.Text)
+                loadData(in_kode.Text)
             Catch ex As Exception
-                Console.WriteLine(ex.Message)
+                consoleWriteLine(ex.Message)
+                logError(ex)
             End Try
             disableAllSwitch(False)
             in_gudang.Focus()
@@ -663,14 +712,13 @@
                 Dim kode As String = in_kode.Text
                 performRefresh(True)
                 loadData(kode)
-                loadDataBrg(kode)
             End If
         End If
     End Sub
 
     Private Sub mn_hapus_Click(sender As Object, e As EventArgs) Handles mn_hapus.Click
         If in_kode.Text <> Nothing And tblStatus = 0 Then
-            If MessageBox.Show("Batalkan transaksi Stock Opname?", "Stock Opname", MessageBoxButtons.YesNo, MessageBoxIcon.Question) Then
+            If MessageBox.Show("Batalkan transaksi Stock Opname?", "Stock Opname", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
                 cancelData()
             End If
         End If
@@ -699,8 +747,7 @@
             If MessageBox.Show("Proses Stock Opname No." & in_kode.Text & "?", "Stock Opname", MessageBoxButtons.YesNo) = DialogResult.Yes Then
                 Using x As New fr_stockopconfirm_dialog
                     With x
-                        .do_load("opname")
-                        .ShowDialog()
+                        .do_loaddialog()
                         _konfirm = .returnval
                         If .returnval = True Then
                             in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text

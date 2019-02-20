@@ -59,6 +59,7 @@ Public Class fr_export_efaktur
         Return q
     End Function
 
+    'GET FAKTUR
     Public Sub loadFaktur(Optional keepSelected As Boolean = False)
         'If keepSelected = True Then
         '    cacheSelectedFak()
@@ -205,8 +206,50 @@ Public Class fr_export_efaktur
         Return _retsuc
     End Function
 
-    Private Sub changeTaxDate()
+    'CHANGE TAX DATE
+    Private Sub changeTaxDate(periode As Date)
+        Dim q As String = ""
+        Dim _tglawal As String = periode.ToString("yyyy-MM-01")
+        Dim _tglakhir As String = DateSerial(periode.Year, periode.Month + 1, 0).ToString("yyyy-MM-01")
+        Dim queryArr As New List(Of String)
+        Dim qCk As Boolean = False
+        Dim listkode As New List(Of String)
 
+        Me.Cursor = Cursors.WaitCursor
+
+        q = "UPDATE data_penjualan_faktur SET faktur_pajak_tanggal='{0}' WHERE faktur_kode='{1}'"
+        For Each rows As DataGridViewRow In dgv_faktur.Rows
+            If rows.Cells(0).Value = 1 Then
+                Dim _setdate As Date = Today
+                Dim month As Integer = CDate(rows.Cells("faktur_tgl_pajak").Value).Month
+                Dim year As Integer = CDate(rows.Cells("faktur_tgl_pajak").Value).Year
+                If month < periode.Month And year = periode.Year Then
+                    _setdate = DateSerial(periode.Year, periode.Month, 1)
+                ElseIf month > periode.Month And year = periode.Month Then
+                    _setdate = DateSerial(periode.Year, periode.Month + 1, 0)
+                ElseIf month > periode.Month And year < periode.Month Then
+                    _setdate = DateSerial(periode.Year, periode.Month, 1)
+                Else
+                    _setdate = Nothing
+                End If
+                If Not IsNothing(_setdate) Then
+                    queryArr.Add(String.Format(q, _setdate.ToString("'yyyy-MM-dd'"), rows.Cells(1).Value))
+                    listkode.Add(rows.Cells(1).Value)
+                End If
+            End If
+        Next
+
+        qCk = startTrans(queryArr)
+
+        If qCk = True Then
+            MessageBox.Show("Periode Pajak berhasil di ubah.", "Export EFaktur")
+            date_tglawal.Value = DateSerial(periode.Year, periode.Month, 1)
+            date_tglakhir.Value = DateSerial(periode.Year, periode.Month + 1, 0)
+            loadFaktur()
+            ck_faktur_all.CheckState = CheckState.Checked
+        End If
+
+        Me.Cursor = Cursors.Default
     End Sub
 
     'INSERT NO PAJAK
@@ -224,6 +267,7 @@ Public Class fr_export_efaktur
         nourut2 = SplitText(kodepajak(0), ".", 1)
 
         Dim q As String = "UPDATE data_penjualan_faktur SET faktur_pajak_no='{0}' WHERE faktur_kode='{1}'"
+        Dim queryArr As New List(Of String)
 
         Dim i As Integer = 0
         For Each rows As DataGridViewRow In dgv_faktur.Rows
@@ -232,8 +276,7 @@ Public Class fr_export_efaktur
 
                 _kodeinput = kodetrans & "." & nourut2.ToString.PadLeft(3, "0") & "-" & tahun & "." & nourut.ToString.PadLeft(8, "0")
 
-                'q = String.Format(q, _kodeinput, rows.Cells(1).Value)
-                'commnd(q)
+                queryArr.Add(String.Format(q, _kodeinput, rows.Cells(1).Value))
                 rows.Cells(4).Value = _kodeinput
                 i += 1
 
@@ -248,18 +291,49 @@ Public Class fr_export_efaktur
                 End If
             End If
         Next
+
+        op_con()
+        startTrans(queryArr)
     End Sub
 
-    Private Sub kosongNoPajak()
-        Dim q As String = " UPDATE data_penjualan_faktur SET faktur_pajak_no='' WHERE faktur_kode='{0}'"
+    'REMOVE NO PAJAK
+    Private Sub kosongNoPajak(Optional listKode As List(Of String) = Nothing)
+        Dim q As String = " UPDATE data_penjualan_faktur SET faktur_pajak_no='' WHERE faktur_kode IN ({0})"
+        'Dim qCk As Boolean = False
+        Dim qCk As Integer = 0
 
-        For Each rows As DataGridViewRow In dgv_faktur.Rows
-            If rows.Cells(0).Value = 1 Then
-                'q = String.Format(q, _kodeinput, rows.Cells(1).Value)
-                'commnd(q)
-                rows.Cells(4).Value = ""
-            End If
+        If IsNothing(listKode) Then
+            listKode = New List(Of String)
+            For Each rows As DataGridViewRow In dgv_faktur.Rows
+                If rows.Cells(0).Value = 0 Then
+                    listKode.Add(rows.Cells(1).Value)
+                    'rows.Cells(4).Value = ""
+                End If
+            Next
+        End If
+
+        Dim _inlistkode As New List(Of String)
+        For i = 0 To listKode.Count - 1
+            _inlistkode.Add("'" & listKode(i) & "'")
         Next
+
+        Using x = MainConnection : x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                qCk = x.ExecCommand(String.Format(q, String.Join(",", _inlistkode)))
+            End If
+        End Using
+        'qCk = commnd(String.Format(q, String.Join(",", _inlistkode)))
+
+        If qCk > 0 Then
+            For Each rows As DataGridViewRow In dgv_faktur.Rows
+                If listKode.Contains(rows.Cells(1).Value) Then
+                    rows.Cells(4).Value = ""
+                End If
+            Next
+            MessageBox.Show("No.Pajak berhasil dikosongkan", "Export EFaktur", MessageBoxButtons.OK)
+        Else
+            MessageBox.Show("No.Pajak gagal dikosongkan", "Export EFaktur", MessageBoxButtons.OK)
+        End If
     End Sub
 
     'CLOSE
@@ -301,11 +375,14 @@ Public Class fr_export_efaktur
         End If
 
         If exportData(_svdialog.FileNames(0).ToString, _seltype) = True Then
-            consoleWriteLine(_svdialog.FileNames(0).ToString)
-            MessageBox.Show("Export berhasil!")
             If System.IO.File.Exists(_svdialog.FileName) = True Then
+                MessageBox.Show("Export berhasil!")
                 Process.Start(_svdialog.FileName)
+            Else
+                MessageBox.Show("File export tidak dapat ditemukan", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             End If
+        Else
+            MessageBox.Show("Export gagal", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
@@ -314,14 +391,70 @@ Public Class fr_export_efaktur
     End Sub
 
     Private Sub bt_urutnopajak_Click(sender As Object, e As EventArgs) Handles bt_urutnopajak.Click
+        If String.IsNullOrWhiteSpace(in_nopajak.Text) Then
+            MessageBox.Show("Masukan No. Pajak awal terlebih dulu", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        Else
+            If Not in_nopajak.Text Like "###.###-##.########" Then
+                MessageBox.Show("Format No. Pajak tidak sesuai", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Exit Sub
+            End If
+        End If
+
         Dim _tempnopajak As String = ""
-        _tempnopajak = InputBox("Input nomor pajak ....", "Pajak", "")
+        Dim _tempjmlpajak As Integer = 0
+        Dim _msgRes As DialogResult = MessageBox.Show("Urutkan No. Pajak Transaksi yang dipilih?", "Export EFaktur", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _tempjmlpajak = 0 Then
+            For Each x As DataGridViewRow In dgv_faktur.Rows
+                If x.Cells(0).Value = 1 Then
+                    _tempjmlpajak += 1
+                End If
+            Next
+        End If
+
+        If in_jmlpajak.Value < _tempjmlpajak Then
+            _msgRes = MessageBox.Show("Jumlah Transaksi yang dipilih lebih banyak dibandingkan jumlah nomor faktur." & Environment.NewLine _
+                                      & "Lanjutkan proses?", "Export EFaktur", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If _msgRes = DialogResult.No Then
+                Exit Sub
+            End If
+        End If
+
+        _tempnopajak = in_nopajak.Text
+
         If _tempnopajak <> "" Then
-            insertNoPajak(_tempnopajak, 100)
+            insertNoPajak(_tempnopajak, _tempjmlpajak)
         End If
     End Sub
 
-    'DGV CHECKBOX
+    Private Sub bt_kosongnopajak_Click(sender As Object, e As EventArgs) Handles bt_kosongnopajak.Click
+        Dim _msgRes As DialogResult = MessageBox.Show("Kosongkan No. Pajak dari Transaksi yang tidak dipilih?", "Export EFaktur", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If _msgRes = DialogResult.Yes Then
+            kosongNoPajak()
+        End If
+    End Sub
+
+    Private Sub bt_samamasapajak_Click(sender As Object, e As EventArgs) Handles bt_samamasapajak.Click
+        Dim _msgText As String = "Samakan periode pajak untuk transaksi yang dipilih?" & Environment.NewLine _
+                                 & "Tgl pajak ransaksi sebelum dan sesudah periode terpilih akan di update ke awal dan akhir periode terpilih"
+        Dim _msgRes As DialogResult = MessageBox.Show(_msgText, "Export EFaktur", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+
+        If _msgRes = DialogResult.Yes Then
+            changeTaxDate(dt_periodeselect.Value)
+        End If
+    End Sub
+
+    'UI : NUMERIC
+    Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_jmlpajak.Enter
+        numericGotFocus(sender)
+    End Sub
+
+    Private Sub in_qty_Leave(sender As Object, e As EventArgs) Handles in_jmlpajak.Enter
+        numericLostFocus(sender, "N0")
+    End Sub
+
+    'UI : DGV CHECKBOX
     Private Sub ck_faktur_all_CheckStateChanged(sender As Object, e As EventArgs) Handles ck_faktur_all.CheckedChanged
         If ck_faktur_all.CheckState = CheckState.Checked Then
             For Each rows As DataGridViewRow In dgv_faktur.Rows
@@ -356,6 +489,17 @@ Public Class fr_export_efaktur
     Private Sub dgv_faktur_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgv_faktur.CellMouseUp
         If e.ColumnIndex = 0 And e.RowIndex <> -1 Then
             dgv_faktur.EndEdit()
+        End If
+    End Sub
+
+    'UI : CHECKBOX
+    Private Sub ck_period_CheckedChanged(sender As Object, e As EventArgs) Handles ck_period.CheckedChanged
+        If ck_period.CheckState = CheckState.Checked Then
+            bt_samamasapajak.Enabled = True
+            dt_periodeselect.Enabled = True
+        Else
+            bt_samamasapajak.Enabled = False
+            dt_periodeselect.Enabled = False
         End If
     End Sub
 End Class

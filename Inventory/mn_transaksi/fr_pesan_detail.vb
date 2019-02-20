@@ -100,6 +100,7 @@
                     .Cells("sat_type").Value = rows.ItemArray(12)
                     .Cells("subtotal").Value = rows.ItemArray(2) * rows.ItemArray(3)
                     .Cells("valid_ck").Value = IIf(rows.ItemArray(13) = 0, 0, 1)
+                    .Cells("trans_status").Value = IIf(rows.ItemArray(13) = 0, "-", "Approved")
                     .Cells("qty_sisa").Value = rows.ItemArray(15)
                     '.Cells("qty_sisa").ToolTipText = "Pesan : " & rows.ItemArray(17) & Environment.NewLine _
                     '                                & "Stock : " & rows.ItemArray(18)
@@ -185,6 +186,7 @@
                 bt_simpanjual.Visible = True
                 bt_createjual.Visible = False
                 qty_sisa.Visible = False
+                trans_status.Visible = True
             Case "valid"
                 With dgv_barang
                     .Location = New Point(12, 101)
@@ -201,6 +203,7 @@
                 qty_sisa.Visible = True
                 kode.Visible = False
                 mn_validasi.Visible = False
+                trans_status.Visible = False
 
                 Dim q As String = "SELECT IFNULL(SUM(p_trans_nilai),0),getSisaTitipan('piutang','{1}',customer_kode) " _
                                   & "FROM data_customer_master " _
@@ -304,7 +307,7 @@
                     & "RIGHT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_gudang='" & in_gudang.Text & "' " _
                     & "LEFT JOIN data_barang_hargajual ON barang_kode=b_hargajual_barang AND b_hargajual_jenisharga='{0}' " _
                     & "WHERE barang_nama LIKE '{1}' GROUP BY barang_kode LIMIT 250"
-                q = String.Format(q, jeniscusto, "{0}%")
+                q = String.Format(q, IIf(IsNothing(jeniscusto), 1, jeniscusto), "{0}%")
             Case "custo"
                 q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama', customer_term, customer_kriteria_harga_jual " _
                     & "FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
@@ -642,6 +645,7 @@
         Dim newJual As New fr_jual_detail
         Dim q As String = ""
         Dim term As Integer = 0
+        Dim piutang, maxpiutang As Decimal
 
         op_con()
         For Each row As DataGridViewRow In dgv_barang.Rows
@@ -653,12 +657,16 @@
             q = "SELECT"
         Next
 
+        q = "SELECT customer_term, IFNULL(customer_max_piutang,0), getPiutangSisaCusto(customer_kode) FROM data_customer_master WHERE customer_kode='{0}'"
+        readcommd(String.Format(q, in_custo.Text))
+        If rd.HasRows Then
+            term = rd.Item(0)
+            maxpiutang = rd.Item(1)
+            piutang = rd.Item(2)
+        End If
+
+
         If cb_term.SelectedValue = 1 Then
-            q = "SELECT customer_term FROM data_customer_master WHERE customer_kode='{0}'"
-            readcommd(String.Format(q, in_custo.Text))
-            If rd.HasRows Then
-                term = rd.Item(0)
-            End If
             If rd.IsClosed = False Then
                 Try
                     rd.Close()
@@ -672,6 +680,7 @@
         End If
 
         With newJual
+            .doLoadNew()
             'REF
             .in_ket.Text = "Ref. Order #" & in_faktur.Text
             .refOrderJual = in_faktur.Text
@@ -683,6 +692,8 @@
             'CUSTO
             .in_custo.Text = in_custo.Text
             .in_custo_n.Text = in_custo_n.Text
+            .jumlahpiutang = piutang
+            .maxpiutang = maxpiutang
             .in_custo_n.ReadOnly = True
             'GUDANG
             .in_gudang.Text = in_gudang.Text
@@ -711,7 +722,7 @@
                     End With
                 End If
             Next
-            .Show(main)
+            '.Show(main)
             .countBiaya()
         End With
     End Sub
@@ -951,13 +962,8 @@
 
         Using x As New fr_jualconfirm_dialog
             With x
-                If loggeduser.validasi_trans = True Then
-                    .in_user.Text = loggeduser.user_id
-                End If
-                .do_load("jual")
                 .in_user.Text = loggeduser.user_id
-                .in_pass.Focus()
-                .ShowDialog()
+                .do_load("jual")
                 If .returnval = True Then
                     If loggeduser.user_id <> .in_user.Text Then
                         MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",

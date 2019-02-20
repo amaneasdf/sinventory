@@ -11,7 +11,7 @@
     <AssemblyName>Inventory</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <TargetFrameworkProfile />
     <PublishUrl>D:\mso\publish\</PublishUrl>
@@ -33,12 +33,13 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
+    <DebugType>Full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
     <DocumentationFile>Inventory.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DocumentationFile>Inventory.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -107,6 +109,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="zxing">
+      <HintPath>..\..\..\..\net lib\zxing\net40\zxing.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -171,6 +176,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ds_master.xsd</DependentUpon>
     </Compile>
+    <Compile Include="laporan\ds_master.vb">
+      <DependentUpon>ds_master.xsd</DependentUpon>
+    </Compile>
     <Compile Include="laporan\ds_stock.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -215,6 +223,18 @@
       <DependentUpon>fr_lap_filter_hutang.vb</DependentUpon>
     </Compile>
     <Compile Include="laporan\filter\fr_lap_filter_hutang.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\filter\fr_QR_custo.Designer.vb">
+      <DependentUpon>fr_QR_custo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\filter\fr_QR_custo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="laporan\view\fr_lap_master.Designer.vb">
+      <DependentUpon>fr_lap_master.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\view\fr_lap_master.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="laporan\view\fr_lap_keuangan.Designer.vb">
@@ -521,16 +541,16 @@
     <Compile Include="mn_piutang\fr_bg_tolak.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_piutang\fr_piutang_bayar.Designer.vb">
-      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_piutang\fr_piutang_bayar.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="mn_piutang\fr_piutang_awal.Designer.vb">
       <DependentUpon>fr_piutang_awal.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_piutang\fr_piutang_awal.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_bayar.Designer.vb">
+      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_piutang\fr_piutang_bayar.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_beli_detail.Designer.vb">
@@ -611,15 +631,19 @@
     <Compile Include="mn_transaksi\fr_jual_retur_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="module\connection.vb" />
-    <Compile Include="module\DataRowExtensions.vb" />
-    <Compile Include="module\DataTableExtensions.vb" />
-    <Compile Include="module\functional.vb" />
-    <Compile Include="module\mdlAccount.vb" />
-    <Compile Include="module\mdlControl.vb" />
-    <Compile Include="module\mdlLogging.vb" />
-    <Compile Include="module\mdlParamKodeVar.vb" />
-    <Compile Include="module\mdl_login.vb" />
+    <Compile Include="module_and_class\appbootup.vb" />
+    <Compile Include="module_and_class\class\MySqlThing.vb" />
+    <Compile Include="module_and_class\class\UserData.vb" />
+    <Compile Include="module_and_class\connection.vb" />
+    <Compile Include="module_and_class\DataRowExtensions.vb" />
+    <Compile Include="module_and_class\DataTableExtensions.vb" />
+    <Compile Include="module_and_class\dbChecking.vb" />
+    <Compile Include="module_and_class\functional.vb" />
+    <Compile Include="module_and_class\mdlAccount.vb" />
+    <Compile Include="module_and_class\mdlControl.vb" />
+    <Compile Include="module_and_class\mdlLogging.vb" />
+    <Compile Include="module_and_class\mdlParamKodeVar.vb" />
+    <Compile Include="module_and_class\mdl_login.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -670,6 +694,9 @@
     <EmbeddedResource Include="laporan\filter\fr_lap_filter_hutang.resx">
       <DependentUpon>fr_lap_filter_hutang.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="laporan\filter\fr_QR_custo.resx">
+      <DependentUpon>fr_QR_custo.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_supplier.rdlc" />
     <EmbeddedResource Include="laporan\lap\beli\lap_beli_tglnotabrg.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_bukubesar.rdlc" />
@@ -680,7 +707,11 @@
     <EmbeddedResource Include="laporan\lap\keuangan\uang_neracalajur.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_neraca.rdlc" />
     <EmbeddedResource Include="laporan\lap\keuangan\uang_labarugi.rdlc" />
+    <EmbeddedResource Include="laporan\lap\master\master_custo_qr.rdlc" />
     <EmbeddedResource Include="laporan\lap\piutang\piutang_detailbayar.rdlc" />
+    <EmbeddedResource Include="laporan\view\fr_lap_master.resx">
+      <DependentUpon>fr_lap_master.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\view\fr_lap_keuangan.resx">
       <DependentUpon>fr_lap_keuangan.vb</DependentUpon>
     </EmbeddedResource>
@@ -868,11 +899,11 @@
     <EmbeddedResource Include="mn_piutang\fr_bg_tolak.resx">
       <DependentUpon>fr_bg_tolak.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_piutang\fr_piutang_bayar.resx">
-      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="mn_piutang\fr_piutang_awal.resx">
       <DependentUpon>fr_piutang_awal.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_piutang\fr_piutang_bayar.resx">
+      <DependentUpon>fr_piutang_bayar.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_beli_detail.resx">
       <DependentUpon>fr_beli_detail.vb</DependentUpon>
@@ -1082,7 +1113,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\Search_16x16.png" />
     <None Include="Resources\minimize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

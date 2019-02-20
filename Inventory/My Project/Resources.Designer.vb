@@ -91,27 +91,38 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to [Local]
-        '''Host = localhost
-        '''DB = db-inventory
-        '''UID = wbQdhrzbauYbf3qRhG0x2w==
-        '''Pass =
+        '''  Looks up a localized string similar to [App]
+        '''Conn = 0
+        '''CompanyID = 
         '''
-        '''[Catra]
-        '''Host = 17.5.16.21
-        '''DB = db-inventory
-        '''UID = AG0j230dxE9/Hh9+tj+Rqw==
-        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==
         '''
         '''[CatraDev]
         '''Host = 17.5.16.21
         '''DB = db-inventory_dev
         '''UID = AG0j230dxE9/Hh9+tj+Rqw==
-        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==.
+        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==
+        '''
+        '''[switch]
+        '''Host = 
+        '''DB = 
+        '''UID = 
+        '''Pass =
+        '''
+        '''[network]
+        '''Host = 17.5.16.21
+        '''DB = db-inventory
+        '''UID = AG0j230dxE9/Hh9+tj+Rqw==
+        '''Pass = 8B6AA2i6GwPxVE2Ak4w2Fg==
+        '''
+        '''[local]
+        '''Host = localhost
+        '''DB = db-inventory
+        '''UID = wbQdhrzbauYbf3qRhG0x2w==
+        '''Pass =.
         '''</summary>
-        Friend ReadOnly Property config() As String
+        Friend ReadOnly Property configfile() As String
             Get
-                Return ResourceManager.GetString("config", resourceCulture)
+                Return ResourceManager.GetString("configfile", resourceCulture)
             End Get
         End Property
         
@@ -161,6 +172,16 @@ Namespace My.Resources
         Friend ReadOnly Property plus() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("plus", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Search_16x16() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Search_16x16", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

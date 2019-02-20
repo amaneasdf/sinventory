@@ -74,8 +74,6 @@
         rd.Close()
 
         With x
-            .do_load()
-
             .in_supplier.Text = in_supplier.Text
             .in_supplier_n.Text = in_supplier_n.Text
             .in_saldotitipan.Text = titipan
@@ -85,7 +83,8 @@
             ._totalhutang = removeCommaThousand(in_hutang_awal.Text)
             .in_sisafaktur.Text = in_sisa.Text
 
-            .Show(main)
+            .Owner = main
+            .doLoadNew()
         End With
         Me.Close()
     End Sub
