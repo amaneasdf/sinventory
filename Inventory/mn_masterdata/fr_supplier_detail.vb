@@ -1,62 +1,152 @@
 ﻿Public Class fr_supplier_detail
     Private supStatus As String = 1
     Private olddata As String = ""
+    Private formstate As InputState = InputState.Insert
+
+    Private Enum InputState
+        Insert
+        Edit
+    End Enum
+
+    'SETUP FORM
+    Private Sub SetUpForm(KodeBarang As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Detail Barang : xxxxxxxxx"
+
+        formstate = FormSet
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += KodeBarang
+            Me.lbl_title.Text += " : " & KodeBarang
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            loadDataSupplier(KodeBarang)
+            in_kode.ReadOnly = True
+            bt_simpansupplier.Text = "Update"
+        End If
+
+        ControlSwitch(AllowEdit)
+    End Sub
+
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_namasupplier, in_alamatsupplier, in_telp1supplier, in_telp2supplier, in_faxsupplier, in_cp, in_emailsupplier,
+                                    in_npwpsupplier, in_rek_bank, in_rek_giro, in_ket}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
+        For Each numx As NumericUpDown In {in_term}
+            numx.Enabled = AllowInput
+        Next
+
+        bt_simpansupplier.Enabled = AllowInput
+        mn_deact.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+    End Sub
+
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+        in_namasupplier.Focus()
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+        in_namasupplier.Focus()
+    End Sub
 
     'LOAD DATA
     Private Sub loadDataSupplier(kode As String)
-        Dim _data As New List(Of String)
-        Try
-            readcommd("SELECT supplier_nama,supplier_alamat,supplier_telpon1,supplier_telpon2,supplier_fax,supplier_cp,supplier_email,supplier_npwp,supplier_rek_bank, " _
-                  & "supplier_rek_bg,supplier_keterangan,supplier_term,supplier_status,IFNULL(supplier_reg_alias,'') supplier_reg_alias, " _
-                  & "IFNULL(supplier_reg_date,'00/00/0000 00:00:00') supplier_reg_date,IFNULL(supplier_upd_alias,'') supplier_upd_alias, " _
-                  & "IFNULL(supplier_upd_date,'00/00/0000 00:00:00') supplier_upd_date FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
-            If rd.HasRows Then
-                in_kode.Text = kode
-                in_namasupplier.Text = rd.Item("supplier_nama")
-                in_alamatsupplier.Text = rd.Item("supplier_alamat")
-                in_telp1supplier.Text = rd.Item("supplier_telpon1")
-                in_telp2supplier.Text = rd.Item("supplier_telpon2")
-                in_faxsupplier.Text = rd.Item("supplier_fax")
-                in_cp.Text = rd.Item("supplier_cp")
-                in_emailsupplier.Text = rd.Item("supplier_email")
-                in_npwpsupplier.Text = rd.Item("supplier_npwp")
-                in_rek_bank.Text = rd.Item("supplier_rek_bank")
-                in_rek_giro.Text = rd.Item("supplier_rek_bg")
-                in_ket.Text = rd.Item("supplier_keterangan")
-                in_term.Text = rd.Item("supplier_term")
-                supStatus = rd.Item("supplier_status")
-                txtRegAlias.Text = rd.Item("supplier_reg_alias")
-                txtRegdate.Text = rd.Item("supplier_reg_date")
-                txtUpdDate.Text = rd.Item("supplier_upd_date")
-                txtUpdAlias.Text = rd.Item("supplier_upd_alias")
-            End If
-            For i = 0 To rd.FieldCount - 1
-                _data.Add(rd.Item(i))
-            Next
-            olddata = String.Join(";", _data)
-            rd.Close()
-            setStatus()
+        Dim q As String = ""
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
 
-            If loggeduser.allowedit_master = False Then
-                bt_simpansupplier.Visible = False
-                bt_batalsupplier.Text = "OK"
-                mn_deact.Enabled = False
-                mn_save.Enabled = False
-                mn_del.Enabled = False
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "CALL getDataMasterHeader('{0}','SUPPLIER')"
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    in_kode.Text = kode
+                    in_namasupplier.Text = rdx.Item("supplier_nama")
+                    in_alamatsupplier.Text = rdx.Item("supplier_alamat")
+                    in_telp1supplier.Text = rdx.Item("supplier_telpon1")
+                    in_telp2supplier.Text = rdx.Item("supplier_telpon2")
+                    in_faxsupplier.Text = rdx.Item("supplier_fax")
+                    in_cp.Text = rdx.Item("supplier_cp")
+                    in_emailsupplier.Text = rdx.Item("supplier_email")
+                    in_npwpsupplier.Text = rdx.Item("supplier_npwp")
+                    in_rek_bank.Text = rdx.Item("supplier_rek_bank")
+                    in_rek_giro.Text = rdx.Item("supplier_rek_bg")
+                    in_ket.Text = rdx.Item("supplier_keterangan")
+                    in_term.Text = rdx.Item("supplier_term")
+                    supStatus = rdx.Item("supplier_status")
+                    txtRegAlias.Text = rdx.Item("supplier_reg_alias")
+                    txtRegdate.Text = rdx.Item("supplier_reg_date")
+                    txtUpdDate.Text = rdx.Item("supplier_upd_date")
+                    txtUpdAlias.Text = rdx.Item("supplier_upd_alias")
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", "Detail Barang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
             End If
-        Catch ex As Exception
-            logError(ex, True)
-            MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Supplier", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Me.Close()
-        Finally
-            Try
-                If rd.IsClosed = False Then
-                    rd.Close()
-                End If
-            Catch ex As Exception
-                logError(ex, True)
-            End Try
-        End Try
+        End Using
+        setStatus()
+
+        'Dim _data As New List(Of String)
+        'Try
+        '    readcommd("SELECT supplier_nama,supplier_alamat,supplier_telpon1,supplier_telpon2,supplier_fax,supplier_cp,supplier_email,supplier_npwp,supplier_rek_bank, " _
+        '          & "supplier_rek_bg,supplier_keterangan,supplier_term,supplier_status,IFNULL(supplier_reg_alias,'') supplier_reg_alias, " _
+        '          & "IFNULL(supplier_reg_date,'00/00/0000 00:00:00') supplier_reg_date,IFNULL(supplier_upd_alias,'') supplier_upd_alias, " _
+        '          & "IFNULL(supplier_upd_date,'00/00/0000 00:00:00') supplier_upd_date FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
+        '    If rd.HasRows Then
+        '        in_kode.Text = kode
+        '        in_namasupplier.Text = rd.Item("supplier_nama")
+        '        in_alamatsupplier.Text = rd.Item("supplier_alamat")
+        '        in_telp1supplier.Text = rd.Item("supplier_telpon1")
+        '        in_telp2supplier.Text = rd.Item("supplier_telpon2")
+        '        in_faxsupplier.Text = rd.Item("supplier_fax")
+        '        in_cp.Text = rd.Item("supplier_cp")
+        '        in_emailsupplier.Text = rd.Item("supplier_email")
+        '        in_npwpsupplier.Text = rd.Item("supplier_npwp")
+        '        in_rek_bank.Text = rd.Item("supplier_rek_bank")
+        '        in_rek_giro.Text = rd.Item("supplier_rek_bg")
+        '        in_ket.Text = rd.Item("supplier_keterangan")
+        '        in_term.Text = rd.Item("supplier_term")
+        '        supStatus = rd.Item("supplier_status")
+        '        txtRegAlias.Text = rd.Item("supplier_reg_alias")
+        '        txtRegdate.Text = rd.Item("supplier_reg_date")
+        '        txtUpdDate.Text = rd.Item("supplier_upd_date")
+        '        txtUpdAlias.Text = rd.Item("supplier_upd_alias")
+        '    End If
+        '    For i = 0 To rd.FieldCount - 1
+        '        _data.Add(rd.Item(i))
+        '    Next
+        '    olddata = String.Join(";", _data)
+        '    rd.Close()
+        '    setStatus()
+
+        '    If loggeduser.allowedit_master = False Then
+        '        bt_simpansupplier.Visible = False
+        '        bt_batalsupplier.Text = "OK"
+        '        mn_deact.Enabled = False
+        '        mn_save.Enabled = False
+        '        mn_del.Enabled = False
+        '    End If
+        'Catch ex As Exception
+        '    logError(ex, True)
+        '    MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Supplier", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        '    Me.Close()
+        'Finally
+        '    Try
+        '        If rd.IsClosed = False Then
+        '            rd.Close()
+        '        End If
+        '    Catch ex As Exception
+        '        logError(ex, True)
+        '    End Try
+        'End Try
     End Sub
 
     Private Sub setStatus()
@@ -75,19 +165,6 @@
         End Select
 
 
-    End Sub
-
-    '-------------- load
-    Private Sub fr_supplier_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        op_con()
-
-        If bt_simpansupplier.Text = "Update" Then
-            With in_kode
-                .ReadOnly = True
-                .BackColor = Color.Gainsboro
-                loadDataSupplier(.Text)
-            End With
-        End If
     End Sub
 
     '-------------- save
@@ -210,6 +287,8 @@
     End Sub
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
+        Dim ckdata = MasterConfirmValid(in_ket.Text)
+        If Not ckdata Then Exit Sub
         If mn_deact.Text = "Deactivate" Then
             supStatus = "0"
         ElseIf mn_deact.Text = "Activate" Then

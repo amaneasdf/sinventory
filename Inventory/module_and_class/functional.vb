@@ -306,6 +306,7 @@ Module functional
                 pgstok,
                 pgpembelian,
                 pgpenjualan,
+                pgpesanjual,
                 pgreturbeli,
                 pgreturjual,
                 pgmutasigudang,

@@ -184,11 +184,69 @@
     Public Function MasterConfirmValid(ByRef Keterangan As String) As Boolean
         Dim valid As Boolean = False
 
-        Using x As New fr_jualconfirm_dialog
-
+        Using x As New fr_master_confirmdialog
+            x.lbl_title.Text = "Konfirmasi Data Master"
+            x.in_user.Text = loggeduser.user_id
+            x.do_loaddialog()
+            If x.returnval = True Then
+                If loggeduser.user_id <> x.in_user.Text Then
+                    MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
+                                    x.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    valid = False
+                Else
+                    Keterangan += IIf(Keterangan = Nothing, "", Environment.NewLine) & x.in_ket.Text
+                    valid = x.returnval
+                End If
+            End If
         End Using
 
         Return valid
+    End Function
+
+    'CANCEL PESANAN
+    Public Function CheckCancelPesanan(KodeFaktur As String, ByRef Msg As String) As Boolean
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB Connection is empty")
+        End If
+        Dim retval As Boolean = False
+        Dim q As String = "SELECT j_order_kode, j_order_status status, j_order_ref_faktur faktur FROM data_penjualan_order_faktur WHERE j_order_kode='{0}'"
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Dim _status As Integer = 0
+                Dim _kode As String = Nothing
+                Dim _next As Boolean = False
+                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur), CommandBehavior.SingleRow)
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        _status = rdx.Item("status")
+                        _kode = rdx.Item("faktur")
+                        _next = True
+                    Else
+                        _next = False
+                    End If
+                End Using
+                If _next Then
+                    If {0, 1}.Contains(_status) Then
+                        If _status = 1 And String.IsNullOrWhiteSpace(_kode) = False Then
+                            retval = False
+                            Msg = "Transaksi sudah "
+                        Else
+                            retval = True
+                        End If
+                    Else
+                        retval = False : Msg = ""
+                    End If
+                Else
+                    retval = _next
+                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
+                End If
+            Else
+                Msg = "Tidak dapat terhubung ke database"
+                retval = False
+            End If
+        End Using
+        Return retval
     End Function
 
     'CANCEL PENJUALAN/PIUTANG AWAL

@@ -154,7 +154,7 @@
                 Case "pgbarang"
                     Using detail As New fr_barang_detail
                         With detail
-                            .bt_simpanbarang.Text = "Update"
+                            .bt_simpancusto.Text = "Update"
                             .in_kode.Text = dgv_list.Rows(rowindex).Cells(0).Value
                             .ShowDialog()
                         End With

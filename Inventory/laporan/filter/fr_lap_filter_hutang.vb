@@ -194,8 +194,8 @@
                     & " UNION " _
                     & " SELECT h_trans_id,h_trans_kode_hutang,hutang_supplier,h_trans_tgl,h_trans_faktur, " _
                     & "  (CASE h_trans_jenis " _
-                    & "     WHEN 'beli' THEN 'PENJUALAN' " _
-                    & "     WHEN 'retur' THEN 'RETUR PENJUALAN' " _
+                    & "     WHEN 'beli' THEN 'PEMBELIAN' " _
+                    & "     WHEN 'retur' THEN 'RETUR PEMBELIAN' " _
                     & "     WHEN 'bayar' THEN CONCAT_WS(' ','PEMBAYARAN',h_trans_kode_hutang,h_trans_giro) " _
                     & "     WHEN 'tolak' THEN CONCAT('TOLAK ',h_trans_faktur) " _
                     & "     WHEN 'cair' THEN CONCAT('PENCAIRAN ',h_trans_giro) " _
@@ -221,7 +221,7 @@
                     & "faktur_tanggal_trans hbd_tanggal, h_trans_tgl hbd_tglbayar, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar," _
                     & "hutang_tolak hbd_beli,hutang_sisa hbd_sisa, ket hbd_ket, hbd_hari " _
                     & "FROM( " _
-                    & "SELECT h_trans_kode_hutang,hutang_supplier,h_trans_tgl,faktur_tanggal_trans," _
+                    & "SELECT h_trans_id, h_trans_kode_hutang,hutang_supplier,h_trans_tgl,faktur_tanggal_trans," _
                     & " if(@faktur<>h_trans_kode_hutang,@ct:=0,@ct:=@ct+1) as count," _
                     & " h_trans_jenis," _
                     & " if(@ct=0,@sisa:=if(h_trans_jenis='awal',h_trans_nilai,0),TRUNCATE(@sisa,2)) hutang_awal," _
@@ -244,6 +244,7 @@
                     & "LEFT JOIN data_hutang_bayar ON h_trans_faktur=h_bayar_bukti " _
                     & "JOIN(SELECT @sisa:=0,@faktur:='') para " _
                     & "WHERE h_trans_status = 1 And h_trans_periode = '{0}'" _
+                    & "ORDER BY h_trans_kode_hutang, h_trans_tgl, h_trans_id " _
                     & ")hhh " _
                     & "LEFT JOIN data_supplier_master ON hutang_supplier=supplier_kode " _
                     & "WHERE h_trans_jenis NOT IN ('awal','beli') {1}"

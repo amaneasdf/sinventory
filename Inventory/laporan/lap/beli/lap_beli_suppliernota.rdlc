@@ -300,7 +300,6 @@
                               <Value>NO.FAKTUR</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -340,7 +339,6 @@
                               <Value>TGL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -380,7 +378,6 @@
                               <Value>BRUTTO</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -422,7 +419,6 @@
                               <Value>DISKON</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -464,7 +460,6 @@
                               <Value>PPN</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -506,7 +501,6 @@
                               <Value>JUMLAH</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -539,7 +533,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.54708cm</Height>
+              <Height>0.6cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -553,7 +547,6 @@
                               <Value>=Fields!lap_faktur.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -566,6 +559,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -586,7 +584,6 @@
                               <Value>=Fields!lap_tgl.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>dd-MM-yy</Format>
                               </Style>
                             </TextRun>
@@ -602,6 +599,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -622,7 +624,6 @@
                               <Value>=Fields!lap_brutto.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -640,6 +641,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -660,7 +666,6 @@
                               <Value>=Fields!lap_diskon.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -678,6 +683,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -698,7 +708,6 @@
                               <Value>=Fields!lap_ppn.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -716,6 +725,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -736,7 +750,6 @@
                               <Value>=Fields!lap_jumlah.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -754,6 +767,11 @@
                           <Color>LightGrey</Color>
                           <Style>None</Style>
                         </Border>
+                        <BottomBorder>
+                          <Color>Orange</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </BottomBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -779,7 +797,6 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -821,7 +838,6 @@
                               <Value>SUBTOTAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -863,7 +879,6 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -908,7 +923,6 @@
                               <Value>=Sum(Fields!lap_diskon.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -953,7 +967,6 @@
                               <Value>=Sum(Fields!lap_ppn.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -998,7 +1011,6 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1048,7 +1060,6 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1090,7 +1101,6 @@
                               <Value>TOTAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1132,7 +1142,6 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1177,7 +1186,6 @@
                               <Value>=Sum(Fields!lap_diskon.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1222,7 +1230,6 @@
                               <Value>=Sum(Fields!lap_ppn.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1267,7 +1274,6 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1594,7 +1600,7 @@
         </TablixRowHierarchy>
         <DataSetName>ds_nota</DataSetName>
         <Top>1.49986cm</Top>
-        <Height>3.77666cm</Height>
+        <Height>3.82958cm</Height>
         <Width>19.75cm</Width>
         <Style>
           <Border>
@@ -1674,7 +1680,7 @@
       </Textbox>
       <Rectangle Name="Rectangle1">
         <KeepTogether>true</KeepTogether>
-        <Top>5.34707cm</Top>
+        <Top>5.29009cm</Top>
         <Left>1.5cm</Left>
         <Height>1.92622cm</Height>
         <Width>10.25cm</Width>
@@ -1686,7 +1692,7 @@
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>2.93829in</Height>
+    <Height>2.89662in</Height>
     <Style />
   </Body>
   <Width>19.75cm</Width>

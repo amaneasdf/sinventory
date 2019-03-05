@@ -29,41 +29,64 @@ Public Class fr_lap_stock_view
         Dim parUserId As New ReportParameter("parUserId", loggeduser.user_id)
         Dim parPeriode As New ReportParameter("parPeriode", header)
         Dim repdatasource, repdatasource1, repdatasource2 As New ReportDataSource
+        Dim dt As DataTable
 
         With Me.rv_beli_nota
             With .LocalReport
                 Select Case lap_type
                     Case "lapKartuStok"
+                        dt = ds_stock.dt_kartustok
                         repdatasource.Name = "ds_kartu_stok"
                         repdatasource.Value = ds_stock.dt_kartustok
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_stok_kartustok.rdlc"
+
+                    Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
+                        dt = ds_stock.dt_kartupersediaan
+                        repdatasource.Name = "ds_kartu_stok"
+                        repdatasource.Value = ds_stock.dt_kartupersediaan
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = IIf(lap_type = "lapKartuPersediaan",
+                                                      "Inventory.lap_stok_kartupersediaan.rdlc",
+                                                      "Inventory.lap_stok_kartupersediaan_gudang.rdlc"
+                                                      )
+
                     Case "lapPersediaan"
+                        dt = ds_stock.dt_persediaan
                         repdatasource.Name = "ds_lap_stock"
                         repdatasource.Value = ds_stock.dt_persediaan
-                        
+
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_stok_persedianbrg.rdlc"
+
                     Case "lapStok"
+                        dt = ds_stock.dt_persediaan
                         repdatasource.Name = "ds_lap_stock"
                         repdatasource.Value = ds_stock.dt_persediaan
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_stok_stok.rdlc"
+
                     Case "lapStokSupplier"
+                        dt = ds_stock.dt_persediaan_supplier
                         repdatasource.Name = "ds_lap_stock"
                         repdatasource.Value = ds_stock.dt_persediaan_supplier
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_stok_supplier.rdlc"
+
                     Case "lapStokMutasi"
+                        dt = ds_stock.dt_persediaan_detail
                         repdatasource.Name = "ds_stok_mutasi"
                         repdatasource.Value = ds_stock.dt_persediaan_detail
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.lap_stok_mutasistok.rdlc"
+
                     Case "lapPersediaanMutasi"
+                        dt = ds_stock.dt_persediaan_detail
                         repdatasource.Name = "ds_stok_mutasi"
                         repdatasource.Value = ds_stock.dt_persediaan_detail
 
@@ -73,30 +96,9 @@ Public Class fr_lap_stock_view
                         Exit Sub
                 End Select
 
-                Select Case lap_type
-                    Case "lapKartuStok"
-                        With ds_stock
-                            .dt_kartustok.Clear()
-                            filldatatabel(inquery, .dt_kartustok)
-                        End With
-                    Case "lapPersediaan", "lapStok"
-                        With ds_stock
-                            .dt_persediaan.Clear()
-                            filldatatabel(inquery, .dt_persediaan)
-                        End With
-                    Case "lapStokSupplier"
-                        With ds_stock
-                            .dt_persediaan_supplier.Clear()
-                            filldatatabel(inquery, .dt_persediaan_supplier)
-                        End With
-                    Case "lapStokMutasi", "lapPersediaanMutasi"
-                        With ds_stock
-                            .dt_persediaan_detail.Clear()
-                            filldatatabel(inquery, .dt_persediaan_detail)
-                        End With
-                    Case Else
-                        Exit Sub
-                End Select
+                dt.Clear()
+                filldatatabel(inquery, dt)
+
                 .SetParameters(New ReportParameter() {parUserId, parPeriode})
             End With
             .RefreshReport()

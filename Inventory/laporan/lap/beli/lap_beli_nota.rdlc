@@ -1602,7 +1602,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>Pembelian Per Nota (Exclude PPN)</Value>
+                <Value>Pembelian Per Nota</Value>
                 <Style>
                   <FontFamily>Consolas</FontFamily>
                   <FontSize>14pt</FontSize>
@@ -1718,7 +1718,22 @@
                   <Value>Jl. Bima No.14 Jatiwinangun Purwokerto</Value>
                   <Style>
                     <FontFamily>Consolas</FontFamily>
-                    <FontSize>9pt</FontSize>
+                    <FontSize>8pt</FontSize>
+                    <Color>Maroon</Color>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Telp. (0281)637-658</Value>
+                  <Style>
+                    <FontFamily>Consolas</FontFamily>
+                    <FontSize>8pt</FontSize>
                     <Color>Maroon</Color>
                   </Style>
                 </TextRun>
@@ -1729,7 +1744,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
-          <Height>1.25055cm</Height>
+          <Height>1.5cm</Height>
           <Width>11.75cm</Width>
           <Style>
             <Border>
@@ -1737,14 +1752,14 @@
             </Border>
             <PaddingLeft>2pt</PaddingLeft>
             <PaddingRight>2pt</PaddingRight>
-            <PaddingTop>2pt</PaddingTop>
-            <PaddingBottom>2pt</PaddingBottom>
+            <PaddingTop>0.5pt</PaddingTop>
+            <PaddingBottom>0.25pt</PaddingBottom>
           </Style>
         </Textbox>
         <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
           <Left>15.25cm</Left>
-          <Height>1.25055cm</Height>
+          <Height>1.5cm</Height>
           <Width>4.5cm</Width>
           <ZIndex>1</ZIndex>
           <Style>

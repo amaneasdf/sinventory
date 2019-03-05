@@ -176,15 +176,15 @@
                               & "  faktur_disc_rupiah as lap_diskon, faktur_ppn_persen as lap_ppn, faktur_netto as lap_jumlah, 'JUAL' as lap_jenis " _
                               & "  FROM data_penjualan_faktur LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
                               & "  LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
-                              & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                              & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                               & " UNION " _
                               & " SELECT salesman_kode, salesman_nama, customer_kode, customer_nama, faktur_kode_bukti, faktur_tanggal_trans," _
                               & "  if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah) as brutto," _
                               & "  faktur_jumlah-faktur_netto, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
                               & " FROM data_penjualan_retur_faktur LEFT JOIN data_customer_master ON faktur_custo=customer_kode " _
                               & " LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
-                              & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
-                              & ") jual {3} {4}"
+                              & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
+                              & ") jual {4} {5}"
 
         Dim qtk As String = "SELECT {0} FROM (" _
                             & " SELECT customer_kode as lap_custo, customer_nama as lap_custo_n, faktur_kode as lap_faktur, " _
@@ -194,7 +194,7 @@
                             & "  faktur_disc_rupiah as lap_diskon, faktur_ppn_persen as lap_ppn, faktur_netto as lap_jumlah, 'JUAL' as lap_jenis " _
                             & " FROM data_penjualan_faktur LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
                             & " LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
-                            & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                            & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                             & " UNION " _
                             & " SELECT faktur_custo, customer_nama, faktur_kode_bukti, faktur_sales, salesman_nama, faktur_tanggal_trans, " _
                             & "  IF(faktur_jen_bayar=2,if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah),0) lap_tunai, " _
@@ -202,8 +202,8 @@
                             & "  faktur_jumlah-faktur_netto, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
                             & " FROM data_penjualan_retur_faktur LEFT JOIN data_customer_master ON faktur_custo=customer_kode " _
                             & " LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
-                            & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
-                            & ") jual {3} {4}"
+                            & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
+                            & ") jual {4} {5}"
 
         Dim qbarang As String = "SELECT {0} FROM (" _
                                 & " SELECT faktur_sales, faktur_customer,trans_barang, faktur_kode, faktur_tanggal_trans, " _
@@ -212,7 +212,7 @@
                                 & "  IF(faktur_term=0,TRUNCATE(@subtot-@ppn,2),0) as tunai, IF(faktur_term<>0,TRUNCATE(@subtot-@ppn,2),0) as kredit, " _
                                 & "  @subtot-trans_jumlah as diskon, trans_jumlah as netto,'JUAL' as jenis " _
                                 & " FROM data_penjualan_faktur LEFT JOIN data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
-                                & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                                & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                                 & " UNION " _
                                 & " SELECT faktur_sales, faktur_custo,trans_barang, faktur_kode_bukti, faktur_tanggal_trans, " _
                                 & "  @subtot:=trans_harga_retur*trans_qty as subtot, " _
@@ -222,8 +222,8 @@
                                 & "  @subtot-@diskon as netto, 'RETUR' as jenis " _
                                 & " FROM data_penjualan_retur_faktur " _
                                 & " LEFT JOIN data_penjualan_retur_trans ON faktur_kode_bukti=trans_faktur AND trans_status=1 " _
-                                & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
-                                & ") jual {3} {4}"
+                                & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
+                                & ") jual {4} {5}"
 
         Dim qtransbrg As String = "SELECT {0},barang_kode as dlap_barang,barang_nama as dlap_barang_n," _
                                   & "getQTYdetail(barang_kode,IFNULL(SUM(if(jenis='JUAL',qtyjual,NULL)),0),2) as dlap_qty_jual, " _
@@ -238,7 +238,7 @@
                                   & "  @subtot:=(trans_harga_jual*trans_qty) as subtot,@subtot-trans_jumlah as diskon, trans_jumlah as totalnilai," _
                                   & "  'JUAL' as jenis " _
                                   & " FROM data_penjualan_faktur LEFT JOIN data_penjualan_trans ON trans_status=1 AND trans_faktur=faktur_kode " _
-                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                                   & " UNION " _
                                   & " SELECT faktur_sales, trans_barang," _
                                   & "  countQTYItem(trans_barang, trans_qty, trans_satuan_type) as qtyretur," _
@@ -246,9 +246,9 @@
                                   & "  @subtot-@diskon as totalnilai, 'RETUR' " _
                                   & " FROM data_penjualan_retur_faktur " _
                                   & " LEFT JOIN data_penjualan_retur_trans ON faktur_kode_bukti=trans_faktur AND trans_status=1 " _
-                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' " _
+                                  & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                                   & ") trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
-                                  & "{3} {4}"
+                                  & "{4} {5}"
 
         Dim qdist As String = "SELECT {0} salesman_kode lap_sales,salesman_nama lap_sales_n, customer_kode lap_custo, customer_nama lap_custo_n,  " _
                               & "CONCAT(REPLACE(REPLACE(customer_alamat,CHAR(13),' '),CHAR(10),' '),' Blok ',IFNULL(customer_alamat_blok,'0'), " _
@@ -265,7 +265,7 @@
                               & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                               & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
                               & "LEFT JOIN data_customer_jenis ON jenis_kode=Customer_jenis " _
-                              & "WHERE faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_status=1 {3} {4}"
+                              & "WHERE faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_status=1 AND faktur_ppn_jenis IN ({3}) {4} {5}"
         Dim qPesanan As String = "SELECT {0} FROM ( " _
                                  & "SELECT j_order_kode pesan_id,j_order_tanggal_trans pesan_tgl_trans, j_order_sales pesan_sales, salesman_nama pesan_sales_n, " _
                                  & "j_order_customer pesan_custo, customer_nama pesan_custo_n, IF(j_order_term=0,'TUNAI','TEMPO') pesan_jenis_bayar, " _
@@ -319,7 +319,7 @@
                     "lap_jumlah", "lap_jenis"
                     }
 
-                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "")
+                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "")
 
                 Dim whr As New List(Of String)
                 If cb_jenis.SelectedValue <> Nothing Or in_custo.Text <> Nothing Then
@@ -344,7 +344,7 @@
                     "SUM(lap_jumlah) as lap_jumlah",
                     "lap_jenis"
                     }
-                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "GROUP BY lap_custo, lap_jenis")
+                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "GROUP BY lap_custo, lap_jenis")
 
                 Dim whr As New List(Of String)
                 If cb_jenis.SelectedValue <> Nothing Or in_custo.Text <> Nothing Then
@@ -368,7 +368,7 @@
                     "SUM(lap_jumlah) as lap_jumlah",
                     "lap_jenis"
                     }
-                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "GROUP BY lap_sales,lap_jenis")
+                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "GROUP BY lap_sales,lap_jenis")
 
                 Dim whr As New List(Of String)
                 If cb_jenis.SelectedValue <> Nothing Or in_sales.Text <> Nothing Then
@@ -393,7 +393,7 @@
                     "SUM(lap_jumlah) as lap_jumlah",
                     "lap_jenis"
                     }
-                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "GROUP BY lap_tanggal,lap_jenis")
+                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "GROUP BY lap_tanggal,lap_jenis")
 
                 If cb_jenis.SelectedValue <> Nothing Then
                     qwh += "WHERE lap_jenis IN (" & cb_jenis.SelectedValue & ")"
@@ -410,7 +410,7 @@
                     "SUM(netto) as lap_jumlah",
                     "jenis as lap_jenis"
                     }
-                q = String.Format(qbarang, String.Join(",", qcolselect), _tglawal, _tglakhir,
+                q = String.Format(qbarang, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue,
                                   "LEFT JOIN data_barang_master ON trans_barang=barang_kode LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier {0}",
                                   "GROUP BY barang_supplier,jenis ORDER BY jenis,supplier_kode")
 
@@ -437,7 +437,7 @@
                     "SUM(lap_jumlah) as lap_jumlah",
                     "lap_jenis"
                     }
-                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir,
+                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue,
                                   "LEFT JOIN data_customer_master ON lap_custo=customer_kode LEFT JOIN data_customer_jenis ON customer_jenis=jenis_kode {0}",
                                   "GROUP BY jenis_kode,lap_jenis")
 
@@ -460,7 +460,7 @@
                      "lap_brutto", "lap_diskon", "lap_ppn", "lap_jumlah", "lap_jenis"
                      }
 
-                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "")
+                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "")
 
                 Dim whr As New List(Of String)
                 If cb_jenis.SelectedValue <> Nothing Or in_custo.Text <> Nothing Then
@@ -480,7 +480,7 @@
                     "lap_sales", "lap_sales_n", "lap_faktur", "lap_tanggal", "lap_custo", "lap_custo_n",
                     "lap_brutto", "lap_diskon", "lap_ppn", "lap_jumlah", "lap_jenis"
                     }
-                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "")
+                q = String.Format(qnota, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "")
 
                 Dim whr As New List(Of String)
                 If cb_jenis.SelectedValue <> Nothing Or in_sales.Text <> Nothing Then
@@ -506,7 +506,7 @@
                    "SUM(lap_jumlah) as lap_jumlah",
                    "lap_jenis"
                    }
-                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, "{0}", "GROUP BY lap_tanggal,lap_faktur")
+                q = String.Format(qtk, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "GROUP BY lap_tanggal,lap_faktur")
 
                 If cb_jenis.SelectedValue <> Nothing Then
                     qwh += "WHERE lap_jenis IN (" & cb_jenis.SelectedValue & ")"
@@ -518,7 +518,7 @@
                     "supplier_nama as dlap_supplier_n"
                     }
 
-                q = String.Format(qtransbrg, String.Join(",", qcolselect), _tglawal, _tglakhir,
+                q = String.Format(qtransbrg, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue,
                                   "LEFT JOIN data_supplier_master ON supplier_kode=barang_supplier {0}", "GROUP BY barang_supplier,barang_kode")
 
                 If in_sales.Text <> Nothing Then
@@ -531,7 +531,7 @@
                     "salesman_nama as dlap_supplier_n"
                     }
 
-                q = String.Format(qtransbrg, String.Join(",", qcolselect), _tglawal, _tglakhir,
+                q = String.Format(qtransbrg, String.Join(",", qcolselect), _tglawal, _tglakhir, cb_pajak.SelectedValue,
                                   "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales {0}", "GROUP BY faktur_sales,barang_kode")
 
                 If in_sales.Text <> Nothing Then
@@ -539,7 +539,7 @@
                 End If
 
             Case "lapJualSalesCustoBarang"
-                q = String.Format(qdist, "", _tglawal, _tglakhir, "{0}", "")
+                q = String.Format(qdist, "", _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}", "")
 
                 If in_sales.Text <> Nothing Then
                     qwh += "AND faktur_sales='" & in_sales.Text & "' "
@@ -731,6 +731,12 @@
             .SelectedIndex = 2
         End With
 
+        With cb_pajak
+            .DataSource = jenis("trans_pajak")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+        End With
+
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
@@ -739,6 +745,7 @@
 
     'LOAD LAPORAN
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
+        Cursor = Cursors.WaitCursor
         Dim x As New fr_lap_beli_nota_view With {
                     .inlap_type = laptype,
                     .Text = lapwintext,
@@ -748,6 +755,7 @@
                 }
         x.do_load()
         x.ShowDialog()
+        Cursor = Cursors.Default
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click

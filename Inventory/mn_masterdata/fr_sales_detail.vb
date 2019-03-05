@@ -1,5 +1,11 @@
 ﻿Public Class fr_sales_detail
     Private slsStatus As String = "1"
+    Private formstate As InputState = InputState.Insert
+
+    Private Enum InputState
+        Insert
+        Edit
+    End Enum
 
     'Protected Overrides Sub WndProc(ByRef m As Message)
     '    Const WM_NCLBUTTONDOWN As Integer = 161
@@ -18,59 +24,97 @@
     '    MyBase.WndProc(m)
     'End Sub
 
+    'SETUP FORM
+    Private Sub SetUpForm(KodeSales As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Data Salesman : rb201908"
+
+        formstate = FormSet
+
+        With cb_jenis
+            .DataSource = jenisSales()
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
+        End With
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += KodeSales
+            Me.lbl_title.Text += " : " & KodeSales
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            loadDataSales(KodeSales)
+            If Not {0, 1}.Contains(slsStatus) Then AllowEdit = False
+            in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
+            bt_simpansales.Text = "Update"
+        End If
+
+        ControlSwitch(AllowEdit)
+    End Sub
+
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_kode, in_alamatsales, in_namasales, in_lahir_kota, in_telpsales, in_faxsales, in_nik, in_bank_an, in_bank_nama, in_bank_rek}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
+        For Each dtp As DateTimePicker In {date_kerja, date_lahir_tgl}
+            dtp.Enabled = AllowInput
+        Next
+        in_target.Enabled = AllowInput
+        bt_simpansales.Enabled = AllowInput
+        mn_deact.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+    End Sub
+
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+    End Sub
+
     Private Sub loadDataSales(kode As String)
-        op_con()
-
-        Try
-            readcommd("SELECT salesman_nama,salesman_alamat,salesman_tanggal_masuk,salesman_jenis,salesman_lahir_kota,salesman_lahir_tanggal,salesman_hp, " _
-                      & "salesman_fax,salesman_nik,salesman_target,salesman_bank_nama,salesman_bank_rekening,salesman_bank_atasnama,salesman_status, " _
-                      & "IFNULL(salesman_reg_alias,'') salesman_reg_alias, IFNULL(salesman_reg_date,'00/00/0000 00:00:00') salesman_reg_date, " _
-                      & "IFNULL(salesman_upd_alias,'') salesman_upd_alias, IFNULL(salesman_upd_date,'00/00/0000 00:00:00') salesman_upd_date " _
-                      & "FROM data_salesman_master WHERE salesman_kode='" & kode & "'")
-            If rd.HasRows Then
-                in_kode.Text = kode
-                in_namasales.Text = rd.Item("salesman_nama")
-                in_alamatsales.Text = rd.Item("salesman_alamat")
-                date_kerja.Value = rd.Item("salesman_tanggal_masuk")
-                cb_jenis.SelectedValue = rd.Item("salesman_jenis")
-                in_lahir_kota.Text = rd.Item("salesman_lahir_kota")
-                date_lahir_tgl.Value = rd.Item("salesman_lahir_tanggal")
-                in_telpsales.Text = rd.Item("salesman_hp")
-                in_faxsales.Text = rd.Item("salesman_fax")
-                in_nik.Text = rd.Item("salesman_nik")
-                in_target.Value = rd.Item("salesman_target")
-                in_bank_nama.Text = rd.Item("salesman_bank_nama")
-                in_bank_rek.Text = rd.Item("salesman_bank_rekening")
-                in_bank_an.Text = rd.Item("salesman_bank_atasnama")
-                slsStatus = rd.Item("salesman_status")
-                txtRegAlias.Text = rd.Item("salesman_reg_alias")
-                txtRegdate.Text = rd.Item("salesman_reg_date")
-                txtUpdDate.Text = rd.Item("salesman_upd_date")
-                txtUpdAlias.Text = rd.Item("salesman_upd_alias")
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+        Dim q As String = "SELECT salesman_nama,salesman_alamat,salesman_tanggal_masuk,salesman_jenis,salesman_lahir_kota,salesman_lahir_tanggal,salesman_hp, " _
+                          & "salesman_fax,salesman_nik,salesman_target,salesman_bank_nama,salesman_bank_rekening,salesman_bank_atasnama,salesman_status, " _
+                          & "IFNULL(salesman_reg_alias,'') salesman_reg_alias, DATE_FORMAT(salesman_reg_date,'%d/%m/%Y %H:%i:%S') salesman_reg_date, " _
+                          & "IFNULL(salesman_upd_alias,'') salesman_upd_alias, IFNULL(DATE_FORMAT(salesman_upd_date,'%d/%m/%Y %H:%i:%S'),'') salesman_upd_date " _
+                          & "FROM data_salesman_master WHERE salesman_kode='{0}'"
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_kode.Text = kode
+                        in_namasales.Text = rdx.Item("salesman_nama")
+                        in_alamatsales.Text = rdx.Item("salesman_alamat")
+                        date_kerja.Value = rdx.Item("salesman_tanggal_masuk")
+                        cb_jenis.SelectedValue = rdx.Item("salesman_jenis")
+                        in_lahir_kota.Text = rdx.Item("salesman_lahir_kota")
+                        date_lahir_tgl.Value = rdx.Item("salesman_lahir_tanggal")
+                        in_telpsales.Text = rdx.Item("salesman_hp")
+                        in_faxsales.Text = rdx.Item("salesman_fax")
+                        in_nik.Text = rdx.Item("salesman_nik")
+                        in_target.Value = rdx.Item("salesman_target")
+                        in_bank_nama.Text = rdx.Item("salesman_bank_nama")
+                        in_bank_rek.Text = rdx.Item("salesman_bank_rekening")
+                        in_bank_an.Text = rdx.Item("salesman_bank_atasnama")
+                        slsStatus = rdx.Item("salesman_status")
+                        txtRegAlias.Text = rdx.Item("salesman_reg_alias")
+                        txtRegdate.Text = rdx.Item("salesman_reg_date")
+                        txtUpdDate.Text = rdx.Item("salesman_upd_date")
+                        txtUpdAlias.Text = rdx.Item("salesman_upd_alias")
+                    End If
+                End Using
             End If
-            rd.Close()
             setStatus()
-
-            If loggeduser.allowedit_master = False Then
-                bt_simpansales.Visible = False
-                bt_batalsales.Text = "OK"
-                mn_save.Enabled = False
-                mn_deact.Enabled = False
-                mn_del.Enabled = False
-            End If
-        Catch ex As Exception
-            logError(ex, True)
-            MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Salesman", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Me.Close()
-        Finally
-            Try
-                If rd.IsClosed = False Then
-                    rd.Close()
-                End If
-            Catch ex As Exception
-                logError(ex, True)
-            End Try
-        End Try
+        End Using
     End Sub
 
     Private Sub setStatus()
@@ -212,22 +256,7 @@
 
     'LOAD
     Private Sub fr_sales_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        op_con()
-        With cb_jenis
-            .DataSource = jenisSales()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-        setStatus()
 
-        If bt_simpansales.Text = "Update" Then
-            With in_kode
-                .ReadOnly = True
-                .BackColor = Color.Gainsboro
-                loadDataSales(.Text)
-            End With
-        End If
     End Sub
 
     'SAVE

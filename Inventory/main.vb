@@ -216,7 +216,7 @@
     Sub MenuAkses()
         Dim q As String = "SELECT data_menu_master.menu_kode, data_menu_master.menu_label " _
                           & "FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode AND kode_menu.menu_status=1 " _
-                          & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY kode_menu.menu_kode ASC;"
+                          & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY data_menu_master.menu_kode ASC;"
         dbSelect(String.Format(q, loggeduser.user_lev))
         Do While rd.Read
             listkodemenu.Add(MenuKode)
@@ -291,6 +291,7 @@
 
     Private Async Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim mnName As String = DirectCast(sender, ToolStripItem).Name
+        Dim mnLabel As String = DirectCast(sender, ToolStripItem).Text
         Dim mnChld As Boolean = DirectCast(sender, ToolStripMenuItem).HasDropDownItems
         Console.WriteLine(mnName)
 
@@ -331,65 +332,14 @@
             Case "mn0803" : MessageBox.Show("Maaf fungsi ini masih dalam perbaikan/maintenance", "Tutup Periode", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 'openTab("tutupbuku")
             Case "mn070205" : Dim x As New fr_QR_custo : x.do_load() : x.Show() '-> QRCODE CUSTOMER
-            Case "mn070301"
-                Using x As New fr_lap_filter_beli
-                    x.do_load("transbeli", "Laporan Pembelian Per Nota", "lapBeliNota")
-                    x.ShowDialog()
-                End Using
-            Case "mn070302"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .do_load("transbeli", "Laporan Pembelian Per Supplier", "lapBeliSupplier")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070303"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .supplier_sw = False
-                        .do_load("transbeli", "Laporan Pembelian Per Tanggal", "lapBeliTgl")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070304"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .barang_sw = True
-                        .do_load("transbeli", "Laporan Pembelian Per Supplier Per Barang", "lapBeliSupplierBarang")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070305"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .barang_sw = True
-                        .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Barang", "lapBeliTglBarang")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070306"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .do_load("transbeli", "Laporan Pembelian Per Supplier Per Nota", "lapBeliSupplierNota")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070307"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Nota", "lapBeliTglNota")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070310"
-                Using x As New fr_lap_filter_beli
-                    With x
-                        .jenis_sw = False
-                        .barang_sw = True
-                        .do_load("transbeli", "Laporan Pembelian Per Tanggal Per Nota Per Barang", "lapBeliTglNotaBarang")
-                        .ShowDialog()
-                    End With
-                End Using
+            Case "mn070301" : Dim x As New fr_lap_filter_beli : x.do_load("transbeli", "Laporan Pembelian Per Nota", "lapBeliNota")
+            Case "mn070302" : Dim x As New fr_lap_filter_beli : x.do_load("transbeli", "Laporan Pembelian Per Supplier", "lapBeliSupplier")
+            Case "mn070303" : Dim x As New fr_lap_filter_beli : x.supplier_sw = False : x.do_load("transbeli", "Laporan Pembelian Per Tanggal", "lapBeliTgl")
+            Case "mn070304" : Dim x As New fr_lap_filter_beli : x.barang_sw = True : x.do_load("transbeli", "Laporan Pembelian Per Supplier Per Barang", "lapBeliSupplierBarang")
+            Case "mn070305" : Dim x As New fr_lap_filter_beli : x.barang_sw = True : x.do_load("transbeli", "Laporan Pembelian Per Tanggal Per Barang", "lapBeliTglBarang")
+            Case "mn070306" : Dim x As New fr_lap_filter_beli : x.do_load("transbeli", "Laporan Pembelian Per Supplier Per Nota", "lapBeliSupplierNota")
+            Case "mn070307" : Dim x As New fr_lap_filter_beli : x.do_load("transbeli", "Laporan Pembelian Per Tanggal Per Nota", "lapBeliTglNota")
+            Case "mn070310" : Dim x As New fr_lap_filter_beli : x.jenis_sw = False : x.barang_sw = True : x.do_load("transbeli", "Laporan " & mnLabel, "lapBeliTglNotaBarang")
             Case "mn070401"
                 Using x As New fr_lap_filter_jual
                     With x
@@ -481,56 +431,14 @@
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn070506"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Kartu Stok", "lapKartuStok")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070507"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Laporan Persediaan", "lapPersediaan")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070510"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Laporan Stok Opname", "lapOpname")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070511"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Laporan Stok", "lapStok")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070512"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .supplier_sw = True
-                        .do_load("Laporan Stok Per Supplier", "lapStokSupplier")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070513"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Laporan Mutasi Stok", "lapStokMutasi")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070514"
-                Using x As New fr_lap_filter_stok
-                    With x
-                        .do_load("Laporan Mutasi Persediaan", "lapPersediaanMutasi")
-                        .ShowDialog()
-                    End With
-                End Using
+            Case "mn070506" : Dim x As New fr_lap_filter_stok : x.do_load("Kartu Stok", "lapKartuStok")
+            Case "mn070507" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Persediaan", "lapPersediaan")
+            Case "mn070508" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Rincian Persediaan", "lapKartuPersediaan")
+            Case "mn070510" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Stok Opname", "lapOpname")
+            Case "mn070511" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Stok", "lapStok")
+            Case "mn070512" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Stok Per Supplier", "lapStokSupplier")
+            Case "mn070513" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Mutasi Stok", "lapStokMutasi")
+            Case "mn070514" : Dim x As New fr_lap_filter_stok : x.do_load("Laporan Mutasi Persediaan", "lapPersediaanMutasi")
             Case "mn070602"
                 Using x As New fr_lap_filter_hutang
                     With x
@@ -608,69 +516,22 @@
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn070801"
-                Using x As New fr_lap_filter_keuangan
+            Case "mn070718"
+                Using x As New fr_lap_filter_piutang
                     With x
-                        .do_load("Laporan Biaya Per Salesman", "k_biayasales")
+                        .do_load("Hutang titipan per customer", "p_titipancusto")
                         .ShowDialog()
                     End With
                 End Using
-            Case "mn070802"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Laporan Biaya Per Salesman Global", "k_biayasales_global")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070804"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Jurnal Umum", "k_jurnalumum")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070805"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Buku Besar", "k_bukubesar")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070806"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Neraca Lajur", "k_neracalajur")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070808"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Laba Rugi", "k_labarugi")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070809"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Jurnal Penutup", "k_jurnaltutup")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070810"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Neraca", "k_neraca")
-                        .ShowDialog()
-                    End With
-                End Using
-            Case "mn070812"
-                Using x As New fr_lap_filter_keuangan
-                    With x
-                        .do_load("Daftar Perkiraan", "k_daftarperk")
-                        .ShowDialog()
-                    End With
-                End Using
+            Case "mn070801" : Dim x As New fr_lap_filter_keuangan : x.do_load("Laporan Biaya Per Salesman", "k_biayasales")
+            Case "mn070802" : Dim x As New fr_lap_filter_keuangan : x.do_load("Laporan Biaya Per Salesman Global", "k_biayasales_global")
+            Case "mn070804" : Dim x As New fr_lap_filter_keuangan : x.do_load("Jurnal Umum", "k_jurnalumum")
+            Case "mn070805" : Dim x As New fr_lap_filter_keuangan : x.do_load("Buku Besar", "k_bukubesar")
+            Case "mn070806" : Dim x As New fr_lap_filter_keuangan : x.do_load("Neraca Lajur", "k_neracalajur")
+            Case "mn070808" : Dim x As New fr_lap_filter_keuangan : x.do_load("Laba Rugi", "k_labarugi")
+            Case "mn070809" : Dim x As New fr_lap_filter_keuangan : x.do_load("Jurnal Penutup", "k_jurnaltutup")
+            Case "mn070810" : Dim x As New fr_lap_filter_keuangan : x.do_load("Neraca", "k_neraca")
+            Case "mn070812" : Dim x As New fr_lap_filter_keuangan : x.do_load("Daftar Perkiraan", "k_daftarperk")
             Case "mn0813" : openTab("kartustok")
             Case "mn0822" : Dim x As New fr_import_data : x.Show()
             Case "mn0831" : openTab("exportEfak")
@@ -734,8 +595,8 @@
 
     Private Function setConnection() As Boolean
         Dim _retval As Boolean = False
-        mainConn = loadCon("CatraDev", False)
-        'mainConn = loadCon("Catra", False)
+        'mainConn = loadCon("CatraDev", False)
+        mainConn = loadCon("network", False)
 
         If mainConn.db = Nothing Or mainConn.host = Nothing Then
             MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
@@ -765,6 +626,7 @@
 
     Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim _login As New fr_login
+        lbl_app.Text = Application.ProductName
         Me.Visible = False
 
         Me.Cursor = Cursors.AppStarting
@@ -780,12 +642,13 @@
             Dim msg = MessageBox.Show("Apakah yakin akan menutup program ini?", Application.ProductName, MessageBoxButtons.YesNo)
             If msg = Windows.Forms.DialogResult.No Then
                 e.Cancel = True
+            Else
+                Try
+                    Await logOut(False)
+                Catch ex As Exception
+                    logError(ex, False)
+                End Try
             End If
-            Try
-                Await logOut(False)
-            Catch ex As Exception
-                logError(ex, False)
-            End Try
         End If
     End Sub
 
@@ -821,4 +684,5 @@
             End If
         End If
     End Sub
+
 End Class

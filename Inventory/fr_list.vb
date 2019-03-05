@@ -13,9 +13,8 @@
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
+        Me.Text = page.Text
         setMenuSw()
-        consoleWriteLine("pg" & page.Name.ToString)
-        consoleWriteLine("pgset" & tabpagename.Name.ToString)
     End Sub
 
     'KEYSHORTCUT
@@ -48,7 +47,6 @@
 
     Public Sub performRefresh()
         Dim _editmenutxt As String = "Edit Data"
-        consoleWriteLine(tabpagename.Name.ToString)
         Dim frm As fr_list
         Me.Cursor = Cursors.AppStarting
         Select Case tabpagename.Name.ToString
@@ -190,21 +188,11 @@
             Console.WriteLine(tabpagename.Name.ToString)
             Me.Cursor = Cursors.AppStarting
             Select Case tabpagename.Name.ToString
-                Case "pgbarang"
-                    Dim x As New fr_barang_detail
-                    x.Show()
-                Case "pgsupplier"
-                    Dim x As New fr_supplier_detail
-                    x.Show()
-                Case "pggudang"
-                    Dim x As New fr_gudang_detail
-                    x.Show()
-                Case "pgsales"
-                    Dim x As New fr_sales_detail
-                    x.Show()
-                Case "pgcusto"
-                    Dim x As New fr_custo_detail
-                    x.Show()
+                Case "pgbarang" : Dim brg As New fr_barang_detail : brg.doLoadNew()
+                Case "pgsupplier" : Dim spl As New fr_supplier_detail : spl.doLoadNew()
+                Case "pggudang" : Dim x As New fr_gudang_detail : x.doLoadNew()
+                Case "pgsales" : Dim x As New fr_sales_detail : x.doLoadNew()
+                Case "pgcusto" : Dim x As New fr_custo_detail : x.doLoadNew()
                 Case "pgbank"
                     fr_bank_detail.ShowDialog()
                 Case "pgbgtangan"
@@ -242,8 +230,8 @@
 
                     'Case "pgjurnalmemorial"
                     '    fr_jurnal_mem.ShowDialog(main)
-                Case "pggroup" : Dim frgrp As New fr_group_detail : frgrp.ShowDialog(main)
-                Case "pguser" : Dim frusr As New fr_user_detail : frusr.ShowDialog(main)
+                Case "pggroup" : Dim frgrp As New fr_group_detail : frgrp.doLoadNew(loggeduser.admin_pc)
+                Case "pguser" : Dim frusr As New fr_user_detail : frusr.doLoadNew(loggeduser.admin_pc)
                     'Case "pgjenisbarang"
                     '    fr_jenis_barang.setfor = "jenisbarang"
                     '    fr_jenis_barang.ShowDialog()
@@ -262,46 +250,24 @@
                 Select Case tabpagename.Name.ToString
                     Case "pgbarang"
                         Dim detail As New fr_barang_detail
-                        With detail
-                            .bt_simpanbarang.Text = "Update"
-                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
-                        End With
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_master)
 
                     Case "pgsupplier"
                         Dim detail As New fr_supplier_detail
-                        With detail
-                            .bt_simpansupplier.Text = "Update"
-                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
-                        End With
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_master)
 
                     Case "pggudang"
                         Dim detail As New fr_gudang_detail
-                        With detail
-                            .bt_simpangudang.Text = "Update"
-                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
-                        End With
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_master)
+
                     Case "pgsales"
                         Dim detail As New fr_sales_detail
-                        With detail
-                            .bt_simpansales.Text = "Update"
-                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
-                        End With
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_master)
+
                     Case "pgcusto"
                         Dim detail As New fr_custo_detail
-                        With detail
-                            .bt_simpancusto.Text = "Update"
-                            .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                            .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
-                        End With
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_master)
+
                     Case "pgbgtangan"
                         Dim detail As New fr_giro_detail
                         With detail
@@ -334,13 +300,7 @@
                         Else
                             detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
                         End If
-                        'With detail
-                        '    .bt_simpanbeli.Text = "Update"
-                        '    .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .in_faktur.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .Show(main)
-                        '    .do_load()
-                        'End With
+
                     Case "pgreturbeli"
                         Dim detail As New fr_beli_retur_detail
                         If selectperiode.closed Then
@@ -360,9 +320,9 @@
                     Case "pgpenjualan"
                         Dim detail As New fr_jual_detail
                         If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(1).Value)
+                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(1).Value, loggeduser.allowedit_transact)
+                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
                         End If
 
                     Case "pgreturjual"
@@ -372,12 +332,7 @@
                         Else
                             detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
                         End If
-                        'With detail
-                        '    .bt_simpanreturbeli.Text = "Update"
-                        '    .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .Show(main)
-                        'End With
+
                     Case "pghutangawal"
                         Using detail As New fr_hutang_awal
                             With detail
@@ -415,12 +370,7 @@
                         Else
                             detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
                         End If
-                        'With detail
-                        '    .bt_simpanperkiraan.Text = "Update"
-                        '    .Text += dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                        '    .Show(main)
-                        'End With
+
                     Case "pgpiutangbgcair"
                         Dim detail As New fr_giro
                         With detail
@@ -444,12 +394,6 @@
                             detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(1).Value, loggeduser.allowedit_transact)
                         End If
 
-                        'With detail
-                        '    .bt_simpanperkiraan.Text = "Update"
-                        '    .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                        '    .in_no_bukti.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
-                        '    .Show(main)
-                        'End With
                     Case "pgjurnalumum"
                         Dim detail As New fr_jurnal_u_det
                         Dim row As DataGridViewRow = dgv_list.SelectedRows.Item(0)
@@ -469,25 +413,11 @@
                             End With
                         End Using
                     Case "pggroup"
-                        Using detail As New fr_group_detail
-                            With detail
-                                .bt_simpan_group.Text = "Update"
-                                .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                                .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                                .in_nama_group.Text = dgv_list.SelectedRows.Item(0).Cells(1).Value
-                                .in_ket_group.Text = dgv_list.SelectedRows.Item(0).Cells(2).Value
-                                .ShowDialog()
-                            End With
-                        End Using
+                        Dim detail As New fr_group_detail
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.admin_pc)
                     Case "pguser"
-                        Using detail As New fr_user_detail
-                            With detail
-                                .bt_simpanuser.Text = "Update"
-                                .Text += dgv_list.SelectedRows.Item(0).Cells(1).Value
-                                .in_kode.Text = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                                .ShowDialog(main)
-                            End With
-                        End Using
+                        Dim detail As New fr_user_detail
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.admin_pc)
                     Case Else
                         MessageBox.Show("Under Construction")
                 End Select
@@ -858,134 +788,116 @@
     'UNFINISHED complicated DEACT PROCEDURE
     Private Sub deactItem()
         If del_sw = True Then
-            Dim tabpage As String = tabpagename.Name.ToString
-            Dim _allowdel As Boolean = False
-            Dim _valstate As String = ""
-            Select Case tabpage
-                Case "pgbarang", "pgsupplier", "pgsales", "pgcusto", "pggudang"
-                    _allowdel = loggeduser.validasi_master
-                    _valstate = "master"
-                Case "pgpenjualan", "pgreturjual", "pgpembelian", "pgreturbeli"
-                    _allowdel = loggeduser.validasi_trans
-                    _valstate = "trans"
-            End Select
-
-            If _allowdel = False Then
-                MessageBox.Show("Anda tidak dapat menghapus data")
-                Exit Sub
-                'Else
-                '    Dim _procdel As Boolean = False
-                '    Using validfr As New fr_stockopconfirm_dialog
-
-                '    End Using
-
-                '    If _procdel = False Then
-                '        MessageBox.Show("Penghapusan data dibatalkan")
-                '        Exit Sub
-                '    End If
+            If MainConnection.Connection Is Nothing Then
+                Throw New NullReferenceException("Main DB Connection is empty")
             End If
 
-            With dgv_list
-                If .Rows.Count > 0 And .SelectedRows.Count > 0 Then
-                    Dim q As String = ""
-                    Dim qcheck As String = ""
-                    Dim ckdata As Boolean = True
-                    Dim msg As String = "Hapus"
-                    Dim kode As String = ""
-                    Dim queryCk As Boolean = False
-                    Dim _state As String = "1"
+            If MessageBox.Show("Ubah status data?", "De/Aktivasi Data", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+                Exit Sub
+            End If
 
-                    op_con()
-                    consoleWriteLine(tabpagename.Name.ToString)
-                    Me.Cursor = Cursors.AppStarting
-                    Select Case tabpagename.Name.ToString
-                        Case "pgbarang"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = checkdata("data_stok_awal", "'" & kode & "' AND stock_status=1", "stock_barang")
-                            qcheck = "SELECT barang_status FROM data_barang_master WHERE barang_kode='" & kode & "'"
-                            readcommd(qcheck)
-                            If rd.HasRows Then
-                                _state = rd.Item(0)
-                            End If
-                            rd.Close()
+            Dim tabpage As String = tabpagename.Name.ToString
+            Dim kode As String = ""
+            Dim ket As String = ""
+            Dim _dataState As String = "0"
+            Dim ckdata As Boolean = False
+            Dim q As String = ""
+            Dim qck As String = ""
+            Dim _msg As String = ""
+            Dim refreshtab() As TabPage
 
-                            q = "UPDATE data_barang_master SET barang_status='" & IIf(_state = 1, 0, 1) & "', barang_upd_date=NOW(),  " _
-                                & "barang_upd_alias='" & loggeduser.user_id & "' WHERE barang_kode='" & kode & "'"
+            Select Case tabpage
+                Case "pgbarang"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT barang_kode, barang_status status FROM data_barang_master WHERE barang_kode='{0}' AND barang_status IN (0,1)"
+                    q = "UPDATE data_barang_master SET barang_status='{1}', barang_keterangan=TRIM(BOTH '\r\n' FROM CONCAT(barang_keterangan,'\r\n','{3}')), " _
+                        & "barang_upd_date=NOW(), barang_upd_alias='{2}' WHERE barang_kode='{0}'"
+                    refreshtab = {pgbarang}
 
-                        Case "pgsupplier"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = False
-                            qcheck = "SELECT supplier_status FROM data_supplier_master WHERE supplier_kode='" & kode & "'"
-                            readcommd(qcheck)
-                            If rd.HasRows Then
-                                _state = rd.Item(0)
-                            End If
-                            rd.Close()
+                Case "pggudang"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT gudang_kode, gudang_status status FROM data_barang_gudang WHERE gudang_kode='{0}' AND gudang_status IN (0,1)"
+                    q = "UPDATE data_barang_gudang SET gudang_status='{1}', gudang_ket=TRIM(BOTH '\r\n' FROM CONCAT(gudang_ket,'\r\n','{3}')), " _
+                        & "gudang_upd_date=NOW(), gudang_upd_alias='{2}' WHERE gudang_kode='{0}'"
+                    refreshtab = {pggudang}
 
-                            q = "UPDATE data_supplier_master SET supplier_status='{0}', supplier_upd_date=NOW(), supplier_upd_alias='{1}' WHERE supplier_kode='{2}'"
-                            q = String.Format(q, IIf(_state = 1, 0, 1), loggeduser.user_id, kode)
+                Case "pgsupplier"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT supplier_kode, supplier_status status FROM data_supplier_master WHERE supplier_kode='{0}' AND supplier_status IN (0,1)"
+                    q = "UPDATE data_supplier_master SET supplier_status='{1}', supplier_keterangan=TRIM(BOTH '\r\n' FROM CONCAT(supplier_keterangan,'\r\n','{3}')), " _
+                        & "supplier_upd_date=NOW(), supplier_upd_alias='{2}' WHERE supplier_kode='{0}'"
+                    refreshtab = {pgsupplier}
 
-                        Case "pggudang"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = False
-                            qcheck = "SELECT gudang_status FROM data_barang_gudang WHERE gudang_kode='" & kode & "'"
-                            readcommd(qcheck)
-                            If rd.HasRows Then
-                                _state = rd.Item(0)
-                            End If
-                            rd.Close()
+                Case "pgcusto"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT customer_kode, customer_status status FROM data_customer_master WHERE customer_kode='{0}' AND customer_status IN (0,1)"
+                    q = "UPDATE data_customer_master SET customer_status='{1}', customer_keterangan=TRIM(BOTH '\r\n' FROM CONCAT(customer_keterangan,'\r\n','{3}')), " _
+                        & "customer_upd_date=NOW(), customer_upd_alias='{2}' WHERE customer_kode='{0}'"
+                    refreshtab = {pgcusto}
 
-                            q = "UPDATE data_barang_gudang SET gudang_status='" & IIf(_state = 1, 0, 1) & "', gudang_upd_date=NOW(), " _
-                                & "gudang_upd_alias='" & loggeduser.user_id & "' WHERE gudang_kode='" & kode & "'"
+                Case "pgsales"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT salesman_kode, salesman_status status FROM data_salesman_master WHERE salesman_kode='{0}' AND salesman_status IN (0,1)"
+                    q = "UPDATE data_salesman_master SET salesman_status='{1}', salesman_keterangan=TRIM(BOTH '\r\n' FROM CONCAT(salesman_keterangan,'\r\n','{3}')), " _
+                        & "salesman_upd_date=NOW(), salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
+                    refreshtab = {pgsales}
 
-                        Case "pgcusto"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = False
-                            qcheck = "SELECT customer_status FROM data_customer_master WHERE customer_kode='" & kode & "'"
-                            readcommd(qcheck)
-                            If rd.HasRows Then
-                                _state = rd.Item(0)
-                            End If
-                            rd.Close()
+                Case "pguser"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT user_alias, IF(user_status IN (1,2),1,0) status FROM data_pengguna_alias WHERE user_alias='{0}' AND user_status IN (0,1,2)"
+                    q = "UPDATE data_pengguna_alias SET user_status='{1}',user_upd_date=NOW(),user_upd_alias='{2}' WHERE user_alias='{0}'"
+                    refreshtab = {pguser}
 
-                            q = "UPDATE data_customer_master SET customer_status=0, customer_upd_date=NOW(), customer_upd_alias='" & loggeduser.user_id & "' " _
-                                & "WHERE customer_kode='" & kode & "'"
+                Case "pggroup"
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                    qck = "SELECT group_kode, group_status status FROM data_pengguna_group WHERE group_kode='{0}' AND group_status<>9"
+                    q = "UPDATE data_pengguna_group SET group_status='{1}', group_upd_date=NOW(), group_upd_alias='{2}' WHERE group_kode='{0}'"
+                    refreshtab = {pggroup}
 
-                        Case "pgsales"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                            ckdata = False
-                            qcheck = "SELECT salesman_status FROM data_salesman_master WHERE salesman_kode='" & kode & "'"
-                            readcommd(qcheck)
-                            If rd.HasRows Then
-                                _state = rd.Item(0)
-                            End If
-                            rd.Close()
+                Case Else
+                    Exit Sub
+            End Select
 
-                            q = "UPDATE data_salesman_master SET salesman_status='{0}', salesman_upd_date=NOW(), salesman_upd_alias='{1}' WHERE salesman_kode='{2}'"
-                            q = String.Format(q, IIf(_state = 1, 0, 1), loggeduser.user_id, kode)
-
-                        Case "pgstok"
-                            kode = .SelectedRows.Item(0).Cells(0).Value
-                    End Select
-
-                    If ckdata = False Then
-                        op_con()
-                        queryCk = commnd(q)
-                        If queryCk = True Then
-                            MessageBox.Show("Perubahan tersimpan", "De/Aktivasi Data")
-                            performRefresh()
+            Using x = MainConnection
+                x.Open()
+                If x.ConnectionState = ConnectionState.Open Then
+                    Using rdx = x.ReadCommand(String.Format(qck, kode), CommandBehavior.SingleRow)
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _dataState = rdx.Item("status")
+                            ckdata = True
                         Else
-                            MessageBox.Show("Perubahan tidak dapat tersimpan", "De/Aktivasi Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            ckdata = False
+                            _msg = "Data tidak di temukan"
                         End If
-                    Else
-                        MessageBox.Show("Status data tidak dapat diubah", "De/Aktivasi Data", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    End If
+                    End Using
                 Else
-                    MessageBox.Show("Data tidak ada")
+                    ckdata = False
+                    _msg = "Tidak dapat terhubung ke database."
                 End If
 
-                Me.Cursor = Cursors.Default
-            End With
+                If ckdata Then
+                    Select Case tabpage
+                        Case "pgbarang", "pggudang", "pgsales", "pgsupplier", "pgcusto"
+                            ckdata = MasterConfirmValid(ket)
+                        Case "pguser", "pggroup"
+                            ckdata = loggeduser.admin_pc : ket = Nothing
+                            'MessageBox.Show("x", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End Select
+                    If Not ckdata Then Exit Sub
+
+                    ckdata = x.ExecCommand(String.Format(q, kode, IIf(_dataState = 1, 0, 1), loggeduser.user_id, ket))
+                    If ckdata Then
+                        MessageBox.Show("Perubahan status tersimpan")
+                        doRefreshTab(refreshtab)
+                    Else
+                        _msg = "Terjadi kesalahan saat melakukan proses update"
+                        MessageBox.Show("Perubahan status data tidak dapat dilakukan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                Else
+                    MessageBox.Show("Perubahan status tidak dapat dilakukan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End Using
         End If
     End Sub
 
@@ -1009,6 +921,19 @@
         End If
 
         Select Case _tbpg
+            Case "pgpesanjual"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                ckdata = CheckCancelPesanan(kode, _msg)
+                If ckdata Then
+                    ckdata = TransConfirmValid(ket)
+                    If Not ckdata Then : Exit Sub : End If
+                End If
+                q = "UPDATE data_penjualan_order_faktur SET j_order_status=2, j_order_upd_date=NOW(), j_order_upd_alias='{1}', " _
+                    & " j_order_catatan=TRIM(BOTH '\r\n' FROM CONCAT(j_order_catatan,'\r\n','{2}')) WHERE j_order_kode='{0}'"
+                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
+
+                refreshtab = {pgpesanjual}
+
             Case "pgpembelian", "pghutangawal"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
                 If _tbpg = "pgpembelian" Then
@@ -1059,7 +984,7 @@
 
             Case "pgpenjualan", "pgpiutangawal"
                 If _tbpg = "pgpenjualan" Then
-                    kode = dgv_list.SelectedRows.Item(0).Cells(1).Value
+                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
                     ckdata = CheckCancelPenjualan(kode, _msg)
                 ElseIf _tbpg = "pgpiutangawal" Then
                     Dim tgl = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value)
@@ -1296,6 +1221,7 @@
 
     Private Sub dgv_list_KeyDown(sender As Object, e As KeyEventArgs) Handles dgv_list.KeyDown
         If e.KeyCode = Keys.Enter Then
+            e.Handled = True
             editItem()
         End If
     End Sub

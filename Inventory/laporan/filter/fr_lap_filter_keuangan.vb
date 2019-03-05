@@ -486,11 +486,8 @@
         lbl_title2.Text = Me.Text
 
         formSW(tipeLap)
+        ShowDialog(main)
         'prcessSW()
-    End Sub
-
-    Private Sub fr_lap_filter_hutang_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
     End Sub
 
     'LOAD LAPORAN
@@ -506,9 +503,11 @@
             header = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
         End If
 
+        Me.Cursor = Cursors.WaitCursor
         x.setVar(laptype, createQuery(laptype), header)
         x.do_load()
-        x.ShowDialog()
+        x.ShowDialog(Me)
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click

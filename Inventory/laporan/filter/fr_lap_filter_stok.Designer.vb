@@ -47,6 +47,8 @@ Partial Class fr_lap_filter_stok
         Me.in_gudang = New System.Windows.Forms.TextBox()
         Me.lbl_gudang = New System.Windows.Forms.Label()
         Me.lbl_periodedata = New System.Windows.Forms.Label()
+        Me.cb_groupBy = New System.Windows.Forms.ComboBox()
+        Me.lbl_groupby = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -84,7 +86,7 @@ Partial Class fr_lap_filter_stok
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(591, 42)
+        Me.Panel1.Size = New System.Drawing.Size(591, 30)
         Me.Panel1.TabIndex = 335
         '
         'lbl_close
@@ -92,11 +94,11 @@ Partial Class fr_lap_filter_stok
         Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lbl_close.AutoSize = True
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(511, 8)
+        Me.lbl_close.Location = New System.Drawing.Point(511, 6)
         Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(52, 22)
+        Me.lbl_close.Size = New System.Drawing.Size(46, 19)
         Me.lbl_close.TabIndex = 138
         Me.lbl_close.Text = "Close"
         Me.lbl_close.Visible = False
@@ -112,7 +114,7 @@ Partial Class fr_lap_filter_stok
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(564, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(564, 5)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 9
@@ -123,12 +125,12 @@ Partial Class fr_lap_filter_stok
         '
         Me.lbl_title.AutoSize = True
         Me.lbl_title.BackColor = System.Drawing.Color.Orange
-        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(5, 3)
         Me.lbl_title.MaximumSize = New System.Drawing.Size(490, 33)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(315, 33)
+        Me.lbl_title.Size = New System.Drawing.Size(184, 19)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Laporan Stok/Persediaan"
         '
@@ -328,12 +330,31 @@ Partial Class fr_lap_filter_stok
         'lbl_periodedata
         '
         Me.lbl_periodedata.AutoSize = True
-        Me.lbl_periodedata.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_periodedata.Location = New System.Drawing.Point(8, 194)
+        Me.lbl_periodedata.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_periodedata.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.lbl_periodedata.Location = New System.Drawing.Point(8, 192)
         Me.lbl_periodedata.Name = "lbl_periodedata"
-        Me.lbl_periodedata.Size = New System.Drawing.Size(43, 13)
+        Me.lbl_periodedata.Size = New System.Drawing.Size(50, 13)
         Me.lbl_periodedata.TabIndex = 432
         Me.lbl_periodedata.Text = "Periode"
+        '
+        'cb_groupBy
+        '
+        Me.cb_groupBy.FormattingEnabled = True
+        Me.cb_groupBy.Location = New System.Drawing.Point(82, 117)
+        Me.cb_groupBy.Name = "cb_groupBy"
+        Me.cb_groupBy.Size = New System.Drawing.Size(170, 21)
+        Me.cb_groupBy.TabIndex = 433
+        '
+        'lbl_groupby
+        '
+        Me.lbl_groupby.AutoSize = True
+        Me.lbl_groupby.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_groupby.Location = New System.Drawing.Point(8, 121)
+        Me.lbl_groupby.Name = "lbl_groupby"
+        Me.lbl_groupby.Size = New System.Drawing.Size(48, 13)
+        Me.lbl_groupby.TabIndex = 0
+        Me.lbl_groupby.Text = "GroupBy"
         '
         'fr_lap_filter_stok
         '
@@ -342,6 +363,7 @@ Partial Class fr_lap_filter_stok
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 257)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.cb_groupBy)
         Me.Controls.Add(Me.lbl_periodedata)
         Me.Controls.Add(Me.in_gudang_n)
         Me.Controls.Add(Me.in_gudang)
@@ -351,6 +373,7 @@ Partial Class fr_lap_filter_stok
         Me.Controls.Add(Me.lbl_barang)
         Me.Controls.Add(Me.in_supplier_n)
         Me.Controls.Add(Me.in_supplier)
+        Me.Controls.Add(Me.lbl_groupby)
         Me.Controls.Add(Me.lbl_supplier)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.date_tglakhir)
@@ -399,4 +422,6 @@ Partial Class fr_lap_filter_stok
     Friend WithEvents in_gudang As System.Windows.Forms.TextBox
     Friend WithEvents lbl_gudang As System.Windows.Forms.Label
     Friend WithEvents lbl_periodedata As System.Windows.Forms.Label
+    Friend WithEvents cb_groupBy As System.Windows.Forms.ComboBox
+    Friend WithEvents lbl_groupby As System.Windows.Forms.Label
 End Class

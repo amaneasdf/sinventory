@@ -154,12 +154,23 @@
         Select Case tipe
             Case "satuan"
                 dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1")
-
+            Case "satuan_plus"
+                dt = getDataTablefromDB("SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan WHERE satuan_status=1")
             Case "kat_barang"
                 dt = getDataTablefromDB("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori WHERE kategori_status=1 ORDER BY kategori_kode")
+            Case "pajak_barang"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Pajak (PPn)", "1")
+                dt.Rows.Add("Non-Pajak", "0")
 
             Case "jenis_custo"
                 dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as Text, jenis_kode as `Value` FROM data_customer_jenis")
+            Case "priority_custo"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("One Bill", "0")
+                dt.Rows.Add("Priority", "1")
 
             Case "term"
                 dt.Columns.Add("Text", GetType(String))
@@ -180,6 +191,13 @@
                 dt.Rows.Add("Penjualan", "'JUAL'")
                 dt.Rows.Add("Retur Penjualan", "'RETUR'")
                 dt.Rows.Add("Jual & Retur Jual", "'JUAL','RETUR'")
+
+            Case "trans_pajak"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Kategori A", "0")
+                dt.Rows.Add("Kategori B", "1,2")
+                dt.Rows.Add("Kategori C", "0,1,2")
 
             Case "periode"
                 dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
@@ -306,8 +324,8 @@
         dt.Columns.Add("Text", GetType(String))
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Include", "1")
-        dt.Rows.Add("Excluded", "0")
-        dt.Rows.Add("Non-PPn", "2")
+        dt.Rows.Add("Excluded", "2")
+        dt.Rows.Add("Non-PPn", "0")
 
         Return dt
     End Function

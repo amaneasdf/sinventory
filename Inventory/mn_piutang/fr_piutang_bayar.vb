@@ -177,7 +177,7 @@
                 in_total.Text = commaThousand(countTotal())
                 _prevIsTitip = New KeyValuePair(Of Boolean, Decimal)(IIf(cb_bayar.SelectedValue = "PIUTSUPL", True, False), removeCommaThousand(in_total.Text))
                 If _prevIsTitip.Key Then
-                    in_saldotitipan.Text = commaThousand(removeCommaThousand(in_saldotitipan.Text) + _prevIsTitip.Value)
+                    in_saldotitipan.Text = commaThousand(removeCommaThousand(in_saldotitipan.Text) + If(_status = 1, _prevIsTitip.Value, 0))
                 End If
                 Select Case _status
                     Case 0 : in_status.Text = "Non-Aktif"
@@ -325,7 +325,7 @@
             "p_bayar_jenisbayar='" & cb_bayar.SelectedValue & "'",
             "p_bayar_akun='" & cb_akun.SelectedValue & "'",
             "p_bayar_potongan_nilai=" & in_potongan.Value.ToString.Replace(",", "."),
-            "p_bayar_ket='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
+            "p_bayar_ket=TRIM(BOTH '\r\n' FROM '" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "')",
             "p_bayar_status='" & _status & "'"
             }
         data2 = {
@@ -656,6 +656,7 @@
                     .in_user.ReadOnly = True
                     .ShowDialog()
                     cnfrmval = .returnval
+                    in_ket.Text = Trim(in_ket.Text & Environment.NewLine & .in_ket.Text)
                 End With
 
                 If cnfrmval = True Then

@@ -48,6 +48,8 @@ Partial Class fr_lap_filter_jual
         Me.in_barang_n = New System.Windows.Forms.TextBox()
         Me.in_barang = New System.Windows.Forms.TextBox()
         Me.lbl_barang = New System.Windows.Forms.Label()
+        Me.lbl_pajak = New System.Windows.Forms.Label()
+        Me.cb_pajak = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -71,7 +73,7 @@ Partial Class fr_lap_filter_jual
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(591, 42)
+        Me.Panel1.Size = New System.Drawing.Size(591, 30)
         Me.Panel1.TabIndex = 411
         '
         'lbl_close
@@ -81,7 +83,7 @@ Partial Class fr_lap_filter_jual
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
         Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(511, 8)
+        Me.lbl_close.Location = New System.Drawing.Point(511, 4)
         Me.lbl_close.Name = "lbl_close"
         Me.lbl_close.Size = New System.Drawing.Size(52, 22)
         Me.lbl_close.TabIndex = 138
@@ -99,7 +101,7 @@ Partial Class fr_lap_filter_jual
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(564, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(564, 5)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 137
@@ -110,12 +112,12 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_title.AutoSize = True
         Me.lbl_title.BackColor = System.Drawing.Color.Orange
-        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_title.Font = New System.Drawing.Font("Open Sans", 10.0!, System.Drawing.FontStyle.Bold)
         Me.lbl_title.ForeColor = System.Drawing.Color.White
         Me.lbl_title.Location = New System.Drawing.Point(5, 3)
         Me.lbl_title.MaximumSize = New System.Drawing.Size(490, 33)
         Me.lbl_title.Name = "lbl_title"
-        Me.lbl_title.Size = New System.Drawing.Size(239, 33)
+        Me.lbl_title.Size = New System.Drawing.Size(138, 19)
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Laporan Penjualan"
         '
@@ -159,7 +161,7 @@ Partial Class fr_lap_filter_jual
         Me.in_custo_n.BackColor = System.Drawing.Color.White
         Me.in_custo_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_custo_n.ForeColor = System.Drawing.Color.Black
-        Me.in_custo_n.Location = New System.Drawing.Point(205, 120)
+        Me.in_custo_n.Location = New System.Drawing.Point(205, 126)
         Me.in_custo_n.MaxLength = 200
         Me.in_custo_n.Name = "in_custo_n"
         Me.in_custo_n.Size = New System.Drawing.Size(322, 20)
@@ -170,7 +172,7 @@ Partial Class fr_lap_filter_jual
         Me.in_custo.BackColor = System.Drawing.Color.White
         Me.in_custo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_custo.ForeColor = System.Drawing.Color.Black
-        Me.in_custo.Location = New System.Drawing.Point(82, 120)
+        Me.in_custo.Location = New System.Drawing.Point(82, 126)
         Me.in_custo.MaxLength = 30
         Me.in_custo.Name = "in_custo"
         Me.in_custo.ReadOnly = True
@@ -181,7 +183,7 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_custo.AutoSize = True
         Me.lbl_custo.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_custo.Location = New System.Drawing.Point(8, 124)
+        Me.lbl_custo.Location = New System.Drawing.Point(8, 130)
         Me.lbl_custo.Name = "lbl_custo"
         Me.lbl_custo.Size = New System.Drawing.Size(51, 13)
         Me.lbl_custo.TabIndex = 430
@@ -192,7 +194,7 @@ Partial Class fr_lap_filter_jual
         Me.in_sales_n.BackColor = System.Drawing.Color.White
         Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_n.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_n.Location = New System.Drawing.Point(205, 97)
+        Me.in_sales_n.Location = New System.Drawing.Point(205, 103)
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(322, 20)
@@ -203,7 +205,7 @@ Partial Class fr_lap_filter_jual
         Me.in_sales.BackColor = System.Drawing.Color.White
         Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales.ForeColor = System.Drawing.Color.Black
-        Me.in_sales.Location = New System.Drawing.Point(82, 97)
+        Me.in_sales.Location = New System.Drawing.Point(82, 103)
         Me.in_sales.MaxLength = 30
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
@@ -214,7 +216,7 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_sales.AutoSize = True
         Me.lbl_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_sales.Location = New System.Drawing.Point(8, 101)
+        Me.lbl_sales.Location = New System.Drawing.Point(8, 107)
         Me.lbl_sales.Name = "lbl_sales"
         Me.lbl_sales.Size = New System.Drawing.Size(53, 13)
         Me.lbl_sales.TabIndex = 437
@@ -224,7 +226,7 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_tgl2.AutoSize = True
         Me.lbl_tgl2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_tgl2.Location = New System.Drawing.Point(228, 54)
+        Me.lbl_tgl2.Location = New System.Drawing.Point(228, 38)
         Me.lbl_tgl2.Name = "lbl_tgl2"
         Me.lbl_tgl2.Size = New System.Drawing.Size(24, 13)
         Me.lbl_tgl2.TabIndex = 434
@@ -233,7 +235,7 @@ Partial Class fr_lap_filter_jual
         'date_tglakhir
         '
         Me.date_tglakhir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglakhir.Location = New System.Drawing.Point(258, 50)
+        Me.date_tglakhir.Location = New System.Drawing.Point(258, 34)
         Me.date_tglakhir.MaxDate = New Date(2100, 12, 31, 0, 0, 0, 0)
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
@@ -245,7 +247,7 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_tgl.AutoSize = True
         Me.lbl_tgl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_tgl.Location = New System.Drawing.Point(8, 54)
+        Me.lbl_tgl.Location = New System.Drawing.Point(8, 38)
         Me.lbl_tgl.Name = "lbl_tgl"
         Me.lbl_tgl.Size = New System.Drawing.Size(52, 13)
         Me.lbl_tgl.TabIndex = 433
@@ -254,7 +256,7 @@ Partial Class fr_lap_filter_jual
         'date_tglawal
         '
         Me.date_tglawal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglawal.Location = New System.Drawing.Point(82, 50)
+        Me.date_tglawal.Location = New System.Drawing.Point(82, 34)
         Me.date_tglawal.MaxDate = New Date(2050, 12, 31, 0, 0, 0, 0)
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
@@ -269,7 +271,7 @@ Partial Class fr_lap_filter_jual
         Me.cb_jenis.BackColor = System.Drawing.Color.White
         Me.cb_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_jenis.FormattingEnabled = True
-        Me.cb_jenis.Location = New System.Drawing.Point(82, 73)
+        Me.cb_jenis.Location = New System.Drawing.Point(82, 57)
         Me.cb_jenis.Name = "cb_jenis"
         Me.cb_jenis.Size = New System.Drawing.Size(193, 21)
         Me.cb_jenis.TabIndex = 439
@@ -278,7 +280,7 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_jenis.AutoSize = True
         Me.lbl_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_jenis.Location = New System.Drawing.Point(8, 77)
+        Me.lbl_jenis.Location = New System.Drawing.Point(8, 61)
         Me.lbl_jenis.Name = "lbl_jenis"
         Me.lbl_jenis.Size = New System.Drawing.Size(64, 13)
         Me.lbl_jenis.TabIndex = 440
@@ -287,7 +289,7 @@ Partial Class fr_lap_filter_jual
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(212, 126)
+        Me.popPnl_barang.Location = New System.Drawing.Point(228, 130)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 441
@@ -316,7 +318,7 @@ Partial Class fr_lap_filter_jual
         Me.in_barang_n.BackColor = System.Drawing.Color.White
         Me.in_barang_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang_n.ForeColor = System.Drawing.Color.Black
-        Me.in_barang_n.Location = New System.Drawing.Point(205, 143)
+        Me.in_barang_n.Location = New System.Drawing.Point(205, 149)
         Me.in_barang_n.MaxLength = 200
         Me.in_barang_n.Name = "in_barang_n"
         Me.in_barang_n.Size = New System.Drawing.Size(322, 20)
@@ -327,7 +329,7 @@ Partial Class fr_lap_filter_jual
         Me.in_barang.BackColor = System.Drawing.Color.White
         Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang.ForeColor = System.Drawing.Color.Black
-        Me.in_barang.Location = New System.Drawing.Point(82, 143)
+        Me.in_barang.Location = New System.Drawing.Point(82, 149)
         Me.in_barang.MaxLength = 30
         Me.in_barang.Name = "in_barang"
         Me.in_barang.ReadOnly = True
@@ -338,11 +340,33 @@ Partial Class fr_lap_filter_jual
         '
         Me.lbl_barang.AutoSize = True
         Me.lbl_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_barang.Location = New System.Drawing.Point(8, 147)
+        Me.lbl_barang.Location = New System.Drawing.Point(8, 153)
         Me.lbl_barang.Name = "lbl_barang"
         Me.lbl_barang.Size = New System.Drawing.Size(41, 13)
         Me.lbl_barang.TabIndex = 444
         Me.lbl_barang.Text = "Barang"
+        '
+        'lbl_pajak
+        '
+        Me.lbl_pajak.AutoSize = True
+        Me.lbl_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_pajak.Location = New System.Drawing.Point(8, 84)
+        Me.lbl_pajak.Name = "lbl_pajak"
+        Me.lbl_pajak.Size = New System.Drawing.Size(46, 13)
+        Me.lbl_pajak.TabIndex = 446
+        Me.lbl_pajak.Text = "Kategori"
+        '
+        'cb_pajak
+        '
+        Me.cb_pajak.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cb_pajak.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cb_pajak.BackColor = System.Drawing.Color.White
+        Me.cb_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_pajak.FormattingEnabled = True
+        Me.cb_pajak.Location = New System.Drawing.Point(82, 80)
+        Me.cb_pajak.Name = "cb_pajak"
+        Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
+        Me.cb_pajak.TabIndex = 445
         '
         'fr_lap_filter_jual
         '
@@ -350,6 +374,8 @@ Partial Class fr_lap_filter_jual
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 290)
+        Me.Controls.Add(Me.lbl_pajak)
+        Me.Controls.Add(Me.cb_pajak)
         Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.in_barang_n)
         Me.Controls.Add(Me.in_barang)
@@ -410,4 +436,6 @@ Partial Class fr_lap_filter_jual
     Friend WithEvents in_barang_n As System.Windows.Forms.TextBox
     Friend WithEvents in_barang As System.Windows.Forms.TextBox
     Friend WithEvents lbl_barang As System.Windows.Forms.Label
+    Friend WithEvents lbl_pajak As System.Windows.Forms.Label
+    Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
 End Class

@@ -73,6 +73,8 @@
         Dim q As String = ""
         Dim qwh As String = ""
         Dim qreturn As String = ""
+        Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
+        Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
         Select Case tipe
             Case "lapBeliNota"
                 q = "SELECT * FROM( " _
@@ -80,30 +82,31 @@
                     & "faktur_tanggal_trans as lap_tgl,if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
                     & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah, 'BELI' as lap_jenis " _
                     & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
                     & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah), faktur_jumlah-faktur_netto, " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & ") beli {2}"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & ") beli {3}"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliTgl"
                 q = "SELECT * FROM ( " _
                     & "SELECT faktur_tanggal_trans as lap_tgl,SUM(if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah)) as lap_brutto, " _
                     & "SUM(faktur_disc) as lap_diskon, SUM(faktur_ppn) as lap_ppn, SUM(faktur_netto) as lap_jumlah, 'BELI' as lap_jenis " _
                     & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' GROUP BY faktur_tanggal_trans " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & "GROUP BY faktur_tanggal_trans ORDER BY lap_tgl" _
                     & "UNION " _
                     & "SELECT faktur_tanggal_trans, SUM(if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah)), 0, " _
                     & "SUM(faktur_ppn) as lap_ppn, SUM(faktur_netto) as lap_jumlah, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' GROUP BY faktur_tanggal_trans " _
-                    & "ORDER BY lap_tgl " _
-                    & ") beli {2}"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & "GROUP BY faktur_tanggal_trans ORDER BY lap_tgl " _
+                    & ") beli {3}"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliSupplier"
                 q = "SELECT * FROM( " _
@@ -111,15 +114,15 @@
                     & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
                     & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah, 'BELI' as lap_jenis " _
                     & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, " _
                     & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & ") beli {2}"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & ") beli {3}"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliTglNota"
                 q = "SELECT lap_tgl, lap_faktur,lap_supplier, lap_supplier_n,lap_brutto,lap_diskon,lap_ppn,lap_jumlah,lap_jenis FROM( " _
@@ -127,15 +130,15 @@
                     & "faktur_tanggal_trans as lap_tgl,if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
                     & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah,  'BELI' as lap_jenis " _
                     & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
                     & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & ") beli {2} ORDER BY lap_tgl"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & ") beli {3} ORDER BY lap_tgl"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliSupplierNota"
                 q = "SELECT * FROM( " _
@@ -143,15 +146,15 @@
                     & "faktur_tanggal_trans as lap_tgl,if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah) as lap_brutto, " _
                     & "faktur_disc as lap_diskon, faktur_ppn as lap_ppn, faktur_netto as lap_jumlah,  'BELI' as lap_jenis " _
                     & "FROM data_pembelian_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "UNION " _
                     & "SELECT supplier_kode, supplier_nama, faktur_kode_bukti, faktur_tanggal_trans, " _
                     & "if(faktur_ppn_jenis='1',faktur_jumlah-faktur_ppn,faktur_jumlah),faktur_jumlah-IF(faktur_ppn_jenis<>0,faktur_netto,faktur_netto-faktur_ppn), " _
                     & "faktur_ppn, faktur_netto, 'RETUR' " _
                     & "FROM data_pembelian_retur_faktur LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
-                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
-                    & ") beli {2} ORDER BY lap_tgl"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
+                    & ") beli {3} ORDER BY lap_tgl"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliSupplierBarang"
                 q = "SELECT dlap_supplier,dlap_supplier_n, dlap_barang, dlap_barang_n, dlap_qty, dlap_qty_n,dlap_harga_beli, dlap_total_diskon, " _
@@ -167,7 +170,7 @@
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                     & "JOIN (SELECT @subtot:=0, @ppn:=0) para " _
-                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "GROUP BY supplier_kode, trans_barang " _
                     & "UNION " _
                     & "SELECT supplier_kode,supplier_nama, trans_barang, barang_nama, " _
@@ -181,10 +184,10 @@
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
                     & "JOIN (SELECT @subtot:=0, @ppn:=0) para " _
-                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "GROUP BY supplier_kode,trans_barang" _
-                    & ") beli {2} ORDER BY dlap_jenis, dlap_supplier, dlap_barang"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & ") beli {3} ORDER BY dlap_jenis, dlap_supplier, dlap_barang"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliTglBarang"
                 q = "SELECT dlap_supplier,dlap_barang,dlap_barang_n,dlap_qty, dlap_qty_n,dlap_harga_beli, dlap_total_diskon, " _
@@ -199,7 +202,7 @@
                     & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "GROUP BY faktur_tanggal_trans, trans_barang " _
                     & "UNION " _
                     & "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d-%m-%Y'),'', trans_barang, barang_nama, " _
@@ -212,21 +215,24 @@
                     & "FROM data_pembelian_retur_trans LEFT JOIN data_pembelian_retur_faktur ON faktur_kode_bukti=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' " _
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) " _
                     & "GROUP BY faktur_tanggal_trans,trans_barang" _
-                    & ") beli {2} ORDER BY dlap_barang_n"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & ") beli {3} ORDER BY dlap_barang_n"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
             Case "lapBeliTglNotaBarang"
-                q = "SELECT faktur_kode as dlap_faktur, faktur_tanggal_trans as dlap_tgl,supplier_kode dlap_supplier, supplier_nama dlap_supplier_n, barang_kode dlap_barang, " _
-                    & "barang_nama as dlap_barang_n,CONCAT(trans_qty, ' ', trans_satuan) as dlap_qty, trans_harga_beli as dlap_harga_beli, " _
-                    & "TRUNCATE(((trans_qty*trans_harga_beli-trans_jumlah)/(trans_qty*trans_harga_beli))*100,2) as dlap_total_diskon, " _
-                    & "trans_jumlah as dlap_jumlah " _
-                    & "FROM data_pembelian_trans LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
+                q = "SELECT faktur_kode dlap_faktur, faktur_tanggal_trans dlap_tgl,supplier_kode dlap_supplier, supplier_nama dlap_supplier_n, " _
+                    & "barang_kode dlap_barang, barang_nama dlap_barang_n, trans_qty as dlap_qty, trans_satuan dlap_qty_n, trans_harga_beli as dlap_harga_beli, " _
+                    & "trans_disc1 dlap_disc1, trans_disc2 dlap_disc2, trans_disc3 dlap_disc3, trans_disc_rupiah dlap_disc_rp, " _
+                    & "(trans_qty*trans_harga_beli-trans_jumlah) as dlap_total_diskon, trans_jumlah as dlap_jumlah, " _
+                    & "@ppn := ROUND((CASE faktur_ppn_jenis WHEN 0 THEN trans_jumlah * 0.1 WHEN 1 THEN trans_jumlah * (1 - 10 / 11) ELSE 0 END),2) dlap_ppn, " _
+                    & "(CASE faktur_ppn_jenis WHEN 0 THEN 'NON-PPN' WHEN 1 THEN 'INCLUDED' WHEN 2 THEN 'EXCLUDED' ELSE 'ERROR' END) dlap_ppn_type " _
+                    & "FROM data_pembelian_trans " _
+                    & "LEFT JOIN data_pembelian_faktur ON trans_faktur=faktur_kode AND faktur_status=1 " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
                     & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' {2}"
-                q = String.Format(q, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
+                    & "WHERE trans_status=1 AND faktur_tanggal_trans BETWEEN '{0}' AND '{1}' AND faktur_ppn_jenis IN ({2}) {3}"
+                q = String.Format(q, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
             Case Else
                 Return Nothing
                 Exit Function
@@ -313,8 +319,9 @@
                 _filename = "BeliTanggalBarang" & _datefile & ".xlsx"
 
             Case "lapBeliTglNotaBarang"
-                _colheader.AddRange({"No.Faktur", "Tgl.Transaksi", "Kode Supplier", "Nama Supplier", "Kode Barang", "Nama Barang", "Qty", "Harga Beli", "Diskon", "Jumlah"})
-                _title = "LAPORAN PEMBELIAN PER TANGGAL NOTA BARANG " & _tglawal & " s.d. " & _tglakhir
+                _colheader.AddRange({"No.Faktur", "Tgl.Transaksi", "Kode Supplier", "Nama Supplier", "Kode Barang", "Nama Barang", "Qty", "Satuan",
+                                     "Harga Beli", "Disc1", "Disc2", "Disc3", "Disc Rp.", "Total Diskon", "Total", "PPn", "PPn Type"})
+                _title = "LAPORAN PEMBELIAN DISTRIBUTOR PER TANGGAL " & _tglawal & " s.d. " & _tglakhir
                 _filename = "BeliTanggalBarang" & _datefile & ".xlsx"
 
             Case Else
@@ -418,10 +425,17 @@
             .SelectedIndex = 2
         End With
 
+        With cb_pajak
+            .DataSource = jenis("trans_pajak")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+        End With
+
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
         prcessSW()
+        Show(main)
     End Sub
 
     'LOAD LAPORAN

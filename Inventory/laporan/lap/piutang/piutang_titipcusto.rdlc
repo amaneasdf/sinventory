@@ -830,7 +830,7 @@
           <Paragraph>
             <TextRuns>
               <TextRun>
-                <Value>PIUTANG TITIPAN PER SUPPLIER</Value>
+                <Value>PIUTANG TITIPAN PER CUSTOMER</Value>
                 <Style>
                   <FontFamily>Consolas</FontFamily>
                   <FontSize>11pt</FontSize>

@@ -38,15 +38,15 @@ Public Class fr_import_data
                                    "barang_satuan_tengah_jumlah", "barang_satuan_besar", "barang_satuan_besar_jumlah", "barang_harga_beli", "barang_harga_beli_d1",
                                    "barang_harga_beli_d2", "barang_harga_beli_d3", "barang_harga_jual", "barang_harga_jual_mt", "barang_harga_jual_horeka",
                                    "barang_harga_jual_rita", "barang_harga_jual_d1", "barang_harga_jual_d2", "barang_harga_jual_d3", "barang_harga_jual_d4",
-                                   "barang_harga_jual_d5", "barang_harga_jual_discount", "barang_reg_date", "barang_reg_alias"})
+                                   "barang_harga_jual_d5", "barang_harga_jual_discount", "barang_pajak", "barang_reg_date", "barang_reg_alias"})
             Case "master_gudang"
-                _colData.AddRange({"gudang_kode", "gudang_nama", "gudang_alamat", "gudang_keterangan", "gudang_reg_date", "gudang_reg_alias"})
+                _colData.AddRange({"gudang_kode", "gudang_nama", "gudang_alamat", "gudang_ket", "gudang_reg_date", "gudang_reg_alias"})
             Case "master_sales"
                 _colData.AddRange({"salesman_kode", "salesman_nama", "salesman_jenis", "salesman_alamat", "salesman_tanggal_masuk", "salesman_lahir_kota",
                                    "salesman_lahir_tanggal", "salesman_hp", "salesman_fax", "salesman_nik", "salesman_target", "salesman_bank_nama",
                                    "salesman_bank_rekening", "salesman_bank_atasnama", "salesman_reg_date", "salesman_reg_alias"})
             Case "master_customer"
-                _colData.AddRange({"customer_kode", "customer_jenis", "customer_area", "customer_nama", "customer_nama", "customer_alamat", "customer_alamat_blok",
+                _colData.AddRange({"customer_kode", "customer_jenis", "customer_area", "customer_nama", "customer_alamat", "customer_alamat_blok",
                                    "customer_alamat_nomor", "customer_alamat_rt", "customer_alamat_rw", "customer_alamat_kelurahan", "customer_kecamatan",
                                    "customer_kabupaten", "customer_pasar", "customer_provinsi", "customer_kodepos", "customer_telpon", "customer_fax",
                                    "customer_cp", "customer_nik", "customer_npwp", "customer_tanggal_pkp", "customer_pajak_nama", "customer_pajak_jabatan",
@@ -64,7 +64,10 @@ Public Class fr_import_data
             If row.Cells(0).Value = 1 Then
                 Dim data, data2 As New List(Of String)
                 For i = 1 To dgv_ckImport.Columns.Count - 1
-                    data.Add("'" & row.Cells(i).Value & "'")
+                    Dim _val = row.Cells(i).Value
+                    If type = "master_barang" And i = dgv_ckImport.Columns.Count - 1 Then _val = IIf(UCase(_val) = "PAJAK", 1, 0)
+                    If type = "master_customer" And i = 2 Then _val = CInt(_val).ToString("D2")
+                    data.Add("'" & mysqlQueryFriendlyStringFeed(IIf(IsDBNull(_val), "", _val)) & "'")
                     If type = "master_barang" And i = 3 Then
                         i += 1
                     ElseIf type = "trans_hutang" And i = 4 Then
@@ -75,23 +78,90 @@ Public Class fr_import_data
                     Case "master_supplier"
                         q = "INSERT INTO data_supplier_master({1}) VALUE({0},NOW(),'{2}')"
                         queryArr.Add(String.Format(q, String.Join(",", data), String.Join(",", _colData), loggeduser.user_id))
+
                     Case "master_barang"
                         q = "INSERT INTO data_barang_master({1}) VALUE({0},NOW(),'{2}')"
                         queryArr.Add(String.Format(q, String.Join(",", data), String.Join(",", _colData), loggeduser.user_id))
+
                         q = "INSERT INTO data_supplier_master SET supplier_kode='{0}', supplier_nama='{1}', supplier_reg_date=NOW(), supplier_reg_alias='{2}' " _
                              & "ON DUPLICATE KEY UPDATE supplier_kode=supplier_kode"
                         queryArr.Add(String.Format(q, row.Cells(3).Value, row.Cells(4).Value, loggeduser.user_id))
+
+                        Dim _xdata() As String
+                        Dim _xkode As String = row.Cells(1).Value
+                        Dim _satkecil As String = row.Cells(7).Value
+                        Dim _sattengah As String = row.Cells(8).Value
+                        Dim _satbesar As String = row.Cells(10).Value
+                        Dim _isitengah As Integer = row.Cells(9).Value
+                        Dim _isibesar As Integer = row.Cells(11).Value
+                        Dim _hargajual As Decimal = IIf(String.IsNullOrWhiteSpace(IIf(IsDBNull(row.Cells(16).Value), "", row.Cells(16).Value)), 0, row.Cells(16).Value)
+                        Dim _hargajualmt As Decimal = IIf(String.IsNullOrWhiteSpace(IIf(IsDBNull(row.Cells(17).Value), "", row.Cells(17).Value)), 0, row.Cells(17).Value)
+                        Dim _hargajualhoreka As Decimal = IIf(String.IsNullOrWhiteSpace(IIf(IsDBNull(row.Cells(18).Value), "", row.Cells(18).Value)), 0, row.Cells(18).Value)
+                        Dim _hargajualritail As Decimal = IIf(String.IsNullOrWhiteSpace(IIf(IsDBNull(row.Cells(19).Value), "", row.Cells(19).Value)), 0, row.Cells(19).Value)
+                        Dim _inputvalue(,) As String = {{"kecil", "1", _satkecil,
+                                         _hargajual / (_isibesar * _isitengah),
+                                         _hargajualmt / (_isibesar * _isitengah),
+                                         _hargajualhoreka / (_isibesar * _isitengah),
+                                         _hargajualritail / (_isibesar * _isitengah)
+                                        },
+                                        {
+                                        "tengah", _isitengah, _sattengah,
+                                         _hargajual / _isibesar,
+                                         _hargajualmt / _isibesar,
+                                         _hargajualhoreka / _isibesar,
+                                         _hargajualritail / _isibesar
+                                        },
+                                        {
+                                        "besar", _isibesar, _satbesar,
+                                         _hargajual,
+                                         _hargajualmt,
+                                         _hargajualhoreka,
+                                         _hargajualritail
+                                        }
+                                       }
+                        For i = 0 To 2
+                            q = "INSERT INTO data_barang_satuan SET b_satuan_barang='{0}',{1}"
+                            _xdata = {
+                                "b_satuan_jenis='" & _inputvalue(i, 0) & "'",
+                                "b_satuan_isi='" & _inputvalue(i, 1) & "'",
+                                "b_satuan_kodesatuan='" & _inputvalue(i, 2) & "'",
+                                "b_satuan_hargajual='" & _inputvalue(i, 3).ToString.Replace(",", ".") & "'",
+                                "b_satuan_hargajual_mt='" & _inputvalue(i, 4).ToString.Replace(",", ".") & "'",
+                                "b_satuan_hargajual_horeka='" & _inputvalue(i, 5).ToString.Replace(",", ".") & "'",
+                                "b_satuan_hargajual_rita='" & _inputvalue(i, 6).ToString.Replace(",", ".") & "'",
+                                "b_satuan_status='1'",
+                                "b_satuan_reg_date=NOW()",
+                                "b_satuan_reg_alias='" & loggeduser.user_id & "'"
+                                }
+                            queryArr.Add(String.Format(q, _xkode, String.Join(",", _xdata)))
+
+                            q = "INSERT INTO ref_satuan SET {0} ON DUPLICATE KEY UPDATE satuan_kode=satuan_kode"
+                            _xdata = {
+                                "satuan_kode='" & _inputvalue(i, 2) & "'",
+                                "satuan_nama='" & _inputvalue(i, 2) & "'",
+                                "satuan_keterangan='IMPORT DATA BARANG'",
+                                "satuan_status=1",
+                                "satuan_reg_date=NOW()",
+                                "satuan_reg_alias='" & loggeduser.user_id & "'"
+                                }
+                            queryArr.Add(String.Format(q, String.Join(",", _xdata)))
+                        Next
+
+
                     Case "master_gudang"
                         q = "INSERT INTO data_barang_gudang({1}) VALUE({0},NOW(),'{2}')"
                         queryArr.Add(String.Format(q, String.Join(",", data), String.Join(",", _colData), loggeduser.user_id))
+
                     Case "master_sales"
                         q = "INSERT INTO data_salesman_master({1}) VALUE({0},NOW(),'{2}')"
                         queryArr.Add(String.Format(q, String.Join(",", data), String.Join(",", _colData), loggeduser.user_id))
+
                     Case "master_customer"
                         q = "INSERT INTO data_customer_master({1}) VALUE({0},NOW(),'{2}')"
                         queryArr.Add(String.Format(q, String.Join(",", data), String.Join(",", _colData), loggeduser.user_id))
+
                         q = "UPDATE data_customer_master LEFT JOIN data_customer_jenis ON customer_jenis=jenis_kode " _
-                            & "SET customer_kriteria_harga_jual=jenis_def_jual WHERE customer_kode={0}"
+                            & "SET customer_kriteria_harga_jual=jenis_def_jual WHERE customer_kode='{0}'"
                         queryArr.Add(String.Format(q, row.Cells(1).Value))
 
                     Case "trans_hutang"
@@ -132,7 +202,7 @@ Public Class fr_import_data
                 _columnCk.AddRange({"KODE_ITEM", "NAMA_ITEM", "KODE_SUPPLIER", "NAMA_SUPPLIER", "KODE_JENIS", "KODE_KATEGORI", "SATUAN_KECIL", "SATUAN_TENGAH",
                                     "ISI_SATUAN_TENGAH", "SATUAN_BESAR", "ISI_SATUAN_BESAR", "HARGA_BELI", "HARGA_BELI_D1", "HARGA_BELI_D2", "HARGA_BELI_D3", "HARGA_JUAL",
                                     "HARGA_JUAL_MT", "HARGA_JUAL_HOREKA", "HARGA_JUAL_RITAIL", "HARGA_JUAL_D1", "HARGA_JUAL_D2", "HARGA_JUAL_D3", "HARGA_JUAL_D4",
-                                    "HARGA_JUAL_D5", "HARGA_JUAL_DISCRP"})
+                                    "HARGA_JUAL_D5", "HARGA_JUAL_DISCRP", "PAJAK"})
             Case "master_gudang"
                 _columnCk.AddRange({"KODE_GUDANG", "NAMA_GUDANG", "ALAMAT_GUDANG", "KETERANGAN"})
             Case "master_sales"
@@ -182,7 +252,7 @@ Public Class fr_import_data
                 _colheader.AddRange({"KODE_ITEM", "NAMA_ITEM", "KODE_SUPPLIER", "NAMA_SUPPLIER", "KODE_JENIS", "KODE_KATEGORI", "SATUAN_KECIL", "SATUAN_TENGAH",
                                     "ISI_SATUAN_TENGAH", "SATUAN_BESAR", "ISI_SATUAN_BESAR", "HARGA_BELI", "HARGA_BELI_D1", "HARGA_BELI_D2", "HARGA_BELI_D3", "HARGA_JUAL",
                                     "HARGA_JUAL_MT", "HARGA_JUAL_HOREKA", "HARGA_JUAL_RITAIL", "HARGA_JUAL_D1", "HARGA_JUAL_D2", "HARGA_JUAL_D3", "HARGA_JUAL_D4",
-                                    "HARGA_JUAL_D5", "HARGA_JUAL_DISCRP"})
+                                    "HARGA_JUAL_D5", "HARGA_JUAL_DISCRP", "PAJAK"})
             Case "master_gudang"
                 _colheader.AddRange({"KODE_GUDANG", "NAMA_GUDANG", "ALAMAT_GUDANG", "KETERANGAN"})
             Case "master_sales"

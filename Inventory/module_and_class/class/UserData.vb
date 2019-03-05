@@ -22,6 +22,7 @@
     'Private WithEvents tmer As New Timer
 
     'PROTECTED PROPERTIES
+    Private _User_ID As String
     Private _User_Level As String
     Private _Add_Master As Boolean
     Private _Add_Transaksi As Boolean
@@ -35,7 +36,15 @@
     Private _Admin As Boolean 'Allow user to edit/manage app and system configuration, other normal user could access some app config (In Future)
 
     'general info
-    Public user_id As String
+    Public Property user_id As String
+        Get
+            Return _User_ID
+        End Get
+        Set(value As String)
+            _User_ID = value
+            consoleWriteLine("User ID Changed : " & value & " : " & Now)
+        End Set
+    End Property
     Public user_nama As String
     Public saleskode As String
     Public user_status As UserStatus
@@ -82,7 +91,7 @@
     Public Property allowedit_master As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.MasterEdit)
-            _Edit_Master = IIf(IsNothing(x), _Edit_Master, x)
+            _Edit_Master = IIf(x = TriState.UseDefault, _Edit_Master, x)
             Return _Edit_Master
         End Get
         Set(value As Boolean)
@@ -92,7 +101,7 @@
     Public Property allowedit_transact As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.TransEdit)
-            _Edit_Transaksi = IIf(IsNothing(x), _Edit_Transaksi, x)
+            _Edit_Transaksi = IIf(x = TriState.UseDefault, _Edit_Transaksi, x)
             Return _Edit_Transaksi
         End Get
         Set(value As Boolean)
@@ -102,7 +111,7 @@
     Public Property allowedit_akun As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.AccountEdit)
-            _Edit_Akuntansi = IIf(IsNothing(x), _Edit_Akuntansi, x)
+            _Edit_Akuntansi = IIf(x = TriState.UseDefault, _Edit_Akuntansi, x)
             Return _Edit_Akuntansi
         End Get
         Set(value As Boolean)
@@ -112,7 +121,7 @@
     Public Property validasi_master As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.MasterValid)
-            _Valid_Master = IIf(IsNothing(x), _Valid_Master, x)
+            _Valid_Master = IIf(x = TriState.UseDefault, _Valid_Master, x)
             Return _Valid_Master
         End Get
         Set(value As Boolean)
@@ -122,7 +131,7 @@
     Public Property validasi_trans As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.TransValid)
-            _Valid_Transaksi = IIf(IsNothing(x), _Valid_Transaksi, x)
+            _Valid_Transaksi = IIf(x = TriState.UseDefault, _Valid_Transaksi, x)
             Return _Valid_Transaksi
         End Get
         Set(value As Boolean)
@@ -132,7 +141,7 @@
     Public Property validasi_akun As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.AccountValid)
-            _Valid_Akuntansi = IIf(IsNothing(x), _Valid_Akuntansi, x)
+            _Valid_Akuntansi = IIf(x = TriState.UseDefault, _Valid_Akuntansi, x)
             Return _Valid_Akuntansi
         End Get
         Set(value As Boolean)
@@ -142,21 +151,21 @@
     Public Property admin_pc As Boolean
         Get
             Dim x = GetPriviledgeStatus(UserPriviledge.ADMIN)
-            _Admin = IIf(IsNothing(x), _Admin, x) : Return _Admin
+            _Admin = IIf(x = TriState.UseDefault, _Admin, x) : Return _Admin
         End Get
         Set(value As Boolean)
             _Admin = value
         End Set
     End Property
 
-    Private Function GetPriviledgeStatus(type As UserPriviledge) As Boolean
+    Private Function GetPriviledgeStatus(type As UserPriviledge) As TriState
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Config is empty")
         End If
         If IsNothing(type) Then
             Throw New ArgumentNullException("Type cannot be empty")
         End If
-        Dim retval As Boolean = Nothing
+        Dim retval As TriState = TriState.UseDefault
         Dim q As String = "SELECT {0} FROM data_pengguna_alias WHERE user_alias='{1}'"
         Dim _col As String = ""
         Select Case type
@@ -179,13 +188,13 @@
                 Using rdx = x.ReadCommand(q, CommandBehavior.SingleResult)
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
-                        retval = IIf(rdx.Item(0) = 1, True, False)
+                        retval = IIf(rdx.Item(0) = 1, TriState.True, TriState.False)
                     Else
-                        retval = Nothing
+                        retval = TriState.UseDefault
                     End If
                 End Using
             Else
-                retval = Nothing
+                retval = TriState.UseDefault
             End If
         End Using
         Return retval

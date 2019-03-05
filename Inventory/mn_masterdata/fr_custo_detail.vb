@@ -1,54 +1,159 @@
 ﻿Public Class fr_custo_detail
     Private cstStatus As String = "1"
+    Private formstate As InputState = InputState.Insert
+
+    Private Enum InputState
+        Insert
+        Edit
+    End Enum
+
+    'SETUP FORM
+    Private Sub SetUpForm(KodeGudang As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Data Customer : rb201908"
+
+        formstate = FormSet
+
+        With cb_tipe
+            .DataSource = jenis("jenis_custo")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
+        End With
+
+        With cb_diskon
+            .DataSource = jenisDiskon()
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
+        End With
+
+        With cb_harga
+            .DataSource = jenisHargaJual()
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = 0
+        End With
+
+        With cb_area
+            .DataSource = jenis("areacusto")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+
+        With cb_penjualan
+            .DataSource = jenis("priority_custo")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += KodeGudang
+            Me.lbl_title.Text += " : " & KodeGudang
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            loadDataCusto(KodeGudang)
+            If Not {0, 1}.Contains(cstStatus) Then AllowEdit = False
+            in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
+            bt_simpancusto.Text = "Update"
+        End If
+
+        ControlSwitch(AllowEdit)
+    End Sub
+
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_kode, in_nama_custo, in_telpcusto, in_faxcusto, in_cpcusto, in_alamat_custo, in_alamat_blok, in_alamat_no, in_alamat_rt,
+                                    in_alamat_rw, in_alamat_kelurahan, in_alamat_kecamatan, in_alamat_kabupaten, in_alamat_provinsi, in_alamat_pasar, in_kodepos,
+                                    in_nik, in_npwp, in_pajak_nama, in_pajak_alamat, in_pajak_jabatan}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
+        For Each cbx As ComboBox In {cb_area, cb_diskon, cb_harga, cb_tipe}
+            cbx.Enabled = AllowInput
+        Next
+        For Each nmx As NumericUpDown In {in_term, in_piutang}
+            nmx.Enabled = AllowInput
+        Next
+
+        date_tgl_pkp.Enabled = AllowInput
+        bt_simpancusto.Enabled = AllowInput
+        mn_deact.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+    End Sub
+
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+        in_nama_custo.Focus()
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+        in_nama_custo.Focus()
+    End Sub
 
     'GET DATA
     Private Sub loadDataCusto(kode As String)
-        Dim q As String = ""
-        op_con()
-        readcommd("SELECT customer_nama,customer_status,customer_jenis,customer_area,customer_alamat,customer_alamat_blok,customer_alamat_nomor,customer_alamat_rt, " _
-                  & "customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi,customer_kodepos, " _
-                  & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp,customer_tanggal_pkp,customer_pajak_nama,customer_pajak_jabatan, " _
-                  & "customer_pajak_alamat,customer_max_piutang,Customer_kriteria_discount,Customer_kriteria_harga_jual,customer_term, " _
-                  & "IFNULL(customer_reg_alias,'') customer_reg_alias, IFNULL(customer_reg_date,'00/00/0000 00:00:00') customer_reg_date, " _
-                  & "IFNULL(customer_upd_alias,'') customer_upd_alias, IFNULL(customer_upd_date,'00/00/0000 00:00:00') customer_upd_date " _
-                  & "FROM data_customer_master WHERE customer_kode='" & kode & "'")
-        If rd.HasRows Then
-            in_kode.Text = kode
-            in_nama_custo.Text = rd.Item("customer_nama")
-            cstStatus = rd.Item("customer_status")
-            cb_tipe.SelectedValue = rd.Item("customer_jenis")
-            cb_area.SelectedValue = rd.Item("customer_area")
-            in_alamat_custo.Text = rd.Item("customer_alamat")
-            in_alamat_blok.Text = rd.Item("customer_alamat_blok")
-            in_alamat_no.Text = rd.Item("customer_alamat_nomor")
-            in_alamat_rt.Text = rd.Item("customer_alamat_rt")
-            in_alamat_rw.Text = rd.Item("customer_alamat_rw")
-            in_alamat_kelurahan.Text = rd.Item("customer_alamat_kelurahan")
-            in_alamat_kecamatan.Text = rd.Item("customer_kecamatan")
-            in_alamat_kabupaten.Text = rd.Item("customer_kabupaten")
-            in_alamat_pasar.Text = rd.Item("customer_pasar")
-            in_alamat_provinsi.Text = rd.Item("customer_provinsi")
-            in_kodepos.Text = rd.Item("customer_kodepos")
-            in_telpcusto.Text = rd.Item("customer_telpon")
-            in_faxcusto.Text = rd.Item("customer_fax")
-            in_cpcusto.Text = rd.Item("customer_cp")
-            in_nik.Text = rd.Item("customer_nik")
-            in_npwp.Text = rd.Item("customer_npwp")
-            date_tgl_pkp.Value = rd.Item("customer_tanggal_pkp")
-            in_pajak_nama.Text = rd.Item("customer_pajak_nama")
-            in_pajak_jabatan.Text = rd.Item("customer_pajak_jabatan")
-            in_pajak_alamat.Text = rd.Item("customer_pajak_alamat")
-            in_piutang.Value = rd.Item("customer_max_piutang")
-            cb_diskon.SelectedValue = rd.Item("Customer_kriteria_discount")
-            cb_harga.SelectedValue = rd.Item("Customer_kriteria_harga_jual")
-            in_term.Value = rd.Item("customer_term")
-            txtRegdate.Text = rd.Item("customer_reg_date")
-            txtRegAlias.Text = rd.Item("customer_reg_alias")
-            txtUpdDate.Text = rd.Item("customer_upd_date")
-            txtUpdAlias.Text = rd.Item("customer_upd_alias")
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-        rd.Close()
-        setStatus()
+
+        Dim q As String = "SELECT customer_nama,customer_status,customer_jenis,customer_area,customer_alamat,customer_alamat_blok,customer_alamat_nomor,customer_alamat_rt, " _
+                          & "customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi,customer_kodepos, " _
+                          & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp, " _
+                          & "IF(MONTH(customer_tanggal_pkp)=0,CURDATE(),customer_tanggal_pkp) customer_tanggal_pkp ,customer_pajak_nama,customer_pajak_jabatan, " _
+                          & "customer_pajak_alamat,customer_max_piutang, customer_priority, Customer_kriteria_discount,Customer_kriteria_harga_jual,customer_term, " _
+                          & "IFNULL(customer_keterangan,'') customer_keterangan, " _
+                          & "IFNULL(customer_reg_alias,'') customer_reg_alias, IFNULL(DATE_FORMAT(customer_reg_date,'%d/%m/%Y %H:%i:%S'),'') customer_reg_date, " _
+                          & "IFNULL(customer_upd_alias,'') customer_upd_alias, IFNULL(DATE_FORMAT(customer_upd_date,'%d/%m/%Y %H:%i:%S'),'') customer_upd_date " _
+                          & "FROM data_customer_master WHERE customer_kode='{0}'"
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_kode.Text = kode
+                        in_nama_custo.Text = rdx.Item("customer_nama")
+                        cstStatus = rdx.Item("customer_status")
+                        cb_tipe.SelectedValue = rdx.Item("customer_jenis")
+                        cb_area.SelectedValue = rdx.Item("customer_area")
+                        in_alamat_custo.Text = rdx.Item("customer_alamat")
+                        in_alamat_blok.Text = rdx.Item("customer_alamat_blok")
+                        in_alamat_no.Text = rdx.Item("customer_alamat_nomor")
+                        in_alamat_rt.Text = rdx.Item("customer_alamat_rt")
+                        in_alamat_rw.Text = rdx.Item("customer_alamat_rw")
+                        in_alamat_kelurahan.Text = rdx.Item("customer_alamat_kelurahan")
+                        in_alamat_kecamatan.Text = rdx.Item("customer_kecamatan")
+                        in_alamat_kabupaten.Text = rdx.Item("customer_kabupaten")
+                        in_alamat_pasar.Text = rdx.Item("customer_pasar")
+                        in_alamat_provinsi.Text = rdx.Item("customer_provinsi")
+                        in_kodepos.Text = rdx.Item("customer_kodepos")
+                        in_telpcusto.Text = rdx.Item("customer_telpon")
+                        in_faxcusto.Text = rdx.Item("customer_fax")
+                        in_cpcusto.Text = rdx.Item("customer_cp")
+                        in_nik.Text = rdx.Item("customer_nik")
+                        in_npwp.Text = rdx.Item("customer_npwp")
+                        date_tgl_pkp.Value = rdx.Item("customer_tanggal_pkp")
+                        in_pajak_nama.Text = rdx.Item("customer_pajak_nama")
+                        in_pajak_jabatan.Text = rdx.Item("customer_pajak_jabatan")
+                        in_pajak_alamat.Text = rdx.Item("customer_pajak_alamat")
+                        in_piutang.Value = rdx.Item("customer_max_piutang")
+                        cb_diskon.SelectedValue = rdx.Item("Customer_kriteria_discount")
+                        cb_harga.SelectedValue = rdx.Item("Customer_kriteria_harga_jual")
+                        in_term.Value = rdx.Item("customer_term")
+                        cb_penjualan.SelectedValue = rdx.Item("customer_priority")
+                        in_ket.Text = rdx.Item("customer_keterangan")
+                        txtRegdate.Text = rdx.Item("customer_reg_date")
+                        txtRegAlias.Text = rdx.Item("customer_reg_alias")
+                        txtUpdDate.Text = rdx.Item("customer_upd_date")
+                        txtUpdAlias.Text = rdx.Item("customer_upd_alias")
+                    End If
+                End Using
+                setStatus()
+            End If
+        End Using
     End Sub
 
     'GET QR
@@ -204,6 +309,8 @@
             "Customer_kriteria_discount='" & cb_diskon.SelectedValue & "'",
             "Customer_kriteria_harga_jual='" & cb_harga.SelectedValue & "'",
             "customer_term='" & in_term.Value & "'",
+            "customer_priority='" & cb_penjualan.SelectedValue & "'",
+            "customer_keterangan=TRIM(BOTH '\r\n' FROM '" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "')",
             "customer_status='" & cstStatus & "'"
             }
 
@@ -292,12 +399,28 @@
     End Sub
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        If mn_deact.Text = "Deactivate" Then
-            cstStatus = "0"
-        ElseIf mn_deact.Text = "Activate" Then
-            cstStatus = "1"
+        If loggeduser.validasi_master Then
+            If MessageBox.Show("Ubah status customer?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+                Dim _ket As String = ""
+                Dim ckuser = MasterConfirmValid(_ket)
+
+                If Not ckuser Then
+                    Exit Sub
+                End If
+
+                in_ket.Text += IIf(String.IsNullOrWhiteSpace(in_ket.Text), "", Environment.NewLine) & _ket
+
+                If mn_deact.Text = "Deactivate" Then
+                    cstStatus = "0"
+                ElseIf mn_deact.Text = "Activate" Then
+                    cstStatus = "1"
+                End If
+                setStatus()
+                saveData()
+            End If
+        Else
+            MessageBox.Show("Anda tidak dapat mengubah status customer", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
         End If
-        setStatus()
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
@@ -314,43 +437,7 @@
 
     'LOAD
     Private Sub fr_custo_detail_Load(sender As Object, e As EventArgs) Handles Me.Load
-        With cb_tipe
-            .DataSource = jenis("jenis_custo")
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
 
-        With cb_diskon
-            .DataSource = jenisDiskon()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-
-        With cb_harga
-            .DataSource = jenisHargaJual()
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedIndex = 0
-        End With
-
-        With cb_area
-            .DataSource = jenis("areacusto")
-            .ValueMember = "Value"
-            .DisplayMember = "Text"
-        End With
-
-        setStatus()
-
-        op_con()
-        If bt_simpancusto.Text = "Update" Then
-            With in_kode
-                .ReadOnly = True
-                .BackColor = Color.Gainsboro
-                loadDataCusto(.Text)
-            End With
-        End If
     End Sub
 
     'SAVE
@@ -374,6 +461,16 @@
         End If
 
         If MessageBox.Show("Simpan data customer?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            If formstate = InputState.Edit Then
+                Dim x As Boolean = False
+                Dim _ket As String = ""
+                x = MasterConfirmValid(_ket)
+                If x = False Then
+                    Exit Sub
+                End If
+                in_ket.Text += IIf(String.IsNullOrWhiteSpace(in_ket.Text), "", in_ket.Text) & _ket
+            End If
+
             saveData()
         End If
     End Sub

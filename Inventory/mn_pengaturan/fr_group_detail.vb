@@ -1,75 +1,93 @@
 ﻿Public Class fr_group_detail
     Private usrstatus As String = "1"
+    Private formstate As InputState = InputState.Insert
 
-    Private Sub getGroupData(kode As String)
-        Dim q As String = "SELECT group_kode, group_nama, group_keterangan, group_status, " _
-                          & "group_reg_alias, group_reg_date, group_upd_date, group_upd_alias " _
-                          & "FROM data_pengguna_group WHERE group_kode='{0}'"
+    Private Enum InputState
+        Insert
+        Edit
+    End Enum
 
-        op_con()
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_kode.Text = rd.Item("group_kode")
-            in_nama_group.Text = rd.Item("group_nama")
-            in_ket_group.Text = rd.Item("group_keterangan")
-            usrstatus = rd.Item("group_status")
+    'SETUP FORM
+    Private Sub SetUpForm(KodeUser As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Data User Group : xxxxxxxxx"
 
-            txtRegAlias.Text = rd.Item("group_reg_alias")
-            txtRegdate.Text = rd.Item("group_reg_date")
-            Try
-                txtUpdDate.Text = rd.Item("group_upd_date")
-            Catch ex As Exception
-                Console.WriteLine(ex.Message)
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdAlias.Text = rd.Item("group_upd_alias")
+        formstate = FormSet
+        populateTree()
+        StartPosition = FormStartPosition.CenterScreen
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += KodeUser
+            Me.lbl_title.Text += " : " & KodeUser
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            getGroupData(KodeUser)
+            treeviewCheck()
+            bt_simpan_group.Text = "Update"
         End If
-        rd.Close()
 
-        setStatus()
-
-        If loggeduser.admin_pc = False Then
-            mn_actdeact.Enabled = False
-            mn_del.Enabled = False
-            mn_save.Enabled = False
-            bt_simpan_group.Enabled = False
-        End If
+        ControlSwitch(AllowEdit)
     End Sub
 
-    'menutree
-    Private Sub populateTree()
-        op_con()
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_kode, in_ket_group, in_nama_group}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
 
-        Dim ParentNode As New TreeNode
-        Dim ChildNode, ChildNode2 As New TreeNode
-        Dim MenuKode, MenuLabel As String
+        tv_menu.Enabled = AllowInput
+        bt_simpan_group.Enabled = AllowInput
+        bt_tv_reset.Enabled = AllowInput
+        bt_tv_checkall_group.Enabled = AllowInput
+        mn_actdeact.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+    End Sub
 
-        tv_menu.Nodes.Clear()
-        dbSelect("SELECT menu_kode, menu_label FROM data_menu_master WHERE menu_status=1 ORDER BY menu_kode")
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+        in_nama_group.Focus()
+    End Sub
 
-        Do While rd.Read
-            MenuKode = rd.Item("menu_kode").ToString
-            MenuLabel = Mid(MenuKode, 3, 20) & ". " & rd.Item("menu_label").ToString
-            Console.WriteLine(rd.Item("menu_kode").ToString)
-            If Len(MenuKode) = 4 Then
-                Dim node1 As New TreeNode(MenuLabel)
-                ParentNode = node1
-                tv_menu.Nodes.Add(ParentNode)
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+        in_nama_group.Focus()
+    End Sub
+
+    'LOAD DATA
+    Private Sub getGroupData(kode As String)
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+
+        Dim q As String = "SELECT group_kode, group_nama, group_keterangan, group_status, " _
+                          & "DATE_FORMAT(group_reg_date,'%d/%m/%Y %H:%i') group_reg_date, IFNULL(group_reg_alias,'') group_reg_alias, " _
+                          & "DATE_FORMAT(group_upd_date,'%d/%m/%Y %H:%i') group_upd_date, IFNULL(group_upd_alias,'') group_upd_alias " _
+                          & "FROM data_pengguna_group WHERE group_kode='{0}'"
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_kode.Text = rdx.Item("group_kode")
+                        in_nama_group.Text = rdx.Item("group_nama")
+                        in_ket_group.Text = rdx.Item("group_keterangan")
+                        usrstatus = rdx.Item("group_status")
+
+                        txtRegAlias.Text = rdx.Item("group_reg_alias")
+                        txtRegdate.Text = rdx.Item("group_reg_date")
+                        txtUpdDate.Text = rdx.Item("group_upd_date")
+                        txtUpdAlias.Text = rdx.Item("group_upd_alias")
+                    End If
+                End Using
+                setStatus()
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", "Detail Group User", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
             End If
-            If Len(MenuKode) = 6 Then
-                Dim node2 As New TreeNode(MenuLabel)
-                ChildNode = node2
-                ParentNode.Nodes.Add(ChildNode)
-            End If
-            If Len(MenuKode) = 8 Then
-                Dim node3 As New TreeNode(MenuLabel)
-                ChildNode2 = node3
-                ChildNode.Nodes.Add(ChildNode2)
-            End If
-        Loop
-
-        rd.Close()
-        tv_menu.ExpandAll()
+        End Using
     End Sub
 
     Private Sub treeviewCheck()
@@ -109,6 +127,42 @@
             'consoleWriteLine(MenuKode & IIf(fd = True, "sss", "nnnn"))
         Loop
         rd.Close()
+    End Sub
+
+    'menutree
+    Private Sub populateTree()
+        op_con()
+
+        Dim ParentNode As New TreeNode
+        Dim ChildNode, ChildNode2 As New TreeNode
+        Dim MenuKode, MenuLabel As String
+
+        tv_menu.Nodes.Clear()
+        dbSelect("SELECT menu_kode, menu_label FROM data_menu_master WHERE menu_status=1 ORDER BY menu_kode")
+
+        Do While rd.Read
+            MenuKode = rd.Item("menu_kode").ToString
+            MenuLabel = Mid(MenuKode, 3, 20) & ". " & rd.Item("menu_label").ToString
+            Console.WriteLine(rd.Item("menu_kode").ToString)
+            If Len(MenuKode) = 4 Then
+                Dim node1 As New TreeNode(MenuLabel)
+                ParentNode = node1
+                tv_menu.Nodes.Add(ParentNode)
+            End If
+            If Len(MenuKode) = 6 Then
+                Dim node2 As New TreeNode(MenuLabel)
+                ChildNode = node2
+                ParentNode.Nodes.Add(ChildNode)
+            End If
+            If Len(MenuKode) = 8 Then
+                Dim node3 As New TreeNode(MenuLabel)
+                ChildNode2 = node3
+                ChildNode.Nodes.Add(ChildNode2)
+            End If
+        Loop
+
+        rd.Close()
+        tv_menu.ExpandAll()
     End Sub
 
     Private Function treeCK(nodes As TreeNode, menukode As String) As Boolean
@@ -334,13 +388,13 @@
 
     'LOAD
     Private Sub fr_group_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        populateTree()
+        'populateTree()
 
-        If bt_simpan_group.Text = "Update" Then
-            treeviewCheck()
-            getGroupData(in_kode.Text)
-            'mn_actdeact.Enabled = True
-        End If
+        'If bt_simpan_group.Text = "Update" Then
+        '    treeviewCheck()
+        '    getGroupData(in_kode.Text)
+        '    'mn_actdeact.Enabled = True
+        'End If
     End Sub
 
     'SAVE

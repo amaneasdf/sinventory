@@ -19,7 +19,7 @@
 
     'SETUP FORM
     Private Sub SetUpForm(NoFaktur As String, FormSet As InputState, AllowEdit As Boolean)
-        Const _tempTitle As String = "Data Retur Pembelian : rb20190810902"
+        Const _tempTitle As String = "Data Pembelian : po20190810902"
 
         formstate = FormSet
 
@@ -60,11 +60,8 @@
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
-        For Each txt As TextBox In {in_supplier_n, in_gudang_n, in_barang_nm, in_pajak, in_ket, in_suratjalan}
+        For Each txt As TextBox In {in_gudang_n, in_barang_nm, in_pajak, in_ket, in_suratjalan}
             txt.ReadOnly = IIf(AllowInput, False, True)
-        Next
-        For Each cbx As ComboBox In {cb_ppn}
-            cbx.Enabled = AllowInput
         Next
         For Each ctr As Control In {in_qty, cb_sat, in_harga_beli, in_disc1, in_disc2, in_disc3, in_discrp, bt_tbbarang}
             ctr.Visible = AllowInput
@@ -80,28 +77,37 @@
         mn_cancelorder.Enabled = AllowInput
         mn_save.Enabled = AllowInput
 
+        If Not formstate = InputState.Insert Then
+            Dim _rowcount As Integer = dgv_barang.RowCount
+            in_supplier_n.ReadOnly = IIf(_rowcount > 0, True, False)
+            cb_ppn.Enabled = IIf(_rowcount > 0, False, True)
+        Else
+            in_supplier_n.ReadOnly = IIf(AllowInput, False, True)
+            cb_ppn.Enabled = AllowInput
+        End If
+
         If AllowInput Then
-            dgv_barang.Location = New Point(8, 219) : dgv_barang.Height = 207
+            dgv_barang.Location = New Point(9, 148) : dgv_barang.Height = 207
             AddHandler dgv_barang.CellDoubleClick, AddressOf dgv_barang_CellDoubleClick
         Else
-            dgv_barang.Location = New Point(8, 179) : dgv_barang.Height = 247
+            dgv_barang.Location = New Point(9, 109) : dgv_barang.Height = 247
             RemoveHandler dgv_barang.CellDoubleClick, AddressOf dgv_barang_CellDoubleClick
         End If
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)
         SetUpForm(Nothing, InputState.Insert, AllowInput)
-        Me.Show()
+        Me.Show(main)
     End Sub
 
     Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
         SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
-        Me.Show()
+        Me.Show(main)
     End Sub
 
     Public Sub doLoadView(NoFaktur As String)
-        SetUpForm(NoFaktur, InputState.View, Nothing)
-        Me.Show()
+        SetUpForm(NoFaktur, InputState.View, False)
+        Me.Show(main)
     End Sub
 
     'LOAD DATA
@@ -243,9 +249,11 @@
         Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "barang"
+                Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli 'Harga Default', barang_harga_beli_d1, " _
                     & "barang_harga_beli_d2, barang_harga_beli_d3 FROM data_barang_master WHERE barang_nama LIKE '{0}%' " _
-                    & "AND barang_supplier='" & in_supplier.Text & "' AND barang_status=1 LIMIT 250"
+                    & "AND barang_supplier='{1}' AND barang_status=1 AND barang_pajak='{2}' LIMIT 250"
+                q = String.Format(q, "{0}", in_supplier.Text, _pajak)
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama', supplier_term FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
             Case "gudang"
@@ -308,11 +316,17 @@
 
     'INPUT DATA TO DGV FR TEXTBOX
     Private Sub textToDgv()
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main Connection is empty")
+        End If
+
         Dim _supplier As String = ""
+        Dim _pajak As String = ""
+        Dim kode As String = in_barang.Text
         Dim q As String = ""
 
-        If Trim(in_barang_nm.Text) = Nothing Then
-            in_barang.Focus()
+        If Trim(in_barang.Text) = Nothing Then
+            in_barang_nm.Focus()
             Exit Sub
         End If
         If in_qty.Value = 0 Then
@@ -320,13 +334,20 @@
             Exit Sub
         End If
 
-        op_con()
-        q = "SELECT barang_supplier FROM data_barang_master WHERE barang_kode='{0}'"
-        readcommd(String.Format(q, in_barang.Text))
-        If rd.HasRows Then
-            _supplier = rd.Item(0)
-        End If
-        rd.Close()
+        'GET DATA BARANG
+        q = "SELECT barang_supplier, barang_pajak FROM data_barang_master WHERE barang_kode='{0}'"
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, kode), CommandBehavior.SingleRow)
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        _supplier = rdx.Item(0)
+                        _pajak = rdx.Item(1)
+                    End If
+                End Using
+            End If
+        End Using
 
         If in_supplier.Text <> _supplier Then
             MessageBox.Show("Supplier barang berbeda dengan barang yang terpilih.", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -334,6 +355,14 @@
             popPnl_barang.Visible = False
             Exit Sub
         End If
+
+        If (_pajak = 0 And cb_ppn.SelectedValue <> 0) Or (_pajak = 1 And {1, 2}.Contains(cb_ppn.SelectedValue) = False) Then
+            MessageBox.Show("Kategori barang tidak sesuai dengan kategori pajak faktur/nota beli", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang_nm.Focus()
+            popPnl_barang.Visible = False
+            Exit Sub
+        End If
+
 
         Dim pajak_tot As Double = 0
         Dim total As Double = removeCommaThousand(in_subtotal.Text)
@@ -374,11 +403,16 @@
         cb_sat.Text = ""
         cb_sat.DataSource.Clear()
         in_barang.Focus()
+
+        in_supplier_n.ReadOnly = True
+        cb_ppn.Enabled = False
     End Sub
 
     'GET DATA TO TEXTBOX FR DGV
     Private Sub dgvTotxt()
-        With dgv_barang.Rows(indexrow)
+        Dim _idx As Integer = 0
+        With dgv_barang.SelectedRows.Item(0)
+            _idx = .Index
             in_barang.Text = .Cells("kode").Value
             in_barang_nm.Text = .Cells("nama").Value
             in_qty.Value = .Cells("qty").Value
@@ -392,11 +426,18 @@
             in_discrp.Value = .Cells("discrp").Value
         End With
 
-        'countbiaya()
         in_qty.Focus()
         selectSupplier = in_supplier.Text
+        dgv_barang.Rows.RemoveAt(_idx)
+        countbiaya()
+
+        If dgv_barang.RowCount = 0 Then
+            in_supplier_n.ReadOnly = False
+            cb_ppn.Enabled = True
+        End If
     End Sub
 
+    'COUNT COST & VALUE
     Private Sub countbiaya()
         Dim pajak As Double = 0
         Dim x As Double = jumlahbiaya()
@@ -411,17 +452,15 @@
         y = x - diskon
         netto = y
 
-        If cb_ppn.SelectedValue = 0 Then
+        If cb_ppn.SelectedValue = 2 Then
             pajak = x * 0.1
             netto += pajak
         ElseIf cb_ppn.SelectedValue = 1 Then
-            'pajak = x - (x / 1.1)
             pajak = x * (1 - 10 / 11)
         Else
             pajak = 0
         End If
 
-        Dim aa As Double = netto - CDbl(in_klaim.Value)
         Dim cc As Globalization.CultureInfo = Globalization.CultureInfo.GetCultureInfo("id-ID")
         in_jumlah.Text = x.ToString("N2", cc)
         in_diskon.Text = commaThousand(diskon)
@@ -429,7 +468,7 @@
         in_total.Text = y.ToString("N2", cc)
         in_netto.Text = netto.ToString("N2", cc)
         in_klaim.Maximum = netto
-        in_total_netto.Text = aa.ToString("N2", cc)
+        in_total_netto.Text = (netto - CDbl(in_klaim.Value)).ToString("N2", cc)
     End Sub
 
     Private Function jumlahbiaya() As Double
@@ -1036,8 +1075,6 @@
             Else
                 indexrow = e.RowIndex
                 dgvTotxt()
-                dgv_barang.Rows.RemoveAt(indexrow)
-                countbiaya()
             End If
         End If
     End Sub

@@ -5,28 +5,79 @@
     Public supplier_sw As Boolean = False
     Public barang_sw As Boolean = True
     Public gudang_sw As Boolean = True
+    Private groupby_sw As Boolean = False
+
+    Private Sub SetForm(FrmType As String)
+        Select Case FrmType
+            Case "lapKartuStok", "lapStokMutasi", "lapPersediaanMutasi", "lapPersediaan", "lapStok"
+                barang_sw = True
+                gudang_sw = True
+                supplier_sw = False
+                groupby_sw = False
+            Case "lapStokSupplier"
+                lapwintext = "Laporan Stok Per Supplier"
+                barang_sw = True
+                gudang_sw = True
+                supplier_sw = True
+                groupby_sw = False
+            Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
+                If FrmType = "lapKartuPersediaan" Then
+                    lapwintext = "Laporan Rincian Persediaan"
+                ElseIf FrmType = "lapKartuPersediaanGudang" Then
+                    lapwintext = "Laporan Rincian Persediaan Per Gudang"
+                End If
+                barang_sw = True
+                gudang_sw = True
+                supplier_sw = False
+                groupby_sw = True
+
+                lbl_groupby.Location = lbl_supplier.Location
+                With cb_groupBy
+                    .Location = in_supplier.Location
+                    .DataSource = LoadGroupCombo(FrmType)
+                    .DisplayMember = "Text"
+                    .ValueMember = "Value"
+                    .SelectedValue = FrmType
+                End With
+        End Select
+
+        prcessSW()
+    End Sub
 
     Private Sub prcessSW()
-        'If supplier_sw = False Then
         lbl_supplier.Visible = supplier_sw
         in_supplier.Visible = supplier_sw
         in_supplier_n.Visible = supplier_sw
-        'End If
-        'If jenis_sw = False Then
+
         lbl_gudang.Visible = gudang_sw
         in_gudang.Visible = gudang_sw
         in_gudang_n.Visible = gudang_sw
-        'End If
-        'If barang_sw = False Then
+
         lbl_barang.Visible = barang_sw
         in_barang.Visible = barang_sw
         in_barang_n.Visible = barang_sw
-        'End If
+
+        lbl_groupby.Visible = groupby_sw
+        cb_groupBy.Visible = groupby_sw
 
         Me.Text = lapwintext
         bt_exportxl.Visible = IIf({"lapStokMutasi"}.Contains(laptype), False, True)
         bt_simpanbeli.Enabled = IIf({"lapOpname"}.Contains(laptype), False, True)
     End Sub
+
+    Private Function LoadGroupCombo(LapType As String) As DataTable
+        Dim dt As New DataTable
+        dt.Columns.Add("Text", GetType(String))
+        dt.Columns.Add("Value", GetType(String))
+
+        Select Case LapType
+            Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
+                dt.Rows.Add("Per Barang", "lapKartuPersediaan")
+                dt.Rows.Add("Per Gudang & Barang", "lapKartuPersediaanGudang")
+        End Select
+
+        Return dt
+    End Function
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
@@ -98,7 +149,7 @@
                                 & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {3} " _
                                 & "ORDER BY barang_kode"
         Dim qOpname As String = "SELECT faktur_bukti, faktur_tanggal, (CASE faktur_status " _
-                                & "WHEN 0 THEN 'PENDING' WHEN 1 THEN 'TERPROSES' WHEN 2 THEN 'BATAL' ELSE 'ERROR' END) 'status', " _
+                                & "WHEN 0 THEN 'PENDING' WHEN 1 THEN 'OK' WHEN 2 THEN 'BATAL' ELSE 'ERROR' END) 'status', " _
                                 & "faktur_gudang, gudang_nama, trans_barang, barang_nama, " _
                                 & "CONCAT(trans_qty_sys, trans_satuan) qty_sys, trans_hpp, trans_qty_fisik*trans_hpp nilai_sys, " _
                                 & "CONCAT(trans_qty_fisik,trans_satuan) qty_fisik, trans_hpp_fisik, trans_qty_fisik*trans_hpp_fisik nilai_fisik, " _
@@ -108,6 +159,33 @@
                                 & "LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON faktur_gudang=gudang_kode " _
                                 & "WHERE faktur_status IN (0,1,2) AND faktur_tanggal BETWEEN '{0}' AND '{1}' {2}"
+        Const qKartuStok As String = "SELECT barang_kode kartu_barang, barang_nama kartu_barang_n, gudang_kode kartu_gudang, gudang_nama kartu_gudang_n, " _
+                                     & "kartu_tgl, kartu_faktur, kartu_ket, kartu_ket2, kartu_qty_in, kartu_nilai_in, kartu_qty_out, kartu_nilai_out, " _
+                                     & "@qty:= IF(@stock!={0}, kartu_qty_in - kartu_qty_out, @qty+ kartu_qty_in - kartu_qty_out) kartu_qty_saldo, " _
+                                     & "@nilai:= ROUND(IF(@stock!={0},kartu_nilai_in-kartu_nilai_out,@nilai+ kartu_nilai_in-kartu_nilai_out)) kartu_nilai_saldo, " _
+                                     & "@stock:={0} kartu_stock " _
+                                     & "FROM( " _
+                                     & " SELECT barang_kode, barang_nama, gudang_kode, gudang_nama, " _
+                                     & " trans_id kartu_index, trans_tgl kartu_tgl, trans_faktur kartu_faktur, trans_ket kartu_ket, " _
+                                     & " (CASE WHEN trans_jenis IN ('po','rb') THEN supplier_nama " _
+                                     & "    WHEN trans_jenis IN ('so','rj') THEN customer_nama " _
+                                     & "    ELSE '' " _
+                                     & " END) kartu_ket2, " _
+                                     & " IF(trans_qty>0, trans_qty,0) kartu_qty_in, ROUND(IF(trans_qty>0,trans_nilai,0)) kartu_nilai_in, " _
+                                     & " IF(trans_qty<0,trans_qty*-1,0) kartu_qty_out, ROUND(IF(trans_qty<0,trans_nilai*-1,0)) kartu_nilai_out, " _
+                                     & " trans_stock " _
+                                     & " FROM data_stok_kartustok " _
+                                     & " LEFT JOIN data_barang_master ON barang_kode=SUBSTRING_INDEX(trans_stock,'-',-1) " _
+                                     & " LEFT JOIN data_barang_gudang ON gudang_kode=SUBSTRING_INDEX(trans_stock,'-',1) " _
+                                     & " LEFT JOIN data_pembelian_faktur beli ON trans_faktur=beli.faktur_kode " _
+                                     & " LEFT JOIN data_pembelian_retur_faktur rbeli ON trans_faktur=rbeli.faktur_kode_bukti " _
+                                     & " LEFT JOIN data_penjualan_faktur jual ON trans_faktur=jual.faktur_kode " _
+                                     & " LEFT JOIN data_penjualan_retur_faktur rjual ON trans_faktur=rjual.faktur_kode_bukti " _
+                                     & " LEFT JOIN data_supplier_master ON supplier_kode=beli.faktur_supplier OR supplier_kode=rbeli.faktur_supplier " _
+                                     & " LEFT JOIN data_customer_master ON customer_kode=jual.faktur_customer OR customer_kode=rjual.faktur_custo " _
+                                     & " WHERE trans_stock LIKE '{1}-{2}' AND trans_status=1 AND trans_tgl BETWEEN '{3}' AND '{4}'" _
+                                     & " ORDER BY {0},trans_tgl,trans_id " _
+                                     & ") detail JOIN(SELECT @stock:='', @qty:=0, @nilai:=0) param"
         Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
 
@@ -115,6 +193,13 @@
             Case "lapKartuStok"
                 q = "getDataKartuStok('{0}','{1}','{2}')"
                 q = String.Format(q, selectperiode.id, IIf(in_barang.Text = Nothing, "all", in_barang.Text), IIf(in_gudang.Text = Nothing, "all", in_gudang.Text))
+
+            Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
+                q = String.Format(qKartuStok, IIf(tipe = "lapKartuPersediaanGudang", "trans_stock", "barang_kode"),
+                                  IIf(String.IsNullOrWhiteSpace(in_gudang.Text), "%", in_gudang.Text),
+                                  IIf(String.IsNullOrWhiteSpace(in_barang.Text), "%", in_barang.Text),
+                                  _tglawal, _tglakhir
+                                  )
 
             Case "lapPersediaan", "lapStok", "lapStokSupplier"
                 If tipe = "lapPersediaan" Then
@@ -194,13 +279,22 @@
         Select Case type
             Case "lapKartuStok"
                 _colheader.AddRange({"KODE_STOCK", "IDX", "TANGGAL_TRANS", "KODE_BARANG", "NAMA_BARANG", "KODE_GUDANG", "NAMA_GUDANG", "REF_NO_TRANSAKSI",
-                                     "KETERANGAN", "KETERANGAN2", "DEBET", "KREDIT", "SALDO", "NILAI", "KODE_JENIS_TRANS"})
+                                     "KETERANGAN", "KETERANGAN2", "QTY_MASUK", "QTY_KELUAR", "SALDO", "NILAI", "KODE_JENIS_TRANS"})
                 _title = "Kartu Stok " & header
                 _filename = "KartuStok" & _datefile & ".xlsx"
+
+            Case "lapKartuPersediaan", "LapKartuPersediaanGudang"
+                _colheader.AddRange({"KODE_BARANG", "NAMA_BARANG", "KODE_GUDANG", "NAMA_GUDANG", "TGL_TRANSAKSI", "REF_NO_TRANSAKSI",
+                                     "KETERANGAN", "KETERANGAN2", "QTY_MASUK", "NILAI_MASUK", "QTY_KELUAR", "NILAI_KELUAR", "QTY_SALDO", "NILAI_SALDO", "ID"})
+
+                _title = "Rincian Persediaan" & header & IIf(type = "LapKartuPersediaanGudang", " Per Gudang", "")
+                _filename = "PersediaanRinci" & IIf(type = "LapKartuPersediaanGudang", "PerGudang", "") & _datefile & ".xlsx"
+
             Case "lapPersediaan"
                 _colheader.AddRange({"KODE_GUDANG", "NAMA_GUDANG", "KODE_BARANG", "NAMA_BARANG", "QTY_STOK", "DETAIL_QTY", "HPP_STOK", "NILAI_STOK"})
                 _title = "Laporan Persediaan Barang " & header
                 _filename = "PersediaanBarang" & _datefile & ".xlsx"
+
             Case "lapStok"
                 _colheader.AddRange({"KODE_GUDANG", "NAMA_GUDANG", "KODE_BARANG", "NAMA_BARANG", "QTY_STOK", "DETAIL_QTY"})
                 _title = "Laporan Stok Barang " & header
@@ -321,8 +415,9 @@
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
-        prcessSW()
+        SetForm(tipeLap)
         lbl_periodedata.Text = main.strip_periode.Text
+        ShowDialog(main)
     End Sub
 
     'LOAD LAPORAN
@@ -346,6 +441,12 @@
     End Sub
 
     'UI
+    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click
+        If popPnl_barang.Visible = True Then
+            popPnl_barang.Visible = False
+        End If
+    End Sub
+
     '------------- POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
         If Not in_supplier_n.Focused Or in_barang_n.Focused Or in_gudang_n.Focused Then
@@ -413,6 +514,7 @@
         date_tglawal.MaxDate = date_tglakhir.Value
     End Sub
 
+    'UI : TEXTBOX
     Private Sub in_supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier.KeyDown
         keyshortenter(in_supplier_n, e)
     End Sub
@@ -500,9 +602,13 @@
         loadDataBRGPopup("gudang", in_gudang_n.Text)
     End Sub
 
-    Private Sub fr_hutang_bayar_Click(sender As Object, e As EventArgs) Handles MyBase.Click
-        If popPnl_barang.Visible = True Then
-            popPnl_barang.Visible = False
-        End If
+    'UI : COMBO BOX
+    Private Sub cb_groupBy_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_groupBy.KeyPress
+        e.Handled = True
+    End Sub
+
+    Private Sub cb_groupBy_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_groupBy.SelectionChangeCommitted
+        laptype = cb_groupBy.SelectedValue
+        SetForm(cb_groupBy.SelectedValue)
     End Sub
 End Class

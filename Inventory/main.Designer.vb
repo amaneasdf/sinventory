@@ -24,8 +24,8 @@ Partial Class main
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(main))
         Me.SplitContainer = New System.Windows.Forms.SplitContainer()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.pic_company = New System.Windows.Forms.PictureBox()
+        Me.lbl_app = New System.Windows.Forms.Label()
         Me.tabcontrol = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.pnl_main = New System.Windows.Forms.Panel()
@@ -43,6 +43,7 @@ Partial Class main
         Me.SplitContainer.Panel1.SuspendLayout()
         Me.SplitContainer.Panel2.SuspendLayout()
         Me.SplitContainer.SuspendLayout()
+        CType(Me.pic_company, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.tabcontrol.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.Panel1.SuspendLayout()
@@ -63,8 +64,8 @@ Partial Class main
         '
         Me.SplitContainer.Panel1.BackColor = System.Drawing.Color.White
         Me.SplitContainer.Panel1.BackgroundImage = Global.Inventory.My.Resources.Resources.bg_stripes_gray
-        Me.SplitContainer.Panel1.Controls.Add(Me.Label12)
-        Me.SplitContainer.Panel1.Controls.Add(Me.Label2)
+        Me.SplitContainer.Panel1.Controls.Add(Me.pic_company)
+        Me.SplitContainer.Panel1.Controls.Add(Me.lbl_app)
         '
         'SplitContainer.Panel2
         '
@@ -73,30 +74,28 @@ Partial Class main
         Me.SplitContainer.SplitterDistance = 60
         Me.SplitContainer.TabIndex = 1
         '
-        'Label12
+        'pic_company
         '
-        Me.Label12.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label12.AutoSize = True
-        Me.Label12.BackColor = System.Drawing.Color.Transparent
-        Me.Label12.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label12.Location = New System.Drawing.Point(779, 15)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(183, 31)
-        Me.Label12.TabIndex = 137
-        Me.Label12.Text = "CV. Catra Upaya"
+        Me.pic_company.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pic_company.BackgroundImage = Global.Inventory.My.Resources.Resources.company_name
+        Me.pic_company.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.pic_company.Location = New System.Drawing.Point(742, 3)
+        Me.pic_company.Name = "pic_company"
+        Me.pic_company.Size = New System.Drawing.Size(224, 54)
+        Me.pic_company.TabIndex = 138
+        Me.pic_company.TabStop = False
         '
-        'Label2
+        'lbl_app
         '
-        Me.Label2.AutoSize = True
-        Me.Label2.BackColor = System.Drawing.Color.Transparent
-        Me.Label2.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label2.Location = New System.Drawing.Point(5, 15)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(119, 31)
-        Me.Label2.TabIndex = 137
-        Me.Label2.Text = "Inventory"
+        Me.lbl_app.AutoSize = True
+        Me.lbl_app.BackColor = System.Drawing.Color.Transparent
+        Me.lbl_app.Font = New System.Drawing.Font("Source Sans Pro", 18.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_app.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.lbl_app.Location = New System.Drawing.Point(5, 15)
+        Me.lbl_app.Name = "lbl_app"
+        Me.lbl_app.Size = New System.Drawing.Size(119, 31)
+        Me.lbl_app.TabIndex = 137
+        Me.lbl_app.Text = "Inventory"
         '
         'tabcontrol
         '
@@ -236,6 +235,7 @@ Partial Class main
         Me.SplitContainer.Panel2.ResumeLayout(False)
         CType(Me.SplitContainer, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainer.ResumeLayout(False)
+        CType(Me.pic_company, System.ComponentModel.ISupportInitialize).EndInit()
         Me.tabcontrol.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
@@ -252,14 +252,14 @@ Partial Class main
     Friend WithEvents strip_user As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_tgl As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents strip_host As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents Label12 As System.Windows.Forms.Label
     Friend WithEvents cal_front As System.Windows.Forms.MonthCalendar
     Friend WithEvents strip_periode As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents pnl_main As System.Windows.Forms.Panel
     Friend WithEvents ListView1 As System.Windows.Forms.ListView
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents lbl_app As System.Windows.Forms.Label
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents strip_status As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents bt_periode_main As System.Windows.Forms.Button
+    Friend WithEvents pic_company As System.Windows.Forms.PictureBox
 
 End Class

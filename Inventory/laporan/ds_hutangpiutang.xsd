@@ -99,6 +99,8 @@
               <xs:element name="psb_total" msprop:Generator_ColumnVarNameInTable="columnpsb_total" msprop:Generator_ColumnPropNameInRow="psb_total" msprop:Generator_ColumnPropNameInTable="psb_totalColumn" msprop:Generator_UserColumnName="psb_total" type="xs:double" minOccurs="0" />
               <xs:element name="psb_jenisbayar" msprop:Generator_ColumnVarNameInTable="columnpsb_jenisbayar" msprop:Generator_ColumnPropNameInRow="psb_jenisbayar" msprop:Generator_ColumnPropNameInTable="psb_jenisbayarColumn" msprop:Generator_UserColumnName="psb_jenisbayar" type="xs:string" minOccurs="0" />
               <xs:element name="psb_faktur" msprop:Generator_ColumnVarNameInTable="columnpsb_faktur" msprop:Generator_ColumnPropNameInRow="psb_faktur" msprop:Generator_ColumnPropNameInTable="psb_fakturColumn" msprop:Generator_UserColumnName="psb_faktur" type="xs:string" minOccurs="0" />
+              <xs:element name="psb_bukti" msprop:Generator_ColumnVarNameInTable="columnpsb_bukti" msprop:Generator_ColumnPropNameInRow="psb_bukti" msprop:Generator_ColumnPropNameInTable="psb_buktiColumn" msprop:Generator_UserColumnName="psb_bukti" type="xs:string" minOccurs="0" />
+              <xs:element name="psb_status" msprop:Generator_ColumnVarNameInTable="columnpsb_status" msprop:Generator_ColumnPropNameInRow="psb_status" msprop:Generator_ColumnPropNameInTable="psb_statusColumn" msprop:Generator_UserColumnName="psb_status" type="xs:string" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

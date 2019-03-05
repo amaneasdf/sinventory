@@ -79,7 +79,6 @@
         Dim q As String = ""
         Dim _ckUser As ckUserRes = checkuser(id, pass)
 
-        op_con()
         If _ckUser = ckUserRes.Invalid Then
             MessageBox.Show("Username/Password yang dimasukan salah", "Login " & Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
             salahlogin -= 1

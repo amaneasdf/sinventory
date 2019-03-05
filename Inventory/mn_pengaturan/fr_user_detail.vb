@@ -1,9 +1,80 @@
 ﻿Public Class fr_user_detail
     Private usrstatus As String = "1"
     Private _popUpPos As String = "sales"
+    Private formstate As InputState = InputState.Insert
 
+    Private Enum InputState
+        Insert
+        Edit
+    End Enum
 
+    'SETUP FORM
+    Private Sub SetUpForm(KodeUser As String, FormSet As InputState, AllowEdit As Boolean)
+        Const _tempTitle As String = "Detail User : xxxxxxxxx"
+
+        formstate = FormSet
+
+        With cb_group
+            .DataSource = getDataTablefromDB("SELECT group_kode, group_nama FROM data_pengguna_group WHERE group_status <> 9")
+            .DisplayMember = "group_nama"
+            .ValueMember = "group_kode"
+            .SelectedIndex = -1
+        End With
+
+        ControlSwitch(AllowEdit)
+
+        If Not FormSet = InputState.Insert Then
+            Me.Text += KodeUser
+            Me.lbl_title.Text += " : " & KodeUser
+            If Me.lbl_title.Text.Length > _tempTitle.Length Then
+                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            End If
+
+            loadDatauser(KodeUser)
+            For Each txt As TextBox In {in_userid, in_pass}
+                txt.ReadOnly = True
+                txt.BackColor = Color.Gainsboro
+            Next
+            mn_reset.Enabled = IIf(loggeduser.user_id <> in_userid.Text, AllowEdit, True)
+            bt_simpanuser.Text = "Update"
+        End If
+
+        'ck_pc_CheckStateChanged(Nothing, Nothing)
+        'ck_sales_CheckStateChanged(Nothing, Nothing)
+    End Sub
+
+    Private Sub ControlSwitch(AllowInput As Boolean)
+        For Each txt As TextBox In {in_email, in_telp, in_karyawan_nama, in_sales_n, in_userid, in_pass}
+            txt.ReadOnly = IIf(AllowInput, False, True)
+        Next
+        For Each ckbx As CheckBox In {ck_pc, ck_sales, ck_adminandro, ck_edit_akun, ck_edit_master, ck_edit_trans, ck_valid_akun, ck_valid_master,
+                                      ck_valid_trans, ck_admin_pc}
+            ckbx.Enabled = AllowInput
+        Next
+        cb_group.Enabled = AllowInput
+        bt_simpanuser.Enabled = AllowInput
+        mn_actdeact.Enabled = AllowInput
+        mn_save.Enabled = AllowInput
+    End Sub
+
+    Public Sub doLoadNew(Optional AllowInput As Boolean = True)
+        SetUpForm(Nothing, InputState.Insert, AllowInput)
+        Me.Show()
+        in_userid.Focus()
+    End Sub
+
+    Public Sub doLoadEdit(NoFaktur As String, AllowEdit As Boolean)
+        SetUpForm(NoFaktur, InputState.Edit, AllowEdit)
+        Me.Show()
+        in_email.Focus()
+    End Sub
+
+    'LOAD DATA
     Private Sub loadDatauser(kode As String)
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+
         Dim url As String = Nothing
         Dim q As String = "SELECT user_id,user_alias, user_nama, user_group, user_sales, user_sales_kode, salesman_nama, user_telp," _
                           & "(CASE " _
@@ -12,95 +83,72 @@
                           & " ELSE 'ERROR' END) AS salesman_jenis,user_pc,user_validasi_master, user_validasi_trans, user_gambar, user_email, " _
                           & "user_allowedit_master, user_allowedit_trans, IF(user_login_status=1,'ON','OFF') as user_login_status, " _
                           & "user_allowedit_akun, user_validasi_akun, user_admin_pc, " _
-                          & "user_login_terakhir, user_status, user_reg_date, user_reg_alias, user_upd_date, user_upd_alias " _
+                          & "DATE_FORMAT(user_login_terakhir,'%d/%m/%Y %H:%i:%S') user_login_terakhir, user_status, " _
+                          & "DATE_FORMAT(user_reg_date,'%d/%m/%Y %H:%i:%S') user_reg_date, IFNULL(user_reg_alias,'') user_reg_alias, " _
+                          & "DATE_FORMAT(user_upd_date,'%d/%m/%Y %H:%i:%S') user_upd_date, IFNULL(user_upd_alias,'') user_upd_alias " _
                           & "FROM data_pengguna_alias LEFT JOIN data_salesman_master ON salesman_kode=user_sales_kode " _
                           & "WHERE user_alias='{0}'"
 
-        op_con()
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            'general
-            in_kode.Text = rd.Item("user_id")
-            in_userid.Text = rd.Item("user_alias")
-            in_pass.Text = "***********************"
-            in_pass.UseSystemPasswordChar = True
-            in_karyawan_nama.Text = rd.Item("user_nama")
-            in_email.Text = rd.Item("user_email")
-            in_telp.Text = rd.Item("user_telp")
-            'PC
-            If rd.Item("user_pc") = 1 Then
-                ckPCSW(rd.Item("user_pc"))
-                'level
-                in_group_kode.Text = rd.Item("user_group")
-                cb_group.SelectedValue = rd.Item("user_group")
-                'privilege
-                If rd.Item("user_validasi_master") = 1 Then
-                    ck_valid_master.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_validasi_trans") = 1 Then
-                    ck_valid_trans.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_validasi_akun") = 1 Then
-                    ck_valid_akun.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_allowedit_trans") = 1 Then
-                    ck_edit_trans.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_allowedit_master") = 1 Then
-                    ck_edit_master.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_allowedit_akun") = 1 Then
-                    ck_edit_akun.CheckState = CheckState.Checked
-                End If
-                If rd.Item("user_admin_pc") = 1 Then
-                    ck_admin_pc.CheckState = CheckState.Checked
-                End If
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, kode))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        'general
+                        in_kode.Text = rdx.Item("user_id")
+                        in_userid.Text = rdx.Item("user_alias")
+                        in_pass.Text = "***********************"
+                        in_pass.UseSystemPasswordChar = True
+                        in_karyawan_nama.Text = rdx.Item("user_nama")
+                        in_email.Text = rdx.Item("user_email")
+                        in_telp.Text = rdx.Item("user_telp")
+                        'PC
+                        If rdx.Item("user_pc") = 1 Then
+                            ckPCSW(rdx.Item("user_pc"))
+                            'level
+                            in_group_kode.Text = rdx.Item("user_group")
+                            cb_group.SelectedValue = rdx.Item("user_group")
+                            'privilege
+                            If rdx.Item("user_validasi_master") = 1 Then ck_valid_master.CheckState = CheckState.Checked
+                            If rdx.Item("user_validasi_trans") = 1 Then ck_valid_trans.CheckState = CheckState.Checked
+                            If rdx.Item("user_validasi_akun") = 1 Then ck_valid_akun.CheckState = CheckState.Checked
+                            If rdx.Item("user_allowedit_trans") = 1 Then ck_edit_trans.CheckState = CheckState.Checked
+                            If rdx.Item("user_allowedit_master") = 1 Then ck_edit_master.CheckState = CheckState.Checked
+                            If rdx.Item("user_allowedit_akun") = 1 Then ck_edit_akun.CheckState = CheckState.Checked
+                            If rdx.Item("user_admin_pc") = 1 Then ck_admin_pc.CheckState = CheckState.Checked
+                        End If
+                        'sales
+                        If {1, 2}.Contains(rdx.Item("user_sales")) Then
+                            ckSalesSW(1)
+                            If rdx.Item("user_sales") = 1 Then
+                                ck_sales.CheckState = CheckState.Checked
+                            Else
+                                ck_adminandro.CheckState = CheckState.Checked
+                            End If
+                            in_sales.Text = rdx.Item("user_sales_kode")
+                            in_sales_n.Text = rdx.Item("salesman_nama")
+                            in_sales_t.Text = rdx.Item("salesman_jenis")
+                        End If
+                        'status
+                        usrstatus = rdx.Item("user_status")
+                        in_login_status.Text = rdx.Item("user_login_status")
+                        txtLastLogin.Text = rdx.Item("user_login_terakhir")
+                        'usrimg
+                        url = IIf(IsDBNull(rdx.Item("user_gambar")) = False, rdx.Item("user_gambar"), Nothing)
+                        'db
+                        txtRegdate.Text = rdx.Item("user_reg_date")
+                        txtRegAlias.Text = rdx.Item("user_reg_alias")
+                        txtUpdDate.Text = rdx.Item("user_upd_date")
+                        txtUpdAlias.Text = rdx.Item("user_upd_alias")
+                    End If
+                End Using
+                setStatus()
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", "Detail User", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
             End If
-            'sales
-            If {1, 2}.Contains(rd.Item("user_sales")) Then
-                ckSalesSW(1)
-                If rd.Item("user_sales") = 1 Then
-                    ck_sales.CheckState = CheckState.Checked
-                Else
-                    ck_adminandro.CheckState = CheckState.Checked
-                End If
-                in_sales.Text = rd.Item("user_sales_kode")
-                in_sales_n.Text = rd.Item("salesman_nama")
-                in_sales_t.Text = rd.Item("salesman_jenis")
-            End If
-            'status
-            usrstatus = rd.Item("user_status")
-            in_login_status.Text = rd.Item("user_login_status")
-            Try
-                txtLastLogin.Text = rd.Item("user_login_terakhir")
-            Catch ex As Exception
-                txtLastLogin.Text = "00/00/0000 00:00:00"
-            End Try
-            'usrimg
-            url = IIf(IsDBNull(rd.Item("user_gambar")) = False, rd.Item("user_gambar"), Nothing)
-            'db
-            txtRegdate.Text = rd.Item("user_reg_date")
-            txtRegAlias.Text = rd.Item("user_reg_alias")
-            Try
-                txtUpdDate.Text = rd.Item("user_upd_date")
-            Catch ex As Exception
-                txtUpdDate.Text = "00/00/0000 00:00:00"
-            End Try
-            txtUpdAlias.Text = rd.Item("user_upd_alias")
-            'txtExpDate.Text = rd.Item("user_exp_date")
-        End If
-
-        rd.Close()
-        setStatus()
-        'If url <> Nothing Then
-        '    pb_usrimg.Image = streamImgUrl(url)
-        'End If
-
-        If loggeduser.admin_pc = False Then
-            bt_simpanuser.Visible = False
-            mn_save.Enabled = False
-            bt_bataluser.Text = "Close"
-        End If
+        End Using
     End Sub
 
     Private Sub setStatus()
@@ -286,6 +334,7 @@
         Dim queryArr As New List(Of String)
         Dim queryCheck As Boolean = False
 
+        op_con()
         If MsgBox("Apakah yakin akan mereset password user ini?", MsgBoxStyle.YesNo, "Data User") = MsgBoxResult.Yes Then
             q = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), user_status=2, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
             queryArr.Add(String.Format(q, in_userid.Text, loggeduser.user_id))
@@ -359,33 +408,6 @@
     'DELETE
     Private Sub delData()
 
-    End Sub
-
-    'LOAD
-    Private Sub do_load()
-
-    End Sub
-
-    Private Sub fr_user_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        op_con()
-        With cb_group
-            .DataSource = getDataTablefromDB("select group_kode, group_nama from data_pengguna_group")
-            .DisplayMember = "group_nama"
-            .ValueMember = "group_kode"
-            .SelectedIndex = -1
-        End With
-
-        If bt_simpanuser.Text = "Update" Then
-            For Each txt As TextBox In {in_userid, in_pass}
-                With txt
-                    .ReadOnly = True
-                    .BackColor = Color.Gainsboro
-                End With
-            Next
-            loadDatauser(in_kode.Text)
-            mn_actdeact.Enabled = True
-            mn_reset.Enabled = True
-        End If
     End Sub
 
     'SAVE

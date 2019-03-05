@@ -12,11 +12,33 @@
 	-> (kecuali oleh user validator? dgn mengecek apakah transaksi sdh diproses pada proses selanjutnya atau belum)
 + pengelompokan menu berdasarkan fitur/kegunaan
 + setting user group menu yg bisa diberikan berdasarkan level pada user
-+ improve perhitungan penutupan periode agar lebih bisa dicontrol oleh user
++ improve perhitungan penutupan periode agar lebih bisa dikontrol oleh user
 + De/Activate entri stok yg tidak terpakai
 + Fix improve laporan/informasi giro
 + Input nilai awal saldo akun
 	-> (migrasi, no akun baru dg saldo <> 0)
+
+====================================================================================================================================
++ Android halaman utama isi info barang, info customer, info promo
++ Android search transaksi/tagihan berdasarkan QR
++ Android input customer
++ Jenis barang/produk pajak/non-pajak
+	[done]
++ Laporan keuangan dan lainnya berdasarkan jenis pajak, nonpajak, gabungan (Kat.A,B,C)
+	-> Neraca+LabaRugi 
+	-> Modal Disetor, biaya masuk pajak
++ Laporan labarugi akumulasi, range periode satu/lebih
++ Penambahan kolom utk pelaporan efaktur (kode_temp,tgl_trans_temp)
++ input informasi program/promo berjalan untuk admin
++ penggolongan/list barang yang bisa diorder oleh sales
++ prioritas utk customer one bill(satu faktur penjualan sampai lunas) atau tidak
+	-> di pc dan andro [PC : done]
+	-> notifikasi/peringatan ketika piutang belum lunas [done]
++ penggolongan gudang yg bisa diakses sales
++ Android penambahan input diskon pada order penjualan
+
++ penyesuaian input transasi(jenis pajak barang, dkk)
+
 
 optional:
 improve UI/UX -> (rearrange the layout, adding tooltip, improve validation feedback, etc etc. incl.points below)
@@ -31,3 +53,4 @@ level user -> power user dan priviledge nya
 
 info:
 qr uk.kertas 10,5*13 cm sementara
+ftp://17.5.16.21 uid:usr_ata pass:ata123!
