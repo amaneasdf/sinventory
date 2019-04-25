@@ -47,11 +47,11 @@
 
     'LOAD LIST FAKTUR
     Private Sub loadFaktur(param As String)
-        Dim query As String = "SELECT faktur_kode as kode, customer_nama as nama, faktur_tanggal_trans,faktur_netto, " _
-                              & "IF(faktur_draft_rekap='','N',faktur_draft_rekap) as faktur_draft_rekap, salesman_nama " _
-                              & "FROM data_penjualan_faktur INNER JOIN data_customer_master ON customer_kode=faktur_customer " _
+        Dim query As String = "SELECT faktur_kode as kode, GetMasterNama('custo',faktur_customer) as nama, faktur_tanggal_trans,faktur_netto, " _
+                              & "IF(IFNULL(faktur_draft_rekap,'')='','N',faktur_draft_rekap) as faktur_draft_rekap, salesman_nama " _
+                              & "FROM data_penjualan_faktur " _
                               & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
-                              & "WHERE faktur_sales IN ({0}) AND faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}'"
+                              & "WHERE faktur_sales IN ({0}) AND faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' LIMIT 2000"
         Dim _tglawal As String = date_faktur_awal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_faktur_akhir.Value.ToString("yyyy-MM-dd")
         Dim bs As New BindingSource
@@ -245,6 +245,32 @@
         End Try
     End Function
 
+    'DELETE DRAFT
+    Private Function deleteDraft() As Boolean
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main Connection is empty")
+        End If
+
+        Dim q As String = ""
+        Dim _retval As Boolean = False
+        Dim queryArr As New List(Of String)
+
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "UPDATE data_draft_faktur SET draft_status=9, draft_upd_date=NOW(), draft_upd_alias='{1}' WHERE draft_kode='{0}'"
+                queryArr.Add(String.Format(q, in_kode_draft.Text, loggeduser.user_id))
+
+                q = "UPDATE data_draft_nota SET nota_status=9 WHERE nota_draft='{0}'"
+                queryArr.Add(String.Format(q, in_kode_draft.Text))
+
+                _retval = x.TransactCommand(queryArr)
+            End If
+        End Using
+
+        Return _retval
+    End Function
+
     'CLEAR
     Private Sub ClearAll()
         For Each x As TextBox In {in_cari_faktur, in_cari_sales, in_caridraft, in_kode_draft}
@@ -295,26 +321,6 @@
 
         loadSales("")
         loadDraftList("")
-    End Sub
-
-    '------------- menu
-    Private Sub mn_tambah_Click(sender As Object, e As EventArgs) Handles mn_tambah.Click
-        If in_kode_draft.Text <> Nothing Then
-            If MessageBox.Show("Batalkan Input?", "Rekap Penjualan", MessageBoxButtons.YesNo) = DialogResult.No Then
-                Exit Sub
-            End If
-        End If
-        ClearAll()
-        date_tgl_trans.Focus()
-    End Sub
-
-    Private Sub mn_edit_Click(sender As Object, e As EventArgs) Handles mn_edit.Click
-        in_caridraft.Focus()
-        pnl_content.VerticalScroll.Value = pnl_content.VerticalScroll.Maximum
-    End Sub
-
-    Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
-        performRefresh()
     End Sub
 
     '----------------- cari
@@ -379,13 +385,13 @@
     Private Sub dgv_listfaktur_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_listfaktur.CellDoubleClick
         If e.RowIndex >= 0 Then
             list_row_faktur = e.RowIndex
-            bt_addfaktur.PerformClick()
+            addFaktur()
         End If
     End Sub
 
     Private Sub dgv_draftfaktur_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_draftfaktur.CellDoubleClick
-        If e.RowIndex > -1 And in_kode_draft.Text = Nothing Then
-            bt_remfaktur.PerformClick()
+        If e.RowIndex > -1 Then
+            removeFaktur()
         End If
     End Sub
 
@@ -410,11 +416,20 @@
     End Sub
 
     Private Sub bt_addfaktur_Click(sender As Object, e As EventArgs) Handles bt_addfaktur.Click
+        If dgv_listfaktur.SelectedRows.Count <= 1 Then
+            For Each ss As DataGridViewRow In dgv_listfaktur.Rows
+                ss.Selected = True
+            Next
+        End If
+        addFaktur()
+    End Sub
+
+    Private Sub addFaktur()
         With dgv_listfaktur
             For Each selected As DataGridViewRow In .SelectedRows
                 For Each rows As DataGridViewRow In dgv_draftfaktur.Rows
                     If rows.Cells("draft_faktur").Value = selected.Cells("list_faktur").Value Then
-                        Exit Sub
+                        Exit For
                     End If
                 Next
                 If selected.Cells("list_draft").Value = "N" Or selected.Cells("list_draft").Value = "" Then
@@ -446,6 +461,15 @@
     End Sub
 
     Private Sub bt_remfaktur_Click(sender As Object, e As EventArgs) Handles bt_remfaktur.Click
+        If dgv_draftfaktur.SelectedRows.Count <= 1 Then
+            For Each ss As DataGridViewRow In dgv_draftfaktur.Rows
+                ss.Selected = True
+            Next
+        End If
+        removeFaktur()
+    End Sub
+
+    Private Sub removeFaktur()
         With dgv_draftfaktur
             For Each selected As DataGridViewRow In .SelectedRows
                 For Each rows As DataGridViewRow In dgv_listfaktur.Rows
@@ -486,7 +510,7 @@
     '------------- cetak
     Private Sub bt_draft_barang_Click(sender As Object, e As EventArgs) Handles bt_draft_barang.Click
         If in_kode_draft.Text = Nothing Then
-            MessageBox.Show("Input/Pilih draft rekap penjualan salesman yang akan dicetak terlebih dahulu.", "Rekap Salesman", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Input/Pilih draft rekap penjualan salesman yang akan dicetak terlebih dahulu.", "Draft Rekap", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -500,7 +524,7 @@
 
     Private Sub bt_draft_nota_Click(sender As Object, e As EventArgs) Handles bt_draft_nota.Click
         If in_kode_draft.Text = Nothing Then
-            MessageBox.Show("Input/Pilih draft rekap penjualan salesman yang akan dicetak terlebih dahulu.", "Rekap Salesman", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Input/Pilih draft rekap penjualan salesman yang akan dicetak terlebih dahulu.", "Draft Rekap", MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -561,12 +585,47 @@
         End If
     End Sub
 
+    'UI : MENU
+    Private Sub mn_tambah_Click(sender As Object, e As EventArgs) Handles mn_tambah.Click
+        If in_kode_draft.Text <> Nothing Then
+            If MessageBox.Show("Batalkan Input?", "Rekap Penjualan", MessageBoxButtons.YesNo) = DialogResult.No Then
+                Exit Sub
+            End If
+        End If
+        ClearAll()
+        date_tgl_trans.Focus()
+    End Sub
+
+    Private Sub mn_edit_Click(sender As Object, e As EventArgs) Handles mn_edit.Click
+        in_caridraft.Focus()
+        pnl_content.VerticalScroll.Value = pnl_content.VerticalScroll.Maximum
+    End Sub
+
+    Private Sub mn_refresh_Click(sender As Object, e As EventArgs) Handles mn_refresh.Click
+        performRefresh()
+    End Sub
+
     Private Sub DraftBarangToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DraftBarangToolStripMenuItem.Click
         bt_draft_barang.PerformClick()
     End Sub
 
     Private Sub DraftNotaToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DraftNotaToolStripMenuItem.Click
         bt_draft_nota.PerformClick()
+    End Sub
+
+    Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
+        If Not String.IsNullOrWhiteSpace(in_kode_draft.Text) Then
+            If MessageBox.Show("Hapus Draft?", "Draft Rekap Penjualan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
+                If deleteDraft() Then
+                    MessageBox.Show("Draft berhasil di hapus.", "Draft Rekap Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    mn_refresh.PerformClick()
+                Else
+                    MessageBox.Show("Draft gagal di hapus.", "Draft Rekap Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            End If
+        Else
+            MessageBox.Show("Pilih draft rekap terlebih dahulu.", "Draft Rekap Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
     End Sub
 End Class
 

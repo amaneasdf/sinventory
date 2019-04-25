@@ -52,6 +52,8 @@ Public Class fr_import_data
                                    "customer_cp", "customer_nik", "customer_npwp", "customer_tanggal_pkp", "customer_pajak_nama", "customer_pajak_jabatan",
                                    "customer_pajak_alamat", "customer_max_piutang", "customer_term", "customer_reg_date", "customer_reg_alias"})
 
+            Case "master_custojenis"
+                _colData.AddRange({"customer_kode", "customer_jenis"})
             Case "trans_hutang"
                 _colData.AddRange({"hutang_kode", "hutang_tgl", "hutang_tgl_jt", "hutang_supplier", "hutang_reg_date", "hutang_reg_alias"})
             Case Else
@@ -70,7 +72,7 @@ Public Class fr_import_data
                     data.Add("'" & mysqlQueryFriendlyStringFeed(IIf(IsDBNull(_val), "", _val)) & "'")
                     If type = "master_barang" And i = 3 Then
                         i += 1
-                    ElseIf type = "trans_hutang" And i = 4 Then
+                    ElseIf (type = "trans_hutang" And i = 4) Or (type = "master_custojenis" And i = 2) Then
                         Exit For
                     End If
                 Next
@@ -164,6 +166,10 @@ Public Class fr_import_data
                             & "SET customer_kriteria_harga_jual=jenis_def_jual WHERE customer_kode='{0}'"
                         queryArr.Add(String.Format(q, row.Cells(1).Value))
 
+                    Case "master_custojenis"
+                        q = "UPDATE data_customer_master SET customer_jenis='{1}' WHERE customer_kode='{0}'"
+                        queryArr.Add(String.Format(q, row.Cells(1).Value, row.Cells(2).Value))
+
                     Case "trans_hutang"
                         q = "INSERT INTO data_supplier_master SET supplier_kode='{0}', supplier_nama='{1}', supplier_reg_date=NOW(), supplier_reg_alias='{2}' " _
                             & "ON DUPLICATE KEY UPDATE supplier_kode=supplier_kode"
@@ -212,6 +218,8 @@ Public Class fr_import_data
                 _columnCk.AddRange({"KODE_CUSTOMER", "KODE_JENIS", "KODE_AREA", "NAMA_CUSTOMER", "ALAMAT", "BLOK", "NOMOR", "RT", "RW", "KELURAHAN", "KECAMATAN",
                                      "KABUPATEN", "PASAR", "PROVINSI", "KODEPOS", "NO_TELP", "NO_FAX", "CONTACT_PERSON", "NIK", "NPWP", "TGL_PKP", "PAJAK_NAMA",
                                      "PAJAK_JABATAN", "PAJAK_ALAMAT", "MAX_PIUTANG", "DEFAULT_TERM"})
+            Case "master_custojenis"
+                _columnCk.AddRange({"KODE_CUSTOMER", "KODE_TIPE", "TIPE"})
             Case "trans_beli_fk"
                 _columnCk.AddRange({"FK", "NO_FAKTUR", "TGL_TRANSAKSI", "NO_FAKTUR_PAJAK", "TGL_PAJAK", "SURAT_JALAN", "KODE_SUPPLIER", "NAMA_SUPPLIER", "KODE_GUDANG",
                                      "NAMA_GUDANG", "JENIS_PPN", "TERM"})
@@ -262,6 +270,8 @@ Public Class fr_import_data
                 _colheader.AddRange({"KODE_CUSTOMER", "KODE_JENIS", "KODE_AREA", "NAMA_CUSTOMER", "ALAMAT", "BLOK", "NOMOR", "RT", "RW", "KELURAHAN", "KECAMATAN",
                                      "KABUPATEN", "PASAR", "PROVINSI", "KODEPOS", "NO_TELP", "NO_FAX", "CONTACT_PERSON", "NIK", "NPWP", "TGL_PKP", "PAJAK_NAMA",
                                      "PAJAK_JABATAN", "PAJAK_ALAMAT", "MAX_PIUTANG", "DEFAULT_TERM"})
+            Case "master_custojenis"
+                _colheader.AddRange({"KODE_CUSTOMER", "KODE_TIPE", "TIPE"})
             Case "trans_beli"
                 _colheader.AddRange({"FK", "NO_FAKTUR", "TGL_TRANSAKSI", "NO_FAKTUR_PAJAK", "TGL_PAJAK", "SURAT_JALAN", "KODE_SUPPLIER", "NAMA_SUPPLIER", "KODE_GUDANG",
                                      "NAMA_GUDANG", "JENIS_PPN", "TERM"})
@@ -388,6 +398,9 @@ Public Class fr_import_data
                 datatab = {pgsales}
             Case "master_customer"
                 msg = String.Format(msg, "customer")
+                datatab = {pgcusto}
+            Case "master_custojenis"
+                msg = String.Format(msg, "jenis customer")
                 datatab = {pgcusto}
             Case Else
                 Exit Sub

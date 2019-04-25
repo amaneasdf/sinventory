@@ -472,6 +472,7 @@ Module mdlControl
     Private beli_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "tanggal",
         .HeaderText = "Tanggal",
+        .DefaultCellStyle = dgvstyle_date,
         .Name = "tanggal",
         .ReadOnly = True,
         .Width = 100
@@ -1149,7 +1150,6 @@ Module mdlControl
                 setDoubleBuffered(frmmutasigudang.dgv_list, True)
                 setTabPageControl(type)
                 populateDGVUserCon(type, "", frmmutasigudang.dgv_list)
-                Console.WriteLine(pgmutasigudang.Name.ToString & "listcode")
                 With frmmutasigudang
                     .in_countdata.Text = .dgv_list.Rows.Count
                     .setpage(pgmutasigudang)
@@ -1206,9 +1206,12 @@ Module mdlControl
                 End With
             Case "exportEfak"
                 With frmexportEfak
-                    .loadFaktur()
+                    '.loadFaktur()
                     .setpage(pgexportEFak)
                 End With
+            Case "setbarangsales"
+                frmsalesbarang.performRefresh()
+                frmsalesbarang.setpage(pgsalesbarang)
             Case "group"
                 setListcode(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -1493,10 +1496,14 @@ Module mdlControl
                 Dim beli_tglinvoice = New DataGridViewColumn
                 Dim beli_status = New DataGridViewColumn
                 Dim beli_jenpajak = New DataGridViewColumn
+                Dim beli_it = New DataGridViewColumn
+                Dim beli_et = New DataGridViewColumn
                 beli_user = user_id.Clone()
                 beli_tglinvoice = beli_tgl.Clone()
                 beli_status = gudang_status.Clone()
                 beli_jenpajak = gudang_status.Clone()
+                beli_it = jual_tgl.Clone()
+                beli_et = jual_tgl.Clone()
 
                 beli_jenpajak.Width = 50
                 beli_jenpajak.Name = "jenpajak"
@@ -1506,16 +1513,25 @@ Module mdlControl
                 beli_jenpajak.DataPropertyName = "jenispajak"
                 beli_tglinvoice.DataPropertyName = "tanggalinvoice"
 
+                beli_it.Name = "beli_it"
+                beli_it.HeaderText = "InputDate"
+                beli_it.DataPropertyName = "regdate"
+
+                beli_et.Name = "beli_et"
+                beli_et.HeaderText = "LastEditDate"
+                beli_et.DataPropertyName = "upddate"
+
                 With frmpembelian
                     .print_sw = True
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .add_sw = IIf(selectperiode.closed = True, False, True)
                     .del_sw = False
+                    .delete_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .export_sw = True
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
                     Dim x As DataGridViewColumn() = {beli_faktur, beli_tgl, beli_tglinvoice, beli_status, beli_jenpajak, beli_supplier, beli_gudang, beli_pajak,
-                                                     beli_netto, beli_klaim, beli_total, beli_term, beli_user}
+                                                     beli_netto, beli_klaim, beli_total, beli_term, beli_it, beli_et, beli_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                     Next
@@ -1529,19 +1545,39 @@ Module mdlControl
                     Dim retur_beli_user = New DataGridViewColumn
                     Dim retur_jnsbyr = New DataGridViewColumn
                     Dim retur_status = New DataGridViewColumn
+                    Dim retur_jenpajak = New DataGridViewColumn
+                    Dim retur_it = New DataGridViewColumn
+                    Dim retur_et = New DataGridViewColumn
                     retur_beli_user = user_id.Clone()
                     retur_jnsbyr = hutang_jenis.Clone()
                     retur_status = gudang_status.Clone()
+                    retur_jenpajak = gudang_status.Clone()
+                    retur_it = jual_tgl.Clone()
+                    retur_et = jual_tgl.Clone()
+
+                    retur_jenpajak.Width = 50
+                    retur_jenpajak.Name = "jenpajak"
+                    retur_jenpajak.HeaderText = "Kat."
+                    retur_jenpajak.DataPropertyName = "jenispajak"
+
+                    retur_it.Name = "retur_it"
+                    retur_it.HeaderText = "InputDate"
+                    retur_it.DataPropertyName = "regdate"
+
+                    retur_et.Name = "retur_et"
+                    retur_et.HeaderText = "LastEditDate"
+                    retur_et.DataPropertyName = "upddate"
 
                     .print_sw = True
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .add_sw = IIf(selectperiode.closed = True, False, True)
                     .del_sw = False
+                    .delete_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .export_sw = True
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
-                    Dim x As DataGridViewColumn() = {retur_beli_bukti, retur_jnsbyr, retur_beli_faktur, retur_beli_tgl, retur_status, retur_beli_supplier,
-                                                     retur_beli_gudang, retur_beli_jml, retur_beli_user}
+                    Dim x As DataGridViewColumn() = {retur_beli_bukti, retur_jnsbyr, retur_jenpajak, retur_beli_faktur, retur_beli_tgl, retur_status, retur_beli_supplier,
+                                                     retur_beli_gudang, retur_beli_jml, retur_it, retur_et, retur_beli_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                         consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -1615,6 +1651,7 @@ Module mdlControl
                     .valid_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
                     .del_sw = False
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
+                    .delete_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .add_sw = IIf(selectperiode.closed = True, False, True)
 
                     Dim x As DataGridViewColumn() = {pesan_kode, pesan_tanggal, pesan_sales, pesan_custo, pesan_total, pesan_term, pesan_validstate,
@@ -1634,27 +1671,37 @@ Module mdlControl
                     Dim jual_user = New DataGridViewColumn
                     Dim jual_status = New DataGridViewColumn
                     Dim jual_jenpajak = New DataGridViewColumn
+                    Dim jual_it = New DataGridViewColumn
+                    Dim jual_et = New DataGridViewColumn
                     jual_user = user_id.Clone()
                     jual_status = gudang_status.Clone()
                     jual_jenpajak = gudang_status.Clone()
+                    jual_it = jual_tgl.Clone()
+                    jual_et = jual_tgl.Clone()
 
                     jual_jenpajak.Width = 50
                     jual_jenpajak.Name = "jenpajak"
                     jual_jenpajak.HeaderText = "Kat."
                     jual_jenpajak.DataPropertyName = "jenispajak"
+                    jual_it.HeaderText = "InputDate"
+                    jual_et.HeaderText = "LastEditDate"
+                    jual_it.Name = "jual_it"
+                    jual_et.Name = "jual_et"
+                    jual_it.DataPropertyName = "regdate"
+                    jual_et.DataPropertyName = "upddate"
 
                     .print_sw = True
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .add_sw = IIf(selectperiode.closed = True, False, True)
                     .del_sw = False
+                    .delete_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .export_sw = True
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
-                    Dim x As DataGridViewColumn() = {jual_faktur, jual_tgl, jual_status, jual_jenpajak, jual_custo, jual_sales, jual_pajak,
-                                                    jual_gudang, jual_netto, jual_klaim, jual_total, jual_term, jual_user}
+                    Dim x As DataGridViewColumn() = {jual_faktur, jual_tgl, jual_status, jual_jenpajak, jual_term, jual_custo, jual_sales, jual_pajak,
+                                                    jual_gudang, jual_netto, jual_klaim, jual_total, jual_it, jual_et, jual_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
-                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                     Next
 
                     .dgv_list.AutoGenerateColumns = False
@@ -1668,24 +1715,41 @@ Module mdlControl
                     Dim retur_jual_jml = New DataGridViewColumn
                     Dim retur_jnsbyr = New DataGridViewColumn
                     Dim retur_status = New DataGridViewColumn
+                    Dim retur_jenpajak = New DataGridViewColumn
+                    Dim retur_it = New DataGridViewColumn
+                    Dim retur_et = New DataGridViewColumn
                     retur_jual_gudang = retur_beli_gudang.Clone()
                     retur_jual_user = user_id.Clone()
                     retur_jual_jml = retur_beli_jml.Clone()
                     retur_jnsbyr = hutang_jenis.Clone()
                     retur_status = gudang_status.Clone()
+                    retur_jenpajak = gudang_status.Clone()
+                    retur_it = jual_tgl.Clone()
+                    retur_et = jual_tgl.Clone()
+
+                    retur_jenpajak.Width = 50
+                    retur_jenpajak.Name = "jenpajak"
+                    retur_jenpajak.HeaderText = "Kat."
+                    retur_jenpajak.DataPropertyName = "jenispajak"
+                    retur_it.HeaderText = "InputDate"
+                    retur_et.HeaderText = "LastEditDate"
+                    retur_it.Name = "retur_it"
+                    retur_et.Name = "retur_et"
+                    retur_it.DataPropertyName = "regdate"
+                    retur_et.DataPropertyName = "upddate"
 
                     .print_sw = True
                     .cancel_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .add_sw = IIf(selectperiode.closed = True, False, True)
                     .del_sw = False
+                    .delete_sw = IIf(selectperiode.closed = False, loggeduser.allowedit_transact, False)
                     .export_sw = True
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
-                    Dim x As DataGridViewColumn() = {retur_jual_bukti, retur_jnsbyr, retur_jual_faktur, retur_status, retur_jual_tgl, retur_jual_sales,
-                                                     retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_jual_user}
+                    Dim x As DataGridViewColumn() = {retur_jual_bukti, retur_jnsbyr, retur_jenpajak, retur_jual_faktur, retur_status, retur_jual_tgl, retur_jual_sales,
+                                                     retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_it, retur_et, retur_jual_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
-                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                     Next
 
                     .dgv_list.AutoGenerateColumns = False
@@ -1708,7 +1772,7 @@ Module mdlControl
                     stok_kode.Visible = False
                     stok_kode.DataPropertyName = "stock_kode"
 
-                    .edit_sw = False
+                    .edit_sw = True
                     .del_sw = False
                     .add_sw = False
 
@@ -1717,13 +1781,13 @@ Module mdlControl
                                                          stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname, stok_sisaop}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
-                            consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                         Next
 
                         .AutoGenerateColumns = False
                         .Columns.AddRange(x)
                     End With
                 End With
+
             Case "mutasigudang"
                 With frmmutasigudang
                     With .dgv_list
@@ -1733,23 +1797,44 @@ Module mdlControl
                         Dim mutasig_tgl = New DataGridViewColumn()
                         Dim mutasig_id = New DataGridViewColumn()
                         Dim mutasig_status = New DataGridViewColumn()
+                        Dim mutasig_jenpajak = New DataGridViewColumn
+                        Dim mutasig_it = New DataGridViewColumn
+                        Dim mutasig_et = New DataGridViewColumn
                         mutasig_gudang_tujuan = mutasi_gudang_tujuan.Clone()
                         mutasig_gudang_asal = mutasi_gudang_asal.Clone()
-                        mutasig_user = mutasi_id.Clone()
+                        mutasig_user = user_id.Clone()
                         mutasig_tgl = mutasi_tgl.Clone()
                         mutasig_id = mutasi_id.CLone()
                         mutasig_status = gudang_status.Clone()
+                        mutasig_jenpajak = gudang_status.Clone()
+                        mutasig_it = jual_tgl.Clone()
+                        mutasig_et = jual_tgl.Clone()
 
-                        Dim x As DataGridViewColumn() = {mutasig_id, mutasig_tgl, mutasig_gudang_asal, mutasig_gudang_tujuan, mutasig_status, mutasig_user}
+                        mutasig_jenpajak.Width = 50
+                        mutasig_jenpajak.Name = "jenpajak"
+                        mutasig_jenpajak.HeaderText = "Kat."
+                        mutasig_jenpajak.DataPropertyName = "jenispajak"
+
+                        mutasig_it.Name = "retur_it"
+                        mutasig_it.HeaderText = "InputDate"
+                        mutasig_it.DataPropertyName = "regdate"
+
+                        mutasig_et.Name = "retur_et"
+                        mutasig_et.HeaderText = "LastEditDate"
+                        mutasig_et.DataPropertyName = "upddate"
+
+
+                        Dim x As DataGridViewColumn() = {mutasig_id, mutasig_tgl, mutasig_jenpajak, mutasig_gudang_asal, mutasig_gudang_tujuan, mutasig_status,
+                                                         mutasig_it, mutasig_et, mutasig_user}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
-                            consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
                         Next
 
                         .AutoGenerateColumns = False
                         .Columns.AddRange(x)
                     End With
                 End With
+
             Case "mutasistok"
                 With frmmutasistok
                     With .dgv_list
@@ -1757,6 +1842,7 @@ Module mdlControl
                         Dim mutasis_id = New DataGridViewColumn()
                         Dim mutasis_tgl = New DataGridViewColumn()
                         Dim mutasis_gudang = New DataGridViewColumn()
+                        Dim mutasis_jenpajak = New DataGridViewColumn
                         Dim mutasis_et = New DataGridViewColumn()
                         Dim mutasis_it = New DataGridViewColumn()
                         Dim mutasis_status = New DataGridViewColumn()
@@ -1767,6 +1853,12 @@ Module mdlControl
                         mutasis_et = mutasi_tgl.Clone()
                         mutasis_it = mutasi_tgl.Clone()
                         mutasis_status = gudang_status.Clone()
+                        mutasis_jenpajak = gudang_status.Clone()
+
+                        mutasis_jenpajak.Width = 50
+                        mutasis_jenpajak.Name = "jenpajak"
+                        mutasis_jenpajak.HeaderText = "Kat."
+                        mutasis_jenpajak.DataPropertyName = "jenispajak"
 
                         mutasis_it.Name = "mutasis_it"
                         mutasis_et.Name = "mutasis_et"
@@ -1775,7 +1867,7 @@ Module mdlControl
                         mutasis_it.HeaderText = "InputDate"
                         mutasis_et.HeaderText = "LastEditDate"
 
-                        Dim x As DataGridViewColumn() = {mutasis_id, mutasis_tgl, mutasis_gudang, mutasis_status, mutasis_it, mutasis_et, mutasis_user}
+                        Dim x As DataGridViewColumn() = {mutasis_id, mutasis_jenpajak, mutasis_tgl, mutasis_gudang, mutasis_status, mutasis_it, mutasis_et, mutasis_user}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                             consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -1795,14 +1887,33 @@ Module mdlControl
                         Dim mutasiop_gudang = New DataGridViewColumn()
                         Dim mutasiop_proses = New DataGridViewColumn()
                         Dim mutasiop_status = New DataGridViewColumn()
+                        Dim mutasiop_jenpajak = New DataGridViewColumn
+                        Dim mutasiop_et = New DataGridViewColumn()
+                        Dim mutasiop_it = New DataGridViewColumn()
                         mutasiop_user = user_id.Clone()
                         mutasiop_id = mutasi_id.Clone()
                         mutasiop_tgl = mutasi_tgl.Clone()
                         mutasiop_gudang = mutasi_gudang.Clone()
                         mutasiop_proses = mutasi_proses.Clone()
                         mutasiop_status = gudang_status.Clone()
+                        mutasiop_jenpajak = gudang_status.Clone()
+                        mutasiop_et = mutasi_tgl.Clone()
+                        mutasiop_it = mutasi_tgl.Clone()
 
-                        Dim x As DataGridViewColumn() = {mutasiop_id, mutasiop_tgl, mutasiop_gudang, mutasiop_status, mutasiop_user, mutasiop_proses}
+                        mutasiop_jenpajak.Width = 50
+                        mutasiop_jenpajak.Name = "jenpajak"
+                        mutasiop_jenpajak.HeaderText = "Kat."
+                        mutasiop_jenpajak.DataPropertyName = "jenispajak"
+
+                        mutasiop_it.Name = "mutasis_it"
+                        mutasiop_et.Name = "mutasiop_et"
+                        mutasiop_it.DataPropertyName = "regdate"
+                        mutasiop_et.DataPropertyName = "upddate"
+                        mutasiop_it.HeaderText = "InputDate"
+                        mutasiop_et.HeaderText = "LastEditDate"
+
+                        Dim x As DataGridViewColumn() = {mutasiop_id, mutasiop_tgl, mutasiop_gudang, mutasiop_status, mutasiop_proses, mutasiop_user,
+                                                         mutasiop_it, mutasiop_et}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                             consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -1822,6 +1933,7 @@ Module mdlControl
                     Dim hutang_term = New DataGridViewColumn()
                     Dim hutang_pending = New DataGridViewColumn()
                     Dim hutang_giro_awal = New DataGridViewColumn()
+                    Dim hutang_jenpajak = New DataGridViewColumn()
                     hutang_faktur = beli_faktur.Clone()
                     hutang_tgl = beli_tgl.Clone()
                     hutang_supplier = beli_supplier.Clone()
@@ -1829,7 +1941,12 @@ Module mdlControl
                     hutang_term = beli_term.Clone()
                     hutang_pending = hutang_bayar.Clone()
                     hutang_giro_awal = hutang_awal.Clone()
+                    hutang_jenpajak = gudang_status.Clone()
 
+                    hutang_jenpajak.Width = 50
+                    hutang_jenpajak.Name = "jenpajak"
+                    hutang_jenpajak.HeaderText = "Kat."
+                    hutang_jenpajak.DataPropertyName = "hutang_kat"
                     hutang_pending.Name = "hutang_giro"
                     hutang_pending.DataPropertyName = "hutang_giro"
                     hutang_pending.HeaderText = "Giro"
@@ -1844,7 +1961,7 @@ Module mdlControl
                     .mn_edit.Text = "Tampilkan Detail"
                     '.bayar_sw = False
 
-                    Dim x As DataGridViewColumn() = {hutang_faktur, hutang_tgl, hutang_supplier, hutang_term, hutang_status, hutang_awal, hutang_hutang,
+                    Dim x As DataGridViewColumn() = {hutang_faktur, hutang_tgl, hutang_supplier, hutang_jenpajak, hutang_term, hutang_status, hutang_awal, hutang_hutang,
                                                      hutang_retur, hutang_bayar, hutang_sisa, hutang_giro_awal, hutang_pending}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
@@ -1865,6 +1982,7 @@ Module mdlControl
                     Dim hutang_et = New DataGridViewColumn()
                     Dim hutang_user = New DataGridViewColumn()
                     Dim hutang_status = New DataGridViewColumn()
+                    Dim hutang_jenpajak = New DataGridViewColumn()
                     hutang_bukti = retur_beli_bukti.Clone()
                     hutang_tgl = beli_tgl.Clone()
                     hutang_supplier = beli_supplier.Clone()
@@ -1872,7 +1990,12 @@ Module mdlControl
                     hutang_et = piutang_et.Clone()
                     hutang_user = user_id.Clone()
                     hutang_status = gudang_status.Clone()
+                    hutang_jenpajak = gudang_status.Clone()
 
+                    hutang_jenpajak.Width = 50
+                    hutang_jenpajak.Name = "jenpajak"
+                    hutang_jenpajak.HeaderText = "Kat."
+                    hutang_jenpajak.DataPropertyName = "bayar_kat"
                     hutang_tgl.HeaderText = "Tgl. Pembayaran"
 
                     .print_sw = False
@@ -1881,7 +2004,7 @@ Module mdlControl
                     .del_sw = False
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
-                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_jenis,
+                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_supplier, hutang_debet, hutang_jenis, hutang_jenpajak,
                                                      hutang_status, hutang_it, hutang_et, hutang_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
@@ -1891,6 +2014,7 @@ Module mdlControl
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
                 End With
+
             Case "hutangbgo"
                 With frmhutangbgo
                     Dim hutangbgo_kode = New DataGridViewColumn()
@@ -1954,6 +2078,7 @@ Module mdlControl
                     Dim piutang_term = New DataGridViewColumn()
                     Dim piutang_pending = New DataGridViewColumn()
                     Dim piutang_giro_awal = New DataGridViewColumn()
+                    Dim piutang_jenpajak = New DataGridViewColumn()
                     piutang_faktur = beli_faktur.Clone()
                     piutang_tgl = beli_tgl.Clone()
                     piutang_custo = jual_custo.Clone()
@@ -1962,7 +2087,12 @@ Module mdlControl
                     piutang_term = beli_term.Clone()
                     piutang_pending = piutang_bayar.Clone()
                     piutang_giro_awal = piutang_awal.Clone()
+                    piutang_jenpajak = gudang_status.Clone()
 
+                    piutang_jenpajak.Width = 50
+                    piutang_jenpajak.Name = "jenpajak"
+                    piutang_jenpajak.HeaderText = "Kat."
+                    piutang_jenpajak.DataPropertyName = "piutang_kat"
                     piutang_pending.Name = "piutang_giro"
                     piutang_pending.DataPropertyName = "piutang_giro"
                     piutang_pending.HeaderText = "Giro"
@@ -1979,8 +2109,9 @@ Module mdlControl
                     .mn_edit.Text = "Tampilkan Detail"
                     '.bayar_sw = False
 
-                    Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_status, piutang_term, piutang_tempo, piutang_sales, piutang_awal,
-                                                    piutang_piutang, piutang_retur, piutang_bayar, piutang_sisa, piutang_giro_awal, piutang_pending, piutang_lunas}
+                    Dim x As DataGridViewColumn() = {piutang_faktur, piutang_tgl, piutang_custo, piutang_jenpajak, piutang_status, piutang_term, piutang_tempo,
+                                                     piutang_sales, piutang_awal, piutang_piutang, piutang_retur, piutang_bayar, piutang_sisa, piutang_giro_awal,
+                                                     piutang_pending, piutang_lunas}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
                         consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
@@ -2001,6 +2132,7 @@ Module mdlControl
                     Dim piutang_status = New DataGridViewColumn()
                     Dim piutang_jenis = New DataGridViewColumn()
                     Dim piutang_andro = New DataGridViewColumn()
+                    Dim piutang_jenpajak = New DataGridViewColumn()
                     piutang_bukti = retur_beli_bukti.Clone()
                     piutang_tgl = beli_tgl.Clone()
                     piutang_sales = jual_sales.Clone()
@@ -2010,7 +2142,12 @@ Module mdlControl
                     piutang_status = gudang_status.Clone()
                     piutang_jenis = hutang_jenis.Clone()
                     piutang_andro = gudang_status.Clone()
+                    piutang_jenpajak = gudang_status.Clone()
 
+                    piutang_jenpajak.Width = 50
+                    piutang_jenpajak.Name = "jenpajak"
+                    piutang_jenpajak.HeaderText = "Kat."
+                    piutang_jenpajak.DataPropertyName = "bayar_kat"
                     piutang_tgl.HeaderText = "Tanggal Pembayaran"
                     piutang_debet.HeaderText = "Total Pembayaran"
                     piutang_andro.HeaderText = "InputFrom"
@@ -2025,7 +2162,7 @@ Module mdlControl
                     .del_sw = False
                     .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
-                    Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_custo, piutang_sales, piutang_debet, piutang_jenis,
+                    Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_custo, piutang_sales, piutang_debet, piutang_jenpajak, piutang_jenis,
                                                      piutang_status, piutang_andro, piutang_it, piutang_et, piutang_user}
                     For i = 0 To x.Count - 1
                         x(i).DisplayIndex = i
@@ -2173,6 +2310,7 @@ Module mdlControl
                     Dim jurnal_u_tgl = New DataGridViewColumn()
                     Dim jurnal_u_bukti = New DataGridViewColumn()
                     Dim jurnal_u_ref = New DataGridViewColumn()
+                    Dim jurnal_u_jenpajak = New DataGridViewColumn()
 
                     jurnal_u_id = gudang_kode.Clone()
                     jurnal_u_bukti = jual_faktur.Clone()
@@ -2180,6 +2318,12 @@ Module mdlControl
                     jurnal_u_debet = hutang_debet.Clone()
                     jurnal_u_kredit = hutang_kredit.Clone()
                     jurnal_u_ref = group_ket.Clone()
+                    jurnal_u_jenpajak = gudang_status.Clone()
+
+                    jurnal_u_jenpajak.Width = 50
+                    jurnal_u_jenpajak.Name = "jenpajak"
+                    jurnal_u_jenpajak.HeaderText = "Kat."
+                    jurnal_u_jenpajak.DataPropertyName = "jenispajak"
 
                     jurnal_u_id.HeaderText = "ID"
                     jurnal_u_bukti.HeaderText = "Kode Transaksi"
@@ -2203,7 +2347,8 @@ Module mdlControl
                     .mn_edit.Text = "Lihat Detail"
 
                     With .dgv_list
-                        Dim x As DataGridViewColumn() = {jurnal_u_id, jurnal_u_tgl, jurnal_u_bukti, jurnal_u_jenis, jurnal_u_debet, jurnal_u_kredit, jurnal_u_ref}
+                        Dim x As DataGridViewColumn() = {jurnal_u_id, jurnal_u_jenpajak, jurnal_u_tgl, jurnal_u_bukti, jurnal_u_jenis, jurnal_u_debet, jurnal_u_kredit,
+                                                         jurnal_u_ref}
                         For i = 0 To x.Count - 1
                             x(i).DisplayIndex = i
                         Next
@@ -2285,6 +2430,8 @@ Module mdlControl
         Dim p As String = ""
         Dim colsort As DataGridViewColumn
         Dim dirsort As System.ComponentModel.ListSortDirection
+        Dim _tglawal As String = selectperiode.tglawal.ToString("yyyy-MM-dd")
+        Dim _tglakhir As String = selectperiode.tglakhir.ToString("yyyy-MM-dd")
 
         Select Case type
 
@@ -2309,10 +2456,10 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "custo"
-                q = "getDataMaster('custo','" & param & "')"
+                q = "CALL getDataMaster('custo','" & param & "')"
                 p = "nama LIKE '{0}%' OR kode LIKE '{0}%' OR tipe LIKE '{0}%' OR alamat LIKE '{0}%' OR kec LIKE '{0}%' OR kab LIKE '{0}%' OR pasar LIKE '{0}%' " _
                     & "OR telp LIKE '{0}%' OR fax LIKE '{0}%'"
-                bs = populateDGVUserConTemp(q, String.Format(p, param))
+                bs = populateDGVUserConTemp(q, "")
 
                 colsort = dgv.Columns(1)
                 dirsort = System.ComponentModel.ListSortDirection.Ascending
@@ -2336,26 +2483,28 @@ Module mdlControl
                 Exit Sub
 
             Case "beli"
-                q = "getTableTrans('beli','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR tanggalinvoice LIKE '{0}%' OR supplier LIKE '{0}%'"
-                Dim pNumeric As String = "term={0} OR total={0}"
+                q = "getTableTrans('beli','{0}','{1}','{2}')"
+                q = String.Format(q, _tglawal, _tglakhir, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "returbeli"
-                q = "getTableTrans('rbeli','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "bukti LIKE '{0}%' OR faktur LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR supplier LIKE '{0}%'"
-                Dim pNumeric As String = "jumlah={0}"
+                q = "getTableTrans('rbeli','{0}','{1}','{2}')"
+                q = String.Format(q, _tglawal, _tglakhir, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "pesanan"
-                q = "getTableTrans('pesanan','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '%{0}%' OR tanggal LIKE '%{0}%' OR custo LIKE '%{0}%' OR valid_date LIKE '%{0}%' " _
-                                         & "OR input_source LIKE '{0}%' OR term LIKE '{0}%'"
-                Dim pNumeric As String = "total={0}"
+                q = "CALL getTableTrans('pesanan','{0}','{1}','{2}')"
+                q = String.Format(q, _tglawal, _tglakhir, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
@@ -2365,17 +2514,19 @@ Module mdlControl
                 'Exit Sub
 
             Case "jual"
-                q = "getTableTrans('jual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR pajak LIKE '{0}%' OR status LIKE '{0}%'"
-                Dim pNumeric As String = "bayar={0} OR total={0} OR term={0} OR klaim={0}"
+                q = "getTableTrans('jual','{0}','{1}','{2}')"
+                q = String.Format(q, _tglawal, _tglakhir, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "returjual"
-                q = "getTableTrans('rjual','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"
-                Dim pDefault As String = "bukti LIKE '{0}%' OR sales LIKE '{0}%' OR gudang LIKE '{0}%' OR tanggal LIKE '{0}%' OR custo LIKE '{0}%' OR faktur LIKE '{0}%'"
-                Dim pNumeric As String = "jumlah={0}"
+                q = "getTableTrans('rjual','{0}','{1}','{2}')"
+                q = String.Format(q, _tglawal, _tglakhir, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
@@ -2390,91 +2541,94 @@ Module mdlControl
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "mutasigudang"
-                q = "getDataStockTransTable('mutasigudang','" & selectperiode.id & "')"
-                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR gudang2 LIKE '{0}%' OR userid LIKE '{0}%'"
+                q = "getDataStockTransTable('mutasigudang','{0}','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
                 Dim pNumeric As String = ""
-                p = pAlphabet
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "mutasistok"
-                q = "getDataStockTransTable('mutasibarang','" & selectperiode.id & "')"
-                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR userid LIKE '{0}%'"
+                q = "getDataStockTransTable('mutasibarang','{0}','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
                 Dim pNumeric As String = ""
-                p = pAlphabet
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "stockop"
-                q = "getDataStockTransTable('stockop','" & selectperiode.id & "')"
-                Dim pAlphabet As String = "kode LIKE '{0}%' OR tanggal LIKE '{0}%' OR gudang LIKE '{0}%' OR userid LIKE '{0}%'"
+                q = "getDataStockTransTable('stockop','{0}','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
                 Dim pNumeric As String = ""
-                p = pAlphabet
+                p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "hutangawal"
-                q = "getDataHutangTable('" & selectperiode.id & "','awal')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR supplier LIKE '{0}%' OR tanggal LIKE '{0}%'"
+                q = "getDataHutangTable('{0}','awal','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
                 Dim pNumeric As String = "hutang_sisa={0} OR term={0}"
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "hutangbayar"
-                q = "getDataHutangTable('" & selectperiode.id & "','bayar')"
-                Dim pDefault As String = "bukti LIKE '{0}%' OR supplier LIKE '{0}%' OR jenisbayar LIKE '{0}%' OR userid LIKE '{0}%' OR tanggal LIKE '{0}%'"
-                Dim pNumeric As String = "debet={0}"
+                q = "getDataHutangTable('{0}','bayar','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "hutangbgo"
-                q = "getDataHutangTable('" & selectperiode.id & "','bgo')"
-                Dim pDefault As String = "giro_no LIKE '%{0}%' OR giro_bank_n LIKE '%{0}%' OR supplier LIKE '%{0}%' OR status LIKE '%{0}%' OR bukti LIKE '%{0}%' " _
-                                         & "OR giro_tglterima LIKE '%{0}%' OR giro_tglefektif LIKE '%{0}%' OR giro_tglcair LIKE '%{0}%' OR giro_cair_user LIKE '%{0}%' " _
-                                         & "OR giro_tgltolak LIKE '%{0}%' OR userid LIKE '%{0}%'"
-                Dim pNumeric As String = "giro_nilai={0}"
+                q = "getDataHutangTable('{0}','bgo','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
-                consoleWriteLine(q)
-
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
-                'Exit Sub
 
             Case "piutangawal"
-                q = "getDataPiutangTable('" & selectperiode.id & "','awal')"
-                Dim pDefault As String = "faktur LIKE '{0}%' OR custo LIKE '{0}%' OR status LIKE '%{0}%'"
-                Dim pNumeric As String = "piutang_sisa={0}"
+                q = "getDataPiutangTable('{0}','awal','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "piutangbayar"
-                q = "getDataPiutangTable('" & selectperiode.id & "','bayar')"
-                Dim pDefault As String = "bukti LIKE '{0}%' OR custo LIKE '{0}%' OR sales LIKE '{0}%' OR tanggal LIKE '{0}%' OR jenisbayar LIKE '{0}%' OR userid LIKE '{0}%'"
-                Dim pNumeric As String = "debet={0}"
+                q = "getDataPiutangTable('{0}','bayar','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "piutangbgcair"
-                q = "getDataPiutangTable('" & selectperiode.id & "','bgi')"
-                Dim pDefault As String = "giro_no LIKE '%{0}%' OR giro_bank LIKE '%{0}%' OR custo LIKE '%{0}%' OR sales LIKE '%{0}%' OR bukti LIKE '%{0}%' " _
-                                         & "OR giro_tglterima LIKE '%{0}%' OR giro_tglefektif LIKE '%{0}%' OR giro_tglcair LIKE '%{0}%' OR giro_cair_user LIKE '%{0}%' " _
-                                         & "OR giro_tgltolak LIKE '%{0}%' OR userid LIKE '%{0}%'"
-                Dim pNumeric As String = "giro_nilai={0}"
+                q = "getDataPiutangTable('{0}','bgi','{1}')"
+                q = String.Format(q, selectperiode.id, param)
+                Dim pDefault As String = ""
+                Dim pNumeric As String = ""
                 p = IIf(IsNumeric(param), pNumeric, pDefault)
 
                 bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "piutangbgtolak"
-                q = "getDataPiutangTable('" & selectperiode.id & "','bgitolak')"
-                Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tgltolak LIKE '{0}%'"
-                Dim pNumeric As String = "jml={0}"
-                p = IIf(IsNumeric(param), pNumeric, pDefault)
+                Exit Sub
+                'q = "getDataPiutangTable('" & selectperiode.id & "','bgitolak')"
+                'Dim pDefault As String = "nobg LIKE '{0}%' OR bank LIKE '{0}%' OR tgl LIKE '{0}%' OR tglbg LIKE '{0}%' OR tgltolak LIKE '{0}%'"
+                'Dim pNumeric As String = "jml={0}"
+                'p = IIf(IsNumeric(param), pNumeric, pDefault)
 
-                bs = populateDGVUserConTemp(q, String.Format(p, param))
+                'bs = populateDGVUserConTemp(q, String.Format(p, param))
 
             Case "kas"
                 q = "getDataAkunTable('kas','" & selectperiode.tglawal.ToString("yyyy-MM-dd") & "','" & selectperiode.tglakhir.ToString("yyyy-MM-dd") & "')"

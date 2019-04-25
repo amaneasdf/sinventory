@@ -3,12 +3,12 @@
 
     Private selectedcusto As String = ""
     Private selectedsales As String = ""
-    Private _totaltitipan As Double = 0
+    Private _totaltitipan As Decimal = 0
     Private _statusgiro As String = "1"
-    Private _status As String = 0
+    Private _status As String = 1
 
-    Private _sisaHutang As Double = 0
-    Public _totalhutang As Double = 0
+    Private _sisaHutang As Decimal = 0
+    Public _totalhutang As Decimal = 0
 
     Private _prevfakturbayar As New KeyValuePair(Of String, Decimal)
     Private _prevIsTitip As New KeyValuePair(Of Boolean, Decimal)
@@ -34,6 +34,12 @@
         End With
         loadCBAkun(cb_bayar.SelectedValue)
 
+        With cb_pajak
+            .DataSource = jenis("bayar_pajak")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+        End With
+
         With date_tgl_trans
             .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
             .MaxDate = selectperiode.tglakhir
@@ -58,7 +64,7 @@
             in_no_bukti.ReadOnly = True
             'mn_print.Enabled = IIf(_status = 1, True, False)
             mn_proses.Enabled = IIf(_status = 0, loggeduser.validasi_trans, False)
-            bt_simpanperkiraan.Text = "Update"
+            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
@@ -68,7 +74,7 @@
         For Each cbx As ComboBox In {cb_akun, cb_bayar}
             cbx.Enabled = AllowInput
         Next
-        For Each txt As TextBox In {in_ket, in_bg_no, in_bank, in_sales_n}
+        For Each txt As TextBox In {in_ket, in_bg_no, in_bank}
             txt.ReadOnly = IIf(AllowInput, False, True)
         Next
         For Each ctr As Control In {in_faktur, in_kredit}
@@ -77,16 +83,18 @@
         For Each dtpick As DateTimePicker In {date_bg_tgl, date_tgl_trans}
             dtpick.Enabled = AllowInput
         Next
-        bt_simpanperkiraan.Enabled = AllowInput
+        bt_simpancusto.Enabled = AllowInput
         in_custo_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, IIf(AllowInput, False, True))
+        in_sales_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, IIf(AllowInput, False, True))
+        cb_pajak.Enabled = IIf(dgv_bayar.RowCount > 0, False, AllowInput)
         mn_delete.Enabled = AllowInput
         mn_save.Enabled = AllowInput
 
         If AllowInput Then
-            dgv_bayar.Location = New Point(12, 245) : dgv_bayar.Height = 137
+            dgv_bayar.Location = New Point(12, 184) : dgv_bayar.Height = 152
             AddHandler dgv_bayar.CellDoubleClick, AddressOf dgv_bayar_CellDoubleClick
         Else
-            dgv_bayar.Location = New Point(12, 194) : dgv_bayar.Height = 188
+            dgv_bayar.Location = New Point(12, 145) : dgv_bayar.Height = 191
             RemoveHandler dgv_bayar.CellDoubleClick, AddressOf dgv_bayar_CellDoubleClick
         End If
     End Sub
@@ -130,6 +138,7 @@
                         in_custo.Text = rdx.Item("p_bayar_custo")
                         in_custo_n.Text = rdx.Item("customer_nama")
                         in_saldotitipan.Text = commaThousand(rdx.Item("titipan"))
+                        cb_pajak.SelectedValue = rdx.Item("p_bayar_pajak")
                         cb_bayar.SelectedValue = rdx.Item("p_bayar_jenisbayar")
                         akun = rdx.Item("p_bayar_akun")
                         date_tgl_trans.Value = rdx.Item("p_bayar_tanggal_bayar")
@@ -197,19 +206,69 @@
 
     'ADD INPUT FROM TEXTBOX TO DGV
     Private Sub textToDGV()
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+
         Dim _faktur_sw = True
         Dim _kredit_sw = True
         Dim msg As String = ""
+        Dim q As String = ""
 
-        If Trim(in_faktur.Text) = "" And in_kredit.Value <> 0 Then
+        in_faktur.Text = Trim(in_faktur.Text)
+        If in_faktur.Text = "" Then
             _faktur_sw = False
+            msg = "Kode faktur yang ingin dibayarkan belum terisi."
         ElseIf Trim(in_faktur.Text) <> "" And in_tgl_jtfaktur.Text = "" Then
             _faktur_sw = False
+            msg = "Faktur " & in_faktur.Text & " tidak dapat ditemukan."
+        Else
+            q = "SELECT piutang_pajak, piutang_status, piutang_status_lunas, piutang_sales, piutang_custo FROM data_piutang_awal WHERE piutang_faktur='{0}'"
+            Using x = MainConnection
+                x.Open()
+                If x.ConnectionState = ConnectionState.Open Then
+                    Dim _jenispajak As String = ""
+                    Dim _status As String = ""
+                    Dim _customer As String = ""
+                    Dim _salesman As String = ""
+                    Using rdx = x.ReadCommand(String.Format(q, in_faktur.Text))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _jenispajak = rdx.Item(0)
+                            _status = IIf(rdx.Item(2) <> 0, 9, rdx.Item(1))
+                            _salesman = rdx.Item(3)
+                            _customer = rdx.Item(4)
+
+                            If _salesman <> in_sales.Text Then
+                                _faktur_sw = False
+                                msg = "Kode salesman tidak sesuai dengan faktur."
+                            ElseIf _customer <> in_custo.Text Then
+                                _faktur_sw = False
+                                msg = "Kode customer tidak sesuai dengan faktur."
+                            ElseIf cb_pajak.SelectedValue <> _jenispajak Then
+                                _faktur_sw = False
+                                msg = "Kategori faktur tidak sesuai dengan kategori pembayaran terpilih."
+                            Else
+                                If _status <> 1 Then
+                                    _faktur_sw = False
+                                    msg = "Faktur " & in_faktur.Text & " tidak dapat ditemukan atau sudah lunas."
+                                End If
+                            End If
+                        Else
+                            _faktur_sw = False
+                            msg = "Faktur " & in_faktur.Text & " tidak dapat ditemukan."
+                        End If
+                    End Using
+                Else
+                    _faktur_sw = False
+                    msg = "Tidak dapat terhubung ke database."
+                End If
+            End Using
         End If
 
         If _faktur_sw = False Then
             in_faktur.Focus()
-            MessageBox.Show("Faktur tidak sesuai")
+            MessageBox.Show("Faktur tidak sesuai." & Environment.NewLine & msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
 
@@ -235,6 +294,9 @@
         dgv_bayar.Rows.Add(in_faktur.Text, in_tgl_jtfaktur.Text, _totalhutang, removeCommaThousand(in_sisafaktur.Text), in_kredit.Value)
         clearInput()
         in_total.Text = commaThousand(countTotal)
+        in_custo_n.ReadOnly = True
+        in_sales_n.ReadOnly = True
+        cb_pajak.Enabled = False
     End Sub
 
     'LOAD SELECTED DGV ROW TO TEXTBOX INPUT
@@ -259,17 +321,15 @@
         dgv_bayar.Rows.RemoveAt(idx)
         in_total.Text = commaThousand(countTotal)
 
-        If dgv_bayar.RowCount <= 0 Then
-            in_sales_n.ReadOnly = True
-            in_custo_n.ReadOnly = True
-        Else
+        If dgv_bayar.RowCount = 0 Then
             in_sales_n.ReadOnly = False
             in_custo_n.ReadOnly = False
+            cb_pajak.Enabled = True
         End If
     End Sub
 
-    Private Function countTotal() As Double
-        Dim res As Double = 0
+    Private Function countTotal() As Decimal
+        Dim res As Decimal = 0
 
         For Each row As DataGridViewRow In dgv_bayar.Rows
             res += row.Cells("bayar_kredit").Value
@@ -320,6 +380,7 @@
         dataHead = {
             "p_bayar_tanggal_bayar='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
             "p_bayar_tanggal_jt='" & date_bg_tgl.Value.ToString("yyyy-MM-dd") & "'",
+            "p_bayar_pajak='" & cb_pajak.SelectedValue & "'",
             "p_bayar_custo='" & in_custo.Text & "'",
             "p_bayar_sales='" & in_sales.Text & "'",
             "p_bayar_jenisbayar='" & cb_bayar.SelectedValue & "'",
@@ -332,9 +393,8 @@
             "p_bayar_giro_no='" & in_bg_no.Text & "'",
             "p_bayar_giro_bank='" & in_bank.Text & "'"
             }
-        '"p_bayar_status='" & IIf(cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text = "", 0, 1) & "'"
 
-        If bt_simpanperkiraan.Text = "Simpan Pembayaran" Then
+        If bt_simpancusto.Text = "Simpan" Then
             'GENERATE KODE
             If in_no_bukti.Text = Nothing Then
                 Dim no As Integer = 1
@@ -344,7 +404,7 @@
                 End If
                 rd.Close()
                 in_no_bukti.Text = "PP" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
-            ElseIf in_no_bukti.Text <> Nothing And LCase(bt_simpanperkiraan.Text) = "simpan pembayaran" Then
+            ElseIf in_no_bukti.Text <> Nothing And LCase(bt_simpancusto.Text) = "simpan" Then
                 If checkdata("data_piutang_bayar", "'" & in_no_bukti.Text & "'", "p_bayar_bukti") = True Then
                     MessageBox.Show("Nomor faktur " & in_no_bukti.Text & " sudah pernah diinputkan", "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
                     in_no_bukti.Focus()
@@ -353,7 +413,7 @@
             End If
 
             q = "INSERT INTO data_piutang_bayar SET p_bayar_bukti='{0}',{1},p_bayar_reg_date=NOW(),p_bayar_reg_alias='{2}'"
-        ElseIf bt_simpanperkiraan.Text = "Update" Then
+        ElseIf bt_simpancusto.Text = "Update" Then
             q = "UPDATE data_piutang_bayar SET {1},p_bayar_upd_date=NOW(),p_bayar_upd_alias='{2}' WHERE p_bayar_bukti='{0}'"
         End If
         queryArr.Add(String.Format(
@@ -460,20 +520,19 @@
         Select Case tipe
             Case "sales"
                 q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman' FROM data_salesman_master " _
-                    & "WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
+                    & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%') LIMIT 250"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case "custo"
-                q = "SELECT customer_kode as 'Kode', customer_nama as 'Customer', getSisaTitipan('piutang','{0}',customer_kode) as PiutangSupl FROM data_customer_master " _
-                    & "WHERE customer_status=1 AND customer_nama LIKE '{1}%'"
+                q = "SELECT customer_kode as 'Kode', customer_nama as 'Customer', getSisaTitipan('piutang','{0}',customer_kode) as PiutangSupl " _
+                    & "FROM data_customer_master " _
+                    & "WHERE customer_status=1 AND (customer_nama LIKE '%{1}%' OR customer_kode LIKE '%{1}%') LIMIT 250"
                 q = String.Format(q, selectperiode.id, "{0}")
                 dt = getDataTablefromDB(String.Format(q, param))
             Case "faktur"
-                q = "SELECT piutang_faktur as 'Kode Faktur', getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as 'Sisa Piutang', " _
-                    & "ADDDATE(faktur_tanggal_trans, faktur_term) as 'Jatuh Tempo', piutang_awal " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                    & "WHERE getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') <> 0 AND faktur_customer='{1}' " _
-                    & "AND faktur_sales='" & in_sales.Text & "' AND piutang_faktur LIKE '{0}%'"
-                dt = getDataTablefromDB(String.Format(q, param, param2, selectperiode.id))
+                q = "SELECT piutang_faktur as 'Kode Faktur', getSisaPiutang(piutang_faktur,'{1}') as 'Sisa Piutang', piutang_jt as 'Jatuh Tempo', piutang_awal " _
+                    & "FROM data_piutang_awal " _
+                    & "WHERE getSisaPiutang(piutang_faktur,'{1}')>0 AND piutang_custo='{2}' AND piutang_sales='{3}' AND piutang_pajak='{4}' AND piutang_faktur LIKE '%{0}%'"
+                dt = getDataTablefromDB(String.Format(q, param, selectperiode.id, in_custo.Text, in_sales.Text, cb_pajak.SelectedValue))
             Case Else
                 Exit Sub
         End Select
@@ -555,7 +614,7 @@
     End Sub
 
     '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalperkiraan.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
         If MessageBox.Show("Tutup Form?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
@@ -566,7 +625,7 @@
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalperkiraan.PerformClick()
+        bt_batalcusto.PerformClick()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -582,7 +641,7 @@
             If popPnl_barang.Visible = True Then
                 popPnl_barang.Visible = False
             Else
-                bt_batalperkiraan.PerformClick()
+                bt_batalcusto.PerformClick()
             End If
             e.SuppressKeyPress = True
         End If
@@ -590,22 +649,23 @@
 
     '------------- menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpanperkiraan.PerformClick()
+        bt_simpancusto.PerformClick()
     End Sub
 
     Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
         If in_no_bukti.Text <> Nothing Then
             If MessageBox.Show("Batalkan pembayaran?", "Pembayaran Piutang", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-                Dim _cnfirm As New fr_jualconfirm_dialog
+                'Dim _cnfirm As New fr_jualconfirm_dialog
                 Dim cnfrmval As Boolean = False
 
-                With _cnfirm
-                    .lbl_title.Text = "Konfirmasi Pembayaran"
-                    .in_user.Text = loggeduser.user_id
-                    .in_user.ReadOnly = True
-                    .ShowDialog()
-                    cnfrmval = .returnval
-                End With
+                cnfrmval = TransConfirmValid(in_ket.Text)
+                'With _cnfirm
+                '    .lbl_title.Text = "Konfirmasi Pembayaran"
+                '    .in_user.Text = loggeduser.user_id
+                '    .in_user.ReadOnly = True
+                '    .ShowDialog()
+                '    cnfrmval = .returnval
+                'End With
 
                 If cnfrmval = True Then
                     cancelData(in_no_bukti.Text)
@@ -647,17 +707,17 @@
             End If
 
             If MessageBox.Show("Proses pembayaran?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-                Dim _cnfirm As New fr_jualconfirm_dialog
+                'Dim _cnfirm As New fr_jualconfirm_dialog
                 Dim cnfrmval As Boolean = False
 
-                With _cnfirm
-                    .lbl_title.Text = "Konfirmasi Pembayaran"
-                    .in_user.Text = loggeduser.user_id
-                    .in_user.ReadOnly = True
-                    .ShowDialog()
-                    cnfrmval = .returnval
-                    in_ket.Text = Trim(in_ket.Text & Environment.NewLine & .in_ket.Text)
-                End With
+                cnfrmval = TransConfirmValid(in_ket.Text)
+                'With _cnfirm
+                '    .lbl_title.Text = "Konfirmasi Pembayaran"
+                '    .in_user.Text = loggeduser.user_id
+                '    .in_user.ReadOnly = True
+                '    .ShowDialog()
+                '    cnfrmval = .returnval
+                'End With
 
                 If cnfrmval = True Then
                     _status = 1
@@ -673,7 +733,7 @@
     End Sub
 
     '------------ save
-    Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpanperkiraan.Click
+    Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If in_sales.Text = "" Then
             MessageBox.Show("Sales belum di input")
             in_sales_n.Focus()
@@ -742,13 +802,18 @@
                 _nxtcontrol = in_custo_n
                 _kdcontrol = in_sales
             Case "in_custo_n"
-                _nxtcontrol = cb_bayar
+                _nxtcontrol = cb_pajak
                 _kdcontrol = in_custo
             Case Else
                 Exit Sub
         End Select
-        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
+        If (sender.Text = "" Or (e.KeyCode = Keys.Back And sender.ReadOnly = False)) And IsNothing(_kdcontrol) = False Then
             _kdcontrol.Text = ""
+            in_sisafaktur.Clear()
+            in_tgl_jtfaktur.Clear()
+            in_faktur.Clear()
+
+            If popPnl_barang.Visible = True And sender.ReadOnly = False Then loadDataBRGPopup(_popUpPos, sender.Text)
         End If
 
         If e.KeyCode = Keys.Down Then
@@ -791,14 +856,6 @@
         End If
     End Sub
 
-    Private Sub in_custo_n_TextChanged(sender As Object, e As EventArgs) Handles in_custo_n.TextChanged
-        If in_custo_n.Text = "" Then
-            in_custo.Clear()
-            in_faktur.Clear()
-            'AND OTHER THINGS
-        End If
-    End Sub
-
     Private Sub in_custo_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_custo_n.MouseClick
         If popPnl_barang.Visible = False And sender.ReadOnly = False Then
             popPnl_barang.Visible = True
@@ -817,6 +874,13 @@
     End Sub
 
     Private Sub in_faktur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_faktur.KeyUp
+        If sender.Text = "" Or (e.KeyCode = Keys.Back And sender.ReadOnly = False) Then
+            in_sisafaktur.Clear()
+            in_tgl_jtfaktur.Clear()
+
+            If popPnl_barang.Visible = True And sender.ReadOnly = False Then loadDataBRGPopup(_popUpPos, sender.Text)
+        End If
+
         If e.KeyCode = Keys.Down Then
             If popPnl_barang.Visible = True Then
                 dgv_listbarang.Focus()
@@ -831,7 +895,7 @@
                 If popPnl_barang.Visible = False And sender.ReadOnly = False Then
                     popPnl_barang.Visible = True
                 End If
-                loadDataBRGPopup("faktur", in_faktur.Text, in_custo.Text)
+                loadDataBRGPopup("faktur", in_faktur.Text)
             End If
         End If
     End Sub
@@ -839,14 +903,6 @@
     Private Sub in_faktur_MouseClick(sender As Object, e As MouseEventArgs) Handles in_faktur.MouseClick
         If popPnl_barang.Visible = False And sender.ReadOnly = False Then
             popPnl_barang.Visible = True
-        End If
-    End Sub
-
-    Private Sub in_faktur_TextChanged(sender As Object, e As EventArgs) Handles in_faktur.TextChanged
-        If in_faktur.Text = "" Then
-            in_sisafaktur.Text = ""
-            in_tgl_jtfaktur.Text = ""
-
         End If
     End Sub
 
@@ -901,7 +957,7 @@
     End Sub
 
     '------------- cb prevent input
-    Private Sub cb_bank_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_bayar.KeyPress
+    Private Sub cb_bank_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_bayar.KeyPress, cb_akun.KeyPress, cb_pajak.KeyPress
         e.Handled = True
     End Sub
 
@@ -915,6 +971,10 @@
     End Sub
 
     '-------------- OTHER
+    Private Sub cb_pajak_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_pajak.KeyUp
+        keyshortenter(cb_bayar, e)
+    End Sub
+
     Private Sub cb_bayar_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_bayar.KeyUp
         keyshortenter(date_tgl_trans, e)
     End Sub

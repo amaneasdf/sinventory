@@ -111,13 +111,13 @@ Module functional
     End Function
 
     'string format
-    Public Function stringCurrency(x As Double) As String
+    Public Function stringCurrency(x As Decimal) As String
         Dim s As String = ""
         s = x.ToString("C2", System.Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
         Return s
     End Function
 
-    Public Function commaThousand(x As Double) As String
+    Public Function commaThousand(x As Decimal) As String
         Dim s As String = ""
         s = x.ToString("N2", System.Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
         Return s
@@ -129,16 +129,59 @@ Module functional
             Exit Function
         End If
 
-        Dim s As String = 0
-        s = Replace(Replace(x, ",00", ""), ".", "")
-        Dim y = Split(s, ",")
-        Dim z As Decimal = 0
-        If y.Count = 2 Then
-            z = CDec(y(0)) + (CDec(y(1)) / 100)
+        'Dim s As String = 0
+        's = Replace(Replace(x, ",00", ""), ".", "")
+        'Dim y = Split(s, ",")
+        'Dim z As Decimal = 0
+        'If y.Count = 2 Then
+        '    z = CDec(y(0)) + (CDec(y(1)) / 100)
+        'Else
+        '    z = CDec(y(0))
+        'End If
+        'Return z
+
+        Dim retval As Decimal = Decimal.Parse(x, System.Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
+
+        Return retval
+    End Function
+
+    ''' <summary>
+    ''' Convert number to  <see cref="String" />s of words.
+    ''' </summary>
+    ''' <param name="NumAmount">
+    ''' Number to be descripted.
+    ''' </param>
+    ''' <returns>
+    ''' A formated <see cref="String"/> of the input.
+    ''' </returns>
+    Public Function AmountToString(NumAmount As Long) As String
+        If Not IsNumeric(NumAmount) Then Throw New InvalidDataException
+
+        Dim _nilai As String() = {"", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"}
+
+        If NumAmount < 12 Then
+            Return _nilai(NumAmount)
+        ElseIf NumAmount < 20 Then
+            Return _nilai(NumAmount - 10) & " Belas "
+        ElseIf NumAmount < 100 Then
+            Return AmountToString(Math.Floor(NumAmount / 10)) & " Puluh " & AmountToString(NumAmount Mod 10)
+        ElseIf NumAmount < 200 Then
+            Return " Seratus " & AmountToString(NumAmount - 100)
+        ElseIf NumAmount < 1000 Then
+            Return AmountToString(Math.Floor(NumAmount / 100)) & " Ratus " & AmountToString(NumAmount Mod 100)
+        ElseIf NumAmount < 2000 Then
+            Return " Seribu " & AmountToString(NumAmount - 1000)
+        ElseIf NumAmount < 1000000 Then
+            Return AmountToString(Math.Floor(NumAmount / 1000)) & " Ribu " & AmountToString(NumAmount Mod 1000)
+        ElseIf NumAmount < 1000000000 Then
+            Return AmountToString(Math.Floor(NumAmount / 1000000)) & " Juta " & AmountToString(NumAmount Mod 1000000)
+        ElseIf NumAmount < 1000000000000 Then
+            Return AmountToString(Math.Floor(NumAmount / 1000000000)) & " Milyar " & AmountToString(NumAmount Mod 1000000000)
+        ElseIf NumAmount < 1000000000000000 Then
+            Return AmountToString(Math.Floor(NumAmount / 1000000000000)) & " Trilyun " & AmountToString(NumAmount Mod 1000000000000)
         Else
-            z = CDec(y(0))
+            Return NumAmount
         End If
-        Return z
     End Function
 
     ''' <summary>
@@ -351,6 +394,99 @@ Module functional
     End Sub
 
     'EXPORT EXCEL
+    Public Function ExportExcel(ColHeader As List(Of String), DataTbl As List(Of DataTable), DataTitle As List(Of String),
+                                FileDir As String, FileExt As String, ByRef FileDirReturn As String) As Boolean
+        If String.IsNullOrWhiteSpace(FileDir) Then
+            Throw New NullReferenceException
+        End If
+
+        Dim _dir As String = IO.Path.GetDirectoryName(FileDir)
+        Dim _filename As String = FileDir.Replace(_dir & "\", "")
+        Dim _filenameSplit = Strings.Split(_filename, ".")
+        If _filenameSplit(_filenameSplit.Length - 1) <> LCase(FileExt) Then
+            _filename += If(String.IsNullOrWhiteSpace(FileExt) = False, ".", "") & FileExt
+        End If
+
+        If String.IsNullOrWhiteSpace(_filename) Then
+            _filename = "ExportData" & Today.ToString("yyyyMMdd")
+        End If
+
+        Using xls As New ExcelPackage
+            For Each tbl As DataTable In DataTbl
+                Dim _sheet As ExcelWorksheet = xls.Workbook.Worksheets.Add(tbl.TableName)
+                Dim _rowidx As Integer = 1
+                Dim _lastcol As Integer = tbl.Columns.Count
+                Dim _firstrow As Integer = 1
+
+                'DATA TITLE
+                For Each _title As String In DataTitle
+                    _sheet.Cells(_rowidx, 1).Value = _title
+                    _rowidx += 1
+                Next
+
+                'COMPANY NAME AND ADDRESS
+                Dim _rowcomp As Integer = 2
+                _sheet.Cells(1, _lastcol).Value = "CV. CATRA UPAYA"
+                _sheet.Cells(2, _lastcol).Value = "JL. BIMA NO. 14 JATIWINANGUN - PURWOKERTO"
+                _sheet.Cells(1, _lastcol, 2, _lastcol).Style.HorizontalAlignment = Style.ExcelHorizontalAlignment.Right
+                If _rowcomp >= _rowidx Then
+                    _rowidx = _rowcomp + 1
+                End If
+
+                'COLUMN HEADER
+                Dim _col As Integer = 1
+                For Each _colhead As String In ColHeader
+                    _sheet.Cells(_rowidx, _col).Value = _colhead
+                    _col += 1
+                Next
+                If ColHeader.Count <> 0 Then
+                    With _sheet.Cells(_rowidx, 1, _rowidx, ColHeader.Count).Style
+                        .Border.Top.Style = Style.ExcelBorderStyle.Thin
+                        .Border.Left.Style = Style.ExcelBorderStyle.Thin
+                        .Border.Right.Style = Style.ExcelBorderStyle.Thin
+                        .Border.Bottom.Style = Style.ExcelBorderStyle.Thin
+                        .Font.Bold = True
+                    End With
+                    _rowidx += 2
+                End If
+                _firstrow = _rowidx
+
+                'DATA
+                For Each _row As DataRow In tbl.Rows
+                    For i = 0 To _lastcol - 1
+                        If IsDBNull(_row.ItemArray(i)) Then
+                            _sheet.Cells(_rowidx, i + 1).Value = ""
+                        Else
+                            If _row.ItemArray(i).GetType() = GetType(Date) Then
+                                Dim _val = CDate(_row.ItemArray(i))
+                                _sheet.Cells(_rowidx, i + 1).Value = _val.ToString("yyyy-MM-dd")
+                            Else
+                                _sheet.Cells(_rowidx, i + 1).Value = _row.ItemArray(i)
+                            End If
+                        End If
+                    Next
+                    _rowidx += 1
+                Next
+                With _sheet.Cells(_firstrow, 1, _rowidx - 1, _lastcol).Style.Border
+                    .Top.Style = Style.ExcelBorderStyle.Thin
+                    .Left.Style = Style.ExcelBorderStyle.Thin
+                    .Right.Style = Style.ExcelBorderStyle.Thin
+                    .Bottom.Style = Style.ExcelBorderStyle.Thin
+                End With
+                _sheet.Cells(_firstrow - IIf(ColHeader.Count <> 0, 2, 0), 1, _rowidx - 1, _lastcol).AutoFitColumns(5)
+               
+            Next
+            xls.SaveAs(New FileInfo(_dir & "\" & _filename))
+        End Using
+
+        If File.Exists(_dir & "\" & _filename) Then
+            FileDirReturn = _dir & "\" & _filename
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
     Public Function exportXlsx(colheader As List(Of String), datatbl As DataTable, outputDir As String, Optional workbookname As String = Nothing, Optional title As String = Nothing) As Boolean
         If workbookname = Nothing Then
             workbookname = "dataexport" & Today.ToString("yyyyMMdd")
@@ -363,6 +499,12 @@ Module functional
                 Dim firstrow As Integer = 1
                 Dim colcount As Integer = datatbl.Columns.Count
                 'CREATE HEADER
+                'A1 :JUDUL; A2: Periode; A3:Kategori; A4: OPTIONAL
+                'LASTCOL1: COMPANY NAME; LASTCOL2: ADDRESS; LASTCOL3: ADDRESS2
+                'A5-LASTCOL5 : COLHEADER
+                'A6-END : DATA
+                'END+1 :SUMMARIZE
+
                 wrksht.Cells(1, 1).Value = "CV. Catra Upaya"
                 wrksht.Cells("A1:E1").Merge = True
                 wrksht.Cells(1, 1).Style.Font.Size = 14
@@ -468,18 +610,21 @@ Module functional
 
     '-----------.ini file manipulation-------------
     Private Function getConfigFile() As String
+        Dim _appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & Application.ProductName
         Dim fileloc As String = ""
 
         If File.Exists(Application.StartupPath & "\config") = True Then
             fileloc = Application.StartupPath & "\config"
         ElseIf File.Exists(Application.StartupPath & "\bin\config") = True Then
             fileloc = Application.StartupPath & "\bin\config"
+        ElseIf File.Exists(_appSysDir & "\bin\config") Then
+            fileloc = _appSysDir & "\bin\config"
         Else
-            If Not Directory.Exists(Application.StartupPath & "\bin\") Then
-                Directory.CreateDirectory(Application.StartupPath & "\bin\")
+            If Not Directory.Exists(_appSysDir & "\bin\") Then
+                Directory.CreateDirectory(_appSysDir & "\bin\")
             End If
-            File.WriteAllText(Application.StartupPath & "\bin\config", My.Resources.ResourceManager.GetObject("configfile").ToString)
-            fileloc = Application.StartupPath & "\bin\config"
+            File.WriteAllText(_appSysDir & "\bin\config", My.Resources.ResourceManager.GetObject("configfile").ToString)
+            fileloc = _appSysDir & "\bin\config"
         End If
 
         Return fileloc
@@ -519,7 +664,7 @@ Module functional
     Public Function loadCon(con_type As String, Optional showErrMsg As Boolean = True) As cnction
         Dim options As New IniOptions()
         Dim inifile As New IniFile(options)
-        Dim x As cnction
+        Dim x As New cnction
 
         Try
             inifile.Load(getConfigFile)

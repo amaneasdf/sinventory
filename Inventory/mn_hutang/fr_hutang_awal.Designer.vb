@@ -38,7 +38,6 @@ Partial Class fr_hutang_awal
         Me.in_supplier_n = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.in_hutang_awal = New System.Windows.Forms.TextBox()
-        Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.in_tgl_term = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.in_total = New System.Windows.Forms.TextBox()
@@ -54,8 +53,10 @@ Partial Class fr_hutang_awal
         Me.bayar = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.in_kat = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.in_term = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
-        CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -203,7 +204,7 @@ Partial Class fr_hutang_awal
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 120)
+        Me.Label4.Location = New System.Drawing.Point(8, 164)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(31, 13)
         Me.Label4.TabIndex = 292
@@ -217,7 +218,7 @@ Partial Class fr_hutang_awal
         Me.in_supplier_n.MaxLength = 15
         Me.in_supplier_n.Name = "in_supplier_n"
         Me.in_supplier_n.ReadOnly = True
-        Me.in_supplier_n.Size = New System.Drawing.Size(177, 20)
+        Me.in_supplier_n.Size = New System.Drawing.Size(315, 20)
         Me.in_supplier_n.TabIndex = 4
         Me.in_supplier_n.TabStop = False
         '
@@ -242,18 +243,11 @@ Partial Class fr_hutang_awal
         Me.in_hutang_awal.Size = New System.Drawing.Size(172, 20)
         Me.in_hutang_awal.TabIndex = 6
         '
-        'in_term
-        '
-        Me.in_term.Location = New System.Drawing.Point(82, 116)
-        Me.in_term.Name = "in_term"
-        Me.in_term.Size = New System.Drawing.Size(95, 20)
-        Me.in_term.TabIndex = 296
-        '
         'in_tgl_term
         '
         Me.in_tgl_term.BackColor = System.Drawing.Color.White
         Me.in_tgl_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_tgl_term.Location = New System.Drawing.Point(178, 116)
+        Me.in_tgl_term.Location = New System.Drawing.Point(178, 160)
         Me.in_tgl_term.MaxLength = 15
         Me.in_tgl_term.Name = "in_tgl_term"
         Me.in_tgl_term.ReadOnly = True
@@ -338,7 +332,7 @@ Partial Class fr_hutang_awal
         '
         Me.bt_bayar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_bayar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_bayar.Location = New System.Drawing.Point(14, 487)
+        Me.bt_bayar.Location = New System.Drawing.Point(14, 498)
         Me.bt_bayar.Name = "bt_bayar"
         Me.bt_bayar.Size = New System.Drawing.Size(146, 29)
         Me.bt_bayar.TabIndex = 371
@@ -351,11 +345,11 @@ Partial Class fr_hutang_awal
         Me.dgv_hutang.AllowUserToDeleteRows = False
         Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ket, Me.tgl, Me.hutang, Me.bayar, Me.ref, Me.status})
-        Me.dgv_hutang.Location = New System.Drawing.Point(10, 164)
+        Me.dgv_hutang.Location = New System.Drawing.Point(10, 186)
         Me.dgv_hutang.Name = "dgv_hutang"
         Me.dgv_hutang.ReadOnly = True
         Me.dgv_hutang.RowHeadersVisible = False
-        Me.dgv_hutang.Size = New System.Drawing.Size(530, 241)
+        Me.dgv_hutang.Size = New System.Drawing.Size(530, 219)
         Me.dgv_hutang.TabIndex = 372
         '
         'ket
@@ -403,12 +397,49 @@ Partial Class fr_hutang_awal
         Me.status.Name = "status"
         Me.status.ReadOnly = True
         '
+        'in_kat
+        '
+        Me.in_kat.BackColor = System.Drawing.Color.White
+        Me.in_kat.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_kat.Location = New System.Drawing.Point(82, 116)
+        Me.in_kat.MaxLength = 15
+        Me.in_kat.Name = "in_kat"
+        Me.in_kat.ReadOnly = True
+        Me.in_kat.Size = New System.Drawing.Size(95, 20)
+        Me.in_kat.TabIndex = 380
+        Me.in_kat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(8, 120)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(46, 13)
+        Me.Label10.TabIndex = 381
+        Me.Label10.Text = "Kategori"
+        '
+        'in_term
+        '
+        Me.in_term.BackColor = System.Drawing.Color.White
+        Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_term.Location = New System.Drawing.Point(82, 160)
+        Me.in_term.MaxLength = 15
+        Me.in_term.Name = "in_term"
+        Me.in_term.ReadOnly = True
+        Me.in_term.Size = New System.Drawing.Size(95, 20)
+        Me.in_term.TabIndex = 382
+        Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'fr_hutang_awal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(550, 543)
+        Me.Controls.Add(Me.in_term)
+        Me.Controls.Add(Me.in_kat)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.dgv_hutang)
         Me.Controls.Add(Me.bt_bayar)
         Me.Controls.Add(Me.Label8)
@@ -417,7 +448,6 @@ Partial Class fr_hutang_awal
         Me.Controls.Add(Me.in_tgllunas)
         Me.Controls.Add(Me.in_sisa)
         Me.Controls.Add(Me.in_total)
-        Me.Controls.Add(Me.in_term)
         Me.Controls.Add(Me.in_hutang_awal)
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
@@ -438,7 +468,6 @@ Partial Class fr_hutang_awal
         Me.Text = "fr_hutang_awal"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -460,7 +489,6 @@ Partial Class fr_hutang_awal
     Friend WithEvents in_supplier_n As System.Windows.Forms.TextBox
     Friend WithEvents Label5 As System.Windows.Forms.Label
     Friend WithEvents in_hutang_awal As System.Windows.Forms.TextBox
-    Friend WithEvents in_term As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_tgl_term As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents in_total As System.Windows.Forms.TextBox
@@ -476,4 +504,7 @@ Partial Class fr_hutang_awal
     Friend WithEvents bayar As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ref As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents status As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents in_kat As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents in_term As System.Windows.Forms.TextBox
 End Class

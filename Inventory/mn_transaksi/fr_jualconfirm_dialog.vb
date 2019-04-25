@@ -7,10 +7,10 @@
     Public Function checkUser(uid As String, pass As String) As Boolean
         Dim rval As Boolean = False
         Dim q As String = "SELECT user_validasi_trans FROM data_pengguna_alias " _
-                          & " WHERE user_alias='{0}' AND user_pwd=MD5('{1}') AND user_status=1"
+                          & " WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
         op_con()
         Try
-            readcommd(String.Format(q, uid, pass))
+            readcommd(String.Format(q, uid, computeHash(pass)))
             If rd.HasRows Then
                 If rd.Item(0) = 1 Then
                     rval = True
@@ -26,7 +26,7 @@
 
     Public Sub do_load(Optional tipetrans As String = "jual")
         Me.Text = lbl_title.Text
-        in_user.ReadOnly = True
+        'in_user.ReadOnly = True
         in_pass.UseSystemPasswordChar = True
         ShowDialog()
     End Sub

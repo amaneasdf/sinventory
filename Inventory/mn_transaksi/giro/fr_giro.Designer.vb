@@ -568,6 +568,7 @@ Partial Class fr_giro
         Me.Label8.Size = New System.Drawing.Size(37, 13)
         Me.Label8.TabIndex = 451
         Me.Label8.Text = "Faktur"
+        Me.Label8.Visible = False
         '
         'dgv_hutang
         '
@@ -582,6 +583,7 @@ Partial Class fr_giro
         Me.dgv_hutang.RowHeadersVisible = False
         Me.dgv_hutang.Size = New System.Drawing.Size(304, 168)
         Me.dgv_hutang.TabIndex = 452
+        Me.dgv_hutang.Visible = False
         '
         'faktur_kode
         '

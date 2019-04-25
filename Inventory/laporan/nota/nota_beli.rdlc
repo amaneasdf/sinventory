@@ -6,34 +6,34 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.475cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>4.5cm</Width>
+              <Width>5cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1cm</Width>
+              <Width>0.85cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1cm</Width>
+              <Width>0.85cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1cm</Width>
+              <Width>0.85cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.75cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.75cm</Width>
+              <Width>2.5cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -51,8 +51,7 @@
                             <TextRun>
                               <Value>KD.BARANG</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -90,8 +89,7 @@
                             <TextRun>
                               <Value>NAMA BARANG</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -129,8 +127,7 @@
                             <TextRun>
                               <Value>QTY</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -170,8 +167,7 @@
                             <TextRun>
                               <Value>HRG BELI</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -211,8 +207,7 @@
                             <TextRun>
                               <Value>D1</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -252,8 +247,7 @@
                             <TextRun>
                               <Value>D2</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -293,8 +287,7 @@
                             <TextRun>
                               <Value>D3</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -334,8 +327,7 @@
                             <TextRun>
                               <Value>DISCRP</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -375,8 +367,7 @@
                             <TextRun>
                               <Value>TOT.DISCOUT</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -416,8 +407,7 @@
                             <TextRun>
                               <Value>SUBTOTAL</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -449,7 +439,7 @@
               </TablixCells>
             </TablixRow>
             <TablixRow>
-              <Height>0.6cm</Height>
+              <Height>0.575cm</Height>
               <TablixCells>
                 <TablixCell>
                   <CellContents>
@@ -462,8 +452,7 @@
                             <TextRun>
                               <Value>=Fields!beli_barang.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -499,8 +488,7 @@
                             <TextRun>
                               <Value>=Fields!beli_brg_n.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -536,8 +524,7 @@
                             <TextRun>
                               <Value>=Fields!beli_qty.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -577,8 +564,7 @@
                             <TextRun>
                               <Value>=Fields!beli_harga.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -619,8 +605,7 @@
                             <TextRun>
                               <Value>=Fields!beli_disc1.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -648,7 +633,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -662,8 +646,7 @@
                             <TextRun>
                               <Value>=Fields!beli_disc2.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -691,7 +674,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -705,8 +687,7 @@
                             <TextRun>
                               <Value>=Fields!beli_disc3.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -734,7 +715,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -748,8 +728,7 @@
                             <TextRun>
                               <Value>=Fields!beli_discrp.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -790,8 +769,7 @@
                             <TextRun>
                               <Value>=Fields!beli_disctot.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -831,8 +809,7 @@
                             <TextRun>
                               <Value>=Fields!beli_jml.Value</Value>
                               <Style>
-                                <FontFamily>Consolas</FontFamily>
-                                <FontSize>9pt</FontSize>
+                                <FontFamily>calibri</FontFamily>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -854,6 +831,403 @@
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </BottomBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+            <TablixRow>
+              <Height>0.1cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox33">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox33</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox34">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style />
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox34</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox35">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox35</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox36">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox36</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox37">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox37</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox38">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox38</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox39">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox39</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox40">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox40</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox41">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox41</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
+                        <PaddingLeft>2pt</PaddingLeft>
+                        <PaddingRight>2pt</PaddingRight>
+                        <PaddingTop>2pt</PaddingTop>
+                        <PaddingBottom>2pt</PaddingBottom>
+                      </Style>
+                    </Textbox>
+                  </CellContents>
+                </TablixCell>
+                <TablixCell>
+                  <CellContents>
+                    <Textbox Name="Textbox42">
+                      <CanGrow>true</CanGrow>
+                      <KeepTogether>true</KeepTogether>
+                      <Paragraphs>
+                        <Paragraph>
+                          <TextRuns>
+                            <TextRun>
+                              <Value />
+                              <Style>
+                                <FontFamily>calibri</FontFamily>
+                                <Language>id-ID</Language>
+                                <NumeralLanguage>id-ID</NumeralLanguage>
+                              </Style>
+                            </TextRun>
+                          </TextRuns>
+                          <Style>
+                            <TextAlign>Right</TextAlign>
+                          </Style>
+                        </Paragraph>
+                      </Paragraphs>
+                      <rd:DefaultName>Textbox42</rd:DefaultName>
+                      <Style>
+                        <Border>
+                          <Style>None</Style>
+                        </Border>
+                        <TopBorder>
+                          <Color>Black</Color>
+                          <Style>None</Style>
+                          <Width>1pt</Width>
+                        </TopBorder>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
                         <PaddingTop>2pt</PaddingTop>
@@ -889,700 +1263,34 @@
             <TablixMember>
               <Group Name="Details" />
             </TablixMember>
+            <TablixMember>
+              <KeepWithGroup>Before</KeepWithGroup>
+              <RepeatOnNewPage>true</RepeatOnNewPage>
+            </TablixMember>
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_nota_beli</DataSetName>
-        <Top>2.31716cm</Top>
-        <Height>1.2cm</Height>
-        <Width>21.225cm</Width>
+        <Left>0.00048cm</Left>
+        <Height>1.275cm</Height>
+        <Width>20.05cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
           </Border>
         </Style>
       </Tablix>
-      <Textbox Name="Textbox74">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Bag.Keuangan</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox72</rd:DefaultName>
-        <Top>3.69355cm</Top>
-        <Left>0.21657cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.94979cm</Width>
-        <ZIndex>1</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox75">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>(.............)</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox72</rd:DefaultName>
-        <Top>5.2532cm</Top>
-        <Left>0.21657cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.94979cm</Width>
-        <ZIndex>2</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox76">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Yang Menerima</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox72</rd:DefaultName>
-        <Top>3.69355cm</Top>
-        <Left>5.27521cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.94979cm</Width>
-        <ZIndex>3</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox77">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>(.............)</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Center</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox72</rd:DefaultName>
-        <Top>5.2532cm</Top>
-        <Left>5.27521cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.94979cm</Width>
-        <ZIndex>4</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox16">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"))</Value>
-                <Style>
-                  <FontSize>8pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox16</rd:DefaultName>
-        <Top>5.61702cm</Top>
-        <Left>8.75417cm</Left>
-        <Height>0.47653cm</Height>
-        <Width>6.79444cm</Width>
-        <ZIndex>5</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parJml.Value</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <Format>#,0</Format>
-                  <Language>id-ID</Language>
-                  <NumeralLanguage>id-ID</NumeralLanguage>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>3.69355cm</Top>
-        <Left>18.475cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>6</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parDiskon">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parDiskon.Value</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <Format>#,0</Format>
-                  <Language>id-ID</Language>
-                  <NumeralLanguage>id-ID</NumeralLanguage>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parDiskon</rd:DefaultName>
-        <Top>4.29355cm</Top>
-        <Left>18.475cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>7</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parPPN2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parNetto.Value</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                  <Format>#,0</Format>
-                  <Language>id-ID</Language>
-                  <NumeralLanguage>id-ID</NumeralLanguage>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parPPN</rd:DefaultName>
-        <Top>5.49355cm</Top>
-        <Left>18.475cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>8</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml2">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>JUMLAH :</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>3.69355cm</Top>
-        <Left>15.725cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>9</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml3">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>DISCOUNT :</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>4.29355cm</Top>
-        <Left>15.725cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>10</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml5">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>TOTAL :</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Right</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>5.49355cm</Top>
-        <Left>15.725cm</Left>
-        <Height>0.6cm</Height>
-        <Width>2.75cm</Width>
-        <ZIndex>11</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox18">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parSupplier.Value</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox18</rd:DefaultName>
-        <Top>0.14111cm</Top>
-        <Left>13.61226cm</Left>
-        <Height>0.64382cm</Height>
-        <Width>7.61224cm</Width>
-        <ZIndex>12</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="Textbox15">
-        <CanGrow>true</CanGrow>
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parSupplierAl.Value</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>8pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>Textbox9</rd:DefaultName>
-        <Top>0.78493cm</Top>
-        <Left>13.61226cm</Left>
-        <Height>1.35584cm</Height>
-        <Width>7.61224cm</Width>
-        <ZIndex>13</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="PageNumber7">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>No. Faktur :</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>PageNumber</rd:DefaultName>
-        <Top>0.14111cm</Top>
-        <Height>0.6cm</Height>
-        <Width>2.475cm</Width>
-        <ZIndex>14</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="PageNumber6">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parNoFaktur.Value</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontWeight>Bold</FontWeight>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>PageNumber</rd:DefaultName>
-        <Top>0.14111cm</Top>
-        <Left>2.47524cm</Left>
-        <Height>0.6cm</Height>
-        <Width>4.99974cm</Width>
-        <ZIndex>15</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml7">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Tanggal :</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>0.14111cm</Top>
-        <Left>7.65137cm</Left>
-        <Height>0.6cm</Height>
-        <Width>1.86646cm</Width>
-        <ZIndex>16</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="PageNumber3">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>=Parameters!parTglFaktur.Value</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>PageNumber</rd:DefaultName>
-        <Top>0.14111cm</Top>
-        <Left>9.51783cm</Left>
-        <Height>0.6cm</Height>
-        <Width>3.80319cm</Width>
-        <ZIndex>17</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="parJml8">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>Jt.Tempo:</Value>
-                <Style>
-                  <FontFamily>consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>parJml</rd:DefaultName>
-        <Top>0.74111cm</Top>
-        <Left>7.65137cm</Left>
-        <Height>0.6cm</Height>
-        <Width>1.86646cm</Width>
-        <ZIndex>18</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <VerticalAlign>Middle</VerticalAlign>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
-      <Textbox Name="PageNumber4">
-        <KeepTogether>true</KeepTogether>
-        <Paragraphs>
-          <Paragraph>
-            <TextRuns>
-              <TextRun>
-                <Value>= CDate(Parameters!parTglFaktur.Value).AddDays(Parameters!parTerm.Value)</Value>
-                <Style>
-                  <FontFamily>Consolas</FontFamily>
-                  <FontSize>9pt</FontSize>
-                </Style>
-              </TextRun>
-            </TextRuns>
-            <Style>
-              <TextAlign>Left</TextAlign>
-            </Style>
-          </Paragraph>
-        </Paragraphs>
-        <rd:DefaultName>PageNumber</rd:DefaultName>
-        <Top>0.74111cm</Top>
-        <Left>9.51783cm</Left>
-        <Height>0.6cm</Height>
-        <Width>3.80319cm</Width>
-        <ZIndex>19</ZIndex>
-        <Style>
-          <Border>
-            <Style>None</Style>
-          </Border>
-          <PaddingLeft>2pt</PaddingLeft>
-          <PaddingRight>2pt</PaddingRight>
-          <PaddingTop>2pt</PaddingTop>
-          <PaddingBottom>2pt</PaddingBottom>
-        </Style>
-      </Textbox>
     </ReportItems>
-    <Height>2.48231in</Height>
+    <Height>0.50197in</Height>
     <Style>
       <Border>
         <Style>None</Style>
       </Border>
     </Style>
   </Body>
-  <Width>8.3563in</Width>
+  <Width>7.89389in</Width>
   <Page>
     <PageHeader>
-      <Height>0.59055in</Height>
+      <Height>1.48893in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -1629,6 +1337,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
+          <Left>0.00048cm</Left>
           <Height>1.5cm</Height>
           <Width>7.4745cm</Width>
           <Style>
@@ -1663,15 +1372,284 @@
           </Paragraphs>
           <rd:DefaultName>Textbox21</rd:DefaultName>
           <Top>0.25922cm</Top>
-          <Left>11.22476cm</Left>
+          <Left>10.75048cm</Left>
           <Height>0.82361cm</Height>
-          <Width>9.99974cm</Width>
+          <Width>9.3cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
               <Style>None</Style>
             </Border>
             <VerticalAlign>Top</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox18">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Parameters!parSupplier.Value</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox18</rd:DefaultName>
+          <Top>1.67639cm</Top>
+          <Left>12.45048cm</Left>
+          <Height>0.64382cm</Height>
+          <Width>7.6cm</Width>
+          <ZIndex>2</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox15">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Parameters!parSupplierAl.Value</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontSize>9pt</FontSize>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox9</rd:DefaultName>
+          <Top>2.32021cm</Top>
+          <Left>12.45048cm</Left>
+          <Height>1.33257cm</Height>
+          <Width>7.6cm</Width>
+          <ZIndex>3</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="PageNumber7">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>No. Faktur :</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>PageNumber</rd:DefaultName>
+          <Top>1.67639cm</Top>
+          <Height>0.6cm</Height>
+          <Width>2.475cm</Width>
+          <ZIndex>4</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="PageNumber6">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Parameters!parNoFaktur.Value</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>PageNumber</rd:DefaultName>
+          <Top>1.67639cm</Top>
+          <Left>2.47524cm</Left>
+          <Height>0.6cm</Height>
+          <Width>4.99974cm</Width>
+          <ZIndex>5</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml7">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Tanggal   :</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Top>2.45278cm</Top>
+          <Height>0.6cm</Height>
+          <Width>2.475cm</Width>
+          <ZIndex>6</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="PageNumber3">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Parameters!parTglFaktur.Value</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>PageNumber</rd:DefaultName>
+          <Top>2.45278cm</Top>
+          <Left>2.475cm</Left>
+          <Height>0.6cm</Height>
+          <Width>4.9995cm</Width>
+          <ZIndex>7</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml8">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Jt.Tempo :</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Top>3.05278cm</Top>
+          <Height>0.6cm</Height>
+          <Width>2.475cm</Width>
+          <ZIndex>8</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="PageNumber4">
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>= CDate(Parameters!parTglFaktur.Value).AddDays(Parameters!parTerm.Value)</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>PageNumber</rd:DefaultName>
+          <Top>3.05278cm</Top>
+          <Left>2.475cm</Left>
+          <Height>0.6cm</Height>
+          <Width>4.9995cm</Width>
+          <ZIndex>9</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
             <PaddingLeft>2pt</PaddingLeft>
             <PaddingRight>2pt</PaddingRight>
             <PaddingTop>2pt</PaddingTop>
@@ -1685,6 +1663,411 @@
         </Border>
       </Style>
     </PageHeader>
+    <PageFooter>
+      <Height>0.93055in</Height>
+      <PrintOnFirstPage>true</PrintOnFirstPage>
+      <PrintOnLastPage>true</PrintOnLastPage>
+      <ReportItems>
+        <Textbox Name="Textbox74">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Bag.Keuangan</Value>
+                  <Style>
+                    <FontFamily>Calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox72</rd:DefaultName>
+          <Left>0.12103cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.94979cm</Width>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox75">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>( . . . . . . . . . )</Value>
+                  <Style>
+                    <FontFamily>Calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox72</rd:DefaultName>
+          <Top>1.55965cm</Top>
+          <Left>0.12103cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.94979cm</Width>
+          <ZIndex>1</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox76">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>Yang Menerima</Value>
+                  <Style>
+                    <FontFamily>Calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox72</rd:DefaultName>
+          <Left>5.17967cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.94979cm</Width>
+          <ZIndex>2</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox77">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>( . . . . . . . . . )</Value>
+                  <Style>
+                    <FontFamily>Calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Center</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox72</rd:DefaultName>
+          <Top>1.55965cm</Top>
+          <Left>5.17967cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.94979cm</Width>
+          <ZIndex>3</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="Textbox16">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=String.Join("/",Parameters!parUserId.Value,CDate(Globals!ExecutionTime).ToString("yyyy-MM-dd"),CDate(Globals!ExecutionTime).ToString("hh:mm:ss"))</Value>
+                  <Style>
+                    <FontFamily>Calibri</FontFamily>
+                    <FontSize>9pt</FontSize>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Left</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>Textbox16</rd:DefaultName>
+          <Top>1.68312cm</Top>
+          <Left>8.50048cm</Left>
+          <Height>0.47653cm</Height>
+          <Width>6.07598cm</Width>
+          <ZIndex>4</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+	 Sum(Fields!beli_disctot.Value, "ds_nota_beli") + Sum(Fields!beli_jml.Value, "ds_nota_beli"),
+	 "")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <Format>#,0</Format>
+                    <Language>id-ID</Language>
+                    <NumeralLanguage>id-ID</NumeralLanguage>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Left>17.55048cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.5cm</Width>
+          <ZIndex>5</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parDiskon">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+	 Sum(Fields!beli_disctot.Value, "ds_nota_beli"),
+	 "")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <Format>#,0</Format>
+                    <Language>id-ID</Language>
+                    <NumeralLanguage>id-ID</NumeralLanguage>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parDiskon</rd:DefaultName>
+          <Top>0.6cm</Top>
+          <Left>17.55048cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.5cm</Width>
+          <ZIndex>6</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parPPN2">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+	 Sum(Fields!beli_jml.Value, "ds_nota_beli"),
+	 "")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                    <Format>#,0</Format>
+                    <Language>id-ID</Language>
+                    <NumeralLanguage>id-ID</NumeralLanguage>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parPPN</rd:DefaultName>
+          <Top>1.55965cm</Top>
+          <Left>17.55048cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.5cm</Width>
+          <ZIndex>7</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml2">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "BERSAMBUNG . . .", "JUMLAH :")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Left>14.82646cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.72402cm</Width>
+          <ZIndex>8</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml3">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "BERSAMBUNG . . .", "DISCOUNT :")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Top>0.6cm</Top>
+          <Left>14.82646cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.72402cm</Width>
+          <ZIndex>9</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+        <Textbox Name="parJml5">
+          <CanGrow>true</CanGrow>
+          <KeepTogether>true</KeepTogether>
+          <Paragraphs>
+            <Paragraph>
+              <TextRuns>
+                <TextRun>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "BERSAMBUNG . . .", "TOTAL :")</Value>
+                  <Style>
+                    <FontFamily>calibri</FontFamily>
+                    <FontWeight>Bold</FontWeight>
+                  </Style>
+                </TextRun>
+              </TextRuns>
+              <Style>
+                <TextAlign>Right</TextAlign>
+              </Style>
+            </Paragraph>
+          </Paragraphs>
+          <rd:DefaultName>parJml</rd:DefaultName>
+          <Top>1.55965cm</Top>
+          <Left>14.82646cm</Left>
+          <Height>0.6cm</Height>
+          <Width>2.72402cm</Width>
+          <ZIndex>10</ZIndex>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+            <VerticalAlign>Middle</VerticalAlign>
+            <PaddingLeft>2pt</PaddingLeft>
+            <PaddingRight>2pt</PaddingRight>
+            <PaddingTop>2pt</PaddingTop>
+            <PaddingBottom>2pt</PaddingBottom>
+          </Style>
+        </Textbox>
+      </ReportItems>
+      <Style>
+        <Border>
+          <Style>None</Style>
+        </Border>
+      </Style>
+    </PageFooter>
     <PageHeight>5.5in</PageHeight>
     <LeftMargin>0.05in</LeftMargin>
     <TopMargin>0.1in</TopMargin>

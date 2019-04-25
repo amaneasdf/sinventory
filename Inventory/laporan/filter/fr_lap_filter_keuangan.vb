@@ -55,6 +55,8 @@
             Case "k_jurnalumum", "k_labarugi", "k_neraca", "k_neracalajur", "k_jurnaltutup", "k_daftarperk"
                 sales_sw = "OFF"
                 akun_sw = False
+                lbl_pajak.Location = lbl_sales.Location
+                cb_pajak.Location = in_sales.Location
                 prcessSW()
         End Select
 
@@ -79,26 +81,27 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "sales"
-                q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
+                q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master " _
+                    & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%')"
             Case "akun"
                 If laptype = "k_biayasales" Or laptype = "k_biayasales_global" Then
                     q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan WHERE perk_status=1 " _
                         & "AND LEFT(perk_tipe,1)='4' AND perk_nama_akun LIKE '{0}%'"
                 Else
-                    q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan WHERE perk_status=1 AND perk_nama_akun LIKE '{0}%'"
+                    q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan " _
+                        & "WHERE perk_status=1 AND (perk_nama_akun LIKE '%{0}%' OR perk_kode LIKE '%{0}%')"
                 End If
             Case "faktur"
                 Exit Sub
             Case Else
                 Exit Sub
         End Select
-        consoleWriteLine(String.Format(q, param))
         dt = getDataTablefromDB(String.Format(q, param))
 
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
+            .Columns(0).Width = 120
+            .Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
         End With
     End Sub
 
@@ -120,6 +123,7 @@
         popPnl_barang.Visible = False
     End Sub
 
+    'CREATE QUERY
     Private Function createQuery(tipe As String) As String
         Dim q As String = ""
         Dim qwh As String = ""
@@ -132,47 +136,142 @@
                                & "LEFT JOIN data_salesman_master ON salesman_kode=kas_sales " _
                                & "WHERE perk_kode LIKE '4%' {2} GROUP BY {3}kas_sales,k_trans_rek"
 
-        Dim qbukubesar As String = "CALL createBukuBesarTableTemp('{0}'); " _
-                                   & "SELECT bb_akun, bb_akun_n, bb_tgl, bb_kodebukti,bb_ket,bb_debet,bb_kredit,bb_saldo FROM bukubesar_temp{1}; " _
-                                   & "DROP TEMPORARY TABLE IF EXISTS bukubesar_temp;"
+        Dim qbukubesar As String = "SELECT perk_kode bb_akun, bb_akun_n, bb_tgl, bb_kodebukti, bb_ket, " _
+                                   & "@debet:=IF(n_jenis<>'sa',bb_debet,0) bb_debet, " _
+                                   & "@kredit:=IF(n_jenis<>'sa',bb_kredit,0) bb_kredit, " _
+                                   & "(CASE bb_id " _
+                                   & "  WHEN 0 THEN @saldo:=IF(perk_d_or_k='K',bb_kredit-bb_debet,bb_debet-bb_kredit) " _
+                                   & "  ELSE @saldo:= @saldo+IF(perk_d_or_k='K',bb_kredit-bb_debet,bb_debet-bb_kredit) " _
+                                   & "END) bb_saldo " _
+                                   & "FROM( " _
+                                   & "  SELECT perk_kode, perk_nama_akun as bb_akun_n, perk_d_or_k, IFNULL(n_id,0) bb_id, '{1}' as bb_tgl, " _
+                                   & "   '' as bb_kodebukti, 'Saldo Awal' as bb_ket, " _
+                                   & "   IFNULL(n_debet,0) bb_debet, IFNULL(n_kredit,0) bb_kredit, 'sa' n_jenis " _
+                                   & "  FROM data_perkiraan " _
+                                   & "  LEFT JOIN ( " _
+                                   & "      SELECT jurnal_kode_perk, 0 n_id, SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
+                                   & "      FROM data_jurnal_line " _
+                                   & "      LEFT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status=1 " _
+                                   & "      WHERE line_status=1 AND line_tanggal < '{1}' AND line_pajak IN({3}) " _
+                                   & "      GROUP BY jurnal_kode_perk " _
+                                   & "  )awal ON awal.jurnal_kode_perk=perk_kode " _
+                                   & "  UNION " _
+                                   & "  SELECT perk_kode, perk_nama_akun, perk_d_or_k, jurnal_id, line_tanggal, line_kode, jurnal_ket, " _
+                                   & "   jurnal_debet, jurnal_kredit, 'tr' n_jenis " _
+                                   & "  FROM data_jurnal_line " _
+                                   & "  LEFT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status=1 " _
+                                   & "  LEFT JOIN data_perkiraan ON perk_kode=jurnal_kode_perk " _
+                                   & "  WHERE jurnal_status = 1 AND line_tanggal BETWEEN '{1}' AND '{2}' AND line_pajak IN({3}) " _
+                                   & "  ORDER BY perk_kode, bb_tgl, bb_id, FIELD(n_jenis,'sa','tr') " _
+                                   & ")trans " _
+                                   & "JOIN (SELECT @debet:=0, @kredit:=0, @saldo:=0) para {0}"
 
-        Dim qjurnalumum As String = "CALL createJurnalUmumTableTemp('{0}'); " _
-                                    & "SELECT * FROM jurnalumum_temp{1}; " _
-                                    & "DROP TEMPORARY TABLE IF EXISTS jurnalumum_temp;"
+        Dim qjurnalumum As String = "SELECT line_tanggal as ju_tgl, line_kode as ju_kode, " _
+                                    & "IFNULL(pajak.ref_text,'ERROR') ju_kat, line_type as ju_type, " _
+                                    & "line_ref_type as ju_ref_type, line_ref as ju_ref_kode, " _
+                                    & "CONCAT_WS(' ',IFNULL(l_type_ket,line_type), " _
+                                    & "(CASE " _
+                                    & " WHEN line_ref_type='GUDANG' THEN gudang_nama " _
+                                    & " WHEN line_ref_type='SUPPLIER' THEN supplier_nama " _
+                                    & " WHEN line_ref_type='CUSTO' THEN customer_nama " _
+                                    & " WHEN line_ref_type='AKUN' THEN refakun.perk_nama_akun " _
+                                    & " WHEN line_ref_type='PERIODE' THEN 'Transaksi Penyesuaian Saldo Awal Periode' " _
+                                    & " ELSE line_ref END)) as ju_ref,jurnal_kode_perk as ju_akun,akun.perk_nama_akun as ju_akun_n, " _
+                                    & "jurnal_ket as ju_akun_ket,jurnal_debet as ju_debet,jurnal_kredit as ju_kredit, " _
+                                    & "line_id as ju_lineid " _
+                                    & "FROM data_jurnal_line " _
+                                    & "LEFT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status=1 " _
+                                    & "LEFT JOIN data_perkiraan akun ON akun.perk_kode=jurnal_kode_perk " _
+                                    & "LEFT JOIN data_barang_gudang ON line_ref=gudang_kode AND line_ref_type='GUDANG' " _
+                                    & "LEFT JOIN data_supplier_master ON supplier_kode=line_ref AND line_ref_type='SUPPLIER' " _
+                                    & "LEFT JOIN data_customer_master ON customer_kode=line_ref AND line_ref_type='CUSTO' " _
+                                    & "LEFT JOIN data_perkiraan refakun ON refakun.perk_kode=line_ref AND line_ref_type='AKUN' " _
+                                    & "LEFT JOIN ref_jenis pajak ON line_pajak=pajak.ref_kode AND pajak.ref_status=1 AND pajak.ref_type='ppn_trans2' " _
+                                    & "LEFT JOIN data_jurnal_line_type ON line_type=l_type_kode " _
+                                    & "WHERE line_status=1 AND line_tanggal BETWEEN '{0}' AND '{1}' AND line_kat='UMUM' AND line_pajak IN ({2}) " _
+                                    & "ORDER BY line_tanggal,line_id,jurnal_index"
 
         Dim qjurnaltutup As String = "CALL createJurnalTutupTableTemp('{0}'); " _
                                     & "SELECT * FROM jurnaltutup_temp WHERE ju_debet+ju_kredit<>0{1}; " _
                                     & "DROP TEMPORARY TABLE IF EXISTS jurnaltutup_temp;"
 
-        Dim qneracalajur As String = "SELECT n_kat, n_group,n_group_n, n_parent,n_parent_n,n_parent_pos,n_akun,n_akun_n,n_akun_pos," _
-                                     & "n_saldoawal, IFNULL(n_debet,0) n_debet,IFNULL(n_kredit,0) n_kredit, " _
-                                     & "@saldo:=IFNULL(IF(n_akun_pos='K',n_kredit-n_debet,n_debet-n_kredit),0) as n_saldo, " _
-                                     & "IF(n_kat IN ('1','2'),TRUNCATE(@saldo+n_saldoawal,2),0) n_neraca, " _
-                                     & "IF(n_kat IN ('1','2'),0,@saldo) n_labarugi " _
-                                     & "FROM( " _
-                                     & " SELECT perk_gol_kat n_kat, perk_tipe as n_group,perk_jen_nama as n_group_n," _
-                                     & "  perk_parent n_parent,perk_gol_nama n_parent_n,perk_gol_pos n_parent_pos, " _
-                                     & "  perk_kode n_akun,perk_nama_akun n_akun_n, perk_d_or_k n_akun_pos,IFNULL(perk_saldoawal_nilai,0) n_saldoawal " _
-                                     & " FROM data_perkiraan " _
-                                     & " LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
-                                     & " LEFT JOIN data_perkiraan_jenis ON perk_jen_kode= perk_gol_kodejen " _
-                                     & " LEFT JOIN data_perkiraan_saldoawal ON perk_saldoawal_kodeakun=perk_kode AND perk_saldoawal_status=1 AND perk_saldoawal_idperiode='{0}' " _
-                                     & " WHERE perk_status = 1 " _
-                                     & ")akun_det LEFT JOIN( " _
+        Dim qneracalajur As String = "SELECT perk_gol_kat n_kat, perk_jen_kode n_group, perk_jen_nama n_group_n, perk_gol_kode n_parent, perk_gol_nama n_parent_n, " _
+                                     & "perk_gol_pos n_parent_pos, perk_kode n_akun, perk_nama_akun n_akun_n, perk_d_or_k n_akun_pos," _
+                                     & "@saldoawal:=IFNULL(IF(perk_d_or_k='K',awal.n_kredit-awal.n_debet,awal.n_debet-awal.n_kredit),0) n_saldoawal, " _
+                                     & "IFNULL(saldo.n_debet,0) n_debet,IFNULL(saldo.n_kredit,0) n_kredit, " _
+                                     & "@saldo:=IFNULL(IF(perk_d_or_k='K',saldo.n_kredit-saldo.n_debet,saldo.n_debet-saldo.n_kredit),0) as n_saldo, " _
+                                     & "IF(perk_gol_kat IN ('1','2'),ROUND(@saldo+@saldoawal,2),0) n_neraca, " _
+                                     & "IF(perk_gol_kat IN ('1','2'),0,ROUND(@saldo+@saldoawal,2)) n_labarugi " _
+                                     & "FROM data_perkiraan " _
+                                     & "LEFT JOIN( " _
                                      & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
                                      & " FROM data_jurnal_line " _
                                      & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
-                                     & " WHERE line_status=1 AND line_tanggal BETWEEN '{1}' AND '{2}' AND line_kat='UMUM' " _
+                                     & " WHERE line_status=1 AND line_tanggal < '{1}' AND line_pajak IN ({0}) AND line_kat='UMUM' " _
                                      & " GROUP BY jurnal_kode_perk " _
-                                     & ")akun_saldo ON jurnal_kode_perk=n_akun " _
-                                     & "JOIN (SELECT @saldo:=0) para"
+                                     & ")awal ON awal.jurnal_kode_perk=perk_kode " _
+                                     & "LEFT JOIN( " _
+                                     & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
+                                     & " FROM data_jurnal_line " _
+                                     & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
+                                     & " WHERE line_status=1 AND line_tanggal BETWEEN '{1}' AND '{2}' AND line_pajak IN ({0}) AND line_kat='UMUM' " _
+                                     & " GROUP BY jurnal_kode_perk " _
+                                     & ")saldo ON saldo.jurnal_kode_perk=perk_kode " _
+                                     & "LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
+                                     & "LEFT JOIN data_perkiraan_jenis ON perk_jen_kode= perk_gol_kodejen " _
+                                     & "JOIN (SELECT @saldo:=0, @saldoawal:=0) para " _
+                                     & "WHERE perk_status = 1"
 
-        Dim qlabarugi As String = "CALL createLabaRugiTemp('{0}','{1}','{2}'); " _
-                                  & "SELECT * FROM labarugi_temp; " _
-                                  & "DROP TEMPORARY TABLE IF EXISTS labarugi_temp;"
-        Dim qneraca As String = "CALL createNeracaTemp('{0}','{1}','{2}'); " _
-                                & "SELECT * FROM neraca_temp; " _
-                                & "DROP TEMPORARY TABLE IF EXISTS neraca_temp;"
+        Dim qlabarugi As String = "SELECT lr_group,lr_group_ket,lr_parent,lr_parent_n,lr_parent_pos, " _
+                                  & "lr_akun,lr_akun_n,lr_akun_pos,IFNULL(lr_debet,0) lr_debet,IFNULL(lr_kredit,0) lr_kredit, " _
+                                  & "IFNULL(IF(lr_akun_pos='K',lr_kredit-lr_debet,lr_debet-lr_kredit),0) as lr_saldo " _
+                                  & "FROM( " _
+                                  & " SELECT perk_tipe as lr_group, " _
+                                  & "   IF(perk_tipe='31','Total Laba Kotor',CONCAT('Total ',perk_jen_nama)) lr_group_ket, " _
+                                  & "   perk_parent lr_parent,perk_gol_nama lr_parent_n,perk_gol_pos lr_parent_pos, " _
+                                  & "   perk_kode lr_akun,perk_nama_akun lr_akun_n, perk_d_or_k lr_akun_pos " _
+                                  & " FROM data_perkiraan " _
+                                  & " LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
+                                  & " LEFT JOIN data_perkiraan_jenis ON perk_jen_kode= perk_gol_kodejen " _
+                                  & " WHERE perk_tipe IN ('31','41','42','32') AND perk_status=1 " _
+                                  & ")det_akun " _
+                                  & "LEFT JOIN ( " _
+                                  & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) lr_debet, SUM(IFNULL(jurnal_kredit,0)) lr_kredit " _
+                                  & " FROM data_jurnal_line " _
+                                  & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
+                                  & " WHERE line_status=1 AND line_tanggal BETWEEN '{0}' AND '{1}' " _
+                                  & "   AND LEFT(jurnal_kode_perk,2) IN ('31','41','42','32') AND line_kat='UMUM' " _
+                                  & "   AND line_pajak IN ({2}) " _
+                                  & " GROUP BY jurnal_kode_perk " _
+                                  & ")nilai_akun ON jurnal_kode_perk=lr_akun"
+
+        Dim qneraca As String = "SELECT perk_gol_kat n_kat, perk_tipe as n_group,perk_jen_nama as n_group_n, " _
+                                & "perk_parent n_parent,perk_gol_nama n_parent_n,perk_gol_pos n_parent_pos, " _
+                                & "perk_kode n_akun,perk_nama_akun n_akun_n, perk_d_or_k n_akun_pos, " _
+                                & "@saldoawal:=IFNULL(IF(perk_d_or_k='K',awal.n_kredit-awal.n_debet,awal.n_debet-awal.n_kredit),0) n_saldoawal, " _
+                                & "IFNULL(saldo.n_debet,0) n_debet, IFNULL(saldo.n_kredit,0) n_kredit, " _
+                                & "@saldo:=IFNULL(IF(perk_d_or_k='K',saldo.n_kredit-saldo.n_debet,saldo.n_debet-saldo.n_kredit),0) n_saldo, " _
+                                & "ROUND(@saldoawal + @saldo,2) n_saldoakhir " _
+                                & "FROM data_perkiraan " _
+                                & "LEFT JOIN( " _
+                                & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
+                                & " FROM data_jurnal_line " _
+                                & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
+                                & " WHERE line_status=1 AND line_pajak IN({0}) AND line_tanggal BETWEEN '{1}' AND '{2}' AND LEFT(jurnal_kode_perk,1) IN ('1','2') " _
+                                & " GROUP BY jurnal_kode_perk " _
+                                & ")saldo ON perk_kode=saldo.jurnal_kode_perk " _
+                                & "LEFT JOIN ( " _
+                                & " SELECT jurnal_kode_perk,SUM(IFNULL(jurnal_debet,0)) n_debet, SUM(IFNULL(jurnal_kredit,0)) n_kredit " _
+                                & " FROM data_jurnal_line " _
+                                & " RIGHT JOIN data_jurnal_det ON jurnal_kode_line=line_id AND jurnal_status='1' " _
+                                & " WHERE line_status=1 AND line_pajak IN({0}) AND line_tanggal < '{1}' AND LEFT(jurnal_kode_perk,1) IN ('1','2') " _
+                                & " GROUP BY jurnal_kode_perk " _
+                                & ")awal ON saldo.jurnal_kode_perk=perk_kode " _
+                                & "LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
+                                & "LEFT JOIN data_perkiraan_jenis ON perk_jen_kode= perk_gol_kodejen " _
+                                & "JOIN (SELECT @saldo:=0, @saldoawal:=0) para " _
+                                & "WHERE perk_gol_kat IN ('1','2') AND perk_status=1"
+
         Dim qkas As String = "SELECT kas_kode, kas_tgl, kas_bank, aa.perk_nama_akun kas_bank_n, kas_jenis, kas_nobg, kas_sales, salesman_nama kas_sales_n," _
                              & "(CASE kas_status WHEN 1 THEN 'AKTIF' WHEN 2 THEN 'BATAL' ELSE 'ERROR' END) kas_status, " _
                              & "k_trans_rek kas_rek, bb.perk_nama_akun kas_rek_n, k_trans_debet kas_debet, k_trans_kredit kas_kredit, k_trans_ket kas_keterangan " _
@@ -182,8 +281,9 @@
                              & "LEFT JOIN data_perkiraan bb ON bb.perk_kode=k_trans_rek " _
                              & "LEFT JOIN data_salesman_master ON salesman_kode=kas_sales " _
                              & "WHERE kas_status=1 AND kas_tgl BETWEEN '{0}' AND '{1}' {2}"
+
         Dim qdaftarperk As String = "SELECT perk_kode da_kode,(CASE " _
-                                    & "WHEN LEFT(perk_kode,1)=1 THEN 'Aktiva' WHEN LEFT(perk_kode,1)=2 THEN 'Pasiva' WHEN LEFT(perk_kode,1)=3 THEN 'Pendapatan' " _
+                                    & "WHEN LEFT(perk_kode,1)=1 THEN 'Aktiva' WHEN LEFT(perk_kode,1)=2 THEN 'Passiva' WHEN LEFT(perk_kode,1)=3 THEN 'Pendapatan' " _
                                     & "WHEN LEFT(perk_kode,1)=4 THEN 'Biaya' ELSE 'ERROR' END) da_jenis, perk_jen_nama da_gol, perk_nama_akun da_akun_n, " _
                                     & "IF(perk_d_or_k='D','Debet','Kredit') da_akun_pos, " _
                                     & "(CASE WHEN perk_status='1' THEN 'AKTIF' WHEN perk_status='0' THEN 'NON AKTIF' WHEN perk_status='9' THEN 'DELETE' " _
@@ -236,17 +336,14 @@
                 End If
 
             Case "k_bukubesar"
-                q = String.Format(qbukubesar, selectperiode.id, "{0}")
+                q = String.Format(qbukubesar, "{0}", _tglawal, _tglakhir, cb_pajak.SelectedValue)
 
                 If in_akun.Text <> Nothing Then
-                    qwh += " WHERE bb_akun='" & in_akun.Text & "'"
+                    qwh += " WHERE perk_kode='" & in_akun.Text & "'"
                 End If
 
             Case "k_jurnalumum"
-                'If selectperiode.closed = False Then
-                q = String.Format(qjurnalumum, selectperiode.id, "{0}")
-                'End If
-                qwh += " WHERE ju_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'"
+                q = String.Format(qjurnalumum, _tglawal, _tglakhir, cb_pajak.SelectedValue)
 
             Case "k_jurnaltutup"
                 'If selectperiode.closed = False Then
@@ -255,13 +352,13 @@
                 qwh += " AND ju_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "'"
 
             Case "k_labarugi"
-                q = String.Format(qlabarugi, selectperiode.id, _tglawal, _tglakhir)
+                q = String.Format(qlabarugi, _tglawal, _tglakhir, cb_pajak.SelectedValue)
 
             Case "k_neraca"
-                q = String.Format(qneraca, selectperiode.id, _tglawal, _tglakhir)
+                q = String.Format(qneraca, cb_pajak.SelectedValue, _tglawal, _tglakhir)
 
             Case "k_neracalajur"
-                q = String.Format(qneracalajur, selectperiode.id, _tglawal, _tglakhir)
+                q = String.Format(qneracalajur, cb_pajak.SelectedValue, _tglawal, _tglakhir)
 
             Case "k_daftarperk"
                 q = qdaftarperk
@@ -269,7 +366,6 @@
         End Select
 
         qreturn = String.Format(q, qwh)
-        consoleWriteLine(qreturn)
 
         Return qreturn
     End Function
@@ -475,6 +571,12 @@
             .DisplayMember = "Text"
             .ValueMember = "Value"
             .SelectedValue = selectperiode.id
+        End With
+
+        With cb_pajak
+            .DataSource = jenis("trans_pajak2")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
         End With
 
         date_tglawal.MinDate = selectperiode.tglawal

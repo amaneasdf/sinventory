@@ -85,27 +85,28 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%')"
             Case "barang"
                 q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_stok_awal " _
                     & "LEFT JOIN data_barang_master ON barang_kode=stock_barang WHERE stock_status=1 " _
-                    & "AND stock_gudang LIKE '{0}' AND barang_nama LIKE '{1}%' " _
+                    & "AND stock_gudang LIKE '{0}' AND barang_nama LIKE '%{1}%' AND barang_pajak IN ({2})" _
                     & "GROUP BY barang_kode"
-                q = String.Format(q, IIf(in_gudang.Text <> Nothing, in_gudang.Text, "%"), "{0}")
+                q = String.Format(q, IIf(in_gudang.Text <> Nothing, in_gudang.Text, "%"), "{0}", cb_jenis.SelectedValue)
             Case "gudang"
-                q = "SELECT gudang_kode as 'Kode', gudang_nama as 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
+                q = "SELECT gudang_kode as 'Kode', gudang_nama as 'Nama' FROM data_barang_gudang " _
+                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%'"
             Case Else
                 Exit Sub
         End Select
 
-        consoleWriteLine(String.Format(q, param))
         dt = getDataTablefromDB(String.Format(q, param))
 
         If IsNothing(dt) = False Then
             With dgv_listbarang
                 .DataSource = dt
-                .Columns(0).Width = 135
-                .Columns(1).Width = 200
+                .Columns(0).Width = 125
+                .Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             End With
         End If
     End Sub
@@ -146,7 +147,8 @@
                                 & "	WHERE stock_status=1 " _
                                 & ") stok LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON stock_gudang=gudang_kode " _
-                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode {3} " _
+                                & "LEFT JOIN data_supplier_master ON barang_supplier=supplier_kode " _
+                                & "WHERE barang_pajak IN ({3}) {4} " _
                                 & "ORDER BY barang_kode"
         Dim qOpname As String = "SELECT faktur_bukti, faktur_tanggal, (CASE faktur_status " _
                                 & "WHEN 0 THEN 'PENDING' WHEN 1 THEN 'OK' WHEN 2 THEN 'BATAL' ELSE 'ERROR' END) 'status', " _
@@ -158,7 +160,7 @@
                                 & "LEFT JOIN data_stok_opname_trans ON faktur_bukti=trans_faktur AND trans_status=1 " _
                                 & "LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
                                 & "LEFT JOIN data_barang_gudang ON faktur_gudang=gudang_kode " _
-                                & "WHERE faktur_status IN (0,1,2) AND faktur_tanggal BETWEEN '{0}' AND '{1}' {2}"
+                                & "WHERE faktur_status IN (0,1,2) AND faktur_tanggal BETWEEN '{0}' AND '{1}' AND faktur_pajak IN ({2}) {3}"
         Const qKartuStok As String = "SELECT barang_kode kartu_barang, barang_nama kartu_barang_n, gudang_kode kartu_gudang, gudang_nama kartu_gudang_n, " _
                                      & "kartu_tgl, kartu_faktur, kartu_ket, kartu_ket2, kartu_qty_in, kartu_nilai_in, kartu_qty_out, kartu_nilai_out, " _
                                      & "@qty:= IF(@stock!={0}, kartu_qty_in - kartu_qty_out, @qty+ kartu_qty_in - kartu_qty_out) kartu_qty_saldo, " _
@@ -168,7 +170,8 @@
                                      & " SELECT barang_kode, barang_nama, gudang_kode, gudang_nama, " _
                                      & " trans_id kartu_index, trans_tgl kartu_tgl, trans_faktur kartu_faktur, trans_ket kartu_ket, " _
                                      & " (CASE WHEN trans_jenis IN ('po','rb') THEN supplier_nama " _
-                                     & "    WHEN trans_jenis IN ('so','rj') THEN customer_nama " _
+                                     & "    WHEN trans_jenis='so' THEN jual.faktur_customer " _
+                                     & "    WHEN trans_jenis='rj' THEN rjual.faktur_custo " _
                                      & "    ELSE '' " _
                                      & " END) kartu_ket2, " _
                                      & " IF(trans_qty>0, trans_qty,0) kartu_qty_in, ROUND(IF(trans_qty>0,trans_nilai,0)) kartu_nilai_in, " _
@@ -182,44 +185,101 @@
                                      & " LEFT JOIN data_penjualan_faktur jual ON trans_faktur=jual.faktur_kode " _
                                      & " LEFT JOIN data_penjualan_retur_faktur rjual ON trans_faktur=rjual.faktur_kode_bukti " _
                                      & " LEFT JOIN data_supplier_master ON supplier_kode=beli.faktur_supplier OR supplier_kode=rbeli.faktur_supplier " _
-                                     & " LEFT JOIN data_customer_master ON customer_kode=jual.faktur_customer OR customer_kode=rjual.faktur_custo " _
-                                     & " WHERE trans_stock LIKE '{1}-{2}' AND trans_status=1 AND trans_tgl BETWEEN '{3}' AND '{4}'" _
-                                     & " ORDER BY {0},trans_tgl,trans_id " _
+                                     & " WHERE trans_stock LIKE '{1}-{2}' AND trans_status=1 AND trans_tgl BETWEEN '{3}' AND '{4}' AND barang_pajak IN ({5}) " _
+                                     & " ORDER BY {0}, trans_tgl, trans_index , FIELD(trans_jenis,'sa','mi','ad','po','rb','so','rj','mg','mb','op') " _
                                      & ") detail JOIN(SELECT @stock:='', @qty:=0, @nilai:=0) param"
+        Dim qdatapers As String = "SELECT stock_gudang as persediaan_gudang, gudang_nama as persediaan_gudang_n, " _
+                                  & "stock_barang as persediaan_barang, barang_nama as persediaan_barang_n, " _
+                                  & "getHPPAVG(barang_kode, '{2}', {3}) as persediaan_hpp, " _
+                                  & "IFNULL(qty_awal,0) as persediaan_awal, IFNULL(nilai_awal,0) persediaan_awal_nilai, " _
+                                  & "IFNULL(qty_beli,0) as persediaan_beli, IFNULL(nilai_beli,0) as persediaan_beli_nilai, " _
+                                  & "IFNULL(qty_jual,0)*-1 as persediaan_jual, IFNULL(nilai_jual,0)*-1 as persediaan_jual_nilai, " _
+                                  & "IFNULL(qty_rbeli,0)*-1 as persediaan_rbeli, IFNULL(nilai_rbeli,0)*-1 as persediaan_rbeli_nilai, " _
+                                  & "IFNULL(qty_rjual,0) as persediaan_rjual, IFNULL(nilai_rjual,0) as persediaan_rjual_nilai, " _
+                                  & "IFNULL(qty_keluar,0)*-1 as persediaan_keluar,IFNULL(nilai_keluar,0)*-1  as persediaan_keluar_nilai, " _
+                                  & "IFNULL(qty_masuk,0) as persediaan_masuk,IFNULL(nilai_masuk,0)  as persediaan_masuk_nilai, " _
+                                  & "IFNULL(qty_stockop,0) as persediaan_stockop,IFNULL(nilai_stockop,0) as persediaan_stockop_nilai " _
+                                  & "FROM data_stok_awal " _
+                                  & "LEFT JOIN ( " _
+                                  & " SELECT trans_stock, " _
+                                  & "   SUM(if(trans_jenis IN ('sa','ad','mi'),trans_qty,0)) qty_awal, " _
+                                  & "   SUM(if(trans_jenis IN ('sa','ad','mi'),trans_nilai,0)) nilai_awal, " _
+                                  & "   SUM(if(trans_jenis='po',trans_qty,0)) qty_beli, " _
+                                  & "   SUM(if(trans_jenis='po',trans_nilai,0)) nilai_beli, " _
+                                  & "   SUM(if(trans_jenis='rb',trans_qty,0)) qty_rbeli, " _
+                                  & "   SUM(if(trans_jenis='rb',trans_nilai,0)) nilai_rbeli, " _
+                                  & "   SUM(if(trans_jenis='so',trans_qty,0)) qty_jual, " _
+                                  & "   SUM(if(trans_jenis='so',trans_nilai,0)) nilai_jual, " _
+                                  & "   SUM(if(trans_jenis='rj',trans_qty,0)) qty_rjual, " _
+                                  & "   SUM(if(trans_jenis='rj',trans_nilai,0)) nilai_rjual, " _
+                                  & "   SUM(if(trans_jenis IN('mg','mb') AND trans_qty>0,trans_qty,0)) qty_masuk, " _
+                                  & "   SUM(if(trans_jenis IN('mg','mb') AND trans_qty>0,trans_nilai,0)) nilai_masuk, " _
+                                  & "   SUM(if(trans_jenis IN('mg','mb') AND trans_qty<0,trans_qty,0)) qty_keluar, " _
+                                  & "   SUM(if(trans_jenis IN('mg','mb') AND trans_qty<0,trans_nilai,0)) nilai_keluar, " _
+                                  & "   SUM(if(trans_jenis='op',trans_qty,0)) qty_stockop, " _
+                                  & "   SUM(if(trans_jenis='op',trans_nilai,0)) nilai_stockop " _
+                                  & " FROM data_stok_kartustok " _
+                                  & " WHERE trans_status=1 AND trans_tgl BETWEEN '{1}' AND '{2}' " _
+                                  & " GROUP BY trans_stock " _
+                                  & ")stock_persed ON trans_stock=stock_kode " _
+                                  & "LEFT JOIN data_barang_gudang ON gudang_kode=stock_gudang " _
+                                  & "LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
+                                  & "WHERE stock_status=1 AND barang_pajak IN({4}) {0} " _
+                                  & "ORDER BY gudang_kode,barang_kode"
+
         Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
 
         Select Case tipe
-            Case "lapKartuStok"
-                q = "getDataKartuStok('{0}','{1}','{2}')"
-                q = String.Format(q, selectperiode.id, IIf(in_barang.Text = Nothing, "all", in_barang.Text), IIf(in_gudang.Text = Nothing, "all", in_gudang.Text))
+                Case "lapKartuStok"
+                    q = "getDataKartuStok('{0}','{1}','{2}')"
+                    q = String.Format(q, selectperiode.id, IIf(in_barang.Text = Nothing, "all", in_barang.Text), IIf(in_gudang.Text = Nothing, "all", in_gudang.Text))
 
-            Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
-                q = String.Format(qKartuStok, IIf(tipe = "lapKartuPersediaanGudang", "trans_stock", "barang_kode"),
-                                  IIf(String.IsNullOrWhiteSpace(in_gudang.Text), "%", in_gudang.Text),
-                                  IIf(String.IsNullOrWhiteSpace(in_barang.Text), "%", in_barang.Text),
-                                  _tglawal, _tglakhir
-                                  )
+                Case "lapKartuPersediaan", "lapKartuPersediaanGudang"
+                    q = String.Format(qKartuStok, IIf(tipe = "lapKartuPersediaanGudang", "trans_stock", "barang_kode"),
+                                      IIf(String.IsNullOrWhiteSpace(in_gudang.Text), "%", in_gudang.Text),
+                                      IIf(String.IsNullOrWhiteSpace(in_barang.Text), "%", in_barang.Text),
+                                      _tglawal, _tglakhir, cb_jenis
+                                      )
 
-            Case "lapPersediaan", "lapStok", "lapStokSupplier"
-                If tipe = "lapPersediaan" Then
-                    _colselect.AddRange({"stock_gudang", "gudang_nama stock_gudang_n", "stock_barang", "barang_nama stock_barang_n", "stock_qty",
-                                         "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n", "stock_hpp", "stock_hpp*stock_qty stock_nilai"})
-                ElseIf tipe = "lapStok" Then
-                    _colselect.AddRange({"stock_gudang", "gudang_nama stock_gudang_n", "stock_barang", "barang_nama stock_barang_n", "stock_qty",
-                                         "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n"})
-                ElseIf tipe = "lapStokSupplier" Then
-                    _colselect.AddRange({"barang_supplier stock_supplier", "supplier_nama stock_supplier_n", "stock_gudang", "gudang_nama stock_gudang_n", "stock_barang",
-                                         "barang_nama stock_barang_n", "stock_qty", "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n", "stock_hpp",
-                                         "stock_hpp*stock_qty stock_nilai"})
-                End If
+                Case "lapPersediaan", "lapStok", "lapStokSupplier"
+                    If tipe = "lapPersediaan" Then
+                        _colselect.AddRange({"stock_gudang", "gudang_nama stock_gudang_n", "stock_barang", "barang_nama stock_barang_n", "stock_qty",
+                                             "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n", "stock_hpp", "stock_hpp*stock_qty stock_nilai"})
+                    ElseIf tipe = "lapStok" Then
+                        _colselect.AddRange({"stock_gudang", "gudang_nama stock_gudang_n", "stock_barang", "barang_nama stock_barang_n", "stock_qty",
+                                             "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n"})
+                    ElseIf tipe = "lapStokSupplier" Then
+                        _colselect.AddRange({"barang_supplier stock_supplier", "supplier_nama stock_supplier_n", "stock_gudang", "gudang_nama stock_gudang_n", "stock_barang",
+                                             "barang_nama stock_barang_n", "stock_qty", "getQTYdetail(stock_barang, stock_qty, 1) stock_qty_n", "stock_hpp",
+                                             "stock_hpp*stock_qty stock_nilai"})
+                    End If
 
-                q = qpersed
-                q = String.Format(q, String.Join(",", _colselect), selectperiode.id, _tglakhir, "{0}")
+                    q = qpersed
+                    q = String.Format(q, String.Join(",", _colselect), selectperiode.id, _tglakhir, cb_jenis.SelectedValue, "{0}")
+
+                    Dim whr As New List(Of String)
+                    If in_gudang.Text <> Nothing Or in_barang.Text <> Nothing Or in_supplier.Text <> Nothing Then
+                        qwh += "AND {0}"
+                    End If
+                    If in_gudang.Text <> Nothing Then
+                        whr.Add("stock_gudang='" & in_gudang.Text & "'")
+                    End If
+                    If in_barang.Text <> Nothing Then
+                        whr.Add("stock_barang='" & in_barang.Text & "'")
+                    End If
+                    If in_supplier.Text <> Nothing And tipe = "lapStokSupplier" Then
+                        whr.Add("barang_supplier='" & in_supplier.Text & "'")
+                    End If
+
+                    qwh = String.Format(qwh, String.Join(" AND ", whr))
+
+            Case "lapStokMutasi", "lapPersediaanMutasi"
+                q = String.Format(qdatapers, "{0}", _tglawal, _tglakhir, selectperiode.id, cb_jenis.SelectedValue)
 
                 Dim whr As New List(Of String)
-                If in_gudang.Text <> Nothing Or in_barang.Text <> Nothing Or in_supplier.Text <> Nothing Then
-                    qwh += "WHERE {0}"
+                If in_gudang.Text <> Nothing Or in_barang.Text <> Nothing Then
+                    qwh += "AND {0}"
                 End If
                 If in_gudang.Text <> Nothing Then
                     whr.Add("stock_gudang='" & in_gudang.Text & "'")
@@ -227,15 +287,7 @@
                 If in_barang.Text <> Nothing Then
                     whr.Add("stock_barang='" & in_barang.Text & "'")
                 End If
-                If in_supplier.Text <> Nothing And tipe = "lapStokSupplier" Then
-                    whr.Add("barang_supplier='" & in_supplier.Text & "'")
-                End If
-
                 qwh = String.Format(qwh, String.Join(" AND ", whr))
-
-            Case "lapStokMutasi", "lapPersediaanMutasi"
-                q = "getDataPersediaan('{0}','{1}','{2}')"
-                q = String.Format(q, selectperiode.id, IIf(in_barang.Text = Nothing, "all", in_barang.Text), IIf(in_gudang.Text = Nothing, "all", in_gudang.Text))
 
             Case "lapOpname"
                 q = qOpname
@@ -249,10 +301,9 @@
                 End If
         End Select
 
-        qreturn = String.Format(q, qwh)
-        consoleWriteLine(qreturn)
+            qreturn = String.Format(q, qwh)
 
-        Return qreturn
+            Return qreturn
     End Function
 
     Private Sub exportData(type As String)
@@ -409,6 +460,12 @@
     End Sub
 
     Public Sub do_load(judulLap As String, tipeLap As String)
+        With cb_jenis
+            .DataSource = jenis("trans_pajak2")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+        End With
+
         laptype = tipeLap
         lapwintext = judulLap
 

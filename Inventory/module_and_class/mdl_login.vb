@@ -108,7 +108,7 @@
                     If rdx.HasRows Then
                         'cek ststus user -> setup, aktif, nonaktif/block
                         Dim user_stat As String = rdx.Item("user_status")
-                        If user_stat = "2" Then
+                        If user_stat = "0" Then
                             MessageBox.Show("Password Akun anda baru saja direset, Harap ganti password anda")
                         ElseIf user_stat <> "1" Then
                             MessageBox.Show("Akun anda terblokir, Aplikasi akan ditutup")

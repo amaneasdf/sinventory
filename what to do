@@ -14,6 +14,7 @@
 + setting user group menu yg bisa diberikan berdasarkan level pada user
 + improve perhitungan penutupan periode agar lebih bisa dikontrol oleh user
 + De/Activate entri stok yg tidak terpakai
++ Pecahan qty stok (besar,tengah,kecil)
 + Fix improve laporan/informasi giro
 + Input nilai awal saldo akun
 	-> (migrasi, no akun baru dg saldo <> 0)
@@ -27,8 +28,9 @@
 + Laporan keuangan dan lainnya berdasarkan jenis pajak, nonpajak, gabungan (Kat.A,B,C)
 	-> Neraca+LabaRugi 
 	-> Modal Disetor, biaya masuk pajak
++ Pencarian Data melalui kode
 + Laporan labarugi akumulasi, range periode satu/lebih
-+ Penambahan kolom utk pelaporan efaktur (kode_temp,tgl_trans_temp)
++ Penambahan kolom utk pelaporan efaktur (kode_temp(kode_pajak?),tgl_trans_temp)
 + input informasi program/promo berjalan untuk admin
 + penggolongan/list barang yang bisa diorder oleh sales
 + prioritas utk customer one bill(satu faktur penjualan sampai lunas) atau tidak
@@ -36,8 +38,16 @@
 	-> notifikasi/peringatan ketika piutang belum lunas [done]
 + penggolongan gudang yg bisa diakses sales
 + Android penambahan input diskon pada order penjualan
-
-+ penyesuaian input transasi(jenis pajak barang, dkk)
++ Edit & tambah stok awal
+	-> add stok awal
+	-> edit stok awal [done]
++ penyesuaian input transasi (jenis pajak barang, dkk)
++ Improve draft penjualan
+	-> pemilihan sales berdasarkan penjualan
+	-> fix layout printout
++ batal dan hapus transaksi
+	[done]
++ set jenis custo
 
 
 optional:

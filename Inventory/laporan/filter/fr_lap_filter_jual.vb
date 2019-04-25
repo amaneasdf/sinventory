@@ -118,16 +118,20 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "sales"
-                q = "SELECT salesman_kode as 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
+                q = "SELECT salesman_kode as 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master " _
+                    & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%') LIMIT 250"
             Case "custo"
-                q = "SELECT customer_kode as 'Kode', customer_nama AS 'Nama' FROM data_customer_master WHERE customer_status=1 AND customer_nama LIKE '{0}%'"
+                q = "SELECT customer_kode as 'Kode', customer_nama AS 'Nama' FROM data_customer_master " _
+                    & "WHERE customer_status=1 AND (customer_nama LIKE '%{0}%' OR customer_kode LIKE '%{0}%') LIMIT 250"
             Case "jenis"
                 q = "SELECT jenis_kode as 'Kode', CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) AS 'Nama Jenis' " _
-                    & "FROM data_customer_jenis WHERE jenis_status=1 AND jenis_nama LIKE '{0}%'"
+                    & "FROM data_customer_jenis WHERE jenis_status=1 AND (jenis_nama LIKE '%{0}%' OR jenis_kode LIKE '%{0}%') LIMIT 250"
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') LIMIT 250"
             Case "barang"
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_nama LIKE '{0}%'"
+                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama' FROM data_barang_master " _
+                    & "WHERE barang_status=1 AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') LIMIT 250"
             Case Else
                 Exit Sub
         End Select
@@ -170,37 +174,37 @@
         Dim qcolselect As String()
 
         Dim qnota As String = "SELECT {0} FROM (" _
-                              & " SELECT salesman_kode as lap_sales, salesman_nama as lap_sales_n ,customer_kode as lap_custo, customer_nama as lap_custo_n, " _
-                              & "  faktur_kode as lap_faktur, faktur_tanggal_trans as lap_tanggal," _
+                              & " SELECT salesman_kode lap_sales, salesman_nama lap_sales_n ,faktur_customer lap_custo, " _
+                              & "  GetMasterNama('custo', faktur_customer) as lap_custo_n, faktur_kode as lap_faktur, faktur_tanggal_trans as lap_tanggal," _
                               & "  if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah) as lap_brutto, " _
                               & "  faktur_disc_rupiah as lap_diskon, faktur_ppn_persen as lap_ppn, faktur_netto as lap_jumlah, 'JUAL' as lap_jenis " _
-                              & "  FROM data_penjualan_faktur LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
+                              & "  FROM data_penjualan_faktur " _
                               & "  LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                               & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                               & " UNION " _
-                              & " SELECT salesman_kode, salesman_nama, customer_kode, customer_nama, faktur_kode_bukti, faktur_tanggal_trans," _
+                              & " SELECT salesman_kode, salesman_nama, faktur_custo, GetMasterNama('custo', faktur_custo), faktur_kode_bukti, faktur_tanggal_trans," _
                               & "  if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah) as brutto," _
                               & "  faktur_jumlah-faktur_netto, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
-                              & " FROM data_penjualan_retur_faktur LEFT JOIN data_customer_master ON faktur_custo=customer_kode " _
+                              & " FROM data_penjualan_retur_faktur " _
                               & " LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                               & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                               & ") jual {4} {5}"
 
         Dim qtk As String = "SELECT {0} FROM (" _
-                            & " SELECT customer_kode as lap_custo, customer_nama as lap_custo_n, faktur_kode as lap_faktur, " _
+                            & " SELECT faktur_customer as lap_custo, GetMasterNama('custo', faktur_customer) as lap_custo_n, faktur_kode as lap_faktur, " _
                             & "  faktur_sales lap_sales, salesman_nama lap_sales_n, faktur_tanggal_trans as lap_tanggal, " _
                             & "  IF(faktur_term=0,if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah),0) as lap_tunai," _
                             & "  IF(faktur_term<>0,if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah),0) as lap_kredit, " _
                             & "  faktur_disc_rupiah as lap_diskon, faktur_ppn_persen as lap_ppn, faktur_netto as lap_jumlah, 'JUAL' as lap_jenis " _
-                            & " FROM data_penjualan_faktur LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
+                            & " FROM data_penjualan_faktur " _
                             & " LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
                             & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                             & " UNION " _
-                            & " SELECT faktur_custo, customer_nama, faktur_kode_bukti, faktur_sales, salesman_nama, faktur_tanggal_trans, " _
+                            & " SELECT faktur_custo, GetMasterNama('custo', faktur_custo), faktur_kode_bukti, faktur_sales, salesman_nama, faktur_tanggal_trans, " _
                             & "  IF(faktur_jen_bayar=2,if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah),0) lap_tunai, " _
                             & "  IF(faktur_jen_bayar<>2,if(faktur_ppn_jenis='1', faktur_jumlah-faktur_ppn_persen,faktur_jumlah),0) lap_kredit, " _
                             & "  faktur_jumlah-faktur_netto, faktur_ppn_persen, faktur_netto, 'RETUR' as jenis " _
-                            & " FROM data_penjualan_retur_faktur LEFT JOIN data_customer_master ON faktur_custo=customer_kode " _
+                            & " FROM data_penjualan_retur_faktur " _
                             & " LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
                             & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_ppn_jenis IN ({3}) " _
                             & ") jual {4} {5}"
@@ -250,21 +254,24 @@
                                   & ") trans LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
                                   & "{4} {5}"
 
-        Dim qdist As String = "SELECT {0} salesman_kode lap_sales,salesman_nama lap_sales_n, customer_kode lap_custo, customer_nama lap_custo_n,  " _
-                              & "CONCAT(REPLACE(REPLACE(customer_alamat,CHAR(13),' '),CHAR(10),' '),' Blok ',IFNULL(customer_alamat_blok,'0'), " _
-                              & "' No.',LPAD(customer_alamat_nomor,3,0),' RT. ',LPAD(customer_alamat_rt,3,0),' RW. ',LPAD(customer_alamat_rw,3,0)) lap_custo_al, " _
-                              & "customer_kecamatan lap_custo_kec, customer_kabupaten lap_custo_kab, " _
-                              & "CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) lap_custo_jn, faktur_kode as lap_faktur, " _
+        Dim qdist As String = "SELECT {0} salesman_kode lap_sales,salesman_nama lap_sales_n, faktur_customer lap_custo,  " _
+                              & "GetMasterNama('custo', faktur_customer) lap_custo_n, GetMasterNama('custoalamat', faktur_customer) lap_custo_al, " _
+                              & "GetMasterNama('custokec', faktur_customer) lap_custo_kec, GetMasterNama('custokab', faktur_customer) lap_custo_kab, " _
+                              & "GetMasterNama('custojenis', faktur_customer) lap_custo_jn, faktur_kode as lap_faktur, " _
                               & "faktur_tanggal_trans lap_tgl, barang_kode lap_barang, barang_nama lap_barang_n, trans_harga_jual lap_harga_jual, " _
-                              & "trans_qty lap_qty, trans_satuan lap_sat, trans_harga_jual*trans_qty lap_subtotal, trans_disc1 lap_disc1, trans_disc2 lap_disc2, " _
-                              & " trans_disc3 lap_disc3,trans_disc4 lap_disc4, trans_disc5 lap_disc5, trans_disc_rupiah lap_discrp, " _
-                              & "(trans_harga_jual*trans_qty)-trans_jumlah as lap_disc_tot, trans_jumlah as lap_jml " _
+                              & "trans_qty lap_qty, trans_satuan lap_sat,@subtotal:=trans_harga_jual*trans_qty lap_subtotal, " _
+                              & "trans_disc_rupiah lap_discrp, @discrp:=trans_disc_rupiah*trans_qty lap_discrp_n, " _
+                              & "trans_disc1 lap_disc1, @disc1:=ROUND(IF(trans_disc1=0, 0, (@subtotal-@discrp) * (trans_disc1/100)),2) lap_disc1_n, " _
+                              & "trans_disc2 lap_disc2, @disc2:=ROUND(IF(trans_disc2=0, 0, (@subtotal-(@discrp+@disc1)) * (trans_disc2/100)),2) lap_disc2_n, " _
+                              & "trans_disc3 lap_disc3, @disc3:=ROUND(IF(trans_disc3=0, 0, (@subtotal-(@discrp+@disc1+@disc2)) * (trans_disc3/100)),2) lap_disc3_n, " _
+                              & "trans_disc4 lap_disc4, @disc4:=ROUND(IF(trans_disc4=0, 0, (@subtotal-(@discrp+@disc1+@disc2+@disc3)) * (trans_disc4/100)),2) lap_disc4_n, " _
+                              & "trans_disc5 lap_disc5, @disc5:=ROUND(IF(trans_disc5=0, 0, (@subtotal-(@discrp+@disc1+@disc2+@disc3+@disc4)) * (trans_disc5/100)),2) lap_disc5_n, " _
+                              & "ROUND(@discrp+@disc1+@disc2+@disc3+@disc4+@disc5,2) as lap_disc_tot, " _
+                              & "(trans_harga_jual*trans_qty)-ROUND(@discrp+@disc1+@disc2+@disc3+@disc4+@disc5,2) as lap_jml " _
                               & "FROM data_penjualan_faktur " _
                               & "LEFT join data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
                               & "LEFT JOIN data_salesman_master ON salesman_kode=faktur_sales " _
                               & "LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
-                              & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
-                              & "LEFT JOIN data_customer_jenis ON jenis_kode=Customer_jenis " _
                               & "WHERE faktur_tanggal_trans BETWEEN '{1}' AND '{2}' AND faktur_status=1 AND faktur_ppn_jenis IN ({3}) {4} {5}"
         Dim qPesanan As String = "SELECT {0} FROM ( " _
                                  & "SELECT j_order_kode pesan_id,j_order_tanggal_trans pesan_tgl_trans, j_order_sales pesan_sales, salesman_nama pesan_sales_n, " _
@@ -625,8 +632,8 @@
                 _filename = "JualSalesBrg" & _datefile & ".xlsx"
             Case "lapJualSalesCustoBarang"
                 _colheader.AddRange({"KODE SALESMAN", "NAMA SALESMAN", "KODE CUSTOMER", "NAMA CUSTOMER", "ALAMAT CUSTOMER", "KECAMATAN", "KABUPATEN", "JENIS", "NO.FAKTUR",
-                                     "TGL.TRANSAKSI", "KODE BARANG", "NAMA BARANG", "HARGA JUAL", "QTY", "SATUAN", "SUBTOTAL", "DISC1", "DISC2", "DISC3", "DISC4",
-                                     "DISC5", "DISCRP", "TOTAL DISKON", "TOTAL"})
+                                     "TGL.TRANSAKSI", "KODE BARANG", "NAMA BARANG", "HARGA JUAL", "QTY", "SATUAN", "SUBTOTAL", "DISCRP", "NOM.DISCRP", "DISC1", "NOM.DISC1",
+                                     "DISC2", "NOM.DISC2", "DISC3", "NOM.DISC3", "DISC4", "NOM.DISC4", "DISC5", "NOM.DISC5", "TOTAL DISKON", "TOTAL"})
                 _title = "LAPORAN PENJUALAN DISTRIBUTOR PER SALESMAN " & _tglawal & " s.d. " & _tglakhir
                 _filename = "JualDistSalesBrg" & _datefile & ".xlsx"
 

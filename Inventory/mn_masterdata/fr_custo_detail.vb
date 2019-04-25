@@ -518,6 +518,25 @@
         keyshortenter(cb_area, e)
     End Sub
 
+    Private Sub cb_tipe_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_tipe.SelectionChangeCommitted
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main Connection is empty")
+        End If
+
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Dim q = "SELECT jenis_def_jual FROM data_customer_jenis WHERE jenis_kode='{0}'"
+                Using rdx = x.ReadCommand(String.Format(q, cb_tipe.SelectedValue))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        cb_harga.SelectedValue = rdx.Item(0)
+                    End If
+                End Using
+            End If
+        End Using
+    End Sub
+
     Private Sub cb_area_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_area.SelectionChangeCommitted
 
         Dim q As String = "SELECT ref_kab_nama, c_area_nama FROM data_customer_area " _

@@ -143,6 +143,7 @@
                         in_sales_n.Text = rdx.Item("salesman_nama")
                         in_custo.Text = rdx.Item("faktur_custo")
                         in_custo_n.Text = rdx.Item("customer_nama")
+
                         in_gudang.Text = rdx.Item("faktur_gudang")
                         in_gudang_n.Text = rdx.Item("gudang_nama")
                         _persediaan = rdx.Item("faktur_persediaan")
@@ -253,10 +254,10 @@
     End Function
 
     'COUNT SUBTOTAL
-    Private Function countSubtot(harga As Double, qty As Integer, Optional disk As Double = 0) As Double
-        Dim retSubtot As Double = 0
-        Dim _jl As Double = 0
-        Dim _disk As Double = 0
+    Private Function countSubtot(harga As Decimal, qty As Integer, Optional disk As Decimal = 0) As Decimal
+        Dim retSubtot As Decimal = 0
+        Dim _jl As Decimal = 0
+        Dim _disk As Decimal = 0
 
         _jl = harga * qty
         _disk = _jl * (disk / 100)
@@ -269,45 +270,55 @@
     Private Sub loadDataBRGPopup(tipe As String, param As String)
         Dim q As String
         Dim dt As New DataTable
+        Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
+
         Select Case tipe
             Case "barang"
-                Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
                 q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama', IF(trans_harga_jual=0,AVG(trans_harga_jual),trans_harga_jual) as harga_jual " _
                     & "FROM data_penjualan_trans LEFT JOIN data_penjualan_faktur ON faktur_kode=trans_faktur AND faktur_status=1 " _
                     & "LEFT JOIN data_barang_master ON trans_barang=barang_kode AND trans_status=1 " _
-                    & "WHERE trans_status=1 AND faktur_customer='{1}' AND barang_nama LIKE '{0}%' AND barang_pajak='{2}' " _
+                    & "WHERE trans_status=1 AND faktur_customer='{1}' AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND barang_pajak='{2}' " _
                     & "GROUP BY barang_kode LIMIT 250"
                 q = String.Format(q, "{0}", in_custo.Text, _pajak)
+
             Case "custo"
-                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama' " _
+                q = "SELECT customer_kode AS 'Kode', customer_nama AS 'Nama', " _
+                    & "TRIM(BOTH ', ' FROM CONCAT_WS(', ',customer_alamat,customer_kecamatan,customer_kabupaten)) 'Alamat'  " _
                     & "FROM data_penjualan_faktur " _
                     & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode AND customer_status=1 " _
-                    & "WHERE faktur_status=1 AND customer_nama LIKE '{0}%' GROUP BY customer_kode"
+                    & "WHERE faktur_status=1 AND (customer_nama LIKE '%{0}%' OR customer_kode LIKE '%{0}%') GROUP BY customer_kode LIMIT 250"
+
             Case "gudang"
-                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
+                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
+                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+
             Case "sales"
-                q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master WHERE salesman_status=1 AND salesman_nama LIKE '{0}%'"
+                q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master " _
+                     & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%') LIMIT 250"
+
             Case "faktur"
-                q = "SELECT piutang_faktur AS 'faktur', piutang_awal AS 'SaldoAwal', getSisaPiutang(piutang_faktur,'" & selectperiode.id & "') as 'SisaPiutang' " _
-                    & "FROM data_piutang_awal LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur AND faktur_status=1 " _
-                    & "WHERE piutang_status=1 AND faktur_customer='" & in_custo.Text & "' " _
-                    & "AND piutang_faktur LIKE '{0}%' AND faktur_sales LIKE '" & in_sales.Text & "%'"
+                q = "SELECT piutang_faktur AS 'Faktur', piutang_awal AS 'SaldoAwal', getSisaPiutang(piutang_faktur,'{1}') as 'SisaPiutang' " _
+                    & "FROM data_piutang_awal " _
+                    & "WHERE piutang_status=1 AND piutang_customer='{2}' AND piutang_faktur LIKE '%{0}%' AND piutang_sales='{3}' AND piutang_pajak IN {4} LIMIT 250"
+                q = String.Format(q, "{0}", in_custo.Text, in_sales.Text, _pajak)
             Case Else
                 Exit Sub
         End Select
-        consoleWriteLine(String.Format(q, param))
+
         dt = getDataTablefromDB(String.Format(q, param))
 
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
+            .Columns(0).Width = 100
+            .Columns(1).Width = 150
             If tipe = "barang" Then
                 .Columns(2).Visible = False
             ElseIf tipe = "faktur" Then
                 .Columns(1).Width = 80
                 .Columns(2).Width = 125
                 .Columns(2).DefaultCellStyle = dgvstyle_currency
+            ElseIf tipe = "custo" Then
+                .Columns(2).Width = 200
             End If
         End With
     End Sub
@@ -387,7 +398,7 @@
             Exit Sub
         End If
 
-        Dim hpp As Double = 0
+        Dim hpp As Decimal = 0
 
         'GET DATA BARANG
         Using x = MainConnection
@@ -499,9 +510,9 @@
     End Sub
 
     Private Sub countBiaya()
-        Dim subtot As Double = 0
-        Dim pajak As Double = 0
-        Dim z As Double = 0
+        Dim subtot As Decimal = 0
+        Dim pajak As Decimal = 0
+        Dim z As Decimal = 0
         _persediaan = 0
 
         op_con()
@@ -647,11 +658,6 @@
 
         '==========================================================================================================================
         'INSERT BARANG
-        Dim x As New List(Of String)
-        Dim x_kodestock As New List(Of String)
-        Dim qty As New List(Of Integer)
-        Dim nilai As New List(Of Double)
-
         '==========================================================================================================================
         q = "UPDATE data_penjualan_retur_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_no_bukti.Text))
@@ -674,7 +680,7 @@
             'INSERT DATA BARANG
             dataBrg = {
                 "trans_barang='" & rows.Cells(0).Value & "'",
-                "trans_harga_retur='" & rows.Cells("harga").Value.ToString.Replace(",", ".") & "'",
+                "trans_harga_retur='" & Decimal.Parse(rows.Cells("harga").Value).ToString.Replace(",", ".") & "'",
                 "trans_qty='" & rows.Cells("qty").Value & "'",
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
@@ -763,12 +769,9 @@
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
-        Using nota As New fr_view_piutang
-            Me.Cursor = Cursors.WaitCursor
-            With nota
-                '.setVar("beli", in_faktur.Text, "")
-                '.ShowDialog()
-            End With
+        Me.Cursor = Cursors.WaitCursor
+        Using nota As New fr_nota_dialog
+            nota.do_load("returjual", in_no_bukti.Text)
         End Using
         Me.Cursor = Cursors.Default
     End Sub
@@ -847,12 +850,12 @@
         If e.KeyCode = Keys.Enter Then
             'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
+            setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keyup(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
-            setPopUpResult()
         End If
     End Sub
 
@@ -943,7 +946,7 @@
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyUp, in_sales_n.KeyUp, in_gudang_n.KeyUp, in_no_faktur.KeyUp, in_barang_nm.KeyUp
+    Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyDown, in_sales_n.KeyDown, in_gudang_n.KeyDown, in_no_faktur.KeyDown, in_barang_nm.KeyDown
         Dim _nxtcntrl As Control = Nothing
         Dim _kdcntrl As Control = Nothing
 
@@ -997,7 +1000,7 @@
                     End If
                     popPnl_barang.Visible = _sw
                 End If
-                loadDataBRGPopup(popupstate, sender.Text)
+                loadDataBRGPopup(popupstate, sender.Text & IIf(Char.IsLetterOrDigit(Convert.ToChar(e.KeyCode)), Convert.ToChar(e.KeyCode), ""))
             End If
         End If
     End Sub
@@ -1040,7 +1043,7 @@
         Next
     End Sub
 
-    Private Sub cb_bayar_jenis_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_bayar_jenis.KeyUp
+    Private Sub cb_bayar_jenis_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_bayar_jenis.KeyDown
         keyshortenter(in_no_faktur, e)
     End Sub
 
@@ -1055,12 +1058,12 @@
         End If
     End Sub
 
-    Private Sub in_no_faktur_ex_KeyUp(sender As Object, e As KeyEventArgs) Handles in_no_faktur_ex.KeyUp
+    Private Sub in_no_faktur_ex_KeyUp(sender As Object, e As KeyEventArgs) Handles in_no_faktur_ex.KeyDown
         keyshortenter(in_barang_nm, e)
     End Sub
 
     'BARANG
-    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
+    Private Sub in_barang_KeyUp(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
         keyshortenter(in_barang_nm, e)
     End Sub
 
@@ -1079,7 +1082,7 @@
         End If
     End Sub
 
-    Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyUp
+    Private Sub in_qty_KeyUp(sender As Object, e As KeyEventArgs) Handles in_qty.KeyDown
         keyshortenter(cb_sat, e)
     End Sub
 
@@ -1092,15 +1095,15 @@
         _satuanstate = cb_sat.SelectedValue
     End Sub
 
-    Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyUp
+    Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyDown
         keyshortenter(in_harga_retur, e)
     End Sub
 
-    Private Sub in_harga_retur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyUp
+    Private Sub in_harga_retur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_retur.KeyDown
         keyshortenter(in_diskon, e)
     End Sub
 
-    Private Sub in_diskon_KeyUp(sender As Object, e As KeyEventArgs) Handles in_diskon.KeyUp
+    Private Sub in_diskon_KeyUp(sender As Object, e As KeyEventArgs) Handles in_diskon.KeyDown
         keyshortenter(bt_tbbarang, e)
     End Sub
 

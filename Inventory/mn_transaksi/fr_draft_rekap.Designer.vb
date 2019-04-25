@@ -40,6 +40,12 @@ Partial Class fr_draft_rekap
         Me.sales_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.sales_nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draft_list = New System.Windows.Forms.DataGridView()
+        Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_countnota = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_countitem = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.draftlist_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.dgv_draftfaktur = New System.Windows.Forms.DataGridView()
         Me.draft_custo = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.draft_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -62,6 +68,7 @@ Partial Class fr_draft_rekap
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_tambah = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.DraftBarangToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DraftNotaToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -78,15 +85,9 @@ Partial Class fr_draft_rekap
         Me.in_caridraft = New System.Windows.Forms.TextBox()
         Me.bt_create_draft = New System.Windows.Forms.Button()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.Label15 = New System.Windows.Forms.Label()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.draftlist_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_sales = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_countnota = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_countitem = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.draftlist_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_sales, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_draft_list, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -294,6 +295,56 @@ Partial Class fr_draft_rekap
         Me.dgv_draft_list.Size = New System.Drawing.Size(874, 192)
         Me.dgv_draft_list.TabIndex = 22
         '
+        'draftlist_kode
+        '
+        Me.draftlist_kode.DataPropertyName = "draft_kode"
+        Me.draftlist_kode.HeaderText = "Kode Rekap"
+        Me.draftlist_kode.MinimumWidth = 100
+        Me.draftlist_kode.Name = "draftlist_kode"
+        Me.draftlist_kode.ReadOnly = True
+        Me.draftlist_kode.Width = 125
+        '
+        'draftlist_tgl
+        '
+        Me.draftlist_tgl.DataPropertyName = "draft_tanggal"
+        Me.draftlist_tgl.HeaderText = "Tgl.Rekap"
+        Me.draftlist_tgl.MinimumWidth = 50
+        Me.draftlist_tgl.Name = "draftlist_tgl"
+        Me.draftlist_tgl.ReadOnly = True
+        '
+        'draftlist_sales
+        '
+        Me.draftlist_sales.DataPropertyName = "draft_sales"
+        Me.draftlist_sales.HeaderText = "Salesman"
+        Me.draftlist_sales.MinimumWidth = 100
+        Me.draftlist_sales.Name = "draftlist_sales"
+        Me.draftlist_sales.ReadOnly = True
+        Me.draftlist_sales.Width = 225
+        '
+        'draftlist_countnota
+        '
+        Me.draftlist_countnota.DataPropertyName = "draft_ctnota"
+        Me.draftlist_countnota.HeaderText = "Jml.Nota"
+        Me.draftlist_countnota.Name = "draftlist_countnota"
+        Me.draftlist_countnota.ReadOnly = True
+        Me.draftlist_countnota.Width = 75
+        '
+        'draftlist_countitem
+        '
+        Me.draftlist_countitem.DataPropertyName = "draft_ctitem"
+        Me.draftlist_countitem.HeaderText = "Jml.Item"
+        Me.draftlist_countitem.Name = "draftlist_countitem"
+        Me.draftlist_countitem.ReadOnly = True
+        Me.draftlist_countitem.Width = 75
+        '
+        'draftlist_gudang
+        '
+        Me.draftlist_gudang.DataPropertyName = "draft_gudang"
+        Me.draftlist_gudang.HeaderText = "Gudang"
+        Me.draftlist_gudang.Name = "draftlist_gudang"
+        Me.draftlist_gudang.ReadOnly = True
+        Me.draftlist_gudang.Width = 175
+        '
         'dgv_draftfaktur
         '
         Me.dgv_draftfaktur.AllowUserToAddRows = False
@@ -384,9 +435,9 @@ Partial Class fr_draft_rekap
         '
         'bt_addfaktur
         '
-        Me.bt_addfaktur.Location = New System.Drawing.Point(533, 288)
+        Me.bt_addfaktur.Location = New System.Drawing.Point(533, 312)
         Me.bt_addfaktur.Name = "bt_addfaktur"
-        Me.bt_addfaktur.Size = New System.Drawing.Size(27, 85)
+        Me.bt_addfaktur.Size = New System.Drawing.Size(27, 61)
         Me.bt_addfaktur.TabIndex = 13
         Me.bt_addfaktur.Text = ">>"
         Me.bt_addfaktur.UseVisualStyleBackColor = True
@@ -475,7 +526,7 @@ Partial Class fr_draft_rekap
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_print, Me.mn_refresh})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_delete, Me.mn_print, Me.mn_refresh})
         Me.MenuStrip1.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
@@ -498,6 +549,12 @@ Partial Class fr_draft_rekap
         Me.mn_edit.ShortcutKeys = System.Windows.Forms.Keys.F2
         Me.mn_edit.Size = New System.Drawing.Size(115, 20)
         Me.mn_edit.Text = "Edit/Load Draft"
+        '
+        'mn_delete
+        '
+        Me.mn_delete.Name = "mn_delete"
+        Me.mn_delete.Size = New System.Drawing.Size(82, 20)
+        Me.mn_delete.Text = "Hapus Draft"
         '
         'mn_print
         '
@@ -541,9 +598,9 @@ Partial Class fr_draft_rekap
         '
         'bt_remfaktur
         '
-        Me.bt_remfaktur.Location = New System.Drawing.Point(533, 377)
+        Me.bt_remfaktur.Location = New System.Drawing.Point(533, 379)
         Me.bt_remfaktur.Name = "bt_remfaktur"
-        Me.bt_remfaktur.Size = New System.Drawing.Size(27, 85)
+        Me.bt_remfaktur.Size = New System.Drawing.Size(27, 61)
         Me.bt_remfaktur.TabIndex = 14
         Me.bt_remfaktur.Text = "<<"
         Me.bt_remfaktur.UseVisualStyleBackColor = True
@@ -681,6 +738,17 @@ Partial Class fr_draft_rekap
         Me.pnl_content.Size = New System.Drawing.Size(918, 509)
         Me.pnl_content.TabIndex = 0
         '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label15.Location = New System.Drawing.Point(6, 543)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(68, 13)
+        Me.Label15.TabIndex = 374
+        Me.Label15.Text = "List Rekap"
+        '
         'Label13
         '
         Me.Label13.AutoSize = True
@@ -702,67 +770,6 @@ Partial Class fr_draft_rekap
         Me.Label8.Size = New System.Drawing.Size(61, 13)
         Me.Label8.TabIndex = 372
         Me.Label8.Text = "Salesman"
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label15.Location = New System.Drawing.Point(6, 543)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(68, 13)
-        Me.Label15.TabIndex = 374
-        Me.Label15.Text = "List Rekap"
-        '
-        'draftlist_kode
-        '
-        Me.draftlist_kode.DataPropertyName = "draft_kode"
-        Me.draftlist_kode.HeaderText = "Kode Rekap"
-        Me.draftlist_kode.MinimumWidth = 100
-        Me.draftlist_kode.Name = "draftlist_kode"
-        Me.draftlist_kode.ReadOnly = True
-        Me.draftlist_kode.Width = 125
-        '
-        'draftlist_tgl
-        '
-        Me.draftlist_tgl.DataPropertyName = "draft_tanggal"
-        Me.draftlist_tgl.HeaderText = "Tgl.Rekap"
-        Me.draftlist_tgl.MinimumWidth = 50
-        Me.draftlist_tgl.Name = "draftlist_tgl"
-        Me.draftlist_tgl.ReadOnly = True
-        '
-        'draftlist_sales
-        '
-        Me.draftlist_sales.DataPropertyName = "draft_sales"
-        Me.draftlist_sales.HeaderText = "Salesman"
-        Me.draftlist_sales.MinimumWidth = 100
-        Me.draftlist_sales.Name = "draftlist_sales"
-        Me.draftlist_sales.ReadOnly = True
-        Me.draftlist_sales.Width = 225
-        '
-        'draftlist_countnota
-        '
-        Me.draftlist_countnota.DataPropertyName = "draft_ctnota"
-        Me.draftlist_countnota.HeaderText = "Jml.Nota"
-        Me.draftlist_countnota.Name = "draftlist_countnota"
-        Me.draftlist_countnota.ReadOnly = True
-        Me.draftlist_countnota.Width = 75
-        '
-        'draftlist_countitem
-        '
-        Me.draftlist_countitem.DataPropertyName = "draft_ctitem"
-        Me.draftlist_countitem.HeaderText = "Jml.Item"
-        Me.draftlist_countitem.Name = "draftlist_countitem"
-        Me.draftlist_countitem.ReadOnly = True
-        Me.draftlist_countitem.Width = 75
-        '
-        'draftlist_gudang
-        '
-        Me.draftlist_gudang.DataPropertyName = "draft_gudang"
-        Me.draftlist_gudang.HeaderText = "Gudang"
-        Me.draftlist_gudang.Name = "draftlist_gudang"
-        Me.draftlist_gudang.ReadOnly = True
-        Me.draftlist_gudang.Width = 175
         '
         'fr_draft_rekap
         '
@@ -856,5 +863,6 @@ Partial Class fr_draft_rekap
     Friend WithEvents draftlist_countnota As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents draftlist_countitem As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents draftlist_gudang As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
 
 End Class

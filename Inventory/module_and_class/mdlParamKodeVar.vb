@@ -130,6 +130,7 @@
         dt.Rows.Add("Data Gudang", "master_gudang")
         dt.Rows.Add("Data Salesman", "master_sales")
         dt.Rows.Add("Data Customer", "master_customer")
+        dt.Rows.Add("Jenis Customer", "master_custojenis")
         'dt.Rows.Add("Data Pembelian", "trans_beli")
 
         Return dt
@@ -172,6 +173,10 @@
                 dt.Rows.Add("One Bill", "0")
                 dt.Rows.Add("Priority", "1")
 
+            Case "bayar_pajak"
+                q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
+                dt = getDataTablefromDB(q)
+
             Case "term"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
@@ -198,6 +203,12 @@
                 dt.Rows.Add("Kategori A", "0")
                 dt.Rows.Add("Kategori B", "1,2")
                 dt.Rows.Add("Kategori C", "0,1,2")
+            Case "trans_pajak2"
+                dt.Columns.Add("Text", GetType(String))
+                dt.Columns.Add("Value", GetType(String))
+                dt.Rows.Add("Kategori A", "0")
+                dt.Rows.Add("Kategori B", "1")
+                dt.Rows.Add("Kategori C", "0,1")
 
             Case "periode"
                 dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
@@ -407,10 +418,11 @@
     Public pgkartustok = New TabPage() With {.Name = "pgkartustok"}
     Public pgtutupbuku = New TabPage() With {.Name = "pgtutupbuku"}
     Public pglap = New TabPage() With {.Name = "pglap"}
-    Public pgexportEFak = New TabPage() With {.Name = "pgexportEFak"}
+    Public pgexportEFak = New TabPage() With {.Name = "pgexportEFak", .AutoScroll = True}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgref = New TabPage() With {.Name = "pgref"}
+    Public pgsalesbarang = New TabPage() With {.Name = "pgsalesbarang"}
     'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
     'Public pgsatuanbarang = New TabPage() With {.Name = "pgsatuanbarang"}
 
@@ -453,6 +465,7 @@
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmref As New fr_data_referensi With {.Dock = DockStyle.Fill}
+    Public frmsalesbarang As New uc_sales_barang With {.Dock = DockStyle.Fill}
     Public frmjenisbarang As New fr_jenis_barang
     Public frmsatuanbarang As New fr_jenis_barang
 
@@ -480,6 +493,13 @@
     'dgv percentage style
     Public dgvstyle_percentage As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "p2",
+        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
+        .NullValue = "-"
+    }
+
+    'dgv date style
+    Public dgvstyle_date As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+        .Format = "dd/MM/yyyy",
         .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
         .NullValue = "-"
     }

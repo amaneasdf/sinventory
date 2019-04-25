@@ -2,6 +2,7 @@
     Private pass_switch As Boolean = True
     Private tglkom As Date = System.DateTime.Today
     Private _tmer_ckLock As New Timer With {.Interval = 7500}
+    Public AppClosing As Boolean = True
 
     Private Async Function call_login() As Task
         Dim loginstate As String = do_login(in_user.Text, in_pass.Text)
@@ -42,6 +43,7 @@
                 .Visible = True
                 .Opacity = 100
             End With
+            AppClosing = False
             Me.Close()
         End If
     End Sub
@@ -145,9 +147,22 @@
     End Sub
 
     Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_close.Click
-        main.isForcedClose = True
-        Application.Exit()
+        Me.Close()
     End Sub
+
+    Private Sub fr_login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        'If Not SkipCloseDialog Then
+        '    If MessageBox.Show("Tutup Aplikasi?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.No Then
+        '        e.Cancel = True
+        '    Else
+        If AppClosing Then
+            main.isForcedClose = True
+            Application.Exit()
+        End If
+        '    End If
+        'End If
+    End Sub
+
 
     Private Async Sub bt_login_Click(sender As Object, e As EventArgs) Handles bt_login.Click
         If in_user.Text = Nothing Then

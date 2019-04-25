@@ -74,23 +74,24 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '{0}%' OR supplier_kode LIKE '{0}%')"
             Case "faktur"
                 If in_supplier.Text <> Nothing Then
                     q = "SELECT hutang_faktur as 'Kode Faktur', supplier_kode as 'Kode Supplier', supplier_nama AS 'Supplier' " _
-                        & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON hutang_faktur=faktur_kode AND faktur_status=1 " _
-                        & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                        & "FROM data_hutang_awal " _
+                        & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
                         & "WHERE hutang_status=1 AND faktur_supplier='" & in_supplier.Text & "' AND hutang_faktur LIKE '{0}%'"
                 Else
                     q = "SELECT hutang_faktur as 'Kode Faktur', supplier_kode as 'Kode Supplier', supplier_nama AS 'Supplier' " _
-                        & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON hutang_faktur=faktur_kode AND faktur_status=1 " _
-                        & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+                        & "FROM data_hutang_awal " _
+                        & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
                         & "WHERE hutang_status=1 AND hutang_faktur LIKE '{0}%'"
                 End If
             Case Else
                 Exit Sub
         End Select
-        consoleWriteLine(String.Format(q, param))
+
         dt = getDataTablefromDB(String.Format(q, param))
 
         With dgv_listbarang
@@ -128,33 +129,32 @@
         Select Case LCase(tipe)
             Case "h_nota"
                 'BASED periode,supplier;OPT saldo_sisa
-                q = "SELECT supplier_kode as hn_supplier,supplier_nama as hn_supplier_n, ADDDATE(faktur_tanggal_trans,faktur_term) as hn_jt, " _
+                q = "SELECT supplier_kode as hn_supplier,supplier_nama as hn_supplier_n, hutang_tgl_jt as hn_jt, " _
                     & "h_trans_kode_hutang as hn_faktur, hutang_awal as hn_saldoawal, hutang_hutang as hn_beli, " _
                     & "(hutang_bayar*-1)-hutang_tolak as hn_bayar, hutang_retur*-1 as hn_retur, " _
                     & "hutang_awal+hutang_hutang+hutang_retur+hutang_bayar+hutang_tolak as hn_sisa " _
                     & "FROM ( " _
-                    & " SELECT h_trans_kode_hutang,hutang_tgl, hutang_supplier, " _
-                    & "  SUM(if(h_trans_jenis='awal',h_trans_nilai,0)) hutang_awal, " _
+                    & " SELECT h_trans_kode_hutang,hutang_tgl, hutang_supplier, hutang_tgl_jt, hutang_pajak, " _
+                    & "  SUM(if(h_trans_jenis IN ('awal','migrasi'),h_trans_nilai,0)) hutang_awal, " _
                     & "  SUM(if(h_trans_jenis='beli',h_trans_nilai,0)) hutang_hutang, " _
                     & "  SUM(if(h_trans_jenis='retur',h_trans_nilai,0)) hutang_retur, " _
                     & "  SUM(if(h_trans_jenis='bayar',h_trans_nilai,0)) hutang_bayar, " _
                     & "  SUM(if(h_trans_jenis='tolak',h_trans_nilai,0)) hutang_tolak, " _
-                    & "  MAX(h_trans_tgl) hutang_tglakhir " _
+                    & "  hutang_tgl_lunas hutang_tglakhir " _
                     & " FROM data_hutang_trans " _
                     & " RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & " WHERE h_trans_status = 1 And h_trans_periode ='{2}' " _
+                    & " WHERE h_trans_status = 1 And h_trans_tgl BETWEEN '{0}' AND '{1}' AND hutang_pajak IN ({3}) " _
                     & " GROUP BY h_trans_kode_hutang " _
                     & ")hutang " _
-                    & "LEFT JOIN data_pembelian_faktur ON faktur_kode=h_trans_kode_hutang " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
-                    & "WHERE hutang_tgl BETWEEN '{0}' AND '{1}' {3}" _
-                    & "ORDER BY supplier_nama, faktur_tanggal_trans"
-                q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, "{0}")
+                    & "{4}" _
+                    & "ORDER BY supplier_nama, hn_faktur"
+                q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, cb_pajak.SelectedValue, "{0}")
 
                 'qwh += "AND hutang_idperiode='" & cb_periode.SelectedValue & "' "
 
                 If in_supplier.Text <> Nothing Then
-                    qwh += "AND faktur_supplier='" & in_supplier.Text & "' "
+                    qwh += "WHERE faktur_supplier='" & in_supplier.Text & "' "
                 End If
 
             Case "h_titipsupplier"
@@ -186,10 +186,10 @@
                     & "@change_supplier:=supplier_nama " _
                     & "FROM( " _
                     & " SELECT 0 h_trans_id,'' h_trans_kode_hutang,hutang_supplier pk_custo,h_trans_tgl pk_tgl," _
-                    & "  '' pk_no_bukti,'SALDO AWAL' pk_ket,SUM(if(h_trans_jenis='awal',h_trans_nilai,0)) pk_debet,0 pk_kredit " _
+                    & "  '' pk_no_bukti,'SALDO AWAL' pk_ket,SUM(h_trans_nilai) pk_debet,0 pk_kredit " _
                     & " FROM data_hutang_trans  " _
                     & " RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & " WHERE h_trans_status = 1 And h_trans_periode ='{0}' AND h_trans_jenis='awal' " _
+                    & " WHERE h_trans_status = 1 And h_trans_periode ='{0}' AND h_trans_jenis IN ('awal','migrasi') AND hutang_pajak IN ({3}) " _
                     & " GROUP BY hutang_supplier " _
                     & " UNION " _
                     & " SELECT h_trans_id,h_trans_kode_hutang,hutang_supplier,h_trans_tgl,h_trans_faktur, " _
@@ -202,15 +202,15 @@
                     & "     ELSE 'ERROR' " _
                     & "  END) ket,if(h_trans_nilai>0,h_trans_nilai,0) debet, " _
                     & "  if(h_trans_nilai<0,h_trans_nilai*-1,0) kredit " _
-                    & " FROM data_hutang_trans " _
-                    & " RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & " WHERE h_trans_status = 1 And h_trans_periode ='{0}' AND h_trans_jenis <> 'awal' " _
+                    & " FROM data_hutang_awal " _
+                    & " LEFT JOIN data_hutang_trans ON hutang_faktur=h_trans_kode_hutang AND h_trans_status = 1 AND h_trans_jenis NOT IN ('awal','migrasi') " _
+                    & " WHERE hutang_status = 1 And h_trans_periode ='{0}' AND hutang_pajak IN ({3}) " _
                     & " ORDER BY pk_custo,pk_tgl,h_trans_id " _
                     & ")hhh " _
                     & "LEFT JOIN data_supplier_master ON supplier_kode=pk_custo " _
                     & "JOIN (SELECT @change_supplier:='',@csum:=0) para " _
-                    & "WHERE pk_tgl BETWEEN '{1}' AND '{2}' {3}"
-                q = String.Format(q, cb_periode.SelectedValue, _tglawal, _tglakhir, "{0}")
+                    & "WHERE pk_tgl BETWEEN '{1}' AND '{2}' {4}"
+                q = String.Format(q, cb_periode.SelectedValue, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
 
                 If in_supplier.Text <> Nothing Then
                     qwh += "AND supplier_kode='" & in_supplier.Text & "' "
@@ -218,38 +218,37 @@
 
             Case "h_bayarnota"
                 q = "SELECT h_trans_kode_hutang hbd_faktur,hutang_supplier hbd_supplier,supplier_nama hbd_supplier_n, " _
-                    & "faktur_tanggal_trans hbd_tanggal, h_trans_tgl hbd_tglbayar, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar," _
+                    & "hutang_tgl hbd_tanggal, h_trans_tgl hbd_tglbayar, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar," _
                     & "hutang_tolak hbd_beli,hutang_sisa hbd_sisa, ket hbd_ket, hbd_hari " _
                     & "FROM( " _
-                    & "SELECT h_trans_id, h_trans_kode_hutang,hutang_supplier,h_trans_tgl,faktur_tanggal_trans," _
+                    & "SELECT h_trans_id, h_trans_kode_hutang,hutang_supplier,h_trans_tgl,hutang_tgl," _
                     & " if(@faktur<>h_trans_kode_hutang,@ct:=0,@ct:=@ct+1) as count," _
                     & " h_trans_jenis," _
-                    & " if(@ct=0,@sisa:=if(h_trans_jenis='awal',h_trans_nilai,0),TRUNCATE(@sisa,2)) hutang_awal," _
+                    & " if(@ct=0,@sisa:=if(h_trans_jenis IN ('awal','migrasi'),h_trans_nilai,0),TRUNCATE(@sisa,2)) hutang_awal," _
                     & " if(h_trans_jenis='beli',h_trans_nilai,0) hutang_hutang," _
                     & " if(h_trans_jenis='retur',h_trans_nilai,0) hutang_retur," _
                     & " if(h_trans_jenis='bayar',h_trans_nilai,0) hutang_bayar," _
                     & " if(h_trans_jenis='tolak',h_trans_nilai,0) hutang_tolak," _
                     & " TRUNCATE(@sisa:=@sisa+h_trans_nilai,2) hutang_sisa," _
-                    & " IF(h_trans_jenis NOT IN('awal','jual')," _
+                    & " IF(h_trans_jenis NOT IN('awal', 'migrasi','jual')," _
                     & " CONCAT(h_trans_faktur,':',(CASE " _
                     & "     WHEN h_trans_jenis='bayar' THEN h_bayar_jenis_bayar " _
                     & "     WHEN h_trans_jenis='retur' THEN 'RETUR' " _
                     & "     WHEN h_trans_jenis='tolak' THEN 'BGTOLAK' " _
                     & "     WHEN h_trans_jenis='cair' THEN 'BGCAIR' " _
-                    & "     Else '-' END)),'-')	ket,DATEDIFF(h_trans_tgl,faktur_tanggal_trans) as hbd_hari, " _
+                    & "     Else '-' END)),'-')	ket,DATEDIFF(h_trans_tgl,hutang_tgl) as hbd_hari, " _
                     & " @faktur:=h_trans_kode_hutang " _
-                    & "FROM data_hutang_trans " _
-                    & "RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & "LEFT JOIN data_pembelian_faktur ON faktur_kode=h_trans_kode_hutang AND faktur_status=1 " _
+                    & "FROM data_hutang_awal " _
+                    & "LEFT JOIN data_hutang_trans ON hutang_faktur=h_trans_kode_hutang AND h_trans_status " _
                     & "LEFT JOIN data_hutang_bayar ON h_trans_faktur=h_bayar_bukti " _
                     & "JOIN(SELECT @sisa:=0,@faktur:='') para " _
-                    & "WHERE h_trans_status = 1 And h_trans_periode = '{0}'" _
+                    & "WHERE hutang_status=1 And h_trans_periode='{0}' AND hutang_pajak IN({1})" _
                     & "ORDER BY h_trans_kode_hutang, h_trans_tgl, h_trans_id " _
                     & ")hhh " _
                     & "LEFT JOIN data_supplier_master ON hutang_supplier=supplier_kode " _
-                    & "WHERE h_trans_jenis NOT IN ('awal','beli') {1}"
+                    & "WHERE h_trans_jenis NOT IN ('awal','beli','migrasi') {2}"
                 'q = String.Format(q, cb_periode.SelectedValue, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
-                q = String.Format(q, cb_periode.SelectedValue, "{0}")
+                q = String.Format(q, cb_periode.SelectedValue, cb_pajak.SelectedValue, "{0}")
 
 
                 Dim whr As New List(Of String)
@@ -424,6 +423,13 @@
             .ValueMember = "Value"
             .SelectedValue = selectperiode.id
         End With
+
+        With cb_pajak
+            .DataSource = jenis("trans_pajak2")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+        End With
+
         With cb_bayar
             .DataSource = jenis("bayarhutang")
             .DisplayMember = "Text"
@@ -450,9 +456,14 @@
         Dim x As New fr_lap_hutang With {
                     .Text = lapwintext
                 }
-        x.setVar(laptype, createQuery(laptype), date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy"))
+        Dim _periode As String = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
+        Dim _kategori As String = cb_pajak.Text
+
+        Me.Cursor = Cursors.WaitCursor
+        x.setVar(laptype, createQuery(laptype), _periode)
         x.do_load()
         x.ShowDialog()
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
@@ -508,7 +519,7 @@
     End Sub
 
     '------------- INPUT UI
-    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_periode.KeyPress, cb_bayar.KeyPress
+    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_periode.KeyPress, cb_bayar.KeyPress, cb_pajak.KeyPress
         If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
             e.Handled = True
         End If

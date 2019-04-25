@@ -63,6 +63,26 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized resource of type System.Drawing.Bitmap.
         '''</summary>
+        Friend ReadOnly Property _1492932873_Delete() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("1492932873_Delete", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property Add_16x16() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("Add_16x16", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
         Friend ReadOnly Property bg() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("bg", resourceCulture)
@@ -105,6 +125,13 @@ Namespace My.Resources
         '''Conn = 0
         '''CompanyID = 
         '''
+        '''[NotaPrint]
+        '''Width = 850
+        '''Height = 550
+        '''MarginTop = 0
+        '''MarginBottom = 0
+        '''MarginLeft = 0
+        '''MarginRight = 0
         '''
         '''[CatraDev]
         '''Host = 17.5.16.21
@@ -252,6 +279,16 @@ Namespace My.Resources
         Friend ReadOnly Property toolbar_print_icon() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("toolbar_print_icon", resourceCulture)
+                Return CType(obj,System.Drawing.Bitmap)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized resource of type System.Drawing.Bitmap.
+        '''</summary>
+        Friend ReadOnly Property toolbar_proses_icon() As System.Drawing.Bitmap
+            Get
+                Dim obj As Object = ResourceManager.GetObject("toolbar_proses_icon", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

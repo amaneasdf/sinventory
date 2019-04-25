@@ -2,24 +2,28 @@
     Private fak_date As Date = Today
 
     Public Sub loadData(kode As String)
-        Dim q As String = "SELECT hutang_faktur,faktur_tanggal_trans, faktur_supplier, supplier_nama, faktur_term, faktur_netto " _
-                          & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON hutang_faktur=faktur_kode AND faktur_status=1 " _
-                          & "LEFT JOIN data_supplier_master ON supplier_kode=faktur_supplier " _
+        Dim q As String = "SELECT hutang_faktur, hutang_tgl, hutang_tgl_jt, hutang_supplier, supplier_nama, " _
+                          & "DATEDIFF(hutang_tgl_jt,hutang_tgl) faktur_term, hutang_awal, " _
+                          & "IFNULL(ppn.ref_text,'ERROR') bayar_kat " _
+                          & "FROM data_hutang_awal " _
+                          & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
+                          & "LEFT JOIN ref_jenis ppn ON hutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
                           & "WHERE hutang_faktur='{0}'"
         op_con()
         'readcommd("SELECT * FROM selectHutangAwal WHERE hutang_faktur='" & kode & "'")
         readcommd(String.Format(q, kode))
         If rd.HasRows Then
             in_faktur.Text = rd.Item("hutang_faktur")
-            fak_date = rd.Item("faktur_tanggal_trans")
-            in_supplier.Text = rd.Item("faktur_supplier")
+            in_kat.Text = rd.Item("bayar_kat")
+            fak_date = rd.Item("hutang_tgl")
+            in_tgl_term.Text = CDate(rd.Item("hutang_tgl_jt")).ToLongDateString
+            in_supplier.Text = rd.Item("hutang_supplier")
             in_supplier_n.Text = rd.Item("supplier_nama")
-            in_term.Value = rd.Item("faktur_term")
-            in_hutang_awal.Text = commaThousand(rd.Item("faktur_netto"))
+            in_term.Text = rd.Item("faktur_term")
+            in_hutang_awal.Text = commaThousand(rd.Item("hutang_awal"))
         End If
         rd.Close()
         in_tgl.Text = fak_date.ToLongDateString
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
         loadDgv(kode)
 
         If selectperiode.closed = True Then
@@ -74,6 +78,8 @@
         rd.Close()
 
         With x
+            .doLoadNew()
+            .cb_pajak.SelectedValue = IIf(in_kat.Text = "A", 0, 1)
             .in_supplier.Text = in_supplier.Text
             .in_supplier_n.Text = in_supplier_n.Text
             .in_saldotitipan.Text = titipan
@@ -84,7 +90,6 @@
             .in_sisafaktur.Text = in_sisa.Text
 
             .Owner = main
-            .doLoadNew()
         End With
         Me.Close()
     End Sub
@@ -129,24 +134,11 @@
         lbl_close.Visible = False
     End Sub
 
-    '--------------- NUMERIC 
-    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
-        numericGotFocus(sender)
-    End Sub
-
-    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
-        numericLostFocus(sender, "N0")
-    End Sub
-
     '---------------------- LOAD FORM
     Private Sub fr_hutang_awal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If in_faktur.Text <> Nothing Then
             loadData(in_faktur.Text)
         End If
-    End Sub
-
-    Private Sub in_term_ValueChanged(sender As Object, e As EventArgs) Handles in_term.ValueChanged
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToLongDateString
     End Sub
 
     Private Sub bt_bayar_Click(sender As Object, e As EventArgs) Handles bt_bayar.Click

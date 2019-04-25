@@ -1,6 +1,6 @@
 ﻿Public Class fr_beli_retur_detail
     Private rtbStatus As String = "1"
-    Private _persediaan As Double = 0
+    Private _persediaan As Decimal = 0
     Private popupstate As String = "barang"
     Private indexrow As Integer = 0
     Private hargabesr As Decimal = 0
@@ -264,10 +264,10 @@
     End Function
 
     'COUNT SUBTOTAL
-    Private Function countSubtot(harga As Double, qty As Integer, Optional disk As Double = 0) As Double
-        Dim retSubtot As Double = 0
-        Dim _jl As Double = 0
-        Dim _disk As Double = 0
+    Private Function countSubtot(harga As Decimal, qty As Integer, Optional disk As Decimal = 0) As Decimal
+        Dim retSubtot As Decimal = 0
+        Dim _jl As Decimal = 0
+        Dim _disk As Decimal = 0
 
         _jl = harga * qty
         _disk = _jl * (disk / 100)
@@ -281,31 +281,36 @@
         Dim q As String
         Dim dt As New DataTable
         Dim autoco As New AutoCompleteStringCollection
+        Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
+
         Select Case tipe
             Case "barang"
-                Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli as harga_beli, getStockSisa(barang_kode,'{1}') 'Jumlah Stock' " _
                     & "FROM data_barang_master " _
                     & "LEFT JOIN data_stok_awal ON stock_barang=barang_kode AND stock_status=1 " _
-                    & "WHERE barang_nama LIKE '{0}%' AND stock_gudang='{1}' AND barang_supplier='{2}' AND barang_status=1 AND barang_pajak='{3}' LIMIT 250"
+                    & "WHERE (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND stock_gudang='{1}' AND barang_supplier='{2}' AND barang_status=1 AND barang_pajak='{3}' LIMIT 250"
                 q = String.Format(q, "{0}", in_gudang.Text, in_supplier.Text, _pajak)
+
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' " _
                     & "FROM data_pembelian_faktur " _
-                    & "LEFT JOIN data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                    & "LEFT JOIN data_supplier_master WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') LIMIT 250"
+
             Case "gudang"
-                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
+                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
+                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+
             Case "faktur"
-                'q = "SELECT hutang_faktur As 'Faktur', hutang_tgl As 'Tanggal', hutang_sisa As 'Sisa' FROM selecthutangawal " _
-                '    & "WHERE hutang_supplier='" & in_supplier.Text & "' AND hutang_faktur LIKE '{0}%'"
-                q = "SELECT hutang_faktur AS 'Faktur', getSisaHutang(hutang_faktur,'" & selectperiode.id & "') as 'SisaHutang' " _
-                    & "FROM data_hutang_awal LEFT JOIN data_pembelian_faktur ON faktur_kode=hutang_faktur AND faktur_status=1 " _
-                    & "WHERE hutang_status=1 AND faktur_supplier='" & in_supplier.Text & "' " _
-                    & "AND hutang_faktur LIKE '{0}%'"
+                q = "SELECT hutang_faktur AS 'Faktur', getSisaHutang(hutang_faktur,'{1}') as 'SisaHutang' " _
+                    & "FROM data_hutang_awal " _
+                    & "WHERE hutang_status=1 AND hutang_supplier='{2}' AND hutang_pajak={3} " _
+                    & "AND hutang_faktur LIKE '%{0}%' LIMIT 250"
+                q = String.Format(q, "{0}", selectperiode.id, in_supplier.Text, _pajak)
+
             Case Else
                 Exit Sub
         End Select
-        consoleWriteLine(String.Format(q, param))
+
         dt = getDataTablefromDB(String.Format(q, param))
 
         With dgv_listbarang
@@ -333,6 +338,16 @@
         With dgv_listbarang.SelectedRows.Item(0)
             Select Case popupstate
                 Case "barang"
+                    If .Cells(3).Value <= 0 Then
+                        If MessageBox.Show("Barang " & .Cells(0).Value & " kosong/minus. Lanjutkan?", Me.Text,
+                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = Windows.Forms.DialogResult.Yes Then
+                            If Not TransConfirmValid(in_ket.Text) Then
+                                Exit Sub
+                            End If
+                        Else
+                            Exit Sub
+                        End If
+                    End If
                     in_barang.Text = .Cells(0).Value
                     in_barang_nm.Text = .Cells(1).Value
                     in_harga_retur.Value = .Cells(2).Value
@@ -370,7 +385,7 @@
 
         Me.Cursor = Cursors.AppStarting
 
-        Dim hpp As Double = 0
+        Dim hpp As Decimal = 0
         Dim q As String = ""
         Dim _pajak As String = ""
         Dim _supplier As String = ""
@@ -477,9 +492,9 @@
 
     'COUNT COST & VALUE
     Private Sub countBiaya()
-        Dim subtot As Double = 0
-        Dim pajak As Double = 0
-        Dim z As Double = 0
+        Dim subtot As Decimal = 0
+        Dim pajak As Decimal = 0
+        Dim z As Decimal = 0
         _persediaan = 0
 
         op_con()
@@ -507,10 +522,9 @@
             pajak = 0
         End If
 
-        Dim cc As Globalization.CultureInfo = Globalization.CultureInfo.GetCultureInfo("id-ID")
-        in_jumlah.Text = subtot.ToString("N2", cc)
-        in_netto.Text = z.ToString("N2", cc)
-        in_ppn_tot.Text = pajak.ToString("N2", cc)
+        in_jumlah.Text = commaThousand(subtot)
+        in_netto.Text = commaThousand(z)
+        in_ppn_tot.Text = commaThousand(pajak)
     End Sub
 
     Private Sub clearTextBarang()
@@ -552,6 +566,7 @@
 
         Dim invalid As Integer = 0
         For Each rows As DataGridViewRow In dgv_barang.Rows
+            rows.DefaultCellStyle.BackColor = Color.White
             Dim kode As String = rows.Cells(0).Value
             Dim _stokaval As Integer = GetItemStock(kode, in_gudang.Text)
             Dim _stokInp As Integer = GetItemSmallQty(kode, rows.Cells("qty").Value, rows.Cells("sat_type").Value)
@@ -641,11 +656,6 @@
 
         '==========================================================================================================================
         'INSERT BARANG
-        Dim x As New List(Of String)
-        Dim x_kodestock As New List(Of String)
-        Dim qty As New List(Of Integer)
-        Dim nilai As New List(Of Double)
-
         '==========================================================================================================================
         q = "UPDATE data_pembelian_retur_trans SET trans_status=9 WHERE trans_faktur='{0}'"
         queryArr.Add(String.Format(q, in_no_bukti.Text))
@@ -668,10 +678,10 @@
             'INSERT DATA BARANG
             dataBrg = {
                 "trans_barang='" & rows.Cells(0).Value & "'",
-                "trans_harga_retur='" & rows.Cells("harga").Value.ToString.Replace(",", ".") & "'",
+                "trans_harga_retur='" & Decimal.Parse(rows.Cells("harga").Value).ToString.Replace(",", ".") & "'",
                 "trans_qty='" & rows.Cells("qty").Value & "'",
                 "trans_satuan='" & rows.Cells("sat").Value & "'",
-                "trans_diskon=" & rows.Cells("diskon").Value.ToString.Replace(",", "."),
+                "trans_diskon=" & Decimal.Parse(rows.Cells("diskon").Value).ToString.Replace(",", "."),
                 "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
                 "trans_hpp='" & _hpp.ToString.Replace(",", ".") & "'",
                 "trans_status='" & IIf({0, 1, 2}.Contains(rtbStatus), 1, rtbStatus) & "'"
@@ -756,12 +766,9 @@
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
-        Using nota As New fr_view_piutang
-            Me.Cursor = Cursors.WaitCursor
-            With nota
-                .setVar("beli", in_no_bukti.Text, "")
-                .ShowDialog()
-            End With
+        Me.Cursor = Cursors.WaitCursor
+        Using nota As New fr_nota_dialog
+            nota.do_load("returbeli", in_no_bukti.Text)
         End Using
         Me.Cursor = Cursors.Default
     End Sub

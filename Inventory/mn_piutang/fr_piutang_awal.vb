@@ -2,28 +2,30 @@
     Private fak_date As Date = Today
 
     Public Sub loadData(kode As String)
-        Dim q As String = "SELECT piutang_faktur, piutang_tgl, faktur_netto-faktur_bayar as piutang_awal, " _
-                          & "faktur_customer as piutang_custo, customer_nama as piutang_custo_n, faktur_sales as piutang_sales, " _
-                          & "salesman_nama as piutang_sales_n, faktur_term FROM data_piutang_awal " _
-                          & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode AND faktur_status=1 " _
-                          & "LEFT JOIN data_customer_master ON faktur_customer=customer_kode " _
-                          & "LEFT JOIN data_salesman_master ON faktur_sales=salesman_kode " _
+        Dim q As String = "SELECT piutang_faktur, piutang_tgl, piutang_awal, IFNULL(ppn.ref_text,'ERROR') bayar_kat, " _
+                          & "piutang_custo, customer_nama as piutang_custo_n, piutang_sales, salesman_nama as piutang_sales_n," _
+                          & "DATEDIFF(piutang_jt,piutang_tgl) faktur_term " _
+                          & "FROM data_piutang_awal " _
+                          & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+                          & "LEFT JOIN data_salesman_master ON piutang_sales=salesman_kode " _
+                          & "LEFT JOIN ref_jenis ppn ON piutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
                           & "WHERE piutang_faktur='{0}'"
         op_con()
         readcommd(String.Format(q, kode))
         If rd.HasRows Then
             in_faktur.Text = rd.Item("piutang_faktur")
             fak_date = rd.Item("piutang_tgl")
+            in_kat.Text = rd.Item("bayar_kat")
             in_custo.Text = rd.Item("piutang_custo")
             in_custo_n.Text = rd.Item("piutang_custo_n")
             in_sales.Text = rd.Item("piutang_sales")
             in_sales_n.Text = rd.Item("piutang_sales_n")
-            in_term.Value = rd.Item("faktur_term")
+            in_term.Text = rd.Item("faktur_term")
             in_piutangawal.Text = commaThousand(rd.Item("piutang_awal"))
         End If
         rd.Close()
         in_tgl.Text = fak_date.ToLongDateString
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToString("dd/MM/yyyy")
+        in_tgl_term.Text = fak_date.AddDays(in_term.Text).ToString("dd/MM/yyyy")
 
         loadDgv(kode)
 
@@ -78,6 +80,8 @@
         rd.Close()
 
         With x
+            .doLoadNew()
+            .cb_pajak.SelectedValue = IIf(in_kat.Text = "A", 0, 1)
             .in_sales.Text = in_sales.Text
             .in_sales_n.Text = in_sales_n.Text
             .in_saldotitipan.Text = titipan
@@ -89,7 +93,6 @@
             ._totalhutang = removeCommaThousand(in_piutangawal.Text)
             .in_tgl_jtfaktur.Text = in_tgl_term.Text
             .Owner = main
-            .doLoadNew()
         End With
         Me.Close()
     End Sub
@@ -135,11 +138,11 @@
     End Sub
 
     '--------------- NUMERIC 
-    Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
+    Private Sub in_term_Enter(sender As Object, e As EventArgs)
         numericGotFocus(sender)
     End Sub
 
-    Private Sub in_term_Leave(sender As Object, e As EventArgs) Handles in_term.Leave
+    Private Sub in_term_Leave(sender As Object, e As EventArgs)
         numericLostFocus(sender, "N0")
     End Sub
 
@@ -148,10 +151,6 @@
         If in_faktur.Text <> Nothing Then
             loadData(in_faktur.Text)
         End If
-    End Sub
-
-    Private Sub in_term_ValueChanged(sender As Object, e As EventArgs) Handles in_term.ValueChanged
-        in_tgl_term.Text = fak_date.AddDays(in_term.Value).ToLongDateString
     End Sub
 
     Private Sub bt_bayar_Click(sender As Object, e As EventArgs) Handles bt_bayar.Click

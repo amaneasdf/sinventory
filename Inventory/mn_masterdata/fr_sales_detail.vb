@@ -47,7 +47,7 @@
             loadDataSales(KodeSales)
             If Not {0, 1}.Contains(slsStatus) Then AllowEdit = False
             in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
-            bt_simpansales.Text = "Update"
+            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
@@ -61,7 +61,7 @@
             dtp.Enabled = AllowInput
         Next
         in_target.Enabled = AllowInput
-        bt_simpansales.Enabled = AllowInput
+        bt_simpancusto.Enabled = AllowInput
         mn_deact.Enabled = AllowInput
         mn_save.Enabled = AllowInput
     End Sub
@@ -159,7 +159,7 @@
             "salesman_status='" & slsStatus & "'"
             }
 
-        If bt_simpansales.Text = "Simpan" Then
+        If bt_simpancusto.Text = "Simpan" Then
             'GENERATE CODE
             If Trim(in_kode.Text) = Nothing Then
                 Dim no As Integer = 1
@@ -180,7 +180,7 @@
             End If
 
             q = "INSERT INTO data_salesman_master SET salesman_kode='{0}',{1},salesman_reg_date=NOW(),salesman_reg_alias='{2}'"
-        ElseIf bt_simpansales.Text = "Update" Then
+        ElseIf bt_simpancusto.Text = "Update" Then
             q = "UPDATE data_salesman_master SET {1}, salesman_upd_date=NOW(),salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
         End If
         querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
@@ -216,14 +216,14 @@
     End Sub
 
     'CLOSE
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalsales.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
         If MessageBox.Show("Tutup Form?", "Detail Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             Me.Close()
         End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalsales.PerformClick()
+        bt_batalcusto.PerformClick()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -236,7 +236,7 @@
 
     'MENU
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpansales.PerformClick()
+        bt_simpancusto.PerformClick()
     End Sub
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
@@ -260,7 +260,7 @@
     End Sub
 
     'SAVE
-    Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpansales.Click
+    Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If in_namasales.Text = Nothing Then
             MessageBox.Show("Nama belum di input")
             in_namasales.Focus()
@@ -354,6 +354,6 @@
     End Sub
 
     Private Sub in_bank_an_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_an.KeyDown
-        keyshortenter(bt_simpansales, e)
+        keyshortenter(bt_simpancusto, e)
     End Sub
 End Class

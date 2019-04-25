@@ -22,64 +22,36 @@ Partial Class fr_list
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.in_countdata = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.in_cari = New System.Windows.Forms.TextBox()
         Me.dgv_list = New System.Windows.Forms.DataGridView()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_judul = New System.Windows.Forms.Label()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
-        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_add = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_export = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_exportExcel = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_bayar = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.mn_transedit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_bataljual = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cancelbatal = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.svdialog_export = New System.Windows.Forms.SaveFileDialog()
+        Me.in_cari = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.in_countdata = New System.Windows.Forms.TextBox()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'in_countdata
-        '
-        Me.in_countdata.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.in_countdata.BackColor = System.Drawing.Color.White
-        Me.in_countdata.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_countdata.Location = New System.Drawing.Point(898, 10)
-        Me.in_countdata.MaxLength = 100
-        Me.in_countdata.Name = "in_countdata"
-        Me.in_countdata.ReadOnly = True
-        Me.in_countdata.Size = New System.Drawing.Size(45, 22)
-        Me.in_countdata.TabIndex = 5
-        Me.in_countdata.TabStop = False
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(8, 8)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(61, 26)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Pencarian :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(CTRL+F)"
-        '
-        'in_cari
-        '
-        Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_cari.Location = New System.Drawing.Point(80, 10)
-        Me.in_cari.MaxLength = 100
-        Me.in_cari.Name = "in_cari"
-        Me.in_cari.Size = New System.Drawing.Size(248, 22)
-        Me.in_cari.TabIndex = 0
         '
         'dgv_list
         '
@@ -158,21 +130,12 @@ Partial Class fr_list
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_cari, Me.mn_add, Me.mn_edit, Me.mn_del, Me.mn_print, Me.mn_export, Me.mn_refresh, Me.mn_bataljual, Me.mn_bayar, Me.mn_validasi})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_add, Me.mn_edit, Me.mn_validasi, Me.mn_print, Me.mn_export, Me.mn_bayar, Me.mn_transedit, Me.mn_refresh})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
         Me.MenuStrip1.TabIndex = 341
         Me.MenuStrip1.Text = "MenuStrip1"
-        '
-        'mn_cari
-        '
-        Me.mn_cari.Name = "mn_cari"
-        Me.mn_cari.ShortcutKeyDisplayString = "Ctrl+F"
-        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.mn_cari.Size = New System.Drawing.Size(40, 20)
-        Me.mn_cari.Text = "Cari"
-        Me.mn_cari.Visible = False
         '
         'mn_add
         '
@@ -192,13 +155,11 @@ Partial Class fr_list
         Me.mn_edit.Text = "Edit Data"
         Me.mn_edit.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'mn_del
+        'mn_validasi
         '
-        Me.mn_del.Name = "mn_del"
-        Me.mn_del.ShortcutKeyDisplayString = "Ctrl+Del"
-        Me.mn_del.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.Delete), System.Windows.Forms.Keys)
-        Me.mn_del.Size = New System.Drawing.Size(81, 20)
-        Me.mn_del.Text = "De/Activate"
+        Me.mn_validasi.Name = "mn_validasi"
+        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
+        Me.mn_validasi.Text = "Validasi"
         '
         'mn_print
         '
@@ -223,6 +184,51 @@ Partial Class fr_list
         Me.mn_exportExcel.Size = New System.Drawing.Size(116, 22)
         Me.mn_exportExcel.Text = "To Excel"
         '
+        'mn_bayar
+        '
+        Me.mn_bayar.Name = "mn_bayar"
+        Me.mn_bayar.Size = New System.Drawing.Size(48, 20)
+        Me.mn_bayar.Text = "Bayar"
+        Me.mn_bayar.Visible = False
+        '
+        'mn_transedit
+        '
+        Me.mn_transedit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_deact, Me.mn_bataljual, Me.mn_cancelbatal, Me.mn_delete, Me.mn_cari})
+        Me.mn_transedit.Name = "mn_transedit"
+        Me.mn_transedit.Size = New System.Drawing.Size(68, 20)
+        Me.mn_transedit.Text = "Lain-Lain"
+        '
+        'mn_deact
+        '
+        Me.mn_deact.Name = "mn_deact"
+        Me.mn_deact.Size = New System.Drawing.Size(176, 22)
+        Me.mn_deact.Text = "De/Activate Data"
+        '
+        'mn_bataljual
+        '
+        Me.mn_bataljual.Name = "mn_bataljual"
+        Me.mn_bataljual.Size = New System.Drawing.Size(176, 22)
+        Me.mn_bataljual.Text = "Batalkan Transaksi"
+        '
+        'mn_cancelbatal
+        '
+        Me.mn_cancelbatal.Name = "mn_cancelbatal"
+        Me.mn_cancelbatal.Size = New System.Drawing.Size(176, 22)
+        Me.mn_cancelbatal.Text = "Cancel Pembatalan"
+        '
+        'mn_delete
+        '
+        Me.mn_delete.Name = "mn_delete"
+        Me.mn_delete.Size = New System.Drawing.Size(176, 22)
+        Me.mn_delete.Text = "Hapus Transaksi"
+        '
+        'mn_cari
+        '
+        Me.mn_cari.Name = "mn_cari"
+        Me.mn_cari.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
+        Me.mn_cari.Size = New System.Drawing.Size(176, 22)
+        Me.mn_cari.Text = "Cari Data"
+        '
         'mn_refresh
         '
         Me.mn_refresh.Name = "mn_refresh"
@@ -231,24 +237,23 @@ Partial Class fr_list
         Me.mn_refresh.Size = New System.Drawing.Size(58, 20)
         Me.mn_refresh.Text = "Refresh"
         '
-        'mn_bataljual
+        'in_cari
         '
-        Me.mn_bataljual.Name = "mn_bataljual"
-        Me.mn_bataljual.Size = New System.Drawing.Size(115, 20)
-        Me.mn_bataljual.Text = "Batalkan Transaksi"
+        Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_cari.Location = New System.Drawing.Point(80, 10)
+        Me.in_cari.MaxLength = 100
+        Me.in_cari.Name = "in_cari"
+        Me.in_cari.Size = New System.Drawing.Size(248, 22)
+        Me.in_cari.TabIndex = 0
         '
-        'mn_bayar
+        'Label2
         '
-        Me.mn_bayar.Name = "mn_bayar"
-        Me.mn_bayar.Size = New System.Drawing.Size(48, 20)
-        Me.mn_bayar.Text = "Bayar"
-        Me.mn_bayar.Visible = False
-        '
-        'mn_validasi
-        '
-        Me.mn_validasi.Name = "mn_validasi"
-        Me.mn_validasi.Size = New System.Drawing.Size(58, 20)
-        Me.mn_validasi.Text = "Validasi"
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(8, 8)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(61, 26)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "Pencarian :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(CTRL+F)"
         '
         'Panel2
         '
@@ -261,6 +266,19 @@ Partial Class fr_list
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
         Me.Panel2.TabIndex = 342
+        '
+        'in_countdata
+        '
+        Me.in_countdata.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.in_countdata.BackColor = System.Drawing.Color.White
+        Me.in_countdata.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_countdata.Location = New System.Drawing.Point(898, 10)
+        Me.in_countdata.MaxLength = 100
+        Me.in_countdata.Name = "in_countdata"
+        Me.in_countdata.ReadOnly = True
+        Me.in_countdata.Size = New System.Drawing.Size(45, 22)
+        Me.in_countdata.TabIndex = 5
+        Me.in_countdata.TabStop = False
         '
         'fr_list
         '
@@ -283,27 +301,30 @@ Partial Class fr_list
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents Label2 As System.Windows.Forms.Label
-    Friend WithEvents in_cari As System.Windows.Forms.TextBox
     Friend WithEvents dgv_list As System.Windows.Forms.DataGridView
-    Friend WithEvents in_countdata As System.Windows.Forms.TextBox
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_judul As System.Windows.Forms.Label
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_add As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_edit As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents mn_refresh As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents mn_export As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_exportExcel As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_bayar As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_validasi As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents svdialog_export As System.Windows.Forms.SaveFileDialog
+    Friend WithEvents mn_transedit As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_bataljual As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_cancelbatal As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents in_cari As System.Windows.Forms.TextBox
+    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents Panel2 As System.Windows.Forms.Panel
+    Friend WithEvents in_countdata As System.Windows.Forms.TextBox
 
 End Class

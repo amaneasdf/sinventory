@@ -151,15 +151,15 @@
         If switch Then
             Await x.OpenAsync
 
-            q = "SELECT IFNULL(SUM(getPiutangSisa(piutang_faktur)),0), COUNT(DISTINCT faktur_customer), COUNT(piutang_faktur), " _
-                & "IFNULL(SUM(IF(piutang_jt <= CURDATE(),getPiutangSisa(piutang_faktur),0)),0), " _
-                & "COUNT(DISTINCT IF(piutang_jt <= CURDATE(),faktur_customer, NULL))," _
+            q = "SELECT IFNULL(SUM(p_trans_nilai),0), COUNT(DISTINCT piutang_custo), COUNT(piutang_faktur), " _
+                & "IFNULL(SUM(IF(piutang_jt <= CURDATE(),p_trans_nilai,0)),0), " _
+                & "COUNT(DISTINCT IF(piutang_jt <= CURDATE(),piutang_custo, NULL))," _
                 & "COUNT(IF(piutang_jt <= CURDATE(),piutang_faktur,NULL)), " _
                 & "COUNT(IF(piutang_jt=CURDATE(),piutang_faktur,NULL)), " _
                 & "COUNT(IF(piutang_status_approve=1,1,NULL)) " _
                 & "FROM data_piutang_awal " _
-                & "LEFT JOIN data_penjualan_faktur ON piutang_faktur=faktur_kode " _
-                & "WHERE piutang_status<>9 AND piutang_status_lunas=0"
+                & "LEFT JOIN data_piutang_trans ON piutang_faktur=p_trans_kode_piutang AND p_trans_status=1 " _
+                & "WHERE piutang_status<>9 AND piutang_status_lunas=0 AND p_trans_periode='{0}'"
             Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, currentperiode.id), CommandBehavior.SingleRow)
                 If Await rdx.ReadAsync Then
                     If rdx.HasRows Then
@@ -227,7 +227,7 @@
         Panel1.Visible = False
 
         'auto refresh
-        Timer1.Interval = 10000
+        Timer1.Interval = 50000
         Timer1.Start()
 
         'clock

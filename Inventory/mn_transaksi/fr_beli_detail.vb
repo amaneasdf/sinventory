@@ -251,13 +251,15 @@
             Case "barang"
                 Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', barang_harga_beli 'Harga Default', barang_harga_beli_d1, " _
-                    & "barang_harga_beli_d2, barang_harga_beli_d3 FROM data_barang_master WHERE barang_nama LIKE '{0}%' " _
-                    & "AND barang_supplier='{1}' AND barang_status=1 AND barang_pajak='{2}' LIMIT 250"
+                    & "barang_harga_beli_d2, barang_harga_beli_d3 FROM data_barang_master " _
+                    & "WHERE (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND barang_supplier='{1}' AND barang_status=1 AND barang_pajak='{2}' LIMIT 250"
                 q = String.Format(q, "{0}", in_supplier.Text, _pajak)
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama', supplier_term FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama', supplier_term FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') LIMIT 250"
             Case "gudang"
-                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 AND gudang_nama LIKE '{0}%'"
+                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
+                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
             Case Else
                 Exit Sub
         End Select
@@ -364,12 +366,12 @@
         End If
 
 
-        Dim pajak_tot As Double = 0
-        Dim total As Double = removeCommaThousand(in_subtotal.Text)
+        Dim pajak_tot As Decimal = 0
+        Dim total As Decimal = removeCommaThousand(in_subtotal.Text)
 
-        For Each x As Double In {in_disc1.Value, in_disc2.Value, in_disc3.Value}
+        For Each x As Decimal In {in_disc1.Value, in_disc2.Value, in_disc3.Value}
             If x <> 0 Then
-                Dim y As Double = total
+                Dim y As Decimal = total
                 total = y * (1 - x / 100)
             Else
                 total = total
@@ -439,11 +441,11 @@
 
     'COUNT COST & VALUE
     Private Sub countbiaya()
-        Dim pajak As Double = 0
-        Dim x As Double = jumlahbiaya()
-        Dim y As Double = x
-        Dim netto As Double = 0
-        Dim diskon As Double = 0
+        Dim pajak As Decimal = 0
+        Dim x As Decimal = jumlahbiaya()
+        Dim y As Decimal = x
+        Dim netto As Decimal = 0
+        Dim diskon As Decimal = 0
 
         For Each row As DataGridViewRow In dgv_barang.Rows
             diskon += row.Cells(6).Value - row.Cells(11).Value
@@ -461,18 +463,17 @@
             pajak = 0
         End If
 
-        Dim cc As Globalization.CultureInfo = Globalization.CultureInfo.GetCultureInfo("id-ID")
-        in_jumlah.Text = x.ToString("N2", cc)
+        in_jumlah.Text = commaThousand(x)
         in_diskon.Text = commaThousand(diskon)
         in_ppn_tot.Text = commaThousand(pajak)
-        in_total.Text = y.ToString("N2", cc)
-        in_netto.Text = netto.ToString("N2", cc)
+        in_total.Text = commaThousand(y)
+        in_netto.Text = commaThousand(netto)
         in_klaim.Maximum = netto
-        in_total_netto.Text = (netto - CDbl(in_klaim.Value)).ToString("N2", cc)
+        in_total_netto.Text = commaThousand(netto - CDbl(in_klaim.Value))
     End Sub
 
-    Private Function jumlahbiaya() As Double
-        Dim x As Double = 0
+    Private Function jumlahbiaya() As Decimal
+        Dim x As Decimal = 0
 
         For Each rows As DataGridViewRow In dgv_barang.Rows
             x += rows.Cells("subtot").Value
@@ -527,16 +528,17 @@
 
     'SAVE
     Private Sub saveData()
-        'INSERT
-        'SAVE HEADER -> LISTBARANG(GET QTY->UPD HPP->CHECK STOK AWAL(IFNULL INPUT->INPUT KARTU STOK)->INPUT BARANG->INPUT KARTU STOK) -> INPUT HUTANG AWAL
-        'UPDATE
-        'SAVE HEADER -> LISTBARANG(GET QTY->SAVEBARANG->UPD HPP-> UPD KARTUSTOK) -> UPD HUTANG AWAL
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+
         Dim dataHead, dataBrg As String()
         Dim querycheck As Boolean = False
         Dim queryArr As New List(Of String)
         Dim q As String = ""
 
         Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+        in_faktur.Text = Trim(in_faktur.Text)
 
         '==========================================================================================================================
         dataHead = {
@@ -559,89 +561,117 @@
             "faktur_status='" & tblStatus & "'"
         }
 
-        'SAVE HEADER
-        op_con()
-        If bt_simpanbeli.Text = "Simpan" Then
-            'GENERATE KODE
-            If in_faktur.Text = Nothing Then
-                Dim tgl = date_tgl_beli.Value.ToString("yyyyMMdd")
-                Dim no As Integer = 1
-                readcommd("SELECT COUNT(faktur_kode) FROM data_pembelian_faktur WHERE SUBSTRING(faktur_kode,3,8)='" & tgl & "' AND faktur_kode LIKE 'PO%'")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim _qGet As String = ""
+                'START OF INSERT UPDATE HEADER ====================================================================================================
+                If formstate = InputState.Insert Then
+                    'START OF NEW TRANSACTION =====================================================================================================
+                    If in_faktur.Text = Nothing Then
+                        'START OF GENERATING NEW CODE =============================================================================================
+                        Dim no As Integer = 1
+                        Dim tgl = date_tgl_beli.Value.ToString("yyyyMMdd")
+
+                        _qGet = "SELECT COUNT(faktur_kode) FROM data_pembelian_faktur WHERE SUBSTRING(faktur_kode,3,8)='{0}' AND faktur_kode LIKE 'PO%'"
+
+                        Try
+                            no = CInt(x.ExecScalar(String.Format(_qGet, tgl)))
+                            in_faktur.Text = "PO" & tgl & no.ToString("D3")
+
+                            q = "INSERT INTO data_pembelian_faktur SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                        'END OF GENERATING NEW CODE ===============================================================================================
+
+                    ElseIf in_faktur.Text <> Nothing Then
+                        'START OF CHECKING USER INPUTED CODE ======================================================================================
+                        Dim cAct As Integer = 0 : Dim cDel As Integer = 0
+                        _qGet = "SELECT COUNT(CASE WHEN faktur_status!=9 THEN 1 END) ActiveCode, COUNT(CASE WHEN faktur_status=9 THEN 1 END) DeleteCode " _
+                                & "FROM data_pembelian_faktur WHERE faktur_kode='{0}'"
+                        Using rdx = x.ReadCommand(String.Format(_qGet, in_faktur.Text), CommandBehavior.SingleRow)
+                            Dim red = rdx.Read
+                            If red And rdx.HasRows Then
+                                cAct = rdx.Item(0) : cDel = rdx.Item(1)
+                            End If
+                        End Using
+
+                        If cAct = 1 Then 'WHEN THE CODE ALREADY TAKEN
+                            MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernah diinputkan", "Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
+                            in_faktur.Focus() : Exit Sub
+                        ElseIf cAct = 0 And cDel = 0 Then 'WHEN THE CODE IS AVAILABLE
+                            q = "INSERT INTO data_pembelian_faktur SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
+                        ElseIf cDel = 1 Then 'WHEN THE CODE IS ALREADY TAKEN BUT THE TRASACTION STATE IS DELETE
+                            q = "UPDATE data_pembelian_faktur SET {1}, faktur_reg_date=NOW(), faktur_reg_alias='{2}', " _
+                                & "faktur_upd_date=NULL, faktur_upd_alias=NULL WHERE faktur_kode='{0}'"
+                        Else 'WHEN THERE IS DUPLICATION IN DATABASE ON THE CODE
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & _
+                                            "Terdapat duplikasi kode pada database, kode faktur tidak dapat digunakan.",
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            errLog(New List(Of String) From {"Error : Duplicate primary code in database for purchase data.",
+                                                             encryptString("Duplicated Code : " & in_faktur.Text)
+                                                            }) : Exit Sub
+                        End If
+                        'END OF CHECKING USER INPUTED CODE ========================================================================================
+                    End If
+                    'END OF NEW TRANSACTION =======================================================================================================
+
+                ElseIf bt_simpanbeli.Text = "Update" Then
+                    q = "UPDATE data_pembelian_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}'"
                 End If
-                rd.Close()
-                in_faktur.Text = "PO" & tgl & no.ToString("D3")
-            ElseIf in_faktur.Text <> Nothing And bt_simpanbeli.Text <> "Update" Then
-                If checkdata("data_pembelian_faktur", "'" & in_faktur.Text & "'", "faktur_kode") = True Then
-                    MessageBox.Show("Nomor faktur " & in_faktur.Text & " sudah pernnah diinputkan", "Pembelian", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    in_faktur.Focus()
+                queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), loggeduser.user_id))
+                'END OF INSERT UPDATE HEADER ======================================================================================================
+
+                'START OF INSERT UPDATE BARANG ====================================================================================================
+                q = "UPDATE data_pembelian_trans SET trans_status=9 WHERE trans_faktur='{0}'"
+                queryArr.Add(String.Format(q, in_faktur.Text))
+
+                For Each rows As DataGridViewRow In dgv_barang.Rows
+                    Dim _kdbrg As String = rows.Cells(0).Value
+
+                    'INSERT DATA BARANG
+                    dataBrg = {
+                        "trans_barang='" & _kdbrg & "'",
+                        "trans_harga_beli='" & Decimal.Parse(rows.Cells("harga").Value).ToString.Replace(",", ".") & "'",
+                        "trans_qty='" & rows.Cells("qty").Value & "'",
+                        "trans_satuan='" & rows.Cells("sat").Value & "'",
+                        "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
+                        "trans_disc1='" & Decimal.Parse(rows.Cells("disc1").Value).ToString.Replace(",", ".") & "'",
+                        "trans_disc2='" & Decimal.Parse(rows.Cells("disc2").Value).ToString.Replace(",", ".") & "'",
+                        "trans_disc3='" & Decimal.Parse(rows.Cells("disc3").Value).ToString.Replace(",", ".") & "'",
+                        "trans_disc_rupiah='" & Decimal.Parse(rows.Cells("discrp").Value).ToString.Replace(",", ".") & "'",
+                        "trans_jumlah='" & Decimal.Parse(rows.Cells("jml").Value).ToString.Replace(",", ".") & "'",
+                        "trans_status='1'"
+                        }
+                    q = "INSERT INTO data_pembelian_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
+                    queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataBrg)))
+                Next
+                'END OF INSERT UPDATE BARANG ======================================================================================================
+
+                'START OF OTHER DATA CALC AND INPUT ===============================================================================================
+                q = "CALL transPembelianFin('{0}','{1}')"
+                queryArr.Add(String.Format(q, in_faktur.Text, loggeduser.user_id))
+                'END OF OTHER DATA CALC AND INPUT =================================================================================================
+
+                '==========================================================================================================================
+                'BEGIN MYSQL TRANSACTION
+                querycheck = x.TransactCommand(queryArr)
+                '==========================================================================================================================
+
+                If querycheck = False Then
+                    MessageBox.Show("Data tidak dapat tersimpan")
                     Exit Sub
+                Else
+                    MessageBox.Show("Data tersimpan")
+                    doRefreshTab({pgpembelian, pgstok, pghutangawal})
+                    Me.Close()
                 End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error) : Exit Sub
             End If
-
-            q = "INSERT INTO data_pembelian_faktur SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
-        ElseIf bt_simpanbeli.Text = "Update" Then
-            q = "UPDATE data_pembelian_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}'"
-        End If
-        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), loggeduser.user_id))
-        '==========================================================================================================================
-
-
-        '==========================================================================================================================
-        'INSERT BARANG
-        Dim x As New List(Of String)
-        Dim x_kodestock As New List(Of String)
-        Dim qty As New List(Of Integer)
-        Dim nilai As New List(Of Double)
-
-        '==========================================================================================================================
-        q = "UPDATE data_pembelian_trans SET trans_status=9 WHERE trans_faktur='{0}'"
-        queryArr.Add(String.Format(q, in_faktur.Text))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        For Each rows As DataGridViewRow In dgv_barang.Rows
-            Dim _kdbrg As String = rows.Cells(0).Value
-
-            'INSERT DATA BARANG
-            dataBrg = {
-                "trans_barang='" & _kdbrg & "'",
-                "trans_harga_beli='" & rows.Cells("harga").Value & "'",
-                "trans_qty='" & rows.Cells("qty").Value & "'",
-                "trans_satuan='" & rows.Cells("sat").Value & "'",
-                "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",
-                "trans_disc1='" & rows.Cells("disc1").Value & "'",
-                "trans_disc2='" & rows.Cells("disc2").Value & "'",
-                "trans_disc3='" & rows.Cells("disc3").Value & "'",
-                "trans_disc_rupiah='" & rows.Cells("discrp").Value & "'",
-                "trans_jumlah='" & rows.Cells("jml").Value & "'",
-                "trans_status='1'"
-                }
-            q = "INSERT INTO data_pembelian_trans SET trans_faktur= '{0}',{1} ON DUPLICATE KEY UPDATE {1}"
-            queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataBrg)))
-        Next
-        '==========================================================================================================================
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        q = "CALL transPembelianFin('{0}','{1}')"
-        queryArr.Add(String.Format(q, in_faktur.Text, loggeduser.user_id))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'BEGIN TRANSACT
-        querycheck = startTrans(queryArr)
-        '==========================================================================================================================
-
-        If querycheck = False Then
-            MessageBox.Show("Data tidak dapat tersimpan")
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            doRefreshTab({pgpembelian, pgstok, pghutangawal})
-            Me.Close()
-        End If
+        End Using
     End Sub
 
     'CANCEL
@@ -741,12 +771,9 @@
     End Sub
 
     Private Sub mn_print_Click(sender As Object, e As EventArgs) Handles mn_print.Click
-        Using nota As New fr_view_nota
-            Me.Cursor = Cursors.WaitCursor
-            With nota
-                .setVar("beli", in_faktur.Text, "")
-                .ShowDialog()
-            End With
+        Me.Cursor = Cursors.WaitCursor
+        Using nota As New fr_nota_dialog
+            nota.do_load("beli", in_faktur.Text)
         End Using
         Me.Cursor = Cursors.Default
     End Sub
@@ -941,6 +968,7 @@
                 _kdcontrol = in_gudang
             Case "in_barang_nm"
                 _nxtcontrol = in_qty
+                _kdcontrol = Nothing
             Case Else
                 Exit Sub
         End Select

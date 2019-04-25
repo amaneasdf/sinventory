@@ -158,17 +158,17 @@
             Select Case popupstate
                 Case "bank"
                     q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan " _
-                        & "WHERE perk_status=1 AND perk_parent IN('1101','1102') AND perk_nama_akun LIKE '{0}%'"
+                        & "WHERE perk_status=1 AND perk_parent IN('1101','1102') AND (perk_nama_akun LIKE '%{0}%' OR perk_kode LIKE '%{0}%')"
                     .DataSource = getDataTablefromDB(String.Format(q, param))
                     .Columns(1).Width = 150
                 Case "sales"
                     q = "SELECT salesman_kode AS 'Kode',salesman_nama AS 'Nama' FROM data_salesman_master " _
-                        & "WHERE salesman_status=1 AND salesman_nama LIKE '{0}%' LIMIT 100"
+                        & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%') LIMIT 100"
                     .DataSource = getDataTablefromDB(String.Format(q, param))
                     .Columns(1).Width = 175
                 Case "rek"
                     q = "SELECT perk_kode as 'Kode', perk_nama_akun as 'Nama' FROM data_perkiraan " _
-                        & "WHERE perk_status=1 AND perk_nama_akun LIKE '{0}%' AND perk_kode<>'" & in_bank.Text & "' LIMIT 100"
+                        & "WHERE perk_status=1 AND (perk_nama_akun LIKE '%{0}%' OR perk_kode LIKE '%{0}%') AND perk_kode<>'" & in_bank.Text & "' LIMIT 100"
                     .DataSource = getDataTablefromDB(String.Format(q, param))
                     .Columns(1).Width = 200
             End Select
@@ -352,8 +352,8 @@
         For Each rows As DataGridViewRow In dgv_kas.Rows
             data1 = {
                 "k_trans_rek='" & rows.Cells("kas_rek").Value & "'",
-                "k_trans_debet=" & rows.Cells("kas_debet").Value.ToString.Replace(",", "."),
-                "k_trans_kredit=" & rows.Cells("kas_kredit").Value.ToString.Replace(",", "."),
+                "k_trans_debet=" & Decimal.Parse(rows.Cells("kas_debet").Value).ToString.Replace(",", "."),
+                "k_trans_kredit=" & Decimal.Parse(rows.Cells("kas_kredit").Value).ToString.Replace(",", "."),
                 "k_trans_ket='" & rows.Cells("kas_ket").Value & "'",
                 "k_trans_status='" & IIf(tjlstatus = 9, 9, 1) & "'"
                 }

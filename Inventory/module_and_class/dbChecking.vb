@@ -518,4 +518,57 @@
 
         Return retval
     End Function
+
+    'GET TRANS STATUS
+    Public Function getTransStatus(KodeFaktur As String, JenisTrans As String, ByRef Msg As String) As Integer
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main DB Connection is empty")
+        End If
+        Dim _retval As Integer = 0
+        Dim q As String = ""
+
+        Msg = Nothing
+
+        Select Case JenisTrans
+            Case "pesanan"
+                q = "SELECT j_order_status FROM data_penjualan_order_faktur WHERE j_order_kode='{0}'"
+            Case "penjualan"
+                q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}'"
+            Case "returjual"
+                q = "SELECT faktur_status FROM data_pejualan_retur_faktur WHERE faktur_kode_bukti='{0}'"
+            Case "pembelian"
+                q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}'"
+            Case "returbeli"
+                q = "SELECT faktur_status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='{0}'"
+            Case "piutangbayar"
+                q = "SELECT p_bayar_status FROM data_piutang_bayar WHERE p_bayar_bukti='{0}'"
+            Case "hutangbayar"
+                q = "SELECT h_bayar_status FROM data_piutang_bayar WHERE h_bayar_bukti='{0}'"
+            Case Else
+                Msg = "Tipe Transaksi tidak sesuai"
+                Return 9
+                Exit Function
+        End Select
+
+        Using x = MainConnection
+            x.Open()
+            If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        _retval = rdx.Item(0)
+                        Msg = Nothing
+                    Else
+                        _retval = 9
+                        Msg = "Data tidak ditemukan"
+                    End If
+                End Using
+            Else
+                _retval = 9
+                Msg = "Tidak dapat terhubung ke database"
+            End If
+        End Using
+
+        Return _retval
+    End Function
 End Module

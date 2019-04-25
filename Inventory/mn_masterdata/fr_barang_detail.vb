@@ -187,7 +187,7 @@
             Case "supplier"
                 q = "SELECT supplier_kode as 'Kode', supplier_nama as 'Nama Supplier', " _
                     & "If(supplier_status=1,'Aktif','Non_Aktif') as 'Status' FROM data_supplier_master " _
-                    & "WHERE supplier_status<>9 AND supplier_nama LIKE '{0}%'"
+                    & "WHERE supplier_status<>9 AND (supplier_nama LIKE '{0}%' OR supplier_kode LIKE '{0}%') LIMIT 250"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case Else
                 Exit Sub

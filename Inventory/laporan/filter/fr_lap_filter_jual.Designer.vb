@@ -124,12 +124,11 @@ Partial Class fr_lap_filter_jual
         'bt_exportxl
         '
         Me.bt_exportxl.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.bt_exportxl.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_exportxl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_exportxl.Location = New System.Drawing.Point(11, 244)
         Me.bt_exportxl.Name = "bt_exportxl"
         Me.bt_exportxl.Size = New System.Drawing.Size(96, 30)
-        Me.bt_exportxl.TabIndex = 415
+        Me.bt_exportxl.TabIndex = 9
         Me.bt_exportxl.Text = "Export Excel"
         Me.bt_exportxl.UseVisualStyleBackColor = True
         '
@@ -141,7 +140,7 @@ Partial Class fr_lap_filter_jual
         Me.bt_batalbeli.Location = New System.Drawing.Point(488, 244)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalbeli.TabIndex = 414
+        Me.bt_batalbeli.TabIndex = 11
         Me.bt_batalbeli.Text = "Close"
         Me.bt_batalbeli.UseVisualStyleBackColor = True
         '
@@ -152,7 +151,7 @@ Partial Class fr_lap_filter_jual
         Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 244)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
-        Me.bt_simpanbeli.TabIndex = 413
+        Me.bt_simpanbeli.TabIndex = 10
         Me.bt_simpanbeli.Text = "Tampilkan"
         Me.bt_simpanbeli.UseVisualStyleBackColor = True
         '
@@ -165,7 +164,7 @@ Partial Class fr_lap_filter_jual
         Me.in_custo_n.MaxLength = 200
         Me.in_custo_n.Name = "in_custo_n"
         Me.in_custo_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_custo_n.TabIndex = 428
+        Me.in_custo_n.TabIndex = 6
         '
         'in_custo
         '
@@ -177,7 +176,7 @@ Partial Class fr_lap_filter_jual
         Me.in_custo.Name = "in_custo"
         Me.in_custo.ReadOnly = True
         Me.in_custo.Size = New System.Drawing.Size(121, 20)
-        Me.in_custo.TabIndex = 427
+        Me.in_custo.TabIndex = 5
         '
         'lbl_custo
         '
@@ -198,7 +197,7 @@ Partial Class fr_lap_filter_jual
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_sales_n.TabIndex = 436
+        Me.in_sales_n.TabIndex = 4
         '
         'in_sales
         '
@@ -210,7 +209,7 @@ Partial Class fr_lap_filter_jual
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
         Me.in_sales.Size = New System.Drawing.Size(121, 20)
-        Me.in_sales.TabIndex = 435
+        Me.in_sales.TabIndex = 3
         '
         'lbl_sales
         '
@@ -240,7 +239,7 @@ Partial Class fr_lap_filter_jual
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
         Me.date_tglakhir.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglakhir.TabIndex = 432
+        Me.date_tglakhir.TabIndex = 1
         Me.date_tglakhir.TabStop = False
         '
         'lbl_tgl
@@ -261,7 +260,7 @@ Partial Class fr_lap_filter_jual
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
         Me.date_tglawal.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglawal.TabIndex = 431
+        Me.date_tglawal.TabIndex = 0
         Me.date_tglawal.TabStop = False
         '
         'cb_jenis
@@ -274,7 +273,7 @@ Partial Class fr_lap_filter_jual
         Me.cb_jenis.Location = New System.Drawing.Point(82, 57)
         Me.cb_jenis.Name = "cb_jenis"
         Me.cb_jenis.Size = New System.Drawing.Size(193, 21)
-        Me.cb_jenis.TabIndex = 439
+        Me.cb_jenis.TabIndex = 2
         '
         'lbl_jenis
         '
@@ -322,7 +321,7 @@ Partial Class fr_lap_filter_jual
         Me.in_barang_n.MaxLength = 200
         Me.in_barang_n.Name = "in_barang_n"
         Me.in_barang_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_barang_n.TabIndex = 443
+        Me.in_barang_n.TabIndex = 8
         '
         'in_barang
         '
@@ -334,7 +333,7 @@ Partial Class fr_lap_filter_jual
         Me.in_barang.Name = "in_barang"
         Me.in_barang.ReadOnly = True
         Me.in_barang.Size = New System.Drawing.Size(121, 20)
-        Me.in_barang.TabIndex = 442
+        Me.in_barang.TabIndex = 7
         '
         'lbl_barang
         '
@@ -366,13 +365,14 @@ Partial Class fr_lap_filter_jual
         Me.cb_pajak.Location = New System.Drawing.Point(82, 80)
         Me.cb_pajak.Name = "cb_pajak"
         Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
-        Me.cb_pajak.TabIndex = 445
+        Me.cb_pajak.TabIndex = 2
         '
         'fr_lap_filter_jual
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
+        Me.CancelButton = Me.bt_batalbeli
         Me.ClientSize = New System.Drawing.Size(591, 290)
         Me.Controls.Add(Me.lbl_pajak)
         Me.Controls.Add(Me.cb_pajak)

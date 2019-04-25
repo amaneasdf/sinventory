@@ -47,6 +47,8 @@ Partial Class fr_lap_filter_keuangan
         Me.in_akun = New System.Windows.Forms.TextBox()
         Me.lbl_akun = New System.Windows.Forms.Label()
         Me.lbl_title2 = New System.Windows.Forms.Label()
+        Me.lbl_pajak = New System.Windows.Forms.Label()
+        Me.cb_pajak = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -166,7 +168,7 @@ Partial Class fr_lap_filter_keuangan
         '
         'in_sales
         '
-        Me.in_sales.BackColor = System.Drawing.Color.White
+        Me.in_sales.BackColor = System.Drawing.Color.Gainsboro
         Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales.ForeColor = System.Drawing.Color.Black
         Me.in_sales.Location = New System.Drawing.Point(86, 84)
@@ -301,7 +303,7 @@ Partial Class fr_lap_filter_keuangan
         '
         'in_akun
         '
-        Me.in_akun.BackColor = System.Drawing.Color.White
+        Me.in_akun.BackColor = System.Drawing.Color.Gainsboro
         Me.in_akun.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akun.ForeColor = System.Drawing.Color.Black
         Me.in_akun.Location = New System.Drawing.Point(86, 106)
@@ -332,14 +334,38 @@ Partial Class fr_lap_filter_keuangan
         Me.lbl_title2.TabIndex = 438
         Me.lbl_title2.Text = "Periode"
         '
+        'lbl_pajak
+        '
+        Me.lbl_pajak.AutoSize = True
+        Me.lbl_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_pajak.Location = New System.Drawing.Point(12, 133)
+        Me.lbl_pajak.Name = "lbl_pajak"
+        Me.lbl_pajak.Size = New System.Drawing.Size(46, 13)
+        Me.lbl_pajak.TabIndex = 448
+        Me.lbl_pajak.Text = "Kategori"
+        '
+        'cb_pajak
+        '
+        Me.cb_pajak.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
+        Me.cb_pajak.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cb_pajak.BackColor = System.Drawing.Color.White
+        Me.cb_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.cb_pajak.FormattingEnabled = True
+        Me.cb_pajak.Location = New System.Drawing.Point(86, 129)
+        Me.cb_pajak.Name = "cb_pajak"
+        Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
+        Me.cb_pajak.TabIndex = 447
+        '
         'fr_lap_filter_keuangan
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 273)
-        Me.Controls.Add(Me.lbl_title2)
         Me.Controls.Add(Me.popPnl_barang)
+        Me.Controls.Add(Me.lbl_pajak)
+        Me.Controls.Add(Me.cb_pajak)
+        Me.Controls.Add(Me.lbl_title2)
         Me.Controls.Add(Me.in_akun_n)
         Me.Controls.Add(Me.in_akun)
         Me.Controls.Add(Me.lbl_akun)
@@ -396,4 +422,6 @@ Partial Class fr_lap_filter_keuangan
     Friend WithEvents in_akun As System.Windows.Forms.TextBox
     Friend WithEvents lbl_akun As System.Windows.Forms.Label
     Friend WithEvents lbl_title2 As System.Windows.Forms.Label
+    Friend WithEvents lbl_pajak As System.Windows.Forms.Label
+    Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
 End Class

@@ -41,9 +41,14 @@ Partial Class fr_piutang_awal
         Me.Label7 = New System.Windows.Forms.Label()
         Me.in_sales = New System.Windows.Forms.TextBox()
         Me.in_sales_n = New System.Windows.Forms.TextBox()
-        Me.in_term = New System.Windows.Forms.NumericUpDown()
         Me.in_tgl_term = New System.Windows.Forms.TextBox()
         Me.dgv_hutang = New System.Windows.Forms.DataGridView()
+        Me.ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.piutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
@@ -51,14 +56,10 @@ Partial Class fr_piutang_awal
         Me.in_sisa = New System.Windows.Forms.TextBox()
         Me.in_total = New System.Windows.Forms.TextBox()
         Me.bt_bayar = New System.Windows.Forms.Button()
-        Me.ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bayar = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.piutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ref = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.in_kat = New System.Windows.Forms.TextBox()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.in_term = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
-        CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -70,7 +71,7 @@ Partial Class fr_piutang_awal
         Me.bt_batalreturbeli.Location = New System.Drawing.Point(441, 495)
         Me.bt_batalreturbeli.Name = "bt_batalreturbeli"
         Me.bt_batalreturbeli.Size = New System.Drawing.Size(96, 29)
-        Me.bt_batalreturbeli.TabIndex = 10
+        Me.bt_batalreturbeli.TabIndex = 15
         Me.bt_batalreturbeli.Text = "Batal"
         Me.bt_batalreturbeli.UseVisualStyleBackColor = True
         '
@@ -121,10 +122,10 @@ Partial Class fr_piutang_awal
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(525, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(521, 9)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
-        Me.bt_cl.TabIndex = 137
+        Me.bt_cl.TabIndex = 16
         Me.bt_cl.TabStop = False
         Me.bt_cl.UseVisualStyleBackColor = False
         '
@@ -144,18 +145,19 @@ Partial Class fr_piutang_awal
         '
         Me.in_piutangawal.BackColor = System.Drawing.Color.White
         Me.in_piutangawal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_piutangawal.Location = New System.Drawing.Point(82, 143)
+        Me.in_piutangawal.Location = New System.Drawing.Point(82, 165)
         Me.in_piutangawal.MaxLength = 15
         Me.in_piutangawal.Name = "in_piutangawal"
         Me.in_piutangawal.ReadOnly = True
-        Me.in_piutangawal.Size = New System.Drawing.Size(172, 20)
-        Me.in_piutangawal.TabIndex = 8
+        Me.in_piutangawal.Size = New System.Drawing.Size(273, 20)
+        Me.in_piutangawal.TabIndex = 7
+        Me.in_piutangawal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label5
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(8, 147)
+        Me.Label5.Location = New System.Drawing.Point(8, 169)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(69, 13)
         Me.Label5.TabIndex = 302
@@ -165,7 +167,7 @@ Partial Class fr_piutang_awal
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(8, 169)
+        Me.Label4.Location = New System.Drawing.Point(8, 191)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(31, 13)
         Me.Label4.TabIndex = 303
@@ -180,7 +182,7 @@ Partial Class fr_piutang_awal
         Me.in_custo_n.Name = "in_custo_n"
         Me.in_custo_n.ReadOnly = True
         Me.in_custo_n.Size = New System.Drawing.Size(341, 20)
-        Me.in_custo_n.TabIndex = 4
+        Me.in_custo_n.TabIndex = 3
         Me.in_custo_n.TabStop = False
         '
         'in_custo
@@ -192,7 +194,8 @@ Partial Class fr_piutang_awal
         Me.in_custo.Name = "in_custo"
         Me.in_custo.ReadOnly = True
         Me.in_custo.Size = New System.Drawing.Size(95, 20)
-        Me.in_custo.TabIndex = 3
+        Me.in_custo.TabIndex = 2
+        Me.in_custo.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'Label2
         '
@@ -213,7 +216,7 @@ Partial Class fr_piutang_awal
         Me.in_tgl.Name = "in_tgl"
         Me.in_tgl.ReadOnly = True
         Me.in_tgl.Size = New System.Drawing.Size(172, 20)
-        Me.in_tgl.TabIndex = 2
+        Me.in_tgl.TabIndex = 1
         '
         'Label1
         '
@@ -265,7 +268,8 @@ Partial Class fr_piutang_awal
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
         Me.in_sales.Size = New System.Drawing.Size(95, 20)
-        Me.in_sales.TabIndex = 6
+        Me.in_sales.TabIndex = 4
+        Me.in_sales.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'in_sales_n
         '
@@ -276,27 +280,19 @@ Partial Class fr_piutang_awal
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.ReadOnly = True
         Me.in_sales_n.Size = New System.Drawing.Size(341, 20)
-        Me.in_sales_n.TabIndex = 7
+        Me.in_sales_n.TabIndex = 5
         Me.in_sales_n.TabStop = False
-        '
-        'in_term
-        '
-        Me.in_term.Location = New System.Drawing.Point(82, 165)
-        Me.in_term.Maximum = New Decimal(New Integer() {999, 0, 0, 0})
-        Me.in_term.Name = "in_term"
-        Me.in_term.Size = New System.Drawing.Size(95, 20)
-        Me.in_term.TabIndex = 308
         '
         'in_tgl_term
         '
         Me.in_tgl_term.BackColor = System.Drawing.Color.White
         Me.in_tgl_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_tgl_term.Location = New System.Drawing.Point(178, 165)
+        Me.in_tgl_term.Location = New System.Drawing.Point(178, 187)
         Me.in_tgl_term.MaxLength = 15
         Me.in_tgl_term.Name = "in_tgl_term"
         Me.in_tgl_term.ReadOnly = True
         Me.in_tgl_term.Size = New System.Drawing.Size(177, 20)
-        Me.in_tgl_term.TabIndex = 307
+        Me.in_tgl_term.TabIndex = 9
         '
         'dgv_hutang
         '
@@ -304,97 +300,12 @@ Partial Class fr_piutang_awal
         Me.dgv_hutang.AllowUserToDeleteRows = False
         Me.dgv_hutang.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_hutang.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ket, Me.tgl, Me.bayar, Me.piutang, Me.ref, Me.status})
-        Me.dgv_hutang.Location = New System.Drawing.Point(11, 191)
+        Me.dgv_hutang.Location = New System.Drawing.Point(11, 213)
         Me.dgv_hutang.Name = "dgv_hutang"
         Me.dgv_hutang.ReadOnly = True
         Me.dgv_hutang.RowHeadersVisible = False
-        Me.dgv_hutang.Size = New System.Drawing.Size(530, 215)
-        Me.dgv_hutang.TabIndex = 309
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label8.Location = New System.Drawing.Point(11, 464)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(88, 13)
-        Me.Label8.TabIndex = 374
-        Me.Label8.Text = "Tgl Pelunasan"
-        '
-        'Label6
-        '
-        Me.Label6.AutoSize = True
-        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label6.Location = New System.Drawing.Point(11, 439)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(78, 13)
-        Me.Label6.TabIndex = 375
-        Me.Label6.Text = "Sisa Piutang"
-        '
-        'Label9
-        '
-        Me.Label9.AutoSize = True
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label9.Location = New System.Drawing.Point(11, 415)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(109, 13)
-        Me.Label9.TabIndex = 376
-        Me.Label9.Text = "Total Pembayaran"
-        '
-        'in_tgllunas
-        '
-        Me.in_tgllunas.BackColor = System.Drawing.Color.White
-        Me.in_tgllunas.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_tgllunas.ForeColor = System.Drawing.Color.Black
-        Me.in_tgllunas.Location = New System.Drawing.Point(123, 461)
-        Me.in_tgllunas.MaxLength = 50
-        Me.in_tgllunas.Name = "in_tgllunas"
-        Me.in_tgllunas.ReadOnly = True
-        Me.in_tgllunas.Size = New System.Drawing.Size(218, 21)
-        Me.in_tgllunas.TabIndex = 371
-        Me.in_tgllunas.TabStop = False
-        '
-        'in_sisa
-        '
-        Me.in_sisa.BackColor = System.Drawing.Color.White
-        Me.in_sisa.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_sisa.ForeColor = System.Drawing.Color.Black
-        Me.in_sisa.Location = New System.Drawing.Point(123, 436)
-        Me.in_sisa.MaxLength = 50
-        Me.in_sisa.Name = "in_sisa"
-        Me.in_sisa.ReadOnly = True
-        Me.in_sisa.Size = New System.Drawing.Size(218, 21)
-        Me.in_sisa.TabIndex = 372
-        Me.in_sisa.TabStop = False
-        Me.in_sisa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'in_total
-        '
-        Me.in_total.BackColor = System.Drawing.Color.White
-        Me.in_total.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_total.ForeColor = System.Drawing.Color.Black
-        Me.in_total.Location = New System.Drawing.Point(123, 412)
-        Me.in_total.MaxLength = 50
-        Me.in_total.Name = "in_total"
-        Me.in_total.ReadOnly = True
-        Me.in_total.Size = New System.Drawing.Size(218, 21)
-        Me.in_total.TabIndex = 373
-        Me.in_total.TabStop = False
-        Me.in_total.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
-        '
-        'bt_bayar
-        '
-        Me.bt_bayar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_bayar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_bayar.Location = New System.Drawing.Point(14, 495)
-        Me.bt_bayar.Name = "bt_bayar"
-        Me.bt_bayar.Size = New System.Drawing.Size(146, 29)
-        Me.bt_bayar.TabIndex = 377
-        Me.bt_bayar.Text = "Tambah Pembayaran"
-        Me.bt_bayar.UseVisualStyleBackColor = True
+        Me.dgv_hutang.Size = New System.Drawing.Size(530, 193)
+        Me.dgv_hutang.TabIndex = 10
         '
         'ket
         '
@@ -441,6 +352,126 @@ Partial Class fr_piutang_awal
         Me.status.Name = "status"
         Me.status.ReadOnly = True
         '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label8.Location = New System.Drawing.Point(11, 464)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(88, 13)
+        Me.Label8.TabIndex = 374
+        Me.Label8.Text = "Tgl Pelunasan"
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label6.Location = New System.Drawing.Point(11, 439)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(78, 13)
+        Me.Label6.TabIndex = 375
+        Me.Label6.Text = "Sisa Piutang"
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label9.ForeColor = System.Drawing.Color.MidnightBlue
+        Me.Label9.Location = New System.Drawing.Point(11, 415)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(109, 13)
+        Me.Label9.TabIndex = 376
+        Me.Label9.Text = "Total Pembayaran"
+        '
+        'in_tgllunas
+        '
+        Me.in_tgllunas.BackColor = System.Drawing.Color.White
+        Me.in_tgllunas.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_tgllunas.ForeColor = System.Drawing.Color.Black
+        Me.in_tgllunas.Location = New System.Drawing.Point(123, 461)
+        Me.in_tgllunas.MaxLength = 50
+        Me.in_tgllunas.Name = "in_tgllunas"
+        Me.in_tgllunas.ReadOnly = True
+        Me.in_tgllunas.Size = New System.Drawing.Size(218, 21)
+        Me.in_tgllunas.TabIndex = 13
+        Me.in_tgllunas.TabStop = False
+        Me.in_tgllunas.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'in_sisa
+        '
+        Me.in_sisa.BackColor = System.Drawing.Color.White
+        Me.in_sisa.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_sisa.ForeColor = System.Drawing.Color.Black
+        Me.in_sisa.Location = New System.Drawing.Point(123, 436)
+        Me.in_sisa.MaxLength = 50
+        Me.in_sisa.Name = "in_sisa"
+        Me.in_sisa.ReadOnly = True
+        Me.in_sisa.Size = New System.Drawing.Size(218, 21)
+        Me.in_sisa.TabIndex = 12
+        Me.in_sisa.TabStop = False
+        Me.in_sisa.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'in_total
+        '
+        Me.in_total.BackColor = System.Drawing.Color.White
+        Me.in_total.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_total.ForeColor = System.Drawing.Color.Black
+        Me.in_total.Location = New System.Drawing.Point(123, 412)
+        Me.in_total.MaxLength = 50
+        Me.in_total.Name = "in_total"
+        Me.in_total.ReadOnly = True
+        Me.in_total.Size = New System.Drawing.Size(218, 21)
+        Me.in_total.TabIndex = 11
+        Me.in_total.TabStop = False
+        Me.in_total.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'bt_bayar
+        '
+        Me.bt_bayar.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_bayar.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_bayar.Location = New System.Drawing.Point(14, 495)
+        Me.bt_bayar.Name = "bt_bayar"
+        Me.bt_bayar.Size = New System.Drawing.Size(146, 29)
+        Me.bt_bayar.TabIndex = 14
+        Me.bt_bayar.Text = "Tambah Pembayaran"
+        Me.bt_bayar.UseVisualStyleBackColor = True
+        '
+        'in_kat
+        '
+        Me.in_kat.BackColor = System.Drawing.Color.White
+        Me.in_kat.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_kat.Location = New System.Drawing.Point(82, 143)
+        Me.in_kat.MaxLength = 15
+        Me.in_kat.Name = "in_kat"
+        Me.in_kat.ReadOnly = True
+        Me.in_kat.Size = New System.Drawing.Size(95, 20)
+        Me.in_kat.TabIndex = 6
+        Me.in_kat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label10.Location = New System.Drawing.Point(8, 147)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(46, 13)
+        Me.Label10.TabIndex = 379
+        Me.Label10.Text = "Kategori"
+        '
+        'in_term
+        '
+        Me.in_term.BackColor = System.Drawing.Color.White
+        Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_term.Location = New System.Drawing.Point(82, 187)
+        Me.in_term.MaxLength = 15
+        Me.in_term.Name = "in_term"
+        Me.in_term.ReadOnly = True
+        Me.in_term.Size = New System.Drawing.Size(95, 20)
+        Me.in_term.TabIndex = 8
+        Me.in_term.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
         'fr_piutang_awal
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -448,6 +479,9 @@ Partial Class fr_piutang_awal
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalreturbeli
         Me.ClientSize = New System.Drawing.Size(552, 540)
+        Me.Controls.Add(Me.in_term)
+        Me.Controls.Add(Me.in_kat)
+        Me.Controls.Add(Me.Label10)
         Me.Controls.Add(Me.bt_bayar)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.Label6)
@@ -456,7 +490,6 @@ Partial Class fr_piutang_awal
         Me.Controls.Add(Me.in_sisa)
         Me.Controls.Add(Me.in_total)
         Me.Controls.Add(Me.dgv_hutang)
-        Me.Controls.Add(Me.in_term)
         Me.Controls.Add(Me.in_tgl_term)
         Me.Controls.Add(Me.in_piutangawal)
         Me.Controls.Add(Me.Label5)
@@ -481,7 +514,6 @@ Partial Class fr_piutang_awal
         Me.Text = "fr_piutang_awal"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgv_hutang, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
@@ -506,7 +538,6 @@ Partial Class fr_piutang_awal
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents in_sales As System.Windows.Forms.TextBox
     Friend WithEvents in_sales_n As System.Windows.Forms.TextBox
-    Friend WithEvents in_term As System.Windows.Forms.NumericUpDown
     Friend WithEvents in_tgl_term As System.Windows.Forms.TextBox
     Friend WithEvents dgv_hutang As System.Windows.Forms.DataGridView
     Friend WithEvents Label8 As System.Windows.Forms.Label
@@ -522,4 +553,7 @@ Partial Class fr_piutang_awal
     Friend WithEvents piutang As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ref As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents status As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents in_kat As System.Windows.Forms.TextBox
+    Friend WithEvents Label10 As System.Windows.Forms.Label
+    Friend WithEvents in_term As System.Windows.Forms.TextBox
 End Class

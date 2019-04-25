@@ -225,6 +225,12 @@
     <Compile Include="laporan\filter\fr_QR_custo.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="laporan\nota\fr_nota_dialog.Designer.vb">
+      <DependentUpon>fr_nota_dialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="laporan\nota\fr_nota_dialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="laporan\view\fr_lap_master.Designer.vb">
       <DependentUpon>fr_lap_master.vb</DependentUpon>
     </Compile>
@@ -397,11 +403,35 @@
     <Compile Include="mn_masterdata\fr_supplier_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_olahdata\fr_export_efaktur.Designer.vb">
+    <Compile Include="mn_olahdata\export_efak\fr_exportaddfaktur.Designer.vb">
+      <DependentUpon>fr_exportaddfaktur.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_exportaddfaktur.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_export_efaktur.Designer.vb">
       <DependentUpon>fr_export_efaktur.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_olahdata\fr_export_efaktur.vb">
+    <Compile Include="mn_olahdata\export_efak\fr_export_efaktur.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_newexport.Designer.vb">
+      <DependentUpon>fr_newexport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_newexport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_search_export.Designer.vb">
+      <DependentUpon>fr_search_export.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_search_export.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_urutnofaktur.Designer.vb">
+      <DependentUpon>fr_urutnofaktur.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_urutnofaktur.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_olahdata\fr_set_periode.Designer.vb">
       <DependentUpon>fr_set_periode.vb</DependentUpon>
@@ -481,34 +511,40 @@
     <Compile Include="mn_pengaturan\fr_user_password.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="mn_pengaturan\uc_sales_barang.Designer.vb">
+      <DependentUpon>uc_sales_barang.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\uc_sales_barang.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.Designer.vb">
       <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stockop_list.Designer.vb">
+    <Compile Include="mn_persediaan\stok_op\fr_stockop_list.Designer.vb">
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stockop_list.vb">
+    <Compile Include="mn_persediaan\stok_op\fr_stockop_list.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasibarang_list.Designer.vb">
+    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.Designer.vb">
       <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasibarang_list.vb">
+    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi_list.Designer.vb">
+    <Compile Include="mn_persediaan\mutasi_stok\fr_stok_mutasi_list.Designer.vb">
       <DependentUpon>fr_stok_mutasi_list.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\fr_stok_mutasi_list.vb">
+    <Compile Include="mn_persediaan\mutasi_stok\fr_stok_mutasi_list.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stock_op.Designer.vb">
+    <Compile Include="mn_persediaan\stok_op\fr_stock_op.Designer.vb">
       <DependentUpon>fr_stock_op.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stock_op.vb">
+    <Compile Include="mn_persediaan\stok_op\fr_stock_op.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_persediaan\fr_stok_awal.Designer.vb">
@@ -517,22 +553,16 @@
     <Compile Include="mn_persediaan\fr_stok_awal.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_detail.Designer.vb">
-      <DependentUpon>fr_stok_detail.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_detail.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_mutasi.Designer.vb">
+    <Compile Include="mn_persediaan\mutasi_stok\fr_stok_mutasi.Designer.vb">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_mutasi.vb">
+    <Compile Include="mn_persediaan\mutasi_stok\fr_stok_mutasi.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_mutasi_barang.Designer.vb">
+    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasi_barang.Designer.vb">
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_persediaan\ss\fr_stok_mutasi_barang.vb">
+    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasi_barang.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_piutang\fr_bg_tolak.Designer.vb">
@@ -709,6 +739,9 @@
     <EmbeddedResource Include="laporan\lap\piutang\piutang_detailbayar.rdlc" />
     <EmbeddedResource Include="laporan\lap\stok\lap_stok_kartupersediaan_gudang.rdlc" />
     <EmbeddedResource Include="laporan\lap\stok\lap_stok_kartupersediaan.rdlc" />
+    <EmbeddedResource Include="laporan\nota\fr_nota_dialog.resx">
+      <DependentUpon>fr_nota_dialog.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="laporan\view\fr_lap_master.resx">
       <DependentUpon>fr_lap_master.vb</DependentUpon>
     </EmbeddedResource>
@@ -830,8 +863,20 @@
     <EmbeddedResource Include="mn_masterdata\fr_supplier_detail.resx">
       <DependentUpon>fr_supplier_detail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_olahdata\fr_export_efaktur.resx">
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_exportaddfaktur.resx">
+      <DependentUpon>fr_exportaddfaktur.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_export_efaktur.resx">
       <DependentUpon>fr_export_efaktur.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_newexport.resx">
+      <DependentUpon>fr_newexport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_search_export.resx">
+      <DependentUpon>fr_search_export.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_urutnofaktur.resx">
+      <DependentUpon>fr_urutnofaktur.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\fr_set_periode.resx">
       <DependentUpon>fr_set_periode.vb</DependentUpon>
@@ -872,31 +917,31 @@
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\uc_sales_barang.resx">
+      <DependentUpon>uc_sales_barang.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stockopconfirm_dialog.resx">
       <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stockop_list.resx">
+    <EmbeddedResource Include="mn_persediaan\stok_op\fr_stockop_list.resx">
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasibarang_list.resx">
+    <EmbeddedResource Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.resx">
       <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\fr_stok_mutasi_list.resx">
+    <EmbeddedResource Include="mn_persediaan\mutasi_stok\fr_stok_mutasi_list.resx">
       <DependentUpon>fr_stok_mutasi_list.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\ss\fr_stock_op.resx">
+    <EmbeddedResource Include="mn_persediaan\stok_op\fr_stock_op.resx">
       <DependentUpon>fr_stock_op.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stok_awal.resx">
       <DependentUpon>fr_stok_awal.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_detail.resx">
-      <DependentUpon>fr_stok_detail.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_mutasi.resx">
+    <EmbeddedResource Include="mn_persediaan\mutasi_stok\fr_stok_mutasi.resx">
       <DependentUpon>fr_stok_mutasi.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\ss\fr_stok_mutasi_barang.resx">
+    <EmbeddedResource Include="mn_persediaan\mutasi_brg\fr_stok_mutasi_barang.resx">
       <DependentUpon>fr_stok_mutasi_barang.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_piutang\fr_bg_tolak.resx">
@@ -1116,6 +1161,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\1492932873_Delete.png" />
+    <None Include="Resources\Add_16x16.png" />
+    <None Include="Resources\proses.png" />
     <None Include="Resources\company_name.jpg" />
     <None Include="Resources\Save.png" />
     <None Include="Resources\Search_16x16.png" />

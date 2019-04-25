@@ -31,12 +31,15 @@
         Dim dt As New DataTable
         Select Case tipe
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master WHERE supplier_status=1 AND supplier_nama LIKE '{0}%'"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%')"
             Case "barang"
                 If in_supplier.Text <> Nothing Then
-                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_supplier='" & in_supplier.Text & "' AND barang_nama LIKE '{0}%'"
+                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master " _
+                        & "WHERE barang_status=1 AND barang_supplier='" & in_supplier.Text & "' AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%')"
                 Else
-                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master WHERE barang_status=1 AND barang_nama LIKE '{0}%'"
+                    q = "SELECT barang_kode as 'Kode', barang_nama as 'Nama' FROM data_barang_master " _
+                        & "WHERE barang_status=1 AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%')"
                 End If
             Case Else
                 Exit Sub

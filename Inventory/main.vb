@@ -147,6 +147,19 @@
                 createTabPage(pgjurnalmemorial, type, frmjurnalmemorial, "Jurnal Memorial")
                 'Case "jenisbarang"
                 '    createTabPage(pgjenisbarang, type, frmjenisbarang, "Ref. Jenis Barang")
+            Case "setbarangsales"
+                If tabcontrol.Contains(pgsalesbarang) Then
+                    tabcontrol.SelectedTab = pgsalesbarang
+                Else
+                    With pgsalesbarang
+                        .Text = "Set Barang Salesman"
+                        tabcontrol.TabPages.Add(pgsalesbarang)
+                        setList(type)
+                        .Controls.Add(frmsalesbarang)
+                        .Show()
+                        tabcontrol.SelectedTab = pgsalesbarang
+                    End With
+                End If
             Case "kartustok"
                 If tabcontrol.Contains(pgkartustok) Then
                     tabcontrol.SelectedTab = pgkartustok
@@ -171,7 +184,6 @@
                         setList(type)
                         .Controls.Add(frmexportEfak)
                         .Show()
-                        Console.WriteLine(.Name.ToString)
                         tabcontrol.SelectedTab = pgexportEFak
                     End With
                 End If
@@ -185,7 +197,6 @@
                         setList(type)
                         .Controls.Add(frmtutupbuku)
                         .Show()
-                        Console.WriteLine(.Name.ToString)
                         tabcontrol.SelectedTab = pgtutupbuku
                     End With
                 End If
@@ -555,6 +566,7 @@
                 With fr_reference
                     .Show()
                 End With
+            Case "mn0934" : openTab("setbarangsales")
             Case "mn0941"
                 consoleWriteLine("click logout")
                 Try
@@ -613,9 +625,7 @@
             If getConn.State <> ConnectionState.Open Then
                 MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
                                 Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                isForcedClose = True
-                _retval = False
-                Application.Exit()
+                isForcedClose = True : _retval = False : Application.Exit()
             Else
                 _retval = True
             End If
@@ -632,7 +642,11 @@
         Me.Cursor = Cursors.AppStarting
         If setConnection() = True Then
             _login.Show()
-            strip_host.Text = mainConn.host
+#If DEBUG Then
+            strip_host.Text = MainConnection.Host & ":" & MainConnection.Database
+#Else
+            strip_host.Text = MainConnection.Host
+#End If
         End If
         Me.Cursor = Cursors.Default
     End Sub
@@ -652,6 +666,7 @@
         End If
     End Sub
 
+    'VVV DOESNT MATTER VVV
     Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
         If loggeduser.user_id = "dev" Then
             If e.KeyCode = Keys.E And e.Control = True And e.Shift = True Then

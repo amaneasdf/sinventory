@@ -1,7 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 
 Public Class MySqlThing : Implements IDisposable
-    Private Const connstring As String = "Server={0};Database={1};Uid={2};Pwd={3};Allow User Variables=TRUE"
+    Private Const connstring As String = "Server={0};Database={1};Uid={2};Pwd={3};Allow User Variables=TRUE;"
     Private _host As String
     Private _db As String
     Private _Uid As String
@@ -123,6 +123,7 @@ Public Class MySqlThing : Implements IDisposable
 
         Me.Open()
         Dim cmd = New MySqlCommand(query, conn)
+        cmd.CommandTimeout = 0
         retVal = cmd.ExecuteNonQuery
 
         Return retVal
@@ -133,9 +134,20 @@ Public Class MySqlThing : Implements IDisposable
         consoleWriteLine(query)
         Me.Open()
         Dim cmd = New MySqlCommand(query, conn)
+        cmd.CommandTimeout = 0
         retVal = Await cmd.ExecuteNonQueryAsync
 
         Return retVal
+    End Function
+
+    Public Function ExecScalar(query As String) As Object
+        Dim retval As Object = Nothing
+        Dim _cmd = New MySqlCommand(query, Me.conn)
+
+        Me.Open()
+        retval = _cmd.ExecuteScalar()
+
+        Return retval
     End Function
 
     Public Function ReadCommand(query As String, Optional behavior As System.Data.CommandBehavior = CommandBehavior.Default) As MySqlDataReader
@@ -143,6 +155,7 @@ Public Class MySqlThing : Implements IDisposable
 
         Me.Open()
         Dim x = New MySqlCommand(query, conn)
+        x.CommandTimeout = 0
         retVal = x.ExecuteReader(behavior)
 
         Return retVal

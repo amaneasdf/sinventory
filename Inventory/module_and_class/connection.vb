@@ -51,6 +51,7 @@ Module dbproceduralstuff
         Dim ctrans As New MySqlCommand
         Dim transact As MySqlTransaction = conn.BeginTransaction()
         Dim querycheck As Boolean = False
+        Dim count As Integer = 0
 
         ctrans.Connection = conn
         ctrans.Transaction = transact
@@ -58,7 +59,9 @@ Module dbproceduralstuff
             Try
                 consoleWriteLine(query)
                 ctrans.CommandText = query
-                ctrans.ExecuteNonQuery()
+                Dim i = ctrans.ExecuteNonQuery()
+                consoleWriteLine(i)
+                count += i
                 querycheck = True
             Catch ex As Exception
                 If showErrMsg = True Then
@@ -74,6 +77,7 @@ Module dbproceduralstuff
 
         If querycheck = True Then
             Try
+                consoleWriteLine(count & "ROWS")
                 transact.Commit()
             Catch ex As Exception
                 If showErrMsg = True Then

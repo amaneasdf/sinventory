@@ -55,6 +55,7 @@ Public Class fr_lap_master
         Dim parPeriode As New ReportParameter("parPeriode", inheadpar)
         Dim repdatasource, repdatasource1 As New ReportDataSource
 
+        Dim _pgset As New System.Drawing.Printing.PaperSize
         With Me.rv_nota
             With .LocalReport
 
@@ -69,6 +70,7 @@ Public Class fr_lap_master
                         If Not loadRepTable(data_master.dt_custo_qr) Then
                             Exit Sub
                         End If
+
 
                     Case Else
                         Exit Sub

@@ -59,6 +59,8 @@ Partial Class fr_jurnal_u_det
         Me.in_ket = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.in_kat = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_kas, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnl_content.SuspendLayout()
@@ -463,6 +465,8 @@ Partial Class fr_jurnal_u_det
         '
         'pnl_content
         '
+        Me.pnl_content.Controls.Add(Me.in_kat)
+        Me.pnl_content.Controls.Add(Me.Label6)
         Me.pnl_content.Controls.Add(Me.Label4)
         Me.pnl_content.Controls.Add(Me.Label3)
         Me.pnl_content.Controls.Add(Me.bt_batalperkiraan)
@@ -493,6 +497,29 @@ Partial Class fr_jurnal_u_det
         Me.pnl_content.Name = "pnl_content"
         Me.pnl_content.Size = New System.Drawing.Size(779, 398)
         Me.pnl_content.TabIndex = 427
+        '
+        'in_kat
+        '
+        Me.in_kat.BackColor = System.Drawing.Color.White
+        Me.in_kat.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_kat.ForeColor = System.Drawing.Color.Black
+        Me.in_kat.Location = New System.Drawing.Point(395, 10)
+        Me.in_kat.MaxLength = 200
+        Me.in_kat.Name = "in_kat"
+        Me.in_kat.ReadOnly = True
+        Me.in_kat.Size = New System.Drawing.Size(121, 20)
+        Me.in_kat.TabIndex = 427
+        Me.in_kat.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label6.Location = New System.Drawing.Point(351, 13)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(38, 13)
+        Me.Label6.TabIndex = 428
+        Me.Label6.Text = "Kateg."
         '
         'fr_jurnal_u_det
         '
@@ -554,4 +581,6 @@ Partial Class fr_jurnal_u_det
     Friend WithEvents kas_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents kas_ket As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
+    Friend WithEvents in_kat As System.Windows.Forms.TextBox
+    Friend WithEvents Label6 As System.Windows.Forms.Label
 End Class

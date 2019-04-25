@@ -153,15 +153,15 @@
 
     Private Sub setStatus()
         Select Case usrstatus
-            Case 0
+            Case 9
                 in_status.Text = "Non-Aktif"
                 mn_actdeact.Text = "Activate"
-            Case 1, 2
+            Case 0, 1
                 in_status.Text = "Aktif"
                 mn_actdeact.Text = "Deactivate"
-            Case 9
-                in_status.Text = "Delete"
-                mn_actdeact.Enabled = False
+                'Case 9
+                '    in_status.Text = "Delete"
+                '    mn_actdeact.Enabled = False
             Case Else
                 Exit Sub
         End Select
@@ -226,7 +226,7 @@
                     & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                     & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
                     & " ELSE 'ERROR' END) AS 'Jenis' FROM data_salesman_master " _
-                    & "WHERE salesman_status<>9 AND salesman_nama LIKE '{0}%'"
+                    & "WHERE salesman_status<>9 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%')"
                 dt = getDataTablefromDB(String.Format(q, param))
             Case Else
                 Exit Sub
@@ -316,7 +316,7 @@
     Private Sub mn_actdeact_Click(sender As Object, e As EventArgs) Handles mn_actdeact.Click
         If MessageBox.Show("Ubah status user?", "Data User", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             If mn_actdeact.Text = "Deactivate" Then
-                usrstatus = 0
+                usrstatus = 9
                 setStatus()
             Else
                 usrstatus = 1
@@ -336,7 +336,7 @@
 
         op_con()
         If MsgBox("Apakah yakin akan mereset password user ini?", MsgBoxStyle.YesNo, "Data User") = MsgBoxResult.Yes Then
-            q = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), user_status=2, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
+            q = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), user_status=0, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
             queryArr.Add(String.Format(q, in_userid.Text, loggeduser.user_id))
 
             q = "INSERT INTO system_pwdchange_log(log_alias1,log_alias2,log_ip,log_tanggal) VALUE({0})"
