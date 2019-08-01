@@ -619,7 +619,7 @@
                     'END OF NEW TRANSACTION =======================================================================================================
 
                 ElseIf bt_simpanbeli.Text = "Update" Then
-                    q = "UPDATE data_pembelian_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}'"
+                    q = "UPDATE data_pembelian_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}' AND faktur_status<9"
                 End If
                 queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), loggeduser.user_id))
                 'END OF INSERT UPDATE HEADER ======================================================================================================
@@ -737,9 +737,9 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        If MessageBox.Show("Tutup Form?", "Pembelian", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Pembelian", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -826,9 +826,11 @@
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
-        End If
+        Me.Cursor = Cursors.WaitCursor
+        Dim _askres As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _askres = MessageBox.Show("Simpan perubahan data pembelian?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _askres = Windows.Forms.DialogResult.Yes Then saveData()
+        Me.Cursor = Cursors.Default
     End Sub
 
     'UI

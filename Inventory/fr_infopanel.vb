@@ -44,42 +44,40 @@
         Dim _tglakhir As String = currentperiode.tglakhir.ToString("yyyy-MM-dd")
         Dim retval As Boolean = False
 
-        SetUpPanel(PanelType.GIRO)
-
         If switch Then
             Using x As MySqlThing = MainConnection
-                Await x.OpenAsync
+                Try
+                    Await x.OpenAsync
+                Catch ex As Exception
+                    logError(ex, True) : Return False : Exit Function
+                End Try
 
-                q = "SELECT COUNT(IF(giro_tglefektif<=CURDATE(),1,NULL)), COUNT(IF(giro_tglefektif BETWEEN CURDATE() AND ADDDATE(CURDATE(),30),1,NULL)) " _
-                                & "FROM data_giro WHERE giro_status=1 AND giro_status_pencairan=0 AND giro_type='IN'"
+                If x.ConnectionState = ConnectionState.Open Then
+                    SetUpPanel(PanelType.GIRO)
 
-                Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(q, CommandBehavior.SingleRow)
-                    If Await rdx.ReadAsync Then
-                        If rdx.HasRows Then
-                            lbl_giro_current.Text = String.Format(lbl_giro_current.Text, rdx.Item(0))
-                            lbl_giro_next30.Text = String.Format(lbl_giro_next30.Text, rdx.Item(1))
+                    lbl_giro_current.Text = String.Format(lbl_giro_current.Text, Await x.ExecScalarAsync("SELECT COUNT(giro_no) FROM data_giro WHERE giro_status=1 AND giro_status_pencairan=0 AND giro_type='IN' AND giro_tglefektif<=CURDATE()"))
+                    lbl_giro_next30.Text = String.Format(lbl_giro_next30.Text, Await x.ExecScalarAsync("SELECT COUNT(giro_no) FROM data_giro WHERE giro_status=1 AND giro_status_pencairan=0 AND giro_type='IN' AND giro_tglefektif BETWEEN CURDATE() AND  ADDDATE(CURDATE(),30)"))
+
+                    q = "SELECT COUNT(IF(giro_status_pencairan=1,1,NULL)), COUNT(IF(giro_status_pencairan=2,1,NULL)),COUNT(giro_no) " _
+                        & "FROM data_giro WHERE giro_status=1 AND giro_type='IN' AND (giro_tgl_tolakcair BETWEEN '{0}' AND '{1}' OR giro_tglefektif BETWEEN '{0}' AND '{1}')"
+                    Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir), CommandBehavior.SingleRow)
+                        If Await rdx.ReadAsync Then
+                            If rdx.HasRows Then
+                                lbl_giro_curperiodetot.Text = String.Format(lbl_giro_curperiodetot.Text, rdx.Item(2), rdx.Item(0), rdx.Item(1))
+                            End If
                         End If
-                        rdx.Close()
-                    End If
-                End Using
+                    End Using
 
-                q = "SELECT COUNT(IF(giro_status_pencairan=1,1,NULL)), COUNT(IF(giro_status_pencairan=2,1,NULL)),COUNT(giro_no) " _
-                    & "FROM data_giro WHERE giro_status=1 AND giro_type='IN' AND (giro_tgl_tolakcair BETWEEN '{0}' AND '{1}' OR giro_tglefektif BETWEEN '{0}' AND '{1}')"
-                Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir), CommandBehavior.SingleRow)
-                    If Await rdx.ReadAsync Then
-                        If rdx.HasRows Then
-                            lbl_giro_curperiodetot.Text = String.Format(lbl_giro_curperiodetot.Text, rdx.Item(2), rdx.Item(0), rdx.Item(1))
-                        End If
-                        rdx.Close()
-                    End If
-                End Using
+                    dgv_giroin_jt.DataSource = Await loadDgvGiro()
+                    If dgv_giroin_jt.ColumnCount > 2 Then dgv_giroin_jt.Columns(1).DefaultCellStyle = dgvstyle_currency
 
-                dgv_giroin_jt.DataSource = Await loadDgvGiro()
-
-                retval = True
-
+                    retval = True
+                Else
+                    retval = False
+                End If
             End Using
         End If
+
         Return retval
     End Function
 
@@ -91,15 +89,18 @@
         Dim _tglawal As String = currentperiode.tglawal.ToString("yyyy-MM-dd")
         Dim _tglakhir As String = currentperiode.tglakhir.ToString("yyyy-MM-dd")
         Dim _qtgl As String = String.Format("AND (giro_tglefektif BETWEEN '{0}' AND '{1}' OR giro_tglterima BETWEEN '{0}' AND '{1}')", _tglawal, _tglakhir)
-        Dim _qtdy As String = "AND giro_tglefektif=CURDATE()"
+        Dim _qtdy As String = String.Format("AND giro_tglefektif BETWEEN '{0}' AND CURDATE()", _tglawal)
         Dim retVal As New DataTable
 
-        Await x.OpenAsync()
+        Try
+            Await x.OpenAsync
+        Catch ex As Exception
+            logError(ex, True) : Return New DataTable : Exit Function
+        End Try
+
         If x.Connection.State = ConnectionState.Open Then
             retVal = Await x.GetDTAsync(String.Format(q, IIf(ck_giro_periode.Checked = True, _qtgl, _qtdy)))
         End If
-
-        'dgv_giroin_jt.DataSource = getDataTablefromDB(String.Format(q, IIf(ck_giro_periode.Checked = True, _qtgl, _qtdy)))
 
         Return retVal
     End Function
@@ -115,26 +116,32 @@
         SetUpPanel(PanelType.PESANAN)
 
         If switch Then
-            Await x.OpenAsync
+            Try
+                Await x.OpenAsync
+            Catch ex As Exception
+                logError(ex, True) : Return False : Exit Function
+            End Try
 
-            q = "SELECT COUNT(IF(j_order_status=0,1,NULL)), " _
-                & "COUNT(IF(j_order_tanggal_trans=CURDATE() AND j_order_status=0,1,NULL))," _
-                & "COUNT(IF(j_order_tanggal_trans=CURDATE() AND j_order_status=1,1,NULL))," _
-                & "COUNT(IF(j_order_tanggal_trans=CURDATE(),1,NULL)) , COUNT(IF(j_order_tanggal_trans=CURDATE(),j_order_sales,NULL))" _
-                & "FROM data_penjualan_order_faktur WHERE j_order_status IN (0,1,2) AND j_order_tanggal_trans BETWEEN '{0}' AND '{1}'"
-            Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir))
-                If Await rdx.ReadAsync() Then
-                    If rdx.HasRows Then
-                        lbl_pesan_valid.Text = String.Format(lbl_pesan_valid.Text, rdx.Item(1))
-                        lbl_pesan_validtot.Text = String.Format(lbl_pesan_validtot.Text, rdx.Item(0))
-                        lbl_pesan_aprovedtoday.Text = String.Format(lbl_pesan_aprovedtoday.Text, rdx.Item(2))
-                        lbl_pesan_totpesantoday.Text = String.Format(lbl_pesan_totpesantoday.Text, rdx.Item(3), rdx.Item(4))
+            If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT COUNT(IF(j_order_status=0,1,NULL)), " _
+                    & "COUNT(IF(j_order_tanggal_trans=CURDATE() AND j_order_status=0,1,NULL))," _
+                    & "COUNT(IF(j_order_tanggal_trans=CURDATE() AND j_order_status=1,1,NULL))," _
+                    & "COUNT(IF(j_order_tanggal_trans=CURDATE(),1,NULL)) , COUNT(IF(j_order_tanggal_trans=CURDATE(),j_order_sales,NULL))" _
+                    & "FROM data_penjualan_order_faktur WHERE j_order_status IN (0,1,2) AND j_order_tanggal_trans BETWEEN '{0}' AND '{1}'"
+                Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir))
+                    If Await rdx.ReadAsync() Then
+                        If rdx.HasRows Then
+                            lbl_pesan_valid.Text = String.Format(lbl_pesan_valid.Text, rdx.Item(1))
+                            lbl_pesan_validtot.Text = String.Format(lbl_pesan_validtot.Text, rdx.Item(0))
+                            lbl_pesan_aprovedtoday.Text = String.Format(lbl_pesan_aprovedtoday.Text, rdx.Item(2))
+                            lbl_pesan_totpesantoday.Text = String.Format(lbl_pesan_totpesantoday.Text, rdx.Item(3), rdx.Item(4))
+                        End If
                     End If
-                    rdx.Close()
-                End If
-            End Using
-            retVal = True
+                End Using
+                retVal = True
+            End If
         End If
+
         Return retVal
     End Function
 
@@ -149,7 +156,13 @@
         SetUpPanel(PanelType.PIUTANG)
 
         If switch Then
-            Await x.OpenAsync
+            Try
+                Await x.OpenAsync
+            Catch ex As Exception
+                logError(ex, True) : Return False : Exit Function
+            End Try
+
+            If x.ConnectionState <> ConnectionState.Open Then : Return False : Exit Function : End If
 
             q = "SELECT IFNULL(SUM(p_trans_nilai),0), COUNT(DISTINCT piutang_custo), COUNT(piutang_faktur), " _
                 & "IFNULL(SUM(IF(piutang_jt <= CURDATE(),p_trans_nilai,0)),0), " _
@@ -160,7 +173,7 @@
                 & "FROM data_piutang_awal " _
                 & "LEFT JOIN data_piutang_trans ON piutang_faktur=p_trans_kode_piutang AND p_trans_status=1 " _
                 & "WHERE piutang_status<>9 AND piutang_status_lunas=0 AND p_trans_periode='{0}'"
-            Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, currentperiode.id), CommandBehavior.SingleRow)
+            Using rdx = Await x.ReadCommandAsync(String.Format(q, currentperiode.id), CommandBehavior.SingleRow)
                 If Await rdx.ReadAsync Then
                     If rdx.HasRows Then
                         in_piutang_tot.Text = commaThousand(rdx.Item(0))
@@ -174,7 +187,7 @@
             End Using
 
             q = "SELECT COUNT(IF(p_bayar_status=0,p_bayar_bukti,NULL)) FROM data_piutang_bayar WHERE p_bayar_tanggal_bayar BETWEEN '{0}' AND '{1}'"
-            Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir), CommandBehavior.SingleResult)
+            Using rdx = Await x.ReadCommandAsync(String.Format(q, _tglawal, _tglakhir), CommandBehavior.SingleResult)
                 If Await rdx.ReadAsync Then
                     If rdx.HasRows Then
                         lbl_piutang_valid.Text = String.Format(lbl_piutang_valid.Text, rdx.Item(0))
@@ -200,16 +213,19 @@
         consoleWriteLine("xxx" & Now.ToLongTimeString)
         Try
             'GIRO
-            If Await loadPnlGiro(giro_sw) Then : pnl_giro.Visible = giro_sw : dgv_giroin_jt.Columns(1).DefaultCellStyle = dgvstyle_currency : End If
+            pnl_giro.Visible = giro_sw
+            If giro_sw Then Await loadPnlGiro(giro_sw)
 
-            'ORDER JUAL
-            If Await loadPnlPesanan(pesan_sw) Then pnl_orderjual.Visible = pesan_sw
+            'ORDER 
+            pnl_orderjual.Visible = pesan_sw
+            If pesan_sw Then Await loadPnlPesanan(pesan_sw)
 
             'PIUTANG
-            If Await loadPnlPiutang(piutang_sw) Then pnl_piutang.Visible = piutang_sw
+            pnl_piutang.Visible = piutang_sw
+            If piutang_sw Then Await loadPnlPiutang(piutang_sw)
 
-            'USER
-            lkLbl_user.Visible = user_sw
+            ''USER
+            'lkLbl_user.Visible = user_sw
 
         Catch ex As Exception
             Timer1.Stop()
@@ -244,8 +260,8 @@
         Using x As Task = do_load()
             Await x
             If x.IsFaulted Then
-                MessageBox.Show("Terjadi kesalahan saat melakukan koneksi ke database" & Environment.NewLine, Application.ProductName,
-                                MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Terjadi kesalahan saat melakukan koneksi ke database" & Environment.NewLine & x.Exception.Message,
+                                 Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(x.Exception, True)
                 main.isForcedClose = True
                 Application.Exit()
@@ -296,8 +312,8 @@
             Catch ex As Exception
                 logError(ex, True)
                 Timer1.Stop()
-                MessageBox.Show("Terjadi kesalahan saat melakukan koneksi ke database. Aplikasi akan ditutup." & Environment.NewLine, Application.ProductName,
-                                                MessageBoxButtons.OK, MessageBoxIcon.Error)
+                MessageBox.Show("Terjadi kesalahan saat melakukan koneksi ke database. " & Environment.NewLine & ex.Message,
+                                Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 logError(x.Exception, True)
                 main.isForcedClose = True
                 Application.Exit()

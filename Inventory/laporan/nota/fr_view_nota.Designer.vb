@@ -59,14 +59,14 @@ Partial Class fr_view_nota
         Me.rv_nota.LocalReport.ReportEmbeddedResource = "Inventory.lap_jual_tgl.rdlc"
         Me.rv_nota.Location = New System.Drawing.Point(0, 0)
         Me.rv_nota.Name = "rv_nota"
-        Me.rv_nota.Size = New System.Drawing.Size(818, 524)
+        Me.rv_nota.Size = New System.Drawing.Size(854, 601)
         Me.rv_nota.TabIndex = 0
         '
         'fr_view_nota
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(818, 524)
+        Me.ClientSize = New System.Drawing.Size(854, 601)
         Me.Controls.Add(Me.rv_nota)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "fr_view_nota"

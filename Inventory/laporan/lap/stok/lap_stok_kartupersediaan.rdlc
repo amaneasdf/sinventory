@@ -9,25 +9,25 @@
               <Width>1.75cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5.2cm</Width>
+              <Width>4cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.35cm</Width>
+              <Width>1.75cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.35cm</Width>
+              <Width>1.75cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.35cm</Width>
+              <Width>1.75cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.25cm</Width>
@@ -79,7 +79,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_stock.Value</Value>
+                              <Value>=Fields!kartu_barang.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -206,11 +206,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </TopBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -245,11 +245,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </TopBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -284,11 +284,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </TopBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -325,11 +325,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </TopBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -368,11 +368,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </TopBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -411,11 +411,6 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <TopBorder>
-                          <Color>Black</Color>
-                          <Style>Solid</Style>
-                          <Width>1pt</Width>
-                        </TopBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -457,11 +452,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -496,11 +491,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -535,11 +530,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -576,11 +571,16 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
+                        <RightBorder>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -617,11 +617,16 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
+                        <RightBorder>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -658,11 +663,16 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
+                        <RightBorder>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -699,11 +709,16 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
+                        <RightBorder>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -740,11 +755,16 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
+                        <RightBorder>
+                          <Color>White</Color>
+                          <Style>Solid</Style>
+                          <Width>1pt</Width>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -781,11 +801,11 @@
                         <Border>
                           <Style>None</Style>
                         </Border>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <TopBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </TopBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -958,14 +978,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_qty_in">
+                    <Textbox Name="kartu_debet">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_qty_in.Value</Value>
+                              <Value>=Fields!kartu_debet.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -980,7 +1000,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_qty_in</rd:DefaultName>
+                      <rd:DefaultName>kartu_debet</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1000,14 +1020,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_nilai_in">
+                    <Textbox Name="kartu_debet_nilai">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_nilai_in.Value</Value>
+                              <Value>=Fields!kartu_debet_nilai.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1022,7 +1042,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_nilai_in</rd:DefaultName>
+                      <rd:DefaultName>kartu_debet_nilai</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1042,14 +1062,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_qty_out">
+                    <Textbox Name="kartu_kredit">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_qty_out.Value</Value>
+                              <Value>=Fields!kartu_kredit.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1064,7 +1084,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_qty_out</rd:DefaultName>
+                      <rd:DefaultName>kartu_kredit</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1084,14 +1104,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_nilai_out">
+                    <Textbox Name="kartu_kredit_nilai">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_nilai_out.Value</Value>
+                              <Value>=Fields!kartu_kredit_nilai.Value</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1106,7 +1126,7 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_nilai_out</rd:DefaultName>
+                      <rd:DefaultName>kartu_kredit_nilai</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
@@ -1133,7 +1153,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_qty_saldo.Value</Value>
+                              <Value>=RunningValue(Fields!kartu_debet.Value-Fields!kartu_kredit.Value, Sum, "kartu_kode")</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1175,7 +1195,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!kartu_nilai_saldo.Value</Value>
+                              <Value>=RunningValue(Fields!kartu_debet_nilai.Value-Fields!kartu_kredit_nilai.Value, Sum, "kartu_kode")</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1239,15 +1259,10 @@
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
-                          <Style>Solid</Style>
-                          <Width>1pt</Width>
-                        </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1283,15 +1298,10 @@
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
-                          <Style>Solid</Style>
-                          <Width>1pt</Width>
-                        </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1327,15 +1337,15 @@
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1347,14 +1357,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_qty_in1">
+                    <Textbox Name="kartu_debet1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!kartu_qty_in.Value)</Value>
+                              <Value>=Sum(Fields!kartu_debet.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1370,21 +1380,21 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_qty_in1</rd:DefaultName>
+                      <rd:DefaultName>kartu_debet1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1396,14 +1406,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox19">
+                    <Textbox Name="kartu_debet_nilai1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!kartu_nilai_in.Value)</Value>
+                              <Value>=Sum(Fields!kartu_debet_nilai.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1419,21 +1429,21 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox19</rd:DefaultName>
+                      <rd:DefaultName>kartu_debet_nilai1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1445,14 +1455,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="kartu_qty_out1">
+                    <Textbox Name="kartu_kredit1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!kartu_qty_out.Value)</Value>
+                              <Value>=Sum(Fields!kartu_kredit.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1468,21 +1478,21 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>kartu_qty_out1</rd:DefaultName>
+                      <rd:DefaultName>kartu_kredit1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1494,14 +1504,14 @@
                 </TablixCell>
                 <TablixCell>
                   <CellContents>
-                    <Textbox Name="Textbox25">
+                    <Textbox Name="kartu_kredit_nilai1">
                       <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Sum(Fields!kartu_nilai_out.Value)</Value>
+                              <Value>=Sum(Fields!kartu_kredit_nilai.Value)</Value>
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
@@ -1517,21 +1527,21 @@
                           </Style>
                         </Paragraph>
                       </Paragraphs>
-                      <rd:DefaultName>Textbox25</rd:DefaultName>
+                      <rd:DefaultName>kartu_kredit_nilai1</rd:DefaultName>
                       <Style>
                         <Border>
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
+                        <RightBorder>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
-                        </BottomBorder>
+                        </RightBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1571,15 +1581,10 @@
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
-                          <Style>Solid</Style>
-                          <Width>1pt</Width>
-                        </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1587,7 +1592,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -1620,15 +1624,10 @@
                           <Style>None</Style>
                         </Border>
                         <TopBorder>
-                          <Color>Black</Color>
+                          <Color>White</Color>
                           <Style>Solid</Style>
                           <Width>1pt</Width>
                         </TopBorder>
-                        <BottomBorder>
-                          <Color>Black</Color>
-                          <Style>Solid</Style>
-                          <Width>1pt</Width>
-                        </BottomBorder>
                         <BackgroundColor>CornflowerBlue</BackgroundColor>
                         <PaddingLeft>2pt</PaddingLeft>
                         <PaddingRight>2pt</PaddingRight>
@@ -1636,7 +1635,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
               </TablixCells>
@@ -1954,23 +1952,25 @@
             <TablixMember>
               <Group Name="kartu_kode">
                 <GroupExpressions>
-                  <GroupExpression>=Fields!kartu_stock.Value</GroupExpression>
+                  <GroupExpression>=Fields!kartu_barang.Value</GroupExpression>
                 </GroupExpressions>
               </Group>
               <SortExpressions>
                 <SortExpression>
-                  <Value>=Fields!kartu_stock.Value</Value>
+                  <Value>=Fields!kartu_barang.Value</Value>
                 </SortExpression>
               </SortExpressions>
               <TablixMembers>
                 <TablixMember>
-                  <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
                 </TablixMember>
                 <TablixMember>
                   <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
                 </TablixMember>
                 <TablixMember>
                   <KeepWithGroup>After</KeepWithGroup>
+                  <RepeatOnNewPage>true</RepeatOnNewPage>
                 </TablixMember>
                 <TablixMember>
                   <Group Name="Details" />
@@ -1988,7 +1988,7 @@
         <DataSetName>ds_kartu_stok</DataSetName>
         <Top>1.2882cm</Top>
         <Height>3.33542cm</Height>
-        <Width>20.25cm</Width>
+        <Width>20cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2018,7 +2018,7 @@
         <rd:DefaultName>Textbox21</rd:DefaultName>
         <Top>0.60882cm</Top>
         <Height>0.50299cm</Height>
-        <Width>20.25cm</Width>
+        <Width>20cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -2052,7 +2052,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox21</rd:DefaultName>
         <Height>0.60882cm</Height>
-        <Width>20.25cm</Width>
+        <Width>20cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -2067,9 +2067,9 @@
       <Rectangle Name="Rectangle1">
         <KeepTogether>true</KeepTogether>
         <Top>4.62362cm</Top>
-        <Left>2cm</Left>
+        <Left>1.75cm</Left>
         <Height>1.92622cm</Height>
-        <Width>8.8cm</Width>
+        <Width>8cm</Width>
         <ZIndex>3</ZIndex>
         <Style>
           <Border>
@@ -2078,10 +2078,10 @@
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>2.68154in</Height>
+    <Height>2.57868in</Height>
     <Style />
   </Body>
-  <Width>20.25cm</Width>
+  <Width>20cm</Width>
   <Page>
     <PageHeader>
       <Height>1.5cm</Height>
@@ -2138,9 +2138,9 @@
         </Textbox>
         <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
-          <Left>15.75cm</Left>
+          <Left>16cm</Left>
           <Height>1.25055cm</Height>
-          <Width>4.5cm</Width>
+          <Width>4cm</Width>
           <ZIndex>1</ZIndex>
           <Style>
             <Border>
@@ -2214,8 +2214,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Top>0.07056cm</Top>
-          <Left>18cm</Left>
+          <Top>0.18521cm</Top>
+          <Left>17.75cm</Left>
           <Height>0.46771cm</Height>
           <Width>2.25cm</Width>
           <ZIndex>1</ZIndex>
@@ -2262,16 +2262,8 @@
         <CommandText>/* Local Query */</CommandText>
       </Query>
       <Fields>
-        <Field Name="kartu_stock">
-          <DataField>kartu_stock</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="kartu_barang">
-          <DataField>kartu_barang</DataField>
-          <rd:TypeName>System.String</rd:TypeName>
-        </Field>
-        <Field Name="kartu_barang_n">
-          <DataField>kartu_barang_n</DataField>
+        <Field Name="kartu_kode">
+          <DataField>kartu_kode</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="kartu_gudang">
@@ -2280,6 +2272,14 @@
         </Field>
         <Field Name="kartu_gudang_n">
           <DataField>kartu_gudang_n</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="kartu_barang">
+          <DataField>kartu_barang</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="kartu_barang_n">
+          <DataField>kartu_barang_n</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
         <Field Name="kartu_tgl">
@@ -2298,35 +2298,31 @@
           <DataField>kartu_ket2</DataField>
           <rd:TypeName>System.String</rd:TypeName>
         </Field>
-        <Field Name="kartu_qty_in">
-          <DataField>kartu_qty_in</DataField>
+        <Field Name="kartu_debet">
+          <DataField>kartu_debet</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="kartu_qty_out">
-          <DataField>kartu_qty_out</DataField>
+        <Field Name="kartu_kredit">
+          <DataField>kartu_kredit</DataField>
           <rd:TypeName>System.Int32</rd:TypeName>
         </Field>
-        <Field Name="kartu_qty_saldo">
-          <DataField>kartu_qty_saldo</DataField>
-          <rd:TypeName>System.Int32</rd:TypeName>
-        </Field>
-        <Field Name="kartu_nilai_in">
-          <DataField>kartu_nilai_in</DataField>
+        <Field Name="kartu_debet_nilai">
+          <DataField>kartu_debet_nilai</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="kartu_nilai_out">
-          <DataField>kartu_nilai_out</DataField>
+        <Field Name="kartu_kredit_nilai">
+          <DataField>kartu_kredit_nilai</DataField>
           <rd:TypeName>System.Decimal</rd:TypeName>
         </Field>
-        <Field Name="kartu_nilai_saldo">
-          <DataField>kartu_nilai_saldo</DataField>
-          <rd:TypeName>System.Decimal</rd:TypeName>
+        <Field Name="kartu_kat">
+          <DataField>kartu_kat</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
         </Field>
       </Fields>
       <rd:DataSetInfo>
         <rd:DataSetName>ds_stock</rd:DataSetName>
         <rd:SchemaPath>D:\mso\inventory\sinventory\Inventory\laporan\ds_stock.xsd</rd:SchemaPath>
-        <rd:TableName>dt_kartupersediaan</rd:TableName>
+        <rd:TableName>dt_kartustok</rd:TableName>
         <rd:TableAdapterFillMethod />
         <rd:TableAdapterGetDataMethod />
         <rd:TableAdapterName />

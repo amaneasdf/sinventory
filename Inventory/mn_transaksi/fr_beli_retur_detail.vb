@@ -292,9 +292,8 @@
                 q = String.Format(q, "{0}", in_gudang.Text, in_supplier.Text, _pajak)
 
             Case "supplier"
-                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' " _
-                    & "FROM data_pembelian_faktur " _
-                    & "LEFT JOIN data_supplier_master WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') LIMIT 250"
+                q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') LIMIT 250"
 
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
@@ -315,7 +314,7 @@
 
         With dgv_listbarang
             .DataSource = dt
-            If .ColumnCount > 0 And .RowCount > 0 Then
+            If .ColumnCount > 0 Then
                 .Columns(0).Width = 135
                 .Columns(1).Width = 200
                 If tipe = "barang" Then : .Columns(2).Visible = False
@@ -426,8 +425,8 @@
                     Exit Sub
                 End If
 
-                q = "SELECT getHPPAVG('{0}','{1}','{2}')"
-                Using rdx = x.ReadCommand(String.Format(q, in_barang.Text, date_tgl_trans.Value.ToString("yyyy-MM-dd"), selectperiode.id))
+                q = "SELECT getHppAvg_v2('{0}','{1}')"
+                Using rdx = x.ReadCommand(String.Format(q, in_barang.Text, date_tgl_trans.Value.ToString("yyyy-MM-dd")))
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
                         hpp = rdx.Item(0)
@@ -543,15 +542,6 @@
         in_diskon.Value = 0
     End Sub
 
-    Private Sub setReadOnly()
-        Dim txt As TextBox() = {
-            in_no_bukti, in_no_faktur, in_no_faktur_ex, in_pajak, in_barang_nm
-            }
-        For Each x As TextBox In txt
-            x.ReadOnly = True
-        Next
-    End Sub
-
     'SAVE
     Private Function CheckInputedData(ByRef Msg As List(Of String)) As Boolean
         Dim retval As Boolean = True
@@ -648,7 +638,7 @@
 
             q = "INSERT INTO data_pembelian_retur_faktur SET faktur_kode_bukti='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
         ElseIf bt_simpanreturbeli.Text = "Update" Then
-            q = "UPDATE data_pembelian_retur_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode_bukti='{0}'"
+            q = "UPDATE data_pembelian_retur_faktur SET {1},faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
         End If
         queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", dataHead), loggeduser.user_id))
         '==========================================================================================================================
@@ -668,8 +658,8 @@
             Dim _kdbrg As String = rows.Cells(0).Value
 
             'GET HPP
-            q = "SELECT getHPPAVG('{0}','{1}','{2}')"
-            readcommd(String.Format(q, _kdbrg, _tgltrans, selectperiode.id))
+            q = "SELECT getHppAvg_v2('{0}','{1}')"
+            readcommd(String.Format(q, _kdbrg, _tgltrans))
             If rd.HasRows Then
                 _hpp = rd.Item(0)
             End If
@@ -733,9 +723,9 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        If MessageBox.Show("Tutup Form?", "Retur Pembelian", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Retur Pembelian", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -815,13 +805,14 @@
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data retur pembelian?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
-        End If
+        Me.Cursor = Cursors.WaitCursor
+        Dim _askRes As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _askRes = MessageBox.Show("Simpan perubahan data retur?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _askRes = Windows.Forms.DialogResult.Yes Then saveData()
+        Me.Cursor = Cursors.Default
     End Sub
 
-    'UI
-    '------------- POPUPSEARCH PANEL
+    'UI : POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
         If Not in_supplier_n.Focused Or in_gudang_n.Focused Or in_barang_nm.Focused Or in_no_faktur.Focused Then
             popPnl_barang.Visible = False
@@ -838,7 +829,6 @@
 
     Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
-            'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
         End If
     End Sub
@@ -873,7 +863,7 @@
         End If
     End Sub
 
-    '--------------- numeric input
+    'UI : numeric input
     Private Sub in_qty_Enter(sender As Object, e As EventArgs) Handles in_qty.Enter, in_harga_retur.Enter, in_diskon.Enter
         numericGotFocus(sender)
     End Sub
@@ -915,14 +905,18 @@
         keyshortenter(in_supplier_n, e)
     End Sub
 
-    Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
-        If in_supplier_n.ReadOnly = False And in_supplier_n.Enabled = True Then
-            popPnl_barang.Location = New Point(in_supplier_n.Left - (popPnl_barang.Width - in_supplier_n.Width), in_supplier_n.Top + in_supplier_n.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            popupstate = "supplier"
-            loadDataBRGPopup("supplier", in_supplier_n.Text)
+    Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter, in_gudang_n.Enter, in_no_faktur.Enter
+        If sender.ReadOnly = False And sender.Enabled = True Then
+            popPnl_barang.Location = New Point(sender.Left - (popPnl_barang.Width - sender.Width), sender.Top + sender.Height)
+            If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
+
+            Select Case sender.Name
+                Case "in_supplier_n" : popupstate = "supplier"
+                Case "in_gudang_n" : popupstate = "gudang"
+                Case "in_no_faktur" : popupstate = "faktur"
+                Case Else : Exit Sub
+            End Select
+            loadDataBRGPopup(popupstate, sender.Text)
         End If
     End Sub
 
@@ -934,6 +928,12 @@
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
+        End If
+    End Sub
+
+    Private Sub in_s_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyDown, in_gudang_n.KeyDown, in_no_faktur.KeyDown, in_barang_nm.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
         End If
     End Sub
 
@@ -994,17 +994,6 @@
         keyshortenter(in_gudang_n, e)
     End Sub
 
-    Private Sub in_gudang_n_Enter(sender As Object, e As EventArgs) Handles in_gudang_n.Enter
-        If sender.ReadOnly = False Then
-            popPnl_barang.Location = New Point(in_gudang_n.Left - (popPnl_barang.Width - in_gudang_n.Width), in_gudang_n.Top + in_gudang_n.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            popupstate = "gudang"
-            loadDataBRGPopup("gudang", in_gudang_n.Text)
-        End If
-    End Sub
-
     Private Sub in_gudang_n_TextChanged(sender As Object, e As EventArgs) Handles in_gudang_n.TextChanged
         If in_gudang_n.Text = "" Then
             in_gudang.Clear()
@@ -1025,17 +1014,6 @@
 
     Private Sub cb_bayar_jenis_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_bayar_jenis.KeyUp
         keyshortenter(in_no_faktur, e)
-    End Sub
-
-    Private Sub in_no_faktur_Enter(sender As Object, e As EventArgs) Handles in_no_faktur.Enter
-        If cb_bayar_jenis.SelectedValue = "1" And sender.Readonly = False Then
-            popPnl_barang.Location = New Point(in_no_faktur.Left - (popPnl_barang.Width - in_no_faktur.Width), in_no_faktur.Top + in_no_faktur.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
-            popupstate = "faktur"
-            loadDataBRGPopup("faktur", in_no_faktur.Text)
-        End If
     End Sub
 
     'BARANG

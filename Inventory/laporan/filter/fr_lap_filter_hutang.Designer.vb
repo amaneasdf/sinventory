@@ -25,10 +25,7 @@ Partial Class fr_lap_filter_hutang
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_lap_filter_hutang))
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.bt_exportxl = New System.Windows.Forms.Button()
-        Me.bt_batalbeli = New System.Windows.Forms.Button()
-        Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.lbl_tgl2 = New System.Windows.Forms.Label()
@@ -38,8 +35,6 @@ Partial Class fr_lap_filter_hutang
         Me.in_supplier_n = New System.Windows.Forms.TextBox()
         Me.in_supplier = New System.Windows.Forms.TextBox()
         Me.lbl_supplier = New System.Windows.Forms.Label()
-        Me.cb_periode = New System.Windows.Forms.ComboBox()
-        Me.lbl_periode = New System.Windows.Forms.Label()
         Me.in_faktur = New System.Windows.Forms.TextBox()
         Me.lbl_faktur = New System.Windows.Forms.Label()
         Me.cb_bayar = New System.Windows.Forms.ComboBox()
@@ -48,6 +43,8 @@ Partial Class fr_lap_filter_hutang
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.lbl_periodedata = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.bt_simpanbeli = New System.Windows.Forms.Button()
+        Me.bt_batalbeli = New System.Windows.Forms.Button()
         Me.lbl_pajak = New System.Windows.Forms.Label()
         Me.cb_pajak = New System.Windows.Forms.ComboBox()
         Me.Panel1.SuspendLayout()
@@ -72,35 +69,13 @@ Partial Class fr_lap_filter_hutang
         Me.bt_exportxl.Location = New System.Drawing.Point(6, 184)
         Me.bt_exportxl.Name = "bt_exportxl"
         Me.bt_exportxl.Size = New System.Drawing.Size(96, 30)
-        Me.bt_exportxl.TabIndex = 413
+        Me.bt_exportxl.TabIndex = 7
         Me.bt_exportxl.Text = "Export Excel"
         Me.bt_exportxl.UseVisualStyleBackColor = True
-        '
-        'bt_batalbeli
-        '
-        Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 184)
-        Me.bt_batalbeli.Name = "bt_batalbeli"
-        Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalbeli.TabIndex = 412
-        Me.bt_batalbeli.Text = "Close"
-        Me.bt_batalbeli.UseVisualStyleBackColor = True
-        '
-        'bt_simpanbeli
-        '
-        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 184)
-        Me.bt_simpanbeli.Name = "bt_simpanbeli"
-        Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
-        Me.bt_simpanbeli.TabIndex = 411
-        Me.bt_simpanbeli.Text = "Tampilkan"
-        Me.bt_simpanbeli.UseVisualStyleBackColor = True
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.lbl_close)
         Me.Panel1.Controls.Add(Me.bt_cl)
         Me.Panel1.Controls.Add(Me.lbl_title)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
@@ -108,20 +83,6 @@ Partial Class fr_lap_filter_hutang
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(591, 30)
         Me.Panel1.TabIndex = 0
-        '
-        'lbl_close
-        '
-        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lbl_close.AutoSize = True
-        Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(511, 4)
-        Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(52, 22)
-        Me.lbl_close.TabIndex = 0
-        Me.lbl_close.Text = "Close"
-        Me.lbl_close.Visible = False
         '
         'bt_cl
         '
@@ -172,7 +133,7 @@ Partial Class fr_lap_filter_hutang
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
         Me.date_tglakhir.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglakhir.TabIndex = 416
+        Me.date_tglakhir.TabIndex = 1
         Me.date_tglakhir.TabStop = False
         '
         'lbl_tgl
@@ -193,7 +154,7 @@ Partial Class fr_lap_filter_hutang
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
         Me.date_tglawal.Size = New System.Drawing.Size(140, 20)
-        Me.date_tglawal.TabIndex = 415
+        Me.date_tglawal.TabIndex = 0
         Me.date_tglawal.TabStop = False
         '
         'in_supplier_n
@@ -205,7 +166,7 @@ Partial Class fr_lap_filter_hutang
         Me.in_supplier_n.MaxLength = 200
         Me.in_supplier_n.Name = "in_supplier_n"
         Me.in_supplier_n.Size = New System.Drawing.Size(322, 20)
-        Me.in_supplier_n.TabIndex = 421
+        Me.in_supplier_n.TabIndex = 4
         '
         'in_supplier
         '
@@ -217,7 +178,7 @@ Partial Class fr_lap_filter_hutang
         Me.in_supplier.Name = "in_supplier"
         Me.in_supplier.ReadOnly = True
         Me.in_supplier.Size = New System.Drawing.Size(121, 20)
-        Me.in_supplier.TabIndex = 420
+        Me.in_supplier.TabIndex = 3
         '
         'lbl_supplier
         '
@@ -229,28 +190,6 @@ Partial Class fr_lap_filter_hutang
         Me.lbl_supplier.TabIndex = 422
         Me.lbl_supplier.Text = "Supplier"
         '
-        'cb_periode
-        '
-        Me.cb_periode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cb_periode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cb_periode.BackColor = System.Drawing.Color.White
-        Me.cb_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_periode.FormattingEnabled = True
-        Me.cb_periode.Location = New System.Drawing.Point(77, 130)
-        Me.cb_periode.Name = "cb_periode"
-        Me.cb_periode.Size = New System.Drawing.Size(316, 21)
-        Me.cb_periode.TabIndex = 423
-        '
-        'lbl_periode
-        '
-        Me.lbl_periode.AutoSize = True
-        Me.lbl_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_periode.Location = New System.Drawing.Point(3, 134)
-        Me.lbl_periode.Name = "lbl_periode"
-        Me.lbl_periode.Size = New System.Drawing.Size(43, 13)
-        Me.lbl_periode.TabIndex = 424
-        Me.lbl_periode.Text = "Periode"
-        '
         'in_faktur
         '
         Me.in_faktur.BackColor = System.Drawing.Color.White
@@ -260,7 +199,7 @@ Partial Class fr_lap_filter_hutang
         Me.in_faktur.MaxLength = 200
         Me.in_faktur.Name = "in_faktur"
         Me.in_faktur.Size = New System.Drawing.Size(316, 20)
-        Me.in_faktur.TabIndex = 425
+        Me.in_faktur.TabIndex = 5
         '
         'lbl_faktur
         '
@@ -282,7 +221,7 @@ Partial Class fr_lap_filter_hutang
         Me.cb_bayar.Location = New System.Drawing.Point(77, 95)
         Me.cb_bayar.Name = "cb_bayar"
         Me.cb_bayar.Size = New System.Drawing.Size(170, 21)
-        Me.cb_bayar.TabIndex = 427
+        Me.cb_bayar.TabIndex = 6
         '
         'lbl_bayar
         '
@@ -318,7 +257,7 @@ Partial Class fr_lap_filter_hutang
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 103)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 109)
         Me.dgv_listbarang.TabIndex = 0
         '
         'lbl_periodedata
@@ -335,13 +274,13 @@ Partial Class fr_lap_filter_hutang
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.bt_simpanbeli)
+        Me.pnl_content.Controls.Add(Me.bt_batalbeli)
         Me.pnl_content.Controls.Add(Me.lbl_pajak)
         Me.pnl_content.Controls.Add(Me.cb_pajak)
         Me.pnl_content.Controls.Add(Me.lbl_tgl)
         Me.pnl_content.Controls.Add(Me.lbl_periodedata)
-        Me.pnl_content.Controls.Add(Me.bt_simpanbeli)
         Me.pnl_content.Controls.Add(Me.popPnl_barang)
-        Me.pnl_content.Controls.Add(Me.bt_batalbeli)
         Me.pnl_content.Controls.Add(Me.cb_bayar)
         Me.pnl_content.Controls.Add(Me.bt_exportxl)
         Me.pnl_content.Controls.Add(Me.lbl_bayar)
@@ -350,9 +289,7 @@ Partial Class fr_lap_filter_hutang
         Me.pnl_content.Controls.Add(Me.date_tglakhir)
         Me.pnl_content.Controls.Add(Me.lbl_faktur)
         Me.pnl_content.Controls.Add(Me.lbl_tgl2)
-        Me.pnl_content.Controls.Add(Me.cb_periode)
         Me.pnl_content.Controls.Add(Me.lbl_supplier)
-        Me.pnl_content.Controls.Add(Me.lbl_periode)
         Me.pnl_content.Controls.Add(Me.in_supplier)
         Me.pnl_content.Controls.Add(Me.in_supplier_n)
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
@@ -361,6 +298,34 @@ Partial Class fr_lap_filter_hutang
         Me.pnl_content.Name = "pnl_content"
         Me.pnl_content.Size = New System.Drawing.Size(591, 233)
         Me.pnl_content.TabIndex = 0
+        '
+        'bt_simpanbeli
+        '
+        Me.bt_simpanbeli.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanbeli.FlatAppearance.BorderSize = 0
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 185)
+        Me.bt_simpanbeli.Name = "bt_simpanbeli"
+        Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
+        Me.bt_simpanbeli.TabIndex = 8
+        Me.bt_simpanbeli.Text = "Tampilkan"
+        Me.bt_simpanbeli.UseVisualStyleBackColor = False
+        '
+        'bt_batalbeli
+        '
+        Me.bt_batalbeli.BackColor = System.Drawing.Color.Tomato
+        Me.bt_batalbeli.FlatAppearance.BorderSize = 0
+        Me.bt_batalbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 185)
+        Me.bt_batalbeli.Name = "bt_batalbeli"
+        Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
+        Me.bt_batalbeli.TabIndex = 9
+        Me.bt_batalbeli.Text = "Close"
+        Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
         'lbl_pajak
         '
@@ -382,7 +347,7 @@ Partial Class fr_lap_filter_hutang
         Me.cb_pajak.Location = New System.Drawing.Point(77, 28)
         Me.cb_pajak.Name = "cb_pajak"
         Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
-        Me.cb_pajak.TabIndex = 431
+        Me.cb_pajak.TabIndex = 2
         '
         'fr_lap_filter_hutang
         '
@@ -410,10 +375,7 @@ Partial Class fr_lap_filter_hutang
     End Sub
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents bt_exportxl As System.Windows.Forms.Button
-    Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
-    Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents lbl_tgl2 As System.Windows.Forms.Label
@@ -423,8 +385,6 @@ Partial Class fr_lap_filter_hutang
     Friend WithEvents in_supplier_n As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier As System.Windows.Forms.TextBox
     Friend WithEvents lbl_supplier As System.Windows.Forms.Label
-    Friend WithEvents cb_periode As System.Windows.Forms.ComboBox
-    Friend WithEvents lbl_periode As System.Windows.Forms.Label
     Friend WithEvents in_faktur As System.Windows.Forms.TextBox
     Friend WithEvents lbl_faktur As System.Windows.Forms.Label
     Friend WithEvents cb_bayar As System.Windows.Forms.ComboBox
@@ -435,4 +395,6 @@ Partial Class fr_lap_filter_hutang
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
     Friend WithEvents lbl_pajak As System.Windows.Forms.Label
     Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
+    Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
+    Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
 End Class

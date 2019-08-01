@@ -99,7 +99,11 @@ Public Class MySqlThing : Implements IDisposable
 
     Public Sub Open()
         If Not conn.State = ConnectionState.Open Then
-            conn.Open()
+            Try
+                conn.Open()
+            Catch ex As Exception
+                logError(ex, True)
+            End Try
         End If
     End Sub
 
@@ -150,6 +154,20 @@ Public Class MySqlThing : Implements IDisposable
         Return retval
     End Function
 
+    Public Async Function ExecScalarAsync(query As String) As Task(Of Object)
+        Dim retval As Object = Nothing
+        Dim _cmd = New MySqlCommand(query, Me.conn)
+
+        Me.Open()
+        If conn.State = Data.ConnectionState.Open Then
+            Dim _task = _cmd.ExecuteScalarAsync
+            retval = Await _task
+            If _task.IsFaulted Then Throw _task.Exception
+        End If
+
+        Return retval
+    End Function
+
     Public Function ReadCommand(query As String, Optional behavior As System.Data.CommandBehavior = CommandBehavior.Default) As MySqlDataReader
         Dim retVal As MySqlDataReader = Nothing
 
@@ -194,13 +212,14 @@ Public Class MySqlThing : Implements IDisposable
                         Try
                             _cmd.CommandText = q : _cmd.ExecuteNonQuery() : _ckSw = True
                         Catch ex As Exception
+                            consoleWriteLine(ex.Message)
                             logError(ex, True) : _ckSw = False : Exit For
                         End Try
                     Next
 
                     If _ckSw Then : Try : x.Commit() : Catch ex As Exception : logError(ex, True) : _ckSw = False : End Try : End If
 
-                    If Not _ckSw Then : Try : x.Rollback() : Catch ex As Exception : logError(ex, True) : _ckSw = False : End Try : End If
+                    If Not _ckSw Then : Try : x.Rollback() : _ckSw = False : Catch ex As Exception : logError(ex, True) : _ckSw = False : End Try : End If
                 End Using
             End Using
         End If
@@ -214,6 +233,7 @@ Public Class MySqlThing : Implements IDisposable
         End If
         Dim dtable As New DataTable
         Using _cmd As New MySqlCommand(query, conn)
+            _cmd.CommandTimeout = 180
             Me.Open()
             Using data_adpt As New MySqlDataAdapter(_cmd) : data_adpt.Fill(dtable) : End Using
         End Using

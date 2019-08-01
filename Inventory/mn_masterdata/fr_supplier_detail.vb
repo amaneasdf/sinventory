@@ -23,7 +23,7 @@
 
             loadDataSupplier(KodeBarang)
             in_kode.ReadOnly = True
-            bt_simpansupplier.Text = "Update"
+            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
@@ -38,8 +38,9 @@
             numx.Enabled = AllowInput
         Next
 
-        bt_simpansupplier.Enabled = AllowInput
-        mn_deact.Enabled = AllowInput
+        bt_simpancusto.Enabled = AllowInput
+        mn_deact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
+        mn_del.Enabled = IIf(formstate = InputState.Insert, False, False)
         mn_save.Enabled = AllowInput
     End Sub
 
@@ -167,77 +168,95 @@
 
     End Sub
 
+    'SAVE DATA
+    Private Sub SaveData()
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
+        Dim q As String = ""
+        Dim data1 As String()
+        data1 = {
+               "supplier_nama='" & mysqlQueryFriendlyStringFeed(in_namasupplier.Text) & "'",
+               "supplier_alamat='" & mysqlQueryFriendlyStringFeed(in_alamatsupplier.Text) & "'",
+               "supplier_telpon1='" & in_telp1supplier.Text & "'",
+               "supplier_telpon2='" & in_telp2supplier.Text & "'",
+               "supplier_fax='" & in_faxsupplier.Text & "'",
+               "supplier_cp='" & mysqlQueryFriendlyStringFeed(in_cp.Text) & "'",
+               "supplier_email='" & in_emailsupplier.Text & "'",
+               "supplier_npwp='" & in_npwpsupplier.Text & "'",
+               "supplier_rek_bg='" & in_rek_giro.Text & "'",
+               "supplier_rek_bank='" & in_rek_bank.Text & "'",
+               "supplier_term=" & in_term.Value,
+               "supplier_keterangan='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'",
+               "supplier_status='" & supStatus & "'"
+               }
+
+        Me.Cursor = Cursors.WaitCursor
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    'GENERATE CODE
+                    If String.IsNullOrWhiteSpace(in_kode.Text) Then
+                        Dim i As Integer = 0
+                        q = "SELECT IFNULL(MAX(SUBSTRING(supplier_kode,2)),0) FROM data_supplier_master " _
+                            & "WHERE LEFT(supplier_kode,1)='S' AND SUBSTRING(supplier_kode,2) REGEXP '^[0-9]+$'"
+                        Try
+                            i = CInt(x.ExecScalar(q))
+                        Catch ex As Exception
+                            logError(ex, True)
+                            MessageBox.Show("Terjadikesalahan saat melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            GoTo EndSub
+                        End Try
+                        Dim _format As String = IIf(i + 1 > 999, "D" & (i + 1).ToString.Length, "D3")
+                        in_kode.Text = "S" & (i + 1).ToString(_format)
+                    Else
+                        q = "SELECT COUNT(supplier_kode) FROM data_supplier_master WHERE supplier_kode='{0}'"
+                        If CInt(x.ExecScalar(String.Format(q, in_kode.Text))) <> 0 Then
+                            MessageBox.Show("Kode " & in_kode.Text & " sudah pernah diinputkan ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            GoTo EndSub
+                        End If
+                    End If
+
+                    q = "INSERT INTO data_supplier_master SET supplier_kode='{0}',{1},supplier_reg_date=NOW(), supplier_reg_alias='{2}'"
+                Else
+                    q = "UPDATE data_supplier_master SET {1},supplier_upd_date=NOW(), supplier_upd_alias='{2}' WHERE supplier_kode='{0}'"
+                End If
+
+                Try
+                    x.ExecCommand(String.Format(q, in_kode.Text, String.Join(",", data1), loggeduser.user_id))
+                    MessageBox.Show("Data supplier tersimpan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show("Data supplier tidak dapat tersimpan." & Environment.NewLine & ex.Message,
+                                    Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    GoTo EndSub
+                End Try
+
+                DoRefreshTab_v2({pgsupplier})
+                Me.Close()
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
+
+EndSub:
+        Me.Cursor = Cursors.Default
+    End Sub
+
     '-------------- save
-    Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpansupplier.Click
-        Dim _data As New List(Of String)
-        _data.AddRange({in_namasupplier.Text.Replace("'", "`"), in_alamatsupplier.Text.Replace("'", "`"), in_telp1supplier.Text})
+    Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If in_namasupplier.Text = Nothing Then
             MessageBox.Show("Nama supplier belum di input")
             in_namasupplier.Focus()
             Exit Sub
         End If
 
-        op_con()
-        If MessageBox.Show("Simpan data supplier?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-
-            Dim data1 As String()
-            Dim q As String = ""
-            Dim querycheck As Boolean = False
-
-            data1 = {
-                "supplier_nama='" & in_namasupplier.Text.Replace("'", "`") & "'",
-                "supplier_alamat='" & in_alamatsupplier.Text.Replace("'", "`") & "'",
-                "supplier_telpon1='" & in_telp1supplier.Text & "'",
-                "supplier_telpon2='" & in_telp2supplier.Text & "'",
-                "supplier_fax='" & in_faxsupplier.Text & "'",
-                "supplier_cp='" & in_cp.Text.Replace("'", "`") & "'",
-                "supplier_email='" & in_emailsupplier.Text & "'",
-                "supplier_npwp='" & in_npwpsupplier.Text & "'",
-                "supplier_rek_bg='" & in_rek_giro.Text & "'",
-                "supplier_rek_bank='" & in_rek_bank.Text & "'",
-                "supplier_term=" & in_term.Value,
-                "supplier_keterangan='" & in_ket.Text.Replace("'", "`") & "'",
-                "supplier_status='" & supStatus & "'"
-                }
-
-            op_con()
-            If bt_simpansupplier.Text = "Simpan" Then
-                'GENERATE CODE
-                If in_kode.Text = Nothing Then
-                    Dim no As Integer = 1
-                    readcommd("SELECT RIGHT(supplier_kode,3) as ss FROM data_supplier_master WHERE supplier_kode LIKE 'S%' " _
-                              & "AND RIGHT(supplier_kode,3) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
-                    If rd.HasRows Then
-                        no = CInt(rd.Item(0)) + 1
-                    End If
-                    rd.Close()
-
-                    in_kode.Text = "S" & no.ToString("D3")
-                Else
-                    If checkdata("data_supplier_master", "'" & in_kode.Text & "'", "supplier_kode") = True Then
-                        MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
-                        in_kode.Focus()
-                        Exit Sub
-                    End If
-
-                End If
-
-                q = "INSERT INTO data_supplier_master SET supplier_kode='{0}',{1},supplier_reg_date=NOW(), supplier_reg_alias='{2}'"
-            ElseIf bt_simpansupplier.Text = "Update" Then
-                q = "UPDATE data_supplier_master SET {1},supplier_upd_date=NOW(), supplier_upd_alias='{2}' WHERE supplier_kode='{0}'"
-            End If
-            querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
-
-            If querycheck = False Then
-                Exit Sub
-            Else
-                MessageBox.Show("Data tersimpan")
-                doRefreshTab({pgsupplier, pgpembelian, pgreturbeli, pghutangawal, pghutangbayar, pghutangbgo})
-                'frmsupplier.in_cari.Clear()
-                'populateDGVUserCon("supplier", "", frmsupplier.dgv_list)
-                Me.Close()
-            End If
-        End If
+        Me.Cursor = Cursors.WaitCursor
+        Dim _askres As DialogResult = Windows.Forms.DialogResult.Yes
+        If formstate <> InputState.Insert Then _askres = MessageBox.Show("Simpan perubahan data?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _askres = Windows.Forms.DialogResult.Yes Then SaveData()
+        Me.Cursor = Cursors.Default
     End Sub
 
     '------------drag form
@@ -258,12 +277,12 @@
     End Sub
 
     '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalsupplier.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
         Me.Close()
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalsupplier.PerformClick()
+        bt_batalcusto.PerformClick()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -274,16 +293,15 @@
         lbl_close.Visible = False
     End Sub
 
-    Private Sub fr_supplier_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        For Each tx As TextBox In {in_kode, in_alamatsupplier, in_cp, in_emailsupplier, in_faxsupplier, in_ket, in_namasupplier, in_npwpsupplier, in_rek_bank, in_rek_giro, in_telp1supplier, in_telp2supplier}
-            tx.Clear()
-        Next
-        in_term.Value = 0
+    Private Sub fr_supplier_detail_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If e.KeyCode = Keys.Escape Then
+            bt_batalcusto.PerformClick()
+        End If
     End Sub
 
     '------------------ menu
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpansupplier.PerformClick()
+        bt_simpancusto.PerformClick()
     End Sub
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
@@ -295,7 +313,7 @@
             supStatus = "1"
         End If
         setStatus()
-        bt_simpansupplier.PerformClick()
+        bt_simpancusto.PerformClick()
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
@@ -355,21 +373,10 @@
     End Sub
 
     Private Sub in_rek_giro_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_giro.KeyDown
-        keyshortenter(bt_simpansupplier, e)
+        keyshortenter(bt_simpancusto, e)
     End Sub
 
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(in_namasupplier, e)
     End Sub
-
-    'Private Sub bt_gambar_Click(sender As Object, e As EventArgs) Handles bt_gambar.Click
-    '    pic_supplier.Image = createQRString(in_kode.Text, 500)
-    'End Sub
-
-    'Private Sub pic_supplier_Click(sender As Object, e As EventArgs) Handles pic_supplier.Click
-    '    If Not pic_supplier.Image Is Nothing Then
-    '        Dim ss = decodeQR(pic_supplier.Image)
-    '        MessageBox.Show(ss.Key & " " & ss.Value)
-    '    End If
-    'End Sub
 End Class

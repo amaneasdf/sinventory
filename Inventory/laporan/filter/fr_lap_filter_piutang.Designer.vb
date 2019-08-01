@@ -28,7 +28,6 @@ Partial Class fr_lap_filter_piutang
         Me.bt_batalbeli = New System.Windows.Forms.Button()
         Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.lbl_tgl2 = New System.Windows.Forms.Label()
@@ -38,8 +37,6 @@ Partial Class fr_lap_filter_piutang
         Me.in_sales_n = New System.Windows.Forms.TextBox()
         Me.in_sales = New System.Windows.Forms.TextBox()
         Me.lbl_sales = New System.Windows.Forms.Label()
-        Me.cb_periode = New System.Windows.Forms.ComboBox()
-        Me.lbl_periode = New System.Windows.Forms.Label()
         Me.in_faktur = New System.Windows.Forms.TextBox()
         Me.lbl_faktur = New System.Windows.Forms.Label()
         Me.cb_bayar = New System.Windows.Forms.ComboBox()
@@ -80,28 +77,35 @@ Partial Class fr_lap_filter_piutang
         '
         'bt_batalbeli
         '
-        Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.BackColor = System.Drawing.Color.Tomato
+        Me.bt_batalbeli.FlatAppearance.BorderSize = 0
+        Me.bt_batalbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.ForeColor = System.Drawing.Color.White
         Me.bt_batalbeli.Location = New System.Drawing.Point(486, 185)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbeli.TabIndex = 11
         Me.bt_batalbeli.Text = "Close"
-        Me.bt_batalbeli.UseVisualStyleBackColor = True
+        Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
         'bt_simpanbeli
         '
-        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanbeli.FlatAppearance.BorderSize = 0
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.ForeColor = System.Drawing.Color.White
         Me.bt_simpanbeli.Location = New System.Drawing.Point(309, 185)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
         Me.bt_simpanbeli.TabIndex = 10
         Me.bt_simpanbeli.Text = "Tampilkan"
-        Me.bt_simpanbeli.UseVisualStyleBackColor = True
+        Me.bt_simpanbeli.UseVisualStyleBackColor = False
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.lbl_close)
         Me.Panel1.Controls.Add(Me.bt_cl)
         Me.Panel1.Controls.Add(Me.lbl_title)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
@@ -109,20 +113,6 @@ Partial Class fr_lap_filter_piutang
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(591, 30)
         Me.Panel1.TabIndex = 0
-        '
-        'lbl_close
-        '
-        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lbl_close.AutoSize = True
-        Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 10.0!, System.Drawing.FontStyle.Bold)
-        Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(511, 6)
-        Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(46, 19)
-        Me.lbl_close.TabIndex = 0
-        Me.lbl_close.Text = "Close"
-        Me.lbl_close.Visible = False
         '
         'bt_cl
         '
@@ -229,30 +219,6 @@ Partial Class fr_lap_filter_piutang
         Me.lbl_sales.Size = New System.Drawing.Size(53, 13)
         Me.lbl_sales.TabIndex = 422
         Me.lbl_sales.Text = "Salesman"
-        '
-        'cb_periode
-        '
-        Me.cb_periode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cb_periode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cb_periode.BackColor = System.Drawing.Color.White
-        Me.cb_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_periode.FormattingEnabled = True
-        Me.cb_periode.Location = New System.Drawing.Point(80, 149)
-        Me.cb_periode.Name = "cb_periode"
-        Me.cb_periode.Size = New System.Drawing.Size(316, 21)
-        Me.cb_periode.TabIndex = 423
-        Me.cb_periode.Visible = False
-        '
-        'lbl_periode
-        '
-        Me.lbl_periode.AutoSize = True
-        Me.lbl_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_periode.Location = New System.Drawing.Point(6, 153)
-        Me.lbl_periode.Name = "lbl_periode"
-        Me.lbl_periode.Size = New System.Drawing.Size(43, 13)
-        Me.lbl_periode.TabIndex = 424
-        Me.lbl_periode.Text = "Periode"
-        Me.lbl_periode.Visible = False
         '
         'in_faktur
         '
@@ -392,8 +358,6 @@ Partial Class fr_lap_filter_piutang
         Me.pnl_content.Controls.Add(Me.in_sales)
         Me.pnl_content.Controls.Add(Me.lbl_faktur)
         Me.pnl_content.Controls.Add(Me.in_sales_n)
-        Me.pnl_content.Controls.Add(Me.cb_periode)
-        Me.pnl_content.Controls.Add(Me.lbl_periode)
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_content.Location = New System.Drawing.Point(0, 30)
         Me.pnl_content.Name = "pnl_content"
@@ -419,7 +383,7 @@ Partial Class fr_lap_filter_piutang
         Me.cb_pajak.FormattingEnabled = True
         Me.cb_pajak.Location = New System.Drawing.Point(80, 30)
         Me.cb_pajak.Name = "cb_pajak"
-        Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
+        Me.cb_pajak.Size = New System.Drawing.Size(170, 21)
         Me.cb_pajak.TabIndex = 2
         '
         'fr_lap_filter_piutang
@@ -451,7 +415,6 @@ Partial Class fr_lap_filter_piutang
     Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
     Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
-    Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents lbl_tgl2 As System.Windows.Forms.Label
@@ -461,8 +424,6 @@ Partial Class fr_lap_filter_piutang
     Friend WithEvents in_sales_n As System.Windows.Forms.TextBox
     Friend WithEvents in_sales As System.Windows.Forms.TextBox
     Friend WithEvents lbl_sales As System.Windows.Forms.Label
-    Friend WithEvents cb_periode As System.Windows.Forms.ComboBox
-    Friend WithEvents lbl_periode As System.Windows.Forms.Label
     Friend WithEvents in_faktur As System.Windows.Forms.TextBox
     Friend WithEvents lbl_faktur As System.Windows.Forms.Label
     Friend WithEvents cb_bayar As System.Windows.Forms.ComboBox

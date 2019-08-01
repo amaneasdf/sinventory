@@ -992,7 +992,7 @@ Partial Class fr_barang_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 127)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(389, 129)
         Me.dgv_listbarang.TabIndex = 0
         '
         'linkLbl_searchbarang
@@ -1065,6 +1065,7 @@ Partial Class fr_barang_detail
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.cb_pajak)
         Me.pnl_content.Controls.Add(Me.Label13)
         Me.pnl_content.Controls.Add(Me.Label14)
@@ -1076,7 +1077,6 @@ Partial Class fr_barang_detail
         Me.pnl_content.Controls.Add(Me.txtUpdAlias)
         Me.pnl_content.Controls.Add(Me.txtRegAlias)
         Me.pnl_content.Controls.Add(Me.Label18)
-        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.out_sat_tengah)
         Me.pnl_content.Controls.Add(Me.out_sat_kecil)
         Me.pnl_content.Controls.Add(Me.in_ket)

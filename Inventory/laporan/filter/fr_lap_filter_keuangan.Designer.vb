@@ -25,8 +25,6 @@ Partial Class fr_lap_filter_keuangan
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_lap_filter_keuangan))
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.bt_exportxl = New System.Windows.Forms.Button()
-        Me.bt_batalbeli = New System.Windows.Forms.Button()
-        Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
@@ -41,14 +39,13 @@ Partial Class fr_lap_filter_keuangan
         Me.popPnl_barang = New System.Windows.Forms.Panel()
         Me.dgv_listbarang = New System.Windows.Forms.DataGridView()
         Me.lbl_periodedata = New System.Windows.Forms.Label()
-        Me.cb_periode = New System.Windows.Forms.ComboBox()
-        Me.lbl_periode = New System.Windows.Forms.Label()
         Me.in_akun_n = New System.Windows.Forms.TextBox()
         Me.in_akun = New System.Windows.Forms.TextBox()
         Me.lbl_akun = New System.Windows.Forms.Label()
-        Me.lbl_title2 = New System.Windows.Forms.Label()
         Me.lbl_pajak = New System.Windows.Forms.Label()
         Me.cb_pajak = New System.Windows.Forms.ComboBox()
+        Me.bt_simpanbeli = New System.Windows.Forms.Button()
+        Me.bt_batalbeli = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
         CType(Me.dgv_listbarang, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -74,29 +71,6 @@ Partial Class fr_lap_filter_keuangan
         Me.bt_exportxl.TabIndex = 418
         Me.bt_exportxl.Text = "Export Excel"
         Me.bt_exportxl.UseVisualStyleBackColor = True
-        '
-        'bt_batalbeli
-        '
-        Me.bt_batalbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 226)
-        Me.bt_batalbeli.Name = "bt_batalbeli"
-        Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalbeli.TabIndex = 417
-        Me.bt_batalbeli.Text = "Close"
-        Me.bt_batalbeli.UseVisualStyleBackColor = True
-        '
-        'bt_simpanbeli
-        '
-        Me.bt_simpanbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 226)
-        Me.bt_simpanbeli.Name = "bt_simpanbeli"
-        Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
-        Me.bt_simpanbeli.TabIndex = 416
-        Me.bt_simpanbeli.Text = "Tampilkan"
-        Me.bt_simpanbeli.UseVisualStyleBackColor = True
         '
         'Panel1
         '
@@ -160,7 +134,7 @@ Partial Class fr_lap_filter_keuangan
         Me.in_sales_n.BackColor = System.Drawing.Color.White
         Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_n.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_n.Location = New System.Drawing.Point(209, 84)
+        Me.in_sales_n.Location = New System.Drawing.Point(209, 61)
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(322, 20)
@@ -171,7 +145,7 @@ Partial Class fr_lap_filter_keuangan
         Me.in_sales.BackColor = System.Drawing.Color.Gainsboro
         Me.in_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales.ForeColor = System.Drawing.Color.Black
-        Me.in_sales.Location = New System.Drawing.Point(86, 84)
+        Me.in_sales.Location = New System.Drawing.Point(86, 61)
         Me.in_sales.MaxLength = 30
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
@@ -182,7 +156,7 @@ Partial Class fr_lap_filter_keuangan
         '
         Me.lbl_sales.AutoSize = True
         Me.lbl_sales.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_sales.Location = New System.Drawing.Point(12, 88)
+        Me.lbl_sales.Location = New System.Drawing.Point(12, 65)
         Me.lbl_sales.Name = "lbl_sales"
         Me.lbl_sales.Size = New System.Drawing.Size(53, 13)
         Me.lbl_sales.TabIndex = 429
@@ -192,7 +166,7 @@ Partial Class fr_lap_filter_keuangan
         '
         Me.lbl_tgl2.AutoSize = True
         Me.lbl_tgl2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_tgl2.Location = New System.Drawing.Point(232, 65)
+        Me.lbl_tgl2.Location = New System.Drawing.Point(232, 42)
         Me.lbl_tgl2.Name = "lbl_tgl2"
         Me.lbl_tgl2.Size = New System.Drawing.Size(24, 13)
         Me.lbl_tgl2.TabIndex = 426
@@ -201,19 +175,18 @@ Partial Class fr_lap_filter_keuangan
         'date_tglakhir
         '
         Me.date_tglakhir.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglakhir.Location = New System.Drawing.Point(262, 61)
+        Me.date_tglakhir.Location = New System.Drawing.Point(262, 38)
         Me.date_tglakhir.MaxDate = New Date(2100, 12, 31, 0, 0, 0, 0)
         Me.date_tglakhir.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tglakhir.Name = "date_tglakhir"
         Me.date_tglakhir.Size = New System.Drawing.Size(140, 20)
         Me.date_tglakhir.TabIndex = 424
-        Me.date_tglakhir.TabStop = False
         '
         'lbl_tgl
         '
         Me.lbl_tgl.AutoSize = True
         Me.lbl_tgl.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_tgl.Location = New System.Drawing.Point(12, 65)
+        Me.lbl_tgl.Location = New System.Drawing.Point(12, 42)
         Me.lbl_tgl.Name = "lbl_tgl"
         Me.lbl_tgl.Size = New System.Drawing.Size(52, 13)
         Me.lbl_tgl.TabIndex = 425
@@ -222,18 +195,17 @@ Partial Class fr_lap_filter_keuangan
         'date_tglawal
         '
         Me.date_tglawal.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.date_tglawal.Location = New System.Drawing.Point(86, 61)
+        Me.date_tglawal.Location = New System.Drawing.Point(86, 38)
         Me.date_tglawal.MaxDate = New Date(2050, 12, 31, 0, 0, 0, 0)
         Me.date_tglawal.MinDate = New Date(1990, 1, 1, 0, 0, 0, 0)
         Me.date_tglawal.Name = "date_tglawal"
         Me.date_tglawal.Size = New System.Drawing.Size(140, 20)
         Me.date_tglawal.TabIndex = 423
-        Me.date_tglawal.TabStop = False
         '
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(209, 120)
+        Me.popPnl_barang.Location = New System.Drawing.Point(209, 97)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 433
@@ -268,34 +240,12 @@ Partial Class fr_lap_filter_keuangan
         Me.lbl_periodedata.TabIndex = 434
         Me.lbl_periodedata.Text = "Periode"
         '
-        'cb_periode
-        '
-        Me.cb_periode.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend
-        Me.cb_periode.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cb_periode.BackColor = System.Drawing.Color.White
-        Me.cb_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.cb_periode.FormattingEnabled = True
-        Me.cb_periode.Location = New System.Drawing.Point(86, 180)
-        Me.cb_periode.Name = "cb_periode"
-        Me.cb_periode.Size = New System.Drawing.Size(316, 21)
-        Me.cb_periode.TabIndex = 431
-        '
-        'lbl_periode
-        '
-        Me.lbl_periode.AutoSize = True
-        Me.lbl_periode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_periode.Location = New System.Drawing.Point(12, 184)
-        Me.lbl_periode.Name = "lbl_periode"
-        Me.lbl_periode.Size = New System.Drawing.Size(43, 13)
-        Me.lbl_periode.TabIndex = 432
-        Me.lbl_periode.Text = "Periode"
-        '
         'in_akun_n
         '
         Me.in_akun_n.BackColor = System.Drawing.Color.White
         Me.in_akun_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akun_n.ForeColor = System.Drawing.Color.Black
-        Me.in_akun_n.Location = New System.Drawing.Point(209, 106)
+        Me.in_akun_n.Location = New System.Drawing.Point(209, 83)
         Me.in_akun_n.MaxLength = 200
         Me.in_akun_n.Name = "in_akun_n"
         Me.in_akun_n.Size = New System.Drawing.Size(322, 20)
@@ -306,7 +256,7 @@ Partial Class fr_lap_filter_keuangan
         Me.in_akun.BackColor = System.Drawing.Color.Gainsboro
         Me.in_akun.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_akun.ForeColor = System.Drawing.Color.Black
-        Me.in_akun.Location = New System.Drawing.Point(86, 106)
+        Me.in_akun.Location = New System.Drawing.Point(86, 83)
         Me.in_akun.MaxLength = 30
         Me.in_akun.Name = "in_akun"
         Me.in_akun.ReadOnly = True
@@ -317,28 +267,17 @@ Partial Class fr_lap_filter_keuangan
         '
         Me.lbl_akun.AutoSize = True
         Me.lbl_akun.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_akun.Location = New System.Drawing.Point(12, 110)
+        Me.lbl_akun.Location = New System.Drawing.Point(12, 87)
         Me.lbl_akun.Name = "lbl_akun"
         Me.lbl_akun.Size = New System.Drawing.Size(77, 13)
         Me.lbl_akun.TabIndex = 437
         Me.lbl_akun.Text = "AkunPerkiraan"
         '
-        'lbl_title2
-        '
-        Me.lbl_title2.AutoSize = True
-        Me.lbl_title2.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_title2.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.lbl_title2.Location = New System.Drawing.Point(6, 37)
-        Me.lbl_title2.Name = "lbl_title2"
-        Me.lbl_title2.Size = New System.Drawing.Size(48, 15)
-        Me.lbl_title2.TabIndex = 438
-        Me.lbl_title2.Text = "Periode"
-        '
         'lbl_pajak
         '
         Me.lbl_pajak.AutoSize = True
         Me.lbl_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_pajak.Location = New System.Drawing.Point(12, 133)
+        Me.lbl_pajak.Location = New System.Drawing.Point(12, 110)
         Me.lbl_pajak.Name = "lbl_pajak"
         Me.lbl_pajak.Size = New System.Drawing.Size(46, 13)
         Me.lbl_pajak.TabIndex = 448
@@ -351,10 +290,38 @@ Partial Class fr_lap_filter_keuangan
         Me.cb_pajak.BackColor = System.Drawing.Color.White
         Me.cb_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_pajak.FormattingEnabled = True
-        Me.cb_pajak.Location = New System.Drawing.Point(86, 129)
+        Me.cb_pajak.Location = New System.Drawing.Point(86, 106)
         Me.cb_pajak.Name = "cb_pajak"
         Me.cb_pajak.Size = New System.Drawing.Size(193, 21)
         Me.cb_pajak.TabIndex = 447
+        '
+        'bt_simpanbeli
+        '
+        Me.bt_simpanbeli.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanbeli.FlatAppearance.BorderSize = 0
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 227)
+        Me.bt_simpanbeli.Name = "bt_simpanbeli"
+        Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
+        Me.bt_simpanbeli.TabIndex = 449
+        Me.bt_simpanbeli.Text = "Tampilkan"
+        Me.bt_simpanbeli.UseVisualStyleBackColor = False
+        '
+        'bt_batalbeli
+        '
+        Me.bt_batalbeli.BackColor = System.Drawing.Color.Tomato
+        Me.bt_batalbeli.FlatAppearance.BorderSize = 0
+        Me.bt_batalbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 227)
+        Me.bt_batalbeli.Name = "bt_batalbeli"
+        Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
+        Me.bt_batalbeli.TabIndex = 450
+        Me.bt_batalbeli.Text = "Close"
+        Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
         'fr_lap_filter_keuangan
         '
@@ -362,16 +329,15 @@ Partial Class fr_lap_filter_keuangan
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(591, 273)
+        Me.Controls.Add(Me.bt_simpanbeli)
+        Me.Controls.Add(Me.bt_batalbeli)
         Me.Controls.Add(Me.popPnl_barang)
         Me.Controls.Add(Me.lbl_pajak)
         Me.Controls.Add(Me.cb_pajak)
-        Me.Controls.Add(Me.lbl_title2)
         Me.Controls.Add(Me.in_akun_n)
         Me.Controls.Add(Me.in_akun)
         Me.Controls.Add(Me.lbl_akun)
         Me.Controls.Add(Me.lbl_periodedata)
-        Me.Controls.Add(Me.cb_periode)
-        Me.Controls.Add(Me.lbl_periode)
         Me.Controls.Add(Me.in_sales_n)
         Me.Controls.Add(Me.in_sales)
         Me.Controls.Add(Me.lbl_sales)
@@ -381,15 +347,12 @@ Partial Class fr_lap_filter_keuangan
         Me.Controls.Add(Me.date_tglawal)
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.bt_exportxl)
-        Me.Controls.Add(Me.bt_batalbeli)
-        Me.Controls.Add(Me.bt_simpanbeli)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_lap_filter_keuangan"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
-        Me.Text = "fr_lap_filter_keuangan"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.popPnl_barang.ResumeLayout(False)
@@ -400,8 +363,6 @@ Partial Class fr_lap_filter_keuangan
     End Sub
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents bt_exportxl As System.Windows.Forms.Button
-    Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
-    Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
@@ -416,12 +377,11 @@ Partial Class fr_lap_filter_keuangan
     Friend WithEvents popPnl_barang As System.Windows.Forms.Panel
     Friend WithEvents dgv_listbarang As System.Windows.Forms.DataGridView
     Friend WithEvents lbl_periodedata As System.Windows.Forms.Label
-    Friend WithEvents cb_periode As System.Windows.Forms.ComboBox
-    Friend WithEvents lbl_periode As System.Windows.Forms.Label
     Friend WithEvents in_akun_n As System.Windows.Forms.TextBox
     Friend WithEvents in_akun As System.Windows.Forms.TextBox
     Friend WithEvents lbl_akun As System.Windows.Forms.Label
-    Friend WithEvents lbl_title2 As System.Windows.Forms.Label
     Friend WithEvents lbl_pajak As System.Windows.Forms.Label
     Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
+    Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
+    Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
 End Class

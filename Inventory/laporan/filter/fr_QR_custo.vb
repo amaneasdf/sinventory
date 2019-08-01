@@ -122,7 +122,6 @@
         Dim x As New fr_lap_master
         x.setVar(_repID, dt)
         x.do_load()
-        x.ShowDialog()
     End Sub
 
     'DRAG FORM

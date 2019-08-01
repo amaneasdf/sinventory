@@ -255,8 +255,8 @@
                     End If
                 End Using
 
-                q = "SELECT getHPPAVG('{0}','{1}','{2}')"
-                q = String.Format(q, KodeBrg, date_tgl_beli.Value.ToString("yyyy-MM-dd"), selectperiode.id)
+                q = "SELECT getHppAvg_v2('{0}','{1}')"
+                q = String.Format(q, KodeBrg, date_tgl_beli.Value.ToString("yyyy-MM-dd"))
                 Using rdx = x.ReadCommand(q, CommandBehavior.SingleRow)
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
@@ -481,7 +481,8 @@
                     Exit Sub
                 Else
                     MessageBox.Show("Data Opname tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    doRefreshTab({pgstockop})
+                    'doRefreshTab({pgstockop})
+                    DoRefreshTab_v2({pgstockop})
                     Me.Close()
                 End If
             End If

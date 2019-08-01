@@ -49,6 +49,9 @@ Partial Class fr_export_efaktur
         Me.bt_createtemplate = New System.Windows.Forms.Button()
         Me.bt_loadtemplate = New System.Windows.Forms.Button()
         Me.dgv_faktur = New System.Windows.Forms.DataGridView()
+        Me.ctxMn_dgv = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.mn_viewdetail = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_removefaktur = New System.Windows.Forms.ToolStripMenuItem()
         Me.faktur_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.faktur_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_tgl_trans = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -58,9 +61,7 @@ Partial Class fr_export_efaktur
         Me.faktur_npwp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_dpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_ppn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ctxMn_dgv = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.mn_viewdetail = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_removefaktur = New System.Windows.Forms.ToolStripMenuItem()
+        Me.faktur_filler = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_container.SuspendLayout()
         CType(Me.dgv_faktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -309,7 +310,7 @@ Partial Class fr_export_efaktur
         Me.bt_deletetemplate.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_deletetemplate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_deletetemplate.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_deletetemplate.Image = Global.Inventory.My.Resources.Resources._1492932873_Delete
+        Me.bt_deletetemplate.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
         Me.bt_deletetemplate.Location = New System.Drawing.Point(861, 66)
         Me.bt_deletetemplate.Name = "bt_deletetemplate"
         Me.bt_deletetemplate.Size = New System.Drawing.Size(99, 30)
@@ -380,13 +381,33 @@ Partial Class fr_export_efaktur
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgv_faktur.BackgroundColor = System.Drawing.Color.White
         Me.dgv_faktur.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_faktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.faktur_ck, Me.faktur_kode, Me.faktur_tgl_trans, Me.faktur_tgl_pajak, Me.faktur_nopajak, Me.faktur_custo, Me.faktur_npwp, Me.faktur_dpp, Me.faktur_ppn})
+        Me.dgv_faktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.faktur_ck, Me.faktur_kode, Me.faktur_tgl_trans, Me.faktur_tgl_pajak, Me.faktur_nopajak, Me.faktur_custo, Me.faktur_npwp, Me.faktur_dpp, Me.faktur_ppn, Me.faktur_filler})
         Me.dgv_faktur.Location = New System.Drawing.Point(12, 103)
         Me.dgv_faktur.Name = "dgv_faktur"
         Me.dgv_faktur.RowHeadersVisible = False
         Me.dgv_faktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_faktur.Size = New System.Drawing.Size(948, 394)
         Me.dgv_faktur.TabIndex = 9
+        '
+        'ctxMn_dgv
+        '
+        Me.ctxMn_dgv.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_viewdetail, Me.mn_removefaktur})
+        Me.ctxMn_dgv.Name = "ctxMn_dgv"
+        Me.ctxMn_dgv.Size = New System.Drawing.Size(133, 48)
+        '
+        'mn_viewdetail
+        '
+        Me.mn_viewdetail.Image = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.mn_viewdetail.Name = "mn_viewdetail"
+        Me.mn_viewdetail.Size = New System.Drawing.Size(132, 22)
+        Me.mn_viewdetail.Text = "View Detail"
+        '
+        'mn_removefaktur
+        '
+        Me.mn_removefaktur.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
+        Me.mn_removefaktur.Name = "mn_removefaktur"
+        Me.mn_removefaktur.Size = New System.Drawing.Size(132, 22)
+        Me.mn_removefaktur.Text = "Remove"
         '
         'faktur_ck
         '
@@ -466,25 +487,12 @@ Partial Class fr_export_efaktur
         Me.faktur_ppn.ReadOnly = True
         Me.faktur_ppn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         '
-        'ctxMn_dgv
+        'faktur_filler
         '
-        Me.ctxMn_dgv.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_viewdetail, Me.mn_removefaktur})
-        Me.ctxMn_dgv.Name = "ctxMn_dgv"
-        Me.ctxMn_dgv.Size = New System.Drawing.Size(133, 48)
-        '
-        'mn_viewdetail
-        '
-        Me.mn_viewdetail.Image = Global.Inventory.My.Resources.Resources.Search_16x16
-        Me.mn_viewdetail.Name = "mn_viewdetail"
-        Me.mn_viewdetail.Size = New System.Drawing.Size(132, 22)
-        Me.mn_viewdetail.Text = "View Detail"
-        '
-        'mn_removefaktur
-        '
-        Me.mn_removefaktur.Image = Global.Inventory.My.Resources.Resources._1492932873_Delete
-        Me.mn_removefaktur.Name = "mn_removefaktur"
-        Me.mn_removefaktur.Size = New System.Drawing.Size(132, 22)
-        Me.mn_removefaktur.Text = "Remove"
+        Me.faktur_filler.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.faktur_filler.HeaderText = ""
+        Me.faktur_filler.Name = "faktur_filler"
+        Me.faktur_filler.ReadOnly = True
         '
         'fr_export_efaktur
         '
@@ -544,5 +552,6 @@ Partial Class fr_export_efaktur
     Friend WithEvents faktur_npwp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents faktur_dpp As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents faktur_ppn As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents faktur_filler As System.Windows.Forms.DataGridViewTextBoxColumn
 
 End Class

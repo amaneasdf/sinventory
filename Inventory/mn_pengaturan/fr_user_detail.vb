@@ -217,25 +217,34 @@
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
-        Dim q As String
-        Dim dt As New DataTable
-        Dim autoco As New AutoCompleteStringCollection
+        Dim q As String : Dim dt As New DataTable
+
         Select Case tipe
             Case "sales"
                 q = "SELECT salesman_kode as 'Kode', salesman_nama as 'Salesman', (CASE " _
                     & " WHEN salesman_jenis=1 THEN 'Sales TO' " _
                     & " WHEN salesman_jenis=2 THEN 'Sales Kanvas' " _
                     & " ELSE 'ERROR' END) AS 'Jenis' FROM data_salesman_master " _
-                    & "WHERE salesman_status<>9 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%')"
-                dt = getDataTablefromDB(String.Format(q, param))
+                    & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%')"
             Case Else
                 Exit Sub
         End Select
 
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                dt = x.GetDataTable(String.Format(q, param))
+            Else
+                Exit Sub
+            End If
+        End Using
+
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
+            If .ColumnCount >= 3 Then
+                .Columns(0).Width = 100
+                .Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                .Columns(2).Width = 75
+            End If
         End With
     End Sub
 
@@ -278,9 +287,9 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_bataluser.Click
-        If MessageBox.Show("Tutup Form?", "Data User", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Data User", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -308,7 +317,8 @@
             End If
         End If
     End Sub
-    '------------- menu
+
+    'UI : MENU
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
         bt_simpanuser.PerformClick()
     End Sub
@@ -334,17 +344,24 @@
         Dim queryArr As New List(Of String)
         Dim queryCheck As Boolean = False
 
-        op_con()
         If MsgBox("Apakah yakin akan mereset password user ini?", MsgBoxStyle.YesNo, "Data User") = MsgBoxResult.Yes Then
-            q = "UPDATE data_pengguna_alias SET user_pwd = MD5('123456'), user_status=0, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
-            queryArr.Add(String.Format(q, in_userid.Text, loggeduser.user_id))
+            q = "UPDATE data_pengguna_alias SET user_pwd = '{2}', user_status=0, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
+            queryArr.Add(String.Format(q, in_userid.Text, loggeduser.user_id, computeHash("123456")))
 
-            q = "INSERT INTO system_pwdchange_log(log_alias1,log_alias2,log_ip,log_tanggal) VALUE({0})"
-            Dim data As String() = {"'" & in_userid.Text & "'", "'" & loggeduser.user_id & "'", "'" & loggeduser.user_ip & "'", "NOW()"}
-            queryArr.Add(String.Format(q, String.Join(",", data)))
+            q = "INSERT INTO system_pwdchange_log(log_alias1, log_alias2, log_ip, log_mac, log_session, log_tanggal, log_time) VALUE({0})"
+            Dim _d = {"'" & in_userid.Text & "'", "'" & loggeduser.user_id & "'",
+                      "'" & loggeduser.user_ip & "'", "'" & loggeduser.user_mac & "'",
+                      "'" & loggeduser.user_session & "'", "CURDATE()", "NOW()"}
+            queryArr.Add(String.Format(q, String.Join(",", _d)))
 
-            queryCheck = startTrans(queryArr, False)
-
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    queryCheck = x.TransactCommand(queryArr)
+                Else
+                    MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Exit Sub
+                End If
+            End Using
 
             If queryCheck = True Then
                 MessageBox.Show("Password telah direset, password defaultnya: 123456 ", "Data User", MessageBoxButtons.OK)
@@ -352,57 +369,77 @@
             Else
                 MessageBox.Show("Telah terjadi kesalahan. Password gagal direset.", "Data User", MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-        Else
-            Exit Sub
         End If
     End Sub
 
     'SAVE
     Private Sub saveData()
         Dim q As String = ""
-        Dim data As String()
+        Dim data As New List(Of String) : Dim qArr As New List(Of String)
         Dim querycheck As Boolean = False
 
-        data = {
+        data.AddRange({
             "user_nama='" & in_karyawan_nama.Text & "'",
             "user_email='" & in_email.Text & "'",
             "user_telp='" & in_telp.Text & "'",
-            "user_pc='" & IIf(ck_pc.Checked = True, 1, 0) & "'",
+            "user_pc='" & IIf(ck_pc.Checked, 1, 0) & "'",
             "user_group='" & in_group_kode.Text & "'",
-            "user_validasi_master='" & IIf(ck_valid_master.Checked = True, 1, 0) & "'",
-            "user_validasi_trans='" & IIf(ck_valid_trans.Checked = True, 1, 0) & "'",
-            "user_validasi_akun='" & IIf(ck_valid_akun.Checked = True, 1, 0) & "'",
-            "user_allowedit_master='" & IIf(ck_edit_master.Checked = True, 1, 0) & "'",
-            "user_allowedit_trans='" & IIf(ck_edit_trans.Checked = True, 1, 0) & "'",
-            "user_allowedit_akun='" & IIf(ck_edit_akun.Checked = True, 1, 0) & "'",
-            "user_admin_pc='" & IIf(ck_admin_pc.Checked = True, 1, 0) & "'",
+            "user_validasi_master='" & IIf(ck_valid_master.Checked, 1, 0) & "'",
+            "user_validasi_trans='" & IIf(ck_valid_trans.Checked, 1, 0) & "'",
+            "user_validasi_akun='" & IIf(ck_valid_akun.Checked, 1, 0) & "'",
+            "user_allowedit_master='" & IIf(ck_edit_master.Checked, 1, 0) & "'",
+            "user_allowedit_trans='" & IIf(ck_edit_trans.Checked, 1, 0) & "'",
+            "user_allowedit_akun='" & IIf(ck_edit_akun.Checked, 1, 0) & "'",
+            "user_admin_pc='" & IIf(ck_admin_pc.Checked, 1, 0) & "'",
             "user_status='" & usrstatus & "'",
-            "user_sales='" & IIf(ck_sales.Checked = True, 1, IIf(ck_adminandro.Checked = True, 2, 0)) & "'",
+            "user_sales='" & IIf(ck_sales.Checked, 1, IIf(ck_adminandro.Checked, 2, 0)) & "'",
             "user_sales_kode='" & in_sales.Text & "'"
-            }
+            })
 
-        If bt_simpanuser.Text = "Simpan" Then
-            If checkdata("data_pengguna_alias", "'" & in_userid.Text & "'", "user_alias") = True Then
-                MessageBox.Show("Username sudah ada")
-                in_userid.Focus()
-                Exit Sub
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    q = "SELECT COUNT(user_alias) FROM data_pengguna_alias WHERE user_alias='{0}'"
+                    Try
+                        Dim _ck = CInt(x.ExecScalar(String.Format(q, in_userid.Text)))
+                        If _ck > 0 Then
+                            MessageBox.Show("Username tidak tersedia, silahkan masukan username lain.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                            in_userid.Focus() : Exit Sub
+                        End If
+                    Catch ex As Exception
+                        logError(ex, True)
+                        MessageBox.Show("Terjadi kesalahan saat melakukan input data user.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
+                    End Try
+
+                    q = "INSERT INTO data_pengguna_alias SET user_alias='{0}', user_pwd='{1}',{2},user_reg_date=NOW(),user_reg_alias='{3}'"
+                    qArr.Add(String.Format(q, in_userid.Text, computeHash(in_pass.Text), String.Join(",", data), loggeduser.user_id))
+                Else
+                    'If Not String.IsNullOrWhiteSpace(in_pass.Text) And in_pass.Enabled And in_pass.ReadOnly = False Then
+                    '    data.AddRange({"user_pwd='" & computeHash(in_pass.Text) & "'"})
+                    '    q = "INSERT INTO system_pwdchange_log(log_alias1,log_alias2,log_ip, log_mac, log_session, log_tanggal, log_time) VALUE({0})"
+                    '    Dim _d = {"'" & in_userid.Text & "'", "'" & loggeduser.user_id & "'",
+                    '              "'" & loggeduser.user_ip & "'", "'" & loggeduser.user_mac & "'",
+                    '              "'" & loggeduser.user_session & "'", "CURDATE()", "NOW()"}
+                    '    qArr.Add(String.Format(q, String.Join(",", _d)))
+                    'End If
+
+                    q = "UPDATE data_penggunaan_alias SET {1}, user_upd_alias='{2}', user_upd_date=NOW() WHERE user_alias='{0}'"
+                    qArr.Add(String.Format(in_userid.Text, String.Join(",", data), loggeduser.user_id))
+                End If
+
+                querycheck = x.TransactCommand(qArr)
+
+                If querycheck Then
+                    MessageBox.Show("Data user berhasil tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pguser}) : Me.Close()
+                Else
+                    MessageBox.Show("Data user tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
-            Dim pass As String = in_pass.Text
-            q = "INSERT INTO data_pengguna_alias SET user_alias='{0}', user_pwd=MD5('" & pass & "'),{1},user_reg_date=NOW(),user_reg_alias='{2}'"
-        ElseIf bt_simpanuser.Text = "Update" Then
-            q = "UPDATE data_pengguna_alias SET {1},user_upd_alias='{2}', user_upd_date=NOW() WHERE user_alias='{0}'"
-        End If
-
-        querycheck = commnd(String.Format(q, in_userid.Text, String.Join(",", data), loggeduser.user_id))
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            doRefreshTab({pguser})
-            Me.Close()
-        End If
+        End Using
     End Sub
 
     'DELETE
@@ -412,39 +449,37 @@
 
     'SAVE
     Private Sub bt_simpanuser_Click(sender As Object, e As EventArgs) Handles bt_simpanuser.Click
-        If in_kode.Text = Nothing Then
-            If in_userid.Text = Nothing Then
-                MessageBox.Show("UserID belum di input")
-                in_userid.Focus()
-                Exit Sub
+        If in_userid.Text = Nothing Then
+            If formstate = InputState.Insert Then
+                MessageBox.Show("Username belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Else
+                MessageBox.Show("Terdapat kesalahan dalam melakukan pengambilan data user." & Environment.NewLine & "Username/userid kosong.",
+                                Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
-            If in_pass.Text = Nothing Then
-                MessageBox.Show("Password belum di input")
-                in_pass.Focus()
-                Exit Sub
-            End If
+            in_userid.Focus() : Exit Sub
         End If
 
-        If ck_pc.CheckState = CheckState.Checked And in_group_kode.Text = Nothing Then
-            MessageBox.Show("Group user belum di pilih")
-            cb_group.Focus()
-            Exit Sub
+        If formstate = InputState.Insert And String.IsNullOrWhiteSpace(in_pass.Text) Then
+            MessageBox.Show("Password belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_pass.Focus() : Exit Sub
         End If
 
-        If (ck_sales.CheckState = CheckState.Checked Or ck_adminandro.CheckState = CheckState.Checked) And (in_sales.Text = Nothing Or UCase(in_sales_t.Text) = "ERROR") Then
-            MessageBox.Show("Salesman belum di input")
-            in_sales_n.Focus()
-            Exit Sub
+        If ck_pc.Checked And String.IsNullOrWhiteSpace(in_group_kode.Text) Then
+            MessageBox.Show("Group user belum di pilih", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_group.Focus() : Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data user?", "Data User", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
+        If (ck_sales.Checked Or ck_adminandro.Checked) And (in_sales.Text = Nothing Or UCase(in_sales_t.Text) = "ERROR") Then
+            MessageBox.Show("Salesman belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_sales_n.Focus() : Exit Sub
         End If
+
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data user?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then saveData()
     End Sub
 
-    'UI
-    '------------- POPUPSEARCH PANEL
+    'UI : POPUPSEARCH PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
         If Not in_sales_n.Focused Then
             popPnl_barang.Visible = False
@@ -461,26 +496,23 @@
 
     Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_keyUp(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
+        If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
-        If Char.IsLetterOrDigit(e.KeyChar) Then
-            Dim x As TextBox
-            Select Case _popUpPos
-                Case "sales"
-                    x = in_sales_n
-                Case Else
-                    x = Nothing
-                    x.Dispose()
-                    Exit Sub
-            End Select
-            x.Text += e.KeyChar
-            e.Handled = True
-            x.Focus()
-            x.Select(x.TextLength, x.TextLength)
-        End If
+        Dim x As TextBox
+        Select Case _popUpPos
+            Case "sales" : x = in_sales_n
+            Case Else : Exit Sub
+        End Select
+        PopUpSearchKeyPress(e, x)
     End Sub
 
     'Other
@@ -506,7 +538,7 @@
     End Sub
 
     Private Sub cb_group_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_group.KeyPress
-        If e.KeyChar <> ControlChars.Cr Then
+        If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
             e.Handled = True
         End If
     End Sub
@@ -550,12 +582,11 @@
 
     Private Sub in_sales_n_Enter(sender As Object, e As EventArgs) Handles in_sales_n.Enter
         If in_sales_n.Enabled = True Then
-            popPnl_barang.Location = New Point(in_sales_n.Left, in_sales_n.Top + in_sales_n.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
+            popPnl_barang.Location = New Point(sender.Left, sender.Top + sender.Height)
+            If popPnl_barang.Visible = False Then  popPnl_barang.Visible = True
+
             _popUpPos = "sales"
-            loadDataBRGPopup("sales", in_sales_n.Text)
+            loadDataBRGPopup(_popUpPos, sender.Text)
         End If
     End Sub
 
@@ -568,21 +599,24 @@
     End Sub
 
     Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
+        If sender.Text = "" Then
+            in_sales_n.Clear() : in_sales_t.Clear()
+        End If
+
         If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
+            If popPnl_barang.Visible = True Then dgv_listbarang.Focus()
+
         ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then setPopUpResult()
             keyshortenter(bt_simpanuser, e)
         Else
-            If in_sales_n.Enabled = True Then
-                If popPnl_barang.Visible = False Then
-                    popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape And sender.Enabled Then
+                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
+                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
+                    in_sales_n.Clear() : in_sales_t.Clear()
                 End If
-                loadDataBRGPopup("sales", in_sales_n.Text)
+                If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
+                loadDataBRGPopup(_popUpPos, sender.Text)
             End If
         End If
     End Sub

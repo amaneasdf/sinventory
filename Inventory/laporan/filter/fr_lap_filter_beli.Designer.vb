@@ -26,7 +26,6 @@ Partial Class fr_lap_filter_beli
         Me.bt_batalbeli = New System.Windows.Forms.Button()
         Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
@@ -56,29 +55,36 @@ Partial Class fr_lap_filter_beli
         '
         'bt_batalbeli
         '
+        Me.bt_batalbeli.BackColor = System.Drawing.Color.Tomato
         Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 168)
+        Me.bt_batalbeli.FlatAppearance.BorderSize = 0
+        Me.bt_batalbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_batalbeli.Location = New System.Drawing.Point(488, 181)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalbeli.TabIndex = 8
         Me.bt_batalbeli.Text = "Close"
-        Me.bt_batalbeli.UseVisualStyleBackColor = True
+        Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
         'bt_simpanbeli
         '
-        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 168)
+        Me.bt_simpanbeli.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanbeli.FlatAppearance.BorderSize = 0
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(311, 181)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(171, 30)
         Me.bt_simpanbeli.TabIndex = 7
         Me.bt_simpanbeli.Text = "Tampilkan"
-        Me.bt_simpanbeli.UseVisualStyleBackColor = True
+        Me.bt_simpanbeli.UseVisualStyleBackColor = False
         '
         'Panel1
         '
         Me.Panel1.BackColor = System.Drawing.Color.Orange
-        Me.Panel1.Controls.Add(Me.lbl_close)
         Me.Panel1.Controls.Add(Me.bt_cl)
         Me.Panel1.Controls.Add(Me.lbl_title)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
@@ -86,20 +92,6 @@ Partial Class fr_lap_filter_beli
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(591, 30)
         Me.Panel1.TabIndex = 335
-        '
-        'lbl_close
-        '
-        Me.lbl_close.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.lbl_close.AutoSize = True
-        Me.lbl_close.BackColor = System.Drawing.Color.Orange
-        Me.lbl_close.Font = New System.Drawing.Font("Open Sans", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(514, 6)
-        Me.lbl_close.Name = "lbl_close"
-        Me.lbl_close.Size = New System.Drawing.Size(46, 19)
-        Me.lbl_close.TabIndex = 137
-        Me.lbl_close.Text = "Close"
-        Me.lbl_close.Visible = False
         '
         'bt_cl
         '
@@ -145,7 +137,7 @@ Partial Class fr_lap_filter_beli
         '
         Me.bt_exportxl.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.bt_exportxl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_exportxl.Location = New System.Drawing.Point(8, 168)
+        Me.bt_exportxl.Location = New System.Drawing.Point(8, 181)
         Me.bt_exportxl.Name = "bt_exportxl"
         Me.bt_exportxl.Size = New System.Drawing.Size(96, 30)
         Me.bt_exportxl.TabIndex = 9
@@ -252,7 +244,7 @@ Partial Class fr_lap_filter_beli
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(530, 10)
+        Me.popPnl_barang.Location = New System.Drawing.Point(149, 33)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 425
@@ -273,7 +265,7 @@ Partial Class fr_lap_filter_beli
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 103)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(351, 107)
         Me.dgv_listbarang.TabIndex = 0
         '
         'in_barang_n
@@ -312,9 +304,9 @@ Partial Class fr_lap_filter_beli
         'pnl_content
         '
         Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.lbl_pajak)
         Me.pnl_content.Controls.Add(Me.cb_pajak)
-        Me.pnl_content.Controls.Add(Me.popPnl_barang)
         Me.pnl_content.Controls.Add(Me.bt_simpanbeli)
         Me.pnl_content.Controls.Add(Me.bt_batalbeli)
         Me.pnl_content.Controls.Add(Me.bt_exportxl)
@@ -404,7 +396,6 @@ Partial Class fr_lap_filter_beli
     Friend WithEvents in_barang As System.Windows.Forms.TextBox
     Friend WithEvents lbl_barang As System.Windows.Forms.Label
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
-    Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_pajak As System.Windows.Forms.Label
     Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox

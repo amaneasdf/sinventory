@@ -100,7 +100,8 @@
             x.Open()
             If x.ConnectionState = ConnectionState.Open Then
                 q = "SELECT faktur_kode, faktur_pajak, faktur_tanggal, faktur_gudang, gudang_nama, faktur_ket, faktur_reg_alias, " _
-                    & "faktur_reg_date, faktur_upd_alias, CAST(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%s') AS CHAR) faktur_upd_date, " _
+                    & "faktur_reg_date, IFNULL(faktur_upd_alias,'') faktur_upd_alias, " _
+                    & "IFNULL(CAST(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%s') AS CHAR),'') faktur_upd_date, " _
                     & "faktur_status FROM data_barang_mutasi " _
                     & "LEFT JOIN data_barang_gudang ON gudang_kode=faktur_gudang " _
                     & "WHERE faktur_kode ='{0}'"
@@ -236,14 +237,9 @@
         Using x = MainConnection
             x.Open()
             If x.ConnectionState = ConnectionState.Open Then
-                q = "SELECT getHPPAVG('{0}','{1}','{2}')"
-                q = String.Format(q, KodeBrg, date_tgl_beli.Value.ToString("yyyy-MM-dd"), selectperiode.id)
-                Using rdx = x.ReadCommand(q, CommandBehavior.SingleResult)
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        retval = rdx.Item(0)
-                    End If
-                End Using
+                q = "SELECT getHppAvg_v2('{0}','{1}')"
+                q = String.Format(q, KodeBrg, date_tgl_beli.Value.ToString("yyyy-MM-dd"))
+                retval = x.ExecScalar(q)
             End If
         End Using
 
@@ -367,8 +363,7 @@
         Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
                 Dim _kode As String = ""
 
@@ -378,30 +373,24 @@
                     Dim no As Integer = 1
                     Dim tgl As String = date_tgl_beli.Value.ToString("yyyyMMdd")
 
-                    q = "SELECT COUNT(DISTINCT faktur_kode) FROM data_barang_mutasi WHERE faktur_tanggal='{0}' AND faktur_kode LIKE 'MB%'"
-                    Using rdx = x.ReadCommand(String.Format(q, date_tgl_beli.Value.ToString("yyyy-MM-dd")))
-                        Dim red = rdx.Read
-                        If red And rdx.HasRows Then
-                            no = CInt(rdx.Item(0)) + 1
-                        End If
-                    End Using
+                    q = "SELECT COUNT(DISTINCT faktur_kode) FROM data_barang_mutasi WHERE faktur_tanggal='{0:yyyy-MM-dd}' AND faktur_kode LIKE 'MB{0:yyyyMMdd}%'"
+                    no = CInt(x.ExecScalar(String.Format(q, date_tgl_beli.Value)))
                     in_kode.Text = "MB" & tgl & no.ToString("D3")
+
                 ElseIf in_kode.Text <> Nothing And formstate = InputState.Insert Then
-                    q = "SELECT faktur_kode FROM data_barang_mutasi WHERE faktur_kode='{0}"
+                    q = "SELECT faktur_kode FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_kode<9"
                     Dim _ck As Boolean = True
                     Dim _msg As String = ""
-                    Using rdx = x.ReadCommand(String.Format(q, in_kode.Text))
-                        Dim red = rdx.Read
-                        If red Then
-                            If rdx.HasRows Then
-                                _ck = False
-                                _msg = "Kode " & in_kode.Text & " sudah pernah diinput."
-                            End If
-                        Else
-                            _ck = False
-                            _msg = "Aplikasi tidak dapat terhubung ke database."
-                        End If
-                    End Using
+
+                    Try
+                        Dim _ret = x.ExecScalar(String.Format(q, in_kode.Text))
+                        _ck = IIf(IsNothing(_ret), True, False)
+                        _msg = IIf(Not _ck, "Kode bukti sudah pernah dimasukan.", "")
+                    Catch ex As Exception
+                        logError(ex, True)
+                        _ck = False : _msg = ex.Message
+                    End Try
+
                     If _ck = False Then
                         MessageBox.Show("Data tidak dapat tersimpan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
                         Exit Sub
@@ -473,7 +462,8 @@
                     Exit Sub
                 Else
                     MessageBox.Show("Data mutasi tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    doRefreshTab({pgstok, pgmutasistok})
+                    'doRefreshTab({pgstok, pgmutasistok})
+                    DoRefreshTab_v2({pgstok, pgmutasistok})
                     Me.Close()
                 End If
             End If
@@ -506,7 +496,8 @@
 
                 If queryCk Then
                     MessageBox.Show("Transaksi mutasi dibatalkan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    doRefreshTab({pgmutasistok})
+                    'doRefreshTab({pgmutasistok})
+                    DoRefreshTab_v2({pgstok, pgmutasistok})
                     Me.Close()
                 Else
                     MessageBox.Show("Error. Transaksi gagal dibatalkan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)

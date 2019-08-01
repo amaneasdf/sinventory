@@ -274,25 +274,31 @@ Partial Class fr_kas_detail
         'bt_batalperkiraan
         '
         Me.bt_batalperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_batalperkiraan.BackColor = System.Drawing.Color.Tomato
         Me.bt_batalperkiraan.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalperkiraan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalperkiraan.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalperkiraan.ForeColor = System.Drawing.Color.White
         Me.bt_batalperkiraan.Location = New System.Drawing.Point(670, 436)
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalperkiraan.TabIndex = 20
+        Me.bt_batalperkiraan.TabIndex = 18
         Me.bt_batalperkiraan.Text = "Batal"
-        Me.bt_batalperkiraan.UseVisualStyleBackColor = True
+        Me.bt_batalperkiraan.UseVisualStyleBackColor = False
         '
         'bt_simpanperkiraan
         '
         Me.bt_simpanperkiraan.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.bt_simpanperkiraan.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanperkiraan.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanperkiraan.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanperkiraan.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanperkiraan.ForeColor = System.Drawing.Color.White
         Me.bt_simpanperkiraan.Location = New System.Drawing.Point(520, 436)
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
         Me.bt_simpanperkiraan.Size = New System.Drawing.Size(148, 30)
-        Me.bt_simpanperkiraan.TabIndex = 19
+        Me.bt_simpanperkiraan.TabIndex = 17
         Me.bt_simpanperkiraan.Text = "Simpan"
-        Me.bt_simpanperkiraan.UseVisualStyleBackColor = True
+        Me.bt_simpanperkiraan.UseVisualStyleBackColor = False
         '
         'dgv_kas
         '
@@ -308,7 +314,7 @@ Partial Class fr_kas_detail
         Me.dgv_kas.RowHeadersVisible = False
         Me.dgv_kas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_kas.Size = New System.Drawing.Size(756, 146)
-        Me.dgv_kas.TabIndex = 16
+        Me.dgv_kas.TabIndex = 14
         '
         'kas_rek
         '
@@ -428,7 +434,7 @@ Partial Class fr_kas_detail
         Me.in_bg.MaxLength = 30
         Me.in_bg.Name = "in_bg"
         Me.in_bg.Size = New System.Drawing.Size(181, 20)
-        Me.in_bg.TabIndex = 4
+        Me.in_bg.TabIndex = 5
         '
         'Label3
         '
@@ -450,7 +456,7 @@ Partial Class fr_kas_detail
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
         Me.in_sales.Size = New System.Drawing.Size(104, 20)
-        Me.in_sales.TabIndex = 5
+        Me.in_sales.TabIndex = 6
         '
         'in_sales_n
         '
@@ -461,7 +467,7 @@ Partial Class fr_kas_detail
         Me.in_sales_n.MaxLength = 30
         Me.in_sales_n.Name = "in_sales_n"
         Me.in_sales_n.Size = New System.Drawing.Size(261, 20)
-        Me.in_sales_n.TabIndex = 6
+        Me.in_sales_n.TabIndex = 7
         '
         'Label4
         '
@@ -492,7 +498,7 @@ Partial Class fr_kas_detail
         Me.in_no_bukti.MaxLength = 30
         Me.in_no_bukti.Name = "in_no_bukti"
         Me.in_no_bukti.Size = New System.Drawing.Size(188, 20)
-        Me.in_no_bukti.TabIndex = 8
+        Me.in_no_bukti.TabIndex = 2
         Me.in_no_bukti.TabStop = False
         '
         'date_tgl_trans
@@ -503,8 +509,7 @@ Partial Class fr_kas_detail
         Me.date_tgl_trans.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tgl_trans.Name = "date_tgl_trans"
         Me.date_tgl_trans.Size = New System.Drawing.Size(188, 20)
-        Me.date_tgl_trans.TabIndex = 9
-        Me.date_tgl_trans.TabStop = False
+        Me.date_tgl_trans.TabIndex = 0
         '
         'bt_tbkas
         '
@@ -517,7 +522,7 @@ Partial Class fr_kas_detail
         Me.bt_tbkas.Location = New System.Drawing.Point(749, 198)
         Me.bt_tbkas.Name = "bt_tbkas"
         Me.bt_tbkas.Size = New System.Drawing.Size(17, 17)
-        Me.bt_tbkas.TabIndex = 15
+        Me.bt_tbkas.TabIndex = 13
         Me.bt_tbkas.UseVisualStyleBackColor = False
         '
         'in_kredit
@@ -529,7 +534,7 @@ Partial Class fr_kas_detail
         Me.in_kredit.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_kredit.Name = "in_kredit"
         Me.in_kredit.Size = New System.Drawing.Size(126, 20)
-        Me.in_kredit.TabIndex = 13
+        Me.in_kredit.TabIndex = 11
         Me.in_kredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_kredit.ThousandsSeparator = True
         '
@@ -542,7 +547,7 @@ Partial Class fr_kas_detail
         Me.in_debet.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_debet.Name = "in_debet"
         Me.in_debet.Size = New System.Drawing.Size(126, 20)
-        Me.in_debet.TabIndex = 12
+        Me.in_debet.TabIndex = 10
         Me.in_debet.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_debet.ThousandsSeparator = True
         '
@@ -555,7 +560,7 @@ Partial Class fr_kas_detail
         Me.in_rek_n.MaxLength = 150
         Me.in_rek_n.Name = "in_rek_n"
         Me.in_rek_n.Size = New System.Drawing.Size(188, 20)
-        Me.in_rek_n.TabIndex = 11
+        Me.in_rek_n.TabIndex = 9
         '
         'Label22
         '
@@ -600,7 +605,7 @@ Partial Class fr_kas_detail
         Me.in_rek.Name = "in_rek"
         Me.in_rek.ReadOnly = True
         Me.in_rek.Size = New System.Drawing.Size(103, 20)
-        Me.in_rek.TabIndex = 10
+        Me.in_rek.TabIndex = 8
         '
         'in_ket
         '
@@ -611,7 +616,7 @@ Partial Class fr_kas_detail
         Me.in_ket.MaxLength = 150
         Me.in_ket.Name = "in_ket"
         Me.in_ket.Size = New System.Drawing.Size(183, 20)
-        Me.in_ket.TabIndex = 14
+        Me.in_ket.TabIndex = 12
         '
         'Label8
         '
@@ -634,7 +639,7 @@ Partial Class fr_kas_detail
         Me.in_debet_tot.Name = "in_debet_tot"
         Me.in_debet_tot.ReadOnly = True
         Me.in_debet_tot.Size = New System.Drawing.Size(180, 20)
-        Me.in_debet_tot.TabIndex = 17
+        Me.in_debet_tot.TabIndex = 15
         Me.in_debet_tot.TabStop = False
         Me.in_debet_tot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -648,7 +653,7 @@ Partial Class fr_kas_detail
         Me.in_kredit_tot.Name = "in_kredit_tot"
         Me.in_kredit_tot.ReadOnly = True
         Me.in_kredit_tot.Size = New System.Drawing.Size(180, 20)
-        Me.in_kredit_tot.TabIndex = 18
+        Me.in_kredit_tot.TabIndex = 16
         Me.in_kredit_tot.TabStop = False
         Me.in_kredit_tot.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '

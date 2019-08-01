@@ -22,25 +22,12 @@ Partial Class fr_supplier_detail
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.in_status = New System.Windows.Forms.TextBox()
         Me.Label13 = New System.Windows.Forms.Label()
         Me.in_kode = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.txtRegAlias = New System.Windows.Forms.TextBox()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.txtUpdAlias = New System.Windows.Forms.TextBox()
-        Me.txtRegdate = New System.Windows.Forms.TextBox()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.Label18 = New System.Windows.Forms.Label()
-        Me.Label19 = New System.Windows.Forms.Label()
-        Me.txtUpdDate = New System.Windows.Forms.TextBox()
-        Me.pic_supplier = New System.Windows.Forms.PictureBox()
         Me.in_alamatsupplier = New System.Windows.Forms.TextBox()
         Me.in_emailsupplier = New System.Windows.Forms.TextBox()
-        Me.bt_batalsupplier = New System.Windows.Forms.Button()
-        Me.bt_gambar = New System.Windows.Forms.Button()
-        Me.bt_simpansupplier = New System.Windows.Forms.Button()
         Me.in_faxsupplier = New System.Windows.Forms.TextBox()
         Me.in_npwpsupplier = New System.Windows.Forms.TextBox()
         Me.in_telp1supplier = New System.Windows.Forms.TextBox()
@@ -67,49 +54,48 @@ Partial Class fr_supplier_detail
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.pnl_Menu = New System.Windows.Forms.Panel()
+        Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.txtRegdate = New System.Windows.Forms.TextBox()
+        Me.Label28 = New System.Windows.Forms.Label()
+        Me.Label30 = New System.Windows.Forms.Label()
+        Me.txtUpdDate = New System.Windows.Forms.TextBox()
+        Me.Label29 = New System.Windows.Forms.Label()
+        Me.txtUpdAlias = New System.Windows.Forms.TextBox()
+        Me.txtRegAlias = New System.Windows.Forms.TextBox()
+        Me.Label27 = New System.Windows.Forms.Label()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.GroupBox1.SuspendLayout()
-        CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.pnl_footer = New System.Windows.Forms.Panel()
+        Me.bt_batalcusto = New System.Windows.Forms.Button()
+        Me.bt_simpancusto = New System.Windows.Forms.Button()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
-        Me.pnl_Menu.SuspendLayout()
+        Me.pnl_content.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
+        Me.pnl_footer.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'GroupBox1
-        '
-        Me.GroupBox1.Controls.Add(Me.in_status)
-        Me.GroupBox1.Controls.Add(Me.Label13)
-        Me.GroupBox1.Controls.Add(Me.in_kode)
-        Me.GroupBox1.Controls.Add(Me.Label4)
-        Me.GroupBox1.Location = New System.Drawing.Point(420, 67)
-        Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(216, 64)
-        Me.GroupBox1.TabIndex = 171
-        Me.GroupBox1.TabStop = False
         '
         'in_status
         '
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(44, 35)
+        Me.in_status.Location = New System.Drawing.Point(456, 54)
         Me.in_status.MaxLength = 10
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
-        Me.in_status.Size = New System.Drawing.Size(160, 20)
+        Me.in_status.Size = New System.Drawing.Size(157, 20)
         Me.in_status.TabIndex = 15
         '
         'Label13
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(6, 38)
+        Me.Label13.Location = New System.Drawing.Point(418, 57)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(37, 13)
         Me.Label13.TabIndex = 170
@@ -120,123 +106,28 @@ Partial Class fr_supplier_detail
         Me.in_kode.BackColor = System.Drawing.Color.White
         Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_kode.Location = New System.Drawing.Point(44, 13)
+        Me.in_kode.Location = New System.Drawing.Point(456, 31)
         Me.in_kode.MaxLength = 10
         Me.in_kode.Name = "in_kode"
-        Me.in_kode.Size = New System.Drawing.Size(160, 20)
+        Me.in_kode.Size = New System.Drawing.Size(157, 20)
         Me.in_kode.TabIndex = 14
         '
         'Label4
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(6, 16)
+        Me.Label4.Location = New System.Drawing.Point(418, 34)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(32, 13)
         Me.Label4.TabIndex = 166
         Me.Label4.Text = "Kode"
-        '
-        'txtRegAlias
-        '
-        Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(59, 435)
-        Me.txtRegAlias.Name = "txtRegAlias"
-        Me.txtRegAlias.ReadOnly = True
-        Me.txtRegAlias.Size = New System.Drawing.Size(173, 20)
-        Me.txtRegAlias.TabIndex = 116
-        Me.txtRegAlias.TabStop = False
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(14, 438)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(39, 13)
-        Me.Label16.TabIndex = 119
-        Me.Label16.Text = "RegBy"
-        '
-        'txtUpdAlias
-        '
-        Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(292, 435)
-        Me.txtUpdAlias.Name = "txtUpdAlias"
-        Me.txtUpdAlias.ReadOnly = True
-        Me.txtUpdAlias.Size = New System.Drawing.Size(173, 20)
-        Me.txtUpdAlias.TabIndex = 122
-        Me.txtUpdAlias.TabStop = False
-        '
-        'txtRegdate
-        '
-        Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(59, 458)
-        Me.txtRegdate.Name = "txtRegdate"
-        Me.txtRegdate.ReadOnly = True
-        Me.txtRegdate.Size = New System.Drawing.Size(173, 20)
-        Me.txtRegdate.TabIndex = 115
-        Me.txtRegdate.TabStop = False
-        '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label17.ForeColor = System.Drawing.Color.Black
-        Me.Label17.Location = New System.Drawing.Point(247, 438)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(39, 13)
-        Me.Label17.TabIndex = 125
-        Me.Label17.Text = "UpdBy"
-        '
-        'Label18
-        '
-        Me.Label18.AutoSize = True
-        Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label18.ForeColor = System.Drawing.Color.Black
-        Me.Label18.Location = New System.Drawing.Point(14, 461)
-        Me.Label18.Name = "Label18"
-        Me.Label18.Size = New System.Drawing.Size(30, 13)
-        Me.Label18.TabIndex = 118
-        Me.Label18.Text = "Date"
-        '
-        'Label19
-        '
-        Me.Label19.AutoSize = True
-        Me.Label19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label19.ForeColor = System.Drawing.Color.Black
-        Me.Label19.Location = New System.Drawing.Point(247, 461)
-        Me.Label19.Name = "Label19"
-        Me.Label19.Size = New System.Drawing.Size(30, 13)
-        Me.Label19.TabIndex = 124
-        Me.Label19.Text = "Date"
-        '
-        'txtUpdDate
-        '
-        Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(292, 458)
-        Me.txtUpdDate.Name = "txtUpdDate"
-        Me.txtUpdDate.ReadOnly = True
-        Me.txtUpdDate.Size = New System.Drawing.Size(173, 20)
-        Me.txtUpdDate.TabIndex = 115
-        Me.txtUpdDate.TabStop = False
-        '
-        'pic_supplier
-        '
-        Me.pic_supplier.BackColor = System.Drawing.Color.LightGray
-        Me.pic_supplier.Location = New System.Drawing.Point(420, 137)
-        Me.pic_supplier.Name = "pic_supplier"
-        Me.pic_supplier.Size = New System.Drawing.Size(216, 129)
-        Me.pic_supplier.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.pic_supplier.TabIndex = 168
-        Me.pic_supplier.TabStop = False
-        Me.pic_supplier.Visible = False
         '
         'in_alamatsupplier
         '
         Me.in_alamatsupplier.BackColor = System.Drawing.Color.White
         Me.in_alamatsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_alamatsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_alamatsupplier.Location = New System.Drawing.Point(81, 101)
+        Me.in_alamatsupplier.Location = New System.Drawing.Point(82, 54)
         Me.in_alamatsupplier.MaxLength = 200
         Me.in_alamatsupplier.Multiline = True
         Me.in_alamatsupplier.Name = "in_alamatsupplier"
@@ -249,50 +140,18 @@ Partial Class fr_supplier_detail
         Me.in_emailsupplier.BackColor = System.Drawing.Color.White
         Me.in_emailsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_emailsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_emailsupplier.Location = New System.Drawing.Point(81, 250)
+        Me.in_emailsupplier.Location = New System.Drawing.Point(82, 203)
         Me.in_emailsupplier.MaxLength = 100
         Me.in_emailsupplier.Name = "in_emailsupplier"
         Me.in_emailsupplier.Size = New System.Drawing.Size(314, 20)
         Me.in_emailsupplier.TabIndex = 6
-        '
-        'bt_batalsupplier
-        '
-        Me.bt_batalsupplier.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalsupplier.Location = New System.Drawing.Point(538, 448)
-        Me.bt_batalsupplier.Name = "bt_batalsupplier"
-        Me.bt_batalsupplier.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalsupplier.TabIndex = 13
-        Me.bt_batalsupplier.Text = "Batal"
-        Me.bt_batalsupplier.UseVisualStyleBackColor = True
-        '
-        'bt_gambar
-        '
-        Me.bt_gambar.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_gambar.Location = New System.Drawing.Point(526, 270)
-        Me.bt_gambar.Name = "bt_gambar"
-        Me.bt_gambar.Size = New System.Drawing.Size(110, 24)
-        Me.bt_gambar.TabIndex = 16
-        Me.bt_gambar.Text = "Ubah Gambar"
-        Me.bt_gambar.UseVisualStyleBackColor = True
-        Me.bt_gambar.Visible = False
-        '
-        'bt_simpansupplier
-        '
-        Me.bt_simpansupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpansupplier.Location = New System.Drawing.Point(538, 414)
-        Me.bt_simpansupplier.Name = "bt_simpansupplier"
-        Me.bt_simpansupplier.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpansupplier.TabIndex = 12
-        Me.bt_simpansupplier.Text = "Simpan"
-        Me.bt_simpansupplier.UseVisualStyleBackColor = True
         '
         'in_faxsupplier
         '
         Me.in_faxsupplier.BackColor = System.Drawing.Color.White
         Me.in_faxsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faxsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_faxsupplier.Location = New System.Drawing.Point(81, 204)
+        Me.in_faxsupplier.Location = New System.Drawing.Point(82, 157)
         Me.in_faxsupplier.MaxLength = 20
         Me.in_faxsupplier.Name = "in_faxsupplier"
         Me.in_faxsupplier.Size = New System.Drawing.Size(227, 20)
@@ -303,7 +162,7 @@ Partial Class fr_supplier_detail
         Me.in_npwpsupplier.BackColor = System.Drawing.Color.White
         Me.in_npwpsupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_npwpsupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_npwpsupplier.Location = New System.Drawing.Point(81, 297)
+        Me.in_npwpsupplier.Location = New System.Drawing.Point(82, 250)
         Me.in_npwpsupplier.MaxLength = 50
         Me.in_npwpsupplier.Name = "in_npwpsupplier"
         Me.in_npwpsupplier.Size = New System.Drawing.Size(314, 20)
@@ -314,7 +173,7 @@ Partial Class fr_supplier_detail
         Me.in_telp1supplier.BackColor = System.Drawing.Color.White
         Me.in_telp1supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_telp1supplier.ForeColor = System.Drawing.Color.Black
-        Me.in_telp1supplier.Location = New System.Drawing.Point(81, 158)
+        Me.in_telp1supplier.Location = New System.Drawing.Point(82, 111)
         Me.in_telp1supplier.MaxLength = 20
         Me.in_telp1supplier.Name = "in_telp1supplier"
         Me.in_telp1supplier.Size = New System.Drawing.Size(227, 20)
@@ -325,7 +184,7 @@ Partial Class fr_supplier_detail
         Me.in_namasupplier.BackColor = System.Drawing.Color.White
         Me.in_namasupplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_namasupplier.ForeColor = System.Drawing.Color.Black
-        Me.in_namasupplier.Location = New System.Drawing.Point(81, 78)
+        Me.in_namasupplier.Location = New System.Drawing.Point(82, 31)
         Me.in_namasupplier.MaxLength = 100
         Me.in_namasupplier.Name = "in_namasupplier"
         Me.in_namasupplier.Size = New System.Drawing.Size(314, 20)
@@ -335,7 +194,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(8, 104)
+        Me.Label5.Location = New System.Drawing.Point(9, 57)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(39, 13)
         Me.Label5.TabIndex = 160
@@ -346,7 +205,7 @@ Partial Class fr_supplier_detail
         Me.in_rek_giro.BackColor = System.Drawing.Color.White
         Me.in_rek_giro.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_rek_giro.ForeColor = System.Drawing.Color.Black
-        Me.in_rek_giro.Location = New System.Drawing.Point(105, 374)
+        Me.in_rek_giro.Location = New System.Drawing.Point(106, 306)
         Me.in_rek_giro.MaxLength = 20
         Me.in_rek_giro.Name = "in_rek_giro"
         Me.in_rek_giro.Size = New System.Drawing.Size(290, 20)
@@ -357,7 +216,7 @@ Partial Class fr_supplier_detail
         Me.in_rek_bank.BackColor = System.Drawing.Color.White
         Me.in_rek_bank.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_rek_bank.ForeColor = System.Drawing.Color.Black
-        Me.in_rek_bank.Location = New System.Drawing.Point(105, 348)
+        Me.in_rek_bank.Location = New System.Drawing.Point(106, 283)
         Me.in_rek_bank.MaxLength = 20
         Me.in_rek_bank.Name = "in_rek_bank"
         Me.in_rek_bank.Size = New System.Drawing.Size(290, 20)
@@ -367,7 +226,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label8.AutoSize = True
         Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.Location = New System.Drawing.Point(8, 377)
+        Me.Label8.Location = New System.Drawing.Point(9, 309)
         Me.Label8.Name = "Label8"
         Me.Label8.Size = New System.Drawing.Size(68, 13)
         Me.Label8.TabIndex = 163
@@ -377,7 +236,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label11.Location = New System.Drawing.Point(8, 253)
+        Me.Label11.Location = New System.Drawing.Point(9, 206)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(32, 13)
         Me.Label11.TabIndex = 150
@@ -387,7 +246,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(8, 351)
+        Me.Label7.Location = New System.Drawing.Point(9, 286)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(88, 13)
         Me.Label7.TabIndex = 167
@@ -397,7 +256,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(8, 207)
+        Me.Label10.Location = New System.Drawing.Point(9, 160)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(27, 13)
         Me.Label10.TabIndex = 149
@@ -407,7 +266,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(8, 300)
+        Me.Label1.Location = New System.Drawing.Point(9, 253)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(40, 13)
         Me.Label1.TabIndex = 155
@@ -417,7 +276,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label9.AutoSize = True
         Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label9.Location = New System.Drawing.Point(8, 163)
+        Me.Label9.Location = New System.Drawing.Point(9, 116)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(40, 13)
         Me.Label9.TabIndex = 153
@@ -427,7 +286,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(8, 81)
+        Me.Label3.Location = New System.Drawing.Point(9, 34)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(35, 13)
         Me.Label3.TabIndex = 158
@@ -437,7 +296,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(8, 184)
+        Me.Label6.Location = New System.Drawing.Point(9, 137)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(40, 13)
         Me.Label6.TabIndex = 153
@@ -448,7 +307,7 @@ Partial Class fr_supplier_detail
         Me.in_telp2supplier.BackColor = System.Drawing.Color.White
         Me.in_telp2supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_telp2supplier.ForeColor = System.Drawing.Color.Black
-        Me.in_telp2supplier.Location = New System.Drawing.Point(81, 181)
+        Me.in_telp2supplier.Location = New System.Drawing.Point(82, 134)
         Me.in_telp2supplier.MaxLength = 20
         Me.in_telp2supplier.Name = "in_telp2supplier"
         Me.in_telp2supplier.Size = New System.Drawing.Size(227, 20)
@@ -458,7 +317,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(409, 304)
+        Me.Label2.Location = New System.Drawing.Point(9, 346)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(62, 13)
         Me.Label2.TabIndex = 160
@@ -469,19 +328,19 @@ Partial Class fr_supplier_detail
         Me.in_ket.BackColor = System.Drawing.Color.White
         Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket.ForeColor = System.Drawing.Color.Black
-        Me.in_ket.Location = New System.Drawing.Point(412, 320)
+        Me.in_ket.Location = New System.Drawing.Point(106, 343)
         Me.in_ket.MaxLength = 500
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.in_ket.Size = New System.Drawing.Size(224, 74)
+        Me.in_ket.Size = New System.Drawing.Size(290, 74)
         Me.in_ket.TabIndex = 11
         '
         'Label12
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.Location = New System.Drawing.Point(8, 277)
+        Me.Label12.Location = New System.Drawing.Point(9, 230)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(31, 13)
         Me.Label12.TabIndex = 170
@@ -491,7 +350,7 @@ Partial Class fr_supplier_detail
         '
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(8, 232)
+        Me.Label15.Location = New System.Drawing.Point(9, 185)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(24, 13)
         Me.Label15.TabIndex = 149
@@ -502,7 +361,7 @@ Partial Class fr_supplier_detail
         Me.in_cp.BackColor = System.Drawing.Color.White
         Me.in_cp.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_cp.ForeColor = System.Drawing.Color.Black
-        Me.in_cp.Location = New System.Drawing.Point(81, 227)
+        Me.in_cp.Location = New System.Drawing.Point(82, 180)
         Me.in_cp.MaxLength = 50
         Me.in_cp.Name = "in_cp"
         Me.in_cp.Size = New System.Drawing.Size(314, 20)
@@ -511,7 +370,7 @@ Partial Class fr_supplier_detail
         'in_term
         '
         Me.in_term.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_term.Location = New System.Drawing.Point(81, 273)
+        Me.in_term.Location = New System.Drawing.Point(82, 226)
         Me.in_term.Maximum = New Decimal(New Integer() {99, 0, 0, 0})
         Me.in_term.Name = "in_term"
         Me.in_term.Size = New System.Drawing.Size(87, 21)
@@ -574,21 +433,154 @@ Partial Class fr_supplier_detail
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Supplier"
         '
-        'pnl_Menu
+        'pnl_content
         '
-        Me.pnl_Menu.Controls.Add(Me.MenuStrip1)
-        Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
-        Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(646, 30)
-        Me.pnl_Menu.TabIndex = 279
+        Me.pnl_content.AutoScroll = True
+        Me.pnl_content.Controls.Add(Me.Label14)
+        Me.pnl_content.Controls.Add(Me.txtRegdate)
+        Me.pnl_content.Controls.Add(Me.Label28)
+        Me.pnl_content.Controls.Add(Me.Label30)
+        Me.pnl_content.Controls.Add(Me.txtUpdDate)
+        Me.pnl_content.Controls.Add(Me.Label29)
+        Me.pnl_content.Controls.Add(Me.txtUpdAlias)
+        Me.pnl_content.Controls.Add(Me.txtRegAlias)
+        Me.pnl_content.Controls.Add(Me.Label27)
+        Me.pnl_content.Controls.Add(Me.in_status)
+        Me.pnl_content.Controls.Add(Me.MenuStrip1)
+        Me.pnl_content.Controls.Add(Me.Label13)
+        Me.pnl_content.Controls.Add(Me.Label3)
+        Me.pnl_content.Controls.Add(Me.in_kode)
+        Me.pnl_content.Controls.Add(Me.Label4)
+        Me.pnl_content.Controls.Add(Me.Label9)
+        Me.pnl_content.Controls.Add(Me.Label6)
+        Me.pnl_content.Controls.Add(Me.Label1)
+        Me.pnl_content.Controls.Add(Me.in_term)
+        Me.pnl_content.Controls.Add(Me.Label10)
+        Me.pnl_content.Controls.Add(Me.Label15)
+        Me.pnl_content.Controls.Add(Me.Label7)
+        Me.pnl_content.Controls.Add(Me.Label11)
+        Me.pnl_content.Controls.Add(Me.Label8)
+        Me.pnl_content.Controls.Add(Me.in_rek_bank)
+        Me.pnl_content.Controls.Add(Me.Label12)
+        Me.pnl_content.Controls.Add(Me.in_rek_giro)
+        Me.pnl_content.Controls.Add(Me.Label5)
+        Me.pnl_content.Controls.Add(Me.in_namasupplier)
+        Me.pnl_content.Controls.Add(Me.Label2)
+        Me.pnl_content.Controls.Add(Me.in_ket)
+        Me.pnl_content.Controls.Add(Me.in_telp1supplier)
+        Me.pnl_content.Controls.Add(Me.in_alamatsupplier)
+        Me.pnl_content.Controls.Add(Me.in_telp2supplier)
+        Me.pnl_content.Controls.Add(Me.in_emailsupplier)
+        Me.pnl_content.Controls.Add(Me.in_npwpsupplier)
+        Me.pnl_content.Controls.Add(Me.in_faxsupplier)
+        Me.pnl_content.Controls.Add(Me.in_cp)
+        Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnl_content.Location = New System.Drawing.Point(0, 42)
+        Me.pnl_content.Name = "pnl_content"
+        Me.pnl_content.Size = New System.Drawing.Size(646, 429)
+        Me.pnl_content.TabIndex = 279
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.ForeColor = System.Drawing.Color.Black
+        Me.Label14.Location = New System.Drawing.Point(535, 473)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(10, 13)
+        Me.Label14.TabIndex = 436
+        Me.Label14.Text = " "
+        '
+        'txtRegdate
+        '
+        Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRegdate.Location = New System.Drawing.Point(76, 430)
+        Me.txtRegdate.Name = "txtRegdate"
+        Me.txtRegdate.ReadOnly = True
+        Me.txtRegdate.Size = New System.Drawing.Size(161, 20)
+        Me.txtRegdate.TabIndex = 428
+        Me.txtRegdate.TabStop = False
+        '
+        'Label28
+        '
+        Me.Label28.AutoSize = True
+        Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label28.ForeColor = System.Drawing.Color.Black
+        Me.Label28.Location = New System.Drawing.Point(9, 458)
+        Me.Label28.Name = "Label28"
+        Me.Label28.Size = New System.Drawing.Size(62, 13)
+        Me.Label28.TabIndex = 435
+        Me.Label28.Text = "LastUpdate"
+        '
+        'Label30
+        '
+        Me.Label30.AutoSize = True
+        Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label30.ForeColor = System.Drawing.Color.Black
+        Me.Label30.Location = New System.Drawing.Point(243, 458)
+        Me.Label30.Name = "Label30"
+        Me.Label30.Size = New System.Drawing.Size(19, 13)
+        Me.Label30.TabIndex = 434
+        Me.Label30.Text = "By"
+        '
+        'txtUpdDate
+        '
+        Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUpdDate.Location = New System.Drawing.Point(76, 454)
+        Me.txtUpdDate.Name = "txtUpdDate"
+        Me.txtUpdDate.ReadOnly = True
+        Me.txtUpdDate.Size = New System.Drawing.Size(161, 20)
+        Me.txtUpdDate.TabIndex = 429
+        Me.txtUpdDate.TabStop = False
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.ForeColor = System.Drawing.Color.Black
+        Me.Label29.Location = New System.Drawing.Point(9, 433)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(43, 13)
+        Me.Label29.TabIndex = 431
+        Me.Label29.Text = "Inputed"
+        '
+        'txtUpdAlias
+        '
+        Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtUpdAlias.Location = New System.Drawing.Point(266, 454)
+        Me.txtUpdAlias.Name = "txtUpdAlias"
+        Me.txtUpdAlias.ReadOnly = True
+        Me.txtUpdAlias.Size = New System.Drawing.Size(112, 20)
+        Me.txtUpdAlias.TabIndex = 433
+        Me.txtUpdAlias.TabStop = False
+        '
+        'txtRegAlias
+        '
+        Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.txtRegAlias.Location = New System.Drawing.Point(266, 430)
+        Me.txtRegAlias.Name = "txtRegAlias"
+        Me.txtRegAlias.ReadOnly = True
+        Me.txtRegAlias.Size = New System.Drawing.Size(112, 20)
+        Me.txtRegAlias.TabIndex = 430
+        Me.txtRegAlias.TabStop = False
+        '
+        'Label27
+        '
+        Me.Label27.AutoSize = True
+        Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label27.ForeColor = System.Drawing.Color.Black
+        Me.Label27.Location = New System.Drawing.Point(243, 434)
+        Me.Label27.Name = "Label27"
+        Me.Label27.Size = New System.Drawing.Size(19, 13)
+        Me.Label27.TabIndex = 432
+        Me.Label27.Text = "By"
         '
         'MenuStrip1
         '
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(646, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(629, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -619,92 +611,80 @@ Partial Class fr_supplier_detail
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 487)
+        Me.Panel2.Location = New System.Drawing.Point(0, 518)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(646, 10)
         Me.Panel2.TabIndex = 280
+        '
+        'pnl_footer
+        '
+        Me.pnl_footer.BackColor = System.Drawing.Color.Gainsboro
+        Me.pnl_footer.Controls.Add(Me.bt_batalcusto)
+        Me.pnl_footer.Controls.Add(Me.bt_simpancusto)
+        Me.pnl_footer.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.pnl_footer.Location = New System.Drawing.Point(0, 471)
+        Me.pnl_footer.Name = "pnl_footer"
+        Me.pnl_footer.Size = New System.Drawing.Size(646, 47)
+        Me.pnl_footer.TabIndex = 281
+        '
+        'bt_batalcusto
+        '
+        Me.bt_batalcusto.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_batalcusto.BackColor = System.Drawing.Color.Tomato
+        Me.bt_batalcusto.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_batalcusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalcusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalcusto.ForeColor = System.Drawing.Color.White
+        Me.bt_batalcusto.Location = New System.Drawing.Point(538, 11)
+        Me.bt_batalcusto.Name = "bt_batalcusto"
+        Me.bt_batalcusto.Size = New System.Drawing.Size(96, 30)
+        Me.bt_batalcusto.TabIndex = 27
+        Me.bt_batalcusto.Text = "Batal"
+        Me.bt_batalcusto.UseVisualStyleBackColor = False
+        '
+        'bt_simpancusto
+        '
+        Me.bt_simpancusto.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_simpancusto.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpancusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpancusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpancusto.ForeColor = System.Drawing.Color.White
+        Me.bt_simpancusto.Location = New System.Drawing.Point(378, 11)
+        Me.bt_simpancusto.Name = "bt_simpancusto"
+        Me.bt_simpancusto.Size = New System.Drawing.Size(154, 30)
+        Me.bt_simpancusto.TabIndex = 26
+        Me.bt_simpancusto.Text = "Simpan"
+        Me.bt_simpancusto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.bt_simpancusto.UseVisualStyleBackColor = False
         '
         'fr_supplier_detail
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalsupplier
-        Me.ClientSize = New System.Drawing.Size(646, 497)
+        Me.ClientSize = New System.Drawing.Size(646, 528)
+        Me.Controls.Add(Me.pnl_content)
+        Me.Controls.Add(Me.pnl_footer)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.pnl_Menu)
-        Me.Controls.Add(Me.txtRegAlias)
         Me.Controls.Add(Me.Panel1)
-        Me.Controls.Add(Me.Label16)
-        Me.Controls.Add(Me.in_term)
-        Me.Controls.Add(Me.txtUpdAlias)
-        Me.Controls.Add(Me.GroupBox1)
-        Me.Controls.Add(Me.txtRegdate)
-        Me.Controls.Add(Me.Label17)
-        Me.Controls.Add(Me.Label18)
-        Me.Controls.Add(Me.Label12)
-        Me.Controls.Add(Me.Label19)
-        Me.Controls.Add(Me.txtUpdDate)
-        Me.Controls.Add(Me.pic_supplier)
-        Me.Controls.Add(Me.in_ket)
-        Me.Controls.Add(Me.in_alamatsupplier)
-        Me.Controls.Add(Me.in_emailsupplier)
-        Me.Controls.Add(Me.bt_batalsupplier)
-        Me.Controls.Add(Me.bt_gambar)
-        Me.Controls.Add(Me.bt_simpansupplier)
-        Me.Controls.Add(Me.in_cp)
-        Me.Controls.Add(Me.in_faxsupplier)
-        Me.Controls.Add(Me.in_npwpsupplier)
-        Me.Controls.Add(Me.in_telp2supplier)
-        Me.Controls.Add(Me.in_telp1supplier)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.in_namasupplier)
-        Me.Controls.Add(Me.Label5)
-        Me.Controls.Add(Me.in_rek_giro)
-        Me.Controls.Add(Me.in_rek_bank)
-        Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.Label11)
-        Me.Controls.Add(Me.Label7)
-        Me.Controls.Add(Me.Label15)
-        Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Label6)
-        Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.Label3)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "fr_supplier_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Detail Supplier : "
-        Me.GroupBox1.ResumeLayout(False)
-        Me.GroupBox1.PerformLayout()
-        CType(Me.pic_supplier, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.in_term, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.pnl_Menu.ResumeLayout(False)
-        Me.pnl_Menu.PerformLayout()
+        Me.pnl_content.ResumeLayout(False)
+        Me.pnl_content.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
+        Me.pnl_footer.ResumeLayout(False)
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
-    Friend WithEvents GroupBox1 As System.Windows.Forms.GroupBox
-    Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
-    Friend WithEvents Label16 As System.Windows.Forms.Label
-    Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
-    Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
-    Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents Label18 As System.Windows.Forms.Label
-    Friend WithEvents Label19 As System.Windows.Forms.Label
-    Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
     Friend WithEvents Label13 As System.Windows.Forms.Label
-    Friend WithEvents pic_supplier As System.Windows.Forms.PictureBox
     Friend WithEvents in_alamatsupplier As System.Windows.Forms.TextBox
     Friend WithEvents in_emailsupplier As System.Windows.Forms.TextBox
-    Friend WithEvents bt_batalsupplier As System.Windows.Forms.Button
-    Friend WithEvents bt_gambar As System.Windows.Forms.Button
-    Friend WithEvents bt_simpansupplier As System.Windows.Forms.Button
     Friend WithEvents in_faxsupplier As System.Windows.Forms.TextBox
     Friend WithEvents in_npwpsupplier As System.Windows.Forms.TextBox
     Friend WithEvents in_telp1supplier As System.Windows.Forms.TextBox
@@ -733,11 +713,23 @@ Partial Class fr_supplier_detail
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
-    Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
+    Friend WithEvents pnl_content As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
     Friend WithEvents in_status As System.Windows.Forms.TextBox
+    Friend WithEvents pnl_footer As System.Windows.Forms.Panel
+    Friend WithEvents bt_batalcusto As System.Windows.Forms.Button
+    Friend WithEvents bt_simpancusto As System.Windows.Forms.Button
+    Friend WithEvents Label14 As System.Windows.Forms.Label
+    Friend WithEvents txtRegdate As System.Windows.Forms.TextBox
+    Friend WithEvents Label28 As System.Windows.Forms.Label
+    Friend WithEvents Label30 As System.Windows.Forms.Label
+    Friend WithEvents txtUpdDate As System.Windows.Forms.TextBox
+    Friend WithEvents Label29 As System.Windows.Forms.Label
+    Friend WithEvents txtUpdAlias As System.Windows.Forms.TextBox
+    Friend WithEvents txtRegAlias As System.Windows.Forms.TextBox
+    Friend WithEvents Label27 As System.Windows.Forms.Label
 End Class

@@ -99,7 +99,7 @@
 
     Private Sub searchData(param As String)
         clearPreview()
-        populateDGVUserCon("mutasigudang", param, frmmutasigudang.dgv_list)
+        'populateDGVUserCon("mutasigudang", param, frmmutasigudang.dgv_list)
     End Sub
 
     Private Sub listToDetail()

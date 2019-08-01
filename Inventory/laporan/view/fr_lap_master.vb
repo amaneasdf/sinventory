@@ -34,20 +34,22 @@ Public Class fr_lap_master
     End Sub
 
     Private Sub filldatatabel(query As String, dt As DataTable)
-        op_con()
-        Try
-            Dim _cmd As New MySqlCommand(query, getConn)
-            Dim data_adpt As New MySqlDataAdapter(_cmd)
-            consoleWriteLine(query)
-            data_adpt.Fill(dt)
-            data_adpt.Dispose()
-        Catch ex As Exception
-            consoleWriteLine(ex.Message)
-            logError(ex)
-            'MessageBox.Show(String.Format("Error: {0}", ex.Message))
-        End Try
-
-        'DataGridView1.DataSource = dt
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    consoleWriteLine(query)
+                    data_adpt.Fill(dt)
+                    data_adpt.Dispose()
+                Catch ex As Exception
+                    MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                    logError(ex, True) : Me.Close()
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
+            End If
+        End Using
     End Sub
 
     Private Sub repViewerSelector(lap_type As String)
@@ -67,20 +69,12 @@ Public Class fr_lap_master
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.master_custo_qr.rdlc"
 
-                        If Not loadRepTable(data_master.dt_custo_qr) Then
-                            Exit Sub
-                        End If
+                        If Not loadRepTable(data_master.dt_custo_qr) Then Exit Sub
 
-
-                    Case Else
-                        Exit Sub
+                    Case Else : Exit Sub
                 End Select
                 .SetParameters(New ReportParameter() {parUserId, parPeriode})
             End With
-            .RefreshReport()
-            .SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
-            .ZoomMode = 2
-            .ZoomPercent = 100
         End With
     End Sub
 
@@ -106,13 +100,30 @@ Public Class fr_lap_master
         Return True
     End Function
 
-    Public Sub do_load()
-        repViewerSelector(inlap_type)
+    Private Sub LoadReport()
+        With Me.rv_nota
+            .RefreshReport()
 
-        Me.Cursor = Cursors.Default
+            If inlap_type = "m_custo_qr" Then
+                Dim ps As Drawing.Printing.PageSettings = New System.Drawing.Printing.PageSettings()
+
+                ps.Landscape = False
+                ps.Margins = New System.Drawing.Printing.Margins(0, 0, 0.1, 0)
+                ps.PaperSize = New System.Drawing.Printing.PaperSize("Custom", 295, 138)
+                rv_nota.SetPageSettings(ps)
+            End If
+
+            .SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
+            .ZoomMode = 2
+            .ZoomPercent = 100
+        End With
     End Sub
 
-    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Cursor = Cursors.AppStarting
+    Public Sub do_load()
+        Me.Cursor = Cursors.WaitCursor
+        repViewerSelector(inlap_type)
+        LoadReport()
+        Me.Cursor = Cursors.Default
+        Me.ShowDialog(main)
     End Sub
 End Class

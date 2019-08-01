@@ -46,7 +46,6 @@ Module functional
     Public Sub startdrag(fr As Form, e As MouseEventArgs)
         If e.Button = Windows.Forms.MouseButtons.Left Then
             drag = True
-            Console.WriteLine(fr.Left & "*" & fr.Top)
             mousex = Windows.Forms.Cursor.Position.X - fr.Left
             mousey = Windows.Forms.Cursor.Position.Y - fr.Top
             fr.Cursor = Cursors.SizeAll
@@ -66,7 +65,6 @@ Module functional
     End Sub
 
     Public Sub numericGotFocus(sender As NumericUpDown)
-        Console.WriteLine(sender.Value)
         If sender.Value = 0 Then
             sender.ResetText()
         Else
@@ -85,6 +83,18 @@ Module functional
         End If
     End Sub
 
+    Public Sub PopUpSearchKeyPress(e As KeyPressEventArgs, x As TextBox)
+        If Char.IsLetterOrDigit(e.KeyChar) Then
+            x.Text += e.KeyChar
+        ElseIf e.KeyChar = ControlChars.Back Then
+            x.Text = x.Text.Remove(x.TextLength - 1, 1)
+        Else
+            Exit Sub
+        End If
+        e.Handled = True
+        x.Focus()
+        x.Select(x.TextLength, x.TextLength)
+    End Sub
 
     '----string manipulation----------
     'split string into two string and the nth string
@@ -125,20 +135,8 @@ Module functional
 
     Public Function removeCommaThousand(x As String) As Decimal
         If x = Nothing Then
-            Return 0
-            Exit Function
+            Return 0 : Exit Function
         End If
-
-        'Dim s As String = 0
-        's = Replace(Replace(x, ",00", ""), ".", "")
-        'Dim y = Split(s, ",")
-        'Dim z As Decimal = 0
-        'If y.Count = 2 Then
-        '    z = CDec(y(0)) + (CDec(y(1)) / 100)
-        'Else
-        '    z = CDec(y(0))
-        'End If
-        'Return z
 
         Dim retval As Decimal = Decimal.Parse(x, System.Globalization.CultureInfo.CreateSpecificCulture("id-ID"))
 
@@ -341,7 +339,7 @@ Module functional
         selectperiode = getPeriode(, selecteddate)
 
         If lastperiod <> selectperiode.id Then
-            main.strip_periode.Text = "Periode Data : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
+            main.strip_periode.Text = "Periode : " & selectperiode.tglawal.ToShortDateString & " s.d. " & selectperiode.tglakhir.ToShortDateString
             main.strip_status.Text = "Status Input : " & IIf(selectperiode.closed = True, "Closed", "Open")
             Dim tbpg As TabPage() = {
                 pgperkiraan,
@@ -362,7 +360,6 @@ Module functional
                 pgpiutangbgcair,
                 pgpiutangbgtolak,
                 pgkas,
-                pgjurnalmemorial,
                 pgjurnalumum,
                 pgtutupbuku
                 }
@@ -386,16 +383,74 @@ Module functional
     End Sub
 
     Public Sub doRefreshTab(tab As TabPage())
-        For Each y As TabPage In tab
-            If main.tabcontrol.Contains(y) = True Then
-                refreshTabPage(y.Name.ToString)
-            End If
-        Next
+        DoRefreshTab_v2(tab)
+        'For Each y As TabPage In tab
+        '    If main.tabcontrol.Contains(y) = True Then
+        '        refreshTabPage(y.Name.ToString)
+        '    End If
+        'Next
     End Sub
+
+    Public Function DoRefreshTab_v2(tab As TabPage()) As KeyValuePair(Of Boolean, String)
+        Dim retBool As Boolean = False
+        Dim retMsg As String = ""
+
+        For Each x As TabPage In tab
+            Dim userCon As Object
+            retBool = False
+
+            If Not main.tabcontrol.Contains(x) Then
+                retBool = True : retMsg = "Success" : GoTo NextTab
+            End If
+
+            Select Case x.Name
+                Case "pgsupplier" : userCon = frmsupplier
+                Case "pgbarang" : userCon = frmbarang
+                Case "pggudang" : userCon = frmgudang
+                Case "pgsales" : userCon = frmsales
+                Case "pgcusto" : userCon = frmcusto
+                Case "pgperkiraan" : userCon = frmperkiraan
+                Case "pgpembelian" : userCon = frmpembelian
+                Case "pgreturbeli" : userCon = frmreturbeli
+                Case "pgpesanjual" : userCon = frmpesanjual
+                Case "pgpenjualan" : userCon = frmpenjualan
+                Case "pgreturjual" : userCon = frmreturjual
+                Case "pgdraftrekap" : userCon = frmrekap
+                Case "pgdrafttagihan" : userCon = frmtagihan
+                Case "pgstok" : userCon = frmstok
+                Case "pgmutasistok" : userCon = frmmutasistok
+                Case "pgmutasigudang" : userCon = frmmutasigudang
+                Case "pgstockop" : userCon = frmstockop
+                Case "pghutangawal" : userCon = frmhutangawal
+                Case "pghutangbayar" : userCon = frmhutangbayar
+                Case "pghutangbgo" : userCon = frmhutangbgo
+                Case "pgpiutangawal" : userCon = frmpiutangawal
+                Case "pgpiutangbayar" : userCon = frmpiutangbayar
+                Case "pgpiutangbgcair" : userCon = frmpiutangbgcair
+                Case "pgkas" : userCon = frmkas
+                Case "pgjurnalumum" : userCon = frmjurnalumum
+                Case Else : retMsg = "TabPage tidak sesuai." : GoTo NextTab
+            End Select
+
+            Try
+                userCon.PerformRefresh()
+                retBool = True : retMsg = "Success"
+            Catch ex As Exception
+                logError(ex, True)
+                retBool = False
+                retMsg = "Terjadi kesalahan saat melakukan refresh data." & Environment.NewLine & ex.Message
+            End Try
+NextTab:
+            consoleWriteLine(retBool.ToString & ":" & retMsg)
+        Next
+
+        Return New KeyValuePair(Of Boolean, String)(retBool, retMsg)
+    End Function
 
     'EXPORT EXCEL
     Public Function ExportExcel(ColHeader As List(Of String), DataTbl As List(Of DataTable), DataTitle As List(Of String),
-                                FileDir As String, FileExt As String, ByRef FileDirReturn As String) As Boolean
+                                FileDir As String, FileExt As String, ByRef FileDirReturn As String,
+                                Optional SubTitlePerSheet As List(Of String()) = Nothing) As Boolean
         If String.IsNullOrWhiteSpace(FileDir) Then
             Throw New NullReferenceException
         End If
@@ -411,9 +466,10 @@ Module functional
             _filename = "ExportData" & Today.ToString("yyyyMMdd")
         End If
 
+        Dim sssss As Integer = 1
         Using xls As New ExcelPackage
             For Each tbl As DataTable In DataTbl
-                Dim _sheet As ExcelWorksheet = xls.Workbook.Worksheets.Add(tbl.TableName)
+                Dim _sheet As ExcelWorksheet = xls.Workbook.Worksheets.Add("Sheet" & sssss)
                 Dim _rowidx As Integer = 1
                 Dim _lastcol As Integer = tbl.Columns.Count
                 Dim _firstrow As Integer = 1
@@ -423,6 +479,16 @@ Module functional
                     _sheet.Cells(_rowidx, 1).Value = _title
                     _rowidx += 1
                 Next
+                If Not IsNothing(SubTitlePerSheet) Then
+                    If SubTitlePerSheet.Count >= sssss Then
+                        Dim i As Integer = 1
+                        For Each Str As String In SubTitlePerSheet.Item(sssss - 1)
+                            _sheet.Cells(_rowidx, i).Value = Str
+                            i += 1
+                        Next
+                        _rowidx += 1
+                    End If
+                End If
 
                 'COMPANY NAME AND ADDRESS
                 Dim _rowcomp As Integer = 2
@@ -458,25 +524,34 @@ Module functional
                             _sheet.Cells(_rowidx, i + 1).Value = ""
                         Else
                             If _row.ItemArray(i).GetType() = GetType(Date) Then
-                                Dim _val = CDate(_row.ItemArray(i))
-                                _sheet.Cells(_rowidx, i + 1).Value = _val.ToString("yyyy-MM-dd")
-                            Else
-                                _sheet.Cells(_rowidx, i + 1).Value = _row.ItemArray(i)
+                                _sheet.Cells(_rowidx, i + 1).Style.Numberformat.Format = "dd/MM/yyyy"
+                            ElseIf {GetType(Decimal), GetType(Double)}.Contains(_row.ItemArray(i).GetType()) Then
+                                _sheet.Cells(_rowidx, i + 1).Style.Numberformat.Format = "#,##0.00"
+                            ElseIf _row.ItemArray(i).GetType() = GetType(Integer) Then
+                                _sheet.Cells(_rowidx, i + 1).Style.Numberformat.Format = "#,##0"
                             End If
+                            _sheet.Cells(_rowidx, i + 1).Value = _row.ItemArray(i)
                         End If
                     Next
                     _rowidx += 1
                 Next
-                With _sheet.Cells(_firstrow, 1, _rowidx - 1, _lastcol).Style.Border
-                    .Top.Style = Style.ExcelBorderStyle.Thin
-                    .Left.Style = Style.ExcelBorderStyle.Thin
-                    .Right.Style = Style.ExcelBorderStyle.Thin
-                    .Bottom.Style = Style.ExcelBorderStyle.Thin
-                End With
-                _sheet.Cells(_firstrow - IIf(ColHeader.Count <> 0, 2, 0), 1, _rowidx - 1, _lastcol).AutoFitColumns(5)
-               
+                If tbl.Rows.Count > 0 Then
+                    With _sheet.Cells(_firstrow, 1, _rowidx - 1, _lastcol).Style.Border
+                        .Top.Style = Style.ExcelBorderStyle.Thin
+                        .Left.Style = Style.ExcelBorderStyle.Thin
+                        .Right.Style = Style.ExcelBorderStyle.Thin
+                        .Bottom.Style = Style.ExcelBorderStyle.Thin
+                    End With
+                    _sheet.Cells(_firstrow - IIf(ColHeader.Count <> 0, 2, 0), 1, _rowidx - 1, _lastcol).AutoFitColumns(5)
+                End If
+
+                sssss += 1
             Next
-            xls.SaveAs(New FileInfo(_dir & "\" & _filename))
+            If sssss - 1 > 0 Then
+                xls.SaveAs(New FileInfo(_dir & "\" & _filename))
+            Else
+                Return False
+            End If
         End Using
 
         If File.Exists(_dir & "\" & _filename) Then
@@ -593,7 +668,7 @@ Module functional
                 Next
                 Dim startrow As Integer = IIf(hasheader, 2, 1)
                 For rowNum = startrow To ws.Dimension.End.Row
-                    Dim wsRow = ws.Cells(rowNum, 1, rowNum, ws.Dimension.End.Column)
+                    Dim wsRow = ws.Cells(rowNum, 1, rowNum, dt.Columns.Count)
                     Dim row As DataRow = dt.Rows.Add()
                     For Each cell In wsRow
                         row(cell.Start.Column - 1) = cell.Text
@@ -613,12 +688,12 @@ Module functional
         Dim _appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & Application.ProductName
         Dim fileloc As String = ""
 
-        If File.Exists(Application.StartupPath & "\config") = True Then
+        If File.Exists(_appSysDir & "\bin\config") Then
+            fileloc = _appSysDir & "\bin\config"
+        ElseIf File.Exists(Application.StartupPath & "\config") = True Then
             fileloc = Application.StartupPath & "\config"
         ElseIf File.Exists(Application.StartupPath & "\bin\config") = True Then
             fileloc = Application.StartupPath & "\bin\config"
-        ElseIf File.Exists(_appSysDir & "\bin\config") Then
-            fileloc = _appSysDir & "\bin\config"
         Else
             If Not Directory.Exists(_appSysDir & "\bin\") Then
                 Directory.CreateDirectory(_appSysDir & "\bin\")
@@ -658,7 +733,6 @@ Module functional
 
         iniFile.Save(FileLoc)
     End Sub
-
 
     'load connection
     Public Function loadCon(con_type As String, Optional showErrMsg As Boolean = True) As cnction
@@ -776,6 +850,12 @@ Module functional
     End Function
 
     'MD5
+    ''' <summary>
+    ''' Generate MD5 from a <see cref="String"/>
+    ''' </summary>
+    ''' <param name="inputstring"><see cref="String"/> that need tobe hashed</param>
+    ''' <returns>Generated MD5 <see cref="String"/></returns>
+    ''' <remarks></remarks>
     Public Function computeHash(ByVal inputstring As String) As String
         Dim _retval As String = ""
 

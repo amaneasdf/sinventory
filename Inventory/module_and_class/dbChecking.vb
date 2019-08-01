@@ -166,6 +166,7 @@
                 .in_user.Text = loggeduser.user_id
                 .do_load("jual")
                 If .returnval = True Then
+                    'COULD ALLOW OTHER USER (DIFF.USER FROM THE USER LOGGED TO SYS/APP) TO APPROVE
                     If loggeduser.user_id <> .in_user.Text Then
                         MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
                                         .Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)

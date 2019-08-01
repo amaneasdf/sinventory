@@ -23,6 +23,11 @@ Partial Class fr_setup_menu
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.dgv_menu = New System.Windows.Forms.DataGridView()
+        Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.parent = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bt_keluar_menu = New System.Windows.Forms.Button()
         Me.bt_hapus_menu = New System.Windows.Forms.Button()
         Me.bt_tambah_menu = New System.Windows.Forms.Button()
@@ -40,11 +45,6 @@ Partial Class fr_setup_menu
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.bt_batal = New System.Windows.Forms.Button()
         Me.ck_enable = New System.Windows.Forms.CheckBox()
-        Me.id = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.parent = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.dgv_menu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
@@ -63,6 +63,45 @@ Partial Class fr_setup_menu
         Me.dgv_menu.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_menu.Size = New System.Drawing.Size(708, 350)
         Me.dgv_menu.TabIndex = 6
+        '
+        'id
+        '
+        Me.id.DataPropertyName = "menu_id"
+        Me.id.HeaderText = "ID"
+        Me.id.MinimumWidth = 50
+        Me.id.Name = "id"
+        Me.id.ReadOnly = True
+        Me.id.Width = 50
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "menu_kode"
+        Me.kode.HeaderText = "Kode Menu"
+        Me.kode.MinimumWidth = 100
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'parent
+        '
+        Me.parent.DataPropertyName = "menu_parent"
+        Me.parent.HeaderText = "Menu Parent"
+        Me.parent.Name = "parent"
+        Me.parent.ReadOnly = True
+        '
+        'nama
+        '
+        Me.nama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.nama.DataPropertyName = "menu_label"
+        Me.nama.HeaderText = "Nama"
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        '
+        'status
+        '
+        Me.status.DataPropertyName = "menu_status"
+        Me.status.HeaderText = "Status"
+        Me.status.Name = "status"
+        Me.status.ReadOnly = True
         '
         'bt_keluar_menu
         '
@@ -110,7 +149,7 @@ Partial Class fr_setup_menu
         Me.in_menu_nama.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_menu_nama.ForeColor = System.Drawing.Color.Black
         Me.in_menu_nama.Location = New System.Drawing.Point(100, 82)
-        Me.in_menu_nama.MaxLength = 30
+        Me.in_menu_nama.MaxLength = 255
         Me.in_menu_nama.Name = "in_menu_nama"
         Me.in_menu_nama.Size = New System.Drawing.Size(337, 22)
         Me.in_menu_nama.TabIndex = 2
@@ -269,45 +308,6 @@ Partial Class fr_setup_menu
         Me.ck_enable.TabIndex = 135
         Me.ck_enable.Text = "Enable"
         Me.ck_enable.UseVisualStyleBackColor = True
-        '
-        'id
-        '
-        Me.id.DataPropertyName = "menu_id"
-        Me.id.HeaderText = "ID"
-        Me.id.MinimumWidth = 50
-        Me.id.Name = "id"
-        Me.id.ReadOnly = True
-        Me.id.Width = 50
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "menu_kode"
-        Me.kode.HeaderText = "Kode Menu"
-        Me.kode.MinimumWidth = 100
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'parent
-        '
-        Me.parent.DataPropertyName = "menu_parent"
-        Me.parent.HeaderText = "Menu Parent"
-        Me.parent.Name = "parent"
-        Me.parent.ReadOnly = True
-        '
-        'nama
-        '
-        Me.nama.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
-        Me.nama.DataPropertyName = "menu_label"
-        Me.nama.HeaderText = "Nama"
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        '
-        'status
-        '
-        Me.status.DataPropertyName = "menu_status"
-        Me.status.HeaderText = "Status"
-        Me.status.Name = "status"
-        Me.status.ReadOnly = True
         '
         'fr_setup_menu
         '

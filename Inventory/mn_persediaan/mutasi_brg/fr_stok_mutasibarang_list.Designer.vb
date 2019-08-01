@@ -62,9 +62,15 @@ Partial Class fr_stok_mutasibarang_list
         Me.mn_cari = New System.Windows.Forms.ToolStripMenuItem()
         Me.dgv_list = New System.Windows.Forms.DataGridView()
         Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.bt_page_next = New System.Windows.Forms.Button()
+        Me.bt_page_last = New System.Windows.Forms.Button()
+        Me.bt_page_prev = New System.Windows.Forms.Button()
+        Me.bt_page_first = New System.Windows.Forms.Button()
+        Me.in_page = New System.Windows.Forms.TextBox()
+        Me.bt_search = New System.Windows.Forms.Button()
         Me.in_countdata = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
         Me.in_cari = New System.Windows.Forms.TextBox()
+        Me.lbl_pageinfo = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -165,8 +171,9 @@ Partial Class fr_stok_mutasibarang_list
         '
         Me.SplitContainer1.Panel2.Controls.Add(Me.dgv_list)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Panel4)
+        Me.SplitContainer1.Panel2.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.SplitContainer1.Size = New System.Drawing.Size(964, 533)
-        Me.SplitContainer1.SplitterDistance = 263
+        Me.SplitContainer1.SplitterDistance = 266
         Me.SplitContainer1.TabIndex = 250
         '
         'in_kat
@@ -470,27 +477,103 @@ Partial Class fr_stok_mutasibarang_list
         Me.dgv_list.ReadOnly = True
         Me.dgv_list.RowHeadersVisible = False
         Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_list.Size = New System.Drawing.Size(964, 224)
+        Me.dgv_list.Size = New System.Drawing.Size(964, 221)
         Me.dgv_list.TabIndex = 17
         '
         'Panel4
         '
         Me.Panel4.BackColor = System.Drawing.Color.Orange
+        Me.Panel4.Controls.Add(Me.lbl_pageinfo)
+        Me.Panel4.Controls.Add(Me.bt_page_next)
+        Me.Panel4.Controls.Add(Me.bt_page_last)
+        Me.Panel4.Controls.Add(Me.bt_page_prev)
+        Me.Panel4.Controls.Add(Me.bt_page_first)
+        Me.Panel4.Controls.Add(Me.in_page)
+        Me.Panel4.Controls.Add(Me.bt_search)
         Me.Panel4.Controls.Add(Me.in_countdata)
-        Me.Panel4.Controls.Add(Me.Label7)
         Me.Panel4.Controls.Add(Me.in_cari)
         Me.Panel4.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel4.Location = New System.Drawing.Point(0, 224)
+        Me.Panel4.Location = New System.Drawing.Point(0, 221)
         Me.Panel4.Name = "Panel4"
         Me.Panel4.Size = New System.Drawing.Size(964, 42)
         Me.Panel4.TabIndex = 248
+        '
+        'bt_page_next
+        '
+        Me.bt_page_next.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_next.BackColor = System.Drawing.Color.White
+        Me.bt_page_next.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_next.Location = New System.Drawing.Point(891, 6)
+        Me.bt_page_next.Name = "bt_page_next"
+        Me.bt_page_next.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_next.TabIndex = 26
+        Me.bt_page_next.Text = ">"
+        Me.bt_page_next.UseVisualStyleBackColor = False
+        '
+        'bt_page_last
+        '
+        Me.bt_page_last.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_last.BackColor = System.Drawing.Color.White
+        Me.bt_page_last.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_last.Location = New System.Drawing.Point(927, 6)
+        Me.bt_page_last.Name = "bt_page_last"
+        Me.bt_page_last.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_last.TabIndex = 27
+        Me.bt_page_last.Text = ">>"
+        Me.bt_page_last.UseVisualStyleBackColor = False
+        '
+        'bt_page_prev
+        '
+        Me.bt_page_prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_prev.BackColor = System.Drawing.Color.White
+        Me.bt_page_prev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_prev.Location = New System.Drawing.Point(803, 6)
+        Me.bt_page_prev.Name = "bt_page_prev"
+        Me.bt_page_prev.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_prev.TabIndex = 24
+        Me.bt_page_prev.Text = "<"
+        Me.bt_page_prev.UseVisualStyleBackColor = False
+        '
+        'bt_page_first
+        '
+        Me.bt_page_first.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_first.BackColor = System.Drawing.Color.White
+        Me.bt_page_first.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_first.Location = New System.Drawing.Point(767, 6)
+        Me.bt_page_first.Name = "bt_page_first"
+        Me.bt_page_first.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_first.TabIndex = 23
+        Me.bt_page_first.Text = "<<"
+        Me.bt_page_first.UseVisualStyleBackColor = False
+        '
+        'in_page
+        '
+        Me.in_page.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.in_page.Location = New System.Drawing.Point(839, 10)
+        Me.in_page.Name = "in_page"
+        Me.in_page.ReadOnly = True
+        Me.in_page.Size = New System.Drawing.Size(46, 22)
+        Me.in_page.TabIndex = 25
+        Me.in_page.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'bt_search
+        '
+        Me.bt_search.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.bt_search.BackgroundImage = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.bt_search.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.bt_search.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_search.Location = New System.Drawing.Point(260, 10)
+        Me.bt_search.Name = "bt_search"
+        Me.bt_search.Size = New System.Drawing.Size(42, 22)
+        Me.bt_search.TabIndex = 21
+        Me.bt_search.UseVisualStyleBackColor = False
         '
         'in_countdata
         '
         Me.in_countdata.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.in_countdata.BackColor = System.Drawing.Color.White
         Me.in_countdata.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_countdata.Location = New System.Drawing.Point(899, 10)
+        Me.in_countdata.Location = New System.Drawing.Point(430, 10)
         Me.in_countdata.MaxLength = 100
         Me.in_countdata.Name = "in_countdata"
         Me.in_countdata.ReadOnly = True
@@ -498,23 +581,23 @@ Partial Class fr_stok_mutasibarang_list
         Me.in_countdata.TabIndex = 19
         Me.in_countdata.TabStop = False
         '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(20, 8)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(61, 26)
-        Me.Label7.TabIndex = 8
-        Me.Label7.Text = "Pencarian :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(CTRL+F)"
-        '
         'in_cari
         '
         Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_cari.Location = New System.Drawing.Point(92, 10)
+        Me.in_cari.Location = New System.Drawing.Point(12, 10)
         Me.in_cari.MaxLength = 100
         Me.in_cari.Name = "in_cari"
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 18
+        '
+        'lbl_pageinfo
+        '
+        Me.lbl_pageinfo.AutoSize = True
+        Me.lbl_pageinfo.Location = New System.Drawing.Point(481, 14)
+        Me.lbl_pageinfo.Name = "lbl_pageinfo"
+        Me.lbl_pageinfo.Size = New System.Drawing.Size(41, 15)
+        Me.lbl_pageinfo.TabIndex = 28
+        Me.lbl_pageinfo.Text = "Label1"
         '
         'fr_stok_mutasibarang_list
         '
@@ -562,7 +645,6 @@ Partial Class fr_stok_mutasibarang_list
     Friend WithEvents dgv_list As System.Windows.Forms.DataGridView
     Friend WithEvents Panel4 As System.Windows.Forms.Panel
     Friend WithEvents in_countdata As System.Windows.Forms.TextBox
-    Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents in_cari As System.Windows.Forms.TextBox
     Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents dgv_barang As System.Windows.Forms.DataGridView
@@ -582,5 +664,12 @@ Partial Class fr_stok_mutasibarang_list
     Friend WithEvents hpp_b As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents in_kat As System.Windows.Forms.TextBox
     Friend WithEvents Label6 As System.Windows.Forms.Label
+    Friend WithEvents bt_search As System.Windows.Forms.Button
+    Friend WithEvents bt_page_next As System.Windows.Forms.Button
+    Friend WithEvents bt_page_last As System.Windows.Forms.Button
+    Friend WithEvents bt_page_prev As System.Windows.Forms.Button
+    Friend WithEvents bt_page_first As System.Windows.Forms.Button
+    Friend WithEvents in_page As System.Windows.Forms.TextBox
+    Friend WithEvents lbl_pageinfo As System.Windows.Forms.Label
 
 End Class

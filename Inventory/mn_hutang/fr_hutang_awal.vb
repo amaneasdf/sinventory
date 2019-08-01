@@ -1,54 +1,85 @@
 ﻿Public Class fr_hutang_awal
     Private fak_date As Date = Today
 
-    Public Sub loadData(kode As String)
-        Dim q As String = "SELECT hutang_faktur, hutang_tgl, hutang_tgl_jt, hutang_supplier, supplier_nama, " _
-                          & "DATEDIFF(hutang_tgl_jt,hutang_tgl) faktur_term, hutang_awal, " _
-                          & "IFNULL(ppn.ref_text,'ERROR') bayar_kat " _
-                          & "FROM data_hutang_awal " _
-                          & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
-                          & "LEFT JOIN ref_jenis ppn ON hutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
-                          & "WHERE hutang_faktur='{0}'"
-        op_con()
-        'readcommd("SELECT * FROM selectHutangAwal WHERE hutang_faktur='" & kode & "'")
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_faktur.Text = rd.Item("hutang_faktur")
-            in_kat.Text = rd.Item("bayar_kat")
-            fak_date = rd.Item("hutang_tgl")
-            in_tgl_term.Text = CDate(rd.Item("hutang_tgl_jt")).ToLongDateString
-            in_supplier.Text = rd.Item("hutang_supplier")
-            in_supplier_n.Text = rd.Item("supplier_nama")
-            in_term.Text = rd.Item("faktur_term")
-            in_hutang_awal.Text = commaThousand(rd.Item("hutang_awal"))
-        End If
-        rd.Close()
-        in_tgl.Text = fak_date.ToLongDateString
-        loadDgv(kode)
-
-        If selectperiode.closed = True Then
-            bt_bayar.Enabled = False
+    Public Sub DoLoadView(KodePiutang As String)
+        If loadData(KodePiutang) Then : Me.Show(main)
+        Else : Me.Dispose()
         End If
     End Sub
 
-    Private Sub loadDgv(kode As String)
-        Dim dt As New DataTable
-
-        dt = getDataTablefromDB("getDataHutangTrans('" & selectperiode.id & "','" & kode & "')")
-
-        On Error Resume Next
-        With dgv_hutang
-            .AutoGenerateColumns = False
-            .DataSource = dt
-            .Columns("bayar").DefaultCellStyle = dgvstyle_currency
-            .Columns("hutang").DefaultCellStyle = dgvstyle_currency
-        End With
-        countTotal()
-
-        If removeCommaThousand(in_sisa.Text) = 0 Then
-            bt_bayar.Enabled = False
+    'LOAD DATA
+    Public Function loadData(kode As String) As Boolean
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-    End Sub
+        Dim q As String = ""
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    q = "SELECT hutang_faktur, hutang_tgl, hutang_tgl_jt, hutang_supplier, supplier_nama, " _
+                        & "GetHutangSaldo('awal', hutang_faktur, '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}') hutang_awal, " _
+                        & "DATEDIFF(hutang_tgl_jt,hutang_tgl) faktur_term, hutang_status_lunas, hutang_tgl_lunas, " _
+                        & "IFNULL(ppn.ref_text,'ERROR') hutang_kat " _
+                        & "FROM data_hutang_awal " _
+                        & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
+                        & "LEFT JOIN ref_jenis ppn ON hutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                        & "WHERE hutang_faktur='{0}'"
+                    Using rdx = x.ReadCommand(String.Format(q, kode, selectperiode.tglawal, selectperiode.tglakhir))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            Dim _date As Date = rdx.Item("hutang_tgl")
+                            Dim _datejt As Date = rdx.Item("hutang_tgl_jt")
+                            Dim _lunas As String = rdx.Item("hutang_status_lunas")
+
+                            in_faktur.Text = kode
+                            in_tgl.Text = _date.ToLongDateString
+                            in_supplier.Text = rdx.Item("hutang_supplier")
+                            in_supplier_n.Text = rdx.Item("supplier_nama")
+                            in_kat.Text = rdx.Item("hutang_kat")
+                            in_term.Text = rdx.Item("faktur_term")
+                            in_tgl_term.Text = _datejt.ToLongDateString
+                            in_piutangawal.Text = commaThousand(rdx.Item("hutang_awal"))
+                            If _lunas = 1 Then
+                                in_status.Text = "LUNAS"
+                                in_tgllunas.Text = CDate(rdx.Item("hutang_tgl_lunas")).ToLongDateString
+                                bt_bayar.Enabled = False
+                            Else
+                                in_status.Text = "AKTIF"
+                            End If
+                        Else
+                            MessageBox.Show("Tidak dapat mengambil data hutang.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Return False : Exit Function
+                        End If
+                    End Using
+
+                    'LOAD TABLE
+                    q = String.Format("CALL GetDataList_HutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    With dgv_hutang
+                        .AutoGenerateColumns = False
+                        .DataSource = x.GetDataTable(q)
+                        .Columns("bayar").DefaultCellStyle = dgvstyle_currency
+                        .Columns("hutang").DefaultCellStyle = dgvstyle_currency
+                    End With
+
+                    'LOAD NILAI PIUTANG
+                    q = "SELECT GetHutangSaldoAwal('giro', '{0}', ADDDATE('{1:yyyy-MM-dd}',1)) "
+                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    in_giro.Text = commaThousand(_nilaigiro)
+                    countTotal()
+
+                    If selectperiode.closed Then bt_bayar.Enabled = False
+                    Return True
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show("Tidak dapat mengambil data hutang.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False : Exit Function
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End If
+        End Using
+    End Function
 
     Private Sub countTotal()
         Dim _bayar As Double = 0
@@ -61,40 +92,55 @@
         End If
         in_total.Text = commaThousand(_bayar)
         in_sisa.Text = commaThousand(_hutang - _bayar)
-        If _hutang - _bayar <= 0 Then
-            in_tgllunas.Text = CDate(dgv_hutang.Rows(dgv_hutang.Rows.Count - 1).Cells(1).Value).ToLongDateString
-        End If
     End Sub
 
+    'LOAD PEMBAYARAN
     Private Sub doBayar()
-        Dim x As New fr_hutang_bayar
-        Dim titipan As String = "0"
-
-        op_con()
-        readcommd("SELECT getSisaTitipan('hutang','" & selectperiode.id & "','" & in_supplier.Text & "')")
-        If rd.HasRows Then
-            titipan = commaThousand(rd.Item(0))
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-        rd.Close()
+        If selectperiode.closed Then Exit Sub
 
-        With x
-            .doLoadNew()
-            .cb_pajak.SelectedValue = IIf(in_kat.Text = "A", 0, 1)
-            .in_supplier.Text = in_supplier.Text
-            .in_supplier_n.Text = in_supplier_n.Text
-            .in_saldotitipan.Text = titipan
+        Dim x As New fr_hutang_bayar
+        Dim q As String = ""
 
-            .in_faktur.Text = in_faktur.Text
-            .in_tgl_jtfaktur.Text = in_tgl_term.Text
-            ._totalhutang = removeCommaThousand(in_hutang_awal.Text)
-            .in_sisafaktur.Text = in_sisa.Text
+        Using dd = MainConnection
+            dd.Open() : If dd.ConnectionState = ConnectionState.Open Then
+                q = "SELECT hutang_supplier, supplier_nama, GetHutangSaldoAwal('titipan', hutang_supplier, ADDDATE(CURDATE(),1)), " _
+                    & "GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE(CURDATE(),1)), hutang_awal, hutang_tgl_jt, hutang_pajak " _
+                    & "FROM data_hutang_awal " _
+                    & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
+                    & "WHERE hutang_faktur='{0}'"
+                Using rdx = dd.ReadCommand(String.Format(q, in_faktur.Text))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        x.doLoadNew()
+                        x.Owner = main
 
-            .Owner = main
-        End With
+                        x.in_supplier.Text = rdx.Item(0)
+                        x.in_supplier_n.Text = rdx.Item(1)
+                        x.in_saldotitipan.Text = rdx.Item(2)
+                        x.cb_pajak.SelectedValue = rdx.Item("hutang_pajak")
+
+                        x.in_faktur.Text = in_faktur.Text
+                        x.in_tgl_jtfaktur.Text = CDate(rdx.Item(5)).ToString("dd/MM/yyyy")
+                        x.in_sisafaktur.Text = commaThousand(rdx.Item(3))
+                        x._totalhutang = rdx.Item(4)
+
+                    Else
+                        MessageBox.Show("Data piutang tidak dapat ditemukan.", "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
+                    End If
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
+
         Me.Close()
     End Sub
 
-    '------------drag form
+    'UI : DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
     End Sub
@@ -111,11 +157,9 @@
         CenterToScreen()
     End Sub
 
-    '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        'If MessageBox.Show("Tutup Form?", "Hutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+    'UI : CLOSE
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_bataljual.Click
         Me.Close()
-        'End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -123,7 +167,7 @@
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalreturbeli.PerformClick()
+        bt_bataljual.PerformClick()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -134,13 +178,13 @@
         lbl_close.Visible = False
     End Sub
 
-    '---------------------- LOAD FORM
-    Private Sub fr_hutang_awal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If in_faktur.Text <> Nothing Then
-            loadData(in_faktur.Text)
+    Private Sub fr_piutang_awal_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            Me.Close()
         End If
     End Sub
 
+    'UI : BUTTON
     Private Sub bt_bayar_Click(sender As Object, e As EventArgs) Handles bt_bayar.Click
         If MessageBox.Show("Tambah Pembayaran?", "Hutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             doBayar()

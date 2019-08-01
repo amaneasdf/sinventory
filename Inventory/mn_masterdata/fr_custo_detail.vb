@@ -99,15 +99,17 @@
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
 
-        Dim q As String = "SELECT customer_nama,customer_status,customer_jenis,customer_area,customer_alamat,customer_alamat_blok,customer_alamat_nomor,customer_alamat_rt, " _
-                          & "customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi,customer_kodepos, " _
-                          & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp, " _
+        Dim q As String = "SELECT customer_nama, customer_status, customer_jenis, customer_area, customer_alamat, customer_alamat_blok, customer_alamat_nomor,  " _
+                          & "customer_alamat_rt,customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi, " _
+                          & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp,customer_kodepos, " _
                           & "IF(MONTH(customer_tanggal_pkp)=0,CURDATE(),customer_tanggal_pkp) customer_tanggal_pkp ,customer_pajak_nama,customer_pajak_jabatan, " _
                           & "customer_pajak_alamat,customer_max_piutang, customer_priority, Customer_kriteria_discount,Customer_kriteria_harga_jual,customer_term, " _
                           & "IFNULL(customer_keterangan,'') customer_keterangan, " _
                           & "IFNULL(customer_reg_alias,'') customer_reg_alias, IFNULL(DATE_FORMAT(customer_reg_date,'%d/%m/%Y %H:%i:%S'),'') customer_reg_date, " _
                           & "IFNULL(customer_upd_alias,'') customer_upd_alias, IFNULL(DATE_FORMAT(customer_upd_date,'%d/%m/%Y %H:%i:%S'),'') customer_upd_date " _
                           & "FROM data_customer_master WHERE customer_kode='{0}'"
+        On Error Resume Next
+        'FUCK YOU
         Using x = MainConnection
             x.Open()
             If x.ConnectionState = ConnectionState.Open Then
@@ -181,7 +183,6 @@
         Dim x As New fr_lap_master
         x.setVar("m_custo_qr", dt)
         x.do_load()
-        x.Show()
     End Sub
 
     'SET STATUS

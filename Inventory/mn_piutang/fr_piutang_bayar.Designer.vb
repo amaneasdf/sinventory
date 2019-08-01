@@ -23,7 +23,6 @@ Partial Class fr_piutang_bayar
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_piutang_bayar))
-        Me.pnl_Menu = New System.Windows.Forms.Panel()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
@@ -48,6 +47,7 @@ Partial Class fr_piutang_bayar
         Me.bayar_totalpiutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bayar_sisapiutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bayar_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_filler = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.date_bg_tgl = New System.Windows.Forms.DateTimePicker()
         Me.cb_bayar = New System.Windows.Forms.ComboBox()
@@ -97,9 +97,9 @@ Partial Class fr_piutang_bayar
         Me.txtRegAlias = New System.Windows.Forms.TextBox()
         Me.Label27 = New System.Windows.Forms.Label()
         Me.pnl_footer = New System.Windows.Forms.Panel()
+        Me.bt_proses = New System.Windows.Forms.Button()
         Me.bt_batalcusto = New System.Windows.Forms.Button()
         Me.bt_simpancusto = New System.Windows.Forms.Button()
-        Me.pnl_Menu.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_bayar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -111,19 +111,10 @@ Partial Class fr_piutang_bayar
         Me.pnl_footer.SuspendLayout()
         Me.SuspendLayout()
         '
-        'pnl_Menu
-        '
-        Me.pnl_Menu.Controls.Add(Me.MenuStrip1)
-        Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
-        Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
-        Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(901, 32)
-        Me.pnl_Menu.TabIndex = 277
-        '
         'MenuStrip1
         '
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_delete, Me.mn_print, Me.mn_proses})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(901, 24)
         Me.MenuStrip1.TabIndex = 183
@@ -246,7 +237,7 @@ Partial Class fr_piutang_bayar
         Me.in_no_bukti.MaxLength = 30
         Me.in_no_bukti.Name = "in_no_bukti"
         Me.in_no_bukti.Size = New System.Drawing.Size(170, 20)
-        Me.in_no_bukti.TabIndex = 2
+        Me.in_no_bukti.TabIndex = 0
         Me.in_no_bukti.TabStop = False
         '
         'date_tgl_trans
@@ -269,7 +260,7 @@ Partial Class fr_piutang_bayar
         Me.in_sales.MaxLength = 30
         Me.in_sales.Name = "in_sales"
         Me.in_sales.ReadOnly = True
-        Me.in_sales.Size = New System.Drawing.Size(151, 20)
+        Me.in_sales.Size = New System.Drawing.Size(116, 20)
         Me.in_sales.TabIndex = 0
         '
         'in_faktur
@@ -311,7 +302,7 @@ Partial Class fr_piutang_bayar
         Me.Label20.AutoSize = True
         Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label20.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label20.Location = New System.Drawing.Point(9, 346)
+        Me.Label20.Location = New System.Drawing.Point(12, 346)
         Me.Label20.Name = "Label20"
         Me.Label20.Size = New System.Drawing.Size(44, 13)
         Me.Label20.TabIndex = 364
@@ -323,13 +314,14 @@ Partial Class fr_piutang_bayar
         Me.dgv_bayar.AllowUserToDeleteRows = False
         Me.dgv_bayar.BackgroundColor = System.Drawing.Color.White
         Me.dgv_bayar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_bayar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bayar_faktur, Me.bayar_tgljt, Me.bayar_totalpiutang, Me.bayar_sisapiutang, Me.bayar_kredit})
+        Me.dgv_bayar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bayar_faktur, Me.bayar_tgljt, Me.bayar_totalpiutang, Me.bayar_sisapiutang, Me.bayar_kredit, Me.bayar_filler})
         Me.dgv_bayar.Location = New System.Drawing.Point(12, 184)
         Me.dgv_bayar.Name = "dgv_bayar"
         Me.dgv_bayar.ReadOnly = True
         Me.dgv_bayar.RowHeadersVisible = False
         Me.dgv_bayar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_bayar.Size = New System.Drawing.Size(866, 152)
+        Me.dgv_bayar.StandardTab = True
         Me.dgv_bayar.TabIndex = 15
         '
         'bayar_faktur
@@ -368,6 +360,13 @@ Partial Class fr_piutang_bayar
         Me.bayar_kredit.Name = "bayar_kredit"
         Me.bayar_kredit.ReadOnly = True
         Me.bayar_kredit.Width = 150
+        '
+        'bayar_filler
+        '
+        Me.bayar_filler.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.bayar_filler.HeaderText = ""
+        Me.bayar_filler.Name = "bayar_filler"
+        Me.bayar_filler.ReadOnly = True
         '
         'Label5
         '
@@ -419,10 +418,10 @@ Partial Class fr_piutang_bayar
         Me.in_sales_n.BackColor = System.Drawing.Color.White
         Me.in_sales_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_sales_n.ForeColor = System.Drawing.Color.Black
-        Me.in_sales_n.Location = New System.Drawing.Point(236, 7)
+        Me.in_sales_n.Location = New System.Drawing.Point(202, 7)
         Me.in_sales_n.MaxLength = 200
         Me.in_sales_n.Name = "in_sales_n"
-        Me.in_sales_n.Size = New System.Drawing.Size(327, 20)
+        Me.in_sales_n.Size = New System.Drawing.Size(361, 20)
         Me.in_sales_n.TabIndex = 1
         '
         'bt_tbbayar
@@ -444,11 +443,11 @@ Partial Class fr_piutang_bayar
         Me.in_custo_n.BackColor = System.Drawing.Color.White
         Me.in_custo_n.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_custo_n.ForeColor = System.Drawing.Color.Black
-        Me.in_custo_n.Location = New System.Drawing.Point(236, 29)
+        Me.in_custo_n.Location = New System.Drawing.Point(202, 29)
         Me.in_custo_n.MaxLength = 30
         Me.in_custo_n.Name = "in_custo_n"
-        Me.in_custo_n.Size = New System.Drawing.Size(327, 20)
-        Me.in_custo_n.TabIndex = 4
+        Me.in_custo_n.Size = New System.Drawing.Size(361, 20)
+        Me.in_custo_n.TabIndex = 3
         '
         'in_bank
         '
@@ -470,15 +469,15 @@ Partial Class fr_piutang_bayar
         Me.in_custo.Location = New System.Drawing.Point(83, 29)
         Me.in_custo.MaxLength = 30
         Me.in_custo.Name = "in_custo"
-        Me.in_custo.Size = New System.Drawing.Size(151, 20)
-        Me.in_custo.TabIndex = 3
+        Me.in_custo.Size = New System.Drawing.Size(116, 20)
+        Me.in_custo.TabIndex = 2
         '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(11, 33)
+        Me.Label2.Location = New System.Drawing.Point(12, 33)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(51, 13)
         Me.Label2.TabIndex = 365
@@ -508,7 +507,7 @@ Partial Class fr_piutang_bayar
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(420, 127)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(420, 132)
         Me.dgv_listbarang.TabIndex = 0
         '
         'linkLbl_searchbarang
@@ -528,7 +527,7 @@ Partial Class fr_piutang_bayar
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(11, 11)
+        Me.Label6.Location = New System.Drawing.Point(12, 11)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(53, 13)
         Me.Label6.TabIndex = 365
@@ -539,7 +538,7 @@ Partial Class fr_piutang_bayar
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(9, 123)
+        Me.Label1.Location = New System.Drawing.Point(12, 123)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(55, 13)
         Me.Label1.TabIndex = 365
@@ -550,7 +549,7 @@ Partial Class fr_piutang_bayar
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label7.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label7.Location = New System.Drawing.Point(9, 147)
+        Me.Label7.Location = New System.Drawing.Point(12, 147)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(43, 13)
         Me.Label7.TabIndex = 369
@@ -561,7 +560,7 @@ Partial Class fr_piutang_bayar
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label10.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label10.Location = New System.Drawing.Point(9, 392)
+        Me.Label10.Location = New System.Drawing.Point(12, 392)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(40, 13)
         Me.Label10.TabIndex = 372
@@ -616,14 +615,15 @@ Partial Class fr_piutang_bayar
         Me.in_saldotitipan.Name = "in_saldotitipan"
         Me.in_saldotitipan.ReadOnly = True
         Me.in_saldotitipan.Size = New System.Drawing.Size(283, 20)
-        Me.in_saldotitipan.TabIndex = 5
+        Me.in_saldotitipan.TabIndex = 4
+        Me.in_saldotitipan.TabStop = False
         '
         'Label11
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(11, 55)
+        Me.Label11.Location = New System.Drawing.Point(12, 54)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(69, 13)
         Me.Label11.TabIndex = 377
@@ -691,7 +691,7 @@ Partial Class fr_piutang_bayar
         '
         Me.Label15.AutoSize = True
         Me.Label15.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label15.Location = New System.Drawing.Point(9, 100)
+        Me.Label15.Location = New System.Drawing.Point(12, 100)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(61, 13)
         Me.Label15.TabIndex = 383
@@ -761,7 +761,7 @@ Partial Class fr_piutang_bayar
         Me.Label17.AutoSize = True
         Me.Label17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label17.ForeColor = System.Drawing.Color.MidnightBlue
-        Me.Label17.Location = New System.Drawing.Point(7, 368)
+        Me.Label17.Location = New System.Drawing.Point(12, 368)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(64, 13)
         Me.Label17.TabIndex = 389
@@ -786,7 +786,7 @@ Partial Class fr_piutang_bayar
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(170, 20)
-        Me.in_status.TabIndex = 390
+        Me.in_status.TabIndex = 0
         Me.in_status.TabStop = False
         '
         'pnl_content
@@ -847,9 +847,9 @@ Partial Class fr_piutang_bayar
         Me.pnl_content.Controls.Add(Me.date_bg_tgl)
         Me.pnl_content.Controls.Add(Me.in_sales_n)
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnl_content.Location = New System.Drawing.Point(0, 74)
+        Me.pnl_content.Location = New System.Drawing.Point(0, 66)
         Me.pnl_content.Name = "pnl_content"
-        Me.pnl_content.Size = New System.Drawing.Size(901, 413)
+        Me.pnl_content.Size = New System.Drawing.Size(901, 421)
         Me.pnl_content.TabIndex = 0
         '
         'cb_pajak
@@ -860,15 +860,15 @@ Partial Class fr_piutang_bayar
         Me.cb_pajak.FormattingEnabled = True
         Me.cb_pajak.Location = New System.Drawing.Point(83, 73)
         Me.cb_pajak.Name = "cb_pajak"
-        Me.cb_pajak.Size = New System.Drawing.Size(151, 21)
-        Me.cb_pajak.TabIndex = 509
+        Me.cb_pajak.Size = New System.Drawing.Size(116, 21)
+        Me.cb_pajak.TabIndex = 5
         '
         'Label18
         '
         Me.Label18.AutoSize = True
         Me.Label18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label18.ForeColor = System.Drawing.Color.Black
-        Me.Label18.Location = New System.Drawing.Point(9, 76)
+        Me.Label18.Location = New System.Drawing.Point(12, 76)
         Me.Label18.Name = "Label18"
         Me.Label18.Size = New System.Drawing.Size(46, 13)
         Me.Label18.TabIndex = 510
@@ -971,6 +971,7 @@ Partial Class fr_piutang_bayar
         'pnl_footer
         '
         Me.pnl_footer.BackColor = System.Drawing.Color.Gainsboro
+        Me.pnl_footer.Controls.Add(Me.bt_proses)
         Me.pnl_footer.Controls.Add(Me.bt_batalcusto)
         Me.pnl_footer.Controls.Add(Me.bt_simpancusto)
         Me.pnl_footer.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -979,18 +980,35 @@ Partial Class fr_piutang_bayar
         Me.pnl_footer.Size = New System.Drawing.Size(901, 47)
         Me.pnl_footer.TabIndex = 1
         '
+        'bt_proses
+        '
+        Me.bt_proses.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_proses.BackColor = System.Drawing.Color.OliveDrab
+        Me.bt_proses.FlatAppearance.BorderSize = 0
+        Me.bt_proses.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_proses.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_proses.ForeColor = System.Drawing.Color.White
+        Me.bt_proses.Location = New System.Drawing.Point(12, 11)
+        Me.bt_proses.Name = "bt_proses"
+        Me.bt_proses.Size = New System.Drawing.Size(198, 30)
+        Me.bt_proses.TabIndex = 22
+        Me.bt_proses.Text = "Proses Pembayaran"
+        Me.bt_proses.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.bt_proses.UseVisualStyleBackColor = False
+        '
         'bt_batalcusto
         '
         Me.bt_batalcusto.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_batalcusto.BackColor = System.Drawing.Color.Tomato
         Me.bt_batalcusto.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.bt_batalcusto.FlatAppearance.BorderSize = 0
         Me.bt_batalcusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_batalcusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batalcusto.ForeColor = System.Drawing.Color.White
         Me.bt_batalcusto.Location = New System.Drawing.Point(793, 11)
         Me.bt_batalcusto.Name = "bt_batalcusto"
         Me.bt_batalcusto.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalcusto.TabIndex = 27
+        Me.bt_batalcusto.TabIndex = 21
         Me.bt_batalcusto.Text = "Batal"
         Me.bt_batalcusto.UseVisualStyleBackColor = False
         '
@@ -998,13 +1016,14 @@ Partial Class fr_piutang_bayar
         '
         Me.bt_simpancusto.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.bt_simpancusto.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpancusto.FlatAppearance.BorderSize = 0
         Me.bt_simpancusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_simpancusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_simpancusto.ForeColor = System.Drawing.Color.White
         Me.bt_simpancusto.Location = New System.Drawing.Point(633, 11)
         Me.bt_simpancusto.Name = "bt_simpancusto"
         Me.bt_simpancusto.Size = New System.Drawing.Size(154, 30)
-        Me.bt_simpancusto.TabIndex = 26
+        Me.bt_simpancusto.TabIndex = 20
         Me.bt_simpancusto.Text = "Simpan"
         Me.bt_simpancusto.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.bt_simpancusto.UseVisualStyleBackColor = False
@@ -1017,9 +1036,9 @@ Partial Class fr_piutang_bayar
         Me.ClientSize = New System.Drawing.Size(901, 544)
         Me.ControlBox = False
         Me.Controls.Add(Me.pnl_content)
+        Me.Controls.Add(Me.MenuStrip1)
         Me.Controls.Add(Me.pnl_footer)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.pnl_Menu)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
@@ -1027,8 +1046,6 @@ Partial Class fr_piutang_bayar
         Me.Name = "fr_piutang_bayar"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Pembayaran Piutang : "
-        Me.pnl_Menu.ResumeLayout(False)
-        Me.pnl_Menu.PerformLayout()
         Me.MenuStrip1.ResumeLayout(False)
         Me.MenuStrip1.PerformLayout()
         Me.Panel1.ResumeLayout(False)
@@ -1043,9 +1060,9 @@ Partial Class fr_piutang_bayar
         Me.pnl_content.PerformLayout()
         Me.pnl_footer.ResumeLayout(False)
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
-    Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
@@ -1099,11 +1116,6 @@ Partial Class fr_piutang_bayar
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents in_tglpencairan As System.Windows.Forms.TextBox
     Friend WithEvents Label17 As System.Windows.Forms.Label
-    Friend WithEvents bayar_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_tgljt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_totalpiutang As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_sisapiutang As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents in_status As System.Windows.Forms.TextBox
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
@@ -1121,4 +1133,11 @@ Partial Class fr_piutang_bayar
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents bayar_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_tgljt As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_totalpiutang As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_sisapiutang As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_filler As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bt_proses As System.Windows.Forms.Button
 End Class

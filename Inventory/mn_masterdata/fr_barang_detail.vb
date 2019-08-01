@@ -61,7 +61,8 @@
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
-        For Each txt As TextBox In {in_suppliernama, in_nama, in_ket}
+        in_suppliernama.ReadOnly = IIf(formstate = InputState.Insert, IIf(AllowInput, False, True), True)
+        For Each txt As TextBox In {in_nama, in_ket}
             txt.ReadOnly = IIf(AllowInput, False, True)
         Next
         For Each cbx As ComboBox In {cb_sat_besar, cb_sat_kecil, cb_sat_tengah, cb_jenis, cb_kategori}
@@ -75,6 +76,7 @@
         bt_simpancusto.Enabled = AllowInput
         mn_deact.Enabled = AllowInput
         mn_save.Enabled = AllowInput
+        mn_del.Enabled = False
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)

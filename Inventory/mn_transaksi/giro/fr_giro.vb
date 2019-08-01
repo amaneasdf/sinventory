@@ -10,7 +10,7 @@
     Private _tglcairtolak As Date
     Private _allowedit As Boolean = True
 
-
+    'LOAD DATA GIRO
     Private Sub loadData(kode As String, tipe As String)
         Dim q As String = ""
         op_con()
@@ -146,11 +146,11 @@
         CenterToScreen()
     End Sub
 
-    '-------------close
+    'UI : CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        If MessageBox.Show("Tutup Form?", "Detail Giro", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Detail Giro", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -163,6 +163,13 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If e.KeyCode = Keys.Escape Then
+            bt_batalbeli.PerformClick()
+            e.SuppressKeyPress = True
+        End If
     End Sub
 
     '------------- menu

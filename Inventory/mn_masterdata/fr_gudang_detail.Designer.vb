@@ -22,6 +22,7 @@ Partial Class fr_gudang_detail
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(fr_gudang_detail))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.lbl_close = New System.Windows.Forms.Label()
@@ -71,7 +72,7 @@ Partial Class fr_gudang_detail
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(677, 42)
+        Me.Panel1.Size = New System.Drawing.Size(422, 42)
         Me.Panel1.TabIndex = 134
         '
         'lbl_title
@@ -93,7 +94,7 @@ Partial Class fr_gudang_detail
         Me.lbl_close.BackColor = System.Drawing.Color.Orange
         Me.lbl_close.Font = New System.Drawing.Font("Source Sans Pro", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.lbl_close.ForeColor = System.Drawing.Color.White
-        Me.lbl_close.Location = New System.Drawing.Point(592, 9)
+        Me.lbl_close.Location = New System.Drawing.Point(337, 9)
         Me.lbl_close.Name = "lbl_close"
         Me.lbl_close.Size = New System.Drawing.Size(47, 20)
         Me.lbl_close.TabIndex = 137
@@ -112,7 +113,7 @@ Partial Class fr_gudang_detail
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(645, 9)
+        Me.bt_cl.Location = New System.Drawing.Point(390, 9)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 0
@@ -167,9 +168,9 @@ Partial Class fr_gudang_detail
         '
         Me.Panel2.BackColor = System.Drawing.Color.Orange
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel2.Location = New System.Drawing.Point(0, 389)
+        Me.Panel2.Location = New System.Drawing.Point(0, 455)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(677, 10)
+        Me.Panel2.Size = New System.Drawing.Size(422, 10)
         Me.Panel2.TabIndex = 408
         '
         'pnl_Menu
@@ -178,7 +179,7 @@ Partial Class fr_gudang_detail
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Top
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
         Me.pnl_Menu.Name = "pnl_Menu"
-        Me.pnl_Menu.Size = New System.Drawing.Size(677, 30)
+        Me.pnl_Menu.Size = New System.Drawing.Size(422, 30)
         Me.pnl_Menu.TabIndex = 407
         '
         'MenuStrip1
@@ -186,7 +187,7 @@ Partial Class fr_gudang_detail
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(677, 24)
+        Me.MenuStrip1.Size = New System.Drawing.Size(422, 24)
         Me.MenuStrip1.TabIndex = 182
         Me.MenuStrip1.Text = "MenuStrip1"
         '
@@ -218,7 +219,7 @@ Partial Class fr_gudang_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(515, 9)
+        Me.in_status.Location = New System.Drawing.Point(80, 208)
         Me.in_status.MaxLength = 10
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
@@ -230,7 +231,7 @@ Partial Class fr_gudang_detail
         '
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label13.Location = New System.Drawing.Point(470, 12)
+        Me.Label13.Location = New System.Drawing.Point(12, 211)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(37, 13)
         Me.Label13.TabIndex = 170
@@ -286,9 +287,9 @@ Partial Class fr_gudang_detail
         Me.pnl_footer.Controls.Add(Me.bt_batalcusto)
         Me.pnl_footer.Controls.Add(Me.bt_simpancusto)
         Me.pnl_footer.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.pnl_footer.Location = New System.Drawing.Point(0, 342)
+        Me.pnl_footer.Location = New System.Drawing.Point(0, 408)
         Me.pnl_footer.Name = "pnl_footer"
-        Me.pnl_footer.Size = New System.Drawing.Size(677, 47)
+        Me.pnl_footer.Size = New System.Drawing.Size(422, 47)
         Me.pnl_footer.TabIndex = 1
         '
         'bt_batalcusto
@@ -299,7 +300,7 @@ Partial Class fr_gudang_detail
         Me.bt_batalcusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_batalcusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_batalcusto.ForeColor = System.Drawing.Color.White
-        Me.bt_batalcusto.Location = New System.Drawing.Point(569, 11)
+        Me.bt_batalcusto.Location = New System.Drawing.Point(314, 11)
         Me.bt_batalcusto.Name = "bt_batalcusto"
         Me.bt_batalcusto.Size = New System.Drawing.Size(96, 30)
         Me.bt_batalcusto.TabIndex = 27
@@ -313,7 +314,7 @@ Partial Class fr_gudang_detail
         Me.bt_simpancusto.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_simpancusto.Font = New System.Drawing.Font("Open Sans", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_simpancusto.ForeColor = System.Drawing.Color.White
-        Me.bt_simpancusto.Location = New System.Drawing.Point(409, 11)
+        Me.bt_simpancusto.Location = New System.Drawing.Point(154, 11)
         Me.bt_simpancusto.Name = "bt_simpancusto"
         Me.bt_simpancusto.Size = New System.Drawing.Size(154, 30)
         Me.bt_simpancusto.TabIndex = 26
@@ -345,16 +346,16 @@ Partial Class fr_gudang_detail
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_content.Location = New System.Drawing.Point(0, 72)
         Me.pnl_content.Name = "pnl_content"
-        Me.pnl_content.Size = New System.Drawing.Size(677, 270)
+        Me.pnl_content.Size = New System.Drawing.Size(422, 336)
         Me.pnl_content.TabIndex = 0
         '
         'txtRegdate
         '
         Me.txtRegdate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegdate.Location = New System.Drawing.Point(330, 220)
+        Me.txtRegdate.Location = New System.Drawing.Point(100, 269)
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
-        Me.txtRegdate.Size = New System.Drawing.Size(177, 20)
+        Me.txtRegdate.Size = New System.Drawing.Size(161, 20)
         Me.txtRegdate.TabIndex = 420
         Me.txtRegdate.TabStop = False
         '
@@ -363,7 +364,7 @@ Partial Class fr_gudang_detail
         Me.Label28.AutoSize = True
         Me.Label28.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label28.ForeColor = System.Drawing.Color.Black
-        Me.Label28.Location = New System.Drawing.Point(263, 248)
+        Me.Label28.Location = New System.Drawing.Point(33, 297)
         Me.Label28.Name = "Label28"
         Me.Label28.Size = New System.Drawing.Size(62, 13)
         Me.Label28.TabIndex = 427
@@ -374,7 +375,7 @@ Partial Class fr_gudang_detail
         Me.Label30.AutoSize = True
         Me.Label30.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label30.ForeColor = System.Drawing.Color.Black
-        Me.Label30.Location = New System.Drawing.Point(512, 248)
+        Me.Label30.Location = New System.Drawing.Point(267, 297)
         Me.Label30.Name = "Label30"
         Me.Label30.Size = New System.Drawing.Size(19, 13)
         Me.Label30.TabIndex = 426
@@ -383,10 +384,10 @@ Partial Class fr_gudang_detail
         'txtUpdDate
         '
         Me.txtUpdDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdDate.Location = New System.Drawing.Point(330, 244)
+        Me.txtUpdDate.Location = New System.Drawing.Point(100, 293)
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
-        Me.txtUpdDate.Size = New System.Drawing.Size(177, 20)
+        Me.txtUpdDate.Size = New System.Drawing.Size(161, 20)
         Me.txtUpdDate.TabIndex = 421
         Me.txtUpdDate.TabStop = False
         '
@@ -395,7 +396,7 @@ Partial Class fr_gudang_detail
         Me.Label29.AutoSize = True
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(263, 223)
+        Me.Label29.Location = New System.Drawing.Point(33, 272)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(43, 13)
         Me.Label29.TabIndex = 423
@@ -404,20 +405,20 @@ Partial Class fr_gudang_detail
         'txtUpdAlias
         '
         Me.txtUpdAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtUpdAlias.Location = New System.Drawing.Point(535, 244)
+        Me.txtUpdAlias.Location = New System.Drawing.Point(290, 293)
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
-        Me.txtUpdAlias.Size = New System.Drawing.Size(130, 20)
+        Me.txtUpdAlias.Size = New System.Drawing.Size(112, 20)
         Me.txtUpdAlias.TabIndex = 425
         Me.txtUpdAlias.TabStop = False
         '
         'txtRegAlias
         '
         Me.txtRegAlias.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.txtRegAlias.Location = New System.Drawing.Point(535, 220)
+        Me.txtRegAlias.Location = New System.Drawing.Point(290, 269)
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
-        Me.txtRegAlias.Size = New System.Drawing.Size(130, 20)
+        Me.txtRegAlias.Size = New System.Drawing.Size(112, 20)
         Me.txtRegAlias.TabIndex = 422
         Me.txtRegAlias.TabStop = False
         '
@@ -426,7 +427,7 @@ Partial Class fr_gudang_detail
         Me.Label27.AutoSize = True
         Me.Label27.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label27.ForeColor = System.Drawing.Color.Black
-        Me.Label27.Location = New System.Drawing.Point(512, 224)
+        Me.Label27.Location = New System.Drawing.Point(267, 273)
         Me.Label27.Name = "Label27"
         Me.Label27.Size = New System.Drawing.Size(19, 13)
         Me.Label27.TabIndex = 424
@@ -437,8 +438,7 @@ Partial Class fr_gudang_detail
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.bt_batalcusto
-        Me.ClientSize = New System.Drawing.Size(677, 399)
+        Me.ClientSize = New System.Drawing.Size(422, 465)
         Me.Controls.Add(Me.pnl_content)
         Me.Controls.Add(Me.pnl_footer)
         Me.Controls.Add(Me.Panel2)
@@ -446,6 +446,7 @@ Partial Class fr_gudang_detail
         Me.Controls.Add(Me.Panel1)
         Me.Cursor = System.Windows.Forms.Cursors.Default
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_gudang_detail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

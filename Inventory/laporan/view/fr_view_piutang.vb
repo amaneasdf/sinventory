@@ -5,25 +5,31 @@ Public Class fr_view_piutang
     Private inquery As String = ""
     Private inheadpar As String = ""
 
+    'FILL VARIABLE VALUE/CONSTUCTOR
     Public Sub setVar(laptipe As String, query As String, Optional headerparam1 As String = "...")
         inlap_type = laptipe
         inquery = query
         inheadpar = headerparam1
     End Sub
 
+    'FILL TEMP DATA TABLE
     Private Sub filldatatabel(query As String, dt As DataTable)
-        op_con()
-        Try
-            Dim data_adpt As New MySqlDataAdapter(query, getConn)
-            data_adpt.Fill(dt)
-            data_adpt.Dispose()
-        Catch ex As Exception
-            consoleWriteLine(ex.Message)
-            logError(ex)
-            'MessageBox.Show(String.Format("Error: {0}", ex.Message))
-        End Try
-        'cl_con()
-        'DataGridView1.DataSource = dt
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    consoleWriteLine(query)
+                    data_adpt.Fill(dt)
+                    data_adpt.Dispose()
+                Catch ex As Exception
+                    MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                    logError(ex, True) : Me.Close()
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
+            End If
+        End Using
     End Sub
 
     Private Sub repViewerSelector(lap_type As String)
@@ -35,6 +41,16 @@ Public Class fr_view_piutang
             With .LocalReport
                 
                 Select Case inlap_type
+                    Case "h_nota"
+                        repdatasource.Name = "ds_nota"
+                        repdatasource.Value = ds_hutangpiutang.dt_hutang_nota
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.hutang_nota.rdlc"
+
+                        ds_hutangpiutang.dt_hutang_nota.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_hutang_nota)
+
                     Case "p_salesnota"
                         repdatasource.Name = "ds_piutang_salesnota"
                         repdatasource.Value = ds_hutangpiutang.dt_piutang_sales_nota
@@ -42,87 +58,86 @@ Public Class fr_view_piutang
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.piutang_salesnota.rdlc"
 
-                        With ds_hutangpiutang
-                            .dt_piutang_sales_nota.Clear()
-                            filldatatabel(inquery, .dt_piutang_sales_nota)
-                        End With
-                    Case "p_saleslengkap2"
-                        repdatasource.Name = "ds_piutang_salesl2"
+                        ds_hutangpiutang.dt_piutang_sales_nota.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_sales_nota)
+
+                    Case "p_saleslengkap2", "h_notabeli"
+                        repdatasource.Name = "ds_nota"
                         repdatasource.Value = ds_hutangpiutang.dt_piutang_sales_lengkap2
 
                         .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.piutang_saleslengkap2.rdlc"
-                        With ds_hutangpiutang
-                            .dt_piutang_sales_lengkap2.Clear()
-                            filldatatabel(inquery, .dt_piutang_sales_lengkap2)
-                        End With
+                        If LCase(lap_type) = "p_saleslengkap2" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_saleslengkap2.rdlc"
+                        Else
+                            .ReportEmbeddedResource = "Inventory.hutang_notabeli.rdlc"
+                        End If
+
+                        ds_hutangpiutang.dt_piutang_sales_lengkap2.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_sales_lengkap2)
+
                     Case "p_salesbayartanggal"
                         repdatasource.Name = "ds_piutang_salesbayar"
                         repdatasource.Value = ds_hutangpiutang.dt_piutang_sales_bayar
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.piutang_salesbayartanggal.rdlc"
-                        With ds_hutangpiutang
-                            .dt_piutang_sales_bayar.Clear()
-                            filldatatabel(inquery, .dt_piutang_sales_bayar)
-                        End With
 
-                    Case "p_titipancusto"
-                        repdatasource.Name = "ds_hutang_piutangsupplier"
+                        ds_hutangpiutang.dt_piutang_sales_bayar.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_sales_bayar)
+
+                    Case "p_titipancusto", "p_titipancusto_det", "h_titipsupplier", "h_titipsupplier_det"
+                        repdatasource.Name = "ds_titipan"
                         repdatasource.Value = ds_hutangpiutang.dt_hutang_piutangsupplier
 
                         .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.piutang_titipcusto.rdlc"
-                        With ds_hutangpiutang
-                            .dt_hutang_piutangsupplier.Clear()
-                            filldatatabel(inquery, .dt_hutang_piutangsupplier)
-                        End With
+                        If inlap_type = "p_titipancusto" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_titipcusto.rdlc"
+                        ElseIf LCase(inlap_type) = "p_titipancusto_det" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_titipcusto_det.rdlc"
+                        ElseIf LCase(inlap_type) = "h_titipsupplier" Then
+                            .ReportEmbeddedResource = "Inventory.hutang_titipsupplier.rdlc"
+                        Else
+                            .ReportEmbeddedResource = "Inventory.hutang_titipsupplier_det.rdlc"
+                        End If
 
-                    Case "p_kartupiutang"
+                        ds_hutangpiutang.dt_piutang_titip.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_titip)
+
+                    Case "p_kartupiutang", "p_kartupiutangsales", "h_kartuhutang"
+                        Dim parTitleLaporan As New ReportParameter()
+
                         repdatasource.Name = "ds_piutang_kartupiutang"
                         repdatasource.Value = ds_hutangpiutang.dt_piutang_kartu
 
-                        Dim parTitleLaporan As New ReportParameter("parTitleLaporan", "Kartu Piutang")
-
                         .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.piutang_kartupiutang.rdlc"
+                        If inlap_type = "p_kartupiutang" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_kartupiutang.rdlc"
+                            parTitleLaporan = New ReportParameter("parTitleLaporan", "Kartu Piutang")
+                        ElseIf inlap_type = "p_kartupiutangsales" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_kartupiutangsales.rdlc"
+                            parTitleLaporan = New ReportParameter("parTitleLaporan", "Kartu Piutang Per Sales")
+                        Else
+                            .ReportEmbeddedResource = "Inventory.hutang_kartuhutang.rdlc"
+                            parTitleLaporan = New ReportParameter("parTitleLaporan", "Kartu Hutang")
+                        End If
                         .SetParameters(New ReportParameter() {parTitleLaporan})
 
-                        consoleWriteLine(inquery)
+                        ds_hutangpiutang.dt_piutang_kartu.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_kartu)
 
-                        With ds_hutangpiutang
-                            .dt_piutang_kartu.Clear()
-                            filldatatabel(inquery, .dt_piutang_kartu)
-                            consoleWriteLine(.dt_piutang_kartu.Rows.Count)
-                        End With
-
-                    Case "p_kartupiutangsales"
-                        repdatasource.Name = "ds_piutang_kartupiutang"
-                        repdatasource.Value = ds_hutangpiutang.dt_piutang_kartu
-
-                        Dim parTitleLaporan As New ReportParameter("parTitleLaporan", "Kartu Piutang Per Sales")
-                        .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.piutang_kartupiutang.rdlc"
-                        .SetParameters(New ReportParameter() {parTitleLaporan})
-
-                        With ds_hutangpiutang
-                            .dt_piutang_kartu.Clear()
-                            filldatatabel(inquery, .dt_piutang_kartu)
-                            consoleWriteLine(.dt_piutang_kartu.Rows.Count)
-                        End With
-
-                    Case "p_bayarnota"
+                    Case "p_bayarnota", "h_bayarnota"
                         repdatasource.Name = "ds_piutang_bayardetail"
                         repdatasource.Value = ds_hutangpiutang.dt_piutang_bayardetail
 
                         .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.piutang_detailbayar.rdlc"
+                        If inlap_type = "p_bayarnota" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_detailbayar.rdlc"
+                        Else
+                            .ReportEmbeddedResource = "Inventory.hutang_detailbayar.rdlc"
+                        End If
 
-                        With ds_hutangpiutang
-                            .dt_piutang_bayardetail.Clear()
-                            filldatatabel(inquery, .dt_piutang_bayardetail)
-                            consoleWriteLine(.dt_piutang_bayardetail.Rows.Count)
-                        End With
+                        ds_hutangpiutang.dt_piutang_bayardetail.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_bayardetail)
 
                     Case "p_salesglobal"
                         repdatasource.Name = "ds_piutang_salesglobal"
@@ -149,22 +164,18 @@ Public Class fr_view_piutang
                 End Select
                 .SetParameters(New ReportParameter() {parUserId, parPeriode})
             End With
+        End With
+    End Sub
+
+    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Cursor = Cursors.WaitCursor
+        repViewerSelector(inlap_type)
+        With rv_nota
             .RefreshReport()
             .SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
             .ZoomMode = 2
             .ZoomPercent = 100
         End With
-    End Sub
-
-    Public Sub do_load()
-        repViewerSelector(inlap_type)
-
         Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'repViewerSelector(inlap_type)
-        Me.Cursor = Cursors.AppStarting
-
     End Sub
 End Class

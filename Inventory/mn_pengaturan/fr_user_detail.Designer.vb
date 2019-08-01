@@ -507,7 +507,7 @@ Partial Class fr_user_detail
         Me.dgv_listbarang.ReadOnly = True
         Me.dgv_listbarang.RowHeadersVisible = False
         Me.dgv_listbarang.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 111)
+        Me.dgv_listbarang.Size = New System.Drawing.Size(375, 116)
         Me.dgv_listbarang.TabIndex = 0
         '
         'linkLbl_searchbarang

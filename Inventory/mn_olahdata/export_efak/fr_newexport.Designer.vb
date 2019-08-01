@@ -103,7 +103,7 @@ Partial Class fr_newexport
         '
         Me.bt_cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cancel.Image = Global.Inventory.My.Resources.Resources._1492932873_Delete
+        Me.bt_cancel.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
         Me.bt_cancel.Location = New System.Drawing.Point(358, 88)
         Me.bt_cancel.Name = "bt_cancel"
         Me.bt_cancel.Size = New System.Drawing.Size(87, 30)

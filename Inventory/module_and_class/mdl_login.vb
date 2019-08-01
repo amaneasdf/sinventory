@@ -136,34 +136,39 @@
         Return 1
     End Function
 
-    Public Function resetUser(uid As String) As Boolean
-        Dim _retval As Boolean = False
-        Dim _qresult As Boolean = False
+    Public Function resetPassUser(uid As String) As Boolean
+        Dim qArr As New List(Of String)
         Dim q As String = ""
+        Dim qCk As Boolean = False
 
-        op_con()
-        Try
-            q = "UPDATE data_pengguna_alias SET user_password ='{1}', user_exp_date=DATE_ADD(CURDATE(),INTERVAL 3 MONTH), user_status=2 " _
-                & " WHERE user_alias = '{0}'"
-            _qresult = commnd(String.Format(q, uid, computeHash("123456")))
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If MsgBox("Apakah yakin akan mereset password user anda?", MsgBoxStyle.YesNo, "Reset Password") = MsgBoxResult.Yes Then
+                    q = "UPDATE data_pengguna_alias SET user_pwd = '{2}', user_status=0, user_upd_date=NOW(), user_upd_alias='{1}' WHERE user_alias = '{0}'"
+                    qArr.Add(String.Format(q, uid, loggeduser.user_id, computeHash("123456")))
 
-            If _qresult = True Then
-                q = "SELECT user_status FROM data_pengguna_alias WHERE user_alias='{0}'"
-                readcommd(String.Format(q, uid))
-                If rd.HasRows Then
-                    _qresult = IIf(rd.Item(0) = 2, True, False)
+                    q = "INSERT INTO system_pwdchange_log(log_alias1, log_alias2, log_ip, log_mac, log_session, log_tanggal, log_time) VALUE({0})"
+                    Dim _d = {"'" & uid & "'", "'" & loggeduser.user_id & "'",
+                              "'" & loggeduser.user_ip & "'", "'" & loggeduser.user_mac & "'",
+                              "'" & loggeduser.user_session & "'", "CURDATE()", "NOW()"}
+                    qArr.Add(String.Format(q, String.Join(",", _d)))
+
+                    qCk = x.TransactCommand(qArr)
+                    If qCk Then
+                        MessageBox.Show("Password telah direset, password defaultnya: 123456 ", "Data User", MessageBoxButtons.OK)
+                    Else
+                        MessageBox.Show("Telah terjadi kesalahan. Password gagal direset.", "Data User", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+
+                    Return qCk
                 Else
-                    _qresult = False
+                    Return False
                 End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", "Reset Password", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
             End If
-
-            _retval = _qresult
-        Catch ex As Exception
-            logError(ex, True)
-            _retval = False
-        End Try
-
-        Return _retval
+        End Using
     End Function
 
     Public Function getDataUser(ByVal uid As String, Optional ByRef Msg As String = "") As UserData
@@ -175,5 +180,4 @@
 
         Return xx
     End Function
-
 End Module

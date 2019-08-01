@@ -1,35 +1,13 @@
 ﻿Module mdlParamKodeVar
+    Private _LimitPerPage As Integer = 2000
+    Private _LastPrinter As String = String.Empty
+
     Public Structure cnction
         Dim host As String
         Dim uid As String
         Dim pass As String
         Dim db As String
     End Structure
-
-    Public Structure TransactionState
-        Private _oldState As String
-        Private _newState As String
-
-        Public Property OldState As String
-            Get
-                Return _oldState
-            End Get
-            Set(value As String)
-                _oldState = value
-            End Set
-        End Property
-
-        Public Property NewState As String
-            Get
-                Return _newState
-            End Get
-            Set(value As String)
-                _newState = value
-            End Set
-        End Property
-    End Structure
-
-
 
     Public Structure periode
         Dim id As String
@@ -83,11 +61,46 @@
 
     Public Structure dblogwrite
         Dim log_login As Boolean
-        Dim log_stock As Boolean
-        Dim log_trans As Boolean
-        Dim log_act As Boolean
+        Dim log_valid As Boolean
         Dim log_c_w As Boolean
     End Structure
+
+    Public ReadOnly Property LimitDataPerPage As Integer
+        Get
+            Try
+                _LimitPerPage = getSetting("App").Keys("LimitPerPage").Value
+                Return _LimitPerPage
+            Catch ex As Exception
+                logError(ex, True)
+                Return 1000
+            End Try
+        End Get
+    End Property
+
+    Public Property LastUsedPrinter As String
+        Set(value As String)
+            Try
+                InsertConfigIniKey("App", "LastUsedPrinter", value)
+            Catch ex As Exception
+                logError(ex, True)
+                consoleWriteLine(ex.Message)
+            End Try
+        End Set
+        Get
+            Dim x = New Printing.PrintDocument
+            Try
+                _LastPrinter = getSetting("App").Keys("LastUsedPrinter").Value
+                If String.IsNullOrEmpty(_LastPrinter) Then
+                    _LastPrinter = x.PrinterSettings.PrinterName
+                End If
+                Return _LastPrinter
+            Catch ex As Exception
+                logError(ex, True)
+                consoleWriteLine(ex.Message)
+                Return x.PrinterSettings.PrinterName
+            End Try
+        End Get
+    End Property
 
     Public usernull As New UserData
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
@@ -96,16 +109,12 @@
 
     Public selectperiode As New periode
     Public currentperiode As New periode
-    Public tglHariIni As Date = System.DateTime.Today
-
-    'tgl
-    Public sekarang As Date = System.DateTime.Now
-    Public selectedperiode As Date = DateSerial(tglHariIni.Year, tglHariIni.Month, 1)
+    Public selectmonth As Integer = Today.Month
+    Public selectyear As Integer = Today.Year
 
     'pajak increment
     Public Const ppn As Double = 0.1
     Public Const ppnbm As Double = 0.2
-
 
     'jenisreferensi
     Public Function jenisRef() As DataTable
@@ -154,9 +163,10 @@
         Dim q As String = ""
         Select Case tipe
             Case "satuan"
-                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1")
+                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1 ORDER BY satuan_kode")
             Case "satuan_plus"
-                dt = getDataTablefromDB("SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan WHERE satuan_status=1")
+                dt = getDataTablefromDB("SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan " _
+                                        & "WHERE satuan_status=1 ORDER BY satuan_nama")
             Case "kat_barang"
                 dt = getDataTablefromDB("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori WHERE kategori_status=1 ORDER BY kategori_kode")
             Case "pajak_barang"
@@ -175,6 +185,10 @@
 
             Case "bayar_pajak"
                 q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
+                dt = getDataTablefromDB(q)
+
+            Case "bayar_pajak2"
+                q = "SELECT CONCAT('Kateg. ', ref_text) Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
                 dt = getDataTablefromDB(q)
 
             Case "term"
@@ -370,20 +384,6 @@
         Return dt
     End Function
 
-    'statuspajakbarang
-    Public Function statusBarangPajak() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(Integer))
-        dt.Rows.Add("PPn 10% Included", 1)
-        dt.Rows.Add("PPn 10% Excluded", 2)
-        'dt.Rows.Add("PPnBM", 3)
-        dt.Rows.Add("Non Pajak", 0)
-
-        Return dt
-    End Function
-
     'tabpage list
     Public pgbarang = New TabPage() With {.Name = "pgbarang"}
     Public pgsupplier = New TabPage() With {.Name = "pgsupplier"}
@@ -414,8 +414,9 @@
     Public pgpiutangbgtolak = New TabPage() With {.Name = "pgpiutangbgtolak"}
     Public pgkas = New TabPage() With {.Name = "pgkas"}
     Public pgjurnalumum = New TabPage() With {.Name = "pgjurnalumum"}
-    Public pgjurnalmemorial = New TabPage() With {.Name = "pgjurnalmemorial"}
+    Public pgjurnalsesuai = New TabPage() With {.Name = "pgjurnalsesuai"}
     Public pgkartustok = New TabPage() With {.Name = "pgkartustok"}
+    Public pgadjstock = New TabPage() With {.Name = "pgadjstock"}
     Public pgtutupbuku = New TabPage() With {.Name = "pgtutupbuku"}
     Public pglap = New TabPage() With {.Name = "pglap"}
     Public pgexportEFak = New TabPage() With {.Name = "pgexportEFak", .AutoScroll = True}
@@ -441,13 +442,17 @@
     Public frmpenjualan As New fr_list With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list With {.Dock = DockStyle.Fill}
     Public frmpesanjual As New fr_list With {.Dock = DockStyle.Fill}
-    Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
-    'Public frmtagihan As New fr_draft_tagihan With {.Dock = DockStyle.Fill}
-    Public frmtagihan As New fr_draft_tagih With {.Dock = DockStyle.Fill}
+    'Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
+    'Public frmtagihan As New fr_draft_tagih With {.Dock = DockStyle.Fill}
+    Public frmrekap As New fr_draft_list With {.Dock = DockStyle.Fill}
+    Public frmtagihan As New fr_draft_list With {.Dock = DockStyle.Fill}
     Public frmstok As New fr_list With {.Dock = DockStyle.Fill}
-    Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
-    Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}
-    Public frmstockop As New fr_stockop_list With {.Dock = DockStyle.Fill}
+    'Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
+    'Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}
+    'Public frmstockop As New fr_stockop_list With {.Dock = DockStyle.Fill}
+    Public frmmutasigudang As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
+    Public frmmutasistok As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
+    Public frmstockop As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
     Public frmhutangawal As New fr_list With {.Dock = DockStyle.Fill}
     Public frmhutangbayar As New fr_list With {.Dock = DockStyle.Fill}
     Public frmhutangbgo As New fr_list With {.Dock = DockStyle.Fill}
@@ -457,10 +462,10 @@
     Public frmpiutangbgTolak As New fr_list With {.Dock = DockStyle.Fill}
     Public frmkas As New fr_list With {.Dock = DockStyle.Fill}
     Public frmjurnalumum As New fr_list With {.Dock = DockStyle.Fill}
-    Public frmjurnalmemorial As New fr_list With {.Dock = DockStyle.Fill}
-    Public frmlap As New fr_lap_stok With {.Dock = DockStyle.Fill}
+    Public frmjurnalsesuai As New fr_list With {.Dock = DockStyle.Fill}
     Public frmkartustok As New fr_urut_kartustok With {.Dock = DockStyle.Fill}
-    Public frmtutupbuku As New fr_tutup_buku With {.Dock = DockStyle.Fill}
+    Public frmadjstock As New fr_list With {.Dock = DockStyle.Fill}
+    Public frmtutupbuku As New fr_list With {.Dock = DockStyle.Fill}
     Public frmexportEfak As New fr_export_efaktur With {.Dock = DockStyle.Fill}
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
@@ -469,7 +474,48 @@
     Public frmjenisbarang As New fr_jenis_barang
     Public frmsatuanbarang As New fr_jenis_barang
 
-    'dgv currency style
+    'DATAGRID COLUMNS LIST
+    Public dgvcol_temp_ck = New DataGridViewCheckBoxColumn With {
+        .ReadOnly = False,
+        .Width = 50,
+        .FalseValue = 0,
+        .TrueValue = 1,
+        .IndeterminateValue = 0
+        }
+    Public dgvcol_temp_cb = New DataGridViewComboBoxColumn With {
+        .ReadOnly = False,
+        .Width = 100,
+        .DisplayStyle = DataGridViewComboBoxDisplayStyle.ComboBox
+        }
+    Public dgvcol_templ_id = New DataGridViewTextBoxColumn With {
+        .ReadOnly = True,
+        .MinimumWidth = 25,
+        .Width = 50
+        }
+    Public dgvcol_templ_status = New DataGridViewTextBoxColumn With {
+        .ReadOnly = True,
+        .MinimumWidth = 25,
+        .Width = 75
+        }
+    Public dgvcol_templ_alamat = New DataGridViewTextBoxColumn With {
+        .ReadOnly = True,
+        .MinimumWidth = 25,
+        .Width = 200,
+        .DefaultCellStyle = dgvstyle_multiline
+        }
+    Public dgvcol_templ_numeric = New DataGridViewTextBoxColumn With {
+        .ReadOnly = True,
+        .MinimumWidth = 25,
+        .DefaultCellStyle = dgvstyle_commathousand
+        }
+
+    'DATAGRID CELLSTYLE LIST
+    Public dgvstyle_commathousand As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+        .Format = "N0",
+        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
+        .NullValue = "-",
+        .Alignment = DataGridViewContentAlignment.MiddleRight
+    }
     Public dgvstyle_currency As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "N2",
         .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
@@ -477,39 +523,30 @@
         .Alignment = DataGridViewContentAlignment.MiddleRight
     }
 
-    'dgv currency style
-    Public dgvstyle_commathousand As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
-        .Format = "N0",
-        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
-        .NullValue = "-",
-        .Alignment = DataGridViewContentAlignment.MiddleRight
-    }
-
-    'dgv currency style
     Public dgvstyle_multiline As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .WrapMode = DataGridViewTriState.True
     }
 
-    'dgv percentage style
-    Public dgvstyle_percentage As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
-        .Format = "p2",
-        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
-        .NullValue = "-"
-    }
-
-    'dgv date style
     Public dgvstyle_date As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
         .Format = "dd/MM/yyyy",
         .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
         .NullValue = "-"
     }
+    Public dgvstyle_time As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+        .Format = "HH:mm:ss",
+        .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
+        .NullValue = "-"
+    }
+    Public dgvstyle_datetime As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle() With {
+       .Format = "dd/MM/yyyy hh:mm:ss",
+       .FormatProvider = System.Globalization.CultureInfo.GetCultureInfo("id-ID"),
+       .NullValue = "-"
+   }
+
 
     '-----------dev purpose
     Public log_switch As New dblogwrite With {
         .log_login = True,
-        .log_stock = False,
-        .log_trans = False,
-        .log_act = False,
         .log_c_w = True
     }
 End Module

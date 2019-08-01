@@ -134,7 +134,7 @@
     'SEARCH DATA
     Private Sub searchData(param As String, Optional pass As Boolean = False)
         clearPreview()
-        populateDGVUserCon("stockop", param, frmstockop.dgv_list)
+        'populateDGVUserCon("stockop", param, frmstockop.dgv_list)
     End Sub
 
     Private Sub listToDetail()

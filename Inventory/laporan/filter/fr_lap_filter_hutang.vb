@@ -3,75 +3,80 @@
     Private lapwintext As String = ""
     Public laptype As String
     Public bayar_sw As Boolean = False
+    Private pajak_sw As Boolean = True
     Public supplier_sw As Boolean = True
     Public faktur_sw As Boolean = False
     Public tgltrans_sw As Boolean = True
     Public periode_sw As Boolean = False
 
+    'LOAD
+    Public Sub do_load(judulLap As String, tipeLap As String)
+        laptype = tipeLap : lapwintext = judulLap
+
+        date_tglawal.Value = selectperiode.tglawal
+        date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        date_tglawal.MinDate = selectperiode.tglawal
+        date_tglakhir.MaxDate = selectperiode.tglakhir
+
+        lbl_periodedata.Text = main.strip_periode.Text
+        formSW(tipeLap)
+        Me.ShowDialog(main)
+    End Sub
+
     Private Sub prcessSW()
-        'If supplier_sw = False Then
         lbl_supplier.Visible = supplier_sw
         in_supplier.Visible = supplier_sw
         in_supplier_n.Visible = supplier_sw
-        'End If
-        'If jenis_sw = False Then
+
         lbl_bayar.Visible = bayar_sw
         cb_bayar.Visible = bayar_sw
-        'End If
-        'If barang_sw = False Then
+
+        lbl_pajak.Visible = pajak_sw
+        cb_pajak.Visible = pajak_sw
+
         lbl_faktur.Visible = faktur_sw
         in_faktur.Visible = faktur_sw
-        'End If
+
         lbl_tgl.Visible = tgltrans_sw
         lbl_tgl2.Visible = tgltrans_sw
         date_tglawal.Visible = tgltrans_sw
         date_tglakhir.Visible = tgltrans_sw
 
-        cb_periode.Visible = periode_sw
-        lbl_periode.Visible = periode_sw
-
         Me.Text = lapwintext
     End Sub
 
     Private Sub formSW(tipe As String)
+        Dim _pajak As String = "trans_pajak2"
+
         Select Case LCase(tipe)
-            Case "h_nota"
-                bayar_sw = False
-                faktur_sw = False
-                prcessSW()
+            Case "h_nota", "h_notabeli", "h_kartuhutang"
+                If LCase(tipe) = "h_notabeli" Then _pajak = "trans_pajak"
+                If LCase(tipe) = "h_kartuhutang" Then date_tglawal.Enabled = False
 
-                date_tglawal.MinDate = selectperiode.tglawal
-
-            Case "h_titipsupplier"
-                bayar_sw = False
-                faktur_sw = False
-                periode_sw = False
-                prcessSW()
-
-                date_tglawal.Visible = False
-                date_tglakhir.Location = New Point(date_tglawal.Left, date_tglawal.Top)
-                lbl_tgl.Text = "S.d. Tanggal"
-                lbl_tgl2.Visible = False
-
-            Case "h_kartuhutang"
-                bayar_sw = False
-                faktur_sw = False
-                prcessSW()
-
-                date_tglawal.Enabled = False
+            Case "h_titipsupplier", "h_titipsupplier_det"
+                pajak_sw = False
 
             Case "h_bayarnota"
-                periode_sw = False
-                faktur_sw = True
-                bayar_sw = True
-                prcessSW()
+
+            Case Else
+                Exit Sub
         End Select
+
+        cb_bayar.DataSource = jenis("bayarhutang")
+        cb_pajak.DataSource = jenis(_pajak)
+        For Each cb As ComboBox In {cb_bayar, cb_pajak}
+            cb.DisplayMember = "Text"
+            cb.ValueMember = "Value"
+        Next
+        prcessSW()
     End Sub
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
         Dim q As String
         Dim dt As New DataTable
+
+
         Select Case tipe
             Case "supplier"
                 q = "SELECT supplier_kode AS 'Kode', supplier_nama AS 'Nama' FROM data_supplier_master " _
@@ -92,12 +97,20 @@
                 Exit Sub
         End Select
 
-        dt = getDataTablefromDB(String.Format(q, param))
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                dt = x.GetDataTable(String.Format(q, param))
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
 
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
+            If .ColumnCount >= 2 Then
+                .Columns(0).Width = 135
+                .Columns(1).Width = 200
+            End If
         End With
     End Sub
 
@@ -120,241 +133,312 @@
         popPnl_barang.Visible = False
     End Sub
 
+    'CREATE MYSQL QUERY
     Private Function createQuery(tipe As String) As String
         Dim q As String = ""
-        Dim qwh As String = ""
-        Dim qreturn As String = ""
-        Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
-        Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
+        Dim _qjoin, _qorder, _qwh As String
+        Dim _colSelect As New List(Of String)
+        Dim _whrArr As New List(Of String)
+
         Select Case LCase(tipe)
-            Case "h_nota"
-                'BASED periode,supplier;OPT saldo_sisa
-                q = "SELECT supplier_kode as hn_supplier,supplier_nama as hn_supplier_n, hutang_tgl_jt as hn_jt, " _
-                    & "h_trans_kode_hutang as hn_faktur, hutang_awal as hn_saldoawal, hutang_hutang as hn_beli, " _
-                    & "(hutang_bayar*-1)-hutang_tolak as hn_bayar, hutang_retur*-1 as hn_retur, " _
-                    & "hutang_awal+hutang_hutang+hutang_retur+hutang_bayar+hutang_tolak as hn_sisa " _
-                    & "FROM ( " _
-                    & " SELECT h_trans_kode_hutang,hutang_tgl, hutang_supplier, hutang_tgl_jt, hutang_pajak, " _
-                    & "  SUM(if(h_trans_jenis IN ('awal','migrasi'),h_trans_nilai,0)) hutang_awal, " _
-                    & "  SUM(if(h_trans_jenis='beli',h_trans_nilai,0)) hutang_hutang, " _
-                    & "  SUM(if(h_trans_jenis='retur',h_trans_nilai,0)) hutang_retur, " _
-                    & "  SUM(if(h_trans_jenis='bayar',h_trans_nilai,0)) hutang_bayar, " _
-                    & "  SUM(if(h_trans_jenis='tolak',h_trans_nilai,0)) hutang_tolak, " _
-                    & "  hutang_tgl_lunas hutang_tglakhir " _
-                    & " FROM data_hutang_trans " _
-                    & " RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & " WHERE h_trans_status = 1 And h_trans_tgl BETWEEN '{0}' AND '{1}' AND hutang_pajak IN ({3}) " _
-                    & " GROUP BY h_trans_kode_hutang " _
-                    & ")hutang " _
-                    & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
-                    & "{4}" _
-                    & "ORDER BY supplier_nama, hn_faktur"
-                q = String.Format(q, _tglawal, _tglakhir, selectperiode.id, cb_pajak.SelectedValue, "{0}")
-
-                'qwh += "AND hutang_idperiode='" & cb_periode.SelectedValue & "' "
-
-                If in_supplier.Text <> Nothing Then
-                    qwh += "WHERE faktur_supplier='" & in_supplier.Text & "' "
-                End If
-
-            Case "h_titipsupplier"
-                'BASED supplier, tgl_akhir;OPT saldo_Sisa
-                q = "SELECT titipan.*, supplier_nama as hps_supplier_n, " _
-                    & "TRUNCATE(if(@change_supplier=supplier_nama,(@csum := @csum + (hps_debet-hps_kredit)),(@csum:=(hps_debet-hps_kredit))),2) as hps_sisa, " _
-                    & "CONCAT_WS(' : ',h_titip_faktur, UCASE(h_titip_tipe)) hps_bukti, " _
-                    & "@change_supplier:=supplier_nama " _
-                    & "FROM(" _
-                    & " SELECT h_titip_id,h_titip_ref hps_supplier,h_titip_tgl hps_tanggal, " _
-                    & "  IF(h_titip_nilai>0,h_titip_nilai,0) as hps_debet, IF(h_titip_nilai<0,h_titip_nilai*-1,0) as hps_kredit, " _
-                    & "  h_titip_faktur, h_titip_tipe " _
-                    & " FROM data_hutang_titip WHERE h_titip_idperiode='{0}' AND h_titip_status=1 " _
-                    & " ORDER BY h_titip_ref, h_titip_tgl, h_titip_id " _
-                    & ") titipan " _
-                    & "LEFT JOIN data_supplier_master ON supplier_kode=hps_supplier " _
-                    & "JOIN (SELECT @csum := 0, @change_supplier:='') para " _
-                    & "WHERE hps_tanggal<='{1}' {2}"
-                q = String.Format(q, cb_periode.SelectedValue, _tglakhir, "{0}")
-
-                If in_supplier.Text <> Nothing Then
-                    qwh += "AND supplier_kode='" & in_supplier.Text & "' "
-                End If
-
-            Case "h_kartuhutang"
-                'BASED periode,supplier;OPT 
-                q = "SELECT hhh.*, supplier_nama as pk_custo_n, supplier_alamat as pk_custo_k, " _
-                    & "TRUNCATE(if(@change_supplier=supplier_nama,(@csum := @csum + (pk_debet-pk_kredit)),(@csum:=(pk_debet-pk_kredit))),2) as pk_saldo, " _
-                    & "@change_supplier:=supplier_nama " _
-                    & "FROM( " _
-                    & " SELECT 0 h_trans_id,'' h_trans_kode_hutang,hutang_supplier pk_custo,h_trans_tgl pk_tgl," _
-                    & "  '' pk_no_bukti,'SALDO AWAL' pk_ket,SUM(h_trans_nilai) pk_debet,0 pk_kredit " _
-                    & " FROM data_hutang_trans  " _
-                    & " RIGHT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur AND hutang_status=1 " _
-                    & " WHERE h_trans_status = 1 And h_trans_periode ='{0}' AND h_trans_jenis IN ('awal','migrasi') AND hutang_pajak IN ({3}) " _
-                    & " GROUP BY hutang_supplier " _
-                    & " UNION " _
-                    & " SELECT h_trans_id,h_trans_kode_hutang,hutang_supplier,h_trans_tgl,h_trans_faktur, " _
-                    & "  (CASE h_trans_jenis " _
-                    & "     WHEN 'beli' THEN 'PEMBELIAN' " _
-                    & "     WHEN 'retur' THEN 'RETUR PEMBELIAN' " _
-                    & "     WHEN 'bayar' THEN CONCAT_WS(' ','PEMBAYARAN',h_trans_kode_hutang,h_trans_giro) " _
-                    & "     WHEN 'tolak' THEN CONCAT('TOLAK ',h_trans_faktur) " _
-                    & "     WHEN 'cair' THEN CONCAT('PENCAIRAN ',h_trans_giro) " _
-                    & "     ELSE 'ERROR' " _
-                    & "  END) ket,if(h_trans_nilai>0,h_trans_nilai,0) debet, " _
-                    & "  if(h_trans_nilai<0,h_trans_nilai*-1,0) kredit " _
+            Case "h_nota" 'BASED periode,supplier;OPT saldo_sisa
+                q = "SELECT {0} FROM( " _
+                    & " SELECT hutang_faktur, hutang_tgl, hutang_tgl_jt, hutang_supplier, hutang_pajak, hutang_status_lunas, hutang_tgl_lunas " _
                     & " FROM data_hutang_awal " _
-                    & " LEFT JOIN data_hutang_trans ON hutang_faktur=h_trans_kode_hutang AND h_trans_status = 1 AND h_trans_jenis NOT IN ('awal','migrasi') " _
-                    & " WHERE hutang_status = 1 And h_trans_periode ='{0}' AND hutang_pajak IN ({3}) " _
-                    & " ORDER BY pk_custo,pk_tgl,h_trans_id " _
-                    & ")hhh " _
-                    & "LEFT JOIN data_supplier_master ON supplier_kode=pk_custo " _
-                    & "JOIN (SELECT @change_supplier:='',@csum:=0) para " _
-                    & "WHERE pk_tgl BETWEEN '{1}' AND '{2}' {4}"
-                q = String.Format(q, cb_periode.SelectedValue, _tglawal, _tglakhir, cb_pajak.SelectedValue, "{0}")
+                    & " WHERE hutang_status IN (1,2) AND hutang_tgl<='{2:yyyy-MM-dd}' AND hutang_pajak IN ({3}) " _
+                    & "  AND (hutang_status_lunas = 0 OR hutang_tgl_lunas >= '{1:yyyy-MM-dd}') " _
+                    & " ORDER BY hutang_tgl, hutang_faktur " _
+                    & ")hutangawal {4}"
+                If Not String.IsNullOrWhiteSpace(in_supplier.Text) Then _whrArr.Add("hutang_supplier='" & in_supplier.Text & "'")
 
-                If in_supplier.Text <> Nothing Then
-                    qwh += "AND supplier_kode='" & in_supplier.Text & "' "
+
+                _colSelect.AddRange({"hutang_faktur hn_faktur",
+                                     "hutang_tgl_jt hn_jt",
+                                     "hutang_supplier hn_supplier",
+                                     "supplier_nama hn_supplier_n",
+                                     String.Format("@awal:= GetHutangSaldo('awal',hutang_faktur,'{0:yyyy-MM-dd}','{1:yyyy-MM-dd}') hn_saldoawal",
+                                                   selectperiode.tglawal, selectperiode.tglakhir),
+                                     String.Format("@beli:= GetHutangSaldo('beli',hutang_faktur,'{0:yyyy-MM-dd}','{1:yyyy-MM-dd}') hn_beli",
+                                                   selectperiode.tglawal, selectperiode.tglakhir),
+                                     String.Format("(@retur:= GetHutangSaldo('retur',hutang_faktur,'{0:yyyy-MM-dd}','{1:yyyy-MM-dd}'))*-1 hn_retur",
+                                                   selectperiode.tglawal, selectperiode.tglakhir),
+                                     String.Format("(@bayar:= GetHutangSaldo('bayar',hutang_faktur,'{0:yyyy-MM-dd}','{1:yyyy-MM-dd}') " _
+                                                   & "+ GetHutangSaldo('tolak',hutang_faktur,'{0:yyyy-MM-dd}','{1:yyyy-MM-dd}'))*-1 hn_bayar",
+                                                   selectperiode.tglawal, selectperiode.tglakhir),
+                                     "ROUND(@awal + @beli + @retur + @bayar, 2) hn_sisa"
+                                    })
+                _qjoin = " LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=hutang_supplier"
+                _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+                _qorder = ""
+
+                Return String.Format(q, String.Join(",", _colSelect), date_tglawal.Value, date_tglakhir.Value, cb_pajak.SelectedValue, _qjoin + _qwh + _qorder)
+                Exit Function
+
+            Case "h_notabeli" 'HUTANG BERDASARKAN PEMBELIAN DALAM KURUN WAKTU TERTENTU (+YG SUDAH LUNAS)
+                q = "SELECT faktur_kode psl2_faktur, faktur_tanggal_trans psl2_tgl, " _
+                    & "faktur_supplier psl2_sales, supplier_nama psl2_sales_n, " _
+                    & "faktur_term psl2_term, ADDDATE(faktur_tanggal_trans, faktur_term) psl2_jt, " _
+                    & "faktur_jumlah + IF(faktur_ppn_jenis=2, faktur_ppn, 0) psl2_brutto, " _
+                    & "faktur_disc + faktur_klaim psl2_potongan, " _
+                    & "@hutang:= GetHutangSaldo('hutang',faktur_kode,'{2:yyyy-MM-dd}','{3:yyyy-MM-dd}') psl2_penjualan, " _
+                    & "@bayar := GetHutangSaldo('bayar',faktur_kode,'{2:yyyy-MM-dd}','{3:yyyy-MM-dd}')*-1 psl2_bayar, " _
+                    & "@retur := GetHutangSaldo('retur',faktur_kode,'{2:yyyy-MM-dd}','{3:yyyy-MM-dd}')*-1 psl2_retur, " _
+                    & "ROUND(@hutang-@bayar-@retur,2) psl2_sisa " _
+                    & "FROM data_pembelian_faktur " _
+                    & "LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=faktur_supplier " _
+                    & "WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}' " _
+                    & " AND faktur_ppn_jenis IN ({4}) {5}"
+
+                If Not String.IsNullOrWhiteSpace(in_supplier.Text) Then _whrArr.Add("faktur_supplier='" & in_supplier.Text & "'")
+                _qwh = IIf(_whrArr.Count > 0, " AND " & String.Join(" AND ", _whrArr), "")
+
+                Return String.Format(q, date_tglawal.Value, date_tglakhir.Value, selectperiode.tglawal, selectperiode.tglakhir, cb_pajak.SelectedValue, _qwh)
+                Exit Function
+
+            Case "h_titipsupplier", "h_titipsupplier_det" 'BASED supplier, tgl_akhir;OPT saldo_Sisa
+                q = "SELECT {0} FROM( " _
+                     & " SELECT h_titip_ref t_supplier, h_titip_id t_id, h_titip_tgl t_tgl, h_titip_nilai t_nilai, h_titip_tipe t_jenis, h_titip_faktur t_ref " _
+                    & " FROM data_hutang_titip " _
+                    & " WHERE h_titip_status=1 AND h_titip_tgl BETWEEN '{1:yyyy-MM-dd}' AND '{2:yyyy-MM-dd}' " _
+                    & " UNION " _
+                    & " SELECT DISTINCT h_titip_ref t_supplier, 0 t_id, '{1:yyyy-MM-dd}' t_tgl, GetHutangSaldoAwal('titipan', h_titip_ref, '{1:yyyy-MM-dd}'), " _
+                    & "  'awal' t_jenis, '' t_ref " _
+                    & " FROM data_hutang_titip " _
+                    & " WHERE h_titip_status=1 AND h_titip_tgl BETWEEN '{1:yyyy-MM-dd}' AND '{2:yyyy-MM-dd}' " _
+                    & " GROUP BY h_titip_ref " _
+                    & ")titipan {3}"
+
+                If Not String.IsNullOrWhiteSpace(in_supplier.Text) Then _whrArr.Add("t_supplier='" & in_supplier.Text & "'")
+
+                If LCase(tipe) = "h_titipsupplier" Then
+                    _colSelect.AddRange({"t_supplier t_custo",
+                                         "supplier_nama t_custo_n",
+                                         "SUM(IF(t_jenis='awal', t_nilai,0)) t_awal",
+                                         "SUM(IF(t_jenis='retur', t_nilai,0)) t_titip",
+                                         "SUM(IF(t_jenis='bayar', t_nilai,0)) t_bayar"
+                                        })
+                    _qjoin = " LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=t_supplier"
+                    _qorder = " GROUP BY t_custo"
+                    _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+
+                    Return String.Format(q, String.Join(",", _colSelect), date_tglawal.Value, date_tglakhir.Value, _qjoin + _qwh + _qorder)
+                    Exit Function
+
+                ElseIf LCase(tipe) = "h_titipsupplier_det" Then
+                    _colSelect.AddRange({"t_supplier t_custo",
+                                         "supplier_nama t_custo_n",
+                                         "t_tgl",
+                                         "IFNULL(ref_text, 'ERROR') t_ket",
+                                         "t_ref",
+                                         "IF(t_nilai<0, t_nilai*-1, 0) t_debet",
+                                         "IF(t_nilai>0, t_nilai, 0) t_kredit"
+                                        })
+                    _qjoin = " LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=t_supplier " _
+                            & "LEFT JOIN ref_jenis ON ref_status=1 AND ref_kode=t_jenis AND ref_type='piutang_titip'"
+                    _qorder = " ORDER BY t_supplier, t_tgl, t_id"
+                    _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+
+                    Return String.Format(q, String.Join(",", _colSelect), date_tglawal.Value, date_tglakhir.Value, _qjoin + _qwh + _qorder)
+                    Exit Function
                 End If
+
+            Case "h_kartuhutang", "p_kartupiutangnota" 'BASED periode,supplier;OPT 
+                Dim _grouping As String = ""
+                Dim _colSaldoAwal As String = ""
+
+                q = "SELECT {0} FROM( " _
+                    & " SELECT {1}, '{3:yyy-MM-dd}' h_tgl, hutang_pajak h_kat, 'SALDO AWAL' h_ket, " _
+                    & "  '' h_ref, SUM(GetHutangSaldo('awal', hutang_faktur, '{3:yyy-MM-dd}', '{4:yyy-MM-dd}')) h_debet, 0 h_kredit " _
+                    & " FROM data_hutang_awal " _
+                    & " WHERE hutang_status IN (1,2) AND hutang_tgl<='{4:yyy-MM-dd}' AND (hutang_status_lunas = 0 OR hutang_tgl_lunas >= '{3:yyy-MM-dd}') " _
+                    & "  AND hutang_pajak IN({5}) " _
+                    & " GROUP BY {2}, hutang_pajak " _
+                    & " UNION " _
+                    & " SELECT hutang_supplier, h_trans_id, h_trans_kode_hutang, h_trans_tgl, hutang_pajak, " _
+                    & "  jenis.ref_text, h_trans_faktur, IF(h_trans_nilai>0, h_trans_nilai, 0), IF(h_trans_nilai<0, h_trans_nilai*-1, 0) " _
+                    & " FROM data_hutang_trans " _
+                    & " LEFT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur " _
+                    & " LEFT JOIN ref_jenis jenis ON jenis.ref_kode=h_trans_jenis AND jenis.ref_status=1 AND jenis.ref_type='hutang_trans' " _
+                    & " WHERE hutang_status IN (1,2) AND h_trans_status=1 AND h_trans_tgl BETWEEN '{3:yyy-MM-dd}' AND '{4:yyy-MM-dd}' " _
+                    & "  AND h_trans_jenis NOT IN ('migrasi') AND hutang_pajak IN({5}) " _
+                    & ") detailtrans {6}"
+
+                If Not String.IsNullOrWhiteSpace(in_supplier.Text) Then _whrArr.Add("h_supplier='" & in_supplier.Text & "'")
+                If Not String.IsNullOrWhiteSpace(in_faktur.Text) Then _whrArr.Add("h_kode='" & in_faktur.Text & "'")
+
+                If LCase(tipe) = "h_kartuhutang" Then
+                    _colSaldoAwal = "hutang_supplier h_supplier, 0 h_id, '' h_kode"
+                    _grouping = "hutang_supplier"
+                    _qorder = " ORDER BY h_supplier, h_tgl, h_id"
+
+                ElseIf LCase(tipe) = "h_kartuhutangnota" Then
+                    _colSaldoAwal = "hutang_supplier h_supplier, 0 h_id, hutang_faktur h_kode"
+                    _grouping = "hutang_faktur"
+                    _qorder = " ORDER BY h_supplier, h_kode, h_tgl, h_id"
+
+                Else
+                    Return String.Empty : Exit Function
+                End If
+
+                _colSelect.AddRange({"h_supplier pk_custo", "supplier_nama pk_custo_n",
+                                     "supplier_alamat pk_custo_k", "h_tgl pk_tgl",
+                                     "h_ref pk_no_bukti", "ref_text pk_kat",
+                                     "h_ket pk_ket", "h_kode pk_ref",
+                                     "h_debet pk_debet", "h_kredit pk_kredit"
+                                    })
+                _qjoin = " LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=h_supplier " _
+                        & "LEFT JOIN ref_jenis ON h_kat=ref_kode AND ref_status=1 AND ref_type='ppn_trans2'"
+                _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+
+                Return String.Format(q, String.Join(",", _colSelect), _colSaldoAwal, _grouping, date_tglawal.Value, date_tglakhir.Value,
+                                     cb_pajak.SelectedValue, _qjoin + _qwh + _qorder)
+                Exit Function
 
             Case "h_bayarnota"
-                q = "SELECT h_trans_kode_hutang hbd_faktur,hutang_supplier hbd_supplier,supplier_nama hbd_supplier_n, " _
-                    & "hutang_tgl hbd_tanggal, h_trans_tgl hbd_tglbayar, hutang_awal hbd_saldoawal, hutang_retur * -1 hbd_retur, hutang_bayar * -1 hbd_bayar," _
-                    & "hutang_tolak hbd_beli,hutang_sisa hbd_sisa, ket hbd_ket, hbd_hari " _
-                    & "FROM( " _
-                    & "SELECT h_trans_id, h_trans_kode_hutang,hutang_supplier,h_trans_tgl,hutang_tgl," _
-                    & " if(@faktur<>h_trans_kode_hutang,@ct:=0,@ct:=@ct+1) as count," _
-                    & " h_trans_jenis," _
-                    & " if(@ct=0,@sisa:=if(h_trans_jenis IN ('awal','migrasi'),h_trans_nilai,0),TRUNCATE(@sisa,2)) hutang_awal," _
-                    & " if(h_trans_jenis='beli',h_trans_nilai,0) hutang_hutang," _
-                    & " if(h_trans_jenis='retur',h_trans_nilai,0) hutang_retur," _
-                    & " if(h_trans_jenis='bayar',h_trans_nilai,0) hutang_bayar," _
-                    & " if(h_trans_jenis='tolak',h_trans_nilai,0) hutang_tolak," _
-                    & " TRUNCATE(@sisa:=@sisa+h_trans_nilai,2) hutang_sisa," _
-                    & " IF(h_trans_jenis NOT IN('awal', 'migrasi','jual')," _
-                    & " CONCAT(h_trans_faktur,':',(CASE " _
-                    & "     WHEN h_trans_jenis='bayar' THEN h_bayar_jenis_bayar " _
-                    & "     WHEN h_trans_jenis='retur' THEN 'RETUR' " _
-                    & "     WHEN h_trans_jenis='tolak' THEN 'BGTOLAK' " _
-                    & "     WHEN h_trans_jenis='cair' THEN 'BGCAIR' " _
-                    & "     Else '-' END)),'-')	ket,DATEDIFF(h_trans_tgl,hutang_tgl) as hbd_hari, " _
-                    & " @faktur:=h_trans_kode_hutang " _
-                    & "FROM data_hutang_awal " _
-                    & "LEFT JOIN data_hutang_trans ON hutang_faktur=h_trans_kode_hutang AND h_trans_status " _
-                    & "LEFT JOIN data_hutang_bayar ON h_trans_faktur=h_bayar_bukti " _
-                    & "JOIN(SELECT @sisa:=0,@faktur:='') para " _
-                    & "WHERE hutang_status=1 And h_trans_periode='{0}' AND hutang_pajak IN({1})" _
-                    & "ORDER BY h_trans_kode_hutang, h_trans_tgl, h_trans_id " _
-                    & ")hhh " _
-                    & "LEFT JOIN data_supplier_master ON hutang_supplier=supplier_kode " _
-                    & "WHERE h_trans_jenis NOT IN ('awal','beli','migrasi') {2}"
-                'q = String.Format(q, cb_periode.SelectedValue, date_tglawal.Value.ToString("yyyy-MM-dd"), date_tglakhir.Value.ToString("yyyy-MM-dd"), "{0}")
-                q = String.Format(q, cb_periode.SelectedValue, cb_pajak.SelectedValue, "{0}")
+                q = "SELECT {0} FROM( " _
+                    & " SELECT hutang_supplier, h_trans_id, h_trans_kode_hutang, hutang_tgl, hutang_pajak, " _
+                    & "  GetHutangSaldo('awal',hutang_faktur,'{1:yyy-MM-dd}', '{2:yyy-MM-dd}') + " _
+                    & "     GetHutangSaldo('beli',hutang_faktur,'{1:yyy-MM-dd}', '{2:yyy-MM-dd}') h_saldoawal, " _
+                    & "  IFNULL(h_bayar_jenis_bayar, (CASE h_trans_jenis " _
+                    & "     WHEN 'retur' THEN 'RETUR' WHEN 'tolak' THEN 'BGTOLAK' WHEN 'cair' THEN 'BGCAIR' ELSE '-' END)) h_jenis, " _
+                    & "  h_trans_nilai, h_trans_faktur, h_trans_tgl " _
+                    & " FROM data_hutang_trans " _
+                    & " LEFT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur " _
+                    & " LEFT JOIN data_hutang_bayar ON h_trans_faktur=h_bayar_bukti " _
+                    & " WHERE hutang_status IN (1,2) AND h_trans_status=1 AND h_trans_tgl BETWEEN '{1:yyy-MM-dd}' AND '{2:yyy-MM-dd}'" _
+                    & "  AND h_trans_jenis NOT IN ('jual','migrasi') AND hutang_pajak IN({3}) " _
+                    & ") pembayaran {4}"
 
+                _colSelect.AddRange({"hutang_supplier pbd_custo", "supplier_nama pbd_custo_n",
+                                     "h_trans_kode_hutang pbd_faktur", "hutang_tgl pbd_tanggal",
+                                     "ref_text pbd_kat", "h_saldoawal pbd_saldoawal",
+                                     "IF(h_jenis='RETUR', h_trans_nilai *-1, 0) pbd_retur",
+                                     "IF(h_jenis NOT IN('RETUR', 'BGTOLAK'), h_trans_nilai * -1, 0) pbd_bayar",
+                                     "IF(h_jenis='BGTOLAK', h_trans_nilai *-1, 0) pbd_tolak",
+                                     "h_trans_tgl pbd_tglbayar", "CONCAT_WS(':',h_trans_faktur,h_jenis) pbd_ket",
+                                     "DATEDIFF(h_trans_tgl, hutang_tgl) pbd_hari"
+                                    })
 
-                Dim whr As New List(Of String)
-                Dim op As Boolean = False
+                If Not String.IsNullOrWhiteSpace(in_supplier.Text) Then _whrArr.Add("hutang_supplier='" & in_supplier.Text & "'")
+                If Not String.IsNullOrWhiteSpace(in_faktur.Text) Then _whrArr.Add("h_trans_kode_hutang='" & in_faktur.Text & "'")
+                _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+                _qjoin = " LEFT JOIN data_supplier_master FORCE INDEX(supplier_idx3) ON supplier_kode=hutang_supplier " _
+                        & "LEFT JOIN ref_jenis ON hutang_pajak=ref_kode AND ref_status=1 AND ref_type='ppn_trans2'"
+                _qorder = " ORDER BY hutang_supplier, h_trans_kode_hutang, h_trans_tgl, h_trans_id"
 
-                qwh += "AND h_trans_tgl BETWEEN '" & _tglawal & "' AND '" & _tglakhir & "' {0}{1}"
-                If in_supplier.Text <> Nothing Or in_faktur.Text <> Nothing Or cb_bayar.SelectedValue <> "ALL" Then
-                    op = True
-                End If
-                If in_supplier.Text <> Nothing Then
-                    whr.Add("piutang_custo='" & in_supplier.Text & "'")
-                End If
-                If in_faktur.Text <> Nothing Then
-                    whr.Add("h_trans_kode_hutang='" & in_faktur.Text & "'")
-                End If
-                If cb_bayar.SelectedValue <> "ALL" Then
-                    whr.Add("SUBSTRING_INDEX(ket,':',-1)='" & cb_bayar.SelectedValue & "'")
-                End If
+                Return String.Format(q, String.Join(",", _colSelect), date_tglawal.Value, date_tglakhir.Value, cb_pajak.SelectedValue, _qjoin + _qwh + _qorder)
+                Exit Function
 
-                qwh = String.Format(qwh, IIf(op, "AND ", ""), String.Join(" AND ", whr))
-
-                'FUK
-                'If in_faktur.Text <> Nothing Then
-                '    qwh += "WHERE hutang_faktur='" & in_faktur.Text & "' "
-                '    If cb_bayar.SelectedValue <> "ALL" Then
-                '        qwh += "AND SUBSTRING_INDEX(ket,':',-1)='" & cb_bayar.SelectedValue & "' "
-                '    End If
-                'Else
-                '    If cb_bayar.SelectedValue <> "ALL" Then
-                '        qwh += "WHERE SUBSTRING_INDEX(ket,':',-1)='" & cb_bayar.SelectedValue & "' "
-                '    End If
-                'End If
         End Select
 
-        qreturn = String.Format(q, qwh)
-        consoleWriteLine(qreturn)
-
-        Return qreturn
+        Return String.Empty
     End Function
 
-    'EXPORT
-    Private Sub exportData(type As String)
-        Dim q As String = createQuery(type)
-        Dim _dt As New DataTable
-        Dim _colheader As New List(Of String)
-        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\Inventory\"
-        Dim _filename As String = "dataexport" & Today.ToString("yyyyMMdd")
-        Dim _respond As Boolean = False
-        Dim _svdialog As New SaveFileDialog
-        Dim _title As String = ""
+    'EXPORT DATA
+    Private Sub ExportLaporan(LapType As String)
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
+        End If
 
-        MyBase.Cursor = Cursors.AppStarting
+        Dim q As String = createQuery(LapType)
+        Dim _dt As New List(Of DataTable)
+        Dim _title As New List(Of String)
+        Dim _subtitle As New List(Of String())
+        Dim _colHeader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _periode As String = "" : Dim _tglawal As Date = date_tglawal.Value : Dim _tglakhir As Date = date_tglakhir.Value
+        Dim _ck As Boolean = False
 
-        Select Case type
-            Case "h_nota"
-                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Tgl.Jatuh Tempo", "Faktur", "Saldo Awal", "Pembayaran", "Retur", "Sisa"})
-                _title = "LAPORAN HUTANG SUPPLIER PER NOTA"
-                _filename = "SupplierNota" & Today.ToString("yyyyMMdd") & ".xlsx"
-            Case "h_titipsupplier"
-                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "No.Bukti Transaksi", "Tanggal", "Jenis", "Debet", "Kredit"})
-                q = "SELECT hps_supplier, hps_supplier_n,h_titip_faktur, hps_tanggal,UCASE(h_titip_tipe),hps_debet, hps_kredit FROM (" & q & ") datatabl"
-                _title = "LAPORAN PIUTANG TITIPAN PER SUPPLIER"
-                _filename = "PiutangSupplier" & Today.ToString("yyyyMMdd") & ".xlsx"
-            Case "h_kartuhutang"
-                _colheader.AddRange({"Kode Supplier", "Nama Supplier", "Tgl. Transaksi", "No.Bukti Transaksi", "Keterangan", "Debit", "Kredit", "Saldo"})
-                _title = "KARTU HUTANG PER SUPPLIER"
-                _filename = "KartuHutang" & Today.ToString("yyyyMMdd") & ".xlsx"
-                q = "SELECT pk_custo, pk_custo_n, pk_tgl, pk_no_bukti, pk_ket, pk_debet, pk_kredit, pk_saldo FROM (" & q & ") kartuhutang"
+        If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") AndAlso _tglawal.Day = 1 _
+            AndAlso _tglakhir.Day = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0).Day Then
+            _periode = UCase(_tglawal.ToString("MMMM yyyy"))
+        Else
+            _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
+        End If
 
-            Case "h_bayarnota"
-                _colheader.AddRange({"No.Faktur Pembelian", "Kode Supplier", "Nama Supplier", "Tgl.Pembelian", "Tgl.Pembayaran", "Saldo Awal", "Retur",
-                                     "Pembayaran", "Bayar Ditolak", "Keterangan", "Range Hari"})
-                _title = "LAPORAN HISTORI PEMBAYARAN HUTANG"
-                _filename = "PembayaranHutang" & Today.ToString("yyyyMMdd") & ".xlsx"
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Using dtx = x.GetDataTable(q)
+                    If dtx.Rows.Count = 0 Then
+                        MessageBox.Show("Jumlah data 0, tidak dapat mengexport data.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Exit Sub
+                    End If
 
-            Case Else
-                Exit Sub
-        End Select
+                    Select Case LapType
+                        Case "h_nota"
+                            _colHeader.AddRange({"KODE PIUTANG", "TGL. JTH TEMPO", "KD.SUPPLIER", "NAMA SUPPLIER", "SALDOAWAL", "PEMBELIAN", "RETUR", "BAYAR", "SISA"})
+                            _title.AddRange({"LAPORAN NOTA HUTANG SUPPLIER", "PERIODE " & _periode})
+                            _dt.Add(dtx)
 
-        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
-        _svdialog.FilterIndex = 1
-        _svdialog.FileName = _svdialog.InitialDirectory & _filename
-        _svdialog.RestoreDirectory = True
-        If _svdialog.ShowDialog = DialogResult.OK Then
-            If _svdialog.FileName <> Nothing Then
-                _outputdir = IO.Path.GetDirectoryName(_svdialog.FileName)
-                _filename = Strings.Replace(_svdialog.FileName, _outputdir, "")
+                        Case "h_notabeli"
+                            _colHeader.AddRange({"KODE PIUTANG", "TGL.TRANSAKSI", "KD.SUPPLIER", "NAMA SUPPLIER", "TERM", "JTH TEMPO", "BRUTTO", "POTONGAN", "HUTANG", "BAYAR", "RETUR", "SISA"})
+                            _title.AddRange({"LAPORAN HUTANG PEMBELIAN", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "h_titipsupplier"
+                            _colHeader.AddRange({"KD.SUPPLIER", "NAMA SUPPLIER", "SALDOWAL", "TITIPAN", "PEMBAYARAN"})
+                            _title.AddRange({"LAPORAN PIUTANG TITIPAN SUPPLIER", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "h_titipsupplier_det"
+                            _colHeader.AddRange({"TANGGAL", "KETERANGAN", "REFERENSI", "DEBET", "KREDIT"})
+                            _title.AddRange({"LAPORAN DETAIL PIUTANG TITIPAN SUPPLIER", "PERIODE " & _periode})
+
+                            Dim _custolist = New DataView(dtx).ToTable(True, {"t_custo", "t_custo_n"}).Select("", "t_custo ASC")
+                            For Each row As DataRow In _custolist
+                                _subtitle.Add({row.ItemArray(0), row.ItemArray(1), row.ItemArray(2)})
+                                Dim _expression = String.Format("t_custo = '{0}'", row.ItemArray(0))
+                                _dt.Add(New DataView(dtx.Select(_expression).CopyToDataTable()).ToTable(False, {"t_tgl", "t_ket", "t_ref", "t_debet", "t_kredit"}))
+                            Next
+
+                        Case "h_kartuhutang"
+                            _colHeader.AddRange({"TGL.TRANSAKSI", "KD.BUKTI", "KAT.", "KETERANGAN", "REFERENSI", "DEBET", "KREDIT"})
+                            _title.AddRange({"KARTU HUTANG", "PERIODE " & _periode})
+
+                            Dim _custolist = New DataView(dtx).ToTable(True, {"pk_custo", "pk_custo_n", "pk_custo_k"}).Select("", "pk_custo ASC")
+                            For Each row As DataRow In _custolist
+                                _subtitle.Add({row.ItemArray(0), row.ItemArray(1), row.ItemArray(2)})
+                                Dim _expression = String.Format("pk_custo = '{0}'", row.ItemArray(0))
+                                _dt.Add(New DataView(dtx.Select(_expression).CopyToDataTable()).ToTable(False, {"pk_tgl", "pk_no_bukti", "pk_kat", "pk_ket", "pk_ref", "pk_debet", "pk_kredit"}))
+                            Next
+
+                        Case "h_bayarnota"
+                            _colHeader.AddRange({"KD.SUPPLIER", "NAMA SUPPLIER", "NO.FAKTUR", "TGL.FAKTUR", "KAT.", "SALDOAWAL", "RETUR", "PEMBAYARAN",
+                                                 "BATAL/TOLAK", "TGL.BAYAR", "KETERANGAN", "HARI"})
+                            _title.AddRange({"LAPORAN PEMBAYARAN HUTANG PER NOTA", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case Else : Exit Sub
+                    End Select
+                End Using
+
+                Using dd As New SaveFileDialog
+                    dd.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+                    dd.FilterIndex = 1
+                    dd.FileName = dd.InitialDirectory
+                    dd.RestoreDirectory = True
+                    If dd.ShowDialog = DialogResult.OK Then
+                        If dd.FileName <> Nothing Then
+                            Dim fk = dd.FileName.Split(".")
+                            Dim _fileExt As String = IIf(dd.FilterIndex = 1, "xlsx", fk(fk.Count - 1))
+
+                            Me.Cursor = Cursors.WaitCursor
+                            If ExportExcel(_colHeader, _dt, _title, dd.FileName, _fileExt, _outputdir, _subtitle) Then
+                                If System.IO.File.Exists(_outputdir) = True Then
+                                    MessageBox.Show("Export Data Sukses", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                    Process.Start(_outputdir)
+                                Else
+                                    MessageBox.Show("File tidak dapat ditemukan", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                End If
+                            End If
+                            Me.Cursor = Cursors.Default
+                        End If
+                    End If
+                End Using
             Else
-                Exit Sub
+
             End If
-        Else
-            Exit Sub
-        End If
-
-        _dt = getDataTablefromDB(q)
-
-        If exportXlsx(_colheader, _dt, _outputdir, _filename, _title) = True Then
-            MessageBox.Show("Export sukses")
-            If System.IO.File.Exists(_svdialog.FileName) = True Then
-                Process.Start(_svdialog.FileName)
-            End If
-        Else
-            MessageBox.Show("Export gagal")
-        End If
-
-        MyBase.Cursor = Cursors.Default
+        End Using
     End Sub
 
     'DRAG FORM
@@ -380,22 +464,14 @@
     End Sub
 
     Private Sub fr_lap_filter_jual_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        Dim _dialogres As Windows.Forms.DialogResult = MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-        If _dialogres = Windows.Forms.DialogResult.No Then
-            e.Cancel = True
-        End If
+        'Dim _dialogres As Windows.Forms.DialogResult = MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        'If _dialogres = Windows.Forms.DialogResult.No Then
+        '    e.Cancel = True
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         bt_batalbeli.PerformClick()
-    End Sub
-
-    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
-    End Sub
-
-    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
     End Sub
 
     Private Sub fr_pesan_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
@@ -408,66 +484,31 @@
         End If
     End Sub
 
-    'LOAD
-    Private Sub fr_lap_filter_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
-
-    Public Sub do_load(judulLap As String, tipeLap As String)
-        laptype = tipeLap
-        lapwintext = judulLap
-
-        With cb_periode
-            .DataSource = jenis("periode")
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-            .SelectedValue = selectperiode.id
-        End With
-
-        With cb_pajak
-            .DataSource = jenis("trans_pajak2")
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-        End With
-
-        With cb_bayar
-            .DataSource = jenis("bayarhutang")
-            .DisplayMember = "Text"
-            .ValueMember = "Value"
-        End With
-        date_tglawal.Value = selectperiode.tglawal
-        date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-
-        date_tglawal.MinDate = selectperiode.tglawal
-        date_tglakhir.MaxDate = selectperiode.tglakhir
-
-        lbl_periodedata.Text = main.strip_periode.Text
-
-        formSW(tipeLap)
-        'prcessSW()
-    End Sub
-
-    Private Sub fr_lap_filter_hutang_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
-
-    'LOAD LAPORAN
+    'UI : BUTTON
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        Dim x As New fr_lap_hutang With {
+        Dim x As New fr_view_piutang With {
                     .Text = lapwintext
                 }
-        Dim _periode As String = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
-        Dim _kategori As String = cb_pajak.Text
+        Dim _periode As String = ""
+        Dim _tglawal As Date = date_tglawal.Value
+        Dim _tglakhir As Date = date_tglakhir.Value
+
+        If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") And _tglawal.Day = 1 And _tglakhir = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0) Then
+            _periode = "Periode " & _tglawal.ToString("MMMM yyyy")
+        Else
+            _periode = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
+        End If
 
         Me.Cursor = Cursors.WaitCursor
         x.setVar(laptype, createQuery(laptype), _periode)
-        x.do_load()
-        x.ShowDialog()
+        x.ShowDialog(Me)
         Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_exportxl.Click
-        exportData(laptype)
+        Me.Cursor = Cursors.WaitCursor
+        ExportLaporan(laptype)
+        Me.Cursor = Cursors.Default
     End Sub
 
     'UI
@@ -518,8 +559,8 @@
         End If
     End Sub
 
-    '------------- INPUT UI
-    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_periode.KeyPress, cb_bayar.KeyPress, cb_pajak.KeyPress
+    'UI : INPUT
+    Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_bayar.KeyPress, cb_pajak.KeyPress
         If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
             e.Handled = True
         End If
@@ -541,7 +582,7 @@
         date_tglawal.MaxDate = date_tglakhir.Value
     End Sub
 
-    Private Sub cb_periode_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_periode.SelectionChangeCommitted
+    Private Sub cb_periode_SelectionChangeCommitted(sender As Object, e As EventArgs)
         'readcommd("SELECT tutupbk_periode_tglawal, tutupbk_periode_tglakhir FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id='" & cb_periode.SelectedValue & "'")
         'If rd.HasRows Then
         '    'date_tglawal.MaxDate = rd.Item(1)
@@ -560,16 +601,23 @@
         keyshortenter(in_supplier_n, e)
     End Sub
 
-    Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter
-        popPnl_barang.Location = New Point(in_supplier_n.Left, in_supplier_n.Top + in_supplier_n.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
+    Private Sub in_supplier_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyDown, in_faktur.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
         End If
-        popupstate = "supplier"
-        loadDataBRGPopup("supplier", in_supplier_n.Text)
     End Sub
 
-    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave
+    Private Sub in_supplier_n_Enter(sender As Object, e As EventArgs) Handles in_supplier_n.Enter, in_faktur.Enter
+        popPnl_barang.Location = New Point(sender.Left, sender.Top + sender.Height)
+        If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
+
+        If sender.Name = "in_supplier_n" Then : popupstate = "supplier"
+        Else : popupstate = "faktur"
+        End If
+        loadDataBRGPopup(popupstate, sender.Text)
+    End Sub
+
+    Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave, in_faktur.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
         Else
@@ -618,23 +666,6 @@
         If in_supplier_n.Text = "" Then
             in_supplier.Clear()
             'AND OTHER STUFF
-        End If
-    End Sub
-
-    Private Sub in_faktur_Enter(sender As Object, e As EventArgs) Handles in_faktur.Enter
-        popPnl_barang.Location = New Point(in_faktur.Left, in_faktur.Top + in_faktur.Height)
-        If popPnl_barang.Visible = False Then
-            popPnl_barang.Visible = True
-        End If
-        popupstate = "faktur"
-        loadDataBRGPopup("faktur", in_faktur.Text)
-    End Sub
-
-    Private Sub in_faktur_Leave(sender As Object, e As EventArgs) Handles in_faktur.Leave
-        If Not dgv_listbarang.Focused = True Then
-            popPnl_barang.Visible = False
-        Else
-            popPnl_barang.Visible = True
         End If
     End Sub
 End Class

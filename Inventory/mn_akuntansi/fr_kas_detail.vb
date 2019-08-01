@@ -387,9 +387,8 @@
             Return False
             Exit Function
         Else
-            MessageBox.Show("Data tersimpan")
-            frmkas.in_cari.Clear()
-            populateDGVUserCon("kas", "", frmkas.dgv_list)
+            MessageBox.Show("Data tersimpan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+            DoRefreshTab_v2({pgkas})
             Return True
             Me.Close()
         End If
@@ -455,18 +454,13 @@
         CenterToScreen()
     End Sub
 
-    '-------------close
+    'UI : CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalperkiraan.Click
-        If MessageBox.Show("Tutup Form?", "Kas", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            clstate = False
-            Me.Close()
-        Else
-            clstate = True
-        End If
+        Me.Close()
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        e.Cancel = clstate
+
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -553,11 +547,6 @@
         If e.KeyCode = Keys.Enter Then
             'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
-        End If
-    End Sub
-
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
-        If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
     End Sub
@@ -584,7 +573,6 @@
         End If
     End Sub
 
-
     '------------- load
     Private Sub fr_kas_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         dgv_kas.ClearSelection()
@@ -602,26 +590,22 @@
             cb_jenis.Focus()
             Exit Sub
         End If
-        'If Trim(in_sales.Text) = Nothing Then
-        '    MessageBox.Show("Salesman belum di input")
-        '    in_sales_n.Focus()
-        '    Exit Sub
-        'End If
         If dgv_kas.Rows.Count = 0 Then
             MessageBox.Show("Data kas belum di input")
             in_rek_n.Focus()
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data kas?", "Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            If saveData() = True Then
-                clstate = False
-                Me.Close()
-            End If
-        End If
+        Dim _askRes As DialogResult = Windows.Forms.DialogResult.Yes
+        If formstate <> InputState.Insert Then _askRes = MessageBox.Show("Simpan data kas?", "Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _askRes = Windows.Forms.DialogResult.Yes Then saveData()
     End Sub
 
     '------------ input
+    Private Sub date_tgl_trans_KeyDown(sender As Object, e As KeyEventArgs) Handles date_tgl_trans.KeyDown
+        keyshortenter(in_bank_n, e)
+    End Sub
+
     '------------- BANK
     Private Sub in_bank_KeyUP(sender As Object, e As KeyEventArgs) Handles in_bank.KeyUp
         keyshortenter(in_bank_n, e)
@@ -630,49 +614,44 @@
     Private Sub in_bank_n_Enter(sender As Object, e As EventArgs) Handles in_bank_n.Enter
         If sender.ReadOnly = False And sender.Enabled = True Then
             popPnl_barang.Location = New Point(in_bank_n.Left, in_bank_n.Top + in_bank_n.Height)
+            If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
             popupstate = "bank"
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
             loadDataBRGPopup(sender.Text)
         End If
     End Sub
 
-    Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_n.KeyUp, in_sales_n.KeyUp, in_rek_n.KeyUp
-        Dim _nxtcntrol As Control = Nothing
-        Dim _kdcntrol As Control = Nothing
+    Private Sub in_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_n.KeyDown, in_sales_n.KeyDown, in_rek_n.KeyDown
+        Dim _nxtctrl As Control = Nothing
+        Dim _kdcntrl As Control = Nothing
+
         Select Case sender.Name.ToString
             Case "in_bank_n"
-                _nxtcntrol = cb_jenis
-                _kdcntrol = in_bank
+                _nxtctrl = cb_jenis : _kdcntrl = in_bank
             Case "in_sales_n"
-                _nxtcntrol = in_rek_n
-                _kdcntrol = in_sales
+                _nxtctrl = in_rek_n : _kdcntrl = in_sales
             Case "in_rek_n"
-                _nxtcntrol = in_kredit
-                _kdcntrol = in_rek
+                _nxtctrl = in_debet : _kdcntrl = in_rek
             Case Else
                 Exit Sub
         End Select
 
-        If (sender.Text = "" Or e.KeyCode = Keys.Back) And IsNothing(_kdcntrol) = False Then
-            _kdcntrol.Text = ""
+        If sender.Text = "" And IsNothing(_kdcntrl) = False Then
+            _kdcntrl.Text = ""
         End If
 
         If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
+            If popPnl_barang.Visible = True Then dgv_listbarang.Focus()
+
         ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(_nxtcntrol, e)
+            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then setPopUpResult()
+            keyshortenter(_nxtctrl, e)
         Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.Enabled = True And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
+            If e.KeyCode <> Keys.Escape And sender.Readonly = False Then
+                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
+                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
+                    If Not IsNothing(_kdcntrl) Then _kdcntrl.Text = ""
                 End If
+                If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
                 loadDataBRGPopup(sender.Text)
             End If
         End If

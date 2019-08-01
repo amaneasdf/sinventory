@@ -48,11 +48,6 @@
         End If
     End Sub
 
-    Public Sub clearLogin()
-        in_pass.Clear()
-        in_user.Clear()
-    End Sub
-
     Private Async Function ckDBLock() As Task(Of KeyValuePair(Of Boolean, String))
         Dim q As String = "SELECT var_value FROM system_var WHERE var_name='sysLock'; " _
                           & "SELECT IFNULL(var_value,'Ditutup') FROM system_var WHERE var_name='sysLockMessage'"
@@ -138,6 +133,7 @@
         _tmer_ckLock.Start()
     End Sub
 
+    'UI : CLOSE
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
         bt_close.PerformClick()
     End Sub
@@ -163,7 +159,7 @@
         'End If
     End Sub
 
-
+    'UI : BUTTON
     Private Async Sub bt_login_Click(sender As Object, e As EventArgs) Handles bt_login.Click
         If in_user.Text = Nothing Then
             MessageBox.Show("Masukkan UserID")
@@ -180,6 +176,24 @@
         Await call_login()
     End Sub
 
+    Private Sub bt_switch_Click(sender As Object, e As EventArgs) Handles bt_switch.Click
+        With bt_switch
+            If pass_switch = True Then
+                .BackgroundImage = Global.Inventory.My.Resources.Resources.hide_password
+                pass_switch = False
+                in_pass.UseSystemPasswordChar = False
+                hssssss.SetToolTip(bt_switch, "Hide Password")
+            Else
+                .BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
+                pass_switch = True
+                in_pass.UseSystemPasswordChar = True
+                hssssss.SetToolTip(bt_switch, "Show Password")
+            End If
+        End With
+        in_pass.Focus()
+    End Sub
+
+    'UI : INPUT
     Private Async Sub in_user_KeyDown(sender As Object, e As KeyEventArgs) Handles in_user.KeyDown
         If e.KeyCode = Keys.Enter Then
             If in_pass.Text = Nothing Then
@@ -206,23 +220,7 @@
         End If
     End Sub
 
-    Private Sub bt_switch_Click(sender As Object, e As EventArgs) Handles bt_switch.Click
-        With bt_switch
-            If pass_switch = True Then
-                .BackgroundImage = Global.Inventory.My.Resources.Resources.hide_password
-                pass_switch = False
-                in_pass.UseSystemPasswordChar = False
-                hssssss.SetToolTip(bt_switch, "Hide Password")
-            Else
-                .BackgroundImage = Global.Inventory.My.Resources.Resources.show_password
-                pass_switch = True
-                in_pass.UseSystemPasswordChar = True
-                hssssss.SetToolTip(bt_switch, "Show Password")
-            End If
-        End With
-        in_pass.Focus()
-    End Sub
-
+    'UI : OTHER
     Private Async Sub _tmer_ckLock_Tick(sender As Object, e As EventArgs)
         _tmer_ckLock.Stop()
         Dim x = Await ckDBLock()

@@ -44,11 +44,6 @@ Partial Class fr_hutang_bayar
         Me.in_supplier = New System.Windows.Forms.TextBox()
         Me.in_faktur = New System.Windows.Forms.TextBox()
         Me.dgv_bayar = New System.Windows.Forms.DataGridView()
-        Me.bayar_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bayar_jt = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bayar_saldoawal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bayar_sisahutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bayar_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.date_bg_tgl = New System.Windows.Forms.DateTimePicker()
         Me.cb_bayar = New System.Windows.Forms.ComboBox()
         Me.in_kredit = New System.Windows.Forms.NumericUpDown()
@@ -94,6 +89,12 @@ Partial Class fr_hutang_bayar
         Me.Label17 = New System.Windows.Forms.Label()
         Me.in_status = New System.Windows.Forms.TextBox()
         Me.pnl_footer = New System.Windows.Forms.Panel()
+        Me.bayar_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_jt = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_saldoawal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_sisahutang = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_kredit = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bayar_filler = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MenuStrip1.SuspendLayout()
         Me.Panel1.SuspendLayout()
         CType(Me.dgv_bayar, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -232,7 +233,7 @@ Partial Class fr_hutang_bayar
         Me.bt_batalperkiraan.Location = New System.Drawing.Point(798, 11)
         Me.bt_batalperkiraan.Name = "bt_batalperkiraan"
         Me.bt_batalperkiraan.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batalperkiraan.TabIndex = 20
+        Me.bt_batalperkiraan.TabIndex = 23
         Me.bt_batalperkiraan.Text = "Batal"
         Me.bt_batalperkiraan.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
         Me.bt_batalperkiraan.UseVisualStyleBackColor = False
@@ -247,7 +248,7 @@ Partial Class fr_hutang_bayar
         Me.bt_simpanperkiraan.Location = New System.Drawing.Point(637, 11)
         Me.bt_simpanperkiraan.Name = "bt_simpanperkiraan"
         Me.bt_simpanperkiraan.Size = New System.Drawing.Size(155, 30)
-        Me.bt_simpanperkiraan.TabIndex = 19
+        Me.bt_simpanperkiraan.TabIndex = 22
         Me.bt_simpanperkiraan.Text = "Simpan Pembayaran"
         Me.bt_simpanperkiraan.UseVisualStyleBackColor = False
         '
@@ -302,7 +303,7 @@ Partial Class fr_hutang_bayar
         Me.date_tgl_trans.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_tgl_trans.Name = "date_tgl_trans"
         Me.date_tgl_trans.Size = New System.Drawing.Size(188, 20)
-        Me.date_tgl_trans.TabIndex = 6
+        Me.date_tgl_trans.TabIndex = 8
         '
         'in_supplier
         '
@@ -322,10 +323,10 @@ Partial Class fr_hutang_bayar
         Me.in_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faktur.ForeColor = System.Drawing.Color.Black
         Me.in_faktur.Location = New System.Drawing.Point(12, 143)
-        Me.in_faktur.MaxLength = 30
+        Me.in_faktur.MaxLength = 255
         Me.in_faktur.Name = "in_faktur"
         Me.in_faktur.Size = New System.Drawing.Size(206, 20)
-        Me.in_faktur.TabIndex = 8
+        Me.in_faktur.TabIndex = 10
         '
         'dgv_bayar
         '
@@ -333,53 +334,14 @@ Partial Class fr_hutang_bayar
         Me.dgv_bayar.AllowUserToDeleteRows = False
         Me.dgv_bayar.BackgroundColor = System.Drawing.Color.White
         Me.dgv_bayar.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_bayar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bayar_faktur, Me.bayar_jt, Me.bayar_saldoawal, Me.bayar_sisahutang, Me.bayar_kredit})
+        Me.dgv_bayar.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bayar_faktur, Me.bayar_jt, Me.bayar_saldoawal, Me.bayar_sisahutang, Me.bayar_kredit, Me.bayar_filler})
         Me.dgv_bayar.Location = New System.Drawing.Point(12, 168)
         Me.dgv_bayar.Name = "dgv_bayar"
         Me.dgv_bayar.ReadOnly = True
         Me.dgv_bayar.RowHeadersVisible = False
         Me.dgv_bayar.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_bayar.Size = New System.Drawing.Size(865, 158)
-        Me.dgv_bayar.TabIndex = 13
-        '
-        'bayar_faktur
-        '
-        Me.bayar_faktur.HeaderText = "No.Faktur"
-        Me.bayar_faktur.Name = "bayar_faktur"
-        Me.bayar_faktur.ReadOnly = True
-        Me.bayar_faktur.Width = 175
-        '
-        'bayar_jt
-        '
-        Me.bayar_jt.HeaderText = "Jatuh Tempo"
-        Me.bayar_jt.MinimumWidth = 50
-        Me.bayar_jt.Name = "bayar_jt"
-        Me.bayar_jt.ReadOnly = True
-        '
-        'bayar_saldoawal
-        '
-        Me.bayar_saldoawal.HeaderText = "Total Hutang"
-        Me.bayar_saldoawal.MinimumWidth = 100
-        Me.bayar_saldoawal.Name = "bayar_saldoawal"
-        Me.bayar_saldoawal.ReadOnly = True
-        Me.bayar_saldoawal.Width = 150
-        '
-        'bayar_sisahutang
-        '
-        Me.bayar_sisahutang.HeaderText = "Sisa Hutang"
-        Me.bayar_sisahutang.MinimumWidth = 100
-        Me.bayar_sisahutang.Name = "bayar_sisahutang"
-        Me.bayar_sisahutang.ReadOnly = True
-        Me.bayar_sisahutang.Width = 150
-        '
-        'bayar_kredit
-        '
-        Me.bayar_kredit.DataPropertyName = "trans_kredit"
-        Me.bayar_kredit.HeaderText = "Nilai Bayar"
-        Me.bayar_kredit.MinimumWidth = 150
-        Me.bayar_kredit.Name = "bayar_kredit"
-        Me.bayar_kredit.ReadOnly = True
-        Me.bayar_kredit.Width = 150
+        Me.dgv_bayar.TabIndex = 15
         '
         'date_bg_tgl
         '
@@ -389,7 +351,7 @@ Partial Class fr_hutang_bayar
         Me.date_bg_tgl.MinDate = New Date(1999, 1, 1, 0, 0, 0, 0)
         Me.date_bg_tgl.Name = "date_bg_tgl"
         Me.date_bg_tgl.Size = New System.Drawing.Size(188, 20)
-        Me.date_bg_tgl.TabIndex = 7
+        Me.date_bg_tgl.TabIndex = 9
         '
         'cb_bayar
         '
@@ -400,7 +362,7 @@ Partial Class fr_hutang_bayar
         Me.cb_bayar.Location = New System.Drawing.Point(81, 77)
         Me.cb_bayar.Name = "cb_bayar"
         Me.cb_bayar.Size = New System.Drawing.Size(188, 21)
-        Me.cb_bayar.TabIndex = 4
+        Me.cb_bayar.TabIndex = 6
         '
         'in_kredit
         '
@@ -411,7 +373,7 @@ Partial Class fr_hutang_bayar
         Me.in_kredit.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_kredit.Name = "in_kredit"
         Me.in_kredit.Size = New System.Drawing.Size(161, 20)
-        Me.in_kredit.TabIndex = 11
+        Me.in_kredit.TabIndex = 13
         Me.in_kredit.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_kredit.ThousandsSeparator = True
         '
@@ -437,7 +399,7 @@ Partial Class fr_hutang_bayar
         Me.bt_tbbayar.Location = New System.Drawing.Point(758, 144)
         Me.bt_tbbayar.Name = "bt_tbbayar"
         Me.bt_tbbayar.Size = New System.Drawing.Size(18, 18)
-        Me.bt_tbbayar.TabIndex = 12
+        Me.bt_tbbayar.TabIndex = 14
         Me.bt_tbbayar.UseVisualStyleBackColor = False
         '
         'popPnl_barang
@@ -510,7 +472,7 @@ Partial Class fr_hutang_bayar
         Me.in_ket.Multiline = True
         Me.in_ket.Name = "in_ket"
         Me.in_ket.Size = New System.Drawing.Size(382, 60)
-        Me.in_ket.TabIndex = 16
+        Me.in_ket.TabIndex = 18
         '
         'Label10
         '
@@ -544,7 +506,7 @@ Partial Class fr_hutang_bayar
         Me.in_total.Name = "in_total"
         Me.in_total.ReadOnly = True
         Me.in_total.Size = New System.Drawing.Size(245, 26)
-        Me.in_total.TabIndex = 18
+        Me.in_total.TabIndex = 19
         Me.in_total.TabStop = False
         Me.in_total.Text = "0"
         Me.in_total.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
@@ -579,7 +541,7 @@ Partial Class fr_hutang_bayar
         Me.in_sisafaktur.Name = "in_sisafaktur"
         Me.in_sisafaktur.ReadOnly = True
         Me.in_sisafaktur.Size = New System.Drawing.Size(195, 20)
-        Me.in_sisafaktur.TabIndex = 10
+        Me.in_sisafaktur.TabIndex = 12
         Me.in_sisafaktur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
         'Label8
@@ -603,7 +565,7 @@ Partial Class fr_hutang_bayar
         Me.in_tgl_jtfaktur.Name = "in_tgl_jtfaktur"
         Me.in_tgl_jtfaktur.ReadOnly = True
         Me.in_tgl_jtfaktur.Size = New System.Drawing.Size(165, 20)
-        Me.in_tgl_jtfaktur.TabIndex = 9
+        Me.in_tgl_jtfaktur.TabIndex = 11
         Me.in_tgl_jtfaktur.TabStop = False
         '
         'Label5
@@ -626,7 +588,7 @@ Partial Class fr_hutang_bayar
         Me.cb_akun.Location = New System.Drawing.Point(364, 77)
         Me.cb_akun.Name = "cb_akun"
         Me.cb_akun.Size = New System.Drawing.Size(188, 21)
-        Me.cb_akun.TabIndex = 5
+        Me.cb_akun.TabIndex = 7
         '
         'Label12
         '
@@ -659,7 +621,7 @@ Partial Class fr_hutang_bayar
         Me.in_potongan.Maximum = New Decimal(New Integer() {1215752191, 23, 0, 0})
         Me.in_potongan.Name = "in_potongan"
         Me.in_potongan.Size = New System.Drawing.Size(245, 20)
-        Me.in_potongan.TabIndex = 17
+        Me.in_potongan.TabIndex = 20
         Me.in_potongan.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.in_potongan.ThousandsSeparator = True
         Me.in_potongan.Visible = False
@@ -685,7 +647,7 @@ Partial Class fr_hutang_bayar
         Me.in_tglpencairan.Name = "in_tglpencairan"
         Me.in_tglpencairan.ReadOnly = True
         Me.in_tglpencairan.Size = New System.Drawing.Size(149, 20)
-        Me.in_tglpencairan.TabIndex = 15
+        Me.in_tglpencairan.TabIndex = 17
         '
         'Label15
         '
@@ -705,10 +667,10 @@ Partial Class fr_hutang_bayar
         Me.in_no_bg.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_no_bg.ForeColor = System.Drawing.Color.Black
         Me.in_no_bg.Location = New System.Drawing.Point(55, 337)
-        Me.in_no_bg.MaxLength = 30
+        Me.in_no_bg.MaxLength = 250
         Me.in_no_bg.Name = "in_no_bg"
         Me.in_no_bg.Size = New System.Drawing.Size(165, 20)
-        Me.in_no_bg.TabIndex = 14
+        Me.in_no_bg.TabIndex = 16
         '
         'in_saldotitipan
         '
@@ -801,7 +763,7 @@ Partial Class fr_hutang_bayar
         Me.cb_pajak.Location = New System.Drawing.Point(81, 53)
         Me.cb_pajak.Name = "cb_pajak"
         Me.cb_pajak.Size = New System.Drawing.Size(135, 21)
-        Me.cb_pajak.TabIndex = 511
+        Me.cb_pajak.TabIndex = 5
         '
         'Label18
         '
@@ -927,7 +889,7 @@ Partial Class fr_hutang_bayar
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(156, 20)
-        Me.in_status.TabIndex = 381
+        Me.in_status.TabIndex = 4
         Me.in_status.TabStop = False
         '
         'pnl_footer
@@ -939,7 +901,53 @@ Partial Class fr_hutang_bayar
         Me.pnl_footer.Location = New System.Drawing.Point(0, 487)
         Me.pnl_footer.Name = "pnl_footer"
         Me.pnl_footer.Size = New System.Drawing.Size(901, 47)
-        Me.pnl_footer.TabIndex = 343
+        Me.pnl_footer.TabIndex = 21
+        '
+        'bayar_faktur
+        '
+        Me.bayar_faktur.HeaderText = "No.Faktur"
+        Me.bayar_faktur.Name = "bayar_faktur"
+        Me.bayar_faktur.ReadOnly = True
+        Me.bayar_faktur.Width = 175
+        '
+        'bayar_jt
+        '
+        Me.bayar_jt.HeaderText = "Jatuh Tempo"
+        Me.bayar_jt.MinimumWidth = 50
+        Me.bayar_jt.Name = "bayar_jt"
+        Me.bayar_jt.ReadOnly = True
+        '
+        'bayar_saldoawal
+        '
+        Me.bayar_saldoawal.HeaderText = "Total Hutang"
+        Me.bayar_saldoawal.MinimumWidth = 100
+        Me.bayar_saldoawal.Name = "bayar_saldoawal"
+        Me.bayar_saldoawal.ReadOnly = True
+        Me.bayar_saldoawal.Width = 150
+        '
+        'bayar_sisahutang
+        '
+        Me.bayar_sisahutang.HeaderText = "Sisa Hutang"
+        Me.bayar_sisahutang.MinimumWidth = 100
+        Me.bayar_sisahutang.Name = "bayar_sisahutang"
+        Me.bayar_sisahutang.ReadOnly = True
+        Me.bayar_sisahutang.Width = 150
+        '
+        'bayar_kredit
+        '
+        Me.bayar_kredit.DataPropertyName = "trans_kredit"
+        Me.bayar_kredit.HeaderText = "Nilai Bayar"
+        Me.bayar_kredit.MinimumWidth = 150
+        Me.bayar_kredit.Name = "bayar_kredit"
+        Me.bayar_kredit.ReadOnly = True
+        Me.bayar_kredit.Width = 150
+        '
+        'bayar_filler
+        '
+        Me.bayar_filler.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
+        Me.bayar_filler.HeaderText = ""
+        Me.bayar_filler.Name = "bayar_filler"
+        Me.bayar_filler.ReadOnly = True
         '
         'fr_hutang_bayar
         '
@@ -1009,11 +1017,6 @@ Partial Class fr_hutang_bayar
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents Label6 As System.Windows.Forms.Label
     Friend WithEvents in_total As System.Windows.Forms.TextBox
-    Friend WithEvents bayar_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_jt As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_saldoawal As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_sisahutang As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents bayar_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents Label11 As System.Windows.Forms.Label
     Friend WithEvents in_sisafaktur As System.Windows.Forms.TextBox
@@ -1046,4 +1049,10 @@ Partial Class fr_hutang_bayar
     Friend WithEvents Label27 As System.Windows.Forms.Label
     Friend WithEvents cb_pajak As System.Windows.Forms.ComboBox
     Friend WithEvents Label18 As System.Windows.Forms.Label
+    Friend WithEvents bayar_faktur As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_jt As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_saldoawal As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_sisahutang As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_kredit As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents bayar_filler As System.Windows.Forms.DataGridViewTextBoxColumn
 End Class

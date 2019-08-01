@@ -81,9 +81,11 @@ Public Class fr_export_efaktur
                 x.ExecCommand(String.Format(q, IdExport))
 
                 q = "SELECT {0} FROM data_penjualan_efak_list LEFT JOIN data_penjualan_faktur ON e_list_kodefaktur=faktur_kode " _
-                    & "WHERE e_list_templateid='{1}' AND e_list_status=1 LIMIT {2},2000"
+                    & "WHERE e_list_templateid='{1}' AND e_list_status=1 AND faktur_status=1 ORDER BY faktur_tanggal_trans, e_list_kodefaktur " _
+                    & "LIMIT {2},2000"
                 Using dtx = x.GetDataTable(String.Format(q, String.Join(",", col), IdExport, _limit))
                     setDoubleBuffered(dgv_faktur, True)
+                    dgv_faktur.AutoGenerateColumns = False
                     dgv_faktur.DataSource = dtx
                     dgv_faktur.Columns(0).ReadOnly = False
                     in_page.Text = PgNumber
@@ -169,11 +171,12 @@ Public Class fr_export_efaktur
         Using x = MainConnection
             x.Open()
             If Not x.ConnectionState = ConnectionState.Open Then
-                'Message
                 Return False : Exit Function
             End If
 
-            q = "SELECT e_list_kodefaktur FROM data_penjualan_efak_list WHERE e_list_templateid='{0}' AND e_list_selectstate=1 AND e_list_status=1"
+            q = "SELECT e_list_kodefaktur FROM data_penjualan_efak_list " _
+                & "WHERE e_list_templateid='{0}' AND e_list_selectstate=1 AND e_list_status=1 " _
+                & "ORDER BY e_list_tglpajak, e_list_kodepajak"
             Using rdx = x.ReadCommand(String.Format(q, IdExport))
                 While rdx.Read
                     _FakturList.Add(rdx.Item(0))
@@ -228,7 +231,6 @@ Public Class fr_export_efaktur
             Next
 
             System.IO.File.WriteAllText(fileLoc, String.Join(rowdelimiter, contain))
-            consoleWriteLine(fileLoc)
             _retsuc = System.IO.File.Exists(fileLoc)
         Catch ex As Exception
             logError(ex, True)
@@ -270,7 +272,9 @@ Public Class fr_export_efaktur
                 For Each kode As String In kode_faktur
                     dt_fk = getDataTablefromDB(createQuery("exportFK", kode, IdExport), True)
                     dt_of = getDataTablefromDB(createQuery("exportOF", kode, IdExport), True)
-                    wrksht.Cells(rows, 1, rows, dt_fk.Columns.Count).Value = dt_fk.Rows(0).ItemArray()
+                    For i = 0 To dt_fk.Columns.Count - 1
+                        wrksht.Cells(rows, i + 1).Value = dt_fk.Rows(0).ItemArray(i)
+                    Next
                     rows += 1
                     For Each objkrows As DataRow In dt_of.Rows
                         For i = 0 To dt_of.Columns.Count - 1
@@ -282,7 +286,7 @@ Public Class fr_export_efaktur
 
                 xls.SaveAs(New FileInfo(fileloc & filename & ".xlsx"))
 
-                _retsuc = System.IO.File.Exists(fileloc)
+                _retsuc = System.IO.File.Exists(fileloc & filename & ".xlsx")
             End Using
         Catch ex As Exception
             logError(ex, True)
@@ -485,29 +489,13 @@ Public Class fr_export_efaktur
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub bt_page_first_Click(sender As Object, e As EventArgs) Handles bt_page_first.Click
+    Private Sub bt_page_prev_Click(sender As Object, e As EventArgs) Handles bt_page_prev.Click, bt_page_first.Click
         If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
 
         Me.Cursor = Cursors.WaitCursor
         If SelectedPageData = 1 Then
             in_page.Text = SelectedPageData
-        ElseIf SelectedPageData < 1 Then
-            SelectedPageData = 1 : LoadDataGrid(in_id.Text, 1)
-        Else
-            LoadDataGrid(in_id.Text, 1)
-        End If
-        Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Sub bt_page_prev_Click(sender As Object, e As EventArgs) Handles bt_page_prev.Click
-        If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
-
-        Me.Cursor = Cursors.WaitCursor
-        If SelectedPageData = 1 Then
-            in_page.Text = SelectedPageData
-        ElseIf SelectedPageData < 1 Then
-            SelectedPageData = 1 : LoadDataGrid(in_id.Text, 1)
-        ElseIf SelectedPageData > 1 Then
+        ElseIf SelectedPageData > 1 And sender.Name = "bt_page_prev" Then
             LoadDataGrid(in_id.Text, SelectedPageData - 1)
         Else
             LoadDataGrid(in_id.Text, 1)
@@ -515,30 +503,14 @@ Public Class fr_export_efaktur
         Me.Cursor = Cursors.Default
     End Sub
 
-    Private Sub bt_page_next_Click(sender As Object, e As EventArgs) Handles bt_page_next.Click
+    Private Sub bt_page_next_Click(sender As Object, e As EventArgs) Handles bt_page_next.Click, bt_page_last.Click
         If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
 
         Me.Cursor = Cursors.WaitCursor
         If SelectedPageData = MaxPageData Then
             in_page.Text = SelectedPageData
-        ElseIf SelectedPageData > MaxPageData Then
-            SelectedPageData = MaxPageData : LoadDataGrid(in_id.Text, MaxPageData)
-        ElseIf SelectedPageData < MaxPageData Then
+        ElseIf SelectedPageData < MaxPageData And sender.Name = "bt_page_next" Then
             LoadDataGrid(in_id.Text, SelectedPageData + 1)
-        Else
-            LoadDataGrid(in_id.Text, MaxPageData)
-        End If
-        Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Sub bt_page_last_Click(sender As Object, e As EventArgs) Handles bt_page_last.Click
-        If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
-
-        Me.Cursor = Cursors.WaitCursor
-        If SelectedPageData = MaxPageData Then
-            in_page.Text = SelectedPageData
-        ElseIf SelectedPageData > MaxPageData Then
-            SelectedPageData = MaxPageData : LoadDataGrid(in_id.Text, MaxPageData)
         Else
             LoadDataGrid(in_id.Text, MaxPageData)
         End If

@@ -14,18 +14,22 @@ Public Class fr_lap_hutang
 
     'FILL TEMP DATA TABLE
     Private Sub filldatatabel(query As String, dt As DataTable)
-        op_con()
-        Try
-            Dim data_adpt As New MySqlDataAdapter(query, getConn)
-            data_adpt.Fill(dt)
-            data_adpt.Dispose()
-        Catch ex As Exception
-            consoleWriteLine(ex.Message)
-            logError(ex)
-            'MessageBox.Show(String.Format("Error: {0}", ex.Message))
-        End Try
-
-        'DataGridView1.DataSource = dt
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    consoleWriteLine(query)
+                    data_adpt.Fill(dt)
+                    data_adpt.Dispose()
+                Catch ex As Exception
+                    MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                    logError(ex, True) : Me.Close()
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
+            End If
+        End Using
     End Sub
 
     'SELECT LAPORAN
@@ -36,29 +40,40 @@ Public Class fr_lap_hutang
 
         With Me.rv_nota
             With .LocalReport
-
                 Select Case inlap_type
                     Case "h_nota"
-                        repdatasource.Name = "ds_hutang_nota"
+                        repdatasource.Name = "ds_nota"
                         repdatasource.Value = ds_hutangpiutang.dt_hutang_nota
 
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = "Inventory.hutang_nota.rdlc"
 
-                        With ds_hutangpiutang
-                            .dt_hutang_nota.Clear()
-                            filldatatabel(inquery, .dt_hutang_nota)
-                        End With
-                    Case "h_titipsupplier"
-                        repdatasource.Name = "ds_hutang_piutangsupplier"
+                        ds_hutangpiutang .dt_hutang_nota.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_hutang_nota)
+
+                    Case "h_notabeli"
+                        repdatasource.Name = "ds_notabeli"
+                        repdatasource.Value = ds_hutangpiutang.dt_piutang_sales_lengkap2
+
+                        .DataSources.Add(repdatasource)
+                        .ReportEmbeddedResource = "Inventory.hutang_nota.rdlc"
+
+                        ds_hutangpiutang.dt_hutang_nota.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_sales_lengkap2)
+
+                    Case "h_titipsupplier", "h_titipsupplier_det"
+                        repdatasource.Name = "ds_titipan"
                         repdatasource.Value = ds_hutangpiutang.dt_hutang_piutangsupplier
 
                         .DataSources.Add(repdatasource)
-                        .ReportEmbeddedResource = "Inventory.hutang_titipsupplier.rdlc"
-                        With ds_hutangpiutang
-                            .dt_hutang_piutangsupplier.Clear()
-                            filldatatabel(inquery, .dt_hutang_piutangsupplier)
-                        End With
+                        If inlap_type = "p_titipancusto" Then
+                            .ReportEmbeddedResource = "Inventory.piutang_titipcusto.rdlc"
+                        Else
+                            .ReportEmbeddedResource = "Inventory.piutang_titipcusto_det.rdlc"
+                        End If
+
+                        ds_hutangpiutang.dt_piutang_titip.Clear()
+                        filldatatabel(inquery, ds_hutangpiutang.dt_piutang_titip)
 
                     Case "h_kartuhutang"
                         repdatasource.Name = "ds_piutang_kartupiutang"

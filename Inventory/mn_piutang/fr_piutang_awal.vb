@@ -1,56 +1,90 @@
 ﻿Public Class fr_piutang_awal
     Private fak_date As Date = Today
 
-    Public Sub loadData(kode As String)
-        Dim q As String = "SELECT piutang_faktur, piutang_tgl, piutang_awal, IFNULL(ppn.ref_text,'ERROR') bayar_kat, " _
-                          & "piutang_custo, customer_nama as piutang_custo_n, piutang_sales, salesman_nama as piutang_sales_n," _
-                          & "DATEDIFF(piutang_jt,piutang_tgl) faktur_term " _
-                          & "FROM data_piutang_awal " _
-                          & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
-                          & "LEFT JOIN data_salesman_master ON piutang_sales=salesman_kode " _
-                          & "LEFT JOIN ref_jenis ppn ON piutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
-                          & "WHERE piutang_faktur='{0}'"
-        op_con()
-        readcommd(String.Format(q, kode))
-        If rd.HasRows Then
-            in_faktur.Text = rd.Item("piutang_faktur")
-            fak_date = rd.Item("piutang_tgl")
-            in_kat.Text = rd.Item("bayar_kat")
-            in_custo.Text = rd.Item("piutang_custo")
-            in_custo_n.Text = rd.Item("piutang_custo_n")
-            in_sales.Text = rd.Item("piutang_sales")
-            in_sales_n.Text = rd.Item("piutang_sales_n")
-            in_term.Text = rd.Item("faktur_term")
-            in_piutangawal.Text = commaThousand(rd.Item("piutang_awal"))
-        End If
-        rd.Close()
-        in_tgl.Text = fak_date.ToLongDateString
-        in_tgl_term.Text = fak_date.AddDays(in_term.Text).ToString("dd/MM/yyyy")
+    'TAMBAH KETERANGAN LUNAS, JUMLAH GIRO BELUM CAIR, DKK
+    'ADD MORE DETAIL ON TRANS DETAIL TABLE
+    'REFURBISH THE UI
+    'OPTIONAL : ADD CETAK KARTU PIUTANG(?)
 
-        loadDgv(kode)
-
-        If selectperiode.closed = True Then
-            bt_bayar.Enabled = False
+    Public Sub DoLoadView(KodePiutang As String)
+        If loadData(KodePiutang) Then : Me.Show(main)
+        Else : Me.Dispose()
         End If
     End Sub
 
-    Private Sub loadDgv(kode As String)
-        Dim dt As New DataTable
+    'LOAD DATA
+    Public Function loadData(kode As String) As Boolean
+        Dim q As String = ""
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    'LOAD DETAIL PIUTANG
+                    q = "SELECT piutang_faktur, piutang_tgl, piutang_awal, IFNULL(ppn.ref_text,'ERROR') bayar_kat, " _
+                        & "piutang_custo, customer_nama piutang_custo_n, piutang_sales, salesman_nama piutang_sales_n," _
+                        & "DATEDIFF(piutang_jt,piutang_tgl) faktur_term, piutang_status_lunas, piutang_tgl_lunas " _
+                        & "FROM data_piutang_awal " _
+                        & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+                        & "LEFT JOIN data_salesman_master ON piutang_sales=salesman_kode " _
+                        & "LEFT JOIN ref_jenis ppn ON piutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                        & "WHERE piutang_faktur='{0}'"
+                    Using rdx = x.ReadCommand(String.Format(q, kode))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            Dim _date As Date = rdx.Item("piutang_tgl")
+                            Dim _datejt As Date = _date.AddDays(rdx.Item("faktur_term"))
+                            Dim _lunas As String = rdx.Item("piutang_status_lunas")
 
-        dt = getDataTablefromDB("getDataPiutangTrans('" & selectperiode.id & "','" & kode & "')")
+                            in_faktur.Text = kode
+                            in_tgl.Text = _date.ToLongDateString
+                            in_custo.Text = rdx.Item("piutang_custo")
+                            in_custo_n.Text = rdx.Item("piutang_custo_n")
+                            in_sales.Text = rdx.Item("piutang_sales")
+                            in_sales_n.Text = rdx.Item("piutang_sales_n")
+                            in_kat.Text = rdx.Item("bayar_kat")
+                            in_piutangawal.Text = commaThousand(rdx.Item("piutang_awal"))
+                            in_term.Text = rdx.Item("faktur_term")
+                            in_tgl_term.Text = _datejt.ToLongDateString
+                            If _lunas = 1 Then
+                                in_status.Text = "LUNAS"
+                                in_tgllunas.Text = CDate(rdx.Item("piutang_tgl_lunas")).ToLongDateString
+                                bt_bayar.Enabled = False
+                            Else
+                                in_status.Text = "AKTIF"
+                            End If
+                        Else
+                            MessageBox.Show("Tidak dapat mengambil data piutang.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Return False : Exit Function
+                        End If
+                    End Using
 
-        With dgv_hutang
-            .AutoGenerateColumns = False
-            .DataSource = dt
-            .Columns("bayar").DefaultCellStyle = dgvstyle_currency
-            .Columns("piutang").DefaultCellStyle = dgvstyle_currency
-        End With
-        countTotal()
+                    'LOAD TABLE
+                    q = String.Format("GetDataList_PiutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    With dgv_hutang
+                        .AutoGenerateColumns = False
+                        .DataSource = x.GetDataTable(q)
+                        .Columns("bayar").DefaultCellStyle = dgvstyle_currency
+                        .Columns("piutang").DefaultCellStyle = dgvstyle_currency
+                    End With
 
-        If removeCommaThousand(in_sisa.Text) = 0 Then
-            bt_bayar.Enabled = False
-        End If
-    End Sub
+                    'LOAD NILAI PIUTANG
+                    q = "SELECT GetPiutangSaldoAwal('giro', '{0}', ADDDATE('{1:yyyy-MM-dd}',1)) "
+                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    in_giro.Text = commaThousand(_nilaigiro)
+                    countTotal()
+
+                    If selectperiode.closed Then bt_bayar.Enabled = False
+                    Return True
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show("Tidak dapat mengambil data piutang.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False : Exit Function
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End If
+        End Using
+    End Function
 
     Private Sub countTotal()
         Dim _bayar As Double = 0
@@ -63,41 +97,60 @@
         End If
         in_total.Text = commaThousand(_bayar)
         in_sisa.Text = commaThousand(_hutang - _bayar)
-        If _hutang - _bayar <= 0 Then
-            in_tgllunas.Text = CDate(dgv_hutang.Rows(dgv_hutang.Rows.Count - 1).Cells(1).Value).ToLongDateString
-        End If
+        If _hutang - _bayar = 0 Then bt_bayar.Enabled = False
     End Sub
 
+    'LOAD PEMBAYARAN
     Private Sub doBayar()
-        Dim x As New fr_piutang_bayar
-        Dim titipan As String = "0"
-
-        op_con()
-        readcommd("SELECT getSisaTitipan('piutang','" & selectperiode.id & "','" & in_custo.Text & "')")
-        If rd.HasRows Then
-            titipan = commaThousand(rd.Item(0))
+        If MainConnection.Connection Is Nothing Then
+            Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-        rd.Close()
+        If selectperiode.closed Then Exit Sub
 
-        With x
-            .doLoadNew()
-            .cb_pajak.SelectedValue = IIf(in_kat.Text = "A", 0, 1)
-            .in_sales.Text = in_sales.Text
-            .in_sales_n.Text = in_sales_n.Text
-            .in_saldotitipan.Text = titipan
-            .in_custo.Text = in_custo.Text
-            .in_custo_n.Text = in_custo_n.Text
+        Dim x As New fr_piutang_bayar
+        Dim q As String = ""
 
-            .in_faktur.Text = in_faktur.Text
-            .in_sisafaktur.Text = in_sisa.Text
-            ._totalhutang = removeCommaThousand(in_piutangawal.Text)
-            .in_tgl_jtfaktur.Text = in_tgl_term.Text
-            .Owner = main
-        End With
+        Using dd = MainConnection
+            dd.Open() : If dd.ConnectionState = ConnectionState.Open Then
+                q = "SELECT piutang_custo, customer_nama, piutang_sales, salesman_nama, GetPiutangSaldoAwal('titipan', piutang_customer, ADDDATE(CURDATE(),1)), " _
+                    & "GetPiutangSaldoAwal('piutang', '{0}', ADDDATE(CURDATE(),1)), piutang_awal, piutang_jt,piutang_pajak " _
+                    & "FROM data_piutang_awal " _
+                    & "LEFT JOIN data_customer_master ON piutang_custo=customer_kode " _
+                    & "LEFT JOIN data_salesman_master ON salesman_kode=piutang_sales " _
+                    & "WHERE piutang_faktur='{0}'"
+                Using rdx = dd.ReadCommand(String.Format(q, in_faktur.Text))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        x.doLoadNew()
+                        x.Owner = main
+
+                        x.cb_pajak.SelectedValue = rdx.Item("piutang_pajak")
+                        x.in_custo.Text = rdx.Item(0)
+                        x.in_custo_n.Text = rdx.Item(1)
+                        x.in_sales.Text = rdx.Item(2)
+                        x.in_sales_n.Text = rdx.Item(3)
+                        x.in_saldotitipan.Text = commaThousand(rdx.Item(4))
+
+                        x.in_faktur.Text = in_faktur.Text
+                        x.in_tgl_jtfaktur.Text = CDate(rdx.Item(7)).ToString("dd/MM/yyyy")
+                        x.in_sisafaktur.Text = commaThousand(rdx.Item(5))
+                        x._totalhutang = rdx.Item(6)
+
+                    Else
+                        MessageBox.Show("Data piutang tidak dapat ditemukan.", "Pembayaran Piutang", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
+                    End If
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+        End Using
+
         Me.Close()
     End Sub
 
-    '------------drag form
+    'UI : DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown, Panel2.MouseDown
         startdrag(Me, e)
     End Sub
@@ -114,19 +167,15 @@
         CenterToScreen()
     End Sub
 
-    '-------------close
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
+    'UI : CLOSE
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_bataljual.Click
         'If MessageBox.Show("Tutup Form?", "Piutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-        '    Me.Close()
+        Me.Close()
         'End If
     End Sub
 
-    Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-
-    End Sub
-
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalreturbeli.PerformClick()
+        bt_bataljual.PerformClick()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -137,22 +186,13 @@
         lbl_close.Visible = False
     End Sub
 
-    '--------------- NUMERIC 
-    Private Sub in_term_Enter(sender As Object, e As EventArgs)
-        numericGotFocus(sender)
-    End Sub
-
-    Private Sub in_term_Leave(sender As Object, e As EventArgs)
-        numericLostFocus(sender, "N0")
-    End Sub
-
-    '---------------load
-    Private Sub fr_piutang_awal_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If in_faktur.Text <> Nothing Then
-            loadData(in_faktur.Text)
+    Private Sub fr_piutang_awal_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            Me.Close()
         End If
     End Sub
 
+    'UI : BUTTON
     Private Sub bt_bayar_Click(sender As Object, e As EventArgs) Handles bt_bayar.Click
         If MessageBox.Show("Tambah Pembayaran?", "Piutang Awal", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
             doBayar()

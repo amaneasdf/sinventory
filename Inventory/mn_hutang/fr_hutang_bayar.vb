@@ -48,7 +48,7 @@
         date_bg_tgl.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
 
         For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisahutang, bayar_saldoawal}
-            x.DefaultCellStyle = dgvstyle_commathousand
+            x.DefaultCellStyle = dgvstyle_currency
         Next
 
         If Not FormSet = InputState.Insert Then
@@ -159,9 +159,8 @@
                 in_tglpencairan.Text = tglbgcair
 
                 'LOAD TABLE/ITEM
-                q = "SELECT h_trans_faktur, DATE_FORMAT(ADDDATE(faktur_tanggal_trans,faktur_term),'%d/%m/%Y'), faktur_total_netto, " _
-                    & "h_trans_sisa, h_trans_nilaibayar " _
-                    & "FROM data_hutang_bayar_trans LEFT JOIN data_pembelian_faktur ON h_trans_faktur=faktur_kode AND faktur_status=1 " _
+                q = "SELECT h_trans_faktur, DATE_FORMAT(hutang_tgl_jt),'%d/%m/%Y'), hutang_awal, h_trans_sisa, h_trans_nilaibayar " _
+                    & "FROM data_hutang_bayar_trans LEFT JOIN data_hutang_awal ON h_trans_faktur=hutang_faktur AND hutang_status=1 " _
                     & "WHERE h_trans_status=1 AND h_trans_bukti='{0}'"
                 Using dt = x.GetDataTable(String.Format(q, kode))
                     With dgv_bayar.Rows
@@ -200,17 +199,19 @@
             .DataSource = Nothing
             Select Case tipe
                 Case "supplier"
-                    q = "SELECT supplier_kode as Kode, supplier_nama as Nama, getSisaTitipan('hutang','{1}',supplier_kode) as sisaTitip " _
+                    q = "SELECT supplier_kode as Kode, supplier_nama as Nama, GetHutangSaldoAwal('titipan', supplier_kode, ADDDATE(CURDATE(),1)) sisaTitip " _
                         & "FROM data_supplier_master WHERE (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') AND supplier_status=1 LIMIT 250"
                     q = String.Format(q, param, selectperiode.id)
                 Case "faktur"
-                    q = "SELECT hutang_faktur AS Faktur, getSisaHutang(hutang_faktur,{0}) as Sisa, hutang_awal, hutang_tgl_jt as TglJatuhTempo " _
+                    q = "SELECT hutang_faktur Faktur, GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE('{0:yyyy-MM-dd}',1)) Sisa, " _
+                        & "hutang_awal, hutang_tgl_jt as TglJatuhTempo " _
                         & "FROM data_hutang_awal " _
                         & "WHERE hutang_status=1 AND hutang_faktur LIKE '%{1}%' AND hutang_supplier='{2}' AND hutang_pajak='{3}' LIMIT 250"
-                    q = String.Format(q, selectperiode.id, param, in_supplier.Text, cb_pajak.SelectedValue)
+                    q = String.Format(q, date_tgl_trans.Value, param, in_supplier.Text, cb_pajak.SelectedValue)
                 Case Else
                     Exit Sub
             End Select
+
             .DataSource = getDataTablefromDB(q)
             .Columns(0).Width = 150
             .Columns(1).Width = 125
@@ -220,7 +221,6 @@
             ElseIf tipe = "supplier" Then
                 .Columns(2).Visible = False
             End If
-            popupstate = tipe
         End With
     End Sub
 
@@ -267,7 +267,7 @@
             Using x = MainConnection : x.Open()
                 If x.ConnectionState = ConnectionState.Open Then
                     Dim getsupplier As New KeyValuePair(Of Boolean, String)
-                    q = "SELECT hutang_supplier,getHutangSisa(hutang_faktur) sisa FROM data_hutang_awal WHERE hutang_faktur='{0}' AND hutang_status=1"
+                    q = "SELECT hutang_supplier FROM data_hutang_awal WHERE hutang_faktur='{0}' AND hutang_status=1"
                     Using rdx = x.ReadCommand(String.Format(q, kodeFaktur), CommandBehavior.SingleRow)
                         Dim red = rdx.Read
                         If red And rdx.HasRows Then
@@ -675,9 +675,9 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalperkiraan.Click
-        If MessageBox.Show("Tutup Form?", "Pembayaran Hutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            bt_cl.PerformClick()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Pembayaran Hutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        bt_cl.PerformClick()
+        'End If
     End Sub
 
     Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -843,11 +843,11 @@
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data transaksi pembayaran hutang?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            Me.Cursor = Cursors.WaitCursor
-            saveBayar()
-            Me.Cursor = Cursors.Default
-        End If
+        Me.Cursor = Cursors.WaitCursor
+        Dim _askRes As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _askRes = MessageBox.Show("Simpan perubahan data pembayaran?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _askRes = Windows.Forms.DialogResult.Yes Then saveBayar()
+        Me.Cursor = Cursors.Default
     End Sub
 
     '----------- Input Supplier

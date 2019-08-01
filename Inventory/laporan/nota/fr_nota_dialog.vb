@@ -5,13 +5,7 @@
 
     'CLOSE
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        If MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            cancelClose = False
-            Me.Close()
-        Else
-            cancelClose = True
-            Exit Sub
-        End If
+        Me.Close()
     End Sub
 
     Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
@@ -20,6 +14,10 @@
 
     Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
         lbl_close.Visible = False
+    End Sub
+
+    Private Sub fr_nota_dialog_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
+        If e.KeyCode = Keys.Escape Then bt_cl.PerformClick()
     End Sub
 
     'DRAG FORM
@@ -50,8 +48,7 @@
         Dim _status As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Select Case _jenisNota
                     Case "beli"
                         q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}'"
@@ -87,7 +84,7 @@
                         Case "A-read"
                             resp = "Data tidak dapat ditemukan."
                         Case Else
-                            resp = "There is something wrong with the source code dude."
+                            resp = "There is something wrong with the source code or query dude. Sorry."
                     End Select
                     _retval = False
                     Msg = "Faktur tidak dapat diprint." & Environment.NewLine & resp
@@ -118,7 +115,8 @@
             .DataSource = _dt
             .ValueMember = "Value"
             .DisplayMember = "Text"
-            .SelectedValue = _prntDoc.PrinterSettings.PrinterName
+            '.SelectedValue = _prntDoc.PrinterSettings.PrinterName
+            .SelectedValue = LastUsedPrinter
         End With
     End Sub
 
@@ -141,8 +139,8 @@
         Me.Cursor = Cursors.AppStarting
         Using nota As New fr_view_nota
             nota.setVar(_jenisNota, _kodeNota, "")
-            nota.do_load()
-            nota.printRep(cb_printer.SelectedValue)
+            If nota.do_load() Then nota.printRep(cb_printer.SelectedValue)
+            LastUsedPrinter = cb_printer.SelectedValue
         End Using
         Me.Cursor = Cursors.Default
     End Sub
@@ -151,8 +149,7 @@
         Me.Cursor = Cursors.WaitCursor
         Using nota As New fr_view_nota
             nota.setVar(_jenisNota, _kodeNota, "")
-            nota.do_load()
-            nota.viewRep()
+            If nota.do_load() Then nota.viewRep()
         End Using
         Me.Cursor = Cursors.Default
     End Sub

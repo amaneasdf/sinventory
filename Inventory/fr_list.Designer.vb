@@ -27,7 +27,7 @@ Partial Class fr_list
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_judul = New System.Windows.Forms.Label()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mnstrip_main = New System.Windows.Forms.MenuStrip()
         Me.mn_add = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_validasi = New System.Windows.Forms.ToolStripMenuItem()
@@ -44,13 +44,28 @@ Partial Class fr_list
         Me.mn_refresh = New System.Windows.Forms.ToolStripMenuItem()
         Me.svdialog_export = New System.Windows.Forms.SaveFileDialog()
         Me.in_cari = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.in_countdata = New System.Windows.Forms.TextBox()
+        Me.lbl_pageinfo = New System.Windows.Forms.Label()
+        Me.bt_page_next = New System.Windows.Forms.Button()
+        Me.bt_page_last = New System.Windows.Forms.Button()
+        Me.bt_page_prev = New System.Windows.Forms.Button()
+        Me.bt_page_first = New System.Windows.Forms.Button()
+        Me.in_page = New System.Windows.Forms.TextBox()
+        Me.pnl_top = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
+        Me.lbl_date = New System.Windows.Forms.Label()
+        Me.date_tglakhir = New System.Windows.Forms.DateTimePicker()
+        Me.date_tglawal = New System.Windows.Forms.DateTimePicker()
+        Me.bt_search = New System.Windows.Forms.Button()
+        Me.pnl_grid = New System.Windows.Forms.Panel()
+        Me.mn_addentry = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_delentry = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
+        Me.mnstrip_main.SuspendLayout()
         Me.Panel2.SuspendLayout()
+        Me.pnl_top.SuspendLayout()
+        Me.pnl_grid.SuspendLayout()
         Me.SuspendLayout()
         '
         'dgv_list
@@ -62,14 +77,14 @@ Partial Class fr_list
         Me.dgv_list.BackgroundColor = System.Drawing.Color.White
         Me.dgv_list.CausesValidation = False
         Me.dgv_list.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.dgv_list.Location = New System.Drawing.Point(0, 66)
+        Me.dgv_list.Location = New System.Drawing.Point(0, 0)
         Me.dgv_list.MultiSelect = False
         Me.dgv_list.Name = "dgv_list"
         Me.dgv_list.ReadOnly = True
         Me.dgv_list.RowHeadersVisible = False
         Me.dgv_list.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_list.Size = New System.Drawing.Size(950, 468)
-        Me.dgv_list.TabIndex = 6
+        Me.dgv_list.Size = New System.Drawing.Size(950, 431)
+        Me.dgv_list.TabIndex = 1
         '
         'Panel1
         '
@@ -81,7 +96,7 @@ Partial Class fr_list
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(950, 42)
-        Me.Panel1.TabIndex = 340
+        Me.Panel1.TabIndex = 2
         '
         'lbl_close
         '
@@ -128,14 +143,14 @@ Partial Class fr_list
         Me.lbl_judul.TabIndex = 136
         Me.lbl_judul.Text = "Data Perkiraan"
         '
-        'MenuStrip1
+        'mnstrip_main
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_add, Me.mn_edit, Me.mn_validasi, Me.mn_print, Me.mn_export, Me.mn_bayar, Me.mn_transedit, Me.mn_refresh})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 42)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
-        Me.MenuStrip1.TabIndex = 341
-        Me.MenuStrip1.Text = "MenuStrip1"
+        Me.mnstrip_main.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_add, Me.mn_edit, Me.mn_validasi, Me.mn_print, Me.mn_export, Me.mn_bayar, Me.mn_transedit, Me.mn_refresh})
+        Me.mnstrip_main.Location = New System.Drawing.Point(0, 42)
+        Me.mnstrip_main.Name = "mnstrip_main"
+        Me.mnstrip_main.Size = New System.Drawing.Size(950, 24)
+        Me.mnstrip_main.TabIndex = 3
+        Me.mnstrip_main.Text = "MenuStrip1"
         '
         'mn_add
         '
@@ -193,7 +208,7 @@ Partial Class fr_list
         '
         'mn_transedit
         '
-        Me.mn_transedit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_deact, Me.mn_bataljual, Me.mn_cancelbatal, Me.mn_delete, Me.mn_cari})
+        Me.mn_transedit.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_deact, Me.mn_bataljual, Me.mn_cancelbatal, Me.mn_delete, Me.mn_addentry, Me.mn_delentry, Me.mn_cari})
         Me.mn_transedit.Name = "mn_transedit"
         Me.mn_transedit.Size = New System.Drawing.Size(68, 20)
         Me.mn_transedit.Text = "Lain-Lain"
@@ -240,63 +255,205 @@ Partial Class fr_list
         'in_cari
         '
         Me.in_cari.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_cari.Location = New System.Drawing.Point(80, 10)
+        Me.in_cari.Location = New System.Drawing.Point(386, 9)
         Me.in_cari.MaxLength = 100
         Me.in_cari.Name = "in_cari"
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 0
         '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(8, 8)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(61, 26)
-        Me.Label2.TabIndex = 2
-        Me.Label2.Text = "Pencarian :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(CTRL+F)"
-        '
         'Panel2
         '
-        Me.Panel2.BackColor = System.Drawing.Color.Orange
-        Me.Panel2.Controls.Add(Me.Label2)
-        Me.Panel2.Controls.Add(Me.in_countdata)
-        Me.Panel2.Controls.Add(Me.in_cari)
+        Me.Panel2.BackColor = System.Drawing.Color.White
+        Me.Panel2.Controls.Add(Me.lbl_pageinfo)
+        Me.Panel2.Controls.Add(Me.bt_page_next)
+        Me.Panel2.Controls.Add(Me.bt_page_last)
+        Me.Panel2.Controls.Add(Me.bt_page_prev)
+        Me.Panel2.Controls.Add(Me.bt_page_first)
+        Me.Panel2.Controls.Add(Me.in_page)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel2.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel2.Location = New System.Drawing.Point(0, 534)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(950, 42)
-        Me.Panel2.TabIndex = 342
+        Me.Panel2.TabIndex = 4
         '
-        'in_countdata
+        'lbl_pageinfo
         '
-        Me.in_countdata.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.in_countdata.BackColor = System.Drawing.Color.White
-        Me.in_countdata.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_countdata.Location = New System.Drawing.Point(898, 10)
-        Me.in_countdata.MaxLength = 100
-        Me.in_countdata.Name = "in_countdata"
-        Me.in_countdata.ReadOnly = True
-        Me.in_countdata.Size = New System.Drawing.Size(45, 22)
-        Me.in_countdata.TabIndex = 5
-        Me.in_countdata.TabStop = False
+        Me.lbl_pageinfo.AutoSize = True
+        Me.lbl_pageinfo.Location = New System.Drawing.Point(9, 17)
+        Me.lbl_pageinfo.Name = "lbl_pageinfo"
+        Me.lbl_pageinfo.Size = New System.Drawing.Size(81, 15)
+        Me.lbl_pageinfo.TabIndex = 23
+        Me.lbl_pageinfo.Text = "0-0 dari 0 data"
+        '
+        'bt_page_next
+        '
+        Me.bt_page_next.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_next.BackColor = System.Drawing.Color.White
+        Me.bt_page_next.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_next.Location = New System.Drawing.Point(877, 6)
+        Me.bt_page_next.Name = "bt_page_next"
+        Me.bt_page_next.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_next.TabIndex = 21
+        Me.bt_page_next.Text = ">"
+        Me.bt_page_next.UseVisualStyleBackColor = False
+        '
+        'bt_page_last
+        '
+        Me.bt_page_last.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_last.BackColor = System.Drawing.Color.White
+        Me.bt_page_last.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_last.Location = New System.Drawing.Point(913, 6)
+        Me.bt_page_last.Name = "bt_page_last"
+        Me.bt_page_last.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_last.TabIndex = 22
+        Me.bt_page_last.Text = ">>"
+        Me.bt_page_last.UseVisualStyleBackColor = False
+        '
+        'bt_page_prev
+        '
+        Me.bt_page_prev.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_prev.BackColor = System.Drawing.Color.White
+        Me.bt_page_prev.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_prev.Location = New System.Drawing.Point(789, 6)
+        Me.bt_page_prev.Name = "bt_page_prev"
+        Me.bt_page_prev.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_prev.TabIndex = 19
+        Me.bt_page_prev.Text = "<"
+        Me.bt_page_prev.UseVisualStyleBackColor = False
+        '
+        'bt_page_first
+        '
+        Me.bt_page_first.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.bt_page_first.BackColor = System.Drawing.Color.White
+        Me.bt_page_first.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_page_first.Location = New System.Drawing.Point(753, 6)
+        Me.bt_page_first.Name = "bt_page_first"
+        Me.bt_page_first.Size = New System.Drawing.Size(30, 30)
+        Me.bt_page_first.TabIndex = 18
+        Me.bt_page_first.Text = "<<"
+        Me.bt_page_first.UseVisualStyleBackColor = False
+        '
+        'in_page
+        '
+        Me.in_page.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.in_page.Location = New System.Drawing.Point(825, 10)
+        Me.in_page.Name = "in_page"
+        Me.in_page.ReadOnly = True
+        Me.in_page.Size = New System.Drawing.Size(46, 22)
+        Me.in_page.TabIndex = 20
+        Me.in_page.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
+        '
+        'pnl_top
+        '
+        Me.pnl_top.BackColor = System.Drawing.Color.White
+        Me.pnl_top.Controls.Add(Me.Button1)
+        Me.pnl_top.Controls.Add(Me.lbl_date)
+        Me.pnl_top.Controls.Add(Me.date_tglakhir)
+        Me.pnl_top.Controls.Add(Me.date_tglawal)
+        Me.pnl_top.Controls.Add(Me.bt_search)
+        Me.pnl_top.Controls.Add(Me.in_cari)
+        Me.pnl_top.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnl_top.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.pnl_top.Location = New System.Drawing.Point(0, 66)
+        Me.pnl_top.Name = "pnl_top"
+        Me.pnl_top.Size = New System.Drawing.Size(950, 37)
+        Me.pnl_top.TabIndex = 0
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Button1.BackgroundImage = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.Button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.Button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.Button1.Location = New System.Drawing.Point(901, 9)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(42, 22)
+        Me.Button1.TabIndex = 21
+        Me.Button1.UseVisualStyleBackColor = False
+        Me.Button1.Visible = False
+        '
+        'lbl_date
+        '
+        Me.lbl_date.AutoSize = True
+        Me.lbl_date.Location = New System.Drawing.Point(183, 13)
+        Me.lbl_date.Name = "lbl_date"
+        Me.lbl_date.Size = New System.Drawing.Size(26, 15)
+        Me.lbl_date.TabIndex = 0
+        Me.lbl_date.Text = "S.d."
+        '
+        'date_tglakhir
+        '
+        Me.date_tglakhir.CustomFormat = "dd MMM yyyy"
+        Me.date_tglakhir.Location = New System.Drawing.Point(215, 9)
+        Me.date_tglakhir.Name = "date_tglakhir"
+        Me.date_tglakhir.Size = New System.Drawing.Size(165, 22)
+        Me.date_tglakhir.TabIndex = 1
+        '
+        'date_tglawal
+        '
+        Me.date_tglawal.CustomFormat = "dd MMM yyyy"
+        Me.date_tglawal.Location = New System.Drawing.Point(12, 9)
+        Me.date_tglawal.Name = "date_tglawal"
+        Me.date_tglawal.Size = New System.Drawing.Size(165, 22)
+        Me.date_tglawal.TabIndex = 0
+        '
+        'bt_search
+        '
+        Me.bt_search.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.bt_search.BackgroundImage = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.bt_search.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center
+        Me.bt_search.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_search.Location = New System.Drawing.Point(633, 9)
+        Me.bt_search.Name = "bt_search"
+        Me.bt_search.Size = New System.Drawing.Size(42, 22)
+        Me.bt_search.TabIndex = 20
+        Me.bt_search.UseVisualStyleBackColor = False
+        '
+        'pnl_grid
+        '
+        Me.pnl_grid.Controls.Add(Me.dgv_list)
+        Me.pnl_grid.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.pnl_grid.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.pnl_grid.Location = New System.Drawing.Point(0, 103)
+        Me.pnl_grid.Name = "pnl_grid"
+        Me.pnl_grid.Size = New System.Drawing.Size(950, 431)
+        Me.pnl_grid.TabIndex = 5
+        '
+        'mn_addentry
+        '
+        Me.mn_addentry.Name = "mn_addentry"
+        Me.mn_addentry.Size = New System.Drawing.Size(176, 22)
+        Me.mn_addentry.Text = "Tambah Entry"
+        '
+        'mn_delentry
+        '
+        Me.mn_delentry.Name = "mn_delentry"
+        Me.mn_delentry.Size = New System.Drawing.Size(176, 22)
+        Me.mn_delentry.Text = "Delete Entry"
         '
         'fr_list
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.Controls.Add(Me.dgv_list)
+        Me.Controls.Add(Me.pnl_grid)
+        Me.Controls.Add(Me.pnl_top)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.MenuStrip1)
+        Me.Controls.Add(Me.mnstrip_main)
         Me.Controls.Add(Me.Panel1)
         Me.Name = "fr_list"
         Me.Size = New System.Drawing.Size(950, 576)
         CType(Me.dgv_list, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
+        Me.mnstrip_main.ResumeLayout(False)
+        Me.mnstrip_main.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
+        Me.pnl_top.ResumeLayout(False)
+        Me.pnl_top.PerformLayout()
+        Me.pnl_grid.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -305,7 +462,7 @@ Partial Class fr_list
     Friend WithEvents lbl_close As System.Windows.Forms.Label
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_judul As System.Windows.Forms.Label
-    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents mnstrip_main As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_add As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_edit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
@@ -323,8 +480,21 @@ Partial Class fr_list
     Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_cari As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents in_cari As System.Windows.Forms.TextBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents Panel2 As System.Windows.Forms.Panel
-    Friend WithEvents in_countdata As System.Windows.Forms.TextBox
+    Friend WithEvents pnl_top As System.Windows.Forms.Panel
+    Friend WithEvents bt_page_next As System.Windows.Forms.Button
+    Friend WithEvents bt_page_last As System.Windows.Forms.Button
+    Friend WithEvents bt_page_prev As System.Windows.Forms.Button
+    Friend WithEvents bt_page_first As System.Windows.Forms.Button
+    Friend WithEvents in_page As System.Windows.Forms.TextBox
+    Friend WithEvents bt_search As System.Windows.Forms.Button
+    Friend WithEvents lbl_pageinfo As System.Windows.Forms.Label
+    Friend WithEvents pnl_grid As System.Windows.Forms.Panel
+    Friend WithEvents lbl_date As System.Windows.Forms.Label
+    Friend WithEvents date_tglakhir As System.Windows.Forms.DateTimePicker
+    Friend WithEvents date_tglawal As System.Windows.Forms.DateTimePicker
+    Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents mn_addentry As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_delentry As System.Windows.Forms.ToolStripMenuItem
 
 End Class

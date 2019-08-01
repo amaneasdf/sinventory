@@ -99,6 +99,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_661C35BCCC01490A81E2174937F42086"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_713D436C6A63482D73CCE74E14699719"
         "OwnerKey" = "8:_12C6DF635F0A4064B11679E5A82F9889"
         "MsmSig" = "8:_UNDEFINED"
@@ -679,6 +685,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_661C35BCCC01490A81E2174937F42086"
+            {
+            "SourcePath" = "8:D:\\saxMono\\saxmono.ttf"
+            "TargetName" = "8:saxmono.ttf"
+            "Tag" = "8:"
+            "Folder" = "8:_274F58A11C0E4E779F12F6622428B153"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:5"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_713D436C6A63482D73CCE74E14699719"
@@ -1276,15 +1302,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
-        "ProductCode" = "8:{955566EA-CB6D-46B0-814E-DC7BD88DA2AF}"
-        "PackageCode" = "8:{C7093B2A-A2DA-4414-A0CE-A462AAB5C34F}"
+        "ProductCode" = "8:{AE112EFC-0AD4-441D-B7CD-4A7E5A83B0CA}"
+        "PackageCode" = "8:{C6DC8C3F-4939-47D3-9519-C423BC9651C6}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.9"
+        "ProductVersion" = "8:0.0.19"
         "Manufacturer" = "8:MSO"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

@@ -1,7 +1,7 @@
 + FIX PENUTUPAN PERIODE AKUNTANSI
 + Info Panel utama timeout+async 
 	[done?]
-+ transaksi pembelian+penjualan cek/konfirmasi stok 
++ transaksi returpembelian+penjualan cek/konfirmasi stok 
 	[rbeli:done,rjual:done,jual:done]
 + transaksi retur penjualan/pembelian, pembayaran tipe potong nota cek jumlah piutang/hutang 
 	-> (pemisahan jenis pembayaran?)
@@ -22,38 +22,68 @@
 ====================================================================================================================================
 + Android halaman utama isi info barang, info customer, info promo
 + Android search transaksi/tagihan berdasarkan QR
+	[done]
 + Android input customer
 + Jenis barang/produk pajak/non-pajak
 	[done]
 + Laporan keuangan dan lainnya berdasarkan jenis pajak, nonpajak, gabungan (Kat.A,B,C)
-	-> Neraca+LabaRugi 
-	-> Modal Disetor, biaya masuk pajak
+	-> Neraca+LabaRugi [done?]
+	-> Modal Disetor, biaya masuk pajak [done?]
 + Pencarian Data melalui kode
+	[done]
 + Laporan labarugi akumulasi, range periode satu/lebih
-+ Penambahan kolom utk pelaporan efaktur (kode_temp(kode_pajak?),tgl_trans_temp)
-+ input informasi program/promo berjalan untuk admin
++ Penambahan kolom utk pelaporan efaktur (kode_temp(kode_pajak?),tgl_trans_temp) [done]
++ input informasi program/promo berjalan untuk admin 
 + penggolongan/list barang yang bisa diorder oleh sales
 + prioritas utk customer one bill(satu faktur penjualan sampai lunas) atau tidak
 	-> di pc dan andro [PC : done]
 	-> notifikasi/peringatan ketika piutang belum lunas [done]
 + penggolongan gudang yg bisa diakses sales
-+ Android penambahan input diskon pada order penjualan
++ Android penambahan input diskon pada order penjualan [done]
 + Edit & tambah stok awal
-	-> add stok awal
+	-> add stok awal [done]
 	-> edit stok awal [done]
-+ penyesuaian input transasi (jenis pajak barang, dkk)
++ penyesuaian input transasi (jenis pajak barang, dkk) [done]
 + Improve draft penjualan
-	-> pemilihan sales berdasarkan penjualan
-	-> fix layout printout
+	-> pemilihan sales berdasarkan penjualan [done]
+	-> fix layout printout [done]
 + batal dan hapus transaksi
 	[done]
-+ set jenis custo
++ set jenis custo [done]
 
+==================================================================================================================================
++ change save dialog, only when update and delete data 
+	[done:most off it]
++ add info status print draft & nota, and status pengiriman (transaksi penjualan) 
+	[done]
++ fix cetakan nota, default printer -> lastprinter, change font, perbesar kolom nama barang, fix margin 
+	[done?]
++ allow edit kode faktur transaksi sebelum closing, (+priviledges) 
+	[need more test]
++ export e-fak xlsx error
+	[done]
++ adjust paper size of customer qr code tobe printed
+	[done]
+
+==================================================================================================================================
++ pembayaran piutang, tombol proses/validasi dibuat lebih terlihat
+	[done?]
++ pembayaran piutang, cek kode giro
++ pembayaran piutang, cek kategori piutang
+	[done]
++ pembayaran piutang, ketika pembayaran menggunakan giro, update status piutang ke '2'
+	[done]
++ re:check prosedure finishing transaksi giro
+	[IN:done,]
++ order jual, validasi, cek jenis pajak barang
+	[done]
++ periode closing procedure need to be fix ASAP
++ pemilihan periode keuangan
 
 optional:
 improve UI/UX -> (rearrange the layout, adding tooltip, improve validation feedback, etc etc. incl.points below)
 context menu untuk tiap form, list data, dkk
-pagination for list data
+pagination for list data [done]
 improve search popup
 full window data search
 full window data list + more advance(?) search -> (like item inside the transaction, etc)

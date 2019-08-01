@@ -27,12 +27,12 @@
         With date_tgl_beli
             .MaxDate = selectperiode.tglakhir
             .MinDate = selectperiode.tglawal
-            If selectperiode.tglakhir >= Today Then
-                .Value = Today
-            Else
-                .Value = selectperiode.tglakhir
+            If selectperiode.tglakhir >= Today Then : .Value = Today
+            Else : .Value = selectperiode.tglakhir
             End If
         End With
+
+        setDoubleBuffered(dgv_barang, True)
 
         If formstate = InputState.Edit Or formstate = InputState.View Then
             Me.Text += " : " & NoFaktur
@@ -170,15 +170,17 @@
         Dim q As String
         Dim dt As New DataTable
         Dim autoco As New AutoCompleteStringCollection
+
+        setDoubleBuffered(dgv_listbarang, True)
         Select Case tipe
             Case "barang"
-                Dim _date As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
+                Dim _date As Date = date_tgl_beli.Value
                 q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', " _
-                    & "getHPPAVG(barang_kode,'{1}','{2}') as 'HPP', barang_satuan_besar, " _
+                    & "getHppAvg_v2(barang_kode,'{1:yyyy-MM-dd}') as 'HPP', barang_satuan_besar, " _
                     & "barang_satuan_besar_jumlah, barang_satuan_tengah, barang_satuan_tengah_jumlah, barang_satuan_kecil " _
                     & "FROM data_stok_awal LEFT JOIN data_barang_master ON stock_barang=barang_kode " _
-                    & "WHERE stock_status=1 AND stock_gudang='{3}' AND barang_pajak='{4}' AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') LIMIT 250"
-                q = String.Format(q, "{0}", _date, selectperiode.id, in_gudang.Text, cb_pajak.SelectedValue)
+                    & "WHERE stock_status=1 AND stock_gudang='{2}' AND barang_pajak='{3}' AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') LIMIT 250"
+                q = String.Format(q, "{0}", _date, in_gudang.Text, cb_pajak.SelectedValue)
 
             Case "gudang2"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang WHERE gudang_status=1 " _
@@ -191,17 +193,16 @@
                 Exit Sub
         End Select
 
-        dt = getDataTablefromDB(String.Format(q, param))
+        Using x = MainConnection : dt = x.GetDataTable(String.Format(q, param)) : End Using
 
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
-            If tipe = "barang" Then
-                .Columns(2).DefaultCellStyle = dgvstyle_currency
-                For i = 3 To 7
-                    .Columns(i).Visible = False
-                Next
+            If .ColumnCount > 0 Then
+                .Columns(0).Width = 135 : .Columns(1).Width = 200
+                If tipe = "barang" Then
+                    .Columns(2).DefaultCellStyle = dgvstyle_currency
+                    For i = 3 To 7 : .Columns(i).Visible = False : Next
+                End If
             End If
         End With
     End Sub
@@ -364,9 +365,7 @@
                     q = "SELECT COUNT(DISTINCT faktur_kode) FROM data_barang_stok_mutasi WHERE faktur_tanggal='{0}' AND faktur_kode LIKE 'MG%'"
                     Using rdx = x.ReadCommand(String.Format(q, date_tgl_beli.Value.ToString("yyyy-MM-dd")))
                         Dim red = rdx.Read
-                        If red And rdx.HasRows Then
-                            no = CInt(rdx.Item(0)) + 1
-                        End If
+                        If red And rdx.HasRows Then no = CInt(rdx.Item(0)) + 1
                     End Using
                     in_kode.Text = "MG" & tgl & no.ToString("D3")
                 ElseIf in_kode.Text <> Nothing And formstate = InputState.Insert Then
@@ -453,7 +452,8 @@
                     Exit Sub
                 Else
                     MessageBox.Show("Data mutasi tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    doRefreshTab({pgstok, pgmutasigudang})
+                    'doRefreshTab({pgstok, pgmutasigudang})
+                    DoRefreshTab_v2({pgstok, pgmutasigudang})
                     Me.Close()
                 End If
             End If
@@ -557,14 +557,13 @@
 
     Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
-            'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
-            setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
+            setPopUpResult()
         End If
     End Sub
 

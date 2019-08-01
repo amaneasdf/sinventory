@@ -4,15 +4,21 @@ Public Class fr_draft_barang_view
     Public kodedraft As String = ""
 
     Private Sub filldatatabel(query As String, dt As DataTable)
-        op_con()
-        Try
-            Dim data_adpt As New MySqlDataAdapter(query, getConn)
-            data_adpt.Fill(dt)
-            data_adpt.Dispose()
-        Catch ex As Exception
-            MessageBox.Show(String.Format("Error: {0}", ex.Message))
-        End Try
-        cl_con()
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    data_adpt.Fill(dt)
+                    data_adpt.Dispose()
+                Catch ex As Exception
+                    MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                    logError(ex, True) : Me.Close()
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Me.Close()
+            End If
+        End Using
     End Sub
 
     Private Sub fr_draft_barang_view_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -31,5 +37,19 @@ Public Class fr_draft_barang_view
             .ZoomMode = 2
             .ZoomPercent = 100
         End With
+    End Sub
+
+    Private Sub rv_draft_barang_PrintingBegin(sender As Object, e As ReportPrintEventArgs) Handles rv_draft_barang.PrintingBegin
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = "UPDATE data_draft_faktur SET draft_printstatus_barang='Y' WHERE draft_kode='{0}' AND draft_status<9"
+                Try
+                    x.ExecCommand(String.Format(q, kodedraft))
+                    DoRefreshTab_v2({pgdraftrekap})
+                Catch ex As Exception
+                    logError(ex, True)
+                End Try
+            End If
+        End Using
     End Sub
 End Class

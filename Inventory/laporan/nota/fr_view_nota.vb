@@ -14,21 +14,28 @@ Public Class fr_view_nota
         innofaktur = nofaktur
     End Sub
 
-    Private Sub filldatatabel(query As String, dt As DataTable)
-        op_con()
-        Try
-            Dim data_adpt As New MySqlDataAdapter(query, getConn)
-            dt.Clear()
-            data_adpt.Fill(dt)
-            data_adpt.Dispose()
-        Catch ex As Exception
-            MessageBox.Show(String.Format("Error: {0}", ex.Message))
-            logError(ex)
-        End Try
-        cl_con()
-    End Sub
+    Private Function filldatatabel(query As String, dt As DataTable) As Boolean
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    consoleWriteLine(query)
+                    data_adpt.Fill(dt)
+                    data_adpt.Dispose()
+                    Return True
+                Catch ex As Exception
+                    MessageBox.Show(String.Format("Error: {0}", ex.Message))
+                    logError(ex, True)
+                    Return False
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
+            End If
+        End Using
+    End Function
 
-    Private Sub repViewerSelector(lap_type As String)
+    Private Function repViewerSelector(lap_type As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
@@ -54,8 +61,7 @@ Public Class fr_view_nota
                 Dim UserIdInput As String = ""
 
                 Using x = MainConnection
-                    x.Open()
-                    If x.ConnectionState = ConnectionState.Open Then
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
                         Select Case inlap_type
                             Case "beli"
                                 q = "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'),faktur_term, supplier_nama, supplier_alamat, " _
@@ -66,19 +72,19 @@ Public Class fr_view_nota
                                     Dim red = rdx.Read
                                     If red And rdx.HasRows Then
                                         FakturDate = rdx.Item(0)
-                                        term = rdx.Item(1)
+                                        Term = rdx.Item(1)
                                         RecipientName = rdx.Item(2)
                                         RecipientAddress = rdx.Item(3)
-                                        netto = rdx.Item(4)
+                                        Netto = rdx.Item(4)
                                         UserIdInput = rdx.Item(5)
                                     End If
                                 End Using
 
                                 Dim parTglFaktur As New ReportParameter("parTglFaktur", FakturDate)
-                                Dim parTerm As New ReportParameter("parTerm", term)
+                                Dim parTerm As New ReportParameter("parTerm", Term)
                                 Dim parSupplier As New ReportParameter("parSupplier", "A.N. " & RecipientName)
                                 Dim parSupplierAl As New ReportParameter("parSupplierAl", RecipientAddress)
-                                Dim parNetto As New ReportParameter("parNetto", netto)
+                                Dim parNetto As New ReportParameter("parNetto", Netto)
                                 parUserId = New ReportParameter("parUserId", UserIdInput)
 
                                 _parArr = {parSupplier, parSupplierAl, parTerm, parTglFaktur, parNetto, parUserId}
@@ -97,7 +103,7 @@ Public Class fr_view_nota
                             Case "jual"
                                 Dim sales As String = ""
                                 q = "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'), faktur_term, customer_nama, " _
-                                      & "TRIM(BOTH ', ' FROM CONCAT_WS(', ',customer_alamat,customer_kecamatan,customer_kabupaten))	customer_alamat, " _
+                                      & "TRIM(BOTH ', ' FROM TRIM(BOTH ', ' FROM CONCAT_WS(', ',customer_alamat,customer_kecamatan,customer_kabupaten))) customer_alamat, " _
                                       & "salesman_nama, IF(IFNULL(faktur_upd_alias,'')='',faktur_reg_alias,faktur_upd_alias), " _
                                       & "faktur_netto, IFNULL(j_order_kode,'') " _
                                       & "FROM data_penjualan_faktur LEFT JOIN data_customer_master ON customer_kode=faktur_customer " _
@@ -108,12 +114,12 @@ Public Class fr_view_nota
                                     Dim red = rdx.Read
                                     If red And rdx.HasRows Then
                                         FakturDate = rdx.Item(0)
-                                        term = rdx.Item(1)
+                                        Term = rdx.Item(1)
                                         RecipientName = rdx.Item(2)
                                         RecipientAddress = rdx.Item(3)
                                         sales = rdx.Item(4)
                                         UserIdInput = rdx.Item(5)
-                                        netto = rdx.Item(6)
+                                        Netto = rdx.Item(6)
                                         IDReff = rdx.Item(7)
                                     End If
                                 End Using
@@ -124,15 +130,14 @@ Public Class fr_view_nota
                                 Dim parCusto As New ReportParameter("parSupplier", RecipientName)
                                 Dim parCustoAl As New ReportParameter("parSupplierAl", RecipientAddress)
                                 parUserId = New ReportParameter("parUserId", UserIdInput)
-                                Dim parNetto As New ReportParameter("parNetto", netto)
+                                Dim parNetto As New ReportParameter("parNetto", Netto)
                                 Dim parKodeOrder As New ReportParameter("parKodeOrder", IDReff)
-                                Dim parNettoAmount As New ReportParameter("parNettoN", AmountToString(netto) & " Rupiah")
+                                Dim parNettoAmount As New ReportParameter("parNettoN", AmountToString(Netto) & " Rupiah")
 
                                 _parArr = {parCusto, parCustoAl, parTerm, parTglFaktur, parSales, parNetto, parKodeOrder, parNettoAmount}
                                 _repNm = "Inventory.nota_jual.rdlc"
                                 _dt = ds_transaksi.dt_nota_jual
-                                repdatasource.Name = "ds_nota_jual"
-                                repdatasource.Value = _dt
+                                repdatasource.Name = "ds_nota_jual" : repdatasource.Value = _dt
 
                                 inquery = "SELECT trans_barang as jual_barang ,barang_nama as jual_barang_n, " _
                                     & "CONCAT(CAST(trans_qty AS CHAR),' ',trans_satuan) as Jual_qty , trans_harga_jual as jual_harga, " _
@@ -149,31 +154,43 @@ Public Class fr_view_nota
                                     & "WHERE trans_faktur='" & innofaktur & "' AND trans_status<>9"
 
                             Case "returbeli"
-                                Exit Sub
+                                Return False : Exit Function
                                 q = "SELECT DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y'), "
                             Case Else
-                                Exit Sub
+                                Return False : Exit Function
                         End Select
                         .DataSources.Add(repdatasource)
                         .ReportEmbeddedResource = _repNm
                         .SetParameters(_parArr)
                         .SetParameters(New ReportParameter() {parUserId, parNoFaktur})
-                        filldatatabel(inquery, _dt)
+                        Return filldatatabel(inquery, _dt)
+                    Else
+                        MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return False
                     End If
                 End Using
-
             End With
         End With
-    End Sub
+    End Function
 
     'LOAD
-    Public Sub do_load()
+    Public Function do_load() As Boolean
         Me.Cursor = Cursors.AppStarting
-        repViewerSelector(inlap_type)
+        Return repViewerSelector(inlap_type)
         Me.Cursor = Cursors.Default
+    End Function
+
+    'VIEW REPORT
+    Public Sub viewRep()
+        rv_nota.RefreshReport()
+        rv_nota.SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
+        rv_nota.ZoomMode = 2
+        rv_nota.ZoomPercent = 100
+        Me.Size = New Point(940, 680)
+        ShowDialog(main)
     End Sub
 
-    'PRINT?
+    'PRINT REPORT?
     Public Sub printRep(sPrinter As String)
         Dim warnings() As Warning = Nothing
         Dim ps As Printing.PrinterSettings = rv_nota.PrinterSettings
@@ -182,17 +199,17 @@ Public Class fr_view_nota
         ps.PrinterName = sPrinter
         ps.DefaultPageSettings.PaperSize = New Printing.PaperSize("custom", _papersize.Height, _papersize.Width)
 
-        'ps.DefaultPageSettings.Margins = rv_nota.LocalReport.GetDefaultPageSettings.Margins
+        ps.DefaultPageSettings.Margins.Top = 10
         'ps.DefaultPageSettings.Landscape = True
 
         Dim deviceInfo As String = "<DeviceInfo>" & _
             " <OutputFormat>EMF</OutputFormat>" & _
             " <PageWidth>" & _papersize.Height / 100 & "in</PageWidth>" & _
             " <PageHeight>" & _papersize.Width / 100 & "in</PageHeight>" & _
-            " <MarginTop>" & 0.1 & "in</MarginTop>" & _
+            " <MarginTop>" & 0 & "in</MarginTop>" & _
             " <MarginLeft>" & 0.1 & "in</MarginLeft>" & _
             " <MarginRight>" & 0.1 & "in</MarginRight>" & _
-            " <MarginBottom>" & 0.1 & "in</MarginBottom>" & _
+            " <MarginBottom>" & 0 & "in</MarginBottom>" & _
             "</DeviceInfo>"
         m_streams = New List(Of IO.Stream)
         rv_nota.LocalReport.Render("Image", deviceInfo, AddressOf CreateStream, warnings)
@@ -201,21 +218,16 @@ Public Class fr_view_nota
             stream.Position = 0
         Next stream
 
-        Print(ps)
-    End Sub
-
-    'VIEW REPORT
-    Public Sub viewRep()
-        rv_nota.RefreshReport()
-        rv_nota.SetDisplayMode(Microsoft.Reporting.WinForms.DisplayMode.PrintLayout)
-        rv_nota.ZoomMode = 2
-        rv_nota.ZoomPercent = 100
-        ShowDialog(main)
+        Try
+            Print(ps)
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat melakukan proses cetak.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     'PRINT FUNCTION
     Private Sub Print(ByVal pPS As Printing.PrinterSettings)
-
         If m_streams Is Nothing Or m_streams.Count = 0 Then
             Return
         End If
@@ -224,7 +236,31 @@ Public Class fr_view_nota
         printDoc.PrinterSettings = pPS
         AddHandler printDoc.PrintPage, AddressOf PrintPage
         printDoc.Print()
+
+        For Each IoStream As IO.Stream In m_streams
+            IoStream.Close()
+        Next
         m_streams.Clear()
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = ""
+                Select Case inlap_type
+                    Case "jual"
+                        q = "UPDATE data_penjualan_faktur SET faktur_status_print='Y' WHERE faktur_kode='{0}' AND faktur_status=1"
+                    Case Else
+                        Exit Sub
+                End Select
+
+                Try
+                    x.ExecCommand(String.Format(q, innofaktur))
+                Catch ex As Exception
+                    logError(ex, True)
+                End Try
+            Else
+                logError(New Exception("CANNOT CONNECT TO DB; CHANGING STATUS PRINT NOTA"), True)
+            End If
+        End Using
     End Sub
 
     Private Sub PrintPage(ByVal sender As Object, ByVal ev As Printing.PrintPageEventArgs)
@@ -244,8 +280,4 @@ Public Class fr_view_nota
         m_streams.Add(rc)
         Return rc
     End Function
-
-    Private Sub fr_view_nota_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-    End Sub
 End Class
