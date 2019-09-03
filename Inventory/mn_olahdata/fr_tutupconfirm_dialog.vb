@@ -1,43 +1,82 @@
 ﻿Public Class fr_tutupconfirm_dialog
-    Private tipe As String = "IN"
-    Public returnval As Boolean = False
+    Public returnval As New KeyValuePair(Of Boolean, String)
     Private pass_switch As Boolean = True
+    Private formstate As ValidType = ValidType.ClosingValidation
 
+    Private Enum ValidType
+        ClosingValidation
+        UserConfirm
+    End Enum
+
+    'LOAD DIALOG
+    Private Sub LoadForm(formstate As ValidType)
+        Me.formstate = formstate
+        Me.Text = Me.lbl_title.Text
+        in_pass.UseSystemPasswordChar = pass_switch
+        in_user.ReadOnly = IIf(formstate = ValidType.ClosingValidation, False, True)
+    End Sub
+
+    Public Sub doLoadValid()
+        LoadForm(ValidType.ClosingValidation)
+        Me.ShowDialog()
+    End Sub
+
+    Public Sub doLoadConfirm(Uid As String)
+        LoadForm(ValidType.UserConfirm)
+        in_user.Text = Uid
+        Me.ShowDialog()
+    End Sub
+
+    'USER DATA VALIDATION
     Public Function checkUser(uid As String, pass As String) As Boolean
         Dim rval As Boolean = False
-        Dim q As String = "SELECT user_validasi_akun FROM data_pengguna_alias " _
-                          & " WHERE user_alias='{0}' AND user_pwd=MD5('{1}') AND user_status=1"
-        op_con()
-        Try
-            'q = "SELECT checkUser('{0}','{1}')"
-            readcommd(String.Format(q, uid, pass))
-            If rd.HasRows Then
-                If rd.Item(0) = 1 Then
-                    rval = True
-                End If
+        Dim q As String = ""
+        Select Case formstate
+            Case ValidType.ClosingValidation
+                q = "SELECT user_validasi_akun FROM data_pengguna_alias " _
+                    & "WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
+            Case ValidType.UserConfirm
+                q = "SELECT COUNT(user_alias) FROM data_pengguna_alias " _
+                    & "WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
+            Case Else
+                Return False : Exit Function
+        End Select
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim i As Integer = 0
+                    Dim f = x.ExecScalar(String.Format(q, uid, computeHash(pass)))
+                    If Not IsNothing(f) Then i = Integer.Parse(f)
+                    If i = 1 Then
+                        Return True
+                    ElseIf i > 1 And formstate = ValidType.UserConfirm Then
+                        MessageBox.Show("Terjadi kesalahan saat melakukan validasi data user." & Environment.NewLine & "Error duplicated entry",
+                                   Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        errLog(New List(Of String) From {Now.ToString("yyyy-MM-dd hh:mm:ss"), "----- DUPLICATE ENTRY:data_pengguna", "----- " & uid})
+                        Return False
+                    Else
+                        Dim _msg As String = ""
+                        If i = 0 And formstate = ValidType.ClosingValidation Then
+                            _msg = "User tidak ditemukan/tidak dapat melakukan validasi penutupan."
+                        Else
+                            _msg = "Username/Password salah. User tidak dapat ditemukan."
+                        End If
+                        MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                        Return False
+                    End If
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show("Terjadi kesalahan saat melakukan validasi data user." & Environment.NewLine & ex.Message,
+                                    Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
             End If
-            rd.Close()
-        Catch ex As Exception
-            logError(ex)
-        End Try
-
-        Return rval
+        End Using
     End Function
-
-    Public Sub do_loaddialog()
-        Me.Text = lbl_title.Text
-        in_pass.UseSystemPasswordChar = True
-        ShowDialog()
-        'If tipe = "IN" Then
-        '    lbl_cair.Visible = True
-        '    cb_akun.Visible = True
-        'Else
-        '    lbl_cair.Visible = False
-        '    cb_akun.Visible = False
-        'End If
-
-        'loadCBAkun("BG")
-    End Sub
 
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
@@ -59,7 +98,7 @@
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
         If MessageBox.Show("Batalkan?", "Konfirmasi Tutup Buku", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            returnval = False
+            returnval = New KeyValuePair(Of Boolean, String)(False, String.Empty)
             Me.Close()
         End If
     End Sub
@@ -77,6 +116,7 @@
         keyshortenter(IIf(in_user.Text = "", in_user, bt_simpanbeli), e)
     End Sub
 
+    'UI :BUTTON
     Private Sub bt_switch_Click(sender As Object, e As EventArgs) Handles bt_switch.Click
         With bt_switch
             If pass_switch = True Then
@@ -92,29 +132,18 @@
         in_pass.Focus()
     End Sub
 
-    'BUTTON
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
         If in_user.Text = "" Then
-            MessageBox.Show("Username belum di input")
-            in_user.Focus()
-            Exit Sub
+            MessageBox.Show("Username belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_user.Focus() : Exit Sub
         End If
         If in_pass.Text = "" Then
-            MessageBox.Show("Password belum di input")
-            in_pass.Focus()
-            Exit Sub
+            MessageBox.Show("Password belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_pass.Focus() : Exit Sub
         End If
-        If checkUser(in_user.Text, in_pass.Text) = False Then
-            MessageBox.Show("User salah atau tidak dapat melakukan penutupan")
-            in_user.Focus()
-            Exit Sub
+        If checkUser(in_user.Text, in_pass.Text) Then
+            returnval = New KeyValuePair(Of Boolean, String)(True, in_user.Text)
+            Me.Close()
         End If
-
-        returnval = True
-        Me.Close()
-    End Sub
-
-    Private Sub fr_tutupconfirm_dialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        in_pass.UseSystemPasswordChar = True
     End Sub
 End Class

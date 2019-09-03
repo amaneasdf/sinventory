@@ -63,23 +63,15 @@
             Case "piutangbgtolak"
                 createTabPage(pgpiutangbgtolak, type, frmpiutangbgTolak, "BG Tolak")
             Case "kas"
-                createTabPage(pgkas, type, frmkas, "Kas/Bank")
+                createTabPage(pgkas, type, frmkas, "Entry Kas/Bank")
             Case "jurnalumum"
                 createTabPage(pgjurnalumum, type, frmjurnalumum, "Jurnal Umum")
             Case "jurnalsesuai"
                 createTabPage(pgjurnalsesuai, type, frmjurnalsesuai, "Jurnal Penyesuaian")
+            Case "ref"
+                createTabPage(pgref, type, frmref, "Referensi")
             Case "setbarangsales"
-                If tabcontrol.Contains(pgsalesbarang) Then
-                    tabcontrol.SelectedTab = pgsalesbarang
-                Else
-                    With pgsalesbarang
-                        .Text = "Set Barang Salesman"
-                        tabcontrol.TabPages.Add(pgsalesbarang)
-                        setList(type)
-                        .Controls.Add(frmsalesbarang)
-                        tabcontrol.SelectedTab = pgsalesbarang
-                    End With
-                End If
+                createTabPage(pgsalesbarang, type, frmsalesbarang, "Set Gudang/Barang Sales")
             Case "kartustok"
                 If tabcontrol.Contains(pgkartustok) Then
                     tabcontrol.SelectedTab = pgkartustok
@@ -312,27 +304,31 @@
             Case "mn070802" : Dim x As New fr_lap_filter_keuangan : x.do_load("Laporan Biaya Per Salesman Global", "k_biayasales_global")
             Case "mn070804" : Dim x As New fr_lap_filter_keuangan : x.do_load("Jurnal Umum", "k_jurnalumum")
             Case "mn070805" : Dim x As New fr_lap_filter_keuangan : x.do_load("Buku Besar", "k_bukubesar")
-            Case "mn070806" : Dim x As New fr_lap_filter_keuangan : x.do_load("Neraca Lajur", "k_neracalajur")
+            Case "mn070806" : Dim x As New fr_lap_filter_keuangan : x.do_load("Jurnal Penyesuaian", "k_jurnalsesuai")
+            Case "mn070807" : Dim x As New fr_lap_filter_keuangan : x.do_load("Neraca Lajur", "k_neracalajur")
             Case "mn070808" : Dim x As New fr_lap_filter_keuangan : x.do_load("Laba Rugi", "k_labarugi")
             Case "mn070809" : Dim x As New fr_lap_filter_keuangan : x.do_load("Jurnal Penutup", "k_jurnaltutup")
             Case "mn070810" : Dim x As New fr_lap_filter_keuangan : x.do_load("Neraca", "k_neraca")
             Case "mn070812" : Dim x As New fr_lap_filter_keuangan : x.do_load("Daftar Perkiraan", "k_daftarperk")
 
-            Case "mn0813" : openTab("kartustok")
+                'OLAH DATA
+                'Case "mn0813" : openTab("kartustok")
             Case "mn0822" : Dim x As New fr_importjual : x.Show()
             Case "mn0831" : openTab("exportEfak")
 
+                'SETTING
             Case "mn0901" : Using x As New fr_user_password : x.ShowDialog() : End Using
             Case "mn0911" : Dim x As New fr_setup_menu : x.Show()
             Case "mn0921" : openTab("user")
             Case "mn0922" : openTab("group")
             Case "mn0923" : resetPassUser(loggeduser.user_id)
 
-            Case "mn0932"
-                With fr_reference
-                    .Show()
-                End With
+                'SETTING REFERENSI
+            Case "mn0932" : openTab("ref")
             Case "mn0934" : openTab("setbarangsales")
+                'Case "mn0935" : openTab("setpromobrg")
+
+                'LOGOUT/EXIT
             Case "mn0941"
                 Try
                     Dim x As Task = logOut() : Await x
@@ -342,8 +338,7 @@
                     isForcedClose = True
                     Application.Exit()
                 End Try
-            Case "mn0942"
-                Application.Exit()
+            Case "mn0942" : Application.Exit()
             Case Else
                 If mnChld = False Then
                     MessageBox.Show("Maaf fungsi ini masih dalam perbaikan/maintenance atau belum tersedia.", mnLabel, MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -379,8 +374,8 @@
     'SETUP CONECTION
     Private Function setConnection() As Boolean
         Dim _retval As Boolean = False
-        'mainConn = loadCon("CatraDev", False)
-        mainConn = loadCon("network", False)
+        mainConn = loadCon("CatraDev", False)
+        'mainConn = loadCon("network", False)
 
         If mainConn.db = Nothing Or mainConn.host = Nothing Then
             MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
@@ -390,10 +385,10 @@
             Application.Exit()
         Else
             MainConnection = New MySqlThing(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
+            MainConnData = mainConn
             setConn(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
-            op_con(True)
-
-            If getConn.State <> ConnectionState.Open Then
+            MainConnection.Open()
+            If MainConnection.ConnectionState <> ConnectionState.Open Then
                 MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
                                 Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 isForcedClose = True : _retval = False : Application.Exit()

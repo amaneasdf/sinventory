@@ -2148,6 +2148,7 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
+                                <Format>#,0;(#,0)</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -2194,6 +2195,7 @@
                               <Style>
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
+                                <Format>#,0;(#,0)</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -3214,6 +3216,7 @@
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>#,0;(#,0)</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -3262,6 +3265,7 @@
                                 <FontFamily>consolas</FontFamily>
                                 <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>#,0;(#,0)</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>

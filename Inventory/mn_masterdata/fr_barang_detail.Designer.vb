@@ -57,7 +57,6 @@ Partial Class fr_barang_detail
         Me.Label37 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
         Me.Label36 = New System.Windows.Forms.Label()
-        Me.bt_supplier_add = New System.Windows.Forms.Button()
         Me.in_suppliernama = New System.Windows.Forms.TextBox()
         Me.in_supplier = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -104,7 +103,10 @@ Partial Class fr_barang_detail
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.mn_save = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_deact = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_other = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_del = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mn_new_supplier = New System.Windows.Forms.ToolStripMenuItem()
         Me.pnl_content = New System.Windows.Forms.Panel()
         Me.cb_pajak = New System.Windows.Forms.ComboBox()
         Me.Label13 = New System.Windows.Forms.Label()
@@ -535,37 +537,24 @@ Partial Class fr_barang_detail
         Me.Label36.TabIndex = 463
         Me.Label36.Text = "%"
         '
-        'bt_supplier_add
-        '
-        Me.bt_supplier_add.BackColor = System.Drawing.Color.Transparent
-        Me.bt_supplier_add.BackgroundImage = Global.Inventory.My.Resources.Resources.toolbar_add_icon
-        Me.bt_supplier_add.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.bt_supplier_add.FlatAppearance.BorderSize = 0
-        Me.bt_supplier_add.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_supplier_add.Location = New System.Drawing.Point(446, 28)
-        Me.bt_supplier_add.Name = "bt_supplier_add"
-        Me.bt_supplier_add.Size = New System.Drawing.Size(15, 15)
-        Me.bt_supplier_add.TabIndex = 2
-        Me.bt_supplier_add.UseVisualStyleBackColor = False
-        Me.bt_supplier_add.Visible = False
-        '
         'in_suppliernama
         '
         Me.in_suppliernama.BackColor = System.Drawing.Color.White
         Me.in_suppliernama.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_suppliernama.Location = New System.Drawing.Point(192, 25)
+        Me.in_suppliernama.Location = New System.Drawing.Point(170, 25)
         Me.in_suppliernama.MaxLength = 10
         Me.in_suppliernama.Name = "in_suppliernama"
-        Me.in_suppliernama.Size = New System.Drawing.Size(248, 20)
+        Me.in_suppliernama.Size = New System.Drawing.Size(270, 20)
         Me.in_suppliernama.TabIndex = 1
         '
         'in_supplier
         '
+        Me.in_supplier.BackColor = System.Drawing.Color.Gainsboro
         Me.in_supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_supplier.Location = New System.Drawing.Point(83, 25)
         Me.in_supplier.MaxLength = 10
         Me.in_supplier.Name = "in_supplier"
-        Me.in_supplier.Size = New System.Drawing.Size(105, 20)
+        Me.in_supplier.Size = New System.Drawing.Size(87, 20)
         Me.in_supplier.TabIndex = 0
         '
         'Label1
@@ -821,7 +810,7 @@ Partial Class fr_barang_detail
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(560, 28)
+        Me.Label3.Location = New System.Drawing.Point(19, 51)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(32, 13)
         Me.Label3.TabIndex = 434
@@ -831,7 +820,7 @@ Partial Class fr_barang_detail
         '
         Me.in_kode.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_kode.ForeColor = System.Drawing.Color.Black
-        Me.in_kode.Location = New System.Drawing.Point(607, 25)
+        Me.in_kode.Location = New System.Drawing.Point(83, 47)
         Me.in_kode.MaxLength = 15
         Me.in_kode.Name = "in_kode"
         Me.in_kode.Size = New System.Drawing.Size(164, 20)
@@ -842,7 +831,7 @@ Partial Class fr_barang_detail
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(19, 51)
+        Me.Label4.Location = New System.Drawing.Point(19, 71)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(35, 13)
         Me.Label4.TabIndex = 435
@@ -853,7 +842,7 @@ Partial Class fr_barang_detail
         Me.in_nama.BackColor = System.Drawing.Color.White
         Me.in_nama.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_nama.ForeColor = System.Drawing.Color.Black
-        Me.in_nama.Location = New System.Drawing.Point(83, 48)
+        Me.in_nama.Location = New System.Drawing.Point(83, 68)
         Me.in_nama.MaxLength = 200
         Me.in_nama.Name = "in_nama"
         Me.in_nama.Size = New System.Drawing.Size(357, 20)
@@ -864,7 +853,7 @@ Partial Class fr_barang_detail
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label11.ForeColor = System.Drawing.Color.Black
-        Me.Label11.Location = New System.Drawing.Point(560, 53)
+        Me.Label11.Location = New System.Drawing.Point(612, 29)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(37, 13)
         Me.Label11.TabIndex = 437
@@ -875,7 +864,7 @@ Partial Class fr_barang_detail
         Me.Label62.AutoSize = True
         Me.Label62.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label62.ForeColor = System.Drawing.Color.Black
-        Me.Label62.Location = New System.Drawing.Point(19, 122)
+        Me.Label62.Location = New System.Drawing.Point(19, 137)
         Me.Label62.Name = "Label62"
         Me.Label62.Size = New System.Drawing.Size(55, 13)
         Me.Label62.TabIndex = 436
@@ -886,7 +875,7 @@ Partial Class fr_barang_detail
         Me.Label46.AutoSize = True
         Me.Label46.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label46.ForeColor = System.Drawing.Color.Black
-        Me.Label46.Location = New System.Drawing.Point(19, 74)
+        Me.Label46.Location = New System.Drawing.Point(19, 92)
         Me.Label46.Name = "Label46"
         Me.Label46.Size = New System.Drawing.Size(31, 13)
         Me.Label46.TabIndex = 438
@@ -898,7 +887,7 @@ Partial Class fr_barang_detail
         Me.cb_kategori.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_kategori.ForeColor = System.Drawing.Color.Black
         Me.cb_kategori.FormattingEnabled = True
-        Me.cb_kategori.Location = New System.Drawing.Point(83, 119)
+        Me.cb_kategori.Location = New System.Drawing.Point(83, 134)
         Me.cb_kategori.Name = "cb_kategori"
         Me.cb_kategori.Size = New System.Drawing.Size(196, 21)
         Me.cb_kategori.TabIndex = 6
@@ -942,7 +931,7 @@ Partial Class fr_barang_detail
         Me.cb_jenis.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_jenis.ForeColor = System.Drawing.Color.Black
         Me.cb_jenis.FormattingEnabled = True
-        Me.cb_jenis.Location = New System.Drawing.Point(83, 71)
+        Me.cb_jenis.Location = New System.Drawing.Point(83, 89)
         Me.cb_jenis.Name = "cb_jenis"
         Me.cb_jenis.Size = New System.Drawing.Size(133, 21)
         Me.cb_jenis.TabIndex = 5
@@ -1012,13 +1001,14 @@ Partial Class fr_barang_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(607, 50)
+        Me.in_status.Location = New System.Drawing.Point(655, 26)
         Me.in_status.MaxLength = 10
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
-        Me.in_status.Size = New System.Drawing.Size(164, 20)
+        Me.in_status.Size = New System.Drawing.Size(115, 20)
         Me.in_status.TabIndex = 29
         Me.in_status.TabStop = False
+        Me.in_status.TextAlign = System.Windows.Forms.HorizontalAlignment.Center
         '
         'pnl_Menu
         '
@@ -1031,7 +1021,7 @@ Partial Class fr_barang_detail
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_del})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_deact, Me.mn_other})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(805, 24)
@@ -1055,12 +1045,29 @@ Partial Class fr_barang_detail
         Me.mn_deact.Text = "Deactivate"
         Me.mn_deact.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
+        'mn_other
+        '
+        Me.mn_other.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_del, Me.ToolStripSeparator1, Me.mn_new_supplier})
+        Me.mn_other.Name = "mn_other"
+        Me.mn_other.Size = New System.Drawing.Size(68, 20)
+        Me.mn_other.Text = "Lain-Lain"
+        '
         'mn_del
         '
-        Me.mn_del.Enabled = False
         Me.mn_del.Name = "mn_del"
-        Me.mn_del.Size = New System.Drawing.Size(53, 20)
-        Me.mn_del.Text = "Hapus"
+        Me.mn_del.Size = New System.Drawing.Size(144, 22)
+        Me.mn_del.Text = "Hapus Item"
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(141, 6)
+        '
+        'mn_new_supplier
+        '
+        Me.mn_new_supplier.Name = "mn_new_supplier"
+        Me.mn_new_supplier.Size = New System.Drawing.Size(144, 22)
+        Me.mn_new_supplier.Text = "Supplier Baru"
         '
         'pnl_content
         '
@@ -1149,7 +1156,6 @@ Partial Class fr_barang_detail
         Me.pnl_content.Controls.Add(Me.Label35)
         Me.pnl_content.Controls.Add(Me.in_suppliernama)
         Me.pnl_content.Controls.Add(Me.Label36)
-        Me.pnl_content.Controls.Add(Me.bt_supplier_add)
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_content.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.pnl_content.Location = New System.Drawing.Point(0, 72)
@@ -1163,7 +1169,7 @@ Partial Class fr_barang_detail
         Me.cb_pajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.cb_pajak.ForeColor = System.Drawing.Color.Black
         Me.cb_pajak.FormattingEnabled = True
-        Me.cb_pajak.Location = New System.Drawing.Point(83, 95)
+        Me.cb_pajak.Location = New System.Drawing.Point(83, 112)
         Me.cb_pajak.Name = "cb_pajak"
         Me.cb_pajak.Size = New System.Drawing.Size(133, 21)
         Me.cb_pajak.TabIndex = 507
@@ -1173,7 +1179,7 @@ Partial Class fr_barang_detail
         Me.Label13.AutoSize = True
         Me.Label13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label13.ForeColor = System.Drawing.Color.Black
-        Me.Label13.Location = New System.Drawing.Point(19, 98)
+        Me.Label13.Location = New System.Drawing.Point(19, 115)
         Me.Label13.Name = "Label13"
         Me.Label13.Size = New System.Drawing.Size(55, 13)
         Me.Label13.TabIndex = 508
@@ -1448,7 +1454,6 @@ Partial Class fr_barang_detail
     Friend WithEvents Label37 As System.Windows.Forms.Label
     Friend WithEvents Label35 As System.Windows.Forms.Label
     Friend WithEvents Label36 As System.Windows.Forms.Label
-    Friend WithEvents bt_supplier_add As System.Windows.Forms.Button
     Friend WithEvents in_suppliernama As System.Windows.Forms.TextBox
     Friend WithEvents in_supplier As System.Windows.Forms.TextBox
     Friend WithEvents Label1 As System.Windows.Forms.Label
@@ -1495,7 +1500,6 @@ Partial Class fr_barang_detail
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_save As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_deact As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents pnl_content As System.Windows.Forms.Panel
     Friend WithEvents pnl_foot As System.Windows.Forms.Panel
     Friend WithEvents Label12 As System.Windows.Forms.Label
@@ -1515,4 +1519,8 @@ Partial Class fr_barang_detail
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents bt_batalcusto As System.Windows.Forms.Button
     Friend WithEvents bt_simpancusto As System.Windows.Forms.Button
+    Friend WithEvents mn_other As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_del As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents mn_new_supplier As System.Windows.Forms.ToolStripMenuItem
 End Class

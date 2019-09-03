@@ -106,6 +106,7 @@
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
 
     Public MainConnection As New MySqlThing
+    Public MainConnData As New cnction
 
     Public selectperiode As New periode
     Public currentperiode As New periode
@@ -159,16 +160,19 @@
 
     'jenissatuan
     Public Function jenis(tipe As String) As DataTable
-        Dim dt As New DataTable
-        Dim q As String = ""
+        Dim dt As New DataTable : Dim q As String = ""
         Select Case tipe
             Case "satuan"
-                dt = getDataTablefromDB("SELECT satuan_kode as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1 ORDER BY satuan_kode")
+                dt = getDataTablefromDB("SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1 ORDER BY satuan_kode")
             Case "satuan_plus"
                 dt = getDataTablefromDB("SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan " _
                                         & "WHERE satuan_status=1 ORDER BY satuan_nama")
             Case "kat_barang"
-                dt = getDataTablefromDB("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori WHERE kategori_status=1 ORDER BY kategori_kode")
+                Using x = MainConnection
+                    x.Open() : dt = x.GetDataTable("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori " _
+                                                    & "WHERE kategori_status=1 ORDER BY kategori_kode")
+                End Using
+
             Case "pajak_barang"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
@@ -176,12 +180,17 @@
                 dt.Rows.Add("Non-Pajak", "0")
 
             Case "jenis_custo"
-                dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) as Text, jenis_kode as `Value` FROM data_customer_jenis")
+                dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) Text, jenis_kode `Value` " _
+                                        & "FROM data_customer_jenis WHERE jenis_status=1")
             Case "priority_custo"
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("One Bill", "0")
                 dt.Rows.Add("Priority", "1")
+            Case "hargajual_custo"
+                Using x = MainConnection
+                    x.Open() : dt = x.GetDataTable("SELECT hargajual_nama Text, hargajual_kode Value FROM data_customer_hargajual WHERE hargajual_status=1")
+                End Using
 
             Case "bayar_pajak"
                 q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
@@ -229,7 +238,7 @@
                                         & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
                                         & "FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id<>0")
 
-            Case "bayarhutang"
+            Case "bayarhutang" 'LAPORAN PEMBAYARAN HUTANG
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("Semua", "ALL")
@@ -239,7 +248,7 @@
                 dt.Rows.Add("ReturPembelian", "RETUR")
                 dt.Rows.Add("PiutangSupplier", "PIUTSUPL")
 
-            Case "bayarpiutang"
+            Case "bayarpiutang" 'LAPORAN PEMBAYARAN PIUTANG
                 dt.Columns.Add("Text", GetType(String))
                 dt.Columns.Add("Value", GetType(String))
                 dt.Rows.Add("Semua", "ALL")
@@ -424,8 +433,6 @@
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgref = New TabPage() With {.Name = "pgref"}
     Public pgsalesbarang = New TabPage() With {.Name = "pgsalesbarang"}
-    'Public pgjenisbarang = New TabPage() With {.Name = "pgjenisbarang"}
-    'Public pgsatuanbarang = New TabPage() With {.Name = "pgsatuanbarang"}
 
     'user con list
     Public frmbarang As New fr_list With {.Dock = DockStyle.Fill}
@@ -442,14 +449,9 @@
     Public frmpenjualan As New fr_list With {.Dock = DockStyle.Fill}
     Public frmreturjual As New fr_list With {.Dock = DockStyle.Fill}
     Public frmpesanjual As New fr_list With {.Dock = DockStyle.Fill}
-    'Public frmrekap As New fr_draft_rekap With {.Dock = DockStyle.Fill}
-    'Public frmtagihan As New fr_draft_tagih With {.Dock = DockStyle.Fill}
     Public frmrekap As New fr_draft_list With {.Dock = DockStyle.Fill}
     Public frmtagihan As New fr_draft_list With {.Dock = DockStyle.Fill}
     Public frmstok As New fr_list With {.Dock = DockStyle.Fill}
-    'Public frmmutasigudang As New fr_stok_mutasi_list With {.Dock = DockStyle.Fill}
-    'Public frmmutasistok As New fr_stok_mutasibarang_list With {.Dock = DockStyle.Fill}
-    'Public frmstockop As New fr_stockop_list With {.Dock = DockStyle.Fill}
     Public frmmutasigudang As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
     Public frmmutasistok As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
     Public frmstockop As New fr_stock_mutasibrg_list With {.Dock = DockStyle.Fill}
@@ -470,9 +472,7 @@
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmref As New fr_data_referensi With {.Dock = DockStyle.Fill}
-    Public frmsalesbarang As New uc_sales_barang With {.Dock = DockStyle.Fill}
-    Public frmjenisbarang As New fr_jenis_barang
-    Public frmsatuanbarang As New fr_jenis_barang
+    Public frmsalesbarang As New fr_setsales_list With {.Dock = DockStyle.Fill}
 
     'DATAGRID COLUMNS LIST
     Public dgvcol_temp_ck = New DataGridViewCheckBoxColumn With {

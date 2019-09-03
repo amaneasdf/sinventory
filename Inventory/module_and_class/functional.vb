@@ -83,6 +83,7 @@ Module functional
         End If
     End Sub
 
+    'POPUPSEARCH
     Public Sub PopUpSearchKeyPress(e As KeyPressEventArgs, x As TextBox)
         If Char.IsLetterOrDigit(e.KeyChar) Then
             x.Text += e.KeyChar
@@ -95,6 +96,30 @@ Module functional
         x.Focus()
         x.Select(x.TextLength, x.TextLength)
     End Sub
+
+    Public Function PopUpSearchInputHandle_inputKeyup(e As KeyEventArgs, sender As TextBox, IdTextbox As TextBox, PopUpPanel As Panel, PopUpDgv As DataGridView) As List(Of String)
+        Dim _respond As New List(Of String)
+        If e.KeyCode = Keys.Down Then
+            If PopUpPanel.Visible = True Then PopUpDgv.Focus()
+
+        ElseIf e.KeyCode = Keys.Enter Then
+            If PopUpPanel.Visible = True And PopUpDgv.RowCount > 0 Then _respond.Add("set")
+            _respond.Add("next")
+        Else
+            If e.KeyCode <> Keys.Escape And sender.ReadOnly = False Then
+                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown, Keys.Shift, Keys.ShiftKey, Keys.Control, Keys.ControlKey}
+                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
+                    If Not IsNothing(IdTextbox) Then IdTextbox.Clear()
+                    _respond.Add("clear")
+                End If
+                If PopUpPanel.Visible = False Then PopUpPanel.Visible = True
+
+                _respond.Add("load")
+            End If
+        End If
+
+        Return _respond
+    End Function
 
     '----string manipulation----------
     'split string into two string and the nth string
@@ -429,6 +454,9 @@ Module functional
                 Case "pgpiutangbgcair" : userCon = frmpiutangbgcair
                 Case "pgkas" : userCon = frmkas
                 Case "pgjurnalumum" : userCon = frmjurnalumum
+                Case "pgtutupbuku" : userCon = frmtutupbuku
+                Case "pgref" : userCon = frmref
+                Case "pgsalesbarang" : userCon = frmsalesbarang
                 Case Else : retMsg = "TabPage tidak sesuai." : GoTo NextTab
             End Select
 
@@ -441,7 +469,7 @@ Module functional
                 retMsg = "Terjadi kesalahan saat melakukan refresh data." & Environment.NewLine & ex.Message
             End Try
 NextTab:
-            consoleWriteLine(retBool.ToString & ":" & retMsg)
+            consoleWriteLine(x.Name & ":" & retBool.ToString & ":" & retMsg)
         Next
 
         Return New KeyValuePair(Of Boolean, String)(retBool, retMsg)
@@ -684,7 +712,7 @@ NextTab:
     End Function
 
     '-----------.ini file manipulation-------------
-    Private Function getConfigFile() As String
+    Public Function getConfigFile() As String
         Dim _appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & Application.ProductName
         Dim fileloc As String = ""
 

@@ -288,12 +288,6 @@
     <Compile Include="laporan\view\fr_lap_stock_view.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_akuntansi\fr_jurnal_mem.Designer.vb">
-      <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_akuntansi\fr_jurnal_mem.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="mn_akuntansi\fr_akun_confirmdialog.Designer.vb">
       <DependentUpon>fr_akun_confirmdialog.vb</DependentUpon>
     </Compile>
@@ -451,10 +445,22 @@
     <Compile Include="mn_olahdata\fr_tutupconfirm_dialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_olahdata\fr_tutup_buku.Designer.vb">
+    <Compile Include="mn_olahdata\tutupbuku\fr_closing.Designer.vb">
+      <DependentUpon>fr_closing.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\tutupbuku\fr_closing.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\tutupbuku\fr_closing_loading.Designer.vb">
+      <DependentUpon>fr_closing_loading.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\tutupbuku\fr_closing_loading.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_olahdata\tutupbuku\fr_tutup_buku.Designer.vb">
       <DependentUpon>fr_tutup_buku.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_olahdata\fr_tutup_buku.vb">
+    <Compile Include="mn_olahdata\tutupbuku\fr_tutup_buku.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_olahdata\fr_urut_kartustok.Designer.vb">
@@ -463,10 +469,10 @@
     <Compile Include="mn_olahdata\fr_urut_kartustok.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="mn_pengaturan\fr_data_referensi.Designer.vb">
+    <Compile Include="mn_pengaturan\reference\fr_data_referensi.Designer.vb">
       <DependentUpon>fr_data_referensi.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_pengaturan\fr_data_referensi.vb">
+    <Compile Include="mn_pengaturan\reference\fr_data_referensi.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_pengaturan\fr_group_detail.Designer.vb">
@@ -481,16 +487,10 @@
     <Compile Include="mn_pengaturan\fr_import_data.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_pengaturan\fr_jenis_barang.Designer.vb">
-      <DependentUpon>fr_jenis_barang.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_pengaturan\fr_jenis_barang.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="mn_pengaturan\fr_reference\fr_reference.Designer.vb">
+    <Compile Include="mn_pengaturan\reference\fr_reference.Designer.vb">
       <DependentUpon>fr_reference.vb</DependentUpon>
     </Compile>
-    <Compile Include="mn_pengaturan\fr_reference\fr_reference.vb">
+    <Compile Include="mn_pengaturan\reference\fr_reference.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_pengaturan\fr_setup_menu.Designer.vb">
@@ -505,16 +505,28 @@
     <Compile Include="mn_pengaturan\fr_user_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_pengaturan\fr_user\fr_user_list.Designer.vb">
-      <DependentUpon>fr_user_list.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_pengaturan\fr_user\fr_user_list.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="mn_pengaturan\fr_user_password.Designer.vb">
       <DependentUpon>fr_user_password.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_pengaturan\fr_user_password.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\reference\fr_ref_areacusto.Designer.vb">
+      <DependentUpon>fr_ref_areacusto.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\reference\fr_ref_areacusto.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\sales\fr_sales_set_list.Designer.vb">
+      <DependentUpon>fr_sales_set_list.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\sales\fr_sales_set_list.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="mn_pengaturan\sales\fr_sales_set_det.Designer.vb">
+      <DependentUpon>fr_sales_set_det.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_pengaturan\sales\fr_sales_set_det.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_changecode.Designer.vb">
@@ -524,12 +536,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="module_and_class\mdl_importdata.vb" />
-    <Compile Include="mn_pengaturan\uc_sales_barang.Designer.vb">
-      <DependentUpon>uc_sales_barang.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_pengaturan\uc_sales_barang.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.Designer.vb">
       <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
     </Compile>
@@ -546,12 +552,6 @@
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_persediaan\stok_op\fr_stockop_list.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.Designer.vb">
-      <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="mn_persediaan\mutasi_stok\fr_stok_mutasi_list.Designer.vb">
@@ -850,9 +850,6 @@
     <EmbeddedResource Include="laporan\view\fr_lap_stock_view.resx">
       <DependentUpon>fr_lap_stock_view.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_akuntansi\fr_jurnal_mem.resx">
-      <DependentUpon>fr_jurnal_mem.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="mn_akuntansi\fr_akun_confirmdialog.resx">
       <DependentUpon>fr_akun_confirmdialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -931,13 +928,19 @@
     <EmbeddedResource Include="mn_olahdata\fr_tutupconfirm_dialog.resx">
       <DependentUpon>fr_tutupconfirm_dialog.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_olahdata\fr_tutup_buku.resx">
+    <EmbeddedResource Include="mn_olahdata\tutupbuku\fr_closing.resx">
+      <DependentUpon>fr_closing.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\tutupbuku\fr_closing_loading.resx">
+      <DependentUpon>fr_closing_loading.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\tutupbuku\fr_tutup_buku.resx">
       <DependentUpon>fr_tutup_buku.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\fr_urut_kartustok.resx">
       <DependentUpon>fr_urut_kartustok.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_pengaturan\fr_data_referensi.resx">
+    <EmbeddedResource Include="mn_pengaturan\reference\fr_data_referensi.resx">
       <DependentUpon>fr_data_referensi.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_group_detail.resx">
@@ -946,10 +949,7 @@
     <EmbeddedResource Include="mn_pengaturan\fr_import_data.resx">
       <DependentUpon>fr_import_data.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_pengaturan\fr_jenis_barang.resx">
-      <DependentUpon>fr_jenis_barang.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_pengaturan\fr_reference\fr_reference.resx">
+    <EmbeddedResource Include="mn_pengaturan\reference\fr_reference.resx">
       <DependentUpon>fr_reference.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_setup_menu.resx">
@@ -958,14 +958,17 @@
     <EmbeddedResource Include="mn_pengaturan\fr_user_detail.resx">
       <DependentUpon>fr_user_detail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_pengaturan\fr_user\fr_user_list.resx">
-      <DependentUpon>fr_user_list.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="mn_pengaturan\fr_user_password.resx">
       <DependentUpon>fr_user_password.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_pengaturan\uc_sales_barang.resx">
-      <DependentUpon>uc_sales_barang.vb</DependentUpon>
+    <EmbeddedResource Include="mn_pengaturan\reference\fr_ref_areacusto.resx">
+      <DependentUpon>fr_ref_areacusto.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\sales\fr_sales_set_list.resx">
+      <DependentUpon>fr_sales_set_list.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="mn_pengaturan\sales\fr_sales_set_det.resx">
+      <DependentUpon>fr_sales_set_det.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\fr_stockopconfirm_dialog.resx">
       <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
@@ -975,9 +978,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\stok_op\fr_stockop_list.resx">
       <DependentUpon>fr_stockop_list.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_persediaan\mutasi_brg\fr_stok_mutasibarang_list.resx">
-      <DependentUpon>fr_stok_mutasibarang_list.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_persediaan\mutasi_stok\fr_stok_mutasi_list.resx">
       <DependentUpon>fr_stok_mutasi_list.vb</DependentUpon>

@@ -339,7 +339,7 @@
     End Sub
 
     'LOAD LIST DATA
-    Private Sub LoadDataGrid(Param As String, Page As Integer, StartDate As Date, EndDate As Date)
+    Private Async Sub LoadDataGrid(Param As String, Page As Integer, StartDate As Date, EndDate As Date)
         Dim dt As New DataTable
         Dim _typedata As String = ""
         Dim _limitdata As Integer = _limit
@@ -351,17 +351,54 @@
         setDoubleBuffered(Me.dgv_list, True)
         _typedata = "mutasi" & DataTypeSelector()
 
-        dgv_list.DataSource = GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate)
-        DataCount = GetDataCount(_typedata, Param, _startdate, _enddate)
-        MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
-        SelectedPageData = Page
-        in_page.Text = SelectedPageData
-        PageInfo = String.Format(PageInfo,
-                                 If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
-                                 dgv_list.RowCount + (_limitdata * Page) - _limitdata,
-                                 DataCount
-                                 )
-        lbl_pageinfo.Text = PageInfo
+        Dim done As Boolean = False
+        Try
+            Me.Cursor = Cursors.WaitCursor : dgv_list.Cursor = Cursors.WaitCursor
+            For Each ctr As Control In {bt_search, bt_cl, date_tglakhir, date_tglawal, bt_page_first, bt_page_last, bt_page_next, bt_page_prev}
+                ctr.Enabled = False
+            Next
+            mnstrip_main.Enabled = False
+
+            dgv_list.DataSource = New DataTable
+            lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0) & " - LOADING . . ."
+
+            Dim _datalist = Await Task.Run(Function() GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate))
+            Dim _datacount = Await Task.Run(Function() GetDataCount(_typedata, Param, _startdate, _enddate))
+
+            If _datalist.Key And _datacount.Key Then
+                dgv_list.DataSource = _datalist.Value
+                DataCount = _datacount.Value
+
+                MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
+                SelectedPageData = Page
+                PageInfo = String.Format(PageInfo,
+                                         If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
+                                         dgv_list.RowCount + (_limitdata * Page) - _limitdata,
+                                         DataCount
+                                         )
+                lbl_pageinfo.Text = PageInfo
+            Else
+                MaxPageData = 1
+                SelectedPageData = 1
+                lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0)
+            End If
+
+            in_page.Text = SelectedPageData
+            done = True
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data " & Environment.NewLine & ex.Message,
+                            lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            done = True
+        Finally
+            If done Then
+                Me.Cursor = Cursors.Default : dgv_list.Cursor = Cursors.Default
+                For Each ctr As Control In {bt_search, bt_cl, date_tglakhir, date_tglawal, bt_page_first, bt_page_last, bt_page_next, bt_page_prev}
+                    ctr.Enabled = True
+                Next
+                mnstrip_main.Enabled = True
+            End If
+        End Try
     End Sub
 
     Public Sub PerformRefresh()
@@ -698,6 +735,165 @@ EndSub:
         End If
     End Sub
 
+    Private Sub ExportData(ParamString As String)
+        Dim _q As String = ""
+        Dim _qwh, _qorder, _qjoin As String
+
+        Select Case tabpagename.Name
+            Case "pgmutasigudang"
+                _q = "SELECT faktur_kode, faktur_tanggal, IFNULL(ppn.ref_text,'ERROR') jenispajak, " _
+                    & "faktur_gudang_asal, GetMasterNama('gudang',faktur_gudang_asal), faktur_gudang_tujuan, GetMasterNama('gudang',faktur_gudang_tujuan), " _
+                    & "trans_barang, GetMasterNama('barang',trans_barang), trans_qty_besar, trans_satuan_besar, trans_qty_tengah, trans_satuan_tengah, " _
+                    & "trans_qty_kecil, trans_satuan_kecil, trans_qty_tot, trans_hpp, status.ref_text " _
+                    & "FROM data_barang_stok_mutasi "
+                _qjoin = " LEFT JOIN data_barang_stok_mutasi_trans ON trans_faktur=faktur_kode AND trans_status=1 " _
+                        & "LEFT JOIN ref_jenis ppn ON faktur_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                        & "LEFT JOIN ref_jenis status ON faktur_status=status.ref_kode AND status.ref_status=1 AND status.ref_type='status_trans'"
+                _qorder = " ORDER BY faktur_tanggal, faktur_kode"
+                _qwh = String.Format(" WHERE faktur_status IN (0,1,2) faktur_tanggal BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'", SelectedDate1, SelectedDate2)
+                If Not String.IsNullOrWhiteSpace(ParamString) Then
+                    _qwh = String.Join("'" & ParamString & "'", {"AND (faktur_kode REGEXP ",
+                                                                 " OR DATE_FORMAT(faktur_tanggal,'%d/%m/%Y') REGEXP ",
+                                                                 " OR faktur_gudang_asal REGEXP ", " OR GetMasterNama('gudang',faktur_gudang_asal) REGEXP ",
+                                                                 " OR faktur_gudang_tujuan REGEXP ", " OR GetMasterNama('gudang',faktur_gudang_tujuan) REGEXP ",
+                                                                 " OR trans_barang REGEXP ", " OR GetMasterNama('barang',trans_barang) REGEXP ",
+                                                                 " OR status.ref_text REGEXP ", " OR ppn.ref_text REGEXP ", ")"})
+                Else
+                    _qwh = ""
+                End If
+
+                _q += _qjoin + _qwh + _qorder
+
+            Case "pgmutasistok"
+                _q = "SELECT faktur_kode, faktur_tanggal, IFNULL(ppn.ref_text,'ERROR') jenispajak, " _
+                    & "faktur_gudang, GetMasterNama('gudang',faktur_gudang), trans_barang_asal, GetMasterNama('barang',trans_barang_asal), " _
+                    & "CONCAT_WS(' ', trans_qty_asal, trans_sat_asal), trans_qty_asal*trans_hpp_asal, " _
+                    & "trans_barang_tujuan, GetMasterNama('barang',trans_barang_tujuan), CONCAT_WS(' ', trans_qty_tujuan, trans_sat_tujuan), " _
+                    & "trans_qty_tujuan*trans_hpp_tujuan, status.ref_text " _
+                    & "FROM data_barang_mutasi "
+                _qjoin = " LEFT JOIN data_barang_mutasi_trans ON trans_faktur=faktur_kode AND trans_status=1 " _
+                        & "LEFT JOIN ref_jenis ppn ON faktur_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                        & "LEFT JOIN ref_jenis status ON faktur_status=status.ref_kode AND status.ref_status=1 AND status.ref_type='status_trans'"
+                _qorder = " ORDER BY faktur_tanggal, faktur_kode"
+                _qwh = String.Format(" WHERE faktur_status IN (0,1,2) faktur_tanggal BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'", SelectedDate1, SelectedDate2)
+                If Not String.IsNullOrWhiteSpace(ParamString) Then
+                    _qwh = String.Join("'" & ParamString & "'", {"AND (faktur_kode REGEXP ",
+                                                                 " OR DATE_FORMAT(faktur_tanggal,'%d/%m/%Y') REGEXP ",
+                                                                 " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                 " OR trans_barang_asal REGEXP ", " OR GetMasterNama('barang',trans_barang_asal) REGEXP ",
+                                                                 " OR trans_barang_tujuan REGEXP ", " OR GetMasterNama('barang',trans_barang_tujuan) REGEXP ",
+                                                                 " OR status.ref_text REGEXP ", " OR ppn.ref_text REGEXP ", ")"})
+                Else
+                    _qwh = ""
+                End If
+
+                _q += _qjoin + _qwh + _qorder
+
+            Case "pgstockop"
+                _q = "SELECT faktur_bukti, faktur_tanggal, faktur_gudang, GetMasterNama('gudang',faktur_gudang), IFNULL(ppn.ref_text,'ERROR') jenispajak, " _
+                    & "trans_barang, GetMasterNama('barang',trans_barang), getQTYdetail(trans_barang, trans_qty_sys, 1), trans_qty_sys*trans_hpp, " _
+                    & "CONCAT_WS('.',CONCAT(trans_qty_b_fis,' ',trans_sat_b_fis), " _
+                    & "              CONCAT(trans_qty_t_fis,' ',trans_sat_t_fis), " _
+                    & "              CONCAT(trans_qty_k_fis,' ',trans_satuan)), trans_qty_fisik*trans_hpp_fisik, status.ref_text, " _
+                    & "@valid:=IF(faktur_status NOT IN (1,2), NULL, faktur_proc_alias), IF(@valid IS NULL, NULL, faktur_proc_date) " _
+                    & "FROM data_stok_opname "
+                _qjoin = " LEFT JOIN data_stok_opname_trans ON faktur_bukti=trans_faktur AND trans_status=1 " _
+                        & "LEFT JOIN ref_jenis ppn ON faktur_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                        & "LEFT JOIN ref_jenis status ON faktur_status=status.ref_kode AND status.ref_status=1 AND status.ref_type='status_trans'"
+                _qorder = " ORDER BY faktur_tanggal, faktur_bukti"
+                _qwh = String.Format(" WHERE faktur_status IN (0,1,2) faktur_tanggal BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'", SelectedDate1, SelectedDate2)
+                If Not String.IsNullOrWhiteSpace(ParamString) Then
+                    _qwh = String.Join("'" & ParamString & "'", {"AND (faktur_bukti REGEXP ",
+                                                                 " OR DATE_FORMAT(faktur_tanggal,'%d/%m/%Y') REGEXP ",
+                                                                 " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                 " OR trans_barang REGEXP ", " OR GetMasterNama('barang',trans_barang) REGEXP ",
+                                                                 " OR status.ref_text REGEXP ", " OR ppn.ref_text REGEXP ", ")"})
+                Else
+                    _qwh = ""
+                End If
+
+                _q += _qjoin + _qwh + _qorder
+            Case Else : Exit Sub
+        End Select
+
+        exportToExcel(_q)
+    End Sub
+
+    Private Sub exportToExcel(SqlQuery As String)
+        Dim _dt As New List(Of DataTable)
+        Dim _title As New List(Of String)
+        Dim _subtitle As New List(Of String())
+        Dim _colHeader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _periode As String = ""
+        Dim _ck As Boolean = False
+
+        Dim _tglawal As Date = date_tglawal.Value : Dim _tglakhir As Date = date_tglakhir.Value
+        If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") AndAlso _tglawal.Day = 1 _
+            AndAlso _tglakhir.Day = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0).Day Then
+            _periode = UCase(_tglawal.ToString("MMMM yyyy"))
+        Else
+            _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
+        End If
+
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Using dtx = x.GetDataTable(SqlQuery)
+                    Select Case tabpagename.Name
+                        Case "pgmutasigudang"
+                            _colHeader.AddRange({"KodeMutasi", "Tgl", "Kat", "GudangAsal", "NamaGudangAsal", "GudangTujuan", "NamaGudangTujuan",
+                                                 "KodeBarang", "NamaBarang", "QtyB", "SatB", "QtyT", "SatT", "QtyK", "SatK", "QtyTot", "HPP", "Status"})
+                            _title.AddRange({"DATA MUTASI BARANG ANTAR GUDANG", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pgmutasistok"
+                            _colHeader.AddRange({"KodeMutasi", "Tgl", "Kat", "KodeGudang", "NamaGudang", "KodeBrgAsal", "NamaBrgAsal", "QtyA", "NilaiA",
+                                                 "KodeBrgTujuan", "NamaBrgTujuan", "QtyT", "NilaiT", "Status"})
+                            _title.AddRange({"DATA MUTASI BARANG", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pgstockop"
+                            _colHeader.AddRange({"KodeOpname", "Tgl", "KodeGudang", "NamaGudang", "Kat", "KodeBarang", "NamaBarang", "QtySys", "NilaiSys",
+                                                 "QtyFisik", "NilaiFisik", "Status", "UserValid", "ValidDate"})
+                            _title.AddRange({"DATA STOCK OPNAME", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case Else
+                            Exit Sub
+                    End Select
+
+                    Using dd As New SaveFileDialog
+                        dd.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+                        dd.FilterIndex = 1
+                        dd.FileName = dd.InitialDirectory
+                        dd.RestoreDirectory = True : dd.AddExtension = True
+                        If dd.ShowDialog = DialogResult.OK Then
+                            If dd.FileName <> Nothing Then
+                                Dim fk = dd.FileName.Split(".")
+                                Dim _fileExt As String = IIf(dd.FilterIndex = 1, "xlsx", fk(fk.Count - 1))
+
+                                Me.Cursor = Cursors.WaitCursor
+                                If ExportExcel(_colHeader, _dt, _title, dd.FileName, _fileExt, _outputdir, _subtitle) Then
+                                    If System.IO.File.Exists(_outputdir) = True Then
+                                        MessageBox.Show("Export Data Sukses", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                        Process.Start(_outputdir)
+                                    Else
+                                        MessageBox.Show("File tidak dapat ditemukan", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                    End If
+                                End If
+                                Me.Cursor = Cursors.Default
+                            End If
+                        End If
+                    End Using
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke data base.", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+        End Using
+    End Sub
+
     'SEARCH
     Private Sub SearchData(Optional Page As Integer = 1)
         Me.Cursor = Cursors.WaitCursor
@@ -848,7 +1044,7 @@ EndSub:
     End Sub
 
     Private Sub mn_exportExcel_Click(sender As Object, e As EventArgs) Handles mn_exportExcel.Click
-        ExportData()
+        Me.Cursor = Cursors.WaitCursor : ExportData(SearchString) : Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub mn_uncancel_Click(sender As Object, e As EventArgs) Handles mn_uncancel.Click
@@ -859,7 +1055,7 @@ EndSub:
 
     Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
         If dgv_list.RowCount > 0 And dgv_list.SelectedRows.Count > 0 Then
-            DeleteData(dgv_barang.SelectedRows.Item(0).Cells(0).Value)
+            DeleteData(dgv_list.SelectedRows.Item(0).Cells(0).Value)
         End If
     End Sub
 

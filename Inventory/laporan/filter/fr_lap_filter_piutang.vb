@@ -435,7 +435,7 @@
                     _colSelect.AddRange({"t_custo",
                                          "GetMasterNama('custo',t_custo) t_custo_n",
                                          "SUM(IF(t_jenis='awal', t_nilai,0)) t_awal",
-                                         "SUM(IF(t_jenis='retur', t_nilai,0)) t_titip",
+                                         "SUM(IF(t_jenis='retur', t_nilai,0)) t_retur",
                                          "SUM(IF(t_jenis='bayar', t_nilai,0)) t_bayar"
                                         })
                     _qorder = " GROUP BY t_custo"

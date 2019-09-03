@@ -34,8 +34,6 @@ Partial Class fr_jualconfirm_dialog
         Me.bt_switch = New System.Windows.Forms.Button()
         Me.in_pass = New System.Windows.Forms.TextBox()
         Me.in_user = New System.Windows.Forms.TextBox()
-        Me.in_ket = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -47,7 +45,7 @@ Partial Class fr_jualconfirm_dialog
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(417, 30)
+        Me.Panel1.Size = New System.Drawing.Size(413, 30)
         Me.Panel1.TabIndex = 411
         '
         'bt_cl
@@ -85,31 +83,39 @@ Partial Class fr_jualconfirm_dialog
         '
         Me.Panel3.BackColor = System.Drawing.Color.Orange
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel3.Location = New System.Drawing.Point(0, 194)
+        Me.Panel3.Location = New System.Drawing.Point(0, 133)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(417, 10)
+        Me.Panel3.Size = New System.Drawing.Size(413, 10)
         Me.Panel3.TabIndex = 416
         '
         'bt_batalbeli
         '
+        Me.bt_batalbeli.BackColor = System.Drawing.Color.Tomato
         Me.bt_batalbeli.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.bt_batalbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_batalbeli.Location = New System.Drawing.Point(325, 158)
+        Me.bt_batalbeli.FlatAppearance.BorderSize = 0
+        Me.bt_batalbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batalbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batalbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_batalbeli.Location = New System.Drawing.Point(325, 91)
         Me.bt_batalbeli.Name = "bt_batalbeli"
         Me.bt_batalbeli.Size = New System.Drawing.Size(80, 30)
         Me.bt_batalbeli.TabIndex = 5
         Me.bt_batalbeli.Text = "Batal"
-        Me.bt_batalbeli.UseVisualStyleBackColor = True
+        Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
         'bt_simpanbeli
         '
-        Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpanbeli.Location = New System.Drawing.Point(211, 158)
+        Me.bt_simpanbeli.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpanbeli.FlatAppearance.BorderSize = 0
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpanbeli.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpanbeli.ForeColor = System.Drawing.Color.White
+        Me.bt_simpanbeli.Location = New System.Drawing.Point(211, 91)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
         Me.bt_simpanbeli.Size = New System.Drawing.Size(108, 30)
         Me.bt_simpanbeli.TabIndex = 4
         Me.bt_simpanbeli.Text = "OK"
-        Me.bt_simpanbeli.UseVisualStyleBackColor = True
+        Me.bt_simpanbeli.UseVisualStyleBackColor = False
         '
         'lbl_cair
         '
@@ -164,38 +170,16 @@ Partial Class fr_jualconfirm_dialog
         Me.in_user.Size = New System.Drawing.Size(316, 21)
         Me.in_user.TabIndex = 0
         '
-        'in_ket
-        '
-        Me.in_ket.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_ket.Location = New System.Drawing.Point(89, 89)
-        Me.in_ket.MaxLength = 255
-        Me.in_ket.Multiline = True
-        Me.in_ket.Name = "in_ket"
-        Me.in_ket.Size = New System.Drawing.Size(316, 63)
-        Me.in_ket.TabIndex = 3
-        '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(7, 94)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(62, 13)
-        Me.Label1.TabIndex = 432
-        Me.Label1.Text = "Keterangan"
-        '
         'fr_jualconfirm_dialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.CancelButton = Me.bt_batalbeli
-        Me.ClientSize = New System.Drawing.Size(417, 204)
-        Me.Controls.Add(Me.in_ket)
+        Me.ClientSize = New System.Drawing.Size(413, 143)
         Me.Controls.Add(Me.bt_switch)
         Me.Controls.Add(Me.in_pass)
         Me.Controls.Add(Me.in_user)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.lbl_cair)
         Me.Controls.Add(Me.lbl_tgl)
         Me.Controls.Add(Me.Panel3)
@@ -225,6 +209,4 @@ Partial Class fr_jualconfirm_dialog
     Friend WithEvents bt_switch As System.Windows.Forms.Button
     Friend WithEvents in_pass As System.Windows.Forms.TextBox
     Friend WithEvents in_user As System.Windows.Forms.TextBox
-    Friend WithEvents in_ket As System.Windows.Forms.TextBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
 End Class

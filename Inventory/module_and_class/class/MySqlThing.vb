@@ -29,6 +29,7 @@ Public Class MySqlThing : Implements IDisposable
     Public Property ConnectionString As String
         Get
             Return conn.ConnectionString
+            'Return String.Format(connstring, _host, _db, _Uid, _pass)
         End Get
         Set(value As String)
             Dim x = New MySqlConnectionStringBuilder(value)
@@ -111,7 +112,7 @@ Public Class MySqlThing : Implements IDisposable
         Dim x As New TaskCompletionSource(Of Object)
         If Not conn.State = ConnectionState.Open Then
             Try
-                conn.Open()
+                conn.OpenAsync()
                 x.SetResult(Nothing)
             Catch ex As Exception
                 x.SetException(ex)
@@ -124,7 +125,7 @@ Public Class MySqlThing : Implements IDisposable
 
     Public Function ExecCommand(query As String) As Integer
         Dim retVal As Integer = -1
-
+        consoleWriteLine(query)
         Me.Open()
         Dim cmd = New MySqlCommand(query, conn)
         cmd.CommandTimeout = 0
@@ -136,7 +137,7 @@ Public Class MySqlThing : Implements IDisposable
     Public Async Function ExecCommandAsync(query As String) As Task(Of Integer)
         Dim retVal As Integer = -1
         consoleWriteLine(query)
-        Me.Open()
+        Await Me.OpenAsync()
         Dim cmd = New MySqlCommand(query, conn)
         cmd.CommandTimeout = 0
         retVal = Await cmd.ExecuteNonQueryAsync
@@ -149,6 +150,7 @@ Public Class MySqlThing : Implements IDisposable
         Dim _cmd = New MySqlCommand(query, Me.conn)
 
         Me.Open()
+        consoleWriteLine(query)
         retval = _cmd.ExecuteScalar()
 
         Return retval
@@ -160,11 +162,8 @@ Public Class MySqlThing : Implements IDisposable
 
         Me.Open()
         If conn.State = Data.ConnectionState.Open Then
-            Dim _task = _cmd.ExecuteScalarAsync
-            retval = Await _task
-            If _task.IsFaulted Then Throw _task.Exception
+            retval = Await _cmd.ExecuteScalarAsync
         End If
-
         Return retval
     End Function
 
@@ -173,6 +172,7 @@ Public Class MySqlThing : Implements IDisposable
 
         Me.Open()
         Dim x = New MySqlCommand(query, conn)
+        consoleWriteLine(query)
         x.CommandTimeout = 0
         retVal = x.ExecuteReader(behavior)
 
@@ -233,8 +233,9 @@ Public Class MySqlThing : Implements IDisposable
         End If
         Dim dtable As New DataTable
         Using _cmd As New MySqlCommand(query, conn)
-            _cmd.CommandTimeout = 180
+            _cmd.CommandTimeout = 3600
             Me.Open()
+
             Using data_adpt As New MySqlDataAdapter(_cmd) : data_adpt.Fill(dtable) : End Using
         End Using
         Return dtable
@@ -247,7 +248,7 @@ Public Class MySqlThing : Implements IDisposable
             Await Me.OpenAsync()
             If Me.conn.State = ConnectionState.Open Then
                 Using data_adpt As New MySqlDataAdapter(_cmd)
-                    Dim r As Integer = Await data_adpt.FillAsync(dtable)
+                    Dim r As Integer = Await Task.Run(Function() data_adpt.FillAsync(dtable))
                 End Using
             End If
         Catch ex As Exception

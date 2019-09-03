@@ -194,7 +194,7 @@
                         _whrArr.Add(String.Format("faktur_sales='{0}'", in_sales.Text))
                     End If
                 End If
-                If Not String.IsNullOrWhiteSpace(in_custo.Text) Then _whrArr.Add(String.Format("faktur_custo='{0}'", in_custo.Text))
+                If Not String.IsNullOrWhiteSpace(in_custo.Text) Then _whrArr.Add(String.Format("faktur_customer='{0}'", in_custo.Text))
                 If Not cb_jenis.SelectedValue = Nothing Then _whrArr.Add(String.Format("jenis IN({0})", cb_jenis.SelectedValue))
 
                 If {"lapJualCustoNota", "lapJualSalesNota"}.Contains(tipe) Then : _tipe = "nota"

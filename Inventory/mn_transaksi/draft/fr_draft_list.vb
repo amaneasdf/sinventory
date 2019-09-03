@@ -270,7 +270,7 @@
     End Sub
 
     'LOAD DATA
-    Private Sub LoadDataGrid(Param As String, Page As Integer, StartDate As Date, EndDate As Date)
+    Private Async Sub LoadDataGrid(Param As String, Page As Integer, StartDate As Date, EndDate As Date)
         Dim dt As New DataTable
         Dim _typedata As String = ""
         Dim _limitdata As Integer = _limit
@@ -282,17 +282,59 @@
         setDoubleBuffered(Me.dgv_list, True)
         _typedata = "draft" & DataTypeSelector()
 
-        dgv_list.DataSource = GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate)
-        DataCount = GetDataCount(_typedata, Param, _startdate, _enddate)
-        MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
-        SelectedPageData = Page
-        in_page.Text = SelectedPageData
-        PageInfo = String.Format(PageInfo,
-                                 If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
-                                 dgv_list.RowCount + (_limitdata * Page) - _limitdata,
-                                 DataCount
-                                 )
-        lbl_pageinfo.Text = PageInfo
+        Dim done As Boolean = False
+        Dim _switchCtrl() As Control = {bt_search, bt_cl, date_tglakhir, date_tglawal, bt_page_first, bt_page_last, bt_page_next, bt_page_prev}
+        Try
+            RemoveHandler dgv_list.CellClick, AddressOf dgv_list_CellClick
+            RemoveHandler dgv_list.RowEnter, AddressOf dgv_list_CellClick
+            Me.Cursor = Cursors.WaitCursor : dgv_list.Cursor = Cursors.WaitCursor
+            For Each ctr As Control In _switchCtrl
+                ctr.Enabled = False
+            Next
+            mnstrip_main.Enabled = False
+
+            dgv_list.DataSource = New DataTable
+            lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0) & " - LOADING . . ."
+
+            Dim _datalist = Await Task.Run(Function() GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate))
+            Dim _datacount = Await Task.Run(Function() GetDataCount(_typedata, Param, _startdate, _enddate))
+
+            If _datalist.Key = True And _datacount.Key = True Then
+                dgv_list.DataSource = _datalist.Value
+                DataCount = _datacount.Value
+
+                MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
+                SelectedPageData = Page
+                PageInfo = String.Format(PageInfo,
+                                         If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
+                                         dgv_list.RowCount + (_limitdata * Page) - _limitdata,
+                                         DataCount
+                                         )
+                lbl_pageinfo.Text = PageInfo
+            Else
+                MaxPageData = 1
+                SelectedPageData = 1
+                lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0)
+            End If
+
+            in_page.Text = SelectedPageData
+            done = True
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data " & Environment.NewLine & ex.Message,
+                            lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            done = True
+        Finally
+            If done Then
+                Me.Cursor = Cursors.Default : dgv_list.Cursor = Cursors.Default
+                For Each ctr As Control In _switchCtrl
+                    ctr.Enabled = True
+                Next
+                mnstrip_main.Enabled = True
+            End If
+            AddHandler dgv_list.CellClick, AddressOf dgv_list_CellClick
+            AddHandler dgv_list.RowEnter, AddressOf dgv_list_CellClick
+        End Try
     End Sub
 
     Public Sub PerformRefresh()
@@ -545,7 +587,7 @@ EndSub:
         End If
     End Sub
 
-    Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_list.CellClick, dgv_list.RowEnter
+    Private Sub dgv_list_CellClick(sender As Object, e As DataGridViewCellEventArgs)
         If dgv_list.RowCount > 0 And dgv_list.SelectedRows.Count > 0 And e.RowIndex >= 0 Then
             ShowDetail("faktur", dgv_list.SelectedRows.Item(0).Cells(0).Value)
             dgv_detail.ClearSelection()

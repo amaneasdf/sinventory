@@ -377,7 +377,7 @@ Partial Class fr_beli_retur_detail
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
         Me.in_status.Size = New System.Drawing.Size(188, 20)
-        Me.in_status.TabIndex = 3
+        Me.in_status.TabIndex = 2
         Me.in_status.TabStop = False
         '
         'in_no_bukti
@@ -390,7 +390,6 @@ Partial Class fr_beli_retur_detail
         Me.in_no_bukti.Name = "in_no_bukti"
         Me.in_no_bukti.Size = New System.Drawing.Size(188, 20)
         Me.in_no_bukti.TabIndex = 0
-        Me.in_no_bukti.TabStop = False
         '
         'date_tgl_trans
         '
@@ -401,7 +400,6 @@ Partial Class fr_beli_retur_detail
         Me.date_tgl_trans.Name = "date_tgl_trans"
         Me.date_tgl_trans.Size = New System.Drawing.Size(188, 20)
         Me.date_tgl_trans.TabIndex = 1
-        Me.date_tgl_trans.TabStop = False
         '
         'bt_batalreturbeli
         '
@@ -673,7 +671,7 @@ Partial Class fr_beli_retur_detail
         '
         'in_barang
         '
-        Me.in_barang.BackColor = System.Drawing.Color.White
+        Me.in_barang.BackColor = System.Drawing.Color.Gainsboro
         Me.in_barang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_barang.ForeColor = System.Drawing.Color.Black
         Me.in_barang.Location = New System.Drawing.Point(12, 119)
@@ -876,7 +874,7 @@ Partial Class fr_beli_retur_detail
         '
         'in_gudang
         '
-        Me.in_gudang.BackColor = System.Drawing.Color.White
+        Me.in_gudang.BackColor = System.Drawing.Color.Gainsboro
         Me.in_gudang.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_gudang.ForeColor = System.Drawing.Color.Black
         Me.in_gudang.Location = New System.Drawing.Point(345, 27)
@@ -899,7 +897,7 @@ Partial Class fr_beli_retur_detail
         '
         'in_supplier
         '
-        Me.in_supplier.BackColor = System.Drawing.Color.White
+        Me.in_supplier.BackColor = System.Drawing.Color.Gainsboro
         Me.in_supplier.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_supplier.ForeColor = System.Drawing.Color.Black
         Me.in_supplier.Location = New System.Drawing.Point(345, 6)
@@ -907,7 +905,7 @@ Partial Class fr_beli_retur_detail
         Me.in_supplier.Name = "in_supplier"
         Me.in_supplier.ReadOnly = True
         Me.in_supplier.Size = New System.Drawing.Size(121, 20)
-        Me.in_supplier.TabIndex = 4
+        Me.in_supplier.TabIndex = 3
         '
         'in_diskon
         '

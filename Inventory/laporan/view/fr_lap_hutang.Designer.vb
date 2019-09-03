@@ -69,6 +69,8 @@ Partial Class fr_lap_hutang
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.rv_nota)
         Me.Name = "fr_lap_hutang"
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).EndInit()

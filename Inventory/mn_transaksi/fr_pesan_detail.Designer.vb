@@ -47,6 +47,23 @@ Partial Class fr_pesan_detail
         Me.lbl_ref_faktur = New System.Windows.Forms.Label()
         Me.in_ref_faktur = New System.Windows.Forms.TextBox()
         Me.dgv_barang = New System.Windows.Forms.DataGridView()
+        Me.valid_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
+        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.qty_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.trans_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cb_status = New System.Windows.Forms.ComboBox()
         Me.txtValDate = New System.Windows.Forms.TextBox()
         Me.txtValAlias = New System.Windows.Forms.TextBox()
@@ -115,23 +132,6 @@ Partial Class fr_pesan_detail
         Me.mn_createjual = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.pnl_footer = New System.Windows.Forms.Panel()
-        Me.valid_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
-        Me.kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat_type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.nama = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.sat = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.qty_sisa = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.harga = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.subtotal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.discrp = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.disc5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.jml = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.trans_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
         Me.popPnl_barang.SuspendLayout()
@@ -503,7 +503,7 @@ Partial Class fr_pesan_detail
         '
         Me.lbl_ref_faktur.AutoSize = True
         Me.lbl_ref_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_ref_faktur.Location = New System.Drawing.Point(798, 55)
+        Me.lbl_ref_faktur.Location = New System.Drawing.Point(818, 55)
         Me.lbl_ref_faktur.Name = "lbl_ref_faktur"
         Me.lbl_ref_faktur.Size = New System.Drawing.Size(46, 13)
         Me.lbl_ref_faktur.TabIndex = 433
@@ -514,11 +514,11 @@ Partial Class fr_pesan_detail
         Me.in_ref_faktur.BackColor = System.Drawing.Color.White
         Me.in_ref_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ref_faktur.ForeColor = System.Drawing.Color.Black
-        Me.in_ref_faktur.Location = New System.Drawing.Point(850, 51)
+        Me.in_ref_faktur.Location = New System.Drawing.Point(870, 51)
         Me.in_ref_faktur.MaxLength = 30
         Me.in_ref_faktur.Name = "in_ref_faktur"
         Me.in_ref_faktur.ReadOnly = True
-        Me.in_ref_faktur.Size = New System.Drawing.Size(130, 20)
+        Me.in_ref_faktur.Size = New System.Drawing.Size(110, 20)
         Me.in_ref_faktur.TabIndex = 11
         Me.in_ref_faktur.TabStop = False
         '
@@ -538,12 +538,148 @@ Partial Class fr_pesan_detail
         Me.dgv_barang.StandardTab = True
         Me.dgv_barang.TabIndex = 24
         '
+        'valid_ck
+        '
+        Me.valid_ck.FalseValue = "0"
+        Me.valid_ck.HeaderText = "Stat"
+        Me.valid_ck.IndeterminateValue = "0"
+        Me.valid_ck.Name = "valid_ck"
+        Me.valid_ck.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.valid_ck.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.valid_ck.TrueValue = "1"
+        Me.valid_ck.Width = 40
+        '
+        'kode
+        '
+        Me.kode.DataPropertyName = "trans_barang"
+        Me.kode.HeaderText = "Kode"
+        Me.kode.Name = "kode"
+        Me.kode.ReadOnly = True
+        '
+        'sat_type
+        '
+        Me.sat_type.HeaderText = "sattype"
+        Me.sat_type.Name = "sat_type"
+        Me.sat_type.Visible = False
+        '
+        'nama
+        '
+        Me.nama.DataPropertyName = "barang_nama"
+        Me.nama.HeaderText = "Nama Barang"
+        Me.nama.MinimumWidth = 190
+        Me.nama.Name = "nama"
+        Me.nama.ReadOnly = True
+        Me.nama.Width = 190
+        '
+        'qty
+        '
+        Me.qty.DataPropertyName = "trans_qty"
+        Me.qty.HeaderText = "QTY"
+        Me.qty.Name = "qty"
+        Me.qty.ReadOnly = True
+        Me.qty.Width = 40
+        '
+        'sat
+        '
+        Me.sat.DataPropertyName = "trans_satuan"
+        Me.sat.HeaderText = "Satuan"
+        Me.sat.Name = "sat"
+        Me.sat.ReadOnly = True
+        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.sat.Width = 70
+        '
+        'qty_sisa
+        '
+        Me.qty_sisa.HeaderText = "QtySisa"
+        Me.qty_sisa.Name = "qty_sisa"
+        Me.qty_sisa.ReadOnly = True
+        '
+        'harga
+        '
+        Me.harga.DataPropertyName = "trans_harga_jual"
+        Me.harga.HeaderText = "Harga Jual"
+        Me.harga.Name = "harga"
+        Me.harga.ReadOnly = True
+        Me.harga.Width = 110
+        '
+        'subtotal
+        '
+        Me.subtotal.HeaderText = "Subtotal"
+        Me.subtotal.Name = "subtotal"
+        Me.subtotal.ReadOnly = True
+        '
+        'discrp
+        '
+        Me.discrp.DataPropertyName = "trans_disc_rupiah"
+        Me.discrp.HeaderText = "Disc Rp."
+        Me.discrp.Name = "discrp"
+        Me.discrp.ReadOnly = True
+        Me.discrp.Width = 80
+        '
+        'disc1
+        '
+        Me.disc1.DataPropertyName = "trans_disc1"
+        Me.disc1.HeaderText = "Disc1"
+        Me.disc1.MinimumWidth = 40
+        Me.disc1.Name = "disc1"
+        Me.disc1.ReadOnly = True
+        Me.disc1.Width = 45
+        '
+        'disc2
+        '
+        Me.disc2.DataPropertyName = "trans_disc2"
+        Me.disc2.HeaderText = "Disc2"
+        Me.disc2.MinimumWidth = 40
+        Me.disc2.Name = "disc2"
+        Me.disc2.ReadOnly = True
+        Me.disc2.Width = 45
+        '
+        'disc3
+        '
+        Me.disc3.DataPropertyName = "trans_disc3"
+        Me.disc3.HeaderText = "Disc3"
+        Me.disc3.MinimumWidth = 40
+        Me.disc3.Name = "disc3"
+        Me.disc3.ReadOnly = True
+        Me.disc3.Width = 45
+        '
+        'disc4
+        '
+        Me.disc4.DataPropertyName = "trans_disc4"
+        Me.disc4.HeaderText = "Disc4"
+        Me.disc4.MinimumWidth = 40
+        Me.disc4.Name = "disc4"
+        Me.disc4.ReadOnly = True
+        Me.disc4.Width = 45
+        '
+        'disc5
+        '
+        Me.disc5.DataPropertyName = "trans_disc5"
+        Me.disc5.HeaderText = "Disc5"
+        Me.disc5.MinimumWidth = 40
+        Me.disc5.Name = "disc5"
+        Me.disc5.ReadOnly = True
+        Me.disc5.Width = 45
+        '
+        'jml
+        '
+        Me.jml.DataPropertyName = "trans_jumlah"
+        Me.jml.HeaderText = "Jumlah"
+        Me.jml.Name = "jml"
+        Me.jml.ReadOnly = True
+        '
+        'trans_status
+        '
+        Me.trans_status.HeaderText = "Status"
+        Me.trans_status.Name = "trans_status"
+        Me.trans_status.ReadOnly = True
+        '
         'cb_status
         '
         Me.cb_status.FormattingEnabled = True
-        Me.cb_status.Location = New System.Drawing.Point(850, 27)
+        Me.cb_status.Location = New System.Drawing.Point(870, 27)
         Me.cb_status.Name = "cb_status"
-        Me.cb_status.Size = New System.Drawing.Size(130, 23)
+        Me.cb_status.Size = New System.Drawing.Size(110, 23)
         Me.cb_status.TabIndex = 4
         Me.cb_status.TabStop = False
         Me.cb_status.Visible = False
@@ -602,7 +738,7 @@ Partial Class fr_pesan_detail
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(826, 9)
+        Me.Label4.Location = New System.Drawing.Point(846, 9)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(18, 13)
         Me.Label4.TabIndex = 254
@@ -1064,10 +1200,10 @@ Partial Class fr_pesan_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(850, 30)
+        Me.in_status.Location = New System.Drawing.Point(870, 30)
         Me.in_status.Name = "in_status"
         Me.in_status.ReadOnly = True
-        Me.in_status.Size = New System.Drawing.Size(130, 20)
+        Me.in_status.Size = New System.Drawing.Size(110, 20)
         Me.in_status.TabIndex = 4
         Me.in_status.TabStop = False
         '
@@ -1086,11 +1222,11 @@ Partial Class fr_pesan_detail
         Me.in_faktur.BackColor = System.Drawing.Color.White
         Me.in_faktur.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_faktur.ForeColor = System.Drawing.Color.Black
-        Me.in_faktur.Location = New System.Drawing.Point(850, 6)
+        Me.in_faktur.Location = New System.Drawing.Point(870, 6)
         Me.in_faktur.MaxLength = 10
         Me.in_faktur.Name = "in_faktur"
         Me.in_faktur.ReadOnly = True
-        Me.in_faktur.Size = New System.Drawing.Size(130, 20)
+        Me.in_faktur.Size = New System.Drawing.Size(110, 20)
         Me.in_faktur.TabIndex = 1
         Me.in_faktur.TabStop = False
         '
@@ -1152,7 +1288,7 @@ Partial Class fr_pesan_detail
         '
         Me.Label10.AutoSize = True
         Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label10.Location = New System.Drawing.Point(807, 33)
+        Me.Label10.Location = New System.Drawing.Point(827, 33)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(37, 13)
         Me.Label10.TabIndex = 242
@@ -1275,142 +1411,6 @@ Partial Class fr_pesan_detail
         Me.pnl_footer.Name = "pnl_footer"
         Me.pnl_footer.Size = New System.Drawing.Size(1002, 49)
         Me.pnl_footer.TabIndex = 30
-        '
-        'valid_ck
-        '
-        Me.valid_ck.FalseValue = "0"
-        Me.valid_ck.HeaderText = "Stat"
-        Me.valid_ck.IndeterminateValue = "0"
-        Me.valid_ck.Name = "valid_ck"
-        Me.valid_ck.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.valid_ck.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.valid_ck.TrueValue = "1"
-        Me.valid_ck.Width = 40
-        '
-        'kode
-        '
-        Me.kode.DataPropertyName = "trans_barang"
-        Me.kode.HeaderText = "Kode"
-        Me.kode.Name = "kode"
-        Me.kode.ReadOnly = True
-        '
-        'sat_type
-        '
-        Me.sat_type.HeaderText = "sattype"
-        Me.sat_type.Name = "sat_type"
-        Me.sat_type.Visible = False
-        '
-        'nama
-        '
-        Me.nama.DataPropertyName = "barang_nama"
-        Me.nama.HeaderText = "Nama Barang"
-        Me.nama.MinimumWidth = 190
-        Me.nama.Name = "nama"
-        Me.nama.ReadOnly = True
-        Me.nama.Width = 190
-        '
-        'qty
-        '
-        Me.qty.DataPropertyName = "trans_qty"
-        Me.qty.HeaderText = "QTY"
-        Me.qty.Name = "qty"
-        Me.qty.ReadOnly = True
-        Me.qty.Width = 40
-        '
-        'sat
-        '
-        Me.sat.DataPropertyName = "trans_satuan"
-        Me.sat.HeaderText = "Satuan"
-        Me.sat.Name = "sat"
-        Me.sat.ReadOnly = True
-        Me.sat.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.sat.Width = 70
-        '
-        'qty_sisa
-        '
-        Me.qty_sisa.HeaderText = "QtySisa"
-        Me.qty_sisa.Name = "qty_sisa"
-        Me.qty_sisa.ReadOnly = True
-        '
-        'harga
-        '
-        Me.harga.DataPropertyName = "trans_harga_jual"
-        Me.harga.HeaderText = "Harga Jual"
-        Me.harga.Name = "harga"
-        Me.harga.ReadOnly = True
-        Me.harga.Width = 110
-        '
-        'subtotal
-        '
-        Me.subtotal.HeaderText = "Subtotal"
-        Me.subtotal.Name = "subtotal"
-        Me.subtotal.ReadOnly = True
-        '
-        'discrp
-        '
-        Me.discrp.DataPropertyName = "trans_disc_rupiah"
-        Me.discrp.HeaderText = "Disc Rp."
-        Me.discrp.Name = "discrp"
-        Me.discrp.ReadOnly = True
-        Me.discrp.Width = 80
-        '
-        'disc1
-        '
-        Me.disc1.DataPropertyName = "trans_disc1"
-        Me.disc1.HeaderText = "Disc1"
-        Me.disc1.MinimumWidth = 40
-        Me.disc1.Name = "disc1"
-        Me.disc1.ReadOnly = True
-        Me.disc1.Width = 45
-        '
-        'disc2
-        '
-        Me.disc2.DataPropertyName = "trans_disc2"
-        Me.disc2.HeaderText = "Disc2"
-        Me.disc2.MinimumWidth = 40
-        Me.disc2.Name = "disc2"
-        Me.disc2.ReadOnly = True
-        Me.disc2.Width = 45
-        '
-        'disc3
-        '
-        Me.disc3.DataPropertyName = "trans_disc3"
-        Me.disc3.HeaderText = "Disc3"
-        Me.disc3.MinimumWidth = 40
-        Me.disc3.Name = "disc3"
-        Me.disc3.ReadOnly = True
-        Me.disc3.Width = 45
-        '
-        'disc4
-        '
-        Me.disc4.DataPropertyName = "trans_disc4"
-        Me.disc4.HeaderText = "Disc4"
-        Me.disc4.MinimumWidth = 40
-        Me.disc4.Name = "disc4"
-        Me.disc4.ReadOnly = True
-        Me.disc4.Width = 45
-        '
-        'disc5
-        '
-        Me.disc5.DataPropertyName = "trans_disc5"
-        Me.disc5.HeaderText = "Disc5"
-        Me.disc5.MinimumWidth = 40
-        Me.disc5.Name = "disc5"
-        Me.disc5.ReadOnly = True
-        Me.disc5.Width = 45
-        '
-        'jml
-        '
-        Me.jml.DataPropertyName = "trans_jumlah"
-        Me.jml.HeaderText = "Jumlah"
-        Me.jml.Name = "jml"
-        Me.jml.ReadOnly = True
-        '
-        'trans_status
-        '
-        Me.trans_status.HeaderText = "Status"
-        Me.trans_status.Name = "trans_status"
-        Me.trans_status.ReadOnly = True
         '
         'fr_pesan_detail
         '

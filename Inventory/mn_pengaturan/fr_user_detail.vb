@@ -379,7 +379,7 @@
         Dim querycheck As Boolean = False
 
         data.AddRange({
-            "user_nama='" & in_karyawan_nama.Text & "'",
+            "user_nama='" & mysqlQueryFriendlyStringFeed(in_karyawan_nama.Text) & "'",
             "user_email='" & in_email.Text & "'",
             "user_telp='" & in_telp.Text & "'",
             "user_pc='" & IIf(ck_pc.Checked, 1, 0) & "'",
@@ -424,8 +424,9 @@
                     '    qArr.Add(String.Format(q, String.Join(",", _d)))
                     'End If
 
-                    q = "UPDATE data_penggunaan_alias SET {1}, user_upd_alias='{2}', user_upd_date=NOW() WHERE user_alias='{0}'"
-                    qArr.Add(String.Format(in_userid.Text, String.Join(",", data), loggeduser.user_id))
+                    q = "UPDATE data_pengguna_alias SET {1}, user_upd_alias='{2}', user_upd_date=NOW() WHERE user_alias='{0}'"
+                    consoleWriteLine(q)
+                    qArr.Add(String.Format(q, in_userid.Text, String.Join(",", data), loggeduser.user_id))
                 End If
 
                 querycheck = x.TransactCommand(qArr)

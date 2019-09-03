@@ -12,24 +12,6 @@ Module appbootup
 
     'End Structure
 
-    Private Function getConfigFile() As String
-        Dim fileloc As String = ""
-
-        If File.Exists(Application.StartupPath & "\config") = True Then
-            fileloc = Application.StartupPath & "\config"
-        ElseIf File.Exists(Application.StartupPath & "\bin\config") = True Then
-            fileloc = Application.StartupPath & "\bin\config"
-        Else
-            If Not Directory.Exists(Application.StartupPath & "\bin\") Then
-                Directory.CreateDirectory(Application.StartupPath & "\bin\")
-            End If
-            File.WriteAllText(Application.StartupPath & "\bin\config", My.Resources.ResourceManager.GetObject("configfile").ToString)
-            fileloc = Application.StartupPath & "\bin\config"
-        End If
-
-        Return fileloc
-    End Function
-
     Public Function getSetting(SettingName As String, Optional ByRef Msg As String = Nothing) As IniSection
         If String.IsNullOrWhiteSpace(SettingName) Then
             Throw New ArgumentNullException("Setting name cannot be empty")

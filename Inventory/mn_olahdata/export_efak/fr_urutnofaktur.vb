@@ -62,7 +62,7 @@
         End If
 
         Dim _retval As Boolean = False
-        Dim q As String = "CALL SetKodePajakJual('{0}','{1}',{2})"
+        Dim q As String = "CALL EFak_SetKodePajakJual('{0}','{1}',{2})"
         q = String.Format(q, IdExport, StartCode, FakturAmount)
 
         Using x = MainConnection
@@ -105,11 +105,12 @@
         End If
 
         Dim _ct As Integer = 0
+        Me.Cursor = Cursors.WaitCursor
         If SetNomorPajak(Me.IdExport, in_nopajak.Text, in_jmlpajak.Value, _ct) Then
             consoleWriteLine(_ct)
-            ReturnValue = True
-            Me.Close()
+            ReturnValue = True : Me.Close()
         End If
+        Me.Cursor = Cursors.Default
     End Sub
 
     'UI : NUMERIC

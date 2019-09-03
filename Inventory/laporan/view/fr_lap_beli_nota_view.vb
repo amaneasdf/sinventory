@@ -11,8 +11,10 @@ Public Class fr_lap_beli_nota_view
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    data_adpt.SelectCommand.CommandTimeout = 360
                     consoleWriteLine(query)
                     data_adpt.Fill(dt)
+                    consoleWriteLine(dt.TableName & dt.Rows.Count)
                     data_adpt.Dispose()
                 Catch ex As Exception
                     MessageBox.Show(String.Format("Error: {0}", ex.Message))
@@ -35,7 +37,7 @@ Public Class fr_lap_beli_nota_view
             With .LocalReport
                 Select Case lap_type
                     Case "lapBeliNota"
-                        repdatasource.Name = "ds_nota"
+                        repdatasource.Name = "ds_notabeli"
                         repdatasource.Value = ds_transaksi.dt_beli_nota
 
                         .DataSources.Add(repdatasource)
@@ -75,7 +77,7 @@ Public Class fr_lap_beli_nota_view
                         .SetParameters(New ReportParameter() {parLabelJudul})
 
                         ds_transaksi.dt_jual_nota.Clear()
-                        filldatatabel(inquery, ds_transaksi.dt_lap_jual_nota)
+                        filldatatabel(inquery, ds_transaksi.dt_lap_beli_nota_detail)
 
                     Case "lapBeliSupplierNota", "lapBeliTglNota"
                         repdatasource.Name = "ds_nota"

@@ -16,36 +16,10 @@ Module mdlControl
     }
 
     '----------retur_beli_list dgv col-------------------
-    Private retur_beli_bukti = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "bukti",
-        .HeaderText = "No. Bukti",
-        .Name = "bukti",
-        .ReadOnly = True,
-        .Width = 150
-    }
-    Private retur_beli_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "tanggal",
-        .HeaderText = "Tanggal",
-        .Name = "tanggal",
-        .ReadOnly = True
-    }
     Private retur_beli_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "gudang",
         .HeaderText = "Gudang",
         .Name = "gudang",
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-    Private retur_beli_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-       .DataPropertyName = "faktur",
-       .HeaderText = "No. Faktur",
-       .Name = "faktur",
-       .ReadOnly = True
-   }
-    Private retur_beli_supplier = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "supplier",
-        .HeaderText = "Supplier",
-        .Name = "supplier",
         .MinimumWidth = 200,
         .ReadOnly = True
     }
@@ -59,88 +33,10 @@ Module mdlControl
     }
 
     '----------jual_list dgv col------------------- 
-    Private jual_pkp = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "pkp",
-        .HeaderText = "PKP",
-        .Name = "pkp",
-        .Width = 35,
-        .ReadOnly = True
-    }
-    Private jual_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "faktur",
-        .HeaderText = "No. Faktur",
-        .Name = "faktur",
-        .ReadOnly = True
-    }
     Private jual_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
         .DataPropertyName = "tanggal",
         .HeaderText = "Tanggal",
         .Name = "tanggal",
-        .ReadOnly = True
-    }
-    Private jual_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "gudang",
-        .HeaderText = "Gudang",
-        .Name = "gudang",
-        .MinimumWidth = 175,
-        .ReadOnly = True
-    }
-    Private jual_custo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "custo",
-        .HeaderText = "Customer",
-        .Name = "custo",
-        .MinimumWidth = 175,
-        .ReadOnly = True
-    }
-    Private jual_sales = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "sales",
-        .HeaderText = "Salesman",
-        .Name = "sales",
-        .MinimumWidth = 175,
-        .ReadOnly = True
-    }
-    Private jual_pajak = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "pajak",
-        .HeaderText = "Faktur Pajak",
-        .Name = "pajak",
-        .MinimumWidth = 175,
-        .ReadOnly = True
-    }
-    Private jual_netto = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "netto",
-        .HeaderText = "Netto",
-        .Name = "netto",
-        .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 120,
-        .ReadOnly = True
-    }
-    Private jual_klaim = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "klaim",
-        .HeaderText = "Bayar",
-        .Name = "klaim",
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_currency
-    }
-    Private jual_total = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "total",
-        .HeaderText = "Sisa",
-        .Name = "total",
-        .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 120,
-        .ReadOnly = True
-    }
-    Private jual_term = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "term",
-        .HeaderText = "Term",
-        .Name = "term",
-        .Width = 35,
-        .ReadOnly = True
-    }
-    Private jual_batal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "batal",
-        .HeaderText = "BatalKirim",
-        .Name = "batal",
-        .Width = 35,
         .ReadOnly = True
     }
 
@@ -155,13 +51,6 @@ Module mdlControl
         .DataPropertyName = "tanggal",
         .HeaderText = "Tanggal",
         .Name = "tanggal",
-        .ReadOnly = True
-    }
-    Private retur_jual_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "gudang",
-        .HeaderText = "Gudang",
-        .Name = "gudang",
-        .MinimumWidth = 200,
         .ReadOnly = True
     }
     Private retur_jual_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
@@ -386,9 +275,10 @@ Module mdlControl
             Case "tutupbuku"
                 setListcode(pgtutupbuku, type, frmtutupbuku, "Daftar Closing Periode")
             Case "exportEfak" : frmexportEfak.setpage(pgexportEFak)
+            Case "ref"
+                frmref.PerformRefresh() : frmref.SetPage(pgref)
             Case "setbarangsales"
-                frmsalesbarang.performRefresh()
-                frmsalesbarang.setpage(pgsalesbarang)
+                frmsalesbarang.PerformRefresh() : frmsalesbarang.SetPage(pgsalesbarang)
             Case "group"
                 setListcode(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
@@ -412,6 +302,7 @@ Module mdlControl
         Dim type As Type = dgv.[GetType]()
         Dim PI As PropertyInfo = type.GetProperty("DoubleBuffered", BindingFlags.Instance Or BindingFlags.NonPublic)
         PI.SetValue(dgv, True, Nothing)
+        consoleWriteLine(dgv.Name & " " & "DoubleBuffered:" & x.ToString)
     End Sub
 
     Private Sub setTabPageControl(type As String)
@@ -1040,7 +931,7 @@ Module mdlControl
                     hutang_giro_saldo.Name = "hutang_giro_saldo" : hutang_giro_saldo.DataPropertyName = "hutang_giro" : hutang_giro_saldo.HeaderText = "Saldo Giro"
 
                     For Each col As DataGridViewColumn In {hutang_awal, hutang_beli, hutang_retur, hutang_bayar, hutang_tolak, hutang_sisa,
-                                       hutang_giro_awal, hutang_giro_saldo}
+                                                           hutang_giro_awal, hutang_giro_saldo}
                         col.Width = 100
                         col.DefaultCellStyle = dgvstyle_currency
                     Next
@@ -1054,15 +945,10 @@ Module mdlControl
                     Dim x As DataGridViewColumn() = {hutang_faktur, hutang_pajak, hutang_tgl, hutang_jt, hutang_supplier, hutang_term,
                                                      hutang_status, hutang_awal, hutang_beli, hutang_retur, hutang_bayar, hutang_sisa,
                                                      hutang_giro_awal, hutang_giro_saldo, hutang_tgl_lunas}
-                    For i = 0 To x.Count - 1
-                        x(i).DisplayIndex = i
-                        consoleWriteLine(x(i).HeaderText & x(i).DisplayIndex)
-                    Next
+                    For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
 
-                    With .dgv_list
-                        .AutoGenerateColumns = False
-                        .Columns.AddRange(x)
-                    End With
                 End With
 
                 'TAB LIST PEMBAYARAN HUTANG
@@ -1076,6 +962,8 @@ Module mdlControl
                     Dim hutang_debet = New DataGridViewColumn() : hutang_debet = dgvcol_templ_status.Clone()
                     Dim hutang_status = New DataGridViewColumn() : hutang_status = dgvcol_templ_status.Clone()
                     Dim hutang_user = New DataGridViewColumn() : hutang_user = dgvcol_templ_status.Clone()
+                    Dim hutang_it = New DataGridViewColumn : hutang_it = dgvcol_templ_status.Clone()
+                    Dim hutang_et = New DataGridViewColumn : hutang_et = dgvcol_templ_status.Clone()
 
                     hutang_bukti.Name = "hutang_bukti" : hutang_bukti.DataPropertyName = "bayar_bukti" : hutang_bukti.HeaderText = "No. Faktur"
                     hutang_tgl.Name = "hutang_tgl" : hutang_tgl.DataPropertyName = "bayar_tgl" : hutang_tgl.HeaderText = "Tanggal Bayar"
@@ -1085,13 +973,19 @@ Module mdlControl
                     hutang_debet.Name = "hutang_debet" : hutang_debet.DataPropertyName = "bayar_nilai" : hutang_debet.HeaderText = "Jumlah Bayar"
                     hutang_status.Name = "hutang_status" : hutang_status.DataPropertyName = "bayar_status" : hutang_status.HeaderText = "Status"
                     hutang_user.Name = "hutang_user" : hutang_user.DataPropertyName = "bayar_user" : hutang_user.HeaderText = "UserID"
+                    hutang_it.Name = "hutang_it" : hutang_it.DataPropertyName = "regdate" : hutang_it.HeaderText = "InputDate"
+                    hutang_et.Name = "hutang_et" : hutang_et.DataPropertyName = "upddate" : hutang_et.HeaderText = "LastUpdate"
 
                     hutang_bukti.Width = 100
                     hutang_debet.Width = 120 : hutang_debet.DefaultCellStyle = dgvstyle_currency
                     hutang_supplier.Width = 200
                     hutang_tgl.Width = 110 : hutang_tgl.DefaultCellStyle = dgvstyle_date
+                    For Each col As DataGridViewColumn In {hutang_it, hutang_et}
+                        col.Width = 100 : col.DefaultCellStyle = dgvstyle_datetime
+                    Next
 
-                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_jenpajak, hutang_supplier, hutang_debet, hutang_jenis, hutang_status, hutang_user, x_filler}
+                    Dim x As DataGridViewColumn() = {hutang_bukti, hutang_tgl, hutang_jenpajak, hutang_supplier, hutang_debet, hutang_jenis, hutang_status,
+                                                     hutang_it, hutang_et, hutang_user, x_filler}
                     For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
@@ -1206,11 +1100,6 @@ Module mdlControl
                 'TAB LIST PEMBAYARAN PIUTANG
             Case "piutangbayar"
                 With frmpiutangbayar
-                    .print_sw = True
-                    .add_sw = IIf(selectperiode.closed = True, False, True)
-                    .cancel_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
-                    .mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
-
                     Dim piutang_bukti = New DataGridViewColumn() : piutang_bukti = dgvcol_templ_status.Clone()
                     Dim piutang_tgl = New DataGridViewColumn() : piutang_tgl = dgvcol_templ_status.Clone()
                     Dim piutang_jenpajak = New DataGridViewColumn() : piutang_jenpajak = dgvcol_templ_id.Clone()
@@ -1221,6 +1110,8 @@ Module mdlControl
                     Dim piutang_status = New DataGridViewColumn() : piutang_status = dgvcol_templ_status.Clone()
                     Dim piutang_andro = New DataGridViewColumn() : piutang_andro = dgvcol_templ_status.Clone()
                     Dim piutang_user = New DataGridViewColumn() : piutang_user = dgvcol_templ_status.Clone()
+                    Dim piutang_it = New DataGridViewColumn : piutang_it = dgvcol_templ_status.Clone()
+                    Dim piutang_et = New DataGridViewColumn : piutang_et = dgvcol_templ_status.Clone()
 
                     piutang_bukti.Name = "piutang_bukti" : piutang_bukti.DataPropertyName = "bukti" : piutang_bukti.HeaderText = "No. Faktur"
                     piutang_tgl.Name = "piutang_tgl" : piutang_tgl.DataPropertyName = "tanggal" : piutang_tgl.HeaderText = "Tanggal Bayar"
@@ -1232,14 +1123,19 @@ Module mdlControl
                     piutang_status.Name = "piutang_status" : piutang_status.DataPropertyName = "status" : piutang_status.HeaderText = "Status"
                     piutang_andro.Name = "piutang_andro" : piutang_andro.DataPropertyName = "input_source" : piutang_andro.HeaderText = "Input"
                     piutang_user.Name = "piutang_user" : piutang_user.DataPropertyName = "userid" : piutang_user.HeaderText = "UserID"
+                    piutang_it.Name = "piutang_it" : piutang_it.DataPropertyName = "regdate" : piutang_it.HeaderText = "InputDate"
+                    piutang_et.Name = "piutang_et" : piutang_et.DataPropertyName = "upddate" : piutang_et.HeaderText = "LastUpdate"
 
                     piutang_bukti.Width = 100
                     piutang_debet.Width = 120 : piutang_debet.DefaultCellStyle = dgvstyle_currency
                     piutang_sales.Width = 120 : piutang_custo.Width = 200
                     piutang_tgl.Width = 110 : piutang_tgl.DefaultCellStyle = dgvstyle_date
+                    For Each col As DataGridViewColumn In {piutang_it, piutang_et}
+                        col.Width = 100 : col.DefaultCellStyle = dgvstyle_datetime
+                    Next
 
                     Dim x As DataGridViewColumn() = {piutang_bukti, piutang_tgl, piutang_jenpajak, piutang_custo, piutang_sales, piutang_debet, piutang_jenis,
-                                                     piutang_status, piutang_andro, piutang_user, x_filler}
+                                                     piutang_status, piutang_andro, piutang_it, piutang_et, piutang_user, x_filler}
                     For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
@@ -1375,7 +1271,6 @@ Module mdlControl
                     Dim jurnal_p_jenpajak = New DataGridViewColumn : jurnal_p_jenpajak = dgvcol_templ_id.Clone()
                     Dim jurnal_p_tgl = New DataGridViewColumn : jurnal_p_tgl = dgvcol_templ_status.Clone()
                     Dim jurnal_p_bukti = New DataGridViewColumn : jurnal_p_bukti = dgvcol_templ_status.Clone()
-                    Dim jurnal_p_jenis = New DataGridViewColumn : jurnal_p_jenis = dgvcol_templ_status.Clone()
                     Dim jurnal_p_kredit = New DataGridViewColumn : jurnal_p_kredit = dgvcol_templ_status.Clone()
                     Dim jurnal_p_debet = New DataGridViewColumn : jurnal_p_debet = dgvcol_templ_status.Clone()
                     Dim jurnal_p_ref = New DataGridViewColumn : jurnal_p_ref = dgvcol_templ_status.Clone()
@@ -1384,7 +1279,6 @@ Module mdlControl
                     jurnal_p_jenpajak.Name = "jurnal_p_jenpajak" : jurnal_p_jenpajak.DataPropertyName = "jenispajak" : jurnal_p_jenpajak.HeaderText = "Kat."
                     jurnal_p_tgl.Name = "jurnal_p_tgl" : jurnal_p_tgl.DataPropertyName = "jp_tgl" : jurnal_p_tgl.HeaderText = "Tanggal"
                     jurnal_p_bukti.Name = "jurnal_p_bukti" : jurnal_p_bukti.DataPropertyName = "jp_kode" : jurnal_p_bukti.HeaderText = "Kode Transaksi"
-                    jurnal_p_jenis.Name = "jurnal_p_jenis" : jurnal_p_jenis.DataPropertyName = "jp_type" : jurnal_p_jenis.HeaderText = "Jenis"
                     jurnal_p_kredit.Name = "jurnal_p_kredit" : jurnal_p_kredit.DataPropertyName = "kredit" : jurnal_p_kredit.HeaderText = "Kredit"
                     jurnal_p_debet.Name = "jurnal_p_debet" : jurnal_p_debet.DataPropertyName = "debet" : jurnal_p_debet.HeaderText = "Debet"
                     jurnal_p_ref.Name = "jurnal_p_ref" : jurnal_p_ref.DataPropertyName = "jp_ref" : jurnal_p_ref.HeaderText = "Keterangan"
@@ -1396,8 +1290,8 @@ Module mdlControl
                     Next
 
                     With .dgv_list
-                        Dim x As DataGridViewColumn() = {jurnal_p_id, jurnal_p_jenpajak, jurnal_p_tgl, jurnal_p_bukti, jurnal_p_jenis,
-                                                          jurnal_p_debet, jurnal_p_kredit, jurnal_p_ref, x_filler}
+                        Dim x As DataGridViewColumn() = {jurnal_p_id, jurnal_p_jenpajak, jurnal_p_tgl, jurnal_p_bukti,
+                                                         jurnal_p_debet, jurnal_p_kredit, jurnal_p_ref, x_filler}
                         For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
                         .AutoGenerateColumns = False
                         .Columns.AddRange(x)
@@ -1412,21 +1306,23 @@ Module mdlControl
                     Dim cl_tglawal = New DataGridViewColumn : cl_tglawal = dgvcol_templ_status.Clone()
                     Dim cl_tglakhir = New DataGridViewColumn : cl_tglakhir = dgvcol_templ_status.Clone()
                     Dim cl_userid = New DataGridViewColumn : cl_userid = dgvcol_templ_status.Clone()
+                    Dim cl_validid = New DataGridViewColumn : cl_validid = dgvcol_templ_status.Clone()
                     Dim cl_status = New DataGridViewColumn : cl_status = dgvcol_templ_status.Clone()
 
                     cl_id.Name = "cl_id" : cl_id.DataPropertyName = "cl_id" : cl_id.HeaderText = "ID"
                     cl_tgl.Name = "cl_tgl" : cl_tgl.DataPropertyName = "cl_tgl" : cl_tgl.HeaderText = "Tgl. Closing"
                     cl_tglawal.Name = "cl_tglawal" : cl_tglawal.DataPropertyName = "cl_tglawal" : cl_tglawal.HeaderText = "StartDate"
                     cl_tglakhir.Name = "cl_tglakhir" : cl_tglakhir.DataPropertyName = "cl_tglakhir" : cl_tglakhir.HeaderText = "EndDate"
-                    cl_userid.Name = "cl_userid" : cl_userid.DataPropertyName = "cl_userid" : cl_userid.HeaderText = "UserID"
+                    cl_userid.Name = "cl_userid" : cl_userid.DataPropertyName = "cl_userid" : cl_userid.HeaderText = "ClosedBy"
+                    cl_validid.Name = "cl_validid" : cl_validid.DataPropertyName = "cl_validid" : cl_validid.HeaderText = "ValidBy"
                     cl_status.Name = "cl_status" : cl_status.DataPropertyName = "cl_status" : cl_status.HeaderText = "Status"
 
                     For Each col As DataGridViewColumn In {cl_tgl, cl_tglawal, cl_tglakhir}
                         col.Width = 150 : col.DefaultCellStyle = dgvstyle_date
                     Next
-                    cl_userid.Width = 100
+                    cl_userid.Width = 100 : cl_validid.Width = 100
                     With .dgv_list
-                        Dim x As DataGridViewColumn() = {cl_id, cl_status, cl_tgl, cl_tglawal, cl_tglakhir, cl_userid, x_filler}
+                        Dim x As DataGridViewColumn() = {cl_id, cl_status, cl_tgl, cl_tglawal, cl_tglakhir, cl_validid, cl_userid, x_filler}
                         For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
                         .AutoGenerateColumns = False
                         .Columns.AddRange(x)
@@ -1545,16 +1441,15 @@ Module mdlControl
         End Select
     End Sub
 
-    ''' <summary>Getting datatable for listview/gridview data from database.</summary>
+    ''' <summary>Getting datatable for listview/gridview data from database using asyncronous procedure.</summary>
     ''' <param name="TypeData">A <see cref="String"/> of type of data requested</param>
-    ''' <param name="ParamValue"></param>
+    ''' <param name="ParamValue"><see cref="String"/> search parameter/condition. Using REGEXP format with some exception.</param>
     ''' <param name="PageNum"></param>
-    ''' <param name="LimitPerPage"></param>
+    ''' <param name="LimitPerPage">Maximum row every page.</param>
     ''' <param name="StartDate"></param>
     ''' <param name="EndDate"></param>
-    ''' <returns><see cref="DataTable"/> of requested data.</returns>
-    Public Function GetDataLIstForListTemplate(TypeData As String, ParamValue As String, PageNum As Integer, Optional LimitPerPage As Integer = 2000,
-                                               Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing) As DataTable
+    ''' <returns><see cref="DataTable"/> of requested data and a <see cref="Boolean"/> key as task complete parameter.</returns>
+    Public Async Function GetDataLIstForListTemplate(TypeData As String, ParamValue As String, PageNum As Integer, Optional LimitPerPage As Integer = 2000, Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing) As Task(Of KeyValuePair(Of Boolean, DataTable))
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
@@ -1562,7 +1457,7 @@ Module mdlControl
         Dim _startdate As Date = IIf(StartDate = #12:00:00 AM#, selectperiode.tglawal, StartDate)
         Dim _enddate As Date = IIf(EndDate = #12:00:00 AM#, selectperiode.tglakhir, EndDate)
 
-        Dim _retval As New DataTable
+        Dim _retval As New DataTable : Dim _retBool As Boolean = False
         Dim q As String = ""
 
         TypeData = LCase(TypeData)
@@ -1570,7 +1465,7 @@ Module mdlControl
         If Not String.IsNullOrWhiteSpace(ParamValue) Then ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
 
         Select Case TypeData
-            Case "supplier", "barang", "sales", "gudang", "custo", "group", "user", "closing"
+            Case "supplier", "barang", "sales", "gudang", "custo", "group", "user", "salessetting", "closing"
                 q = "CALL GetDataList_Master('{0}','{1}','{2}','{3}')"
                 q = String.Format(q, TypeData, Trim(ParamValue), PageNum, LimitPerPage)
             Case "pesanan", "jual", "rjual", "beli", "rbeli"
@@ -1591,38 +1486,40 @@ Module mdlControl
             Case "piutangawal", "piutangbayar", "bgi"
                 q = "CALL GetDataList_Piutang('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}','{3}','{4}','{5}')"
                 q = String.Format(q, TypeData, _startdate, _enddate, Trim(ParamValue), PageNum, LimitPerPage)
-            Case "kas", "jurnalumum", "perkiraan"
+            Case "kas", "jurnalumum", "perkiraan", "jurnalsesuai"
                 q = "CALL GetDataList_Akuntan('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}','{3}','{4}','{5}')"
                 q = String.Format(q, TypeData, _startdate, _enddate, Trim(ParamValue), PageNum, LimitPerPage)
             Case Else
                 Return Nothing : Exit Function
         End Select
 
-        Using x = MainConnection
+        Using x As New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                Try
-                    _retval = x.GetDataTable(q)
-                Catch ex As Exception
-                    logError(ex, True)
-                    MessageBox.Show("Terjadi kesalahan saat mengambil data." & Environment.NewLine & ex.Message,
-                                    "", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return Nothing : Exit Function
-                End Try
+                consoleWriteLine(q)
+                _retval = Await Task.Run(Function() x.GetDataTable(q))
+                _retBool = True
             Else
                 MessageBox.Show("Tidak dapat terhubung ke database.", "", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Return Nothing : Exit Function
             End If
         End Using
 
-        Return _retval
+        Return New KeyValuePair(Of Boolean, DataTable)(_retBool, _retval)
     End Function
 
-    Public Function GetDataCount(TypeData As String, Optional ParamValue As String = "",
-                                 Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing) As Integer
+    ''' <summary>Getting datacount for listview/gridview paging system from database using asyncronous procedure. 
+    ''' Used as compliment for <see cref="GetDataLIstForListTemplate"/> function.</summary>
+    ''' <param name="TypeData">A <see cref="String"/> of data type requested</param>
+    ''' <param name="ParamValue"><see cref="String"/> of search parameter.</param>
+    ''' <param name="StartDate"></param>
+    ''' <param name="EndDate"></param>
+    ''' <returns><see cref="Integer"/> value of requested data and a <see cref="Boolean"/> key as task complete parameter.</returns>
+    Public Async Function GetDataCount(TypeData As String, Optional ParamValue As String = "",
+                                 Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing) As Task(Of KeyValuePair(Of Boolean, Integer))
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-        Dim _retval As Integer = 0
+        Dim _retval As Integer = 0 : Dim _retBool As Boolean = False
         Dim q As String = ""
 
         Dim _startdate As Date = IIf(StartDate = #12:00:00 AM#, selectperiode.tglawal, StartDate)
@@ -1633,7 +1530,7 @@ Module mdlControl
         If Not String.IsNullOrWhiteSpace(ParamValue) Then ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
 
         Select Case TypeData
-            Case "barang", "gudang", "supplier", "salesman", "custo", "group", "user"
+            Case "barang", "gudang", "supplier", "sales", "custo", "group", "user", "salessetting", "closing"
                 q = "SELECT GetDataCount_Master('{0}','{1}')"
                 q = String.Format(q, TypeData, ParamValue)
             Case "pesanan", "jual", "rjual", "beli", "rbeli"
@@ -1654,18 +1551,20 @@ Module mdlControl
             Case "piutangawal", "piutangbayar", "bgi"
                 q = "SELECT GetDataCount_Piutang('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}','{3}')"
                 q = String.Format(q, TypeData, _startdate, _enddate, ParamValue)
-            Case "kas", "jurnalumum"
+            Case "kas", "jurnalumum", "perkiraan", "jurnalsesuai"
                 q = "SELECT GetDataCount_Akuntan('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}','{3}')"
                 q = String.Format(q, TypeData, _startdate, _enddate, ParamValue)
-            Case Else : Return 0 : Exit Function
+            Case Else
+                Return New KeyValuePair(Of Boolean, Integer)(True, 0)
         End Select
 
-        Using x = MainConnection
+        Using x As New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                _retval = CInt(x.ExecScalar(q))
+                _retval = CInt(Await Task.Run(Function() x.ExecScalar(q)))
+                _retBool = True
             End If
         End Using
 
-        Return _retval
+        Return New KeyValuePair(Of Boolean, Integer)(_retBool, _retval)
     End Function
 End Module

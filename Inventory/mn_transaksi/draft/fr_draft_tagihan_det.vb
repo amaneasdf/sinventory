@@ -239,6 +239,7 @@
             .DataSource = dt
             If .ColumnCount = 2 Then
                 .Columns(0).Width = 135 : .Columns(1).Width = 200
+                .Columns(1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             End If
         End With
     End Sub
@@ -320,8 +321,7 @@
             qArr.Add(String.Format(q, in_kode_draft.Text))
 
             For Each row As DataGridViewRow In dgv_draftfaktur.Rows
-                q = "INSERT INTO data_tagihan_nota SET nota_draft='{0}', nota_faktur='{1}', nota_tagihan={2}, nota_reg_date=NOW(), nota_reg_alias='{3}' " _
-                    & "ON DUPLICATE KEY UPDATE nota_status=1, nota_tagihan={2}, nota_reg_date=NOW(), nota_reg_alias='{3}'"
+                q = "INSERT INTO data_tagihan_nota SET nota_draft='{0}', nota_faktur='{1}', nota_tagihan={2}, nota_reg_date=NOW(), nota_reg_alias='{3}'"
                 qArr.Add(String.Format(q, in_kode_draft.Text, row.Cells(1).Value, row.Cells(2).Value.ToString.Replace(",", "."), loggeduser.user_id))
             Next
 
@@ -440,21 +440,12 @@ EndSub:
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
-        If Char.IsLetterOrDigit(e.KeyChar) Then
-            Dim x As TextBox
-            Select Case popupstate
-                Case "sales"
-                    x = in_sales_n
-                Case Else
-                    x = Nothing
-                    x.Dispose()
-                    Exit Sub
-            End Select
-            x.Text += e.KeyChar
-            e.Handled = True
-            x.Focus()
-            x.Select(x.TextLength, x.TextLength)
-        End If
+        Dim x As TextBox
+        Select Case popupstate
+            Case "sales" : x = in_sales_n
+            Case Else : Exit Sub
+        End Select
+        PopUpSearchKeyPress(e, x)
     End Sub
 
     Private Sub pnl_content_Click(sender As Object, e As EventArgs) Handles Pnl_content.Click, pnl_footer.Click, Panel1.Click, Panel3.Click, MyBase.Click
@@ -578,20 +569,15 @@ EndSub:
     End Sub
 
     Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp
-        If in_sales_n.ReadOnly = False And in_sales_n.Enabled Then
-            If e.KeyCode = Keys.Down Then
-                If popPnl_barang.Visible Then dgv_listbarang.Focus()
-            ElseIf e.KeyCode = Keys.Escape Then
-                popPnl_barang.Visible = False
-            ElseIf e.KeyCode = Keys.Enter Then
-                If popPnl_barang.Visible Then setPopUpResult()
-                in_cari_faktur.Focus()
-            Else
-                If Not popPnl_barang.Visible Then popPnl_barang.Visible = True
-                in_sales.Clear()
-                loadDataBRGPopup(popupstate, sender.Text)
-            End If
-        End If
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, in_sales, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(in_cari_faktur, e)
+                Case "clear"
+                Case "load" : loadDataBRGPopup(popupstate, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_sales_n_Leave(sender As Object, e As EventArgs) Handles in_sales_n.Leave

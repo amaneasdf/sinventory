@@ -171,9 +171,9 @@
                     & "FROM data_stok_awal " _
                     & "LEFT JOIN data_stok_kartustok ON stock_kode=trans_stock AND trans_status=1 " _
                     & "LEFT JOIN data_barang_master ON barang_kode=stock_barang " _
-                    & "WHERE stock_kode=1 AND trans_tgl<='{1}' AND trans_periode={3} AND barang_pajak={4} AND stock_gudang='{2}' " _
-                    & "AND (barang_nama LIKE '%{0}%' OR stock_barang LIKE '%{0}%') AND barang_kode <> '{5}' GROUP BY stock_barang LIMIT 250"
-                q = String.Format(q, "{0}", _tgltrans, in_gudang.Text, selectperiode.id, cb_pajak.SelectedValue, _exbarang)
+                    & "WHERE stock_kode=1 AND trans_tgl<='{1}' AND barang_pajak={3} AND stock_gudang='{2}' " _
+                    & "AND (barang_nama LIKE '%{0}%' OR stock_barang LIKE '%{0}%') AND barang_kode <> '{4}' GROUP BY stock_barang LIMIT 250"
+                q = String.Format(q, "{0}", _tgltrans, in_gudang.Text, cb_pajak.SelectedValue, _exbarang)
 
             Case "gudang"
                 q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
@@ -182,16 +182,19 @@
                 Exit Sub
         End Select
 
-        dt = getDataTablefromDB(String.Format(q, param))
+        Using x = MainConnection : dt = x.GetDataTable(String.Format(q, param)) : End Using
 
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 100
-            .Columns(1).Width = 175
-            If tipe = "barangasal" Or tipe = "barangtujuan" Then
-                .Columns(2).DefaultCellStyle = dgvstyle_currency
-                .Columns(2).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
-                .Columns(3).Visible = False
+            If .ColumnCount >= 2 Then
+                If {"barangasal", "barangtujuan"}.Contains(tipe) Then
+                    .Columns(0).Width = 100 : .Columns(1).Width = 175
+                    .Columns(2).DefaultCellStyle = dgvstyle_commathousand
+                    .Columns(3).Visible = False
+                Else
+                    .Columns(0).Width = 125 : .Columns(1).Width = 200
+                End If
+                If .DisplayedColumnCount(False) <= 3 Then .Columns(.DisplayedColumnCount(False) - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             End If
         End With
     End Sub
@@ -206,6 +209,16 @@
         With dgv_listbarang.SelectedRows.Item(0)
             Select Case popupstate
                 Case "barangasal"
+                    Dim validUid As String = ""
+                    If .Cells(2).Value <= 0 Then
+                        If MessageBox.Show("Barang " & .Cells(1).Value & " kosong/minus. Lanjutkan?", Me.Text,
+                                           MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = Windows.Forms.DialogResult.Yes Then
+                            If Not TransConfirmValid(validUid) Then Exit Sub
+                            'ADD LOG VALIDASI
+                        Else
+                            Exit Sub
+                        End If
+                    End If
                     in_barang.Text = .Cells(0).Value
                     in_barang_nm.Text = .Cells(1).Value
                     in_sat1.Text = .Cells(3).Value
@@ -369,56 +382,52 @@
 
                 'GENERATE KODE
                 in_kode.Text = Trim(in_kode.Text)
-                If in_kode.Text = Nothing Then
-                    Dim no As Integer = 1
-                    Dim tgl As String = date_tgl_beli.Value.ToString("yyyyMMdd")
-
-                    q = "SELECT COUNT(DISTINCT faktur_kode) FROM data_barang_mutasi WHERE faktur_tanggal='{0:yyyy-MM-dd}' AND faktur_kode LIKE 'MB{0:yyyyMMdd}%'"
-                    no = CInt(x.ExecScalar(String.Format(q, date_tgl_beli.Value)))
-                    in_kode.Text = "MB" & tgl & no.ToString("D3")
-
-                ElseIf in_kode.Text <> Nothing And formstate = InputState.Insert Then
-                    q = "SELECT faktur_kode FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_kode<9"
-                    Dim _ck As Boolean = True
-                    Dim _msg As String = ""
-
-                    Try
-                        Dim _ret = x.ExecScalar(String.Format(q, in_kode.Text))
-                        _ck = IIf(IsNothing(_ret), True, False)
-                        _msg = IIf(Not _ck, "Kode bukti sudah pernah dimasukan.", "")
-                    Catch ex As Exception
-                        logError(ex, True)
-                        _ck = False : _msg = ex.Message
-                    End Try
-
-                    If _ck = False Then
-                        MessageBox.Show("Data tidak dapat tersimpan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                        Exit Sub
-                    End If
-                End If
-
+                datafaktur = {"faktur_tanggal='" & _tgltrans & "'",
+                              "faktur_pajak='" & cb_pajak.SelectedValue & "'",
+                              "faktur_gudang='" & in_gudang.Text & "'",
+                              "faktur_ket='" & in_ket.Text & "'",
+                              "faktur_status=1"
+                             }
                 '==========================================================================================================================
                 'INSERT HEADER
-                _kode = in_kode.Text
-                datafaktur = {
-                        "faktur_tanggal='" & _tgltrans & "'",
-                        "faktur_pajak='" & cb_pajak.SelectedValue & "'",
-                        "faktur_gudang='" & in_gudang.Text & "'",
-                        "faktur_ket='" & in_ket.Text & "'",
-                        "faktur_status=1"
-                        }
                 If formstate = InputState.Insert Then
+                    If String.IsNullOrWhiteSpace(in_kode.Text) Then
+                        'START OF GENERATING NEW CODE =============================================================================================
+                        Try
+                            Dim i As Integer = 0 : Dim format As String = "D3"
+                            q = "SELECT IFNULL(MAX(SUBSTRING(faktur_kode, 11)),0) FROM data_barang_mutasi " _
+                                & "WHERE faktur_kode LIKE 'MB{0:yyyyMMdd}%' AND SUBSTRING(faktur_kode,11) REGEXP '^[0-9]+$'"
+                            i = CInt(x.ExecScalar(String.Format(q, date_tgl_beli.Value)))
+                            format = IIf(i + 1 > 999, "D" & (i + 1).ToString.Length, "D3")
+                            in_kode.Text = String.Format("MB{0:yyyyMMdd}", date_tgl_beli.Value) & (i + 1).ToString(format)
+
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                        'END OF GENERATING NEW CODE ===============================================================================================
+                    Else
+                        'START OF CHECKING USER INPUTED CODE ======================================================================================
+                        q = "SELECT COUNT(faktur_kode) FROM data_barang_mutasi WHERE faktur_kode='{0}'"
+                        If CInt(x.ExecScalar(String.Format(q, in_kode.Text))) > 0 Then
+                            MessageBox.Show("Kode Mutasi sudah pernah diinputkan sebelumnya. Silahkan masukan kode lain.", Me.Text,
+                                            MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                            in_kode.Focus() : Exit Sub
+                        End If
+                        'END OF CHECKING USER INPUTED CODE ========================================================================================
+                    End If
                     q = "INSERT INTO data_barang_mutasi SET faktur_kode='{0}',{1},faktur_reg_date=NOW(),faktur_reg_alias='{2}'"
                 Else
                     q = "UPDATE data_barang_mutasi SET {1}, faktur_upd_date=NOW(), faktur_upd_alias='{2}' WHERE faktur_kode='{0}'"
                 End If
-                queryArr.Add(String.Format(q, _kode, String.Join(",", datafaktur), loggeduser.user_id))
+                queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", datafaktur), loggeduser.user_id))
                 '==========================================================================================================================
 
                 '==========================================================================================================================
                 'INSERT BARANG
                 q = "UPDATE data_barang_mutasi_trans SET trans_status=9 WHERE trans_faktur='{0}'"
-                queryArr.Add(String.Format(q, _kode))
+                queryArr.Add(String.Format(q, in_kode.Text))
 
                 For Each rows As DataGridViewRow In dgv_barang.Rows
                     Dim _brgA As String = rows.Cells(0).Value
@@ -440,14 +449,14 @@
                         "trans_status=1"
                         }
                     q = "INSERT INTO data_barang_mutasi_trans SET trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
-                    queryArr.Add(String.Format(q, _kode, String.Join(",", dataBrg)))
+                    queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dataBrg)))
                 Next
                 '==========================================================================================================================
 
                 '==========================================================================================================================
                 'OTHER PROCESS
                 q = "CALL transMutasiBarangFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, _kode, loggeduser.user_id))
+                queryArr.Add(String.Format(q, in_kode.Text, loggeduser.user_id))
                 '==========================================================================================================================
 
                 '==========================================================================================================================
@@ -462,7 +471,6 @@
                     Exit Sub
                 Else
                     MessageBox.Show("Data mutasi tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                    'doRefreshTab({pgstok, pgmutasistok})
                     DoRefreshTab_v2({pgstok, pgmutasistok})
                     Me.Close()
                 End If
@@ -525,9 +533,9 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
-        If MessageBox.Show("Tutup Form Mutasi?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form Mutasi?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -569,14 +577,13 @@
 
     Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
         If e.KeyCode = Keys.Enter Then
-            'consoleWriteLine("fuck")
             e.SuppressKeyPress = True
-            setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
+            setPopUpResult()
         End If
     End Sub
 
@@ -590,15 +597,9 @@
                     x = in_barang_nm
                 Case "barangtujuan"
                     x = in_barang_nm2
-                Case Else
-                    x = Nothing
-                    x.Dispose()
-                    Exit Sub
+                Case Else : Exit Sub
             End Select
-            x.Text += e.KeyChar
-            e.Handled = True
-            x.Focus()
-            x.Select(x.TextLength, x.TextLength)
+            PopUpSearchKeyPress(e, x)
         End If
     End Sub
 
@@ -637,9 +638,9 @@
             Exit Sub
         End If
 
-        If MessageBox.Show("Simpan Data mutasi?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.Yes Then
-            SaveData()
-        End If
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _resMsg = MessageBox.Show("Simpan Data mutasi?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then SaveData()
     End Sub
 
     'UI : NUMERIC
@@ -652,7 +653,7 @@
     End Sub
 
     'UI : INPUT
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
+    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyUp
         keyshortenter(date_tgl_beli, e)
     End Sub
 
@@ -666,11 +667,11 @@
         End If
     End Sub
 
-    Private Sub cb_pajak_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_pajak.KeyDown
+    Private Sub cb_pajak_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_pajak.KeyUp
         keyshortenter(in_gudang_n, e)
     End Sub
 
-    Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown
+    Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyUp
         keyshortenter(in_gudang_n, e)
     End Sub
 
@@ -694,49 +695,26 @@
     End Sub
 
     Private Sub in_gudang_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyDown, in_barang_nm2.KeyDown, in_barang_nm.KeyDown
-        Dim _nxtcontrol As Object
-        Dim _kdcontrol As Object
+        If e.KeyCode = Keys.Enter Or e.KeyCode = Keys.Escape Then e.SuppressKeyPress = True
+    End Sub
+
+    Private Sub in_gudang_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_gudang_n.KeyUp, in_barang_nm2.KeyUp, in_barang_nm.KeyUp
+        Dim _next As Object : Dim _id As TextBox
         Select Case sender.Name.ToString
-            Case "in_gudang_n"
-                _nxtcontrol = in_barang_nm
-                _kdcontrol = in_gudang
-            Case "in_barang_nm2"
-                _nxtcontrol = in_qty2
-                _kdcontrol = in_barang2
-            Case "in_barang_nm"
-                _nxtcontrol = in_qty1
-                _kdcontrol = in_barang
-            Case Else
-                Exit Sub
+            Case "in_gudang_n" : _next = in_barang_nm : _id = in_gudang
+            Case "in_barang_nm2" : _next = in_qty2 : _id = in_barang2
+            Case "in_barang_nm" : _next = in_qty1 : _id = in_barang
+            Case Else : Exit Sub
         End Select
 
-        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
-            _kdcontrol.Text = ""
-        End If
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(_nxtcontrol, e)
-            e.SuppressKeyPress = True
-        ElseIf e.KeyCode = Keys.Escape Then
-            If popPnl_barang.Visible = True Then
-                popPnl_barang.Visible = False
-            End If
-        Else
-            If e.KeyCode <> Keys.Escape And sender.ReadOnly = False Then
-                If popPnl_barang.Visible = False Then
-                    popPnl_barang.Visible = True
-                End If
-                If e.KeyCode = Keys.Back And IsNothing(_kdcontrol) = False And sender.SelectionStart > 0 Then _kdcontrol.Text = ""
-                loadDataBRGPopup(popupstate, sender.Text)
-            End If
-        End If
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, _id, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(_next, e)
+                Case "load" : loadDataBRGPopup(popupstate, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_barang_nm2.Leave, in_gudang_n.Leave, in_barang_nm.Leave
@@ -763,23 +741,23 @@
         If sender.Text = "" Then _kdcontrol.Text = ""
     End Sub
 
-    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyDown
+    Private Sub in_barang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang.KeyUp
         keyshortenter(in_barang_nm, e)
     End Sub
 
-    Private Sub in_barang2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang2.KeyDown
+    Private Sub in_barang2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_barang2.KeyUp
         keyshortenter(in_barang_nm2, e)
     End Sub
 
-    Private Sub in_qty1_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty1.KeyDown
+    Private Sub in_qty1_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty1.KeyUp
         keyshortenter(in_barang_nm2, e)
     End Sub
 
-    Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyDown
+    Private Sub in_qty2_KeyDown(sender As Object, e As KeyEventArgs) Handles in_qty2.KeyUp
         keyshortenter(in_hpp, e)
     End Sub
 
-    Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyDown
+    Private Sub in_hpp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_hpp.KeyUp
         keyshortenter(bt_tbbarang, e)
     End Sub
 

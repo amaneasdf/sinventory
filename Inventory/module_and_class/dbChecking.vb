@@ -157,28 +157,34 @@
     End Function
 
     'CONFIRM DIALOG -> VALID TRANSAKSI
-    Public Function TransConfirmValid(ByRef Keterangan As String) As Boolean
-        Dim valid As Boolean = False
-
-        Using x As New fr_jualconfirm_dialog
-            With x
-                .lbl_title.Text = "Konfirmasi"
-                .in_user.Text = loggeduser.user_id
-                .do_load("jual")
-                If .returnval = True Then
-                    'COULD ALLOW OTHER USER (DIFF.USER FROM THE USER LOGGED TO SYS/APP) TO APPROVE
-                    If loggeduser.user_id <> .in_user.Text Then
-                        MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
-                                        .Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                        valid = False
-                    Else
-                        Keterangan += IIf(Keterangan = Nothing, "", Environment.NewLine) & .in_ket.Text
-                        valid = .returnval
-                    End If
+    Public Function TransConfirmValid(ByRef ValidUid As String) As Boolean
+        Using valid As New fr_jualconfirm_dialog
+            valid.doLoadValid()
+            If valid.returnval.Key Then
+                ValidUid = valid.returnval.Value
+                Return True
+            Else
+                If valid.returnval.Value <> String.Empty Then
+                    MessageBox.Show(valid.returnval.Value, valid.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 End If
-            End With
+                Return False
+            End If
         End Using
-        Return valid
+    End Function
+
+    Public Function AkunConfirmValid(ByRef ValidUid As String) As Boolean
+        Using valid As New fr_akun_confirmdialog
+            'valid.doLoadValid()
+            If valid.returnval.Key Then
+                ValidUid = valid.returnval.Value
+                Return True
+            Else
+                If valid.returnval.Value <> String.Empty Then
+                    MessageBox.Show(valid.returnval.Value, valid.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                End If
+                Return False
+            End If
+        End Using
     End Function
 
     'CONFIRM DIALOG -> VALID MASTER
@@ -210,19 +216,14 @@
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
         Dim retval As Boolean = False
-        Dim q As String = "SELECT j_order_kode, j_order_status status, j_order_ref_faktur faktur FROM data_penjualan_order_faktur WHERE j_order_kode='{0}'"
+        Dim q As String = "SELECT j_order_kode, j_order_status status, IFNULL(j_order_ref_faktur,'') faktur FROM data_penjualan_order_faktur WHERE j_order_kode='{0}'"
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Dim _status As Integer = 0
-                Dim _kode As String = Nothing
-                Dim _next As Boolean = False
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim _status As Integer = 0 : Dim _kode As String = Nothing : Dim _next As Boolean = False
                 Using rdx = x.ReadCommand(String.Format(q, KodeFaktur), CommandBehavior.SingleRow)
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
-                        _status = rdx.Item("status")
-                        _kode = rdx.Item("faktur")
-                        _next = True
+                        _status = rdx.Item("status") : _kode = rdx.Item("faktur") : _next = True
                     Else
                         _next = False
                     End If
@@ -230,21 +231,21 @@
                 If _next Then
                     If {0, 1}.Contains(_status) Then
                         If _status = 1 And String.IsNullOrWhiteSpace(_kode) = False Then
-                            retval = False
-                            Msg = "Transaksi sudah "
+                            retval = False : Msg = "Transaksi sudah divalidasi dan dilakukan proses penjualan."
                         Else
                             retval = True
                         End If
+                    ElseIf _status = 2 Then
+                        retval = False : Msg = "Transaksi sudah di batalkan."
                     Else
-                        retval = False : Msg = ""
+                        retval = False : Msg = "Kode status transaksi tidak sesuai."
                     End If
                 Else
                     retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
+                    Msg = "Terjadi kesalahan saat melakukan pengecekan data order. Data tidak dapat ditemukan."
                 End If
             Else
-                Msg = "Tidak dapat terhubung ke database"
-                retval = False
+                Msg = "Tidak dapat terhubung ke database." : retval = False
             End If
         End Using
         Return retval
@@ -255,63 +256,40 @@
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
-        Dim retval As Boolean = False
-        Dim q As String = "SELECT faktur_kode, IFNULL(faktur_status,0) status, IFNULL(piutang_awal,0) piutang, getPiutangSisa(piutang_faktur) sisa, COUNT(p_bayar_bukti) bayar " _
-                          & "FROM data_piutang_awal " _
-                          & "LEFT JOIN data_penjualan_faktur ON faktur_kode=piutang_faktur " _
-                          & "LEFT JOIN data_piutang_bayar_trans ON p_trans_kode_piutang=faktur_kode AND p_trans_status=1 " _
-                          & "LEFT JOIN data_piutang_bayar ON p_bayar_bukti=p_trans_bukti AND p_bayar_status IN (0,1) " _
-                          & "WHERE piutang_faktur='{0}'"
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Dim _status As Integer = 0
-                Dim _piutang As Decimal = 0
-                Dim _sisa As Decimal = 0
-                Dim _bayar As Integer = 0
-                Dim _next As Boolean = False
-                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur), CommandBehavior.SingleRow)
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        _status = rdx.Item("status")
-                        _piutang = rdx.Item("piutang")
-                        _sisa = rdx.Item("sisa")
-                        _bayar = rdx.Item("bayar")
-                        _next = True
-                    Else
-                        _next = False
-                    End If
-                End Using
 
-                If _next Then
-                    If {0, 1}.Contains(_status) Then
-                        If _piutang = _sisa Then
-                            If _bayar = 0 Then
-                                retval = True
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim q As String = ""
+                    q = "SELECT COUNT(faktur_id) FROM data_faktur_penjualan WHERE data_penjualan_faktur='{0}'"
+                    If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) > 0 Then
+                        q = "SELECT faktur_status FROM data_faktur_penjualan WHERE data_penjualan_faktur='{0}' AND faktur_status<9"
+                        Dim _sts As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
+                        If {0, 1}.Contains(_sts) Then
+                            q = "SELECT COUNT(p_trans_id) FROM data_piutang_trans WHERE p_trans_kode_piutang='{0}' AND p_trans_status=1"
+                            Dim _ct As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
+                            If _ct = 0 Then
+                                Return True
                             Else
-                                retval = False
-                                Msg = "Transaksi pembayaran utk faktur/piutang tsb telah dilakukan"
+                                Msg = "Transaksi penjualan/piutang sudah dilakukan pembayaran." : Return False
                             End If
+                        ElseIf _sts = 2 Then
+                            Msg = "Transaksi sudah di batalkan." : Return False
                         Else
-                            retval = False
-                            Msg = "Transaksi pembayaran utk faktur/piutang tsb telah dilakukan"
+                            Msg = "Kode status transaksi tidak sesuai." : Return False
                         End If
                     Else
-                        retval = False
-                        Msg = ""
+                        Msg = "Data penjualan " & KodeFaktur & " tidak dapat ditemukan." : Return False
                     End If
-                Else
-                    retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
-                End If
+                Catch ex As Exception
+                    logError(ex, True)
+                    Msg = "Terjadi kesalahan saat melakukan pengecekan transaksi." & Environment.NewLine & ex.Message
+                    Return False
+                End Try
             Else
-                Msg = "Tidak dapat terhubung ke database"
-                retval = False
+                Msg = "Tidak dapat terhubung ke database." : Return False
             End If
         End Using
-
-
-        Return retval
     End Function
 
     'CANCEL PEMBELIAN/HUTANG AWAL
@@ -403,20 +381,23 @@
                 Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
-                        _state = rdx.Item("status")
-                        _next = True
+                        _state = rdx.Item("status") : _next = True
                     Else
                         _next = False
                     End If
                 End Using
                 If _next Then
-                    If {0, 1}.Contains(_state) Then : retval = True : Else : retval = False : Msg = "" : End If
+                    If {0, 1}.Contains(_state) Then
+                        retval = True
+                    Else
+                        retval = False : Msg = ""
+                    End If
                 Else
                     retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
+                    Msg = "Terjadi kesalahan saat melakukan pengecekan data. Data retur tidak dapat ditemukan"
                 End If
             Else
-                Msg = "Tidak dapat terhubung ke database"
+                Msg = "Tidak dapat terhubung ke database."
                 retval = False
             End If
         End Using
@@ -429,6 +410,7 @@
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
+
         Dim retval As Boolean = False
         Dim q As String = "SELECT kas_kode, kas_status status FROM data_kas_faktur WHERE kas_kode='{0}'"
         Using x = MainConnection
@@ -534,17 +516,19 @@
             Case "pesanan"
                 q = "SELECT j_order_status FROM data_penjualan_order_faktur WHERE j_order_kode='{0}'"
             Case "penjualan"
-                q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}'"
+                q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
             Case "returjual"
-                q = "SELECT faktur_status FROM data_pejualan_retur_faktur WHERE faktur_kode_bukti='{0}'"
+                q = "SELECT faktur_status FROM data_pejualan_retur_faktur WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
             Case "pembelian"
-                q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}'"
+                q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
             Case "returbeli"
-                q = "SELECT faktur_status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='{0}'"
+                q = "SELECT faktur_status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
             Case "piutangbayar"
                 q = "SELECT p_bayar_status FROM data_piutang_bayar WHERE p_bayar_bukti='{0}'"
             Case "hutangbayar"
-                q = "SELECT h_bayar_status FROM data_piutang_bayar WHERE h_bayar_bukti='{0}'"
+                q = "SELECT h_bayar_status FROM data_hutang_bayar WHERE h_bayar_bukti='{0}'"
+            Case "kas"
+                q = "SELECT kas_status FROM data_kas_faktur WHERE kas_kode='{0}'"
             Case Else
                 Msg = "Tipe Transaksi tidak sesuai"
                 Return 9

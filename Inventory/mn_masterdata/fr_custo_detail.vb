@@ -377,9 +377,9 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        If MessageBox.Show("Tutup Form?", "Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Customer", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -436,48 +436,34 @@
         End If
     End Sub
 
-    'LOAD
-    Private Sub fr_custo_detail_Load(sender As Object, e As EventArgs) Handles Me.Load
-
-    End Sub
-
     'SAVE
     Private Sub bt_simpancusto_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If Trim(in_nama_custo.Text) = Nothing Then
-            MessageBox.Show("Nama Customer belum di input")
-            in_nama_custo.Focus()
-            Exit Sub
+            MessageBox.Show("Nama Customer belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_nama_custo.Focus() : Exit Sub
         End If
 
         If cb_tipe.SelectedValue = Nothing Then
-            MessageBox.Show("Tipe Customer belum di input")
-            cb_tipe.Focus()
-            Exit Sub
+            MessageBox.Show("Tipe Customer belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_tipe.Focus() : Exit Sub
         End If
 
         If cb_area.SelectedValue = Nothing Or Trim(in_alamat_kabupaten.Text) = Nothing Then
-            MessageBox.Show("Area/Kabupaten belum di input")
-            cb_tipe.Focus()
-            Exit Sub
+            MessageBox.Show("Area/Kabupaten belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_tipe.Focus() : Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data customer?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If Not formstate = InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data customer?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then
             If formstate = InputState.Edit Then
-                Dim x As Boolean = False
-                Dim _ket As String = ""
-                x = MasterConfirmValid(_ket)
-                If x = False Then
-                    Exit Sub
-                End If
-                in_ket.Text += IIf(String.IsNullOrWhiteSpace(in_ket.Text), "", in_ket.Text) & _ket
+                If Not MasterConfirmValid("") Then Exit Sub
             End If
-
             saveData()
         End If
     End Sub
 
-    'UI
-    '------------------ numeric
+    'UI :  numeric
     Private Sub in_piutang_Enter(sender As Object, e As EventArgs) Handles in_term.Enter, in_piutang.Enter
         numericGotFocus(sender)
     End Sub
@@ -539,22 +525,25 @@
     End Sub
 
     Private Sub cb_area_SelectionChangeCommitted(sender As Object, e As EventArgs) Handles cb_area.SelectionChangeCommitted
-
-        Dim q As String = "SELECT ref_kab_nama, c_area_nama FROM data_customer_area " _
-                          & "LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
-                          & "WHERE c_area_id='{0}'"
-        Dim _ret As String = ""
-
-        op_con()
-        readcommd(String.Format(q, cb_area.SelectedValue))
-        If rd.HasRows Then
-            _ret = rd.Item(0)
-            in_alamat_kecamatan.Text = rd.Item(1)
-        End If
-        rd.Close()
-
-        in_alamat_kabupaten.Text = _ret
-        'in_alamat_kecamatan.Text = cb_area.Text
+        Dim q As String = ""
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT IFNULL(ref_kab_nama,''), IFNULL(c_area_nama,'') FROM data_customer_area " _
+                    & "LEFT JOIN ref_area_kabupaten ON ref_kab_id=c_area_kode_kab AND ref_kab_status=1 " _
+                    & "WHERE c_area_id='{0}'"
+                Using rdx = x.ReadCommand(String.Format(q, cb_area.SelectedValue))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        in_alamat_kabupaten.Text = rdx.Item(0)
+                        in_alamat_kecamatan.Text = rdx.Item(1)
+                    ElseIf Not red Then
+                        MessageBox.Show("Terjadi kesalahan saat melakukan penggambilan data area.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
     End Sub
 
     Private Sub cb_area_KeyDown(sender As Object, e As KeyEventArgs) Handles cb_area.KeyUp

@@ -352,11 +352,13 @@
         If formstate = InputState.Insert Then
             Return True
         Else
-            Using x As New fr_akun_confirmdialog
-                x.do_loaddialog()
-                If x.RetVal.Key = True Then LogValidTrans(x.RetVal.Value, loggeduser.user_id, "JP.ENTRY", InputType, Me.ID)
-                Return x.RetVal.Key
-            End Using
+            Dim ValidUid As String = ""
+            If AkunConfirmValid(ValidUid) Then
+                LogValidTrans(ValidUid, loggeduser.user_id, "JP.ENTRY", InputType, Me.ID)
+                Return True
+            Else
+                Return False
+            End If
         End If
     End Function
 

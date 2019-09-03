@@ -28,7 +28,7 @@ Public Class fr_export_efaktur
         For Each datepick As DateTimePicker In {date_periode, date_tgl}
             datepick.Value = Today
         Next
-        dgv_faktur.DataSource.Rows.Clear()
+        If Not IsNothing(dgv_faktur.DataSource) Then dgv_faktur.DataSource.Rows.Clear()
     End Sub
 
     'LOAD HEADER
@@ -176,7 +176,7 @@ Public Class fr_export_efaktur
 
             q = "SELECT e_list_kodefaktur FROM data_penjualan_efak_list " _
                 & "WHERE e_list_templateid='{0}' AND e_list_selectstate=1 AND e_list_status=1 " _
-                & "ORDER BY e_list_tglpajak, e_list_kodepajak"
+                & "ORDER BY e_list_tglpajak, e_list_kodepajak, e_list_kodefaktur"
             Using rdx = x.ReadCommand(String.Format(q, IdExport))
                 While rdx.Read
                     _FakturList.Add(rdx.Item(0))
@@ -207,6 +207,9 @@ Public Class fr_export_efaktur
             Case "exportFK"
                 q = "CALL EFak_GetDataFK('{0}', '{1}')" : q = String.Format(q, FakturKode, IdExport)
 
+            Case "exportLT"
+                q = String.Empty
+
             Case "exportOF"
                 If FakturKode <> Nothing Then
                     q = "CALL EFak_GetDataOF('{0}')" : q = String.Format(q, FakturKode)
@@ -225,20 +228,25 @@ Public Class fr_export_efaktur
             contain.Add(String.Join(fielddelimiter, colheadr_FK))
             contain.Add(String.Join(fielddelimiter, colheadr_LT))
             contain.Add(String.Join(fielddelimiter, colheadr_OF))
-            For Each kode As String In kode_faktur
-                contain.Add(getDataTablefromDB(createQuery("exportFK", kode, IdExport), True).ToCsv(False, vbCrLf, fielddelimiter))
-                contain.Add(getDataTablefromDB(createQuery("exportOF", kode, IdExport), True).ToCsv(False, vbCrLf, fielddelimiter))
-            Next
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    For Each kode As String In kode_faktur
+                        contain.Add(x.GetDataTable(createQuery("exportFK", kode, IdExport)).ToCsv(False, vbCrLf, fielddelimiter))
+                        contain.Add(x.GetDataTable(createQuery("exportOF", kode, IdExport)).ToCsv(False, vbCrLf, fielddelimiter))
+                    Next
+                Else
+                    MessageBox.Show("Tidak dapat terhubung ke database.", "Export E Faktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False : Exit Function
+                End If
+            End Using
 
             System.IO.File.WriteAllText(fileLoc, String.Join(rowdelimiter, contain))
-            _retsuc = System.IO.File.Exists(fileLoc)
+            Return System.IO.File.Exists(fileLoc)
         Catch ex As Exception
             logError(ex, True)
             MessageBox.Show("ERROR. Terjadi kesalahan saat melakukan export" & vbCrLf & ex.Message, "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            _retsuc = False
+            Return False
         End Try
-
-        Return _retsuc
     End Function
 
     'EXPORT XLSX
@@ -269,32 +277,36 @@ Public Class fr_export_efaktur
                     Next
                     rows += 1
                 Next
-                For Each kode As String In kode_faktur
-                    dt_fk = getDataTablefromDB(createQuery("exportFK", kode, IdExport), True)
-                    dt_of = getDataTablefromDB(createQuery("exportOF", kode, IdExport), True)
-                    For i = 0 To dt_fk.Columns.Count - 1
-                        wrksht.Cells(rows, i + 1).Value = dt_fk.Rows(0).ItemArray(i)
-                    Next
-                    rows += 1
-                    For Each objkrows As DataRow In dt_of.Rows
-                        For i = 0 To dt_of.Columns.Count - 1
-                            wrksht.Cells(rows, i + 1).Value = objkrows.ItemArray(i)
+                Using x = MainConnection
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        For Each kode As String In kode_faktur
+                            dt_fk = x.GetDataTable(createQuery("exportFK", kode, IdExport))
+                            dt_of = x.GetDataTable(createQuery("exportOF", kode, IdExport))
+                            For i = 0 To dt_fk.Columns.Count - 1
+                                wrksht.Cells(rows, i + 1).Value = dt_fk.Rows(0).ItemArray(i)
+                            Next
+                            rows += 1
+                            For Each objkrows As DataRow In dt_of.Rows
+                                For i = 0 To dt_of.Columns.Count - 1
+                                    wrksht.Cells(rows, i + 1).Value = objkrows.ItemArray(i)
+                                Next
+                                rows += 1
+                            Next
                         Next
-                        rows += 1
-                    Next
-                Next
-
+                    Else
+                        MessageBox.Show("Tidak dapat terhubung ke database.", "Export E Faktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return False : Exit Function
+                    End If
+                End Using
                 xls.SaveAs(New FileInfo(fileloc & filename & ".xlsx"))
 
-                _retsuc = System.IO.File.Exists(fileloc & filename & ".xlsx")
+                Return System.IO.File.Exists(fileloc & filename & ".xlsx")
             End Using
         Catch ex As Exception
             logError(ex, True)
             MessageBox.Show("ERROR. Terjadi kesalahan saat melakukan export" & vbCrLf & ex.Message, "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            _retsuc = False
+            Return False
         End Try
-
-        Return _retsuc
     End Function
 
     'UPDATE EXPORT DATE/BY
@@ -333,10 +345,11 @@ Public Class fr_export_efaktur
             x.DoLoadDialog()
             _ret = x.ReturnId
 
+            Me.Cursor = Cursors.WaitCursor
             If Not String.IsNullOrWhiteSpace(_ret) Then
-                LoadHeader(_ret)
-                LoadDataGrid(_ret)
+                LoadHeader(_ret) : LoadDataGrid(_ret)
             End If
+            Me.Cursor = Cursors.Default
         End Using
     End Sub
 
@@ -345,11 +358,12 @@ Public Class fr_export_efaktur
             Dim _ret As String = ""
             x.DoLoadDialog()
             _ret = x.ReturnId
-
+            Me.Cursor = Cursors.WaitCursor
             If Not String.IsNullOrWhiteSpace(_ret) Then
                 LoadHeader(_ret)
                 LoadDataGrid(_ret)
             End If
+            Me.Cursor = Cursors.Default
         End Using
     End Sub
 
@@ -417,13 +431,14 @@ Public Class fr_export_efaktur
 
         Dim KodePajak As String = ""
         Dim TicketQty As Integer = 0
-
+        Me.Cursor = Cursors.WaitCursor
         Using x = New fr_urutnofaktur
             x.DoLoadDialog(in_id.Text)
             If x.ReturnValue Then
                 LoadDataGrid(in_id.Text, in_page.Text)
             End If
         End Using
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub bt_kosongnopajak_Click(sender As Object, e As EventArgs)
@@ -519,60 +534,20 @@ Public Class fr_export_efaktur
 
     'UI : DGV CHECKBOX
     Private Sub dgv_faktur_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_faktur.CellValueChanged
-        If e.ColumnIndex = 0 And e.RowIndex <> -1 Then
+        If e.ColumnIndex = 0 And e.RowIndex > -1 Then
             If MainConnection.Connection Is Nothing Then
                 Throw New NullReferenceException("Main Connection is empty")
             End If
 
             Dim _state As Boolean = IIf(dgv_faktur.Rows(e.RowIndex).Cells(0).Value = 1, True, False)
 
-            'If _state Then
             Dim q As String = "UPDATE data_penjualan_efak_list SET e_list_selectstate='{1}' WHERE e_list_kodefaktur='{2}' AND e_list_templateid='{0}'"
             q = String.Format(q, in_id.Text, dgv_faktur.Rows(e.RowIndex).Cells(0).Value, dgv_faktur.Rows(e.RowIndex).Cells(1).Value)
 
             Using x = MainConnection
                 x.Open()
-                If x.ConnectionState = ConnectionState.Open Then
-                    x.ExecCommand(q)
-                End If
+                If x.ConnectionState = ConnectionState.Open Then x.ExecCommand(q)
             End Using
-            'End If
-            '    Dim q As String = ""
-            '    Dim qck As Boolean = False
-            '    Dim _kode As String = dgv_faktur.Rows(e.RowIndex).Cells(1).Value
-            '    Dim _value As Integer = 0
-
-            '    If _state Then
-            '        Dim _tglpajak As String = CDate(dgv_faktur.Rows(e.RowIndex).Cells(3).Value).ToString("yyyy-MM-dd")
-            '        Dim _kodepajak As String = dgv_faktur.Rows(e.RowIndex).Cells(4).Value
-            '        Dim _data() As String = {
-            '            "'" & _kode & "'",
-            '            "'" & _tglpajak & "'",
-            '            "'" & _kodepajak & "'",
-            '            "'" & loggeduser.user_id & "'"
-            '            }
-            '        q = "INSERT INTO temp_export_efak(efak_faktur, efak_tanggal, efak_nopajak, efak_user) " _
-            '            & "VALUE({0}) ON DUPLICATE KEY UPDATE efak_status=1"
-            '        q = String.Format(q, String.Join(",", _data))
-            '    Else
-            '        q = "UPDATE temp_export_efak SET efak_status=0 WHERE efak_faktur='{0}' AND efak_user='{1}'"
-            '        q = String.Format(q, _kode, loggeduser.user_id)
-            '    End If
-
-            '    Using x = MainConnection
-            '        x.Open()
-            '        If x.ConnectionState = ConnectionState.Open Then
-            '            Dim i = x.ExecCommand(q)
-            '            If i >= 0 Then
-            '                qck = True
-            '            End If
-
-            '            If Not qck Then
-            '                MessageBox.Show("Terjadi kesalahan")
-            '                dgv_faktur.Rows(e.RowIndex).Cells(0).Value = IIf(_state = 1, 0, 1)
-            '            End If
-            '        End If
-            '    End Using
         End If
     End Sub
 
@@ -586,8 +561,9 @@ Public Class fr_export_efaktur
         If e.RowIndex <> -1 Then
             Dim _kode As String = dgv_faktur.Rows(e.RowIndex).Cells(1).Value
             Dim _view As New fr_jual_detail
-
+            Me.Cursor = Cursors.WaitCursor
             _view.doLoadView(_kode)
+            Me.Cursor = Cursors.Default
         End If
     End Sub
 
@@ -606,8 +582,9 @@ Public Class fr_export_efaktur
         If dgv_faktur.SelectedRows.Count > 0 Then
             Dim _kode As String = dgv_faktur.SelectedRows.Item(0).Cells(1).Value
             Dim _view As New fr_jual_detail
-
+            Me.Cursor = Cursors.WaitCursor
             _view.doLoadView(_kode)
+            Me.Cursor = Cursors.Default
         End If
     End Sub
 
@@ -633,7 +610,7 @@ Public Class fr_export_efaktur
                     x.ExecCommand(q)
                     LoadDataGrid(in_id.Text)
                     dgv_faktur.ClearSelection()
-                    dgv_faktur.Rows(idx).Selected = True
+                    dgv_faktur.Rows(idx - 1).Selected = True
                 Catch ex As Exception
                     logError(ex, True)
                     MessageBox.Show("Terjadi kesalahan saat melakukan proses penghapusan data." & Environment.NewLine & ex.Message,

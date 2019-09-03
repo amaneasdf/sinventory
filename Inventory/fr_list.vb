@@ -81,19 +81,18 @@
 
     'PERFORM REFRESH DATALIST - TODO SIMPLIFIED IT
     Public Sub PerformRefresh()
-        Me.Cursor = Cursors.WaitCursor
         If date_sw Then setDatePicker()
         If search_sw Then : in_cari.Clear() : SearchParam = String.Empty : End If
 
+        'DISABLE ALL INPUT
         If date_sw Then
             LoadDataGrid("", 1, date_tglawal.Value, date_tglakhir.Value)
         Else
             LoadDataGrid("", 1)
         End If
+        'ENABLE ALL INPUT
 
         ControlSet() : setMenuSw()
-EndSub:
-        Me.Cursor = Cursors.Default
     End Sub
 
     'SET CONTROL/MENU SWITCH
@@ -111,9 +110,12 @@ EndSub:
         ElseIf _datatrans.Contains(tabpagename.Name) Then
             add_sw = IIf(selectperiode.closed = True, False, True)
             cancel_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
+            export_sw = True
             print_sw = IIf({"pghutangbayar", "pgpiutangbayar"}.Contains(tabpagename.Name), False, True)
-            If tabpagename.Name = "pgpesanjual" Then valid_sw = IIf(selectperiode.closed = False, loggeduser.validasi_trans, False)
-
+            If tabpagename.Name = "pgpesanjual" Then
+                valid_sw = IIf(Not selectperiode.closed, loggeduser.validasi_trans, False)
+                delete_sw = IIf(Not selectperiode.closed, loggeduser.validasi_trans, False)
+            End If
             mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
         ElseIf _datahpawal.Contains(tabpagename.Name) Then
@@ -126,7 +128,7 @@ EndSub:
 
             add_sw = False
             bayar_sw = IIf(selectperiode.closed, False, main.listkodemenu.Contains(_kdMn))
-            cancel_sw = IIf(selectperiode.closed = True, False, True)
+            'cancel_sw = IIf(selectperiode.closed = True, False, True)
             mn_edit.Text = "Tampilkan Detail"
 
         ElseIf _datagiro.Contains(tabpagename.Name) Then
@@ -211,7 +213,7 @@ EndSub:
     End Sub
 
     'LOAD DATALIST
-    Private Sub LoadDataGrid(Param As String, Page As Integer, Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing)
+    Private Async Sub LoadDataGrid(Param As String, Page As Integer, Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing)
         Dim dt As New DataTable
         Dim _typedata As String = ""
         Dim _limitdata As Integer = 2000
@@ -221,7 +223,6 @@ EndSub:
         Dim _enddate As Date = IIf(EndDate = #12:00:00 AM#, selectperiode.tglakhir, EndDate)
 
         setDoubleBuffered(Me.dgv_list, True)
-
         Select Case tabpagename.Name.ToString
             Case "pgsupplier" : _typedata = "supplier"
             Case "pgbarang" : _typedata = "barang"
@@ -246,23 +247,59 @@ EndSub:
             Case "pgpiutangbgcair" : _typedata = "bgi"
             Case "pgkas" : _typedata = "kas"
             Case "pgjurnalumum" : _typedata = "jurnalumum" : _limitdata = 250
-            Case "pgtutupbuku" : Exit Sub
+            Case "pgjurnalsesuai" : _typedata = "jurnalsesuai" : _limitdata = 250
+            Case "pgtutupbuku" : _typedata = "closing"
             Case "pggroup" : _typedata = "group"
             Case "pguser" : _typedata = "user"
             Case Else : Exit Sub
         End Select
 
-        dgv_list.DataSource = GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate)
-        DataCount = GetDataCount(_typedata, Param, _startdate, _enddate)
-        MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
-        SelectedPageData = Page
-        in_page.Text = SelectedPageData
-        PageInfo = String.Format(PageInfo,
-                                 If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
-                                 dgv_list.RowCount + (_limitdata * Page) - _limitdata,
-                                 DataCount
-                                 )
-        lbl_pageinfo.Text = PageInfo
+        'GETTING DATA FROM DATA BASE (ASYNC/BACKGROUND THREAD)
+        Dim done As Boolean = False
+        Dim _switchCtrl() As Control = {bt_search, bt_cl, date_tglakhir, date_tglawal, bt_page_first, bt_page_last, bt_page_next, bt_page_prev}
+        Try
+            Me.Cursor = Cursors.WaitCursor : dgv_list.Cursor = Cursors.WaitCursor
+            For Each ctr As Control In _switchCtrl : ctr.Enabled = False : Next
+            mnstrip_main.Enabled = False
+
+            dgv_list.DataSource = New DataTable
+            lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0) & " - LOADING . . ."
+
+            Dim _datalist = Await Task.Run(Function() GetDataLIstForListTemplate(_typedata, Param, Page, _limitdata, _startdate, _enddate))
+            Dim _datacount = Await Task.Run(Function() GetDataCount(_typedata, Param, _startdate, _enddate))
+
+            If _datalist.Key = True And _datacount.Key = True Then
+                dgv_list.DataSource = _datalist.Value
+                DataCount = _datacount.Value
+
+                MaxPageData = CInt(Math.Ceiling(DataCount / _limitdata))
+                SelectedPageData = Page
+                PageInfo = String.Format(PageInfo,
+                                         If(dgv_list.RowCount > 0, 1, 0) + (_limitdata * Page) - _limitdata,
+                                         dgv_list.RowCount + (_limitdata * Page) - _limitdata,
+                                         DataCount
+                                         )
+                lbl_pageinfo.Text = PageInfo
+            Else
+                MaxPageData = 1
+                SelectedPageData = 1
+                lbl_pageinfo.Text = String.Format(PageInfo, 0, 0, 0)
+            End If
+
+            in_page.Text = SelectedPageData
+            done = True
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("Terjadi kesalahan saat pengambilan data " & Environment.NewLine & ex.Message,
+                            lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            done = True
+        Finally
+            If done Then
+                Me.Cursor = Cursors.Default : dgv_list.Cursor = Cursors.Default
+                For Each ctr As Control In _switchCtrl : ctr.Enabled = True : Next
+                mnstrip_main.Enabled = True
+            End If
+        End Try
     End Sub
 
     Private Sub addItem()
@@ -437,7 +474,9 @@ EndSub:
                             detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_akun)
                         End If
 
-                        'Case "pgtutupbuku"
+                    Case "pgtutupbuku"
+                        Dim detail As New fr_closing
+                        detail.DoLoadDialog(dgv_list.SelectedRows.Item(0).Cells(0).Value)
 
                         'Case "pgadjstock"
 
@@ -642,156 +681,403 @@ EndSub:
         End If
     End Sub
 
-    Private Sub exportItem()
+    Private Sub exportItem(ParamString As String)
         If export_sw = True Then
-            If dgv_list.RowCount > 0 Then
-                'DEV : THE ONE THAT THE CODE IS ALREADY DONE
-                Dim avaliableData() As String = {"pggudang", "pgbarang", "pgsales", "pgcusto", "pgsupplier"}
-                If Not avaliableData.Contains(tabpagename.Name.ToString) Then Exit Sub
+            Dim _q As String = ""
+            Dim _qwh, _qorder, _qjoin As String
 
-                'EXPORT PROCEDURE
-                If MainConnection.Connection Is Nothing Then
-                    Throw New NullReferenceException("Main DB Connection is empty")
-                End If
+            If Not String.IsNullOrWhiteSpace(ParamString) Then
+                ParamString = mysqlQueryFriendlyStringFeed(ParamString)
+                ParamString = Trim(ParamString).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+            End If
 
-                Dim _tabpage As String = LCase(tabpagename.Name.ToString)
-                Dim q As String = ""
-                Dim _columnHeader As New List(Of String)
-                Dim _dtList As New List(Of DataTable)
-                Dim _dataTitle As New List(Of String)
-                Dim _fileDir As String = ""
-                Dim _fileExt As String = "xlsx"
-
-                Using SaveDialog As New SaveFileDialog
-                    SaveDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
-                    SaveDialog.FilterIndex = 1
-                    SaveDialog.RestoreDirectory = True
-                    SaveDialog.AddExtension = True
-                    If SaveDialog.ShowDialog = DialogResult.OK Then
-                        _fileDir = SaveDialog.FileName
-                        If SaveDialog.FilterIndex = 1 Then
-                            _fileExt = "xlsx"
-                        Else
-                            _fileExt = ""
-                        End If
-                    Else
-                        Exit Sub
+            Select Case tabpagename.Name
+                Case "pgbarang"
+                    _q = "SELECT barang_kode, barang_nama, barang_supplier, GetMasterNama('supplier',barang_supplier), jenis_nama, kategori_nama, " _
+                        & "pajak.ref_text, barang_satuan_besar, barang_satuan_besar_jumlah, barang_satuan_tengah, barang_satuan_tengah_jumlah, " _
+                        & "barang_satuan_kecil, barang_harga_beli, barang_harga_jual, barang_harga_jual_mt, barang_harga_jual_horeka, barang_harga_jual_rita, " _
+                        & "state.ref_text FROM data_barang_master"
+                    _qjoin = " LEFT JOIN data_barang_jenis ON jenis_kode=barang_jenis " _
+                            & "LEFT JOIN ref_barang_kategori ON kategori_kode=IFNULL(IF(barang_kategori='',NULL,barang_kategori),'000') " _
+                            & "LEFT JOIN ref_jenis state ON state.ref_kode=barang_status AND state.ref_status=1 AND state.ref_type='status_master' " _
+                            & "LEFT JOIN ref_jenis pajak ON pajak.ref_kode=barang_pajak AND pajak.ref_status=1 AND pajak.ref_type='barang_pajak'"
+                    _qorder = " ORDER BY barang_kode"
+                    _qwh = " WHERE barang_status IN (0,1)"
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh += String.Join("'" & ParamString & "'", {" AND(barang_kode REGEXP ", " OR barang_nama REGEXP ",
+                                                                      " OR jenis_nama REGEXP ", " OR kategori_nama REGEXP ",
+                                                                      " OR barang_supplier REGEXP ", " OR GetMasterNama('supplier',barang_supplier) REGEXP ",
+                                                                      " OR state.ref_text REGEXP ", " OR pajak.ref_text REGEXP ", ")"})
                     End If
-                End Using
 
-                MyBase.Cursor = Cursors.WaitCursor
-                Using x = MainConnection
-                    x.Open()
-                    If x.ConnectionState = ConnectionState.Open Then
-                        Dim _dtCount As Integer = 1
-                        Dim _qCount As String = ""
-                        Dim _qGetData As String = ""
-
-                        Select Case _tabpage
-                            Case "pggudang"
-                                _qCount = "SELECT COUNT(gudang_kode) FROM data_barang_gudang WHERE gudang_status IN (0,1)"
-                                _qGetData = "SELECT gudang_kode, gudang_nama, gudang_alamat, gudang_ket, state.ref_text " _
-                                    & "FROM data_barang_gudang " _
-                                    & "LEFT JOIN ref_jenis state ON state.ref_kode=gudang_status AND state.ref_status=1 AND state.ref_type='status_master' " _
-                                    & "WHERE gudang_status IN (0,1) LIMIT {0},2000"
-                                _columnHeader.AddRange({"Kode", "Nama Gudang", "Keterangan", "Status"})
-                                _dataTitle.AddRange({"List Gudang"})
-                            Case "pgbarang"
-                                _qCount = "SELECT COUNT(barang_kode) FROM data_barang_master WHERE barang_status IN (0,1)"
-                                _qGetData = "SELECT barang_kode, barang_nama, barang_supplier, GetMasterNama('supplier',barang_supplier), jenis_nama, kategori_nama, " _
-                                    & "pajak.ref_text, state.ref_text, barang_satuan_kecil, barang_satuan_tengah, barang_satuan_tengah_jumlah, barang_satuan_besar, " _
-                                    & "barang_satuan_besar_jumlah, barang_harga_beli, barang_harga_beli_d1, barang_harga_beli_d2, barang_harga_beli_d3, " _
-                                    & "barang_harga_jual_horeka, barang_harga_jual_rita, barang_harga_jual_d1, barang_harga_jual_d2, barang_harga_jual_d3, " _
-                                    & "barang_harga_jual, barang_harga_jual_mt, barang_harga_jual_d4, barang_harga_jual_d5, barang_harga_jual_discount " _
-                                    & "FROM data_barang_master " _
-                                    & "LEFT JOIN data_barang_jenis ON jenis_kode=barang_jenis " _
-                                    & "LEFT JOIN ref_barang_kategori ON kategori_kode=barang_kategori " _
-                                    & "LEFT JOIN ref_jenis state ON state.ref_kode=barang_status AND state.ref_status=1 AND state.ref_type='status_master' " _
-                                    & "LEFT JOIN ref_jenis pajak ON pajak.ref_kode=barang_pajak AND pajak.ref_status=1 AND pajak.ref_type='barang_pajak' " _
-                                    & "WHERE barang_status IN (0,1) LIMIT {0},2000"
-                                _columnHeader.AddRange({"Kode", "Nama Barang", "Kode Supplier", "Nama Supplier", "Jenis", "Kategori", "Pajak", "Status", "Satuan Kecil",
-                                                        "Satuan Tengah", "Isi Tengah", "Satuan Besar", "Isi Besar", "Harga Beli", "Beli Disc1", "Beli Disc2", "Beli Disc3",
-                                                        "Harga Jual", "Harga Jual MT", "Harga Jual Horeka", "Harga Jual Rita", "Jual Disc1", "Jual Disc2", "Jual Disc3",
-                                                        "Jual Disc4", "Jual Disc5", "Jual Disc Rp."})
-                                _dataTitle.AddRange({"List Barang"})
-                            Case "pgsales"
-                                _qCount = "SELECT COUNT(salesman_kode) FROM data_salesman_master WHERE salesman_status IN (0,1)"
-                                _qGetData = "SELECT salesman_kode, salesman_nama, jenis.ref_text salesman_jenis, state.ref_text salesman_status, salesman_alamat, " _
-                                    & "salesman_nik, salesman_hp, salesman_fax, salesman_tanggal_masuk, salesman_lahir_tanggal, salesman_lahir_kota, salesman_target, " _
-                                    & "CONCAT_WS('-', salesman_bank_rekening, salesman_bank_nama) salesman_rek, salesman_bank_atasnama " _
-                                    & "FROM data_salesman_master " _
-                                    & "LEFT JOIN ref_jenis jenis ON jenis.ref_kode=salesman_jenis AND jenis.ref_status=1 AND jenis.ref_type='sales_jenis' " _
-                                    & "LEFT JOIN ref_jenis state ON state.ref_kode=salesman_status AND state.ref_status=1 AND state.ref_type='status_master' " _
-                                    & "WHERE salesman_status IN (0,1) LIMIT {0},2000"
-                                _columnHeader.AddRange({"Kode", "Nama Salesman", "Jenis", "Status", "Alamat", "NIK", "No.Telp", "No.Fax", "Tgl.Masuk", "Tgl.Lahir",
-                                                        "Kota Lahir", "Target", "No.Rekening", "A.N. Rekening"})
-                                _dataTitle.AddRange({"List Salesman"})
-                            Case "pgsupplier"
-                                _qCount = "SELECT COUNT(supplier_kode) FROM data_supplier_master WHERE supplier_status IN (0,1)"
-                                _qGetData = "SELECT supplier_kode, supplier_nama, supplier_alamat, supplier_telpon1, supplier_telpon2, supplier_fax, " _
-                                    & "supplier_email, supplier_cp, supplier_npwp, state.ref_text " _
-                                    & "FROM data_supplier_master " _
-                                    & "LEFT JOIN ref_jenis state ON state.ref_kode=supplier_status AND state.ref_status=1 AND state.ref_type='status_master' " _
-                                    & "WHERE supplier_status IN (0,1) LIMIT {0},2000"
-                                _columnHeader.AddRange({"Kode", "Nama Supplier", "Alamat", "No.Telp1", "No.Telp2", "No.Fax", "Email", "Contact Person", "NPWP", "Status"})
-                                _dataTitle.AddRange({"List Supplier"})
-
-                            Case "pgcusto"
-                                _qCount = "SELECT COUNT(customer_kode) FROM data_customer_master WHERE customer_status IN (0,1)"
-                                _qGetData = "SELECT customer_kode, customer_nama, CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)), " _
-                                    & "customer_telpon, customer_fax, customer_cp, " _
-                                    & "TRIM(BOTH ' Blok  No.000 RT. 000 RW. 000' FROM (CONCAT(REPLACE(REPLACE(customer_alamat,CHAR(13),' '),CHAR(10),' '), " _
-                                    & " ' Blok ',IFNULL(customer_alamat_blok,'0'), " _
-                                    & " ' No.',LPAD(customer_alamat_nomor,3,0), " _
-                                    & " ' RT. ',LPAD(customer_alamat_rt,3,0), " _
-                                    & " ' RW. ',LPAD(customer_alamat_rw,3,0)))) customer_alamat, customer_kecamatan, customer_kabupaten, customer_pasar, " _
-                                    & "customer_provinsi, customer_kodepos, customer_nik, customer_npwp, customer_pajak_nama, customer_pajak_jabatan, " _
-                                    & "customer_pajak_alamat, state.ref_text " _
-                                    & "FROM data_customer_master " _
-                                    & "LEFT JOIN data_customer_jenis ON customer_jenis=jenis_kode " _
-                                    & "LEFT JOIN ref_jenis state ON state.ref_kode=customer_status AND state.ref_status=1 AND state.ref_type='status_master' " _
-                                    & "WHERE customer_status IN (0,1) LIMIT {0},2000"
-                                _columnHeader.AddRange({"Kode", "Nama Customer", "Jenis", "No.Telepon", "No.Fax", "Contact Person", "Alamat Customer", "Kecamatan",
-                                                        "Kabupaten", "Pasar", "Provinsi", "Kode Pos", "NIK", "NPWP", "Nama NPWP", "Jabatan", "Alamat", "Status"})
-                                _dataTitle.AddRange({"List Customer"})
-
-                                'Case "pgpembelian"
-                                '    _qCount = "SELECT faktur_kode, jenis.ref_text, faktur_tanggal_trans, faktur_pajak_no, faktur_pajak_tanggal, faktur_surat_jalan"
-                            Case Else
-                                Exit Sub
-                        End Select
-
-                        Using rdx = x.ReadCommand(_qCount, CommandBehavior.SingleRow)
-                            Dim red = rdx.Read
-                            If red And rdx.HasRows Then
-                                _dtCount = IIf(rdx.Item(0) <= 2000, 1, Math.Ceiling(rdx.Item(0) / 2000))
-                            End If
-                        End Using
-
-                        For i = 1 To _dtCount
-                            Using dtx = x.GetDataTable(String.Format(_qGetData, (i * 2000) - 2000))
-                                dtx.TableName = "export_" & i
-                                _dtList.Add(dtx)
-                            End Using
-                        Next
-
-                        Dim _fileLoc As String = _fileDir
-                        If ExportExcel(_columnHeader, _dtList, _dataTitle, _fileDir, _fileExt, _fileLoc) Then
-                            If System.IO.File.Exists(_fileLoc) = True Then
-                                MessageBox.Show("Export Data Sukses", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
-                                Process.Start(_fileLoc)
-                            End If
-                        Else
-                            MessageBox.Show("Export Tidak Berhasil", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                        End If
-                    Else
-                        MessageBox.Show("Export data gagal. Tidak dapat terhubung ke database.", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Case "pgsupplier"
+                    _q = "SELECT supplier_kode, supplier_nama, supplier_alamat, supplier_telpon1, supplier_telpon2, supplier_fax, supplier_email, supplier_cp, " _
+                        & "supplier_npwp, state.ref_text FROM data_supplier_master"
+                    _qjoin = " LEFT JOIN ref_jenis state ON state.ref_kode=supplier_status AND state.ref_status=1 AND state.ref_type='status_master'"
+                    _qorder = " ORDER BY supplier_kode"
+                    _qwh = " WHERE supplier_status IN (0,1)"
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh += String.Join("'" & ParamString & "'", {" AND(supplier_kode REGEXP ", " OR supplier_nama REGEXP ",
+                                                                      " OR supplier_alamat REGEXP ", " OR supplier_cp REGEXP ",
+                                                                      " OR state.ref_text REGEXP ", ")"})
                     End If
-                End Using
-                MyBase.Cursor = Cursors.Default
 
+                Case "pggudang"
+                    _q = "SELECT gudang_kode, gudang_nama, gudang_alamat, gudang_ket, state.ref_text FROM data_barang_gudang"
+                    _qjoin = " LEFT JOIN ref_jenis state ON state.ref_kode=gudang_status AND state.ref_status=1 AND state.ref_type='status_master'"
+                    _qorder = " ORDER BY gudang_kode"
+                    _qwh = " WHERE gudang_status IN (0,1)"
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh += String.Join("'" & ParamString & "'", {" AND(gudang_kode REGEXP ", " OR gudang_nama REGEXP ",
+                                                                      " OR gudang_alamat REGEXP "," OR state.ref_text REGEXP ", ")"})
+                    End If
+
+                Case "pgsales"
+                    _q = "SELECT salesman_kode, salesman_nama, jenis.ref_text, salesman_alamat, salesman_hp, salesman_fax, salesman_email, salesman_nik, " _
+                        & "CONCAT_WS('-', salesman_bank_rekening, salesman_bank_nama) salesman_rek, salesman_bank_atasnama, state.ref_text " _
+                        & "FROM data_salesman_master"
+                    _qjoin = " LEFT JOIN ref_jenis jenis ON jenis.ref_kode=salesman_jenis AND jenis.ref_status=1 AND jenis.ref_type='sales_jenis' " _
+                            & "LEFT JOIN ref_jenis state ON state.ref_kode=salesman_status AND state.ref_status=1 AND state.ref_type='status_master'"
+                    _qorder = " ORDER BY salesman_kode"
+                    _qwh = " WHERE salesman_status IN (0,1)"
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh += String.Join("'" & ParamString & "'", {" AND(salesman_kode REGEXP ", " OR salesman_nama REGEXP ", " OR salesman_alamat REGEXP ",
+                                                                      " OR state.ref_text REGEXP ", " OR jenis.ref_text REGEXP ", ")"})
+                    End If
+
+                Case "pgcusto"
+                    _q = "SELECT customer_kode, customer_nama, CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)), " _
+                        & "TRIM(BOTH ' Blok  No.000 RT.000/000' FROM (CONCAT(REPLACE(REPLACE(customer_alamat,CHAR(13),' '),CHAR(10),' '), " _
+                        & " ' Blok ',IFNULL(customer_alamat_blok,''), ' No.',LPAD(customer_alamat_nomor,3,0), " _
+                        & " ' RT.',LPAD(customer_alamat_rt,3,0), '/',LPAD(customer_alamat_rw,3,0)))) customer_alamat, " _
+                        & "customer_kecamatan, customer_kabupaten, customer_pasar, customer_provinsi, customer_kodepos, customer_telpon, customer_fax, customer_cp, " _
+                        & "customer_npwp, customer_pajak_nama, customer_pajak_jabatan, customer_pajak_alamat, state.ref_text " _
+                        & "FROM data_customer_master"
+                    _qjoin = " LEFT JOIN data_customer_jenis ON customer_jenis=jenis_kode " _
+                            & "LEFT JOIN ref_jenis state ON state.ref_kode=customer_status AND state.ref_status=1 AND state.ref_type='status_master'"
+                    _qorder = " ORDER BY customer_kode"
+                    _qwh = " WHERE customer_status IN (0,1)"
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh += String.Join("'" & ParamString & "'", {" AND(customer_kode REGEXP ", " OR customer_nama REGEXP ", " OR customer_alamat REGEXP ",
+                                                                      " OR customer_kecamatan REGEXP ", " OR customer_kabupaten REGEXP ", " OR customer_pasar REGEXP ",
+                                                                      " OR jenis_nama REGEXP ", " OR state.ref_text REGEXP ", ")"})
+                    End If
+
+                Case Else : Exit Sub
+            End Select
+            _q += _qjoin + _qwh + _qorder
+            exportToExcel(_q)
+        End If
+    End Sub
+
+    Private Sub exportItemTrans(ParamString As String)
+        If export_sw Then
+            Dim _q As String = ""
+            Dim _qwh, _qorder, _qjoin As String
+
+            If Not String.IsNullOrWhiteSpace(ParamString) Then
+                ParamString = mysqlQueryFriendlyStringFeed(ParamString)
+                ParamString = Trim(ParamString).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+            End If
+
+            Select Case tabpagename.Name
+                Case "pgpembelian"
+                    _q = "SELECT faktur_kode, faktur_tanggal_trans, faktur_supplier, GetMasterNama('supplier',faktur_supplier) faktur_supplier_n, " _
+                        & "faktur_gudang, GetMasterNama('gudang',faktur_gudang) faktur_gudang_n, faktur_term, ppn.ref_text jenispajak, " _
+                        & "trans_barang, GetMasterNama('barang',trans_barang) trans_barang_n, trans_harga_beli, trans_qty, trans_satuan, trans_satuan_type, " _
+                        & "@td:=ROUND(CountTotalDiskonJualItem(@hb:=trans_harga_beli*trans_qty, trans_disc_rupiah*trans_qty, " _
+                        & " trans_disc1, trans_disc2, trans_disc3, 0, 0),2) trans_disctot, ROUND(@hjb - @td,2) trans_netto, " _
+                        & "trans_disc1, trans_disc2, trans_disc3, trans_disc_rupiah, trans_state.ref_text " _
+                        & "FROM( " _
+                        & " SELECT faktur_kode, faktur_tanggal_trans, faktur_supplier, faktur_gudang, faktur_term, faktur_ppn_jenis, faktur_status " _
+                        & " FROM data_pembelian_faktur WHERE faktur_status IN (0,1,2) AND faktur_tanggal_trans BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'{2}" _
+                        & ") data_beli "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (faktur_kode REGEXP ", " OR DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y') REGEXP ",
+                                                                     " OR faktur_supplier REGEXP ", " OR GetMasterNama('supplier',faktur_supplier) REGEXP ",
+                                                                     " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                     " OR ppn.ref_text REGEXP ", " OR trans_state.ref_text REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY faktur_tanggal_trans, faktur_kode "
+                    _qjoin = " LEFT JOIN data_pembelian_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
+                            & "LEFT JOIN ref_jenis ppn ON faktur_ppn_jenis=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans' " _
+                            & "LEFT JOIN ref_jenis trans_state ON faktur_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh
+
+                Case "pgreturbeli"
+                    _q = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_supplier, GetMasterNama('supplier',faktur_supplier) faktur_supplier_n, " _
+                         & "faktur_gudang, GetMasterNama('gudang',faktur_gudang) faktur_gudang_n, " _
+                         & "ppn.ref_text jenispajak, bayar.ref_text jenisbayar, faktur_kode_faktur, faktur_kode_exfaktur, " _
+                         & "trans_barang, GetMasterNama('barang',trans_barang) trans_barang_n, " _
+                         & "trans_harga_retur, trans_qty, trans_satuan, trans_satuan_type, trans_diskon, " _
+                         & "@td:=ROUND((@hr:=trans_harga_retur*trans_qty)*(trans_diskon/100) ,2) trans_disctot, @hr-@td trans_subtot, trans_state.ref_text " _
+                         & "FROM( " _
+                         & " SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_supplier, faktur_gudang, faktur_kode_faktur, " _
+                         & "  faktur_kode_exfaktur, faktur_jen_bayar, faktur_ppn_jenis, faktur_status " _
+                         & " FROM data_pembelian_retur_faktur WHERE faktur_status IN (0,1,2) AND faktur_tanggal_trans BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'{2}" _
+                         & ") data_retur "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (faktur_kode_bukti REGEXP ",
+                                                                     " OR DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y') REGEXP ",
+                                                                     " OR faktur_supplier REGEXP ", " OR GetMasterNama('supplier',faktur_supplier) REGEXP ",
+                                                                     " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                     " OR ppn.ref_text REGEXP ", " OR trans_state.ref_text REGEXP ",
+                                                                     " OR bayar.ref_text REGEXP ", " OR faktur_kode_faktur REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY faktur_tanggal_trans, faktur_kode_bukti "
+                    _qjoin = " LEFT JOIN data_pembelian_retur_trans ON faktur_kode_bukti=trans_faktur AND trans_status=1 " _
+                            & "LEFT JOIN ref_jenis ppn ON faktur_ppn_jenis=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans' " _
+                            & "LEFT JOIN ref_jenis bayar ON faktur_jen_bayar=bayar.ref_kode AND bayar.ref_status=1 AND bayar.ref_type='bayar_retur' " _
+                            & "LEFT JOIN ref_jenis trans_state ON faktur_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh
+
+
+                Case "pgpenjualan"
+                    _q = "SELECT faktur_kode, faktur_tanggal_trans, faktur_sales, GetMasterNama('sales',faktur_sales) faktur_sales_n, " _
+                        & "faktur_customer, GetMasterNama('custo',faktur_customer) faktur_custo_n, " _
+                        & "faktur_gudang, GetMasterNama('gudang',faktur_gudang) faktur_gudang_n, faktur_term, ppn.ref_text jenispajak, " _
+                        & "trans_barang, GetMasterNama('barang',trans_barang) trans_barang_n, trans_harga_jual, trans_qty, trans_satuan, trans_satuan_type, " _
+                        & "@td:=ROUND(CountTotalDiskonJualItem(@hj:=trans_harga_jual*trans_qty, trans_disc_rupiah*trans_qty, " _
+                        & " trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5),2) trans_disctot, ROUND(@hj - @td,2) trans_netto, " _
+                        & "trans_disc1, trans_disc2, trans_disc3, trans_disc4, trans_disc5, trans_disc_rupiah, trans_state.ref_text " _
+                        & "FROM( " _
+                        & " SELECT faktur_kode, faktur_tanggal_trans, faktur_sales, faktur_customer, faktur_gudang, faktur_term, faktur_ppn_jenis, faktur_status " _
+                        & " FROM data_penjualan_faktur WHERE faktur_tanggal_trans BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}' AND faktur_status<9{2}" _
+                        & ") data_jual "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (faktur_kode REGEXP ", " OR DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y') REGEXP ",
+                                                                     " OR faktur_customer REGEXP ", " OR GetMasterNama('custo',faktur_customer) REGEXP ",
+                                                                     " OR faktur_sales REGEXP ", " OR GetMasterNama('sales',faktur_sales) REGEXP ",
+                                                                     " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                     " OR ppn.ref_text REGEXP ", " OR trans_state.ref_text REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY faktur_tanggal_trans, faktur_kode "
+                    _qjoin = " LEFT JOIN data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
+                            & "LEFT JOIN ref_jenis ppn ON faktur_ppn_jenis=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans' " _
+                            & "LEFT JOIN ref_jenis trans_state ON faktur_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh
+
+                Case "pgreturjual"
+                    _q = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_sales, GetMasterNama('sales',faktur_sales) faktur_sales_n, " _
+                        & "faktur_custo, GetMasterNama('custo',faktur_custo) faktur_custo_n, " _
+                        & "faktur_gudang, GetMasterNama('gudang',faktur_gudang) faktur_gudang_n, " _
+                        & "ppn.ref_text jenispajak, bayar.ref_text jenisbayar, faktur_kode_faktur, faktur_kode_exfaktur, " _
+                        & "trans_barang, GetMasterNama('barang',trans_barang) trans_barang_n, " _
+                        & "trans_harga_retur, trans_qty, trans_satuan, trans_satuan_type, trans_diskon, " _
+                        & "@td:=ROUND((@hr:=trans_harga_retur*trans_qty)*(trans_diskon/100) ,2) trans_disctot, @hr-@td trans_subtot, trans_state.ref_text " _
+                        & "FROM( " _
+                        & " SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_sales, faktur_custo, faktur_gudang, faktur_kode_faktur, " _
+                        & "  faktur_kode_exfaktur, faktur_jen_bayar, faktur_ppn_jenis, faktur_status " _
+                        & " FROM data_penjualan_retur_faktur WHERE faktur_status IN (0,1,2) AND faktur_tanggal_trans BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}'{2}" _
+                        & ") data_retur "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (faktur_kode_bukti REGEXP ",
+                                                                     " OR DATE_FORMAT(faktur_tanggal_trans,'%d/%m/%Y') REGEXP ",
+                                                                     " OR faktur_custo REGEXP ", " OR GetMasterNama('custo',faktur_custo) REGEXP ",
+                                                                     " OR faktur_sales REGEXP ", " OR GetMasterNama('sales',faktur_sales) REGEXP ",
+                                                                     " OR faktur_gudang REGEXP ", " OR GetMasterNama('gudang',faktur_gudang) REGEXP ",
+                                                                     " OR ppn.ref_text REGEXP ", " OR trans_state.ref_text REGEXP ",
+                                                                     " OR bayar.ref_text REGEXP ", " OR faktur_kode_faktur REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY faktur_tanggal_trans, faktur_kode_bukti "
+                    _qjoin = " LEFT JOIN data_penjualan_retur_trans ON faktur_kode_bukti=trans_faktur AND trans_status=1 " _
+                            & "LEFT JOIN ref_jenis ppn ON faktur_ppn_jenis=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans' " _
+                            & "LEFT JOIN ref_jenis bayar ON faktur_jen_bayar=bayar.ref_kode AND bayar.ref_status=1 AND bayar.ref_type='bayar_retur' " _
+                            & "LEFT JOIN ref_jenis trans_state ON faktur_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh
+
+                Case "pghutangbayar"
+                    _q = "SELECT h_bayar_bukti, h_bayar_tgl_bayar, h_bayar_supplier, GetMasterNama('supplier',h_bayar_supplier) h_bayar_supplier_n, " _
+                        & "IFNULL(ppn.ref_text,'ERROR') jenispajak, h_bayar_jenis_bayar, h_bayar_akun, perk_nama_akun, h_bayar_giro_no, " _
+                        & "IF(IFNULL(h_bayar_giro_no,'')='', NULL, h_bayar_tgl_jt) h_bayar_giro_tgl, h_trans_faktur, h_trans_sisa, h_trans_nilaibayar, " _
+                        & "IFNULL(trans_state.ref_text,'ERROR') status " _
+                        & "FROM( " _
+                        & " SELECT h_bayar_bukti, h_bayar_tgl_bayar, h_bayar_supplier, h_bayar_pajak, h_bayar_jenis_bayar, " _
+                        & "  h_bayar_akun, h_bayar_giro_no, h_bayar_tgl_jt, h_bayar_status " _
+                        & " FROM data_hutang_bayar WHERE h_bayar_status IN (0,1,2) AND h_bayar_tgl_bayar BETWEEN '{0:yyyy-MM-dd}' AND '{1:yyyy-MM-dd}' " _
+                        & ") data_bayar "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (h_bayar_bukti REGEXP ",
+                                                                     " OR DATE_FORMAT(h_bayar_tgl_bayar,'%d/%m/%Y') REGEXP ",
+                                                                     " OR h_bayar_supplier REGEXP ", " OR GetMasterNama('supplier',h_bayar_supplier) REGEXP ",
+                                                                     " OR h_bayar_jenis_bayar REGEXP ", " OR ppn.ref_text REGEXP ",
+                                                                     " OR trans_state.ref_text REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY h_bayar_tgl_bayar, h_bayar_bukti"
+                    _qjoin = " LEFT JOIN data_hutang_bayar_trans ON h_bayar_bukti=h_trans_bukti AND h_trans_status=1 " _
+                            & "LEFT JOIN data_perkiraan ON perk_kode=h_bayar_akun " _
+                            & "LEFT JOIN ref_jenis ppn ON h_bayar_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                            & "LEFT JOIN ref_jenis trans_state ON h_bayar_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh + _qorder
+
+                Case "pgpiutangbayar"
+                    _q = "SELECT p_bayar_bukti, p_bayar_tanggal_bayar, p_bayar_sales, GetMasterNama('sales',p_bayar_sales) p_bayar_sales_n, " _
+                        & "p_bayar_custo, GetMasterNama('custo',p_bayar_custo) p_bayar_custo_n, IFNULL(ppn.ref_text,'ERROR') jenispajak, p_bayar_jenisbayar, " _
+                        & "p_bayar_akun, perk_nama_akun, p_bayar_giro_no, p_bayar_giro_bank, " _
+                        & "IF(IFNULL(p_bayar_giro_no,'')='', NULL, p_bayar_tanggal_jt) p_bayar_giro_tgl, " _
+                        & "p_trans_kode_piutang, p_trans_sisa, p_trans_nilaibayar, IFNULL(trans_state.ref_text,'ERROR') status " _
+                        & "FROM( " _
+                        & " SELECT p_bayar_bukti, p_bayar_tanggal_bayar, p_bayar_sales, p_bayar_custo, p_bayar_pajak, p_bayar_jenisbayar, p_bayar_akun, " _
+                        & "  p_bayar_giro_no, p_bayar_giro_bank, p_bayar_tanggal_jt, p_bayar_status " _
+                        & " FROM data_piutang_bayar WHERE p_bayar_status IN (0,1,2) AND p_bayar_tanggal_bayar BETWEEN '{0:yyyy-MM_dd}' AND '{1:yyyy-MM-dd}' " _
+                        & ") data_bayar "
+                    If Not String.IsNullOrWhiteSpace(ParamString) Then
+                        _qwh = String.Join("'" & ParamString & "'", {"WHERE (p_bayar_bukti REGEXP ",
+                                                                     " OR DATE_FORMAT(p_bayar_tanggal_bayar,'%d/%m/%Y') REGEXP ",
+                                                                     " OR p_bayar_sales REGEXP ", " OR GetMasterNama('sales',p_bayar_sales) REGEXP ",
+                                                                     " OR p_bayar_custo REGEXP ", " OR GetMasterNama('custo',p_bayar_custo) REGEXP ",
+                                                                     " OR p_bayar_jenisbayar REGEXP ", " OR ppn.ref_text REGEXP ",
+                                                                     " OR trans_state.ref_text REGEXP ", ")"})
+                    Else
+                        _qwh = ""
+                    End If
+                    _qorder = " ORDER BY p_bayar_tanggal_bayar, p_bayar_bukti"
+                    _qjoin = " LEFT JOIN data_piutang_bayar_trans ON p_bayar_bukti=p_trans_bukti AND p_trans_status=1 " _
+                            & "LEFT JOIN data_perkiraan ON perk_kode=p_bayar_akun " _
+                            & "LEFT JOIN ref_jenis ppn ON p_bayar_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
+                            & "LEFT JOIN ref_jenis trans_state ON p_bayar_status=trans_state.ref_kode AND trans_state.ref_status=1 AND trans_state.ref_type='status_trans'"
+                    _q = String.Format(_q, SelectedDate1, SelectedDate2, _qorder) + _qjoin + _qwh + _qorder
+
+                Case Else : Exit Sub
+            End Select
+
+            exportToExcel(_q)
+        End If
+    End Sub
+
+    Private Sub exportToExcel(SqlQuery As String)
+        Dim _dt As New List(Of DataTable)
+        Dim _title As New List(Of String)
+        Dim _subtitle As New List(Of String())
+        Dim _colHeader As New List(Of String)
+        Dim _outputdir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\SIMInvent\"
+        Dim _periode As String = ""
+        Dim _ck As Boolean = False
+
+        If date_sw Then
+            Dim _tglawal As Date = date_tglawal.Value : Dim _tglakhir As Date = date_tglakhir.Value
+            If _tglawal.ToString("MMyyyy") = _tglakhir.ToString("MMyyyy") AndAlso _tglawal.Day = 1 _
+                AndAlso _tglakhir.Day = DateSerial(_tglakhir.Year, _tglakhir.Month + 1, 0).Day Then
+                _periode = UCase(_tglawal.ToString("MMMM yyyy"))
+            Else
+                _periode = _tglawal.ToString("dd/MM/yyyy") & " S.d " & _tglakhir.ToString("dd/MM/yyyy")
             End If
         End If
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Using dtx = x.GetDataTable(SqlQuery)
+                    Select Case tabpagename.Name
+                        Case "pgbarang"
+                            _colHeader.AddRange({"Kode", "NamaBarang", "KodeSupplier", "NamaSupplier", "Jenis", "Kategori", "Pajak", "SatBesar", "IsiBesar",
+                                                 "SatTengah", "IsiTengah", "SatKecil", "HargaBeli", "HargaJual", "HargaJualMT", "HargaJualHoreka",
+                                                 "HargaJualRita", "Status"})
+                            _title.AddRange({"DATA MASTER BARANG"})
+                            _dt.Add(dtx)
+
+                        Case "pgsupplier"
+                            _colHeader.AddRange({"Kode", "NamaSupplier", "Alamat", "NoTelp1", "NoTelp2", "NoFax", "Email", "ContactPerson", "NPWP", "Status"})
+                            _title.AddRange({"DATA MASTER SUPPLIER"})
+                            _dt.Add(dtx)
+
+                        Case "pggudang"
+                            _colHeader.AddRange({"Kode", "NamaGudang", "Alamat", "Ket", "Status"})
+                            _title.AddRange({"DATA MASTER GUDANG"})
+                            _dt.Add(dtx)
+
+                        Case "pgsales"
+                            _colHeader.AddRange({"Kode", "NamaSalesman", "Jenis", "Alamat", "NoTelp", "NoFax", "Email", "NIK", "NoRek", "A.N.Rek", "Status"})
+                            _title.AddRange({"DATA MASTER SALESMAN"})
+                            _dt.Add(dtx)
+
+                        Case "pgcusto"
+                            _colHeader.AddRange({"Kode", "NamaCustomer", "Jenis", "Alamat", "Kecamatan", "Kabupaten", "Pasar", "Provinsi", "KodePos",
+                                                 "NoTelp", "NoFax", "NIK", "NPWP", "NamaPajak", "Jabatan", "AlamatPajak", "Status"})
+                            _title.AddRange({"DATA MASTER CUSTOMER"})
+                            _dt.Add(dtx)
+
+                        Case "pgpembelian"
+                            _colHeader.AddRange({"KodeFaktur", "Tgl", "KodeSupplier", "NamaSupplier", "KodeGudang", "NamaGudang", "Term", "JenisPajak",
+                                                 "KodeBarang", "NamaBarang", "HargaBeli", "Qty", "SatuanBeli", "JenisSatuan", "JumlahDiskon", "JumlahBeliNetto",
+                                                 "Disc1", "Disc2", "Disc3", "DiscRp", "Status"})
+                            _title.AddRange({"DATA PEMBELIAN", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pgreturbeli"
+                            _colHeader.AddRange({"KodeBukti", "Tgl", "KodeSupplier", "NamaSupplier", "KodeGudang", "NamaGudang", "JenisPajak", "JenisBayar",
+                                                 "KodeFaktur", "KodeExFaktur", "KodeBarang", "NamaBarang", "HargaRetur", "Qty", "SatuanJual", "JenisSatuan",
+                                                 "Diskon", "JumlahDiskon", "JumlahReturNetto", "Status"})
+                            _title.AddRange({"DATA RETUR PEMBELIAN", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pgpenjualan"
+                            _colHeader.AddRange({"KodeFaktur", "Tgl", "KodeSalesman", "Salesman", "KodeCustomer", "NamaCustomer", "KodeGudang", "NamaGudang", "Term",
+                                                 "JenisPajak", "KodeBarang", "NamaBarang", "Hargajual", "Qty", "SatuanJual", "JenisSatuan",
+                                                 "JumlahDiskon", "JumlahJualNetto", "Disc1", "Disc2", "Disc3", "Disc4", "Disc5", "DiscRp", "Status"})
+                            _title.AddRange({"DATA PENJUALAN", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+                        Case "pgreturjual"
+                            _colHeader.AddRange({"KodeBukti", "Tgl", "KodeSalesman", "NamaSalesman", "KodeCustomer", "NamaCustomer", "KodeGudang", "NamaGudang",
+                                                 "JenisPajak", "JenisBayar", "KodeFaktur", "KodeExFaktur", "KodeBarang", "NamaBarang", "HargaRetur",
+                                                 "Qty", "SatuanJual", "JenisSatuan", "Diskon", "JumlahDiskon", "JumlahReturNetto", "Status"})
+                            _title.AddRange({"DATA RETUR PENJUALAN", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pghutangbayar"
+                            _colHeader.AddRange({"KodeBukti", "Tgl", "KodeSupplier", "NamaSupplier", "Kat", "JenisBayar", "KodeAkun", "NamaAkun",
+                                                 "NoGiro", "TanggalGiro", "KodeFaktur/Hutang", "SisaHutang", "NilaiBayar", "Status"})
+                            _title.AddRange({"DATA PEMBAYARAN HUTANG", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case "pgpiutangbayar"
+                            _colHeader.AddRange({"KodeBukti", "Tgl", "KodeSales", "NamaSales", "KodeCustomer", "NamaCustomer", "Kat",
+                                                 "JenisBayar", "KodeAkun", "NamaAkun", "NoGiro", "BankGiro", "TanggalGiro",
+                                                 "KodeFaktur/Piutang", "SisaPiutang", "NilaiBayar", "Status"})
+                            _title.AddRange({"DATA PEMBAYARAN PIUTANG", "PERIODE " & _periode})
+                            _dt.Add(dtx)
+
+                        Case Else : Exit Sub
+                    End Select
+
+                    Using dd As New SaveFileDialog
+                        dd.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+                        dd.FilterIndex = 1
+                        dd.FileName = dd.InitialDirectory
+                        dd.RestoreDirectory = True : dd.AddExtension = True
+                        If dd.ShowDialog = DialogResult.OK Then
+                            If dd.FileName <> Nothing Then
+                                Dim fk = dd.FileName.Split(".")
+                                Dim _fileExt As String = IIf(dd.FilterIndex = 1, "xlsx", fk(fk.Count - 1))
+
+                                Me.Cursor = Cursors.WaitCursor
+                                If ExportExcel(_colHeader, _dt, _title, dd.FileName, _fileExt, _outputdir, _subtitle) Then
+                                    If System.IO.File.Exists(_outputdir) = True Then
+                                        MessageBox.Show("Export Data Sukses", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                                        Process.Start(_outputdir)
+                                    Else
+                                        MessageBox.Show("File tidak dapat ditemukan", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                    End If
+                                End If
+                                Me.Cursor = Cursors.Default
+                            End If
+                        End If
+                    End Using
+                End Using
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke data base.", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+        End Using
     End Sub
 
     'UNFINISHED complicated DEACT PROCEDURE
@@ -872,16 +1158,13 @@ EndSub:
             End Select
 
             Using x = MainConnection
-                x.Open()
-                If x.ConnectionState = ConnectionState.Open Then
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
                     Using rdx = x.ReadCommand(String.Format(qck, kode), CommandBehavior.SingleRow)
                         Dim red = rdx.Read
                         If red And rdx.HasRows Then
-                            _dataState = rdx.Item("status")
-                            ckdata = True
+                            _dataState = rdx.Item("status") : ckdata = True
                         Else
-                            ckdata = False
-                            _msg = "Data tidak di temukan"
+                            ckdata = False : _msg = "Data tidak di temukan"
                         End If
                     End Using
                 Else
@@ -914,485 +1197,311 @@ EndSub:
         End If
     End Sub
 
-    Private Sub cancelItem()
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main DB Connection is empty")
-        End If
-
-        Dim _tbpg As String = tabpagename.Name.ToString
-        Dim ckdata As Boolean = False
+    'CHANGE TRANSACTION DATA STATUS
+    Private Sub cancelTransaction()
+        Dim _Qmsg, _Smsg, _Fmsg, _resMsg As String
+        Dim _newSt As Integer = 2
         Dim kode As String = ""
-        Dim ket As String = ""
-        Dim q As String = ""
-        Dim queryArr As New List(Of String)
-        Dim queryCk As Boolean = False
-        Dim _msg As String = ""
-        Dim refreshtab() As TabPage
+        Dim _res As Boolean = False
+        Dim ckdata As Boolean = False
+        _resMsg = ""
+        Select Case tabpagename.Name
+            Case "pgpesanjual"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi order penjualan?"
+                _Fmsg = "Pembatalan order penjualan tidak dapat dilakukan."
+                _Smsg = " order penjualan #" & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelPesanan(kode, _resMsg)
+            Case "pgpembelian"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi pembelian?"
+                _Fmsg = "Pembatalan transaksi pembelian tidak dapat dilakukan."
+                _Smsg = "Transaksi pembelian " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelPembelian(kode, _resMsg)
+            Case "pgreturbeli"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi retur pembelian?"
+                _Fmsg = "Pembatalan transaksi retur pembelian tidak dapat dilakukan."
+                _Smsg = "Transaksi retur pembelian " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelRetur(kode, "beli", _resMsg)
+            Case "pgpenjualan"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi penjualan?"
+                _Fmsg = "Pembatalan transaksi penjualan tidak dapat dilakukan."
+                _Smsg = "Transaksi penjualan " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelPenjualan(kode, _resMsg)
+            Case "pgreturjual"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi retur penjualan?"
+                _Fmsg = "Pembatalan transaksi retur penjualan tidak dapat dilakukan."
+                _Smsg = "Transaksi retur pembelian " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelRetur(kode, "jual", _resMsg)
+            Case "pghutangbayar"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi pembayaran hutang?"
+                _Fmsg = "Pembatalan transaksi pembayaran hutang tidak dapat dilakukan."
+                _Smsg = "Transaksi pembayaran hutang " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelBayar(kode, "hutang", _resMsg)
+            Case "pgpiutangbayar"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Batalkan transaksi pembayaran piutang?"
+                _Fmsg = "Pembatalan transaksi pembayaran piutang tidak dapat dilakukan."
+                _Smsg = "Transaksi pembayaran piutang " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelBayar(kode, "piutang", _resMsg)
+            Case "pgkas"
+                kode = dgv_list.SelectedRows.Item(0).Cells(1).Value
+                _Qmsg = "Batalkan transaksi kas?"
+                _Fmsg = "Pembatalan transaksi kas tidak dapat dilakukan."
+                _Smsg = "Transaksi kas " & kode & " berhasil dibatalkan."
+                ckdata = CheckCancelKas(kode, _resMsg)
 
-        If MessageBox.Show("Batalkan transaksi?", "Pembatalan", MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
+            Case Else : Exit Sub
+        End Select
+
+        If Not ckdata Then
+            If Not String.IsNullOrWhiteSpace(_resMsg) Then _Fmsg += Environment.NewLine & _resMsg
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             Exit Sub
         End If
 
-        Select Case _tbpg
+        If MessageBox.Show(_Qmsg, lbl_judul.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
+        _res = changeTransactionStatus(kode, _newSt, _resMsg)
+        If _res Then
+            MessageBox.Show(_Smsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Else
+            _Fmsg += Environment.NewLine & _resMsg
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
+    End Sub
+
+    Private Sub uncancelTransaction()
+        Dim _Qmsg, _Smsg, _Fmsg, _resMsg As String
+        Dim _newSt As Integer = 0
+        Dim kode As String = ""
+        Dim _oldstatus As Integer = 0
+        Dim _res As Boolean = False
+        _resMsg = ""
+        Select Case tabpagename.Name
             Case "pgpesanjual"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = CheckCancelPesanan(kode, _msg)
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-                q = "UPDATE data_penjualan_order_faktur SET j_order_status=2, j_order_upd_date=NOW(), j_order_upd_alias='{1}', " _
-                    & " j_order_catatan=TRIM(BOTH '\r\n' FROM CONCAT(j_order_catatan,'\r\n','{2}')) WHERE j_order_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-
-                refreshtab = {pgpesanjual}
-
-            Case "pgpembelian", "pghutangawal"
+                _Qmsg = "Cancel pembatalan order penjualan?"
+                _Fmsg = "Cancel pembatalan order penjualan tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "pesanan", _resMsg)
+                _newSt = 0
+            Case "pgpembelian"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                If _tbpg = "pgpembelian" Then
-                    ckdata = CheckCancelPembelian(kode, _msg)
-                ElseIf _tbpg = "pghutangawal" Then
-                    Dim tgl = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value)
-
-                    If tgl < currentperiode.tglawal Then
-                        ckdata = False
-                        _msg = "Transaksi sebelum tanggal periode aktif/saat ini tidak dapat diubah."
-                    ElseIf tgl >= currentperiode.tglawal And currentperiode.closed = True Then
-                        ckdata = False
-                        _msg = "Status periode aktif/saat ini sudah ditutup, tidak dapat melakukan perubahan data."
-                    Else
-                        ckdata = CheckCancelPembelian(kode, _msg)
-                    End If
-                End If
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_pembelian_faktur SET faktur_status=2, faktur_ket=TRIM(BOTH '\r\n' FROM CONCAT(faktur_ket,'\r\n','{2}')), faktur_upd_date=NOW(), faktur_upd_alias='{1}' " _
-                    & "WHERE faktur_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                q = "CALL transPembelianFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgpembelian, pgstok, pghutangawal}
-
+                _Qmsg = "Cancel pembatalan transaksi pembelian?"
+                _Fmsg = "Cancel pembatalan transaksi pembelian tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "pembelian", _resMsg)
+                _newSt = 1
             Case "pgreturbeli"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = CheckCancelRetur(kode, "beli", _msg)
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_pembelian_retur_faktur SET faktur_status=2, faktur_sebab=TRIM(BOTH '\r\n' FROM CONCAT(faktur_sebab,'\r\n','{2}')), faktur_upd_date=NOW(), " _
-                    & "faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                q = "CALL transReturBeliFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgreturbeli, pgstok}
-
-            Case "pgpenjualan", "pgpiutangawal"
-                If _tbpg = "pgpenjualan" Then
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                    ckdata = CheckCancelPenjualan(kode, _msg)
-                ElseIf _tbpg = "pgpiutangawal" Then
-                    Dim tgl = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value)
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-
-                    If tgl < currentperiode.tglawal Then
-                        ckdata = False
-                        _msg = "Transaksi sebelum tanggal periode aktif/saat ini tidak dapat diubah."
-                    ElseIf tgl >= currentperiode.tglawal And currentperiode.closed = True Then
-                        ckdata = False
-                        _msg = "Status periode aktif/saat ini sudah ditutup, tidak dapat melakukan perubahan data."
-                    Else
-                        ckdata = CheckCancelPenjualan(kode, _msg)
-                    End If
-                End If
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_penjualan_faktur SET faktur_status=2, faktur_catatan=TRIM(BOTH '\r\n' FROM CONCAT(faktur_catatan,'\r\n','{2}')), faktur_upd_date=NOW(), " _
-                    & "faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                refreshtab = {pgpenjualan, pgstok, pgpiutangawal}
-
+                _Qmsg = "Cancel pembatalan transaksi retur pembelian?"
+                _Fmsg = "Cancel pembatalan transaksi retur pembelian tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "returbeli", _resMsg)
+                _newSt = 1
+            Case "pgpenjualan"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Cancel pembatalan transaksi penjualan?"
+                _Fmsg = "Cancel pembatalan transaksi penjualan tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "penjualan", _resMsg)
+                _newSt = 1
             Case "pgreturjual"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = CheckCancelRetur(kode, "jual", _msg)
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_penjualan_retur_faktur SET faktur_status=2, faktur_sebab=TRIM(BOTH '\r\n' FROM CONCAT(faktur_sebab,'\r\n','{2}')), faktur_upd_date=NOW(), " _
-                    & "faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                q = "CALL transReturJualFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgreturbeli, pgstok}
-
+                _Qmsg = "Cancel pembatalan transaksi retur penjualan?"
+                _Fmsg = "Cancel pembatalan transaksi retur penjualan tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "returjual", _resMsg)
+                _newSt = 1
             Case "pghutangbayar"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = CheckCancelBayar(kode, "hutang", _msg)
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_hutang_bayar SET h_bayar_status=2, h_bayar_ket=TRIM(BOTH '\r\n' FROM CONCAT(h_bayar_ket,'\r\n','{2}')), h_bayar_upd_alias='{1}', " _
-                    & "h_bayar_upd_date=NOW() WHERE h_bayar_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                q = "CALL transBayarHutangFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pghutangawal, pghutangbayar}
-
+                _Qmsg = "Cancel pembatalan pembayaran hutang?"
+                _Fmsg = "Cancel pembatalan pembayaran hutang tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "hutangbayar", _resMsg)
+                _newSt = 1
             Case "pgpiutangbayar"
                 kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = CheckCancelBayar(kode, "piutang", _msg)
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_piutang_bayar SET p_bayar_status=2, p_bayar_ket=TRIM(BOTH '\r\n' FROM CONCAT(p_bayar_ket,'\r\n','{2}')), p_bayar_upd_alias='{1}', " _
-                    & "p_bayar_upd_date=NOW() WHERE p_bayar_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket))
-                q = "CALL transBayarPiutangFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgpiutangawal, pgpiutangbayar}
-
+                _Qmsg = "Cancel pembatalan pembayaran piutang?"
+                _Fmsg = "Cancel pembatalan pembayaran piutang tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "piutangbayar", _resMsg)
+                _newSt = 0
             Case "pgkas"
                 kode = dgv_list.SelectedRows.Item(0).Cells(1).Value
-                ckdata = CheckCancelKas(kode, _msg)
+                _Qmsg = "Cancel pembatalan pembayaran piutang?"
+                _Fmsg = "Cancel pembatalan pembayaran piutang tidak dapat dilakukan."
+                _oldstatus = getTransStatus(kode, "kas", _resMsg)
+                _newSt = 1
 
-                If ckdata Then
-                    Using x As New fr_tutupconfirm_dialog
-                        x.lbl_title.Text = "Konfirmasi Kas"
-                        x.in_user.Text = loggeduser.user_id
-                        x.in_user.ReadOnly = True
-                        x.do_loaddialog()
-                        ckdata = x.returnval
-                    End Using
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_kas_faktur SET kas_status=2, kas_upd_date=NOW(), kas_upd_alias='{1}' WHERE kas_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-                q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgkas}
-            Case Else
-                Exit Sub
+            Case Else : Exit Sub
         End Select
 
-        If ckdata Then
-            Using x = MainConnection
-                x.Open()
-                If x.ConnectionState = ConnectionState.Open Then
-                    queryCk = x.TransactCommand(queryArr)
-                    If queryCk Then
-                        MessageBox.Show("Transaksi dibatalkan.")
-                        DoRefreshTab_v2(refreshtab)
-                    Else
-                        _msg = "Terjadi kesalahan saat melakukan proses pembatalan"
-                        MessageBox.Show("Transaksi tidak dapat dibatalkan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
-                Else
-                    _msg = "Tidak dapat terhubung ke database"
-                    MessageBox.Show("Transaksi tidak dapat dibatalkan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End If
-            End Using
+        If _oldstatus <> 2 Then
+            If Not String.IsNullOrWhiteSpace(_resMsg) Then _Fmsg += Environment.NewLine & _resMsg
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+
+        If MessageBox.Show(_Qmsg, lbl_judul.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
+
+        _Smsg = "Cancel pembatalan berhasil."
+        _res = changeTransactionStatus(kode, _newSt, _resMsg)
+        If _res Then
+            MessageBox.Show(_Smsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
         Else
-            MessageBox.Show("Transaksi tidak dapat dibatalkan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            _Fmsg += Environment.NewLine & _resMsg
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End If
+    End Sub
+
+    Private Sub deleteTransaction()
+        Dim _Qmsg, _Smsg, _Fmsg, _resMsg As String
+        Dim kode As String = ""
+        Dim _oldstatus As Integer = 0
+        Dim _res As Boolean = False
+        _resMsg = ""
+        Select tabpagename.Name
+            Case "pgpesanjual"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Hapus transaksi order penjualan?"
+                _Fmsg = "Penghapusan order penjualan tidak dapat dilakukan."
+                _Smsg = "Order penjualan #" & kode & " berhasil dihapus."
+                _oldstatus = getTransStatus(kode, "pesanan", _resMsg)
+                _res = CheckCancelPesanan(kode, _resMsg)
+            Case "pgpembelian"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Hapus transaksi pembelian?"
+                _Fmsg = "Penghapusan transaksi pembelian tidak dapat dilakukan."
+                _Smsg = "Transaksi pembelian " & kode & " berhasil dihapus."
+                _oldstatus = getTransStatus(kode, "pembelian", _resMsg)
+                _res = CheckCancelPembelian(kode, _resMsg)
+            Case "pgpenjualan"
+                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+                _Qmsg = "Hapus transaksi penjualan?"
+                _Fmsg = "Penghapusan transaksi penjualan tidak dapat dilakukan."
+                _Smsg = "Transaksi penjualan " & kode & " berhasil dihapus."
+                _oldstatus = getTransStatus(kode, "penjualan", _resMsg)
+                _res = CheckCancelPenjualan(kode, _resMsg)
+
+            Case Else : Exit Sub
+        End Select
+
+        If MessageBox.Show(_Qmsg, lbl_judul.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then Exit Sub
+
+        If _oldstatus = 2 Then
+            _res = True
+        ElseIf {0, 1}.Contains(_oldstatus) Then
+            If Not _res Then
+                If Not String.IsNullOrWhiteSpace(_resMsg) Then _Fmsg += Environment.NewLine & _resMsg
+                MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Exit Sub
+            End If
+        Else
+            _Fmsg += Environment.NewLine & "Kode status taransaksi tidak sesuai."
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Exit Sub
+        End If
+        If _res Then _res = changeTransactionStatus(kode, 9, _resMsg)
+        If _res Then
+            MessageBox.Show(_Smsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+        Else
+            _Fmsg += Environment.NewLine & _resMsg
+            MessageBox.Show(_Fmsg, lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
     End Sub
 
     'PERUBAHAN STATUS DATA TRANSAKSI (NOT DATA ACTIVATION PROCEDURE)
-    Private Sub changeStateTrans(TransState As Integer)
+    Private Function changeTransactionStatus(KodeFaktur As String, NewStatus As Integer, ByRef ReturnMsg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
 
-        Dim _tbpg As String = tabpagename.Name.ToString
-        Dim ckdata As Boolean = False
-        Dim kode As String = ""
-        Dim ket As String = ""
-        Dim q As String = ""
+        Dim _tbpg As String = tabpagename.Name
+        Dim ValidUid As String = ""
         Dim queryArr As New List(Of String)
         Dim queryCk As Boolean = False
         Dim _msg As String = ""
         Dim refreshtab() As TabPage
-        Dim _MsgboxText As String = ""
-        Dim _MsgboxTitle As String = ""
-
-        If TransState = 1 Or TransState = 0 Then
-            _MsgboxText = "Batalkan pembatalan transaksi?" : _MsgboxTitle = "Cancel Pembatalan"
-        ElseIf TransState = 2 Then
-            _MsgboxText = "Batalkan transaksi?" : _MsgboxTitle = "Pembatalan Transaksi"
-        ElseIf TransState = 9 Then
-            _MsgboxText = "Hapus transaksi?" : _MsgboxTitle = "Hapus Transaksi"
-        Else
-            Exit Sub
-        End If
-
-        If MessageBox.Show(_MsgboxText, _MsgboxTitle, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = DialogResult.No Then
-            Exit Sub
-        End If
 
         Select Case _tbpg
             Case "pgpesanjual"
-                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                ckdata = IIf({0, 1}.Contains(TransState), True, CheckCancelPesanan(kode, _msg))
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
+                queryArr.Add("UPDATE data_penjualan_order_faktur SET j_order_status={2}, j_order_upd_date=NOW(), j_order_upd_alias='{1}' WHERE j_order_kode='{0}'")
+                If NewStatus = 9 Then
+                    queryArr.Add("UPDATE data_penjualan_order_trans SET j_order_trans_status=9 WHERE j_order_trans_faktur='{0}' AND j_order_trans_status=1")
                 End If
-                q = "UPDATE data_penjualan_order_faktur SET j_order_status={3}, j_order_upd_date=NOW(), j_order_upd_alias='{1}', " _
-                    & " j_order_catatan=TRIM(BOTH '\r\n' FROM CONCAT(j_order_catatan,'\r\n','{2}')) WHERE j_order_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket, TransState))
-
                 refreshtab = {pgpesanjual}
 
-            Case "pgpembelian", "pghutangawal"
-                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                If _tbpg = "pgpembelian" Then
-                    ckdata = IIf({0, 1}.Contains(TransState), True, IIf(getTransStatus(kode, "pembelian", _msg) = 2 And TransState = 9, True, CheckCancelPembelian(kode, _msg)))
-                ElseIf _tbpg = "pghutangawal" Then
-                    Dim tgl = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value)
-
-                    If tgl < currentperiode.tglawal Then
-                        ckdata = False
-                        _msg = "Transaksi sebelum tanggal periode aktif/saat ini tidak dapat diubah."
-                    ElseIf tgl >= currentperiode.tglawal And currentperiode.closed = True Then
-                        ckdata = False
-                        _msg = "Status periode aktif/saat ini sudah ditutup, tidak dapat melakukan perubahan data."
-                    Else
-                        ckdata = IIf({0, 1}.Contains(TransState), True, CheckCancelPembelian(kode, _msg))
-                    End If
-                End If
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_pembelian_faktur SET faktur_status={3}, faktur_ket=TRIM(BOTH '\r\n' FROM CONCAT(faktur_ket,'\r\n','{2}')), faktur_upd_date=NOW(), " _
-                    & "faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket, TransState))
-                If TransState = 9 Then
-                    q = "UPDATE data_pembelian_faktur SET trans_status=9 WHERE trans_faktur='{0}'"
-                    queryArr.Add(String.Format(q, kode))
-                End If
-                q = "CALL transPembelianFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
+            Case "pgpembelian"
+                queryArr.Add("UPDATE data_pembelian_faktur SET faktur_status={2}, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'")
+                If NewStatus = 9 Then queryArr.Add("UPDATE data_pembelian_faktur SET trans_status=9 WHERE trans_faktur='{0}' AND trans_status=1")
+                queryArr.Add("CALL transPembelianFin('{0}','{1}')")
                 refreshtab = {pgpembelian, pgstok, pghutangawal}
 
-            Case "pgpenjualan", "pgpiutangawal"
-                If _tbpg = "pgpenjualan" Then
-                    Dim _status As Integer = getTransStatus(kode, "penjualan", _msg)
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
+            Case "pgreturbeli"
+                queryArr.Add("UPDATE data_pembelian_retur_faktur SET faktur_status={2}, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'")
+                If NewStatus = 9 Then queryArr.Add("UPDATE data_pembelian_retur_trans SET trans_status=9 WHERE trans_faktur='{0}' AND trans_status=1")
+                queryArr.Add("CALL transReturBeliFin('{0}','{1}')")
+                refreshtab = {pgreturbeli, pgstok}
 
-                    ckdata = IIf({0, 1}.Contains(TransState), True, IIf(_status = 2 And TransState = 9, True, CheckCancelPenjualan(kode, _msg)))
-                ElseIf _tbpg = "pgpiutangawal" Then
-                    Dim tgl = CDate(dgv_list.SelectedRows.Item(0).Cells(1).Value)
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-
-                    If tgl < currentperiode.tglawal Then
-                        ckdata = False
-                        _msg = "Transaksi sebelum tanggal periode aktif/saat ini tidak dapat diubah."
-                    ElseIf tgl >= currentperiode.tglawal And tgl <= currentperiode.tglakhir And currentperiode.closed = True Then
-                        ckdata = False
-                        _msg = "Status periode aktif/saat ini sudah ditutup, tidak dapat melakukan perubahan data."
-                    Else
-                        ckdata = IIf({0, 1}.Contains(TransState), True, CheckCancelPenjualan(kode, _msg))
-                    End If
-                End If
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_penjualan_faktur SET faktur_status={3}, faktur_catatan=TRIM(BOTH '\r\n' FROM CONCAT(faktur_catatan,'\r\n','{2}')), " _
-                    & "faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket, TransState))
-                If TransState = 9 Then
-                    q = "UPDATE data_penjualan_trans SET trans_status=9 WHERE trans_faktur='{0}'"
-                    queryArr.Add(String.Format(q, kode))
-                End If
+            Case "pgpenjualan"
+                queryArr.Add("UPDATE data_penjualan_faktur SET faktur_status={2}, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode='{0}'")
+                If NewStatus = 9 Then queryArr.Add("UPDATE data_penjualan_faktur SET trans_status=9 WHERE trans_faktur='{0}' AND trans_status=1")
                 refreshtab = {pgpenjualan, pgstok, pgpiutangawal}
 
-            Case "pgreturbeli"
-                Dim _status As Integer = getTransStatus(kode, "returbeli", _msg)
-                If _status = 9 And _msg <> Nothing Then ckdata = False
-
-                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                If ckdata Then ckdata = IIf({0, 1}.Contains(TransState), True, IIf(_status = 2 And TransState = 9, True, CheckCancelRetur(kode, "beli", _msg)))
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_pembelian_retur_faktur SET faktur_status={3}, faktur_sebab=TRIM(BOTH '\r\n' FROM CONCAT(faktur_sebab,'\r\n','{2}')), " _
-                    & "faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket, TransState))
-                If TransState = 9 Then
-                    q = "UPDATE data_pembelian_retur_trans SET trans_status=9 WHERE trans_faktur='{0}'"
-                    queryArr.Add(String.Format(q, kode))
-                End If
-                q = "CALL transReturBeliFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
-                refreshtab = {pgreturbeli, pgstok}
-
             Case "pgreturjual"
-                Dim _status As Integer = getTransStatus(kode, "returbeli", _msg)
-                If _status = 9 And _msg <> Nothing Then ckdata = False
-
-                kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                If ckdata Then ckdata = IIf({0, 1}.Contains(TransState), True, IIf(_status = 2 And TransState = 9, True, CheckCancelRetur(kode, "jual", _msg)))
-
-                If ckdata Then
-                    ckdata = TransConfirmValid(ket)
-                    If Not ckdata Then : Exit Sub : End If
-                End If
-
-                q = "UPDATE data_penjualan_retur_faktur SET faktur_status={3}, faktur_sebab=TRIM(BOTH '\r\n' FROM CONCAT(faktur_sebab,'\r\n','{2}')), " _
-                    & "faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id, ket, TransState))
-                If TransState = 9 Then
-                    q = "UPDATE data_penjualan_retur_trans SET trans_status=9 WHERE trans_faktur='{0}'"
-                    queryArr.Add(String.Format(q, kode))
-                End If
-                q = "CALL transReturJualFin('{0}','{1}')"
-                queryArr.Add(String.Format(q, kode, loggeduser.user_id))
-
+                queryArr.Add("UPDATE data_penjualan_retur_faktur SET faktur_status={2}, faktur_upd_date=NOW(), faktur_upd_alias='{1}' WHERE faktur_kode_bukti='{0}'")
+                If NewStatus = 9 Then queryArr.Add("UPDATE data_penjualan_retur_trans SET trans_status=9 WHERE trans_faktur='{0}' AND trans_status=1")
+                queryArr.Add("CALL transReturJualFin('{0}','{1}')")
                 refreshtab = {pgreturbeli, pgstok}
 
-                'Case "pgadjstock"
-                '    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                '    'ask verification (stock trans validation priv)
-                '    'query bulider
-                '    refreshtab = {pgadjstock, pgstok}
+            Case "pghutangbayar"
+                queryArr.Add("UPDATE data_hutang_bayar SET h_bayar_status={2}, h_bayar_upd_alias='{1}', h_bayar_upd_date=NOW() WHERE h_bayar_bukti='{0}'")
+                If NewStatus = 9 Then queryArr.Add("UPDATE data_hutang_bayar_trans SET h_trans_status=9 WHERE h_trans_bukti='{0}' AND h_trans_status=1")
+                queryArr.Add("CALL transBayarHutangFin('{0}','{1}')")
+                refreshtab = {pghutangawal, pghutangbayar}
 
+            Case "pgpiutangbayar"
+                queryArr.Add("UPDATE data_piutang_bayar SET p_bayar_status={2}, p_bayar_upd_alias='{1}', p_bayar_upd_date=NOW() WHERE p_bayar_bukti='{0}'")
+                queryArr.Add("CALL transBayarPiutangFin('{0}','{1}')")
+                refreshtab = {pgpiutangawal, pgpiutangbayar}
 
+            Case "pgkas"
+                queryArr.Add("UPDATE data_kas_faktur SET kas_status={2}, kas_upd_date=NOW(), kas_upd_alias='{1}' WHERE kas_kode='{0}'")
+                If {2, 9}.Contains(NewStatus) Then
+                    queryArr.Add("UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' " _
+                                 & "WHERE line_kode='{0}' AND line_type='KAS' AND lins_status = 1")
+                End If
+                refreshtab = {pgkas}
             Case Else
-                Exit Sub
+                ReturnMsg = "Function doesnt exist for that data." : Return False
+                Exit Function
         End Select
 
-        'PROCEED
-        Dim _failmsg As String = ""
-        Dim _succmsg As String = ""
-        If TransState = 1 Or TransState = 0 Then
-            _failmsg = "Cancel pembatalan gagal." : _succmsg = "Cancel pembatalan berhasil"
-        ElseIf TransState = 2 Then
-            _failmsg = "Pembatalan transaksi gagal." : _succmsg = "Pembatalan transaksi berhasil."
-        ElseIf TransState = 9 Then
-            _failmsg = "Transaksi tidak dapat dihapus." : _succmsg = "Transaksi berhasil dihapus."
+        'If ckdata Then
+        If {"pgkas"}.Contains(_tbpg) Then
+            If Not AkunConfirmValid(ValidUid) Then Return False
         Else
-            Exit Sub
+            If Not TransConfirmValid(ValidUid) Then Return False
         End If
 
-        If ckdata Then
-            Using x = MainConnection
-                x.Open()
-                If x.ConnectionState = ConnectionState.Open Then
-                    queryCk = x.TransactCommand(queryArr)
-                    If queryCk Then
-                        MessageBox.Show(_succmsg, _MsgboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Information)
-                        DoRefreshTab_v2(refreshtab)
-                    Else
-                        _msg = "Terjadi kesalahan saat melakukan proses."
-                        MessageBox.Show(_failmsg & Environment.NewLine & _msg, _MsgboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    End If
-                Else
-                    _msg = "Tidak dapat terhubung ke database"
-                    MessageBox.Show(_failmsg & Environment.NewLine & _msg, _MsgboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                End If
-            End Using
-        Else
-            MessageBox.Show(_failmsg & Environment.NewLine & _msg, _MsgboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Error)
-        End If
-    End Sub
-
-    Private Function changeStateTrans_beli(IdFaktur As String, TransState As Integer) As Boolean
-        Dim q As String = ""
-        Dim qArr As New List(Of String)
-        Dim _oldState As Integer = 1
-        Dim _msgText, _msgTitle As String
+        Dim _qArr As New List(Of String)
+        For Each _str As String In queryArr
+            _qArr.Add(String.Format(_str, KodeFaktur, ValidUid, NewStatus))
+        Next
 
         Using x = MainConnection
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                If tabpagename.Name = "pgpembelian" Then
-                    q = "SELECT faktur_status FROM data_pembelian WHERE faktur_kode='{0}' ORDER BY faktur_id DESC LIMIT 1"
-                ElseIf tabpagename.Name = "pgreturbeli" Then
-                    q = "SELECT faktur_status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='{0}' ORDER BY faktur_id DESC LIMIT 1"
-                ElseIf tabpagename.Name = "pghutangawal" Then
-                    'cek tgl hutang, status lunas, pembayaran
-                    q = "SELECT hutang_tanggal, hutang_status_lunas, FROM data_hutang_awal WHERE hutang_faktur='{0}'"
-                    q = "SELECT faktur_status FROM data_pembelian WHERE faktur_kode='{0}' ORDER BY faktur_id DESC LIMIT 1"
+                queryCk = x.TransactCommand(_qArr)
+                If queryCk Then
+                    DoRefreshTab_v2(refreshtab) : Return True
                 Else
-                    Return False : Exit Function
+                    ReturnMsg = "Terjadi kesalahan saat melakukan proses perubahan status transaksi." : Return False
                 End If
-                If Integer.TryParse(x.ExecScalar(String.Format(q, IdFaktur)), _oldState) Then
-
-                Else
-
-                    Return False : Exit Function
-                End If
-
-                Select Case TransState
-                    Case 1
-
-                        _msgText ="Cancel pembatalan transaksi?" : _msgTitle = "Cancel Pembatalan"
-                    Case 2
-
-                        _msgText = "Batalkan Transaksi?" : _msgTitle = "Pembatalan Transaksi"
-                    Case 9
-
-                        _msgText = "Hapus Transaksi?" : _msgTitle = "Hapus Transaksi"
-                    Case Else
-                        Return False : Exit Function
-                End Select
-
-                Return True
             Else
-                MessageBox.Show("Tidak dapat terhubung ke database.", "", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return False
+                ReturnMsg = "Tidak dapat terhubung ke database." : Return False
             End If
         End Using
-    End Function
-
-    Private Function changeStateTrans_jual(IdFaktur As String, TransState As Integer) As Boolean
-
-        Return False
-    End Function
-
-    Private Function changeStateTrans_hutang(IdFaktur As String, TransState As Integer) As Boolean
-
-        Return False
-    End Function
-
-    Private Function changeStateTrans_piutang(IdFaktur As String, TransState As Integer) As Boolean
-
-        Return False
+        'Else
+        'ReturnMsg = _msg : Return False
+        'End If
     End Function
 
     'SEPUTAR JURNAL UMUM/PENYESUAIAN
@@ -1429,14 +1538,9 @@ EndSub:
 
             'VALIDASI USER AKUN
             If Not _allowdelete Then Exit Sub
-            Dim _v As Boolean = False : Dim _idValid As Integer = 0
-            Using _validDialog As New fr_akun_confirmdialog
-                _validDialog.do_loaddialog()
-                _v = _validDialog.RetVal.Key
-                If _v Then : LogValidTrans(_validDialog.RetVal.Value, loggeduser.user_id, "JU.ENTRY", "DELETE", IdJurnal, _idValid)
-                Else : Exit Sub
-                End If
-            End Using
+            Dim _idValid As Integer = 0 : Dim ValidUid As String = ""
+            If Not AkunConfirmValid(ValidUid) Then Exit Sub
+            LogValidTrans(ValidUid, loggeduser.user_id, "JU.ENTRY", "DELETE", IdJurnal, _idValid)
 
             'UPDATE STATUS ENTRY
             If _allowdelete Then
@@ -1458,52 +1562,6 @@ EndSub:
                     End If
                 End Using
             End If
-        End If
-    End Sub
-
-    'SEPUTAR DATA PENUTUPAN
-    Private Sub ReopenAccPeriode(IdPeriode As String)
-        If deact_sw Then
-            Dim _q As String = "" : Dim _qArr As New List(Of String)
-            Dim _ck As Boolean = False
-            Dim _resMsg As DialogResult = DialogResult.No
-            _resMsg = MessageBox.Show("", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-            If _resMsg = DialogResult.Yes Then
-                Using _valid As New fr_akun_confirmdialog
-                    _valid.do_loaddialog()
-                    If _valid.RetVal.Key = False Then Exit Sub
-                    'logvalidasi
-                End Using
-                _q = ""
-
-                Using x = MainConnection
-                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                        _ck = x.TransactCommand(_qArr)
-                        If _ck Then
-                            MessageBox.Show("")
-
-                        Else
-
-                        End If
-                    Else
-
-                    End If
-                End Using
-            End If
-        End If
-    End Sub
-
-    Private Sub OpenAccReport(ReportType As String, IdPeriode As String)
-
-    End Sub
-
-    Private Sub DeleteClosing(IdPeriode As String)
-        If delete_sw Then
-            If IdPeriode = currentperiode.id Then
-                MessageBox.Show("Cannot delete current active periode.", "Delete Closing", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                Exit Sub
-            End If
-
         End If
     End Sub
 
@@ -1579,8 +1637,16 @@ EndSub:
     End Sub
 
     Private Sub mn_exportExcel_Click(sender As Object, e As EventArgs) Handles mn_exportExcel.Click
-        If export_sw = True And dgv_list.RowCount > 0 Then
-            exportItem()
+        If export_sw = True Then
+            Me.Cursor = Cursors.WaitCursor
+            Dim _tr = {"pgpenjualan", "pgreturjual", "pgpembelian", "pgreturbeli", "pghutangbayar", "pgpiutangbayar"}
+            Dim _mst = {"pgsupplier", "pgbarang", "pggudang", "pgsales", "pgcusto"}
+            If _tr.Contains(tabpagename.Name) Then
+                exportItemTrans(SearchParam)
+            ElseIf _mst.Contains(tabpagename.Name) Then
+                exportItem(SearchParam)
+            End If
+            Me.Cursor = Cursors.Default
         ElseIf dgv_list.Rows.Count = 0 Then
             MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
@@ -1588,7 +1654,7 @@ EndSub:
 
     Private Sub mn_bataljual_Click(sender As Object, e As EventArgs) Handles mn_bataljual.Click
         If cancel_sw = True And dgv_list.Rows.Count > 0 Then
-            cancelItem()
+            cancelTransaction()
         ElseIf dgv_list.Rows.Count = 0 Then
             MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
@@ -1596,7 +1662,7 @@ EndSub:
 
     Private Sub mn_delete_Click(sender As Object, e As EventArgs) Handles mn_delete.Click
         If delete_sw And dgv_list.Rows.Count > 0 Then
-            changeStateTrans(9)
+            deleteTransaction()
         ElseIf dgv_list.Rows.Count = 0 Then
             MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
@@ -1604,37 +1670,7 @@ EndSub:
 
     Private Sub mn_cancelbatal_Click(sender As Object, e As EventArgs) Handles mn_cancelbatal.Click
         If cancel_sw And dgv_list.Rows.Count > 0 Then
-            Dim kode As String = ""
-            Dim _jenis As String = ""
-            Dim _status As Integer = 0
-            Dim _msg As String = Nothing
-
-            Select Case tabpagename.Name.ToString
-                Case "pgpesanjual", "pgpiutangbayar"
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                    If tabpagename.Name.ToString = "pgpesanjual" Then
-                        _jenis = "pesanan"
-                    Else
-                        _jenis = "piutangbayar"
-                    End If
-                    _status = 0
-                Case "pgpenjualan", "pgpembelian", "pgreturjual", "pgreturbeli", "pghutangbayar"
-                    kode = dgv_list.SelectedRows.Item(0).Cells(0).Value
-                    Select Case tabpagename.Name.ToString
-                        Case "pgpenjualan" : _jenis = "penjualan"
-                        Case "pgpembelian" : _jenis = "pembelian"
-                        Case "pgreturjual" : _jenis = "returjual"
-                        Case "pgreturbeli" : _jenis = "returbeli"
-                        Case "pghutangbayar" : _jenis = "hutangbayar"
-                    End Select
-                    _status = 1
-                Case Else
-                    Exit Sub
-            End Select
-
-            Dim _oldstatus As Integer = getTransStatus(kode, _jenis, _msg)
-            If _msg <> Nothing Then : MessageBox.Show(_msg, "Cancel Pembatalan", MessageBoxButtons.OK, MessageBoxIcon.Warning) : Exit Sub : End If
-            If _oldstatus = 2 Then changeStateTrans(_status)
+            uncancelTransaction()
         ElseIf dgv_list.Rows.Count = 0 Then
             MessageBox.Show("Data tidak ada", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error)
         End If
@@ -1677,7 +1713,7 @@ EndSub:
 
     'UI : BUTTON
     Private Sub bt_search_Click(sender As Object, e As EventArgs) Handles bt_search.Click
-        Me.Cursor = Cursors.WaitCursor
+        'Me.Cursor = Cursors.WaitCursor
         SearchParam = in_cari.Text
         If date_sw Then
             SelectedDate1 = date_tglawal.Value : SelectedDate2 = date_tglakhir.Value
@@ -1686,7 +1722,7 @@ EndSub:
             LoadDataGrid(in_cari.Text, 1)
         End If
         dgv_list.Focus()
-        Me.Cursor = Cursors.Default
+        'Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub bt_page_prev_Click(sender As Object, e As EventArgs) Handles bt_page_prev.Click, bt_page_first.Click
@@ -1741,7 +1777,7 @@ EndSub:
     Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
         If e.KeyData = Keys.Enter Then
             e.SuppressKeyPress = True
-            Me.Cursor = Cursors.WaitCursor : bt_search.PerformClick() : Me.Cursor = Cursors.Default
+            bt_search.PerformClick()
         End If
     End Sub
 

@@ -9,7 +9,7 @@
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>6cm</Width>
+              <Width>7cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>1.25cm</Width>
@@ -2337,7 +2337,6 @@
                         <PaddingBottom>2pt</PaddingBottom>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -2849,7 +2848,7 @@
         <DataSetName>ds_stok_mutasi</DataSetName>
         <Top>1.57897cm</Top>
         <Height>3.6cm</Height>
-        <Width>28.25cm</Width>
+        <Width>29.25cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -2878,7 +2877,7 @@
         </Paragraphs>
         <rd:DefaultName>Textbox21</rd:DefaultName>
         <Height>0.79376cm</Height>
-        <Width>28.25cm</Width>
+        <Width>29.25cm</Width>
         <ZIndex>1</ZIndex>
         <Style>
           <Border>
@@ -2913,7 +2912,7 @@
         <rd:DefaultName>Textbox21</rd:DefaultName>
         <Top>0.79376cm</Top>
         <Height>0.60882cm</Height>
-        <Width>28.25cm</Width>
+        <Width>29.25cm</Width>
         <ZIndex>2</ZIndex>
         <Style>
           <Border>
@@ -2929,7 +2928,7 @@
     <Height>2.03896in</Height>
     <Style />
   </Body>
-  <Width>28.25cm</Width>
+  <Width>29.25cm</Width>
   <Page>
     <PageHeader>
       <Height>1.5cm</Height>
@@ -2973,7 +2972,7 @@
           </Paragraphs>
           <rd:DefaultName>Textbox20</rd:DefaultName>
           <Height>1.25055cm</Height>
-          <Width>12.25cm</Width>
+          <Width>10.75cm</Width>
           <Style>
             <Border>
               <Style>None</Style>
@@ -2986,7 +2985,7 @@
         </Textbox>
         <Rectangle Name="Rectangle2">
           <KeepTogether>true</KeepTogether>
-          <Left>23.75cm</Left>
+          <Left>24.75cm</Left>
           <Height>1.25055cm</Height>
           <Width>4.5cm</Width>
           <ZIndex>1</ZIndex>
@@ -3027,7 +3026,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>0.17637cm</Top>
+          <Top>0.17636cm</Top>
           <Height>0.47653cm</Height>
           <Width>8.75cm</Width>
           <Style>
@@ -3061,8 +3060,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>PageNumber</rd:DefaultName>
-          <Top>0.18519cm</Top>
-          <Left>25.5cm</Left>
+          <Top>0.18518cm</Top>
+          <Left>26.5cm</Left>
           <Height>0.46771cm</Height>
           <Width>2.75cm</Width>
           <ZIndex>1</ZIndex>

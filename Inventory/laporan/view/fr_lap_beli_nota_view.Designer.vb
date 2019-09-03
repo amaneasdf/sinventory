@@ -75,6 +75,8 @@ Partial Class fr_lap_beli_nota_view
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.rv_beli_nota)
         Me.Name = "fr_lap_beli_nota_view"
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.Text = "Laporan Pembelian Per Nota"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.dt_lap_beli_notaBindingSource, System.ComponentModel.ISupportInitialize).EndInit()

@@ -15,7 +15,8 @@
             .ValueMember = "Value"
         End With
 
-        laptype = tipeLap : lapwintext = judulLap : Me.Text = judulLap
+        laptype = tipeLap : lapwintext = judulLap
+        Me.Text = judulLap : lbl_title.Text = Me.Text
 
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
@@ -25,6 +26,26 @@
         lbl_periodedata.Text = main.strip_periode.Text
         formSW(tipeLap)
         Me.ShowDialog(main)
+    End Sub
+
+    Public Sub do_loadview(LapType As String, StartDate As Date, EndDate As Date, PjkType As Integer)
+        If String.IsNullOrWhiteSpace(LapType) Then GoTo CloseForm
+        If Not {0, 1}.Contains(PjkType) Then GoTo CloseForm
+
+        Me.laptype = LapType
+        date_tglawal.Value = StartDate : date_tglakhir.Value = EndDate
+
+        With cb_pajak
+            .DataSource = jenis("trans_pajak2")
+            .DisplayMember = "Text"
+            .ValueMember = "Value"
+            .SelectedIndex = PjkType
+        End With
+
+        bt_simpanbeli_Click(Nothing, Nothing)
+
+CloseForm:
+        Me.Close()
     End Sub
 
     Private Sub prcessSW()
@@ -68,7 +89,7 @@
             Case "k_bukubesar"
                 sales_sw = "OFF"
 
-            Case "k_jurnalumum", "k_labarugi", "k_neraca", "k_neracalajur", "k_jurnaltutup", "k_daftarperk"
+            Case "k_jurnalumum", "k_jurnalsesuai", "k_labarugi", "k_neraca", "k_neracalajur", "k_jurnaltutup", "k_daftarperk"
                 sales_sw = "OFF"
                 akun_sw = False
                 lbl_pajak.Location = lbl_sales.Location
@@ -167,9 +188,6 @@
                                     & "WHERE perk_gol_status<>9 GROUP BY perk_gol_kode " _
                                     & "ORDER BY perk_kode " _
                                     & ")perk LEFT JOIN data_perkiraan_jenis ON perk_tipe=perk_jen_kode AND perk_jen_status=1"
-
-        Dim _tglawal As String = date_tglawal.Value.ToString("yyyy-MM-dd")
-        Dim _tglakhir As String = date_tglakhir.Value.ToString("yyyy-MM-dd")
 
         Select Case tipe
             Case "k_transkas", "k_biayasales", "k_biayasales_global"
@@ -296,13 +314,12 @@
                     Exit Function
 
                 ElseIf tipe = "k_jurnalsesuai" Then
-                    _colselect.AddRange({"GetJurnalSesuai_ket(line_tyep, line_ref_type, line_ref) jurnal_ket_line",
+                    _colselect.AddRange({"GetJurnalSesuai_ket(line_type, line_ref_type, line_ref) jurnal_ket_line",
                                          "jurnal_akun", "jurnal_akun_n", "jurnal_ket",
                                          "jurnal_debet", "jurnal_kredit"
                                          })
 
-                    Return String.Empty
-                    'Return String.Format(q, String.Join(",", _colselect), date_tglawal.Value, date_tglakhir.Value, cb_pajak.SelectedValue, "SESUAI", _qjoin + _qorder)
+                    Return String.Format(q, String.Join(",", _colselect), date_tglawal.Value, date_tglakhir.Value, cb_pajak.SelectedValue, "SESUAI", _qjoin + _qorder)
 
                 Else : Exit Select
                 End If
@@ -331,22 +348,22 @@
                     If tipe = "k_labarugi" Then
                         _colselect.AddRange({"perk_jen_kode neraca_jenis", "perk_jen_nama neraca_jenis_n",
                                              String.Format("IF(perk_d_or_k='D', " _
-                                                           & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_d",
-                                                           _katPajak, date_tglakhir.Value),
+                                                           & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}'), NULL) neraca_saldo_d",
+                                                           _katPajak, date_tglawal.Value, date_tglakhir.Value),
                                              String.Format("IF(perk_d_or_k='K', " _
-                                                           & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_k",
-                                                           _katPajak, date_tglakhir.Value)})
-                        _qwh = " AND LEFT(perk_kode,2) IN ('31','41','42','32')"
+                                                           & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}'), NULL) neraca_saldo_k",
+                                                           _katPajak, date_tglawal.Value, date_tglakhir.Value)})
+                        _qwh = " AND LEFT(perk_kode,1) IN ('3','4')"
 
-                    Else
+                    ElseIf tipe = "k_neraca" Then
                         _colselect.AddRange({"perk_jen_kode neraca_subjenis", "perk_jen_nama neraca_subjenis_n",
                                              "LEFT(perk_kode,1) neraca_jenis", "IF(LEFT(perk_kode,1)='1', 'AKTIVA', 'PASSIVA') neraca_jenis_n",
                                              String.Format("IF(perk_d_or_k='D', " _
                                                            & "GetSumPerkiraan_V2(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_d",
-                                                           _katPajak, date_tglakhir.Value),
+                                                           _katPajak, date_tglakhir.Value.AddDays(1)),
                                              String.Format("IF(perk_d_or_k='K', " _
                                                            & "GetSumPerkiraan_V2(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_k",
-                                                           _katPajak, date_tglakhir.Value)})
+                                                           _katPajak, date_tglakhir.Value.AddDays(1))})
                         _qwh = " AND LEFT(perk_kode,1) IN ('1','2')"
 
                     End If
@@ -355,7 +372,49 @@
                     Return String.Format(q, String.Join(",", _colselect), date_tglawal.Value, date_tglakhir.Value, _qjoin, _qwh + _qorder)
                     Exit Function
 
-                    'ADD JURNAL PENYESUAIAN
+                ElseIf {"k_laba_komp", "k_neraca_komp"}.Contains(tipe) Then
+                    _colselect.AddRange({"perk_kode neraca_akun", "perk_nama_akun neraca_akun_n", "perk_gol_pos neraca_pos",
+                                        "perk_parent neraca_parent", "perk_gol_nama neraca_parent_n",
+                                        String.Format("'{0}' perk_kat", _katPajak)})
+                    _qjoin = " LEFT JOIN data_perkiraan_gol ON perk_parent=perk_gol_kode " _
+                            & "LEFT JOIN data_perkiraan_jenis ON perk_gol_kodejen=perk_jen_kode"
+
+                    If tipe = "k_laba_komp" Then
+                        _colselect.AddRange({"perk_jen_kode neraca_jenis", "perk_jen_nama neraca_jenis_n"})
+                        For i = 2 To 0
+                            Dim _tglawal As Date = DateSerial(date_tglawal.Value.Year, date_tglawal.Value.Month - i, 1)
+                            Dim _tglakhir As Date = DateSerial(date_tglakhir.Value.Year, date_tglakhir.Value.Month - i + 1, 0)
+                            _colselect.AddRange({String.Format(
+                                                    "IF(perk_d_or_k='D', " _
+                                                    & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}'), NULL) neraca_saldo_{3}",
+                                                    _katPajak, date_tglawal.Value, date_tglakhir.Value, i + 1),
+                                                 String.Format(
+                                                    "IF(perk_d_or_k='K', " _
+                                                    & "GetJurnalUmum_saldoperk(perk_kode,'SALDO','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}'), NULL) neraca_saldo_{3}",
+                                                    _katPajak, date_tglawal.Value, date_tglakhir.Value, i + 1)})
+                        Next
+                        _qwh = " AND LEFT(perk_kode,1) IN ('3','4')"
+
+                    Else
+                        _colselect.AddRange({"perk_jen_kode neraca_subjenis", "perk_jen_nama neraca_subjenis_n",
+                                             "LEFT(perk_kode,1) neraca_jenis", "IF(LEFT(perk_kode,1)='1', 'AKTIVA', 'PASSIVA') neraca_jenis_n"})
+                        For i = 2 To 0
+                            Dim _tglakhir As Date = DateSerial(date_tglakhir.Value.Year, date_tglakhir.Value.Month - i + 1, 0)
+                            _colselect.AddRange({String.Format("IF(perk_d_or_k='D', " _
+                                                               & "GetSumPerkiraan_V2(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_{2}",
+                                                               _katPajak, _tglakhir.AddDays(1), i + 1),
+                                                 String.Format("IF(perk_d_or_k='K', " _
+                                                               & "GetSumPerkiraan_V2(perk_kode,'SALDO','{0}', NULL, '{1:yyyy-MM-dd}'), NULL) neraca_saldo_{2}",
+                                                               _katPajak, _tglakhir.AddDays(1), i + 1)})
+                        Next
+                        _qwh = " AND LEFT(perk_kode,1) IN ('1','2')"
+
+                    End If
+                    _qorder = " ORDER BY perk_kode"
+
+                    Return String.Format(q, String.Join(",", _colselect), date_tglawal.Value, date_tglakhir.Value, _qjoin, _qwh + _qorder)
+                    Exit Function
+
                 ElseIf tipe = "k_neracalajur" Then
                     _colselect.AddRange({"LEFT(perk_kode,1) n_jenis",
                                          "(CASE LEFT(perk_kode,1) WHEN 1 THEN 'AKTIVA' WHEN 2 THEN 'PASSIVA' WHEN 3 THEN 'PENDAPATAN' WHEN 4 THEN 'BIAYA' ELSE '-' END) n_jenis_n",
@@ -369,8 +428,10 @@
                                                        _katPajak, date_tglawal.Value, date_tglakhir.Value),
                                          String.Format("@k_saldo:= GetJurnalUmum_saldoperk(perk_kode,'KREDIT','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}') n_saldo_k",
                                                        _katPajak, date_tglawal.Value, date_tglakhir.Value),
-                                         "@d_sesuai := 0 n_sesuai_d",
-                                         "@k_sesuai := 0 n_sesuai_k",
+                                         String.Format("@d_sesuai:= GetJurnalSesuai_saldoperk(perk_kode,'DEBET','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}') n_sesuai_d",
+                                                       _katPajak, date_tglawal.Value, date_tglakhir.Value),
+                                         String.Format("@k_sesuai:= GetJurnalSesuai_saldoperk(perk_kode,'KREDIT','{0}', '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}') n_sesuai_k",
+                                                       _katPajak, date_tglawal.Value, date_tglakhir.Value),
                                          "IF(LEFT(perk_kode,1) IN ('3','4') AND perk_d_or_k='D', ROUND(@d_awal+(@d_saldo-@k_saldo)+(@d_sesuai-@k_sesuai),2), NULL) n_laba_d",
                                          "IF(LEFT(perk_kode,1) IN ('3','4') AND perk_d_or_k='K', ROUND(@k_awal+(@k_saldo-@d_saldo)+(@k_sesuai-@d_sesuai),2), NULL) n_laba_k",
                                          "IF(LEFT(perk_kode,1) IN ('1','2') AND perk_d_or_k='D', ROUND(@d_awal+(@d_saldo-@k_saldo)+(@d_sesuai-@k_sesuai),2), NULL) n_neraca_d",
@@ -527,19 +588,22 @@
 
     'LOAD LAPORAN
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        Dim x As New fr_lap_keuangan With {
-                    .Text = lapwintext
-                }
+        Dim x As New fr_lap_keuangan With {.Text = lapwintext}
         Dim header As String = ""
 
-        If date_tglakhir.Value.ToString("MMyyyy") = date_tglawal.Value.ToString("MMyyyy") Then
+        If date_tglakhir.Value.ToString("MMyyyy") = date_tglawal.Value.ToString("MMyyyy") AndAlso date_tglawal.Value.Day = 1 _
+            AndAlso date_tglakhir.Value.Day = DateSerial(date_tglakhir.Value.Year, date_tglakhir.Value.Month + 1, 0).Day Then
             header = date_tglawal.Value.ToString("MMMM yyyy")
         Else
             header = date_tglawal.Value.ToString("dd/MM/yyyy") & " S.d " & date_tglakhir.Value.ToString("dd/MM/yyyy")
         End If
 
         Me.Cursor = Cursors.WaitCursor
-        x.setVar(laptype, createQuery(laptype), header)
+        If Not {"k_laba_komp", "k_neraca_komp"}.Contains(laptype) Then
+            x.setVar(laptype, createQuery(laptype), header)
+        Else
+            Exit Sub
+        End If
         x.ShowDialog(Me)
         Me.Cursor = Cursors.Default
     End Sub

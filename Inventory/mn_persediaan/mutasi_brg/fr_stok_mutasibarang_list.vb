@@ -31,7 +31,6 @@
         Return MyBase.ProcessKeyPreview(m)
     End Function
 
-
     Public Sub setpage(page As TabPage)
         tabpagename = page
         lbl_title.Text = page.Text
@@ -366,7 +365,7 @@ EndSub:
 
     Private Sub mn_hapus_Click(sender As Object, e As EventArgs) Handles mn_hapus.Click
         If dgv_list.RowCount > 0 And dgv_list.SelectedRows.Count > 0 Then
-            CancelData(dgv_barang.SelectedRows.Item(0).Cells(0).Value)
+            CancelData(dgv_list.SelectedRows.Item(0).Cells(0).Value)
         End If
     End Sub
 

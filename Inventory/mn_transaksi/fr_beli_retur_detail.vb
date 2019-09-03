@@ -300,26 +300,33 @@
                     & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
 
             Case "faktur"
-                q = "SELECT hutang_faktur AS 'Faktur', getSisaHutang(hutang_faktur,'{1}') as 'SisaHutang' " _
+                q = "SELECT hutang_faktur AS 'Faktur', GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE(CURDATE(), 1)) as 'SisaHutang' " _
                     & "FROM data_hutang_awal " _
-                    & "WHERE hutang_status=1 AND hutang_supplier='{2}' AND hutang_pajak={3} " _
+                    & "WHERE hutang_status=1 AND hutang_supplier='{1}' AND hutang_pajak={2} " _
                     & "AND hutang_faktur LIKE '%{0}%' LIMIT 250"
-                q = String.Format(q, "{0}", selectperiode.id, in_supplier.Text, _pajak)
+                q = String.Format(q, "{0}", in_supplier.Text, _pajak)
 
             Case Else
                 Exit Sub
         End Select
 
-        dt = getDataTablefromDB(String.Format(q, param))
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                dt = x.GetDataTable(String.Format(q, param))
+            Else
+                Exit Sub
+            End If
+        End Using
 
         With dgv_listbarang
             .DataSource = dt
             If .ColumnCount > 0 Then
                 .Columns(0).Width = 135
                 .Columns(1).Width = 200
-                If tipe = "barang" Then : .Columns(2).Visible = False
+                If tipe = "barang" Then : .Columns(2).Visible = False : .Columns(0).Width = 75
                 ElseIf tipe = "faktur" Then : .Columns(1).Width = 125 : .Columns(1).DefaultCellStyle = dgvstyle_currency
                 End If
+                .Columns(.DisplayedColumnCount(False) - 1).AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             End If
         End With
     End Sub
@@ -337,14 +344,13 @@
         With dgv_listbarang.SelectedRows.Item(0)
             Select Case popupstate
                 Case "barang"
+                    Dim validUid As String = ""
                     If .Cells(3).Value <= 0 Then
                         If MessageBox.Show("Barang " & .Cells(0).Value & " kosong/minus. Lanjutkan?", Me.Text,
                                            MessageBoxButtons.YesNo, MessageBoxIcon.Warning) = Windows.Forms.DialogResult.Yes Then
-                            If Not TransConfirmValid(in_ket.Text) Then
-                                Exit Sub
-                            End If
-                        Else
-                            Exit Sub
+                            If Not TransConfirmValid(validUid) Then Exit Sub
+                            'ADD LOG VALIDASI
+                        Else : Exit Sub
                         End If
                     End If
                     in_barang.Text = .Cells(0).Value
@@ -493,36 +499,25 @@
     Private Sub countBiaya()
         Dim subtot As Decimal = 0
         Dim pajak As Decimal = 0
-        Dim z As Decimal = 0
-        _persediaan = 0
-
-        op_con()
+        Dim netto As Decimal = 0
         For Each rows As DataGridViewRow In dgv_barang.Rows
-            Dim _qtytot As Integer = 0
-            readcommd("SELECT countQTYItem('" & rows.Cells(0).Value & "'," & rows.Cells("qty").Value & ",'" & rows.Cells("sat_type").Value & "')")
-            If rd.HasRows Then
-                _qtytot = rd.Item(0)
-            End If
-            rd.Close()
             subtot += rows.Cells("jml").Value
-            _persediaan += _qtytot * rows.Cells("brg_hpp").Value
         Next
 
-        z = subtot
+        netto = subtot
 
         If cb_ppn.SelectedValue = "1" Then
             'incl
             pajak = subtot * (1 - 10 / 11)
         ElseIf cb_ppn.SelectedValue = "2" Then
             'excl
-            pajak = subtot * 0.1
-            z = subtot + pajak
+            pajak = subtot * 0.1 : netto = subtot + pajak
         Else
             pajak = 0
         End If
 
         in_jumlah.Text = commaThousand(subtot)
-        in_netto.Text = commaThousand(z)
+        in_netto.Text = commaThousand(netto)
         in_ppn_tot.Text = commaThousand(pajak)
     End Sub
 
@@ -611,7 +606,6 @@
             "faktur_ppn_jenis='" & cb_ppn.SelectedValue & "'",
             "faktur_netto='" & removeCommaThousand(in_netto.Text).ToString.Replace(",", ".") & "'",
             "faktur_jen_bayar='" & cb_bayar_jenis.SelectedValue & "'",
-            "faktur_persediaan='" & _persediaan.ToString.Replace(",", ".") & "'",
             "faktur_sebab='" & in_ket.Text & "'",
             "faktur_status='" & rtbStatus & "'"
             }
@@ -781,28 +775,23 @@
     Private Sub bt_simpanreturbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanreturbeli.Click
         If in_supplier.Text = "" Then
             MessageBox.Show("Supplier belum di input")
-            in_supplier_n.Focus()
-            Exit Sub
+            in_supplier_n.Focus() : Exit Sub
         End If
         If in_gudang.Text = "" Then
             MessageBox.Show("Gudang belum di input")
-            in_gudang_n.Focus()
-            Exit Sub
+            in_gudang_n.Focus() : Exit Sub
         End If
         If dgv_barang.RowCount = 0 Then
             MessageBox.Show("Barang belum di input")
-            in_barang.Focus()
-            Exit Sub
+            in_barang.Focus() : Exit Sub
         End If
         If cb_bayar_jenis.SelectedValue = 1 And in_no_faktur.Text = Nothing Then
             MessageBox.Show("Faktur belum di input")
-            in_no_faktur.Focus()
-            Exit Sub
+            in_no_faktur.Focus() : Exit Sub
         End If
         If cb_bayar_jenis.SelectedValue = 1 And jumlahhutang < removeCommaThousand(in_netto.Text) Then
             MessageBox.Show("Nilai retur lebih besar dari sisa hutang dg nomor nota " & in_no_faktur.Text & ".")
-            in_no_faktur.Focus()
-            Exit Sub
+            in_no_faktur.Focus() : Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor
@@ -840,27 +829,15 @@
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
-        If Char.IsLetterOrDigit(e.KeyChar) Then
-            Dim x As TextBox
-            Select Case popupstate
-                Case "supplier"
-                    x = in_supplier_n
-                Case "gudang"
-                    x = in_gudang_n
-                Case "barang"
-                    x = in_barang_nm
-                Case "faktur"
-                    x = in_no_faktur
-                Case Else
-                    x = Nothing
-                    x.Dispose()
-                    Exit Sub
-            End Select
-            x.Text += e.KeyChar
-            e.Handled = True
-            x.Focus()
-            x.Select(x.TextLength, x.TextLength)
-        End If
+        Dim x As TextBox
+        Select Case popupstate
+            Case "supplier" : x = in_supplier_n
+            Case "gudang" : x = in_gudang_n
+            Case "barang" : x = in_barang_nm
+            Case "faktur" : x = in_no_faktur
+            Case Else : Exit Sub
+        End Select
+        PopUpSearchKeyPress(e, x)
     End Sub
 
     'UI : numeric input
@@ -879,12 +856,12 @@
 
     '--------------- cb prevent input
     Private Sub cb_bayar_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_bayar_jenis.KeyPress, cb_sat.KeyPress, cb_ppn.KeyPress
-        If e.KeyChar <> ControlChars.Cr Then
+        If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
             e.Handled = True
         End If
     End Sub
 
-    '----------------- HEADER
+    'UI : HEADER
     Private Sub in_no_bukti_KeyUp(sender As Object, e As KeyEventArgs) Handles in_no_bukti.KeyUp
         keyshortenter(date_tgl_trans, e)
     End Sub
@@ -922,9 +899,6 @@
 
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_supplier_n.Leave, in_gudang_n.Leave, in_barang_nm.Leave, in_no_faktur.Leave
         If Not dgv_listbarang.Focused = True Then
-            If sender.Text <> Nothing And sender.ReadOnly = False And sender.Enabled = True Then
-                setPopUpResult()
-            End If
             popPnl_barang.Visible = False
         Else
             popPnl_barang.Visible = True
@@ -932,62 +906,26 @@
     End Sub
 
     Private Sub in_s_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyDown, in_gudang_n.KeyDown, in_no_faktur.KeyDown, in_barang_nm.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-        End If
+        If e.KeyCode = Keys.Enter Or e.KeyCode = Keys.Escape Then e.SuppressKeyPress = True
     End Sub
 
     Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_supplier_n.KeyUp, in_gudang_n.KeyUp, in_no_faktur.KeyUp, in_barang_nm.KeyUp
-        Dim _nxtcntrl As Control = Nothing
-        Dim _kdcntrl As Control = Nothing
-
+        Dim _next As Control : Dim _id As TextBox
         Select Case sender.Name.ToString
-            Case "in_supplier_n"
-                _nxtcntrl = in_gudang_n
-                _kdcntrl = in_supplier
-            Case "in_gudang_n"
-                _nxtcntrl = cb_bayar_jenis
-                _kdcntrl = in_gudang
-            Case "in_no_faktur"
-                _nxtcntrl = in_barang_nm
-                _kdcntrl = in_nilaihutang
-            Case "in_barang_nm"
-                _nxtcntrl = in_qty
-                _kdcntrl = in_barang
-            Case Else
-                Exit Sub
+            Case "in_supplier_n" : _next = in_gudang_n : _id = in_supplier
+            Case "in_gudang_n" : _next = cb_bayar_jenis : _id = in_gudang
+            Case "in_no_faktur" : _next = in_barang_nm : _id = in_nilaihutang
+            Case "in_barang_nm" : _next = in_qty : _id = in_barang
+            Case Else : Exit Sub
         End Select
-
-        If sender.Text = "" And IsNothing(_kdcntrl) = False Then
-            _kdcntrl.Text = ""
-            If sender.Name.ToString = "in_no_faktur" Then
-                jumlahhutang = 0
-            End If
-        End If
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(_nxtcntrl, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If e.KeyCode = Keys.Back And Not IsNothing(_kdcntrl) Then
-                    _kdcntrl.Text = ""
-                    If sender.Name.ToString = "in_no_faktur" Then
-                        jumlahhutang = 0
-                    End If
-                End If
-                If popPnl_barang.Visible = False And sender.ReadOnly = False And sender.Enabled = True Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup(popupstate, sender.Text)
-            End If
-        End If
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, _id, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(_next, e)
+                Case "load" : loadDataBRGPopup(popupstate, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown

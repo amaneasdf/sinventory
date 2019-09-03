@@ -37,9 +37,12 @@ Partial Class fr_draft_list
         Me.bt_page_first = New System.Windows.Forms.Button()
         Me.in_page = New System.Windows.Forms.TextBox()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.lbl_date = New System.Windows.Forms.Label()
+        Me.date_tglakhir = New System.Windows.Forms.DateTimePicker()
+        Me.date_tglawal = New System.Windows.Forms.DateTimePicker()
         Me.bt_search = New System.Windows.Forms.Button()
         Me.in_cari = New System.Windows.Forms.TextBox()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mnstrip_main = New System.Windows.Forms.MenuStrip()
         Me.mn_tambah = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
@@ -54,9 +57,6 @@ Partial Class fr_draft_list
         Me.lbl_close = New System.Windows.Forms.Label()
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
-        Me.lbl_date = New System.Windows.Forms.Label()
-        Me.date_tglakhir = New System.Windows.Forms.DateTimePicker()
-        Me.date_tglawal = New System.Windows.Forms.DateTimePicker()
         Me.pnl_Menu.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -71,7 +71,7 @@ Partial Class fr_draft_list
         CType(Me.dgv_detail2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
+        Me.mnstrip_main.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -81,7 +81,7 @@ Partial Class fr_draft_list
         Me.pnl_Menu.Controls.Add(Me.SplitContainer1)
         Me.pnl_Menu.Controls.Add(Me.Panel2)
         Me.pnl_Menu.Controls.Add(Me.Panel3)
-        Me.pnl_Menu.Controls.Add(Me.MenuStrip1)
+        Me.pnl_Menu.Controls.Add(Me.mnstrip_main)
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
         Me.pnl_Menu.Name = "pnl_Menu"
@@ -277,6 +277,31 @@ Partial Class fr_draft_list
         Me.Panel3.Size = New System.Drawing.Size(950, 37)
         Me.Panel3.TabIndex = 1
         '
+        'lbl_date
+        '
+        Me.lbl_date.AutoSize = True
+        Me.lbl_date.Location = New System.Drawing.Point(180, 13)
+        Me.lbl_date.Name = "lbl_date"
+        Me.lbl_date.Size = New System.Drawing.Size(26, 15)
+        Me.lbl_date.TabIndex = 0
+        Me.lbl_date.Text = "S.d."
+        '
+        'date_tglakhir
+        '
+        Me.date_tglakhir.CustomFormat = "dd MMM yyyy"
+        Me.date_tglakhir.Location = New System.Drawing.Point(212, 9)
+        Me.date_tglakhir.Name = "date_tglakhir"
+        Me.date_tglakhir.Size = New System.Drawing.Size(165, 22)
+        Me.date_tglakhir.TabIndex = 1
+        '
+        'date_tglawal
+        '
+        Me.date_tglawal.CustomFormat = "dd MMM yyyy"
+        Me.date_tglawal.Location = New System.Drawing.Point(9, 9)
+        Me.date_tglawal.Name = "date_tglawal"
+        Me.date_tglawal.Size = New System.Drawing.Size(165, 22)
+        Me.date_tglawal.TabIndex = 0
+        '
         'bt_search
         '
         Me.bt_search.BackColor = System.Drawing.Color.WhiteSmoke
@@ -298,14 +323,14 @@ Partial Class fr_draft_list
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 2
         '
-        'MenuStrip1
+        'mnstrip_main
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_print, Me.mn_other, Me.mn_refresh})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
-        Me.MenuStrip1.TabIndex = 182
-        Me.MenuStrip1.Text = "MenuStrip1"
+        Me.mnstrip_main.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_print, Me.mn_other, Me.mn_refresh})
+        Me.mnstrip_main.Location = New System.Drawing.Point(0, 0)
+        Me.mnstrip_main.Name = "mnstrip_main"
+        Me.mnstrip_main.Size = New System.Drawing.Size(950, 24)
+        Me.mnstrip_main.TabIndex = 182
+        Me.mnstrip_main.Text = "MenuStrip1"
         '
         'mn_tambah
         '
@@ -432,31 +457,6 @@ Partial Class fr_draft_list
         Me.lbl_title.TabIndex = 136
         Me.lbl_title.Text = "Data Draft Penjualan"
         '
-        'lbl_date
-        '
-        Me.lbl_date.AutoSize = True
-        Me.lbl_date.Location = New System.Drawing.Point(180, 13)
-        Me.lbl_date.Name = "lbl_date"
-        Me.lbl_date.Size = New System.Drawing.Size(26, 15)
-        Me.lbl_date.TabIndex = 0
-        Me.lbl_date.Text = "S.d."
-        '
-        'date_tglakhir
-        '
-        Me.date_tglakhir.CustomFormat = "dd MMM yyyy"
-        Me.date_tglakhir.Location = New System.Drawing.Point(212, 9)
-        Me.date_tglakhir.Name = "date_tglakhir"
-        Me.date_tglakhir.Size = New System.Drawing.Size(165, 22)
-        Me.date_tglakhir.TabIndex = 1
-        '
-        'date_tglawal
-        '
-        Me.date_tglawal.CustomFormat = "dd MMM yyyy"
-        Me.date_tglawal.Location = New System.Drawing.Point(9, 9)
-        Me.date_tglawal.Name = "date_tglawal"
-        Me.date_tglawal.Size = New System.Drawing.Size(165, 22)
-        Me.date_tglawal.TabIndex = 0
-        '
         'fr_draft_list
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 15.0!)
@@ -483,8 +483,8 @@ Partial Class fr_draft_list
         Me.Panel2.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
+        Me.mnstrip_main.ResumeLayout(False)
+        Me.mnstrip_main.PerformLayout()
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.ResumeLayout(False)
@@ -506,7 +506,7 @@ Partial Class fr_draft_list
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
     Friend WithEvents bt_search As System.Windows.Forms.Button
     Friend WithEvents in_cari As System.Windows.Forms.TextBox
-    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents mnstrip_main As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_tambah As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_edit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem

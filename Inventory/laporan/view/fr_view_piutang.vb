@@ -18,8 +18,10 @@ Public Class fr_view_piutang
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    data_adpt.SelectCommand.CommandTimeout = 360
                     consoleWriteLine(query)
                     data_adpt.Fill(dt)
+                    consoleWriteLine(dt.Rows.Count)
                     data_adpt.Dispose()
                 Catch ex As Exception
                     MessageBox.Show(String.Format("Error: {0}", ex.Message))
@@ -87,7 +89,7 @@ Public Class fr_view_piutang
 
                     Case "p_titipancusto", "p_titipancusto_det", "h_titipsupplier", "h_titipsupplier_det"
                         repdatasource.Name = "ds_titipan"
-                        repdatasource.Value = ds_hutangpiutang.dt_hutang_piutangsupplier
+                        repdatasource.Value = ds_hutangpiutang.dt_piutang_titip
 
                         .DataSources.Add(repdatasource)
                         If inlap_type = "p_titipancusto" Then

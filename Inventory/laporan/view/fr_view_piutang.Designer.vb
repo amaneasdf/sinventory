@@ -52,6 +52,8 @@ Partial Class fr_view_piutang
         Me.ClientSize = New System.Drawing.Size(818, 524)
         Me.Controls.Add(Me.rv_nota)
         Me.Name = "fr_view_piutang"
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.ds_hutangpiutang, System.ComponentModel.ISupportInitialize).EndInit()

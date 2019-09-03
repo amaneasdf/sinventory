@@ -53,14 +53,14 @@
             End If
 
             loadData(KodeBarang)
-            in_kode.ReadOnly = True
-            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
+        in_kode.ReadOnly = IIf(formstate = InputState.Edit, True, False)
+        bt_simpancusto.Text = IIf(formstate = InputState.Edit, "Update", "Simpan")
         in_suppliernama.ReadOnly = IIf(formstate = InputState.Insert, IIf(AllowInput, False, True), True)
         For Each txt As TextBox In {in_nama, in_ket}
             txt.ReadOnly = IIf(AllowInput, False, True)
@@ -74,9 +74,10 @@
         Next
 
         bt_simpancusto.Enabled = AllowInput
-        mn_deact.Enabled = AllowInput
-        mn_save.Enabled = AllowInput
+        mn_deact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
+        mn_save.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
         mn_del.Enabled = False
+        mn_new_supplier.Enabled = IIf(main.listkodemenu.Contains("mn0102"), AllowInput, False)
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)
@@ -174,31 +175,33 @@
 
     'OPEN FULL WINDOWS SEARCH
     Private Sub searchData(tipe As String)
-        Dim q As String = ""
-        Using search As New fr_search_dialog
 
-        End Using
     End Sub
 
     'LOAD DATA TO DGV IN POPUP SEARCH PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing, Optional param2 As String = Nothing)
         Dim q As String
         Dim dt As New DataTable
-        Dim autoco As New AutoCompleteStringCollection
         Select Case tipe
             Case "supplier"
-                q = "SELECT supplier_kode as 'Kode', supplier_nama as 'Nama Supplier', " _
-                    & "If(supplier_status=1,'Aktif','Non_Aktif') as 'Status' FROM data_supplier_master " _
-                    & "WHERE supplier_status<>9 AND (supplier_nama LIKE '{0}%' OR supplier_kode LIKE '{0}%') LIMIT 250"
-                dt = getDataTablefromDB(String.Format(q, param))
+                q = "SELECT supplier_kode 'Kode', supplier_nama 'Nama Supplier' FROM data_supplier_master " _
+                    & "WHERE supplier_status=1 AND (supplier_nama LIKE '{0}%' OR supplier_kode LIKE '{0}%') LIMIT 250"
             Case Else
                 Exit Sub
         End Select
 
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                dt = x.GetDataTable(String.Format(q, param))
+            End If
+        End Using
+
         With dgv_listbarang
             .DataSource = dt
-            .Columns(0).Width = 135
-            .Columns(1).Width = 200
+            If dt.Columns.Count >= 2 Then
+                .Columns(0).Width = 100 : .Columns(1).Width = 200
+                .Columns(.DisplayedColumnCount(False) - 1).AutoSizeMode = IIf(.DisplayedColumnCount(False) <= 3, DataGridViewAutoSizeColumnMode.Fill, DataGridViewAutoSizeColumnMode.NotSet)
+            End If
         End With
     End Sub
 
@@ -209,13 +212,12 @@
                 Case "supplier"
                     in_supplier.Text = .Cells(0).Value
                     in_suppliernama.Text = .Cells(1).Value
+                    If String.IsNullOrWhiteSpace(in_kode.Text) Then in_kode.Text = in_supplier.Text
                     in_kode.Focus()
                 Case Else
                     Exit Sub
             End Select
-
         End With
-        popPnl_barang.Visible = False
     End Sub
 
     'SAVE DATA
@@ -224,8 +226,6 @@
         Dim querycheck As Boolean = False
         Dim queryArr As New List(Of String)
         Dim q As String = ""
-
-        Me.Cursor = Cursors.WaitCursor
 
         data = {
                 "barang_nama='" & in_nama.Text.Replace("'", "`") & "'",
@@ -278,25 +278,51 @@
                                         }
                                        }
 
-        op_con()
-        If bt_simpancusto.Text = "Simpan" Then
-            'GENNERATE CODE
-            If Trim(in_kode.Text) = Nothing Then
-                Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(barang_kode," & in_supplier.Text.Length + 1 & ") as ss FROM data_barang_master WHERE barang_kode LIKE '" & in_supplier.Text & "%' " _
-                          & "AND SUBSTRING(barang_kode," & in_supplier.Text.Length + 1 & ") REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
-                End If
-                rd.Close()
-
-                in_kode.Text = in_supplier.Text & no.ToString("D5")
+        If formstate = InputState.Insert Then
+            If String.IsNullOrWhiteSpace(in_kode.Text) Then
+                Dim no As Integer = 0 : Dim format As String = "D5"
+                Using x = MainConnection
+                    'GENERATE CODE
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        q = "SELECT IFNULL(MAX(SUBSTR(barang_kode,{1})), 0) FROM data_barang_master " _
+                            & "WHERE barang_kode LIKE '{0}%' AND SUBSTR(barang_kode,{1}) REGEXP '^[0-9]+$'"
+                        Try
+                            no = Integer.Parse(x.ExecScalar(String.Format(q, in_supplier.Text, in_supplier.Text.Length + 1)))
+                            format = IIf(no + 1 > 99999, "D" & (no + 1).ToString.Length, "D5")
+                            in_kode.Text = in_supplier.Text & (no + 1).ToString(format)
+                        Catch ex As Exception
+                            logError(ex, True)
+                            MessageBox.Show("Terjadi kesalahan saat melakukan proses input data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Exit Sub
+                        End Try
+                    Else
+                        MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
+                    End If
+                End Using
             Else
-                If checkdata("data_barang_master", "'" & in_kode.Text & "'", "barang_kode") Then
-                    MessageBox.Show("Kode Barang " & in_kode.Text & " sudah ada")
-                    in_kode.Focus()
-                    Exit Sub
-                End If
+                'CHECK INPUTED CODE
+                Using x = MainConnection
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        q = "SELECT COUNT(barang_kode) FROM data_barang_master WHERE barang_kode='{0}'"
+                        Try
+                            If Integer.Parse(x.ExecScalar(String.Format(q, in_kode.Text))) > 0 Then
+                                MessageBox.Show("Kode barang " & in_kode.Text & " sudah pernah diinputkan ke database.",
+                                                Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                                Exit Sub
+                            End If
+                        Catch ex As Exception
+                            logError(ex, True)
+                            MessageBox.Show("Terjadi kesalahan saat melakukan proses input data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Exit Sub
+                        End Try
+                    Else
+                        MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
+                    End If
+                End Using
             End If
 
             q = "INSERT INTO data_barang_master SET barang_kode='{0}',{1},barang_reg_date=NOW(), barang_reg_alias='{2}'"
@@ -319,7 +345,7 @@
                 queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data)))
             Next
 
-        ElseIf bt_simpancusto.Text = "Update" Then
+        Else
             q = "UPDATE data_barang_master SET {1},barang_upd_date=NOW(), barang_upd_alias='{2}' WHERE barang_kode='{0}'"
             queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data), loggeduser.user_id))
 
@@ -341,17 +367,21 @@
 
         End If
 
-        querycheck = startTrans(queryArr)
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                querycheck = x.TransactCommand(queryArr)
 
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            doRefreshTab({pgbarang})
-            Me.Close()
-        End If
+                If querycheck Then
+                    MessageBox.Show("Data barang tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pgbarang})
+                    Me.Close()
+                Else
+                    MessageBox.Show("Data barang tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
     End Sub
 
     'DEL DATA
@@ -408,9 +438,9 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        If MessageBox.Show("Tutup Form?", "Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Barang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -436,7 +466,7 @@
         End If
     End Sub
 
-    'MENU
+    'UI : MENU
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
         bt_simpancusto.PerformClick()
     End Sub
@@ -469,6 +499,11 @@
         'setStatus()
     End Sub
 
+    Private Sub mn_new_supplier_Click(sender As Object, e As EventArgs) Handles mn_new_supplier.Click
+        Dim x As New fr_supplier_detail
+        x.doLoadNew()
+    End Sub
+
     'NUMERIC
     Private Sub in_stok_berat_Enter(sender As Object, e As EventArgs) Handles in_isi_tengah.Enter, in_isi_besar.Enter
         numericGotFocus(sender)
@@ -496,60 +531,49 @@
     'SAVE
     Private Sub bt_simpanbarang_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If in_supplier.Text = Nothing Then
-            MessageBox.Show("Supplier belum di input")
-            in_suppliernama.Focus()
-            Exit Sub
+            MessageBox.Show("Supplier belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_suppliernama.Focus() : Exit Sub
         End If
         If Trim(in_nama.Text) = Nothing Then
-            MessageBox.Show("Nama belum di input")
+            MessageBox.Show("Nama belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_nama.Focus()
             Exit Sub
         End If
         If cb_jenis.SelectedValue = Nothing Then
-            MessageBox.Show("Jenis barang belum di input")
-            'cb_jenis.DroppedDown = True
-            cb_jenis.Focus()
-            Exit Sub
+            MessageBox.Show("Jenis barang belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_jenis.Focus() : Exit Sub
         End If
+
+        'CHECK SATUAN/ISI
         Dim sw As Boolean = True
         Dim cbsat As ComboBox() = {cb_sat_kecil, cb_sat_tengah, cb_sat_besar}
         For Each x As ComboBox In cbsat
             If x.SelectedValue = Nothing Then
-                MessageBox.Show("Satuan belum di input")
-                x.Focus()
-                sw = False
-                Exit For
+                MessageBox.Show("Satuan belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                x.Focus() : sw = False : Exit For
             End If
-        Next
-        If sw = False Then Exit Sub
+        Next : If Not sw Then Exit Sub
         Dim n As NumericUpDown() = {in_isi_tengah, in_isi_besar}
         For Each x As NumericUpDown In n
             If x.Value = 0 Then
-                MessageBox.Show("Isi satuan belum di input")
-                x.Focus()
-                sw = False
-                Exit For
+                MessageBox.Show("Isi satuan belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                x.Focus() : sw = False : Exit For
             End If
-        Next
-        If sw = False Then Exit Sub
+        Next : If Not sw Then Exit Sub
 
-        If MessageBox.Show("Simpan data barang?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+        Me.Cursor = Cursors.WaitCursor
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If formstate <> InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data barang?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then
             If formstate = InputState.Edit Then
-                Dim x As Boolean = False
-                Dim _ket As String = ""
-                x = MasterConfirmValid(_ket)
-                If x = False Then
-                    Exit Sub
-                End If
-                in_ket.Text += IIf(String.IsNullOrWhiteSpace(in_ket.Text), "", in_ket.Text) & _ket
+                If Not MasterConfirmValid("") Then Exit Sub
             End If
-
             saveData()
         End If
+        Me.Cursor = Cursors.Default
     End Sub
 
-    'UI
-    '----------------POPUP PANEL
+    'UI : POPUP PANEL
     Private Sub dgv_listbarang_Leave(sender As Object, e As EventArgs) Handles dgv_listbarang.Leave
         If Not in_suppliernama.Focused Then
             popPnl_barang.Visible = False
@@ -564,19 +588,20 @@
         End If
     End Sub
 
-    Private Sub dgv_listbarang_keydown(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+    Private Sub dgv_listbarang_KeyDown_1(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+        End If
+    End Sub
+
+    Private Sub dgv_listbarang_KeyUp(sender As Object, e As KeyEventArgs) Handles dgv_listbarang.KeyUp
         If e.KeyCode = Keys.Enter Then
             setPopUpResult()
         End If
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
-        If Char.IsLetterOrDigit(e.KeyChar) Then
-            in_suppliernama.Text += e.KeyChar
-            e.Handled = True
-            in_suppliernama.Focus()
-            in_suppliernama.Select(in_suppliernama.TextLength, in_suppliernama.TextLength)
-        End If
+        PopUpSearchKeyPress(e, in_suppliernama)
     End Sub
 
     '------------ INPUT
@@ -585,55 +610,35 @@
     End Sub
 
     Private Sub in_suppliernama_Enter(sender As Object, e As EventArgs) Handles in_suppliernama.Enter
-        If in_suppliernama.ReadOnly = False Then
-            popPnl_barang.Location = New Point(in_suppliernama.Left, in_suppliernama.Top + in_suppliernama.Height)
-            If popPnl_barang.Visible = False Then
-                popPnl_barang.Visible = True
-            End If
+        If sender.Enabled And sender.ReadOnly = False Then
+            popPnl_barang.Location = New Point(sender.Left, sender.Top + sender.Height)
+            If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
             popState = "supplier"
-            loadDataBRGPopup(popState, in_suppliernama.Text)
+            loadDataBRGPopup(popState, sender.Text)
         End If
     End Sub
 
     Private Sub in_suppliernama_Leave(sender As Object, e As EventArgs) Handles in_suppliernama.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
-            If Trim(in_suppliernama.Text) <> Nothing Then
-                'setBarang(in_barang_nm.Text)
-            End If
         Else
             popPnl_barang.Visible = True
         End If
     End Sub
 
-    Private Sub in_suppliernama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_suppliernama.KeyUp
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(in_kode, e)
-        Else
-            If e.KeyCode <> Keys.Escape Then
-                If popPnl_barang.Visible = False And sender.ReadOnly = False Then
-                    popPnl_barang.Visible = True
-                End If
-                loadDataBRGPopup(popState, in_suppliernama.Text)
-            End If
-        End If
+    Private Sub in_suppliernama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_suppliernama.KeyDown
+        If e.KeyCode = Keys.Enter Or e.KeyCode = Keys.Escape Then e.SuppressKeyPress = True
     End Sub
 
-    Private Sub in_suppliernama_TextChanged(sender As Object, e As EventArgs) Handles in_suppliernama.TextChanged
-        If sender.Text = Nothing Then
-            in_supplier.Clear()
-        End If
-    End Sub
-
-    Private Sub bt_supplier_add_Click(sender As Object, e As EventArgs) Handles bt_supplier_add.Click
-
+    Private Sub in_suppliernama_KeyUp(sender As Object, e As KeyEventArgs) Handles in_suppliernama.KeyUp
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, in_supplier, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(in_nama, e)
+                Case "load" : loadDataBRGPopup(popState, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
@@ -645,7 +650,7 @@
     End Sub
 
     Private Sub cb_sat_besar_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_sat_besar.KeyPress, cb_sat_kecil.KeyPress, cb_sat_tengah.KeyPress, cb_jenis.KeyPress
-        If e.KeyChar <> ControlChars.Cr Then
+        If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
             e.Handled = True
         End If
     End Sub

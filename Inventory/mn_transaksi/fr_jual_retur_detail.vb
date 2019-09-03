@@ -996,56 +996,28 @@ CountHarga:
     End Sub
 
     Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo_n.KeyUp, in_sales_n.KeyUp, in_gudang_n.KeyUp, in_no_faktur.KeyUp, in_barang_nm.KeyUp
-        Dim _nxtcntrl As Control = Nothing
-        Dim _kdcntrl As Control = Nothing
-
+        Dim _next As Control : Dim _id As TextBox
         Select Case sender.Name.ToString
-            Case "in_custo_n"
-                _nxtcntrl = in_gudang_n
-                _kdcntrl = in_custo
-            Case "in_sales_n"
-                _nxtcntrl = cb_bayar_jenis
-                _kdcntrl = in_sales
-            Case "in_gudang_n"
-                _nxtcntrl = in_sales_n
-                _kdcntrl = in_gudang
-            Case "in_no_faktur"
-                _nxtcntrl = in_no_faktur_ex
-                _kdcntrl = in_nilaipiutang
-            Case "in_barang_nm"
-                _nxtcntrl = in_qty
-                _kdcntrl = in_barang
-            Case Else
-                Exit Sub
+            Case "in_custo_n" : _next = in_gudang_n : _id = in_custo
+            Case "in_sales_n" : _next = cb_bayar_jenis : _id = in_sales
+            Case "in_gudang_n" : _next = in_sales_n : _id = in_gudang
+            Case "in_no_faktur" : _next = in_no_faktur_ex : _id = in_nilaipiutang
+            Case "in_barang_nm" : _next = in_qty : _id = in_barang
+            Case Else : Exit Sub
         End Select
-        If sender.Text = "" And IsNothing(_kdcntrl) = False Then
-            _kdcntrl.Text = ""
-            If sender.Name = "in_no_faktur" Then jumlahpiutang = 0
-        End If
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then dgv_listbarang.Focus()
-
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then setPopUpResult()
-            keyshortenter(_nxtcntrl, e)
-        Else
-            If e.KeyCode <> Keys.Escape And sender.Readonly = False Then
-                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
-                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
-                    If Not IsNothing(_kdcntrl) Then _kdcntrl.Text = ""
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, _id, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(_next, e)
+                Case "clear"
                     If sender.Name.ToString = "in_no_faktur" Then
                         jumlahpiutang = 0
                     End If
-                End If
-                If popPnl_barang.Visible = False Then
-                    Dim _sw As Boolean = True
-                    If sender.Name.ToString = "in_no_faktur" And cb_bayar_jenis.SelectedValue <> 1 Then _sw = False
-                    popPnl_barang.Visible = _sw
-                End If
-                loadDataBRGPopup(popupstate, sender.Text)
-            End If
-        End If
+                Case "load" : loadDataBRGPopup(popupstate, sender.Text)
+            End Select
+        Next
+        'If sender.Name = "in_no_faktur" And cb_bayar_jenis.SelectedValue <> 1 Then popPnl_barang.Visible = False
     End Sub
 
     Private Sub in_gudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_gudang.KeyDown

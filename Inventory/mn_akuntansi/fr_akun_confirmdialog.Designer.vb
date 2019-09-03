@@ -189,8 +189,11 @@ Partial Class fr_akun_confirmdialog
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "fr_akun_confirmdialog"
-        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
+        Me.ShowInTaskbar = False
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Konfirmasi"
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()

@@ -18,6 +18,7 @@ Public Class fr_lap_stock_view
                 Try
                     Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
                     consoleWriteLine(query)
+                    data_adpt.SelectCommand.CommandTimeout = 360
                     data_adpt.Fill(dt)
                     data_adpt.Dispose()
                 Catch ex As Exception

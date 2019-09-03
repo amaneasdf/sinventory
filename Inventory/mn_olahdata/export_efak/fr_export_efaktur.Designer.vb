@@ -49,9 +49,6 @@ Partial Class fr_export_efaktur
         Me.bt_createtemplate = New System.Windows.Forms.Button()
         Me.bt_loadtemplate = New System.Windows.Forms.Button()
         Me.dgv_faktur = New System.Windows.Forms.DataGridView()
-        Me.ctxMn_dgv = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.mn_viewdetail = New System.Windows.Forms.ToolStripMenuItem()
-        Me.mn_removefaktur = New System.Windows.Forms.ToolStripMenuItem()
         Me.faktur_ck = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.faktur_kode = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_tgl_trans = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -62,6 +59,9 @@ Partial Class fr_export_efaktur
         Me.faktur_dpp = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_ppn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.faktur_filler = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ctxMn_dgv = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.mn_viewdetail = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_removefaktur = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         Me.pnl_container.SuspendLayout()
         CType(Me.dgv_faktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -158,10 +158,11 @@ Partial Class fr_export_efaktur
         '
         'date_tgl
         '
-        Me.date_tgl.Location = New System.Drawing.Point(70, 71)
+        Me.date_tgl.Location = New System.Drawing.Point(601, 28)
         Me.date_tgl.Name = "date_tgl"
         Me.date_tgl.Size = New System.Drawing.Size(136, 22)
         Me.date_tgl.TabIndex = 4
+        Me.date_tgl.Visible = False
         '
         'bt_page_next
         '
@@ -188,6 +189,7 @@ Partial Class fr_export_efaktur
         'bt_simpanbeli
         '
         Me.bt_simpanbeli.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.bt_simpanbeli.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_simpanbeli.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_simpanbeli.Location = New System.Drawing.Point(12, 504)
         Me.bt_simpanbeli.Name = "bt_simpanbeli"
@@ -230,7 +232,7 @@ Partial Class fr_export_efaktur
         '
         'in_id
         '
-        Me.in_id.Location = New System.Drawing.Point(70, 45)
+        Me.in_id.Location = New System.Drawing.Point(70, 71)
         Me.in_id.Name = "in_id"
         Me.in_id.Size = New System.Drawing.Size(56, 22)
         Me.in_id.TabIndex = 3
@@ -238,7 +240,7 @@ Partial Class fr_export_efaktur
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(239, 75)
+        Me.Label6.Location = New System.Drawing.Point(149, 75)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(78, 15)
         Me.Label6.TabIndex = 41
@@ -247,16 +249,17 @@ Partial Class fr_export_efaktur
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(9, 75)
+        Me.Label5.Location = New System.Drawing.Point(540, 32)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(47, 15)
         Me.Label5.TabIndex = 41
         Me.Label5.Text = "Tanggal"
+        Me.Label5.Visible = False
         '
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(9, 48)
+        Me.Label2.Location = New System.Drawing.Point(9, 75)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(55, 15)
         Me.Label2.TabIndex = 41
@@ -266,7 +269,7 @@ Partial Class fr_export_efaktur
         '
         Me.date_periode.CustomFormat = "MMMM yyyy"
         Me.date_periode.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.date_periode.Location = New System.Drawing.Point(323, 71)
+        Me.date_periode.Location = New System.Drawing.Point(233, 71)
         Me.date_periode.Name = "date_periode"
         Me.date_periode.Size = New System.Drawing.Size(171, 22)
         Me.date_periode.TabIndex = 5
@@ -274,6 +277,7 @@ Partial Class fr_export_efaktur
         'bt_samamasapajak
         '
         Me.bt_samamasapajak.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.bt_samamasapajak.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_samamasapajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_samamasapajak.Location = New System.Drawing.Point(193, 504)
         Me.bt_samamasapajak.Name = "bt_samamasapajak"
@@ -285,10 +289,11 @@ Partial Class fr_export_efaktur
         'bt_urutnopajak
         '
         Me.bt_urutnopajak.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.bt_urutnopajak.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_urutnopajak.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_urutnopajak.Location = New System.Drawing.Point(374, 504)
         Me.bt_urutnopajak.Name = "bt_urutnopajak"
-        Me.bt_urutnopajak.Size = New System.Drawing.Size(175, 30)
+        Me.bt_urutnopajak.Size = New System.Drawing.Size(175, 32)
         Me.bt_urutnopajak.TabIndex = 12
         Me.bt_urutnopajak.Text = "Urutkan Nomor Pajak"
         Me.bt_urutnopajak.UseVisualStyleBackColor = True
@@ -311,11 +316,11 @@ Partial Class fr_export_efaktur
         Me.bt_deletetemplate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_deletetemplate.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_deletetemplate.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
-        Me.bt_deletetemplate.Location = New System.Drawing.Point(861, 66)
+        Me.bt_deletetemplate.Location = New System.Drawing.Point(842, 66)
         Me.bt_deletetemplate.Name = "bt_deletetemplate"
-        Me.bt_deletetemplate.Size = New System.Drawing.Size(99, 30)
+        Me.bt_deletetemplate.Size = New System.Drawing.Size(118, 30)
         Me.bt_deletetemplate.TabIndex = 8
-        Me.bt_deletetemplate.Text = "Hapus"
+        Me.bt_deletetemplate.Text = "Hapus Data"
         Me.bt_deletetemplate.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.bt_deletetemplate.UseVisualStyleBackColor = True
         '
@@ -325,11 +330,11 @@ Partial Class fr_export_efaktur
         Me.bt_savetemplate.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_savetemplate.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_savetemplate.Image = Global.Inventory.My.Resources.Resources.Add_16x16
-        Me.bt_savetemplate.Location = New System.Drawing.Point(756, 67)
+        Me.bt_savetemplate.Location = New System.Drawing.Point(715, 67)
         Me.bt_savetemplate.Name = "bt_savetemplate"
-        Me.bt_savetemplate.Size = New System.Drawing.Size(99, 30)
+        Me.bt_savetemplate.Size = New System.Drawing.Size(121, 30)
         Me.bt_savetemplate.TabIndex = 7
-        Me.bt_savetemplate.Text = "Simpan"
+        Me.bt_savetemplate.Text = "Simpan Data"
         Me.bt_savetemplate.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.bt_savetemplate.UseVisualStyleBackColor = True
         '
@@ -383,31 +388,12 @@ Partial Class fr_export_efaktur
         Me.dgv_faktur.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgv_faktur.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.faktur_ck, Me.faktur_kode, Me.faktur_tgl_trans, Me.faktur_tgl_pajak, Me.faktur_nopajak, Me.faktur_custo, Me.faktur_npwp, Me.faktur_dpp, Me.faktur_ppn, Me.faktur_filler})
         Me.dgv_faktur.Location = New System.Drawing.Point(12, 103)
+        Me.dgv_faktur.MultiSelect = False
         Me.dgv_faktur.Name = "dgv_faktur"
         Me.dgv_faktur.RowHeadersVisible = False
         Me.dgv_faktur.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgv_faktur.Size = New System.Drawing.Size(948, 394)
         Me.dgv_faktur.TabIndex = 9
-        '
-        'ctxMn_dgv
-        '
-        Me.ctxMn_dgv.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_viewdetail, Me.mn_removefaktur})
-        Me.ctxMn_dgv.Name = "ctxMn_dgv"
-        Me.ctxMn_dgv.Size = New System.Drawing.Size(133, 48)
-        '
-        'mn_viewdetail
-        '
-        Me.mn_viewdetail.Image = Global.Inventory.My.Resources.Resources.Search_16x16
-        Me.mn_viewdetail.Name = "mn_viewdetail"
-        Me.mn_viewdetail.Size = New System.Drawing.Size(132, 22)
-        Me.mn_viewdetail.Text = "View Detail"
-        '
-        'mn_removefaktur
-        '
-        Me.mn_removefaktur.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
-        Me.mn_removefaktur.Name = "mn_removefaktur"
-        Me.mn_removefaktur.Size = New System.Drawing.Size(132, 22)
-        Me.mn_removefaktur.Text = "Remove"
         '
         'faktur_ck
         '
@@ -493,6 +479,26 @@ Partial Class fr_export_efaktur
         Me.faktur_filler.HeaderText = ""
         Me.faktur_filler.Name = "faktur_filler"
         Me.faktur_filler.ReadOnly = True
+        '
+        'ctxMn_dgv
+        '
+        Me.ctxMn_dgv.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_viewdetail, Me.mn_removefaktur})
+        Me.ctxMn_dgv.Name = "ctxMn_dgv"
+        Me.ctxMn_dgv.Size = New System.Drawing.Size(133, 48)
+        '
+        'mn_viewdetail
+        '
+        Me.mn_viewdetail.Image = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.mn_viewdetail.Name = "mn_viewdetail"
+        Me.mn_viewdetail.Size = New System.Drawing.Size(132, 22)
+        Me.mn_viewdetail.Text = "View Detail"
+        '
+        'mn_removefaktur
+        '
+        Me.mn_removefaktur.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
+        Me.mn_removefaktur.Name = "mn_removefaktur"
+        Me.mn_removefaktur.Size = New System.Drawing.Size(132, 22)
+        Me.mn_removefaktur.Text = "Remove"
         '
         'fr_export_efaktur
         '

@@ -792,31 +792,31 @@
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
         If in_no_bukti.Text <> Nothing And _status = 0 Then
             If in_sales.Text = "" Then
-                MessageBox.Show("Sales belum di input")
+                MessageBox.Show("Sales belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_sales_n.Focus()
                 Exit Sub
             End If
             If in_custo_n.Text = "" Then
-                MessageBox.Show("Customer belum di input")
+                MessageBox.Show("Customer belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_sales_n.Focus()
                 Exit Sub
             End If
             If dgv_bayar.RowCount = 0 Then
-                MessageBox.Show("Pembayaran belum di input")
+                MessageBox.Show("Pembayaran belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_custo_n.Focus()
                 Exit Sub
             End If
             If cb_bayar.SelectedValue = "BG" And Trim(in_bg_no.Text) = Nothing Then
-                MessageBox.Show("Nomor Giro belum di input")
+                MessageBox.Show("Nomor Giro belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_bg_no.Focus()
                 Exit Sub
             ElseIf cb_bayar.SelectedValue = "PIUTSUPL" And removeCommaThousand(in_total.Text) > removeCommaThousand(in_saldotitipan.Text) Then
-                MessageBox.Show("Saldo titipan customer lebih kecil daripada total pembayaran.")
+                MessageBox.Show("Saldo titipan customer lebih kecil daripada total pembayaran.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 dgv_bayar.Focus()
                 Exit Sub
             End If
             If cb_akun.SelectedValue = Nothing Then
-                MessageBox.Show("Pilih akun pembayaran terlebih dahulu")
+                MessageBox.Show("Pilih akun pembayaran terlebih dahulu.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 cb_akun.Focus()
                 Exit Sub
             End If
@@ -828,7 +828,8 @@
 
                 If cnfrmval = True Then
                     _status = 1
-                    If Not saveData() Then _status = _prevstatus
+                    Dim _ck = saveData()
+                    If Not _ck Then _status = _prevstatus
                 End If
             End If
         End If
@@ -961,52 +962,30 @@
     End Sub
 
     Private Sub in_sales_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyDown, in_custo_n.KeyDown, in_faktur.KeyDown
-        If e.KeyCode = Keys.Enter Then
-            e.SuppressKeyPress = True
-        End If
+        If e.KeyCode = Keys.Enter And e.KeyCode = Keys.Escape Then e.SuppressKeyPress = True
     End Sub
 
-    Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_custo_n.KeyUp
-        Dim _nxtcontrol As Object
-        Dim _kdcontrol As Object
+    Private Sub in_sales_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_custo_n.KeyUp, in_faktur.KeyUp
+        Dim _next As Object : Dim _id As TextBox
         Select Case sender.Name.ToString
-            Case "in_sales_n"
-                _nxtcontrol = in_custo_n
-                _kdcontrol = in_sales
-            Case "in_custo_n"
-                _nxtcontrol = cb_pajak
-                _kdcontrol = in_custo
+            Case "in_sales_n" : _next = in_custo_n : _id = in_sales
+            Case "in_custo_n" : _next = cb_pajak : _id = in_custo
+            Case "in_faktur" : _next = in_kredit : _id = Nothing
             Case Else
                 Exit Sub
         End Select
 
-        If sender.Text = "" And IsNothing(_kdcontrol) = False Then
-            _kdcontrol.Text = ""
-            in_sisafaktur.Clear() : in_tgl_jtfaktur.Clear() : in_faktur.Clear()
-
-            If popPnl_barang.Visible = True And sender.ReadOnly = False Then loadDataBRGPopup(_popUpPos, sender.Text)
-        End If
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then
-                dgv_listbarang.Focus()
-            End If
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then
-                setPopUpResult()
-            End If
-            keyshortenter(_nxtcontrol, e)
-        Else
-            If e.KeyCode <> Keys.Escape And sender.Readonly = False Then
-                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
-                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
-                    If Not IsNothing(_kdcontrol) Then _kdcontrol.Text = ""
-                    in_sisafaktur.Clear() : in_tgl_jtfaktur.Clear() : in_faktur.Clear()
-                End If
-                If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
-                loadDataBRGPopup(_popUpPos, sender.Text)
-            End If
-        End If
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, _id, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(_next, e)
+                Case "clear"
+                    in_tgl_jtfaktur.Clear() : in_sisafaktur.Clear() : _totalhutang = 0
+                    If {"in_sales_n", "in_custo_n"}.Contains(sender.Name) Then in_faktur.Clear()
+                Case "load" : loadDataBRGPopup(_popUpPos, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_sales_n_MouseClick(sender As Object, e As MouseEventArgs) Handles in_sales_n.MouseClick
@@ -1033,32 +1012,6 @@
             End If
             _popUpPos = "faktur"
             loadDataBRGPopup("faktur", in_faktur.Text, in_custo.Text)
-        End If
-    End Sub
-
-    Private Sub in_faktur_KeyUp(sender As Object, e As KeyEventArgs) Handles in_faktur.KeyUp
-        If sender.Text = "" And sender.ReadOnly = False Then
-            in_sisafaktur.Clear() : in_tgl_jtfaktur.Clear()
-
-            If popPnl_barang.Visible = True Then loadDataBRGPopup(_popUpPos, sender.Text)
-        End If
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then dgv_listbarang.Focus()
-
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then setPopUpResult()
-
-            keyshortenter(in_kredit, e)
-        Else
-            If e.KeyCode <> Keys.Escape And sender.Readonly = False Then
-                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
-                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
-                    in_sisafaktur.Clear() : in_tgl_jtfaktur.Clear()
-                End If
-                If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
-                loadDataBRGPopup(_popUpPos, sender.Text)
-            End If
         End If
     End Sub
 

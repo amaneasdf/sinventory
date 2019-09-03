@@ -6,10 +6,10 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.75cm</Width>
+              <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>3.75cm</Width>
+              <Width>4cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.75cm</Width>
@@ -599,10 +599,13 @@
                                 <FontFamily>Consolas</FontFamily>
                                 <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
+                                <Format>dd MMMM yyyy</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>
-                          <Style />
+                          <Style>
+                            <TextAlign>Left</TextAlign>
+                          </Style>
                         </Paragraph>
                       </Paragraphs>
                       <rd:DefaultName>lap_tgl1</rd:DefaultName>
@@ -618,6 +621,7 @@
                       </Style>
                     </Textbox>
                     <ColSpan>7</ColSpan>
+                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell />
@@ -643,6 +647,7 @@
                               <Value>=Fields!lap_faktur.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -679,6 +684,7 @@
                               <Value>=Fields!lap_supplier_n.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>dd-MM-yy</Format>
                               </Style>
                             </TextRun>
@@ -718,6 +724,7 @@
                               <Value>=Fields!lap_tunai.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -758,6 +765,7 @@
                               <Value>=Fields!lap_brutto.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -799,6 +807,7 @@
                               <Value>=Fields!lap_diskon.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -840,6 +849,7 @@
                               <Value>=Fields!lap_ppn.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -881,6 +891,7 @@
                               <Value>=Fields!lap_jumlah.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -927,6 +938,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -967,6 +979,7 @@
                               <Value>SUBTOTAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1012,6 +1025,7 @@
                               <Value>=Sum(Fields!lap_tunai.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -1059,6 +1073,7 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1107,6 +1122,7 @@
                               <Value>=Sum(Fields!lap_diskon.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1155,6 +1171,7 @@
                               <Value>=Sum(Fields!lap_ppn.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1203,6 +1220,7 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1251,6 +1269,7 @@
                               <Value />
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1291,6 +1310,7 @@
                               <Value>TOTAL</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -1336,6 +1356,7 @@
                               <Value>=Sum(Fields!lap_tunai.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -1383,6 +1404,7 @@
                               <Value>=Sum(Fields!lap_brutto.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1431,6 +1453,7 @@
                               <Value>=Sum(Fields!lap_diskon.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1479,6 +1502,7 @@
                               <Value>=Sum(Fields!lap_ppn.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
@@ -1527,6 +1551,7 @@
                               <Value>=Sum(Fields!lap_jumlah.Value)</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
+                                <FontSize>9pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>

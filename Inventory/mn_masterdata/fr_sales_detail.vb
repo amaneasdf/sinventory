@@ -26,8 +26,7 @@
 
     'SETUP FORM
     Private Sub SetUpForm(KodeSales As String, FormSet As InputState, AllowEdit As Boolean)
-        Const _tempTitle As String = "Data Salesman : rb201908"
-
+        Const _tempTitle As String = "Data Salesman : P01616"
         formstate = FormSet
 
         With cb_jenis
@@ -38,32 +37,30 @@
         End With
 
         If Not FormSet = InputState.Insert Then
-            Me.Text += KodeSales
-            Me.lbl_title.Text += " : " & KodeSales
+            Me.Text += KodeSales : Me.lbl_title.Text += " : " & KodeSales
             If Me.lbl_title.Text.Length > _tempTitle.Length Then
                 Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
             End If
 
             loadDataSales(KodeSales)
             If Not {0, 1}.Contains(slsStatus) Then AllowEdit = False
-            in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
-            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
-        For Each txt As TextBox In {in_kode, in_alamatsales, in_namasales, in_lahir_kota, in_telpsales, in_faxsales, in_nik, in_bank_an, in_bank_nama, in_bank_rek}
+        in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
+        For Each txt As TextBox In {in_alamatsales, in_namasales, in_telpsales, in_faxsales, in_nik, in_bank_an, in_bank_nama, in_bank_rek, in_email}
             txt.ReadOnly = IIf(AllowInput, False, True)
         Next
-        For Each dtp As DateTimePicker In {date_kerja, date_lahir_tgl}
-            dtp.Enabled = AllowInput
-        Next
-        in_target.Enabled = AllowInput
         bt_simpancusto.Enabled = AllowInput
-        mn_deact.Enabled = AllowInput
+        bt_simpancusto.Text = IIf(formstate = InputState.Insert, "Simpan", "Update")
+        mn_deact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
+        mn_deact.Text = IIf(slsStatus = 1, "Deactivate", "Activate")
         mn_save.Enabled = AllowInput
+        mn_set.Enabled = IIf(main.listkodemenu.Contains("mn0934") And formstate <> InputState.Insert, AllowInput, False)
+        mn_del.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)
@@ -80,8 +77,10 @@
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
-        Dim q As String = "SELECT salesman_nama,salesman_alamat,salesman_tanggal_masuk,salesman_jenis,salesman_lahir_kota,salesman_lahir_tanggal,salesman_hp, " _
-                          & "salesman_fax,salesman_nik,salesman_target,salesman_bank_nama,salesman_bank_rekening,salesman_bank_atasnama,salesman_status, " _
+        Dim q As String = "SELECT salesman_nama, IFNULL(salesman_alamat, '') salesman_alamat, salesman_jenis, " _
+                          & "IFNULL(salesman_hp, '') hp, IFNULL(salesman_fax, '') fax, IFNULL(salesman_email, '') email, IFNULL(salesman_nik, '') nik, " _
+                          & "IFNULL(salesman_bank_nama, '') bank_nama, IFNULL(salesman_bank_rekening,'') bank_rek, IFNULL(salesman_bank_atasnama, '') bank_na, " _
+                          & "salesman_status, " _
                           & "IFNULL(salesman_reg_alias,'') salesman_reg_alias, DATE_FORMAT(salesman_reg_date,'%d/%m/%Y %H:%i:%S') salesman_reg_date, " _
                           & "IFNULL(salesman_upd_alias,'') salesman_upd_alias, IFNULL(DATE_FORMAT(salesman_upd_date,'%d/%m/%Y %H:%i:%S'),'') salesman_upd_date " _
                           & "FROM data_salesman_master WHERE salesman_kode='{0}'"
@@ -94,18 +93,16 @@
                         in_kode.Text = kode
                         in_namasales.Text = rdx.Item("salesman_nama")
                         in_alamatsales.Text = rdx.Item("salesman_alamat")
-                        date_kerja.Value = rdx.Item("salesman_tanggal_masuk")
                         cb_jenis.SelectedValue = rdx.Item("salesman_jenis")
-                        in_lahir_kota.Text = rdx.Item("salesman_lahir_kota")
-                        date_lahir_tgl.Value = rdx.Item("salesman_lahir_tanggal")
-                        in_telpsales.Text = rdx.Item("salesman_hp")
-                        in_faxsales.Text = rdx.Item("salesman_fax")
-                        in_nik.Text = rdx.Item("salesman_nik")
-                        in_target.Value = rdx.Item("salesman_target")
-                        in_bank_nama.Text = rdx.Item("salesman_bank_nama")
-                        in_bank_rek.Text = rdx.Item("salesman_bank_rekening")
-                        in_bank_an.Text = rdx.Item("salesman_bank_atasnama")
+                        in_telpsales.Text = rdx.Item("hp")
+                        in_faxsales.Text = rdx.Item("fax")
+                        in_email.Text = rdx.Item("email")
+                        in_nik.Text = rdx.Item("nik")
+                        in_bank_nama.Text = rdx.Item("bank_nama")
+                        in_bank_rek.Text = rdx.Item("bank_rek")
+                        in_bank_an.Text = rdx.Item("bank_na")
                         slsStatus = rdx.Item("salesman_status")
+
                         txtRegAlias.Text = rdx.Item("salesman_reg_alias")
                         txtRegdate.Text = rdx.Item("salesman_reg_date")
                         txtUpdDate.Text = rdx.Item("salesman_upd_date")
@@ -139,63 +136,79 @@
         Dim querycheck As Boolean = False
         Dim q As String = ""
 
-        Me.Cursor = Cursors.WaitCursor
 
-        op_con()
         data1 = {
             "salesman_nama='" & in_namasales.Text.Replace("'", "`") & "'",
             "salesman_alamat='" & in_alamatsales.Text.Replace("'", "`") & "'",
-            "salesman_tanggal_masuk='" & date_kerja.Value.ToString("yyyy-MM-dd") & "'",
             "salesman_jenis='" & cb_jenis.SelectedValue & "'",
-            "salesman_lahir_kota='" & in_lahir_kota.Text.Replace("'", "`") & "'",
-            "salesman_lahir_tanggal='" & date_lahir_tgl.Value.ToString("yyyy-MM-dd") & "'",
             "salesman_hp='" & in_telpsales.Text & "'",
             "salesman_fax='" & in_faxsales.Text & "'",
+            "salesman_email='" & in_email.Text & "'",
             "salesman_nik='" & in_nik.Text & "'",
-            "salesman_target='" & in_target.Value.ToString.Replace(",", ".") & "'",
             "salesman_bank_nama='" & in_bank_nama.Text.Replace("'", "`") & "'",
             "salesman_bank_rekening='" & in_bank_rek.Text & "'",
             "salesman_bank_atasnama='" & in_bank_an.Text & "'",
-            "salesman_status='" & slsStatus & "'"
-            }
+            "salesman_status=" & slsStatus
+        }
 
-        If bt_simpancusto.Text = "Simpan" Then
-            'GENERATE CODE
-            If Trim(in_kode.Text) = Nothing Then
-                Dim no As Integer = 1
-                readcommd("SELECT SUBSTRING(salesman_kode,4) as ss FROM data_salesman_master WHERE salesman_kode LIKE 'P%' " _
-                          & "AND SUBSTRING(salesman_kode,4) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    If Trim(in_kode.Text) = Nothing Then
+                        'GENERATE CODE
+                        Dim no As Integer = 0 : Dim format As String = "D3"
+                        q = "SELECT IFNULL(MAX(SUBSTR(salesman_kode,4)),0) FROM data_salesman_master " _
+                            & "WHERE LEFT(salesman_kode,2)='P{0}' AND SUBSTR(salesman_kode,4) REGEXP '^[0-9]+$'"
+                        no = Integer.Parse(x.ExecScalar(String.Format(q, cb_jenis.SelectedValue.ToString("D2"))))
+                        If no + 1 > 999 Then format = "D" & (no + 1).ToString.Length
+                        in_kode.Text = "P" & CInt(cb_jenis.SelectedValue).ToString("D2") & (no + 1).ToString(format)
+
+                    Else
+                        'CHECK INPUTED CODE
+                        q = "SELECT COUNT(salesman_id) FROM data_salesman_master WHERE salesman_kode='{0}'"
+                        If Integer.Parse(x.ExecScalar(String.Format(q, Trim(in_kode.Text)))) > 0 Then
+                            MessageBox.Show("Kode yang dimasukan sudah pernah diinputkan ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            Exit Sub
+                        End If
+                    End If
+
+                    q = "INSERT INTO data_salesman_master SET salesman_kode='{0}',{1},salesman_reg_date=NOW(),salesman_reg_alias='{2}'"
+                ElseIf bt_simpancusto.Text = "Update" Then
+                    q = "UPDATE data_salesman_master SET {1}, salesman_upd_date=NOW(),salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
                 End If
-                rd.Close()
 
-                in_kode.Text = "P" & CInt(cb_jenis.SelectedValue).ToString("D2") & no.ToString("D3")
+                querycheck = x.TransactCommand(New List(Of String) From {String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id)})
+
+                If querycheck = False Then
+                    MessageBox.Show("Data sales tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Else
+                    MessageBox.Show("Data sales tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pgsales}) : Me.Close()
+                End If
             Else
-                If checkdata("data_salesman_master", "'" & in_kode.Text & "'", "salesman_kode") = True Then
-                    MessageBox.Show("Kode " & in_kode.Text & " sudah ada")
-                    in_kode.Focus()
-                    Exit Sub
-                End If
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
+        End Using
+    End Sub
 
-            q = "INSERT INTO data_salesman_master SET salesman_kode='{0}',{1},salesman_reg_date=NOW(),salesman_reg_alias='{2}'"
-        ElseIf bt_simpancusto.Text = "Update" Then
-            q = "UPDATE data_salesman_master SET {1}, salesman_upd_date=NOW(),salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
-        End If
-        querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
-
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            'frmsales.in_cari.Clear()
-            'populateDGVUserCon("sales", "", frmsales.dgv_list)
-            doRefreshTab({pgsales})
-            Me.Close()
-        End If
+    Private Sub UpdateStatusData(StatCode As Integer)
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                'validasi edit
+                Dim q As String = ""
+                q = "UPDATE data_salesman_master SET salesman_status={1}, salesman_upd_date=NOW(), salesman_upd_alias='{2}' WHERE salesman_kode='{0}'"
+                Dim _ck = x.TransactCommand(New List(Of String) From {String.Format(q, in_kode.Text, StatCode, loggeduser.user_id)})
+                If _ck Then
+                    MessageBox.Show("Status data salesman telah di ubah.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    loadDataSales(in_kode.Text) : ControlSwitch(True)
+                    DoRefreshTab_v2({pgsales})
+                Else
+                    MessageBox.Show("Perubahan status data gagal.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
     End Sub
 
     'DRAG FORM
@@ -217,9 +230,9 @@
 
     'CLOSE
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        If MessageBox.Show("Tutup Form?", "Detail Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", "Detail Salesman", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -234,51 +247,70 @@
         lbl_close.Visible = False
     End Sub
 
+    Private Sub fr_jual_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            bt_batalcusto.PerformClick()
+        End If
+    End Sub
+
     'MENU
     Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
+        Me.Cursor = Cursors.WaitCursor
         bt_simpancusto.PerformClick()
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        If mn_deact.Text = "Deactivate" Then
-            slsStatus = "0"
-        ElseIf mn_deact.Text = "Activate" Then
-            slsStatus = "1"
-        End If
-        setStatus()
+        Dim _sts As Integer = slsStatus
+        Select Case mn_deact.Text
+            Case "Deactivate" : _sts = 0
+            Case "Activate" : _sts = 1
+            Case Else : Exit Sub
+        End Select
+        UpdateStatusData(_sts)
     End Sub
 
     Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-        'brgStatus = 9
-        'UPDATE STATUS TO 9
-        'setStatus()
+        If loggeduser.validasi_master Then
+            'KONFIRMASI USER ID
+
+            'DELETE
+
+            MessageBox.Show("Maaf fungsi ini masih dalam perbaikan/maintenance atau belum tersedia.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        End If
     End Sub
 
-    'LOAD
-    Private Sub fr_sales_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+    Private Sub mn_set_Click(sender As Object, e As EventArgs) Handles mn_set.Click
+        Dim det As New fr_sales_set_det
+        det.DoLoad(in_kode.Text, loggeduser.allowedit_master)
     End Sub
 
     'SAVE
     Private Sub bt_simpansales_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
-        If in_namasales.Text = Nothing Then
-            MessageBox.Show("Nama belum di input")
-            in_namasales.Focus()
-            Exit Sub
+        If String.IsNullOrWhiteSpace(in_namasales.Text) Then
+            MessageBox.Show("Nama belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            in_namasales.Focus() : Exit Sub
+        End If
+        If cb_jenis.SelectedIndex < 0 Then
+            MessageBox.Show("Jenis salesman belum diinput.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            cb_jenis.Focus() : Exit Sub
         End If
 
-        If MessageBox.Show("Simpan data sales?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
-        End If
+        Me.Cursor = Cursors.WaitCursor
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If formstate <> InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data sales?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then saveData()
+        Me.Cursor = Cursors.Default
     End Sub
 
-    'UI
-    '------------------ cb prevent input
+    'UI : COMBOBOX
     Private Sub cb_jenis_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cb_jenis.KeyPress
-        e.Handled = True
+        If e.KeyChar <> ControlChars.CrLf Or e.KeyChar <> ControlChars.Cr Or e.KeyChar <> ControlChars.Lf Then
+            e.Handled = True
+        End If
     End Sub
 
-    '------------------ txtbox numeric
+    'UI : txtbox numeric
     Private Sub in_telpsales_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_nik.KeyPress
         If Asc(e.KeyChar) <> 8 Then
             If Asc(e.KeyChar) < 48 Or Asc(e.KeyChar) > 57 Then
@@ -295,16 +327,7 @@
         End If
     End Sub
 
-    '----------------- numeric
-    Private Sub in_target_Enter(sender As Object, e As EventArgs) Handles in_target.Enter
-        numericGotFocus(sender)
-    End Sub
-
-    Private Sub in_target_Leave(sender As Object, e As EventArgs) Handles in_target.Leave
-        numericLostFocus(sender)
-    End Sub
-
-    '-------------input
+    'UI : input
     Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
         keyshortenter(in_namasales, e)
     End Sub
@@ -317,32 +340,20 @@
         keyshortenter(in_alamatsales, e)
     End Sub
 
-    Private Sub in_lahir_kota_KeyDown(sender As Object, e As KeyEventArgs) Handles in_lahir_kota.KeyDown
-        keyshortenter(date_lahir_tgl, e)
-    End Sub
-
-    Private Sub date_lahir_tgl_KeyDown(sender As Object, e As KeyEventArgs) Handles date_lahir_tgl.KeyDown
-        keyshortenter(date_kerja, e)
-    End Sub
-
-    Private Sub date_kerja_KeyDown(sender As Object, e As KeyEventArgs) Handles date_kerja.KeyDown
-        keyshortenter(in_telpsales, e)
-    End Sub
-
     Private Sub in_telpsales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telpsales.KeyDown
         keyshortenter(in_faxsales, e)
     End Sub
 
     Private Sub in_faxsales_KeyDown(sender As Object, e As KeyEventArgs) Handles in_faxsales.KeyDown
+        keyshortenter(in_email, e)
+    End Sub
+
+    Private Sub date_kerja_KeyDown(sender As Object, e As KeyEventArgs) Handles in_email.KeyDown
         keyshortenter(in_nik, e)
     End Sub
 
     Private Sub in_nik_KeyDown(sender As Object, e As KeyEventArgs) Handles in_nik.KeyDown
-        keyshortenter(in_target, e)
-    End Sub
-
-    Private Sub in_target_KeyDown(sender As Object, e As KeyEventArgs) Handles in_target.KeyDown
-        keyshortenter(in_bank_nama, e)
+        keyshortenter(in_bank_rek, e)
     End Sub
 
     Private Sub in_bank_nama_KeyDown(sender As Object, e As KeyEventArgs) Handles in_bank_nama.KeyDown

@@ -306,7 +306,7 @@
                     & " LEFT JOIN data_hutang_awal ON h_trans_kode_hutang=hutang_faktur " _
                     & " LEFT JOIN data_hutang_bayar ON h_trans_faktur=h_bayar_bukti " _
                     & " WHERE hutang_status IN (1,2) AND h_trans_status=1 AND h_trans_tgl BETWEEN '{1:yyy-MM-dd}' AND '{2:yyy-MM-dd}'" _
-                    & "  AND h_trans_jenis NOT IN ('jual','migrasi') AND hutang_pajak IN({3}) " _
+                    & "  AND h_trans_jenis NOT IN ('beli','migrasi') AND hutang_pajak IN({3}) " _
                     & ") pembayaran {4}"
 
                 _colSelect.AddRange({"hutang_supplier pbd_custo", "supplier_nama pbd_custo_n",

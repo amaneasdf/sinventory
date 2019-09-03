@@ -66,6 +66,8 @@ Partial Class fr_lap_stock_view
         Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.rv_beli_nota)
         Me.Name = "fr_lap_stock_view"
+        Me.ShowIcon = False
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "fr_lap_stock_view"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized

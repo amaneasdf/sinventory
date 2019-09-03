@@ -4950,6 +4950,7 @@
                               <KeepTogether>true</KeepTogether>
                             </TablixMember>
                           </TablixMembers>
+                          <KeepTogether>true</KeepTogether>
                         </TablixMember>
                         <TablixMember>
                           <TablixHeader>
@@ -4989,7 +4990,6 @@
                           <KeepWithGroup>Before</KeepWithGroup>
                         </TablixMember>
                       </TablixMembers>
-                      <KeepTogether>true</KeepTogether>
                     </TablixMember>
                   </TablixMembers>
                 </TablixMember>

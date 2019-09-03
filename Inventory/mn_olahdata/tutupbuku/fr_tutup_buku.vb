@@ -242,11 +242,8 @@
             Dim ckstate As Boolean = checkuser()
             Using ckfrm As New fr_tutupconfirm_dialog
                 With ckfrm
-                    .in_user.Text = loggeduser.user_id
-                    .in_user.ReadOnly = True
-                    .in_pass.Focus()
-                    .do_loaddialog()
-                    ckstate = .returnval
+                    .doLoadValid()
+                    ckstate = .returnval.Key
                 End With
             End Using
             ck_proses.Checked = ckstate

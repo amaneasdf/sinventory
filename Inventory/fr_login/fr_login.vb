@@ -4,6 +4,34 @@
     Private _tmer_ckLock As New Timer With {.Interval = 7500}
     Public AppClosing As Boolean = True
 
+    Private Function CheckAppLock(ByRef LockMsg As String) As Boolean
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim _val As Boolean = False
+                Dim _q As String = ""
+
+                Try
+                    _q = "SELECT var_value FROM system_var WHERE var_name='sys_syslock'"
+                    _val = IIf(CStr(x.ExecScalar(_q)) = "TRUE", False, True)
+
+                    If Not _val Then
+                        _q = "SELECT IFNULL(var_value,'') FROM system_var WHERE var_name='sys_lockmsg'"
+                        LockMsg = "System sedang di kunci. Tidak dapat masuk ke dalam aplikasi." & Environment.NewLine & CStr(x.ExecScalar(_q))
+                    End If
+                Catch ex As Exception
+                    logError(ex, True)
+                    LockMsg = "Terjadi kesalahan saat melakukan proses login." & Environment.NewLine & ex.Message
+                    _val = False
+                End Try
+
+                Return _val
+            Else
+                LockMsg = "Tidak dapat terhubung ke database."
+                Return False
+            End If
+        End Using
+    End Function
+
     Private Async Function call_login() As Task
         Dim loginstate As String = do_login(in_user.Text, in_pass.Text)
         If loginstate = 1 Then
@@ -162,15 +190,19 @@
     'UI : BUTTON
     Private Async Sub bt_login_Click(sender As Object, e As EventArgs) Handles bt_login.Click
         If in_user.Text = Nothing Then
-            MessageBox.Show("Masukkan UserID")
-            in_user.Focus()
-            Exit Sub
+            MessageBox.Show("Masukkan UserID terlebih dahulu.", "Login " & Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            in_user.Focus() : Exit Sub
         End If
 
         If in_pass.Text = Nothing Then
-            MessageBox.Show("Masukkan Password")
-            in_pass.Focus()
-            Exit Sub
+            MessageBox.Show("Masukkan Password terlebih dahulu.", "Login " & Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            in_pass.Focus() : Exit Sub
+        End If
+
+        Dim _msg As String = ""
+        If Not CheckAppLock(_msg) Then
+            MessageBox.Show(_msg, "Login " & Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+            in_user.Focus() : Exit Sub
         End If
 
         Await call_login()

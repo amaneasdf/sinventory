@@ -140,7 +140,7 @@
                 End If
 
                 If tipe = "lapBeliSupplierBarang" Then : _tipe = "supplier"
-                ElseIf tipe = "lapBeliTglBarang" Then : _tipe = "sales"
+                ElseIf tipe = "lapBeliTglBarang" Then : _tipe = "tanggal"
                 Else : Return String.Empty : Exit Function
                 End If
 
@@ -163,7 +163,7 @@
                                      "faktur_gudang dlap_gudang", "gudang_nama dlap_gudang_n",
                                      "trans_barang dlap_barang", "barang_nama dlap_barang_n",
                                      "trans_harga_beli dlap_hargabeli", "trans_qty dlap_qty", "trans_satuan dlap_sat",
-                                     "@subtotal:=trans_harga_beli*trans_qty dlap_subtotal",
+                                     "@subtotal:=trans_harga_beli*trans_qty dlap_subtot",
                                      "trans_disc_rupiah dlap_discrp", "@discrp:=trans_disc_rupiah*trans_qty dlap_discrp_n",
                                      "trans_disc1 dlap_disc1", "trans_disc2 dlap_disc2", "trans_disc3 dlap_disc3",
                                      "@disc1:=ROUND(IF(trans_disc1=0, 0, (@subtotal-@discrp) * (trans_disc1/100)),2) dlap_disc1_n",
@@ -205,7 +205,9 @@
             & " SELECT 'BELI' jenis, faktur_kode, faktur_tanggal_trans, faktur_supplier, trans_barang, faktur_ppn_jenis, " _
             & "  IF(faktur_term=0, 'TUNAI', 'TEMPO') faktur_jenis_bayar, " _
             & "  countQTYItem(trans_barang, trans_qty, trans_satuan_type) qtybrg, " _
-            & "  @subtotal:=trans_qty*trans_harga_beli subtot, @subtotal-trans_jumlah diskon, trans_jumlah totalnilai " _
+            & "  @subtotal:=trans_qty*trans_harga_beli subtot, " _
+            & "  @diskon:=CountTotalDiskonBeliItem(@subtotal, trans_disc_rupiah*trans_qty, trans_disc1, trans_disc2, trans_disc3) diskon, " _
+            & "  @subtotal-@diskon totalnilai " _
             & " FROM data_pembelian_faktur LEFT JOIN data_pembelian_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
             & " WHERE faktur_status=1 AND faktur_tanggal_trans BETWEEN '{1:yyyy-MM-dd}' AND '{2:yyyy-MM-dd}' AND faktur_ppn_jenis IN ({3}) " _
             & " UNION " _
@@ -311,24 +313,24 @@
                                      "faktur_diskon beli_diskon",
                                      "faktur_ppn beli_ppn",
                                      "faktur_netto beli_netto",
-                                     "faktur_klaim beli_bayar"
+                                     "faktur_klaim beli_klaim"
                                     })
                 _qjoin = " LEFT JOIN ref_jenis ppn ON faktur_ppn_jenis=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans'"
                 _qorder = "ORDER BY faktur_tanggal_trans, faktur_kode"
 
-            Case "supplier", "tanggal", "tanggalnota"
-                If LCase(Grouping) = "sales" Then
+            Case "supplier", "tanggal", "tanggalnota", "suppliernota"
+                If LCase(Grouping) = "supplier" Then
                     _selectCol.AddRange({"faktur_supplier lap_supplier",
                                          "GetMasterNama('supplier', faktur_supplier) lap_supplier_n"
                                         })
                     _qorder = " GROUP BY faktur_supplier, jenis"
 
                 ElseIf LCase(Grouping) = "tanggal" Then
-                    _selectCol.AddRange({"faktur_tanggal_trans lap_tanggal"})
+                    _selectCol.AddRange({"faktur_tanggal_trans lap_tgl"})
                     _qorder = " GROUP BY faktur_tanggal_trans, jenis"
 
                 ElseIf {"suppliernota", "tanggalnota"}.Contains(LCase(Grouping)) Then
-                    _selectCol.AddRange({"faktur_tanggal_trans lap_tanggal",
+                    _selectCol.AddRange({"faktur_tanggal_trans lap_tgl",
                                          "faktur_kode lap_faktur",
                                          "faktur_supplier lap_supplier",
                                          "GetMasterNama('supplier', faktur_supplier) lap_supplier_n",

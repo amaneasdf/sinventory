@@ -42,7 +42,7 @@ Public Class fr_draft_barang_view
     Private Sub rv_draft_barang_PrintingBegin(sender As Object, e As ReportPrintEventArgs) Handles rv_draft_barang.PrintingBegin
         Using x = MainConnection
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                Dim q As String = "UPDATE data_draft_faktur SET draft_printstatus_barang='Y' WHERE draft_kode='{0}' AND draft_status<9"
+                Dim q As String = "UPDATE data_draft_faktur SET draft_printstatus_brg='Y' WHERE draft_kode='{0}' AND draft_status<9"
                 Try
                     x.ExecCommand(String.Format(q, kodedraft))
                     DoRefreshTab_v2({pgdraftrekap})

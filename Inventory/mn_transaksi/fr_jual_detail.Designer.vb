@@ -62,7 +62,12 @@ Partial Class fr_jual_detail
         Me.mn_other = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_delete = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_duplicate = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.mn_changecode = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.mn_new_custo = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_new_sales = New System.Windows.Forms.ToolStripMenuItem()
+        Me.mn_new_gudang = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label28 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.txtUpdAlias = New System.Windows.Forms.TextBox()
@@ -605,7 +610,7 @@ Partial Class fr_jual_detail
         '
         'mn_other
         '
-        Me.mn_other.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_delete, Me.mn_duplicate, Me.mn_changecode})
+        Me.mn_other.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_delete, Me.mn_duplicate, Me.ToolStripSeparator1, Me.mn_changecode, Me.ToolStripSeparator2, Me.mn_new_custo, Me.mn_new_sales, Me.mn_new_gudang})
         Me.mn_other.Name = "mn_other"
         Me.mn_other.Size = New System.Drawing.Size(68, 20)
         Me.mn_other.Text = "Lain-Lain"
@@ -622,11 +627,39 @@ Partial Class fr_jual_detail
         Me.mn_duplicate.Size = New System.Drawing.Size(175, 22)
         Me.mn_duplicate.Text = "Duplicate Transaksi"
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(172, 6)
+        '
         'mn_changecode
         '
         Me.mn_changecode.Name = "mn_changecode"
         Me.mn_changecode.Size = New System.Drawing.Size(175, 22)
         Me.mn_changecode.Text = "Ubah Kode Faktur"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(172, 6)
+        '
+        'mn_new_custo
+        '
+        Me.mn_new_custo.Name = "mn_new_custo"
+        Me.mn_new_custo.Size = New System.Drawing.Size(175, 22)
+        Me.mn_new_custo.Text = "Customer Baru"
+        '
+        'mn_new_sales
+        '
+        Me.mn_new_sales.Name = "mn_new_sales"
+        Me.mn_new_sales.Size = New System.Drawing.Size(175, 22)
+        Me.mn_new_sales.Text = "Salesman Baru"
+        '
+        'mn_new_gudang
+        '
+        Me.mn_new_gudang.Name = "mn_new_gudang"
+        Me.mn_new_gudang.Size = New System.Drawing.Size(175, 22)
+        Me.mn_new_gudang.Text = "Gudang Baru"
         '
         'Label28
         '
@@ -1564,4 +1597,9 @@ Partial Class fr_jual_detail
     Friend WithEvents mn_delete As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_duplicate As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_changecode As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents ToolStripSeparator2 As System.Windows.Forms.ToolStripSeparator
+    Friend WithEvents mn_new_custo As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_new_sales As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents mn_new_gudang As System.Windows.Forms.ToolStripMenuItem
 End Class

@@ -44,7 +44,7 @@ Partial Class fr_stock_mutasibrg_list
         Me.date_tglawal = New System.Windows.Forms.DateTimePicker()
         Me.bt_search = New System.Windows.Forms.Button()
         Me.in_cari = New System.Windows.Forms.TextBox()
-        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.mnstrip_main = New System.Windows.Forms.MenuStrip()
         Me.mn_tambah = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_edit = New System.Windows.Forms.ToolStripMenuItem()
         Me.mn_print = New System.Windows.Forms.ToolStripMenuItem()
@@ -67,7 +67,7 @@ Partial Class fr_stock_mutasibrg_list
         CType(Me.dgv_barang, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.Panel3.SuspendLayout()
-        Me.MenuStrip1.SuspendLayout()
+        Me.mnstrip_main.SuspendLayout()
         Me.SuspendLayout()
         '
         'Panel1
@@ -133,7 +133,7 @@ Partial Class fr_stock_mutasibrg_list
         Me.pnl_Menu.Controls.Add(Me.SplitContainer1)
         Me.pnl_Menu.Controls.Add(Me.Panel2)
         Me.pnl_Menu.Controls.Add(Me.Panel3)
-        Me.pnl_Menu.Controls.Add(Me.MenuStrip1)
+        Me.pnl_Menu.Controls.Add(Me.mnstrip_main)
         Me.pnl_Menu.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_Menu.Location = New System.Drawing.Point(0, 42)
         Me.pnl_Menu.Name = "pnl_Menu"
@@ -339,14 +339,14 @@ Partial Class fr_stock_mutasibrg_list
         Me.in_cari.Size = New System.Drawing.Size(248, 22)
         Me.in_cari.TabIndex = 2
         '
-        'MenuStrip1
+        'mnstrip_main
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_print, Me.mn_export, Me.mn_other, Me.mn_refresh})
-        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
-        Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(950, 24)
-        Me.MenuStrip1.TabIndex = 182
-        Me.MenuStrip1.Text = "MenuStrip1"
+        Me.mnstrip_main.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_tambah, Me.mn_edit, Me.mn_print, Me.mn_export, Me.mn_other, Me.mn_refresh})
+        Me.mnstrip_main.Location = New System.Drawing.Point(0, 0)
+        Me.mnstrip_main.Name = "mnstrip_main"
+        Me.mnstrip_main.Size = New System.Drawing.Size(950, 24)
+        Me.mnstrip_main.TabIndex = 182
+        Me.mnstrip_main.Text = "MenuStrip1"
         '
         'mn_tambah
         '
@@ -451,8 +451,8 @@ Partial Class fr_stock_mutasibrg_list
         Me.Panel2.PerformLayout()
         Me.Panel3.ResumeLayout(False)
         Me.Panel3.PerformLayout()
-        Me.MenuStrip1.ResumeLayout(False)
-        Me.MenuStrip1.PerformLayout()
+        Me.mnstrip_main.ResumeLayout(False)
+        Me.mnstrip_main.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -461,7 +461,7 @@ Partial Class fr_stock_mutasibrg_list
     Friend WithEvents bt_cl As System.Windows.Forms.Button
     Friend WithEvents lbl_title As System.Windows.Forms.Label
     Friend WithEvents pnl_Menu As System.Windows.Forms.Panel
-    Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
+    Friend WithEvents mnstrip_main As System.Windows.Forms.MenuStrip
     Friend WithEvents mn_tambah As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_edit As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents mn_print As System.Windows.Forms.ToolStripMenuItem

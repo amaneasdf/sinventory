@@ -38,6 +38,7 @@ Public Class fr_lap_master
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Dim data_adpt As New MySqlDataAdapter(query, x.Connection)
+                    data_adpt.SelectCommand.CommandTimeout = 360
                     consoleWriteLine(query)
                     data_adpt.Fill(dt)
                     data_adpt.Dispose()

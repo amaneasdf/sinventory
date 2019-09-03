@@ -406,18 +406,15 @@
 
         Using x As New fr_tutupconfirm_dialog
             x.lbl_title.Text = "Konfirmasi Kas"
-            x.in_user.Text = loggeduser.user_id
-            x.in_user.ReadOnly = True
-            x.in_pass.Focus()
-            x.do_loaddialog()
-            _retval = x.returnval
+            x.doLoadValid()
+            _retval = x.returnval.Key
         End Using
 
         If _retval Then
             q = "UPDATE data_kas_faktur SET kas_status=2, kas_upd_date=NOW(), kas_upd_alias='{1}' WHERE kas_kode='{0}'"
             queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
 
-            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}'"
+            q = "UPDATE data_jurnal_line SET line_status=9, line_upd_date=NOW(), line_upd_alias='{1}' WHERE line_kode='{0}' AND line_type='KAS'"
             queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
 
             Using x = MainConnection

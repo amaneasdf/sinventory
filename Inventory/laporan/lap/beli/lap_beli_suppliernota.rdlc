@@ -697,7 +697,7 @@
                               <Value>=Fields!lap_tgl.Value</Value>
                               <Style>
                                 <FontFamily>Consolas</FontFamily>
-                                <Format>dd-MM-yy</Format>
+                                <Format>dd-MM-yyyy</Format>
                               </Style>
                             </TextRun>
                           </TextRuns>

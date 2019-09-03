@@ -364,6 +364,7 @@ Partial Class fr_lap_filter_beli
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "fr_lap_filter_beli"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Laporan "
         Me.Panel1.ResumeLayout(False)

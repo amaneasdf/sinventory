@@ -94,7 +94,7 @@
             Case "jual"
                 Return DoImportPenjualan(GetImportJual(_dt, 1), GetImportJual(_dt, 2), SuccID)
             Case "returjual"
-                Return DoImportReturJual(GetImportRetur(_dt, 1), GetImportRetur(_dt, 2))
+                Return DoImportReturJual(GetImportRetur(_dt, 1), GetImportRetur(_dt, 2), SuccID)
             Case "piutang"
                 Return DoImportPiutangPajak(_dt)
             Case "piutang2"

@@ -12,6 +12,7 @@
     Private _satuanstate As String = "kecil"
     Private term As Integer = 0
     Private state As String = "order"
+    Private ValidUid As String = ""
 
     Private formstate As InputState = InputState.Insert
 
@@ -241,6 +242,7 @@
                         in_sales_n.Text = rdx.Item("salesman_nama")
                         in_custo.Text = rdx.Item("j_order_customer")
                         in_custo_n.Text = rdx.Item("customer_nama")
+                        in_custo_al.Text = rdx.Item("customer_alamat")
                         jeniscusto = rdx.Item("customer_kriteria_harga_jual")
                         cb_term.SelectedValue = If(rdx.Item("j_order_term") > 0, 1, 0)
                         cb_ppn.SelectedValue = rdx.Item("j_order_ppn_jenis")
@@ -418,9 +420,35 @@ CountHarga:
         Select Case tipe
             Case "barang"
                 Dim _pajak As String = IIf(cb_ppn.SelectedValue = 0, 0, 1)
-                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama' FROM data_barang_master " _
-                    & "WHERE (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND barang_pajak='{1}' LIMIT 250"
-                q = String.Format(q, "{0}", _pajak)
+                If String.IsNullOrWhiteSpace(in_sales.Text) Then
+                    q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getStockBarang(barang_kode) QTY FROM data_barang_master " _
+                        & "WHERE (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND barang_pajak='{2}' LIMIT 250"
+                    q = String.Format(q, "{0}", in_gudang.Text, _pajak)
+
+                Else
+                    Dim _sales = in_sales.Text : Dim _barangCt As Integer = 0
+                    Using x = MainConnection
+                        x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                            q = "SELECT COUNT(sb_id) FROM data_salesman_barang WHERE sb_status=1 AND sb_kode_sales='{0}'"
+                            _barangCt = Integer.Parse(x.ExecScalar(String.Format(q, _sales)))
+
+                            If _barangCt = 0 Then
+                                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getStockBarang(barang_kode) QTY FROM data_barang_master " _
+                                    & "WHERE (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') AND barang_pajak='{1}' LIMIT 250"
+                                q = String.Format(q, "{0}", _pajak)
+
+                            Else
+                                q = "SELECT barang_kode AS 'Kode', barang_nama AS 'Nama', getStockBarang(barang_kode) QTY FROM data_barang_master " _
+                                    & "WHERE barang_kode IN (SELECT sb_kode_barang FROM data_salesman_barang WHERE sb_kode_sales='{1}' AND sb_status=1) " _
+                                    & " AND barang_pajak='{2}' AND (barang_nama LIKE '%{0}%' OR barang_kode LIKE '%{0}%') LIMIT 250"
+                                q = String.Format(q, "{0}", _sales, _pajak)
+
+                            End If
+                        Else
+                            Exit Sub
+                        End If
+                    End Using
+                End If
             Case "custo"
                 in_alamat_c.Clear() : in_alamat_c.Visible = True
                 popPnl_barang.Height = 175
@@ -428,8 +456,34 @@ CountHarga:
                     & "TRIM(BOTH ', ' FROM CONCAT_WS(', ',customer_alamat,customer_kecamatan,customer_kabupaten)) 'Alamat' " _
                     & "FROM data_customer_master WHERE customer_status=1 AND (customer_nama LIKE '%{0}%' OR customer_kode LIKE '%{0}%') LIMIT 250"
             Case "gudang"
-                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
-                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+                If String.IsNullOrWhiteSpace(in_sales.Text) Then
+                    q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
+                        & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+
+                Else
+                    Dim _sales = in_sales.Text : Dim _gudangCt As Integer = 0
+                    Using x = MainConnection
+                        x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                            q = "SELECT COUNT(sg_id) FROM data_salesman_gudang WHERE sg_status=1 AND sg_kode_sales='{0}'"
+                            _gudangCt = Integer.Parse(x.ExecScalar(String.Format(q, _sales)))
+
+                            If _gudangCt = 0 Then
+                                q = "SELECT gudang_kode AS 'Kode', gudang_nama AS 'Nama' FROM data_barang_gudang " _
+                                    & "WHERE gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+
+                            Else
+                                q = "SELECT gudang_kode Kode, gudang_nama Nama FROM data_barang_gudang " _
+                                    & "WHERE gudang_kode IN (SELECT sg_kode_gudang FROM data_salesman_gudang WHERE sg_kode_sales='{1}' AND sg_status=1) " _
+                                    & " AND gudang_status=1 AND (gudang_nama LIKE '%{0}%' OR gudang_kode LIKE '%{0}%') LIMIT 250"
+                                q = String.Format(q, "{0}", _sales)
+
+                            End If
+                        Else
+                            Exit Sub
+                        End If
+                    End Using
+                End If
+
             Case "sales"
                 q = "SELECT salesman_kode AS 'Kode', salesman_nama AS 'Nama' FROM data_salesman_master " _
                     & "WHERE salesman_status=1 AND (salesman_nama LIKE '%{0}%' OR salesman_kode LIKE '%{0}%') LIMIT 250"
@@ -652,7 +706,7 @@ CountHarga:
 
             dataHead = {
                 "'" & _kdbrg & "'",
-                "'" & rows.Cells("harga").Value & "'",
+                "'" & rows.Cells("harga").Value.ToString.Replace(",", ".") & "'",
                 "'" & rows.Cells("qty").Value & "'",
                 "'" & rows.Cells("sat").Value & "'",
                 "'" & rows.Cells("sat_type").Value & "'",
@@ -681,17 +735,23 @@ CountHarga:
 
         '==========================================================================================================================
         'BEGIN TRANSACTION
-        querycheck = startTrans(queryArr)
-        '==========================================================================================================================
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                querycheck = x.TransactCommand(queryArr)
 
-        If querycheck = False Then
-            MessageBox.Show("Data tidak dapat tersimpan")
-            Exit Sub
-        Else
-            MessageBox.Show("Data tersimpan")
-            doRefreshTab({pgpesanjual})
-            Me.Close()
-        End If
+                If querycheck = False Then
+                    MessageBox.Show("Data tidak dapat tersimpan")
+                    Exit Sub
+                Else
+                    MessageBox.Show("Data tersimpan")
+                    doRefreshTab({pgpesanjual})
+                    Me.Close()
+                End If
+            Else
+                MessageBox.Show("Tidaj dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
+        '==========================================================================================================================
     End Sub
 
     Private Function CheckKatBrg() As Boolean
@@ -728,6 +788,78 @@ CountHarga:
         End Using
     End Function
 
+    Private Function CheckGudang(KodeSales As String, KodeGudang As String, ByRef Msg As String) As Boolean
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = ""
+                Dim _gudangCK As Boolean = False
+
+                q = "SELECT COUNT(sg_id) FROM data_salesman_gudang WHERE sg_kode_sales='{0}' AND sg_status=1"
+                If Integer.Parse(x.ExecScalar(String.Format(q, KodeSales))) > 0 Then
+                    q = "SELECT COUNT(sg_id) FROM data_salesman_gudang WHERE sg_kode_sales='{0}' AND sg_kode_gudang='{1}' AND sg_status=1"
+                    Dim i = Integer.Parse(x.ExecScalar(String.Format(q, KodeSales, KodeGudang)))
+                    If i = 1 Then
+                        Return True
+                    ElseIf i = 0 Then
+                        Msg = "Gudang yang diinput tidak sesuai dengan gudang yang ditentukan untuk sales " & KodeSales & "."
+                        Return False
+                    Else
+                        Msg = "Terjadi kesalahan saat melakukan pengecekan kode gudang."
+                        Return False
+                    End If
+                Else
+                    Return True
+                End If
+            Else
+                Msg = "Tidak dapat terhubung ke database."
+                Return False
+            End If
+        End Using
+    End Function
+
+    Private Function CheckBarang(KodeSales As String, ByRef Msg As String) As Boolean
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = ""
+
+                q = "SELECT COUNT(sb_id) FROM data_salesman_barang WHERE sb_kode_sales='{0}' AND sb_status=1"
+                If Integer.Parse(x.ExecScalar(String.Format(q, KodeSales))) > 0 Then
+                    Dim _kodeBrg As New List(Of String)
+                    Dim _wrongItem As New List(Of String)
+                    For Each row As DataGridViewRow In dgv_barang.Rows
+                        If Not _kodeBrg.Contains(row.Cells(1).Value) Then
+                            _kodeBrg.Add(row.Cells(1).Value)
+                        End If
+                    Next
+                    For Each _brg As String In _kodeBrg
+                        q = "SELECT COUNT(sb_id) FROM data_salesman_barang WHERE sb_kode_sales='{0}' AND sb_kode_barang='{1}' AND sb_status=1"
+                        Dim i = Integer.Parse(x.ExecScalar(String.Format(q, KodeSales, _brg)))
+                        If i = 0 Then
+                            q = "SELECT barang_nama FROM data_barang_master WHERE barang_kode='{0}'"
+                            _wrongItem.Add(x.ExecScalar(String.Format(q, _brg)).ToString)
+                        ElseIf i < 0 Or i > 1 Then
+                            Msg = "Terjadi kesalahan saat melakukan pengecekan barang " & _brg & "."
+                            Return False : Exit Function
+                        End If
+                    Next
+
+                    If _wrongItem.Count > 0 Then
+                        Msg = "Item berikut tidak sesuai dengan item yang ditentukan untuk sales " & KodeSales & "."
+                        Msg += Environment.NewLine & String.Join(Environment.NewLine, _wrongItem)
+                        Return False
+                    Else
+                        Return True
+                    End If
+                Else
+                    Return True
+                End If
+            Else
+                Msg = "Tidak dapat terhubung ke database."
+                Return False
+            End If
+        End Using
+    End Function
+
     'CREATE PENJUALAN
     Private Sub validOrder(ValidStatus As String)
         Dim dataHead As String()
@@ -747,7 +879,7 @@ CountHarga:
                 "j_order_term='" & cb_term.SelectedValue & "'",
                 "j_order_catatan='" & mysqlQueryFriendlyStringFeed(in_ket.Text) & "'"
                 }
-        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), txtValAlias.Text))
+        queryArr.Add(String.Format(q, in_faktur.Text, String.Join(",", dataHead), ValidUid))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -858,6 +990,7 @@ CountHarga:
                         End If
                     Next
                     .countBiaya()
+                    If cb_term.SelectedValue = 0 Then .in_bayar.Value = removeCommaThousand(.in_netto.Text)
                 End With
             Else
                 MessageBox.Show("Tidak dapat terhubung ke database.", "Order Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -946,29 +1079,36 @@ CountHarga:
     'SAVE
     Private Sub bt_simpanjual_Click(sender As Object, e As EventArgs) Handles bt_simpanjual.Click
         If in_custo.Text = Nothing Then
-            MessageBox.Show("Customer belum di input")
-            in_custo_n.Focus()
-            Exit Sub
-        End If
-        If in_gudang.Text = Nothing Then
-            MessageBox.Show("Gudang belum di input")
-            in_gudang_n.Focus()
-            Exit Sub
-        End If
-        If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum di input")
-            in_barang.Focus()
-            Exit Sub
-        End If
-        If date_tgl_beli.Value < selectperiode.tglawal Then
-            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih")
-            date_tgl_beli.Focus()
-            Exit Sub
+            MessageBox.Show("Customer belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_custo_n.Focus() : Exit Sub
         End If
         If in_sales.Text = Nothing Then
-            MessageBox.Show("Sales belum di input")
-            in_sales_n.Focus()
-            Exit Sub
+            MessageBox.Show("Sales belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_sales_n.Focus() : Exit Sub
+        End If
+        If in_gudang.Text = Nothing Then
+            MessageBox.Show("Gudang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_gudang_n.Focus() : Exit Sub
+        Else
+            Dim _msg As String = ""
+            If Not CheckGudang(in_sales.Text, in_gudang.Text, _msg) Then
+                MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                in_gudang_n.Focus() : Exit Sub
+            End If
+        End If
+        If dgv_barang.RowCount = 0 Then
+            MessageBox.Show("Barang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
+        Else
+            Dim _msg As String = ""
+            If Not CheckBarang(in_sales.Text, _msg) Then
+                MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                in_barang.Focus() : Exit Sub
+            End If
+        End If
+        If date_tgl_beli.Value < selectperiode.tglawal Then
+            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
         If Not CheckKatBrg() Then Exit Sub
 
@@ -1022,26 +1162,18 @@ CountHarga:
     End Sub
 
     Private Function valConfirm() As Boolean
-        Dim valid As Boolean = False
-
-        Using x As New fr_jualconfirm_dialog
-            With x
-                .in_user.Text = loggeduser.user_id
-                .do_load("jual")
-                If .returnval = True Then
-                    'If loggeduser.user_id <> .in_user.Text Then
-                    '    MessageBox.Show("User tidak sama dengan user yg anda gunakan untuk login. Pastikan anda menggunakan user yang sama untuk meakukan validasi",
-                    '                    "Validasi Order Penjualan", MessageBoxButtons.OK, MessageBoxIcon.Warning)
-                    '    valid = False
-                    'Else
-                    in_ket.Text += IIf(in_ket.Text = Nothing, "", Environment.NewLine) & .in_ket.Text
-                    txtValAlias.Text = loggeduser.user_id
-                    valid = .returnval
-                    'End If
+        Using valid As New fr_jualconfirm_dialog
+            valid.doLoadValid()
+            If valid.returnval.Key Then
+                ValidUid = valid.returnval.Value
+                Return True
+            Else
+                If valid.returnval.Value <> String.Empty Then
+                    MessageBox.Show(valid.returnval.Value, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 End If
-            End With
+                Return False
+            End If
         End Using
-        Return valid
     End Function
 
     Private Function ckItem() As Boolean
@@ -1071,7 +1203,7 @@ CountHarga:
                         ck_valitem = False : Exit For
                     End If
                 ElseIf hpp < 0 Then
-                    MessageBox.Show("")
+                    MessageBox.Show("", "ERROR", MessageBoxButtons.OK, MessageBoxIcon.Error)
                 Else
                     ck_valitem = True
                 End If
@@ -1174,12 +1306,6 @@ CountHarga:
         End If
     End Sub
 
-    Private Sub in_supplier_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyDown, in_gudang_n.KeyDown, in_custo_n.KeyDown, in_barang_nm.KeyDown
-        If e.KeyCode = Keys.Enter Or e.KeyCode = Keys.Escape Then
-            e.SuppressKeyPress = True
-        End If
-    End Sub
-
     Private Sub in_supplier_n_Leave(sender As Object, e As EventArgs) Handles in_sales_n.Leave, in_custo_n.Leave, in_gudang_n.Leave, in_barang_nm.Leave
         If Not dgv_listbarang.Focused = True Then
             popPnl_barang.Visible = False
@@ -1188,38 +1314,27 @@ CountHarga:
         End If
     End Sub
 
+    Private Sub in_supplier_n_KeyDown(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyDown, in_gudang_n.KeyDown, in_custo_n.KeyDown, in_barang_nm.KeyDown
+        If e.KeyCode = Keys.Enter Or e.KeyCode = Keys.Escape Then e.SuppressKeyPress = True
+    End Sub
+
     Private Sub in_supplier_n_KeyUp(sender As Object, e As KeyEventArgs) Handles in_sales_n.KeyUp, in_gudang_n.KeyUp, in_custo_n.KeyUp, in_barang_nm.KeyUp
-        Dim _kdcntrl As TextBox : Dim _nxtctrl As Control
+        Dim _id As TextBox : Dim _next As Control
         Select Case sender.Name
-            Case "in_sales_n"
-                _kdcntrl = in_sales : _nxtctrl = in_gudang_n
-            Case "in_gudang_n"
-                _kdcntrl = in_gudang : _nxtctrl = cb_term
-            Case "in_custo_n"
-                _kdcntrl = in_custo : _nxtctrl = in_sales_n
-            Case "in_barang_nm"
-                _kdcntrl = in_barang : _nxtctrl = in_qty
+            Case "in_sales_n" : _id = in_sales : _next = in_gudang_n
+            Case "in_gudang_n" : _id = in_gudang : _next = cb_term
+            Case "in_custo_n" : _id = in_custo : _next = in_sales_n
+            Case "in_barang_nm" : _id = in_barang : _next = in_qty
             Case Else : Exit Sub
         End Select
-
-        If sender.Text = "" And IsNothing(_kdcntrl) = False Then _kdcntrl.Text = ""
-
-        If e.KeyCode = Keys.Down Then
-            If popPnl_barang.Visible = True Then dgv_listbarang.Focus()
-
-        ElseIf e.KeyCode = Keys.Enter Then
-            If popPnl_barang.Visible = True And dgv_listbarang.RowCount > 0 Then setPopUpResult()
-            keyshortenter(_nxtctrl, e)
-        Else
-            If e.KeyCode <> Keys.Escape And sender.Readonly = False Then
-                Dim x() As Keys = {Keys.Tab, Keys.CapsLock, Keys.End, Keys.Home, Keys.PageUp, Keys.PageDown}
-                If Not x.Contains(e.KeyCode) And Not e.Shift And Not e.Control And Not e.Alt Then
-                    If Not IsNothing(_kdcntrl) Then _kdcntrl.Text = ""
-                End If
-                If popPnl_barang.Visible = False Then popPnl_barang.Visible = True
-                loadDataBRGPopup(popupstate, sender.Text)
-            End If
-        End If
+        Dim _x = PopUpSearchInputHandle_inputKeyup(e, sender, _id, popPnl_barang, dgv_listbarang)
+        For Each _resp As String In _x
+            Select Case _resp
+                Case "set" : setPopUpResult()
+                Case "next" : keyshortenter(_next, e)
+                Case "load" : loadDataBRGPopup(popupstate, sender.Text)
+            End Select
+        Next
     End Sub
 
     Private Sub in_custo_KeyUp(sender As Object, e As KeyEventArgs) Handles in_custo.KeyUp, in_custo_al.KeyUp
@@ -1231,7 +1346,7 @@ CountHarga:
     End Sub
 
     Private Sub cb_term_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_term.KeyUp
-        keyshortenter(cb_ppn, e)
+        keyshortenter(If(cb_ppn.Enabled, cb_ppn, in_barang_nm), e)
     End Sub
 
     Private Sub cb_ppn_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_ppn.KeyUp
@@ -1279,6 +1394,12 @@ CountHarga:
 
     Private Sub cb_sat_KeyUp(sender As Object, e As KeyEventArgs) Handles cb_sat.KeyUp
         keyshortenter(in_harga_beli, e)
+    End Sub
+
+    Private Sub in_harga_beli_KeyDown(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyDown, in_qty.KeyDown, in_subtotal.KeyDown, in_disc1.KeyDown, in_disc2.KeyDown, in_disc3.KeyDown, in_disc4.KeyDown, in_disc5.KeyDown, in_discrp.KeyDown
+        If e.KeyCode = Keys.Enter Then
+            e.SuppressKeyPress = True
+        End If
     End Sub
 
     Private Sub in_harga_beli_KeyUp(sender As Object, e As KeyEventArgs) Handles in_harga_beli.KeyUp

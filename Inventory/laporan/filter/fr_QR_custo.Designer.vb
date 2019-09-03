@@ -28,6 +28,7 @@ Partial Class fr_QR_custo
         Me.bt_cl = New System.Windows.Forms.Button()
         Me.lbl_title = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.rb_range = New System.Windows.Forms.RadioButton()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.bt_print = New System.Windows.Forms.Button()
         Me.bt_close = New System.Windows.Forms.Button()
@@ -48,7 +49,6 @@ Partial Class fr_QR_custo
         Me.Label1 = New System.Windows.Forms.Label()
         Me.in_kodeawal = New System.Windows.Forms.TextBox()
         Me.rb_selected = New System.Windows.Forms.RadioButton()
-        Me.rb_range = New System.Windows.Forms.RadioButton()
         Me.rb_allcode = New System.Windows.Forms.RadioButton()
         Me.Panel1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
@@ -132,6 +132,16 @@ Partial Class fr_QR_custo
         Me.pnl_content.Name = "pnl_content"
         Me.pnl_content.Size = New System.Drawing.Size(605, 448)
         Me.pnl_content.TabIndex = 2
+        '
+        'rb_range
+        '
+        Me.rb_range.AutoSize = True
+        Me.rb_range.Location = New System.Drawing.Point(11, 43)
+        Me.rb_range.Name = "rb_range"
+        Me.rb_range.Size = New System.Drawing.Size(14, 13)
+        Me.rb_range.TabIndex = 1
+        Me.rb_range.TabStop = True
+        Me.rb_range.UseVisualStyleBackColor = True
         '
         'Panel3
         '
@@ -334,16 +344,6 @@ Partial Class fr_QR_custo
         Me.rb_selected.TabStop = True
         Me.rb_selected.UseVisualStyleBackColor = True
         '
-        'rb_range
-        '
-        Me.rb_range.AutoSize = True
-        Me.rb_range.Location = New System.Drawing.Point(11, 43)
-        Me.rb_range.Name = "rb_range"
-        Me.rb_range.Size = New System.Drawing.Size(14, 13)
-        Me.rb_range.TabIndex = 1
-        Me.rb_range.TabStop = True
-        Me.rb_range.UseVisualStyleBackColor = True
-        '
         'rb_allcode
         '
         Me.rb_allcode.AutoSize = True
@@ -368,7 +368,10 @@ Partial Class fr_QR_custo
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "fr_QR_custo"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Cetak QR Code"
         Me.Panel1.ResumeLayout(False)

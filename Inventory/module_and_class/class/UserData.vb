@@ -182,17 +182,21 @@
         End Select
 
         q = String.Format(q, _col, user_id)
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Using rdx = x.ReadCommand(q, CommandBehavior.SingleResult)
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        retval = IIf(rdx.Item(0) = 1, TriState.True, TriState.False)
-                    Else
-                        retval = TriState.UseDefault
-                    End If
-                End Using
+        Using x As New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Using rdx = x.ReadCommand(q, CommandBehavior.SingleResult)
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            retval = IIf(rdx.Item(0) = 1, TriState.True, TriState.False)
+                        Else
+                            retval = TriState.UseDefault
+                        End If
+                    End Using
+                Catch ex As Exception
+                    logError(ex, True)
+                    retval = TriState.UseDefault
+                End Try
             Else
                 retval = TriState.UseDefault
             End If

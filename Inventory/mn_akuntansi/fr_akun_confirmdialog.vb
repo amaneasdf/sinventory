@@ -1,36 +1,80 @@
 ﻿Public Class fr_akun_confirmdialog
     Public RetVal As New KeyValuePair(Of Boolean, String)
+    Public returnval As New KeyValuePair(Of Boolean, String)
     Private pass_switch As Boolean = True
+    Private formstate As ValidType = ValidType.Validation
 
-    Public Function checkUser(uid As String, pass As String) As Integer
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main DB connection is empty")
-        End If
+    Private Enum ValidType
+        Validation
+        UserConfirm
+    End Enum
 
-        Dim rval As Boolean = False
-        Dim q As String = "SELECT user_validasi_akun FROM data_pengguna_alias WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
+    'LOAD DIALOG
+    Private Sub LoadForm(formstate As ValidType)
+        Me.formstate = formstate
+        Me.Text = Me.lbl_title.Text
+        in_pass.UseSystemPasswordChar = pass_switch
+        in_user.ReadOnly = IIf(formstate = ValidType.Validation, False, True)
+    End Sub
 
+    Public Sub doLoadValid()
+        Me.Text = "Validasi Transaki"
+        LoadForm(ValidType.Validation)
+        Me.ShowDialog()
+    End Sub
+
+    Public Sub doLoadConfirm(Uid As String)
+        Me.Text = "Konfirmasi Transaksi"
+        LoadForm(ValidType.UserConfirm)
+        in_user.Text = Uid
+        Me.ShowDialog()
+    End Sub
+
+    'USER DATA VALID
+    Public Function checkUser(uid As String, pass As String) As Boolean
+        Dim q As String = ""
+        Select Case formstate
+            Case ValidType.Validation
+                q = "SELECT user_validasi_akun FROM data_pengguna_alias " _
+                    & "WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
+            Case ValidType.UserConfirm
+                q = "SELECT COUNT(user_alias) FROM data_pengguna_alias " _
+                    & "WHERE user_alias='{0}' AND user_pwd='{1}' AND user_status=1"
+            Case Else
+                Return False : Exit Function
+        End Select
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
-                    Using rdx = x.ReadCommand(String.Format(q, uid, computeHash(pass)), CommandBehavior.SingleResult)
-                        Dim red = rdx.Read
-                        If red And rdx.HasRows Then
-                            Return rdx.Item(0)
+                    Dim i As Integer = 0
+                    Dim f = x.ExecScalar(String.Format(q, uid, computeHash(pass)))
+                    If Not IsNothing(f) Then i = Integer.Parse(f)
+                    If i = 1 Then
+                        Return True
+                    ElseIf i > 1 And formstate = ValidType.UserConfirm Then
+                        MessageBox.Show("Terjadi kesalahan saat melakukan validasi data user." & Environment.NewLine & "Error duplicated entry",
+                                   Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        errLog(New List(Of String) From {Now.ToString("yyyy-MM-dd hh:mm:ss"), "----- DUPLICATE ENTRY:data_pengguna", "----- " & uid})
+                        Return False
+                    Else
+                        Dim _msg As String = ""
+                        If i = 0 And formstate = ValidType.Validation Then
+                            _msg = "User tidak ditemukan/tidak dapat melakukan validasi transaksi."
                         Else
-                            Return -1
+                            _msg = "Username/Password salah. User tidak dapat ditemukan."
                         End If
-                    End Using
+                        MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
+                        Return False
+                    End If
                 Catch ex As Exception
                     logError(ex, True)
-                    MessageBox.Show("Terjadi kesalahan saat melakukan validasi." & Environment.NewLine & ex.Message,
+                    MessageBox.Show("Terjadi kesalahan saat melakukan validasi data user." & Environment.NewLine & ex.Message,
                                     Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return 9
+                    Return False
                 End Try
             Else
-                MessageBox.Show("Tidak dapat terhubung ke database", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Return 9
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                Return False
             End If
         End Using
     End Function
@@ -61,7 +105,7 @@
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalbeli.Click
         If MessageBox.Show("Batalkan?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            RetVal = New KeyValuePair(Of Boolean, String)(False, "CANCEL")
+            RetVal = New KeyValuePair(Of Boolean, String)(False, String.Empty)
             Me.Close()
         End If
     End Sub
@@ -104,23 +148,10 @@
             MessageBox.Show("Password belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_pass.Focus() : Exit Sub
         End If
-
-        Dim i As Integer = checkUser(in_user.Text, in_pass.Text)
-        If i = 1 Then
-            RetVal = New KeyValuePair(Of Boolean, String)(True, in_user.Text)
+        If checkUser(in_user.Text, in_pass.Text) Then
+            returnval = New KeyValuePair(Of Boolean, String)(True, in_user.Text)
+            RetVal = returnval
             Me.Close()
-        Else
-            Dim _msg As String = "User salah atau tidak dapat melakukan konfirmasi"
-            If i = 9 Then
-                Exit Sub
-            ElseIf i = -1 Then
-                _msg = "Username/password salah."
-            Else
-                _msg = "User " & in_user.Text & " tidak dapat melakukan konfirmasi/validasi."
-            End If
-            MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
-            in_user.Focus()
         End If
-
     End Sub
 End Class
