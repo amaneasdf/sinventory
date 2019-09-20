@@ -54,11 +54,9 @@
             .DisplayMember = "Text"
         End With
 
-        With dgv_barang
-            For Each x As DataGridViewColumn In {harga, discrp, jml, subtotal}
-                x.DefaultCellStyle = dgvstyle_currency
-            Next
-        End With
+        For Each x As DataGridViewColumn In {harga, discrp, jml, subtotal, disc1, disc2, disc3, disc4, disc5, discrp}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
 
         If formstate <> InputState.Insert Then
             Me.Text += NoFaktur
@@ -374,43 +372,6 @@ CountHarga:
         End Using
     End Function
 
-    'COUNT PRICE
-    Private Function countHarga(state As String, hargaawal As Decimal, convState As String) As Decimal
-        Dim retHarga As Decimal = 0
-        Dim isi As Integer = 0
-
-        Select Case state
-            Case "besar"
-                If convState = "tengah" Then
-                    retHarga = hargaawal / isibesar
-                ElseIf convState = "kecil" Then
-                    retHarga = hargaawal / (isibesar * isitengah)
-                Else
-                    retHarga = hargaawal
-                End If
-            Case "tengah"
-                If convState = "besar" Then
-                    retHarga = hargaawal * isibesar
-                ElseIf convState = "kecil" Then
-                    retHarga = hargaawal / isitengah
-                Else
-                    retHarga = hargaawal
-                End If
-            Case "kecil"
-                If convState = "besar" Then
-                    retHarga = hargaawal * isitengah * isibesar
-                ElseIf convState = "tengah" Then
-                    retHarga = hargaawal * isitengah
-                Else
-                    retHarga = hargaawal
-                End If
-            Case Else
-                retHarga = hargaawal
-        End Select
-
-        Return retHarga
-    End Function
-
     'POPUP PANEL
     Private Sub loadDataBRGPopup(tipe As String, Optional param As String = Nothing)
         setDoubleBuffered(Me.dgv_listbarang, True)
@@ -594,6 +555,7 @@ CountHarga:
             in_barang_nm.Text = .Cells("nama").Value
             in_qty.Value = .Cells("qty").Value
             loadSatuanBrg(.Cells("kode").Value)
+            _satuanstate = .Cells("sat_type").Value
             cb_sat.SelectedValue = .Cells("sat_type").Value
             in_harga_beli.Text = .Cells("harga").Value
             in_disc1.Value = .Cells("disc1").Value
@@ -1243,17 +1205,15 @@ CountHarga:
     End Sub
 
     Private Sub dgv_listbarang_keypress(sender As Object, e As KeyPressEventArgs) Handles dgv_listbarang.KeyPress
-        If Char.IsLetterOrDigit(e.KeyChar) Then
-            Dim x As TextBox
-            Select Case popupstate
-                Case "sales" : x = in_sales_n
-                Case "gudang" : x = in_gudang_n
-                Case "barang" : x = in_barang_nm
-                Case "custo" : x = in_custo_n
-                Case Else : Exit Sub
-            End Select
-            PopUpSearchKeyPress(e, x)
-        End If
+        Dim x As TextBox
+        Select Case popupstate
+            Case "sales" : x = in_sales_n
+            Case "gudang" : x = in_gudang_n
+            Case "barang" : x = in_barang_nm
+            Case "custo" : x = in_custo_n
+            Case Else : Exit Sub
+        End Select
+        PopUpSearchKeyPress(e, x)
     End Sub
 
     '------------- cb prevent input
@@ -1388,7 +1348,7 @@ CountHarga:
     End Sub
 
     Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectionChangeCommitted
-        in_harga_beli.Value = countHarga(_satuanstate, in_harga_beli.Value, cb_sat.SelectedValue)
+        in_harga_beli.Value = CountItemPrice(_satuanstate, cb_sat.SelectedValue, in_harga_beli.Value, isibesar, isitengah)
         _satuanstate = cb_sat.SelectedValue
     End Sub
 

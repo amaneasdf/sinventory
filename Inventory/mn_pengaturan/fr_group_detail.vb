@@ -39,7 +39,7 @@
         bt_simpan_group.Enabled = AllowInput
         bt_tv_reset.Enabled = AllowInput
         bt_tv_checkall_group.Enabled = AllowInput
-        mn_actdeact.Enabled = AllowInput
+        mn_actdeact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
         mn_save.Enabled = AllowInput
     End Sub
 
@@ -94,81 +94,79 @@
         Dim fd As Boolean = False
         Dim MenuKode As String
 
-        dbSelect("SELECT menu_kode FROM kode_menu WHERE menu_status=1 AND menu_group = '" & in_kode.Text & "' ORDER BY menu_kode ASC ")
-
-        Do While rd.Read
-            fd = False
-            MenuKode = rd.Item("menu_kode").ToString
-            For Each item As TreeNode In tv_menu.Nodes
-                If treeCK(item, MenuKode) = True Then Exit For
-                If MenuKode.Length > 4 Then
-                    For Each ChildNode As TreeNode In item.Nodes
-                        fd = treeCK(ChildNode, MenuKode)
-                        If fd = True Then
-                            Exit For
-                        End If
-                        If MenuKode.Length > 6 Then
-                            For Each Child2 As TreeNode In ChildNode.Nodes
-                                fd = treeCK(Child2, MenuKode)
-                                If fd = True Then
-                                    Exit For
-                                End If
-                            Next
-                        End If
-                        If fd = True Then
-                            Exit For
-                        End If
-                    Next
-                End If
-                If fd = True Then
-                    Exit For
-                End If
-            Next
-            'consoleWriteLine(MenuKode & IIf(fd = True, "sss", "nnnn"))
-        Loop
-        rd.Close()
+        RemoveHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = "SELECT menu_kode FROM kode_menu WHERE menu_status=1 AND menu_group='{0}' ORDER BY menu_kode ASC"
+                Using rdx = x.ReadCommand(String.Format(q, in_kode.Text))
+                    Do While rdx.Read
+                        fd = False
+                        MenuKode = rdx.Item("menu_kode").ToString
+                        For Each item As TreeNode In tv_menu.Nodes
+                            If treeCK(item, MenuKode) = True Then Exit For
+                            If MenuKode.Length > 4 Then
+                                For Each ChildNode As TreeNode In item.Nodes
+                                    fd = treeCK(ChildNode, MenuKode)
+                                    If fd Then Exit For
+                                    If MenuKode.Length > 6 Then
+                                        For Each Child2 As TreeNode In ChildNode.Nodes
+                                            fd = treeCK(Child2, MenuKode)
+                                            If fd Then Exit For
+                                        Next
+                                    End If
+                                    If fd Then Exit For
+                                Next
+                            End If
+                            If fd Then Exit For
+                        Next
+                    Loop
+                End Using
+            End If
+        End Using
+        AddHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
     End Sub
 
     'menutree
     Private Sub populateTree()
-        op_con()
-
         Dim ParentNode As New TreeNode
         Dim ChildNode, ChildNode2 As New TreeNode
         Dim MenuKode, MenuLabel As String
 
         tv_menu.Nodes.Clear()
-        dbSelect("SELECT menu_kode, menu_label FROM data_menu_master WHERE menu_status=1 ORDER BY menu_kode")
-
-        Do While rd.Read
-            MenuKode = rd.Item("menu_kode").ToString
-            MenuLabel = Mid(MenuKode, 3, 20) & ". " & rd.Item("menu_label").ToString
-            Console.WriteLine(rd.Item("menu_kode").ToString)
-            If Len(MenuKode) = 4 Then
-                Dim node1 As New TreeNode(MenuLabel)
-                ParentNode = node1
-                tv_menu.Nodes.Add(ParentNode)
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Using rdx = x.ReadCommand("SELECT menu_kode, menu_label FROM data_menu_master WHERE menu_status=1 ORDER BY menu_kode")
+                    Do While rdx.Read
+                        MenuKode = rdx.Item("menu_kode").ToString
+                        MenuLabel = Mid(MenuKode, 3, 20) & ". " & rdx.Item("menu_label").ToString
+                        consoleWriteLine(rdx.Item("menu_kode").ToString)
+                        If Len(MenuKode) = 4 Then
+                            Dim node1 As New TreeNode(MenuLabel)
+                            ParentNode = node1
+                            tv_menu.Nodes.Add(ParentNode)
+                        End If
+                        If Len(MenuKode) = 6 Then
+                            Dim node2 As New TreeNode(MenuLabel)
+                            ChildNode = node2
+                            ParentNode.Nodes.Add(ChildNode)
+                        End If
+                        If Len(MenuKode) = 8 Then
+                            Dim node3 As New TreeNode(MenuLabel)
+                            ChildNode2 = node3
+                            ChildNode.Nodes.Add(ChildNode2)
+                        End If
+                    Loop
+                End Using
+                tv_menu.ExpandAll()
+            Else
+                MessageBox.Show("Data menu tidak dapat diambil. Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-            If Len(MenuKode) = 6 Then
-                Dim node2 As New TreeNode(MenuLabel)
-                ChildNode = node2
-                ParentNode.Nodes.Add(ChildNode)
-            End If
-            If Len(MenuKode) = 8 Then
-                Dim node3 As New TreeNode(MenuLabel)
-                ChildNode2 = node3
-                ChildNode.Nodes.Add(ChildNode2)
-            End If
-        Loop
-
-        rd.Close()
-        tv_menu.ExpandAll()
+        End Using
     End Sub
 
     Private Function treeCK(nodes As TreeNode, menukode As String) As Boolean
         Dim fd As Boolean = False
         Dim NodesName As String = "mn" & SplitText(nodes.Text, ".", 0)
-        'consoleWriteLine(Child2Name & ";" & MenuKode)
         If NodesName = menukode Then
             nodes.Checked = True
             fd = True
@@ -193,137 +191,111 @@
         End Select
     End Sub
 
-    Private Sub treeviewAllCheckSwitch(state As Boolean)
-        For Each item As TreeNode In tv_menu.Nodes
-            item.Checked = state
-            For Each ChildNode As TreeNode In item.Nodes
-                ChildNode.Checked = state
-                For Each Child2 As TreeNode In ChildNode.Nodes
-                    Child2.Checked = state
-                Next
-            Next
+    Private Sub treeviewAllCheckSwitch(TreeNodes As TreeNodeCollection, CheckState As Boolean)
+        For Each item As TreeNode In TreeNodes
+            item.Checked = CheckState
+            treeviewAllCheckSwitch(item.Nodes, CheckState)
         Next
     End Sub
 
     'SAVE
-    Private Function processtreeview() As Boolean
-        Dim q As String = ""
-        Dim data As String()
-        Dim queryCheck As Boolean = False
-        Dim queryArr As New List(Of String)
-        Dim listview As New ListView
-
-        op_con()
-        Me.Cursor = Cursors.WaitCursor
-        '======================================================================================================================
-        q = "UPDATE kode_menu SET menu_status=9 WHERE menu_group='{0}'"
-        queryArr.Add(String.Format(q, in_kode.Text))
-        'commnd("DELETE FROM kode_menu WHERE menu_group = '" & in_kode.Text & "'")
-        '======================================================================================================================
-
-        '======================================================================================================================
-        For Each item As TreeNode In tv_menu.Nodes
-            Dim MenuKode As String = "mn" & SplitText(item.Text, ".", 0)
-            Dim MenuNama As String = SplitText(item.Text, ".", 1)
-            'Parent Node
-            If item.Checked = True Then
-                Dim ls As New ListViewItem()
-                ls.SubItems.Add(MenuKode)
-                ls.SubItems.Add(MenuNama)
-                listview.Items.Add(ls)
-                'ChildNode - 1
-                For Each ChildNode As TreeNode In item.Nodes
-                    Dim ChildKode As String = "mn" & SplitText(ChildNode.Text, ".", 0)
-                    Dim ChildNama As String = SplitText(ChildNode.Text, ".", 1)
-                    If ChildNode.Checked = True Then
-                        Dim lsChild As New ListViewItem()
-                        lsChild.SubItems.Add(ChildKode)
-                        lsChild.SubItems.Add("     " & ChildNama)
-                        listview.Items.Add(lsChild)
-                    End If
-                    'ChildNode - 2
-                    For Each Child2 As TreeNode In ChildNode.Nodes
-                        Dim Child2Kode As String = "mn" & SplitText(Child2.Text, ".", 0)
-                        Dim Child2Nama As String = SplitText(Child2.Text, ".", 1)
-                        If Child2.Checked = True Then
-                            Dim lsChild2 As New ListViewItem()
-                            lsChild2.SubItems.Add(Child2Kode)
-                            lsChild2.SubItems.Add("     " & Child2Nama)
-                            listview.Items.Add(lsChild2)
-                        End If
-                    Next
-                Next
-            End If
-        Next
-
-        For i = 0 To listview.Items.Count - 1
-            Dim ItemKode As String = listview.Items(i).SubItems(1).Text
-            Dim ItemLabel As String = Trim(listview.Items(i).SubItems(2).Text)
-
-            consoleWriteLine(ItemKode)
-
-            data = {
-                "menu_kode='" & ItemKode & "'",
-                "menu_status='1'"
-                }
-            q = "INSERT INTO kode_menu SET menu_group='{0}',{1},menu_reg_date=NOW(),menu_reg_alias='{2}' " _
-                & "ON DUPLICATE KEY UPDATE {1},menu_upd_date=NOW(),menu_upd_alias='{2}'"
-            queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", data), loggeduser.user_id))
-            'commnd("INSERT INTO kode_menu SET  menu_kode = '" & ItemKode & "', menu_group = '" & in_kode.Text & "', " _
-            '        & "menu_label = '" & ItemLabel & "', menu_set = 1, menu_parent = '" & sLeft(ItemKode, 4) & "', " _
-            '        & "menu_reg_date = NOW(), menu_reg_ip = '" & loggeduser.user_ip & "', menu_reg_alias = '" & loggeduser.user_id & "'")
-        Next
-        '======================================================================================================================
-
-        '==========================================================================================================================
-        'BEGIN TRANSACTION
-        queryCheck = startTrans(queryArr)
-        '==========================================================================================================================
-        Me.Cursor = Cursors.Default
-
-        Return queryCheck
-    End Function
-
     Private Sub saveData()
         Dim q As String = ""
-        Dim data As String()
+        Dim queryCheck As Boolean = False
+        Dim queryArr As New List(Of String)
+        Dim _listcode As New List(Of String)
+
+        Me.Cursor = Cursors.WaitCursor
+        Dim dh = {"group_nama='" & in_nama_group.Text & "'",
+                  "group_keterangan='" & mysqlQueryFriendlyStringFeed(in_ket_group.Text) & "'",
+                  "group_status=" & usrstatus
+                 }
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                'SAVE HEADER
+                If formstate = InputState.Insert Then
+                    Dim i As Integer = 0
+                    q = "SELECT IFNULL(MAX(group_kode),0) FROM data_pengguna_group WHERE group_kode REGEXP '^[0-9]+$'"
+                    i = Integer.Parse(x.ExecScalar(q))
+                    in_kode.Text = i + 1
+
+                    q = "INSERT INTO data_pengguna_group SET group_kode={0}, {1},group_reg_date=NOW(),group_reg_alias='{2}'"
+                Else
+                    q = "UPDATE data_pengguna_group SET {1},group_upd_date=NOW(),group_upd_alias='{2}' WHERE group_kode={0}"
+                End If
+                queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dh), loggeduser.user_id))
+
+                'SAVE SELECTED MENU
+                q = "UPDATE kode_menu SET menu_status=9 WHERE menu_group='{0}' AND menu_status<>9"
+                queryArr.Add(String.Format(q, in_kode.Text))
+
+                For Each item As TreeNode In tv_menu.Nodes
+                    'Parent Node
+                    If item.Checked = True Then
+                        _listcode.Add(item.Text)
+                        'ChildNode - 1
+                        For Each ChildNode As TreeNode In item.Nodes
+                            If ChildNode.Checked = True Then _listcode.Add(ChildNode.Text)
+                            'ChildNode - 2
+                            For Each Child2 As TreeNode In ChildNode.Nodes
+                                If Child2.Checked = True Then _listcode.Add(Child2.Text)
+                            Next
+                        Next
+                    End If
+                Next
+
+                For Each _strcode As String In _listcode
+                    _strcode = "mn" & SplitText(_strcode, ".", 0)
+                    Dim dm = {"menu_kode='" & _strcode & "'",
+                              "menu_status='1'"
+                             }
+                    q = "INSERT INTO kode_menu SET menu_group='{0}',{1},menu_reg_date=NOW(),menu_reg_alias='{2}' " _
+                        & "ON DUPLICATE KEY UPDATE {1},menu_upd_date=NOW(),menu_upd_alias='{2}'"
+                    queryArr.Add(String.Format(q, in_kode.Text, String.Join(",", dm), loggeduser.user_id))
+                Next
+
+                'BEGIN TRANSACTION
+                queryCheck = x.TransactCommand(queryArr)
+
+                If queryCheck Then
+                    MessageBox.Show("Data user group tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pggroup, pguser}) : Me.Close()
+                Else
+                    MessageBox.Show("Data user group tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
+    End Sub
+
+    Private Sub ChangeDataStatus(NewStatus As Integer)
+        Dim q As String = ""
         Dim queryCheck As Boolean = False
         Dim queryArr As New List(Of String)
 
-        Me.Cursor = Cursors.WaitCursor
-        data = {
-            "group_nama='" & in_nama_group.Text & "'",
-            "group_keterangan='" & mysqlQueryFriendlyStringFeed(in_ket_group.Text) & "'",
-            "group_status='" & usrstatus & "'"
-            }
+        q = "UPDATE data_pengguna_group SET group_status={1}, group_upd_date=NOW(),group_upd_alias='{2}' WHERE group_kode={0}"
+        queryArr.Add(String.Format(q, in_kode.Text, NewStatus, loggeduser.user_id))
+        If NewStatus = 9 Then
+            q = "UPDATE kode_menu SET menu_status=9 WHERE menu_group='{0}' AND menu_status<>9"
+            queryArr.Add(String.Format(q, in_kode.Text))
+        End If
 
-        op_con()
-        If bt_simpan_group.Text = "Simpan" Then
-            readcommd("SELECT IFNULL(MAX(group_kode), '0') as Kode FROM data_pengguna_group")
-            If rd.HasRows Then
-                in_kode.Text = Val(rd.Item("Kode")) + 1
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                queryCheck = x.TransactCommand(queryArr)
+                If queryCheck Then
+                    MessageBox.Show("Status data user group tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pggroup, pguser})
+                    usrstatus = NewStatus : setStatus()
+                Else
+                    MessageBox.Show("Status data user group tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-            rd.Close()
-
-            q = "INSERT INTO data_pengguna_group SET group_kode='{0}',{1},group_reg_date=NOW(),group_reg_alias='{2}'"
-        ElseIf bt_simpan_group.Text = "Update" Then
-            q = "UPDATE data_pengguna_group SET {1},group_upd_date=NOW(),group_upd_alias='{2}' WHERE group_kode='{0}'"
-        End If
-        queryCheck = commnd(String.Format(q, in_kode.Text, String.Join(",", data), loggeduser.user_id))
-        If queryCheck <> False Then
-            queryCheck = processtreeview()
-        End If
-
-        Me.Cursor = Cursors.Default
-
-        If queryCheck = False Then
-            MessageBox.Show("Data tidak dapat tersimpan")
-            Exit Sub
-        Else
-            MessageBox.Show("Data telah disimpan")
-            doRefreshTab({pguser, pggroup})
-            Me.Close()
-        End If
+        End Using
     End Sub
 
     '------------drag form
@@ -345,13 +317,9 @@
 
     '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batal_group.Click
-        If MessageBox.Show("Tutup Form?", "Data User Group", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
-    End Sub
-
-    Private Sub fr_kas_detail_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'e.Cancel = True
+        'If MessageBox.Show("Tutup Form?", "Data User Group", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
@@ -372,12 +340,14 @@
     End Sub
 
     Private Sub mn_actdeact_Click(sender As Object, e As EventArgs) Handles mn_actdeact.Click
+        Dim _newstatus As Integer = usrstatus : Dim _msg As String = ""
         If mn_actdeact.Text = "Deactivate" Then
-            usrstatus = 0
-            setStatus()
+            _newstatus = 0 : _msg = "Nonaktifkan user group?"
         Else
-            usrstatus = 1
-            setStatus()
+            _newstatus = 1 : _msg = "Aktifkan user group?"
+        End If
+        If MessageBox.Show(_msg, Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
+            ChangeDataStatus(_newstatus)
         End If
     End Sub
 
@@ -385,37 +355,25 @@
         'delData()
     End Sub
 
-
-    'LOAD
-    Private Sub fr_group_detail_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'populateTree()
-
-        'If bt_simpan_group.Text = "Update" Then
-        '    treeviewCheck()
-        '    getGroupData(in_kode.Text)
-        '    'mn_actdeact.Enabled = True
-        'End If
-    End Sub
-
     'SAVE
     Private Sub bt_simpan_group_Click(sender As Object, e As EventArgs) Handles bt_simpan_group.Click
-        Dim querycheck As Boolean = False
-
         If Trim(in_nama_group.Text) = "" Then
-            MessageBox.Show("Nama group belum diisi!")
-            in_nama_group.Focus()
-            Exit Sub
+            MessageBox.Show("Nama group belum diisi!", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_nama_group.Focus() : Exit Sub
         End If
 
-        If Trim(in_ket_group.Text) = "" Then
-            MessageBox.Show("Keterangan belum diisi!")
-            in_ket_group.Focus()
-            Exit Sub
+        Me.Cursor = Cursors.WaitCursor
+        Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes
+        If formstate <> InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data user group?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = Windows.Forms.DialogResult.Yes Then
+            Dim _confirm As Boolean = True
+            If formstate = InputState.Edit Then
+                'Dim xx As New fr_tutupconfirm_dialog
+                'xx.lbl_title.Text = "Konfirm"
+            End If
+            If _confirm Then saveData()
         End If
-
-        If MessageBox.Show("Simpan data user group?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
-            saveData()
-        End If
+        Me.Cursor = Cursors.Default
     End Sub
 
     'UI
@@ -423,11 +381,35 @@
         keyshortenter(in_ket_group, e)
     End Sub
 
-    Private Sub bt_tv_checkall_group_Click(sender As Object, e As EventArgs) Handles bt_tv_reset.Click
-        treeviewAllCheckSwitch(False)
+    Private Sub in_alamat_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_ket_group.KeyPress
+        If e.KeyChar = Convert.ToChar(1) Then
+            DirectCast(sender, TextBox).SelectAll()
+            e.Handled = True
+        End If
     End Sub
 
-    Private Sub bt_tv_checkall_group_Click_1(sender As Object, e As EventArgs) Handles bt_tv_checkall_group.Click
-        treeviewAllCheckSwitch(True)
+    Private Sub bt_tv_checkall_group_Click(sender As Object, e As EventArgs) Handles bt_tv_reset.Click, bt_tv_checkall_group.Click
+        RemoveHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
+        Dim _checked As Boolean = False
+        If sender.Name = "bt_tv_checkall_group" Then _checked = True
+        treeviewAllCheckSwitch(tv_menu.Nodes, _checked)
+        AddHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
+    End Sub
+
+    Private Sub tv_menu_AfterCheck(sender As Object, e As TreeViewEventArgs) Handles tv_menu.AfterCheck
+        RemoveHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
+
+        Dim _checked = e.Node.Checked
+        CheckAllChildNodes(e.Node)
+
+        Dim parentNode As TreeNode = e.Node.Parent
+        While parentNode Is Nothing = False
+            Dim _checkedchild As Boolean = _checked
+            If Not _checked Then IsSomeChildChecked(parentNode, _checkedchild)
+            parentNode.Checked = _checkedchild
+            parentNode = parentNode.Parent
+        End While
+
+        AddHandler tv_menu.AfterCheck, AddressOf tv_menu_AfterCheck
     End Sub
 End Class

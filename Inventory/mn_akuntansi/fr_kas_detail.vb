@@ -293,15 +293,11 @@
     End Sub
 
     '------------------ SAVE
-    Private Function saveData() As Boolean
+    Private Sub saveData()
         Dim q As String = ""
         Dim data1 As String()
         Dim queryArr As New List(Of String)
         Dim querycheck As Boolean = False
-
-        op_con()
-
-        Me.Cursor = Cursors.WaitCursor
 
         '==========================================================================================================================
         'INPUT HEAD
@@ -313,86 +309,93 @@
             "kas_sales='" & in_sales.Text & "'",
             "kas_status='" & tjlstatus & "'"
             }
-        If bt_simpanperkiraan.Text = "Simpan" Then
-            'GENERATE KODE
-            If in_no_bukti.Text = Nothing Then
-                Dim no As Integer = 1
-                readcommd("SELECT COUNT(kas_kode) FROM data_kas_faktur WHERE SUBSTRING(kas_kode,3,8)='" & date_tgl_trans.Value.ToString("yyyyMMdd") & "' AND kas_kode LIKE 'KS%'")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    If String.IsNullOrWhiteSpace(in_no_bukti.Text) Then
+                        Dim i As Integer = 0 : Dim format As String = "D3"
+                        q = "SELECT IFNULL(MAX(SUBSTRING(kas_kode, 11)),0) FROM data_kas_faktur " _
+                            & "WHERE kas_kode LIKE 'KS{0:yyyyMMdd}%' AND SUBSTRING(kas_kode,11) REGEXP '^[0-9]+$'"
+                        Try
+                            i = CInt(x.ExecScalar(String.Format(q, date_tgl_trans.Value)))
+                            format = IIf(i + 1 > 999, "D" & (i + 1).ToString.Length, "D3")
+                            in_no_bukti.Text = String.Format("KS{0:yyyyMMdd}", date_tgl_trans.Value) & (i + 1).ToString(format)
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+
+                    Else
+                        Dim i As Integer = 0
+                        q = "SELECT COUNT(kas_kode) FROM data_kas_faktur WHERE kas_kode='{0}'"
+                        Try
+                            i = Integer.Parse(x.ExecScalar(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text))))
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                        If i <> 0 Then
+                            MessageBox.Show("Kode bukti " & in_no_bukti.Text & " sudah pernah di inputkan ke database.",
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            in_no_bukti.Focus() : Exit Sub
+                        End If
+                    End If
+
+                    q = "INSERT INTO data_kas_faktur SET kas_kode='{0}',{1},kas_reg_date=NOW(),kas_reg_alias='{2}'"
+                Else
+                    q = "UPDATE data_kas_faktur SET {1},kas_upd_date=NOW(),kas_upd_alias='{2}' WHERE kas_kode='{0}'"
                 End If
-                rd.Close()
-                in_no_bukti.Text = "KS" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
-            ElseIf in_no_bukti.Text <> Nothing And bt_simpanperkiraan.Text <> "Update" Then
-                If checkdata("data_kas_faktur", "'" & in_no_bukti.Text & "'", "kas_kode") = True Then
-                    MessageBox.Show("Kode " & in_no_bukti.Text & " sudah pernah diinput. Silahkan ganti kode transaksi", "Kas",
-                                    MessageBoxButtons.OK, MessageBoxIcon.Question)
-                    Return False
-                    Exit Function
+                queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text), String.Join(",", data1), loggeduser.user_id))
+
+                q = "UPDATE data_kas_trans SET k_trans_status=9 WHERE k_trans_faktur='{0}'"
+                queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text)))
+
+                q = "INSERT data_kas_trans SET k_trans_faktur='{0}',{1}"
+                For Each rows As DataGridViewRow In dgv_kas.Rows
+                    data1 = {
+                        "k_trans_rek='" & rows.Cells("kas_rek").Value & "'",
+                        "k_trans_debet=" & Decimal.Parse(rows.Cells("kas_debet").Value).ToString.Replace(",", "."),
+                        "k_trans_kredit=" & Decimal.Parse(rows.Cells("kas_kredit").Value).ToString.Replace(",", "."),
+                        "k_trans_ket='" & rows.Cells("kas_ket").Value & "'",
+                        "k_trans_status='" & IIf(tjlstatus = 9, 9, 1) & "'",
+                        "k_trans_reg_date=NOW()",
+                        "k_trans_reg_alias='" & loggeduser.user_id & "'"
+                        }
+                    queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text), String.Join(",", data1)))
+                Next
+
+                '==========================================================================================================================
+                'INPUT JURNAL
+                '----------HEAD
+                q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='KAS',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
+                    & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
+                data1 = {
+                    "line_ref='" & in_bank.Text & "'",
+                    "line_ref_type='AKUN'",
+                    "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
+                    "line_status='" & IIf(tjlstatus = 1, 1, 9) & "'"
+                    }
+                queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text), String.Join(",", data1), loggeduser.user_id))
+                '==========================================================================================================================
+
+                '==========================================================================================================================
+                'BEGIN TRANSACT
+                querycheck = x.TransactCommand(queryArr)
+                '==========================================================================================================================
+
+                If querycheck Then
+                    MessageBox.Show("Data tersimpan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pgkas}) : Me.Close()
+                Else
+                    MessageBox.Show("Data tidak dapat tersimpan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
-            q = "INSERT INTO data_kas_faktur SET kas_kode='{0}',{1},kas_reg_date=NOW(),kas_reg_alias='{2}'"
-        Else
-            q = "UPDATE data_kas_faktur SET {1},kas_upd_date=NOW(),kas_upd_alias='{2}' WHERE kas_kode='{0}'"
-        End If
-        queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INSERT DATA KAS
-
-        '==========================================================================================================================
-        q = "UPDATE data_kas_trans SET k_trans_status=9 WHERE k_trans_faktur='{0}'"
-        queryArr.Add(String.Format(q, in_no_bukti.Text))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        q = "INSERT data_kas_trans SET k_trans_faktur='{0}',{1} ON DUPLICATE KEY UPDATE {1}"
-        For Each rows As DataGridViewRow In dgv_kas.Rows
-            data1 = {
-                "k_trans_rek='" & rows.Cells("kas_rek").Value & "'",
-                "k_trans_debet=" & Decimal.Parse(rows.Cells("kas_debet").Value).ToString.Replace(",", "."),
-                "k_trans_kredit=" & Decimal.Parse(rows.Cells("kas_kredit").Value).ToString.Replace(",", "."),
-                "k_trans_ket='" & rows.Cells("kas_ket").Value & "'",
-                "k_trans_status='" & IIf(tjlstatus = 9, 9, 1) & "'"
-                }
-            queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1)))
-        Next
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INPUT JURNAL
-        '----------HEAD
-        q = "INSERT INTO data_jurnal_line SET line_kode='{0}', line_type='KAS',{1},line_reg_date=NOW(),line_reg_alias='{2}' " _
-            & "ON DUPLICATE KEY UPDATE {1},line_upd_date=NOW(),line_upd_alias='{2}'"
-        data1 = {
-            "line_ref='" & in_bank.Text & "'",
-            "line_ref_type='AKUN'",
-            "line_tanggal='" & date_tgl_trans.Value.ToString("yyyy-MM-dd") & "'",
-            "line_status='" & IIf(tjlstatus = 1, 1, 9) & "'"
-            }
-        queryArr.Add(String.Format(q, in_no_bukti.Text, String.Join(",", data1), loggeduser.user_id))
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'BEGIN TRANSACT
-        querycheck = startTrans(queryArr)
-        '==========================================================================================================================
-
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            MessageBox.Show("Data tidak dapat tersimpan")
-            Return False
-            Exit Function
-        Else
-            MessageBox.Show("Data tersimpan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
-            DoRefreshTab_v2({pgkas})
-            Return True
-            Me.Close()
-        End If
-    End Function
+        End Using
+    End Sub
 
     '------------------ CANCEL
     Private Function cancelData() As Boolean
@@ -593,9 +596,11 @@
             Exit Sub
         End If
 
+        Me.Cursor = Cursors.WaitCursor
         Dim _askRes As DialogResult = Windows.Forms.DialogResult.Yes
         If formstate <> InputState.Insert Then _askRes = MessageBox.Show("Simpan data kas?", "Kas", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If _askRes = Windows.Forms.DialogResult.Yes Then saveData()
+        Me.Cursor = Cursors.Default
     End Sub
 
     '------------ input

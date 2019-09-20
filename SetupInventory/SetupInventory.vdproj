@@ -1302,15 +1302,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Inventory"
-        "ProductCode" = "8:{C152ECB6-C5F2-4F4D-B5EC-BF242930315B}"
-        "PackageCode" = "8:{B679F0AC-F6B7-409D-869A-0F3FAD9969C9}"
+        "ProductCode" = "8:{6768B11D-3380-4525-BBFE-D6D16F5BA948}"
+        "PackageCode" = "8:{A936C01E-6B49-4E77-ADFC-579F358DC74A}"
         "UpgradeCode" = "8:{3E104E36-C60E-4521-99E6-5D13CB6746FC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.0.20"
+        "ProductVersion" = "8:0.0.23"
         "Manufacturer" = "8:MSO"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1866,7 +1866,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_12C6DF635F0A4064B11679E5A82F9889"
             {
-            "SourcePath" = "8:..\\Inventory\\obj\\Debug\\Inventory.exe"
+            "SourcePath" = "8:..\\Inventory\\obj\\Release\\Inventory.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_215895AF1BB54657BA6C2ECA680E508D"

@@ -251,10 +251,10 @@ EndProc:
         If _msgRes = Windows.Forms.DialogResult.Yes Then ck = ConfirmValidasi("UserConfirm")
         Me.Cursor = Cursors.WaitCursor
         If ck Then
-            Dim view As New fr_closing_loading
+            Dim view As New fr_closing_loading With {.ShowInTaskbar = False}
             Try
                 view.lbl_title.Text = "Closing Periode " & _msgPeriode & " . . . "
-                view.Show()
+                view.Show(Me)
                 main.Enabled = False
                 ck = Await Task.Run(Function() NewClosing(date_tglawal.Value, date_tglakhir.Value))
             Catch ex As Exception

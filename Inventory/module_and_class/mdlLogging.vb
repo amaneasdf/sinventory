@@ -14,8 +14,10 @@
 
         Select Case LCase(tipe)
             Case "login"
-                Dim datauser() As String = {"CURDATE()", "NOW()", "'" & loggeduser.user_id & "'", "'" & loggeduser.user_ip & "'", "'" & loggeduser.user_host & "'",
-                                            "'" & loggeduser.user_mac & "'", "'" & loggeduser.user_ver & "'"}
+                Dim datauser() As String = {"CURDATE()", "NOW()", "'" & loggeduser.user_id & "'",
+                                            "'" & loggeduser.user_ip & "'", "'" & loggeduser.user_host & "'",
+                                            "'" & loggeduser.user_mac & "'", "'" & loggeduser.user_hwid & "'",
+                                            "'" & loggeduser.user_ver & "'"}
                 Using x As MySqlThing = MainConnection
                     Dim _tsk As Task = x.OpenAsync()
 
@@ -24,10 +26,10 @@
                     ElseIf _tsk.IsCompleted And x.Connection.State = ConnectionState.Open Then
                         q = "UPDATE system_login_log SET log_status=2 WHERE log_user='{0}' AND log_komputer='{1}' AND log_status=0"
                         Await x.ExecCommandAsync(String.Format(q, loggeduser.user_id, loggeduser.user_host))
-                        q = "INSERT INTO system_login_log(log_tanggal, log_time, log_user,log_ip,log_komputer,log_mac,log_versi) VALUE({0})"
+                        q = "INSERT INTO system_login_log(log_tanggal, log_time, log_user,log_ip,log_komputer,log_mac, log_HWID,log_versi) VALUE({0})"
                         If Await x.ExecCommandAsync(String.Format(q, String.Join(",", datauser))) > 0 Then
                             q = "SELECT MAX(log_id) FROM system_login_log WHERE log_user='{0}' AND log_status=0"
-                            Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, loggeduser.user_id))
+                            Using rdx = Await x.ReadCommandAsync(String.Format(q, loggeduser.user_id))
                                 consoleWriteLine(String.Format(q, loggeduser.user_id))
                                 If Await rdx.ReadAsync Then If rdx.HasRows Then loggeduser.user_session = rdx.Item(0)
                             End Using

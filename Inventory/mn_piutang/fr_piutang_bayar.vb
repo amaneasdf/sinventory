@@ -402,7 +402,7 @@
                         Try
                             Dim i As Integer = 0 : Dim format As String = "D3"
                             q = "SELECT IFNULL(MAX(SUBSTR(p_bayar_bukti,11)),0) FROM data_piutang_bayar " _
-                                & "WHERE SUBSTR(p_bayar_bukti,0,10)='PP{0:yyyyMMdd}' AND SUBSTR(faktur_kode,11) REGEXP '^[0-9]+$'"
+                                & "WHERE SUBSTR(p_bayar_bukti,0,10)='PP{0:yyyyMMdd}' AND SUBSTR(p_bayar_bukti,11) REGEXP '^[0-9]+$'"
                             format = IIf(i + 1 > 999, "D" & (i + 1).ToString.Length, "D3")
                             in_faktur.Text = String.Format("PP{0:yyyyMMdd}", date_tgl_trans.Value) & (i + 1).ToString(format)
 

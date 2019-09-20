@@ -30,12 +30,16 @@ Partial Class fr_search_export
         Me.bt_cancel = New System.Windows.Forms.Button()
         Me.bt_load = New System.Windows.Forms.Button()
         Me.dgv_listexport = New System.Windows.Forms.DataGridView()
-        Me.bt_cari = New System.Windows.Forms.Button()
-        Me.in_cari = New System.Windows.Forms.TextBox()
         Me.ex_id = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ex_periode = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ex_supplier = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ex_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ex_ket = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ex_tglexport = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ex_creator = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bt_cari = New System.Windows.Forms.Button()
+        Me.in_cari = New System.Windows.Forms.TextBox()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
         CType(Me.dgv_listexport, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -49,7 +53,7 @@ Partial Class fr_search_export
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(362, 34)
+        Me.Panel1.Size = New System.Drawing.Size(471, 34)
         Me.Panel1.TabIndex = 1
         '
         'bt_cl
@@ -63,7 +67,7 @@ Partial Class fr_search_export
         Me.bt_cl.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Orange
         Me.bt_cl.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cl.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_cl.Location = New System.Drawing.Point(336, 6)
+        Me.bt_cl.Location = New System.Drawing.Point(445, 6)
         Me.bt_cl.Name = "bt_cl"
         Me.bt_cl.Size = New System.Drawing.Size(20, 20)
         Me.bt_cl.TabIndex = 0
@@ -94,7 +98,7 @@ Partial Class fr_search_export
         Me.pnl_content.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_content.Location = New System.Drawing.Point(0, 34)
         Me.pnl_content.Name = "pnl_content"
-        Me.pnl_content.Size = New System.Drawing.Size(362, 479)
+        Me.pnl_content.Size = New System.Drawing.Size(471, 469)
         Me.pnl_content.TabIndex = 0
         '
         'bt_cancel
@@ -102,7 +106,7 @@ Partial Class fr_search_export
         Me.bt_cancel.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_cancel.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_cancel.Image = Global.Inventory.My.Resources.Resources.Delete_16x16
-        Me.bt_cancel.Location = New System.Drawing.Point(263, 437)
+        Me.bt_cancel.Location = New System.Drawing.Point(378, 433)
         Me.bt_cancel.Name = "bt_cancel"
         Me.bt_cancel.Size = New System.Drawing.Size(87, 30)
         Me.bt_cancel.TabIndex = 4
@@ -115,7 +119,7 @@ Partial Class fr_search_export
         Me.bt_load.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.bt_load.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.bt_load.Image = Global.Inventory.My.Resources.Resources.Search_16x16
-        Me.bt_load.Location = New System.Drawing.Point(146, 438)
+        Me.bt_load.Location = New System.Drawing.Point(261, 434)
         Me.bt_load.Name = "bt_load"
         Me.bt_load.Size = New System.Drawing.Size(111, 30)
         Me.bt_load.TabIndex = 3
@@ -129,32 +133,15 @@ Partial Class fr_search_export
         Me.dgv_listexport.AllowUserToDeleteRows = False
         Me.dgv_listexport.BackgroundColor = System.Drawing.Color.White
         Me.dgv_listexport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgv_listexport.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ex_id, Me.ex_periode, Me.ex_tgl, Me.ex_tglexport})
+        Me.dgv_listexport.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ex_id, Me.ex_periode, Me.ex_supplier, Me.ex_tgl, Me.ex_ket, Me.ex_tglexport, Me.ex_creator})
         Me.dgv_listexport.Location = New System.Drawing.Point(12, 34)
         Me.dgv_listexport.MultiSelect = False
         Me.dgv_listexport.Name = "dgv_listexport"
         Me.dgv_listexport.ReadOnly = True
         Me.dgv_listexport.RowHeadersVisible = False
         Me.dgv_listexport.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgv_listexport.Size = New System.Drawing.Size(338, 393)
+        Me.dgv_listexport.Size = New System.Drawing.Size(453, 393)
         Me.dgv_listexport.TabIndex = 2
-        '
-        'bt_cari
-        '
-        Me.bt_cari.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.bt_cari.Location = New System.Drawing.Point(291, 6)
-        Me.bt_cari.Name = "bt_cari"
-        Me.bt_cari.Size = New System.Drawing.Size(59, 23)
-        Me.bt_cari.TabIndex = 1
-        Me.bt_cari.Text = "Cari"
-        Me.bt_cari.UseVisualStyleBackColor = True
-        '
-        'in_cari
-        '
-        Me.in_cari.Location = New System.Drawing.Point(12, 6)
-        Me.in_cari.Name = "in_cari"
-        Me.in_cari.Size = New System.Drawing.Size(273, 22)
-        Me.in_cari.TabIndex = 0
         '
         'ex_id
         '
@@ -166,11 +153,18 @@ Partial Class fr_search_export
         '
         'ex_periode
         '
-        Me.ex_periode.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill
         Me.ex_periode.DataPropertyName = "efak_periode"
         Me.ex_periode.HeaderText = "Periode"
         Me.ex_periode.Name = "ex_periode"
         Me.ex_periode.ReadOnly = True
+        '
+        'ex_supplier
+        '
+        Me.ex_supplier.DataPropertyName = "efak_supplier"
+        Me.ex_supplier.HeaderText = "Supplier"
+        Me.ex_supplier.Name = "ex_supplier"
+        Me.ex_supplier.ReadOnly = True
+        Me.ex_supplier.Width = 120
         '
         'ex_tgl
         '
@@ -181,6 +175,14 @@ Partial Class fr_search_export
         Me.ex_tgl.ReadOnly = True
         Me.ex_tgl.Width = 72
         '
+        'ex_ket
+        '
+        Me.ex_ket.DataPropertyName = "efak_ket"
+        Me.ex_ket.HeaderText = "Keterangan"
+        Me.ex_ket.Name = "ex_ket"
+        Me.ex_ket.ReadOnly = True
+        Me.ex_ket.Width = 175
+        '
         'ex_tglexport
         '
         Me.ex_tglexport.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
@@ -190,18 +192,57 @@ Partial Class fr_search_export
         Me.ex_tglexport.ReadOnly = True
         Me.ex_tglexport.Width = 90
         '
+        'ex_creator
+        '
+        Me.ex_creator.DataPropertyName = "efak_reg_user"
+        Me.ex_creator.HeaderText = "UserId"
+        Me.ex_creator.Name = "ex_creator"
+        Me.ex_creator.ReadOnly = True
+        Me.ex_creator.Width = 75
+        '
+        'bt_cari
+        '
+        Me.bt_cari.BackColor = System.Drawing.Color.Gainsboro
+        Me.bt_cari.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.bt_cari.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_cari.Image = Global.Inventory.My.Resources.Resources.Search_16x16
+        Me.bt_cari.Location = New System.Drawing.Point(284, 6)
+        Me.bt_cari.Name = "bt_cari"
+        Me.bt_cari.Size = New System.Drawing.Size(50, 22)
+        Me.bt_cari.TabIndex = 1
+        Me.bt_cari.UseVisualStyleBackColor = False
+        '
+        'in_cari
+        '
+        Me.in_cari.Location = New System.Drawing.Point(12, 6)
+        Me.in_cari.Name = "in_cari"
+        Me.in_cari.Size = New System.Drawing.Size(273, 22)
+        Me.in_cari.TabIndex = 0
+        '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.Orange
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel3.Location = New System.Drawing.Point(0, 503)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(471, 10)
+        Me.Panel3.TabIndex = 5
+        '
         'fr_search_export
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(362, 513)
+        Me.ClientSize = New System.Drawing.Size(471, 513)
         Me.Controls.Add(Me.pnl_content)
+        Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.KeyPreview = True
         Me.Name = "fr_search_export"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
@@ -222,6 +263,10 @@ Partial Class fr_search_export
     Friend WithEvents bt_load As System.Windows.Forms.Button
     Friend WithEvents ex_id As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ex_periode As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ex_supplier As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ex_tgl As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ex_ket As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ex_tglexport As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents ex_creator As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents Panel3 As System.Windows.Forms.Panel
 End Class

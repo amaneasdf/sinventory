@@ -506,8 +506,6 @@
         'CHECK INPUT
         If Not CheckInput() Then Exit Sub
 
-        op_con()
-
         '==========================================================================================================================
         'INPUT HEADER
         dataHead = {
@@ -524,77 +522,90 @@
         data2 = {
             "h_bayar_giro_no='" & in_no_bg.Text & "'"
             }
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    If String.IsNullOrWhiteSpace(in_no_bukti.Text) Then
+                        Dim i As Integer = 0 : Dim format As String = "D3"
+                        q = "SELECT IFNULL(MAX(SUBSTRING(h_bayar_bukti, 11)), 0) FROM data_hutang_bayar " _
+                            & "WHERE h_bayar_bukti LIKE 'PH{0:yyyyMMdd}%' AND SUBSTRING(h_bayar_bukti,11) REGEXP '^[0-9]+$'"
+                        Try
+                            i = CInt(x.ExecScalar(String.Format(q, date_tgl_trans.Value)))
+                            format = IIf(i + 1 > 999, "D" & (i + 1).ToString.Length, "D3")
+                            in_no_bukti.Text = String.Format("PH{0:yyyyMMdd}", date_tgl_trans.Value) & (i + 1).ToString(format)
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
 
-        If formstate = InputState.Insert Then
-            'GENERATE KODE
-            If in_no_bukti.Text = Nothing Then
-                Dim no As Integer = 1
-                readcommd("SELECT COUNT(h_bayar_bukti) FROM data_hutang_bayar WHERE SUBSTRING(h_bayar_bukti,3,8)='" & date_tgl_trans.Value.ToString("yyyyMMdd") & "' AND h_bayar_bukti LIKE 'PH%'")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
+                    Else
+                        Dim i As Integer = 0
+                        q = "SELECT COUNT(h_bayar_bukti) FROM data_hutang_bayar WHERE h_bayar_bukti='{0}'"
+                        Try
+                            i = Integer.Parse(x.ExecScalar(String.Format(q, in_no_bukti.Text)))
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                        If i <> 0 Then
+                            MessageBox.Show("Kode bukti " & in_no_bukti.Text & " sudah pernah di inputkan ke database.",
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            in_no_bukti.Focus() : Exit Sub
+                        End If
+                    End If
+
+                    q = "INSERT INTO data_hutang_bayar SET h_bayar_bukti='{0}',{1},h_bayar_reg_date=NOW(),h_bayar_reg_alias='{2}'"
+                Else
+                    q = "UPDATE data_hutang_bayar SET {1},h_bayar_upd_date=NOW(),h_bayar_upd_alias='{2}' WHERE h_bayar_bukti='{0}'"
                 End If
-                rd.Close()
-                in_no_bukti.Text = "PH" & date_tgl_trans.Value.ToString("yyyyMMdd") & no.ToString("D3")
-            ElseIf in_no_bukti.Text <> Nothing And LCase(bt_simpanperkiraan.Text) = "simpan pembayaran" Then
-                If checkdata("data_hutang_bayar", "'" & in_no_bukti.Text & "'", "h_bayar_bukti") = True Then
-                    MessageBox.Show("Nomor faktur " & in_no_bukti.Text & " sudah pernah diinputkan", "Pembayaran Hutang", MessageBoxButtons.OK, MessageBoxIcon.Exclamation)
-                    in_no_bukti.Focus()
-                    Exit Sub
+                queryArr.Add(String.Format(
+                                q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text),
+                                String.Join(",", dataHead) & IIf(cb_bayar.SelectedValue <> "BG", "", "," & String.Join(",", data2)),
+                                loggeduser.user_id)
+                            )
+
+                '==========================================================================================================================
+                'INPUT BAYAR
+                q = "UPDATE data_hutang_bayar_trans SET h_trans_status=9 WHERE h_trans_bukti='{0}'"
+                queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text)))
+
+                For Each rows As DataGridViewRow In dgv_bayar.Rows
+                    q = "INSERT INTO data_hutang_bayar_trans SET h_trans_bukti='{0}', h_trans_faktur='{1}',{2}"
+                    data1 = {
+                        "h_trans_sisa=" & Decimal.Parse(rows.Cells("bayar_sisahutang").Value).ToString.Replace(",", "."),
+                        "h_trans_nilaibayar=" & Decimal.Parse(rows.Cells("bayar_kredit").Value).ToString.Replace(",", "."),
+                        "h_trans_nobg='" & IIf(cb_bayar.SelectedValue = "BG", in_no_bg.Text, "") & "'",
+                        "h_trans_reg_date=NOW()",
+                        "h_trans_reg_alias='" & loggeduser.user_id & "'",
+                        "h_trans_status='1'"
+                        }
+                    queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text), rows.Cells(0).Value, String.Join(",", data1)))
+                Next
+                '==========================================================================================================================
+
+                '==========================================================================================================================
+                q = "CALL transBayarHutangFin('{0}','{1}')"
+                queryArr.Add(String.Format(q, mysqlQueryFriendlyStringFeed(in_no_bukti.Text), loggeduser.user_id))
+                '==========================================================================================================================
+
+                '==========================================================================================================================
+                'BEGIN TRANSACTION
+                querycheck = x.TransactCommand(queryArr)
+                '==========================================================================================================================
+
+                If querycheck Then
+                    MessageBox.Show("Data pembayaran tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pghutangbayar, pghutangawal, pghutangbgo})
+                    Me.Close()
+                Else
+                    MessageBox.Show("Data pembayaran tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-            q = "INSERT INTO data_hutang_bayar SET h_bayar_bukti='{0}',{1},h_bayar_reg_date=NOW(),h_bayar_reg_alias='{2}'"
-        ElseIf formstate = InputState.Edit Then
-            q = "UPDATE data_hutang_bayar SET {1},h_bayar_upd_date=NOW(),h_bayar_upd_alias='{2}' WHERE h_bayar_bukti='{0}'"
-        Else
-            Exit Sub
-        End If
-        queryArr.Add(String.Format(
-                     q, in_no_bukti.Text,
-                     String.Join(",", dataHead) & IIf(cb_bayar.SelectedValue <> "BG", "", "," & String.Join(",", data2)),
-                     loggeduser.user_id)
-                 )
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        'INPUT BAYAR
-        q = "UPDATE data_hutang_bayar_trans SET h_trans_status=9 WHERE h_trans_bukti='{0}'"
-        queryArr.Add(String.Format(q, in_no_bukti.Text))
-
-        For Each rows As DataGridViewRow In dgv_bayar.Rows
-            q = "INSERT INTO data_hutang_bayar_trans SET h_trans_bukti='{0}', h_trans_faktur='{1}',{2} ON DUPLICATE KEY UPDATE {2}"
-            data1 = {
-                "h_trans_sisa=" & rows.Cells("bayar_sisahutang").Value.ToString.Replace(",", "."),
-                "h_trans_nilaibayar=" & rows.Cells("bayar_kredit").Value.ToString.Replace(",", "."),
-                "h_trans_nobg='" & IIf(cb_bayar.SelectedValue = "BG", in_no_bg.Text, "") & "'",
-                "h_trans_reg_date=NOW()",
-                "h_trans_reg_alias='" & loggeduser.user_id & "'",
-                "h_trans_status='1'"
-                }
-            queryArr.Add(String.Format(q, in_no_bukti.Text, rows.Cells(0).Value, String.Join(",", data1)))
-        Next
-        '==========================================================================================================================
-
-        '==========================================================================================================================
-        q = "CALL transBayarHutangFin('{0}','{1}')"
-        queryArr.Add(String.Format(q, in_no_bukti.Text, loggeduser.user_id))
-        '==========================================================================================================================
-
-
-        '==========================================================================================================================
-        'BEGIN TRANSACTION
-        querycheck = startTrans(queryArr)
-        '==========================================================================================================================
-
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            'TODO : WRITE LOG ACTIVITY
-            MessageBox.Show("Data tersimpan")
-            doRefreshTab({pghutangbayar, pghutangawal, pghutangbgo})
-            Me.Close()
-        End If
+        End Using
     End Sub
 
     'CANCEL DATA

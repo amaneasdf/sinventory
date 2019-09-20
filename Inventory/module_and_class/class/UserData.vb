@@ -78,6 +78,11 @@
             Return System.Net.Dns.GetHostName()
         End Get
     End Property
+    Public ReadOnly Property user_hwid() As String
+        Get
+            Return GetHWID()
+        End Get
+    End Property
 
     'level and access info
     Public Property user_lev() As String

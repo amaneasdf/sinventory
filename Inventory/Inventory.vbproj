@@ -89,21 +89,15 @@
     <Reference Include="MadMilkman.Ini">
       <HintPath>..\..\..\..\net lib\MadMilkman\MadMilkman.Ini.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.ReportViewer.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="Microsoft.ReportViewer.WinForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" />
     <Reference Include="MySql.Data, Version=6.9.9.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\net lib\sql connector net\v4.0\MySql.Data.dll</HintPath>
     </Reference>
-    <Reference Include="PresentationCore" />
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Messaging" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -409,6 +403,12 @@
     <Compile Include="mn_olahdata\export_efak\fr_export_efaktur.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_efak_detail.Designer.vb">
+      <DependentUpon>fr_efak_detail.vb</DependentUpon>
+    </Compile>
+    <Compile Include="mn_olahdata\export_efak\fr_efak_detail.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="mn_olahdata\export_efak\fr_newexport.Designer.vb">
       <DependentUpon>fr_newexport.vb</DependentUpon>
     </Compile>
@@ -632,24 +632,6 @@
     <Compile Include="mn_transaksi\fr_beli_retur_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_rekap.Designer.vb">
-      <DependentUpon>fr_draft_rekap.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_rekap.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_tagih.Designer.vb">
-      <DependentUpon>fr_draft_tagih.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_tagih.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_tagihan.Designer.vb">
-      <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_draft_tagihan.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="mn_transaksi\fr_jualconfirm_dialog.Designer.vb">
       <DependentUpon>fr_jualconfirm_dialog.vb</DependentUpon>
     </Compile>
@@ -678,18 +660,6 @@
       <DependentUpon>fr_giro_dialog.vb</DependentUpon>
     </Compile>
     <Compile Include="mn_transaksi\giro\fr_giro_dialog.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_jual_tagihan.Designer.vb">
-      <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_jual_tagihan.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_jual_rekap.Designer.vb">
-      <DependentUpon>fr_jual_rekap.vb</DependentUpon>
-    </Compile>
-    <Compile Include="mn_transaksi\ss\fr_jual_rekap.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_transaksi\fr_jual_retur_detail.Designer.vb">
@@ -910,6 +880,9 @@
     <EmbeddedResource Include="mn_olahdata\export_efak\fr_export_efaktur.resx">
       <DependentUpon>fr_export_efaktur.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="mn_olahdata\export_efak\fr_efak_detail.resx">
+      <DependentUpon>fr_efak_detail.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="mn_olahdata\export_efak\fr_newexport.resx">
       <DependentUpon>fr_newexport.vb</DependentUpon>
     </EmbeddedResource>
@@ -1021,15 +994,6 @@
     <EmbeddedResource Include="mn_transaksi\fr_changecode.resx">
       <DependentUpon>fr_changecode.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\ss\fr_draft_rekap.resx">
-      <DependentUpon>fr_draft_rekap.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\ss\fr_draft_tagih.resx">
-      <DependentUpon>fr_draft_tagih.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\ss\fr_draft_tagihan.resx">
-      <DependentUpon>fr_draft_tagihan.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jualconfirm_dialog.resx">
       <DependentUpon>fr_jualconfirm_dialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -1044,12 +1008,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\giro\fr_giro_dialog.resx">
       <DependentUpon>fr_giro_dialog.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\ss\fr_jual_tagihan.resx">
-      <DependentUpon>fr_jual_tagihan.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="mn_transaksi\ss\fr_jual_rekap.resx">
-      <DependentUpon>fr_jual_rekap.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_transaksi\fr_jual_retur_detail.resx">
       <DependentUpon>fr_jual_retur_detail.vb</DependentUpon>
@@ -1223,6 +1181,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\downarrow_white16x16.png" />
+    <None Include="Resources\downarrow_white.png" />
     <None Include="Resources\1492932873_Delete.png" />
     <None Include="Resources\Add_16x16.png" />
     <None Include="Resources\proses.png" />

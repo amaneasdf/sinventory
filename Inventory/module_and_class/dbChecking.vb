@@ -261,9 +261,9 @@
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Dim q As String = ""
-                    q = "SELECT COUNT(faktur_id) FROM data_faktur_penjualan WHERE data_penjualan_faktur='{0}'"
+                    q = "SELECT COUNT(faktur_id) FROM data_penjualan_faktur WHERE faktur_kode='{0}'"
                     If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) > 0 Then
-                        q = "SELECT faktur_status FROM data_faktur_penjualan WHERE data_penjualan_faktur='{0}' AND faktur_status<9"
+                        q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
                         Dim _sts As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
                         If {0, 1}.Contains(_sts) Then
                             q = "SELECT COUNT(p_trans_id) FROM data_piutang_trans WHERE p_trans_kode_piutang='{0}' AND p_trans_status=1"

@@ -237,7 +237,7 @@
                 retHarga = hargaawal
         End Select
 
-        Return retHarga
+        Return Math.Round(retHarga, 2)
     End Function
 
     'SET SATUAN BARANG

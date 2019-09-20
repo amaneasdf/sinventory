@@ -84,13 +84,11 @@
         If date_sw Then setDatePicker()
         If search_sw Then : in_cari.Clear() : SearchParam = String.Empty : End If
 
-        'DISABLE ALL INPUT
         If date_sw Then
             LoadDataGrid("", 1, date_tglawal.Value, date_tglakhir.Value)
         Else
             LoadDataGrid("", 1)
         End If
-        'ENABLE ALL INPUT
 
         ControlSet() : setMenuSw()
     End Sub
@@ -430,7 +428,6 @@
                         Dim detail As New fr_giro
                         With detail
                             .Text = "Detail Giro : " & dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
                             .do_load("OUT", dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         End With
 
@@ -450,7 +447,6 @@
                         Dim detail As New fr_giro
                         With detail
                             .Text = "Detail Giro : " & dgv_list.SelectedRows.Item(0).Cells(0).Value
-                            .Show()
                             .do_load("IN", dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         End With
 
@@ -483,6 +479,7 @@
                     Case "pggroup"
                         Dim detail As New fr_group_detail
                         detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.admin_pc)
+
                     Case "pguser"
                         Dim detail As New fr_user_detail
                         detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.admin_pc)
@@ -1740,7 +1737,7 @@
 
         in_cari.Text = SearchParam
         If date_sw Then
-            date_tglawal.Value = SelectedDate1 : date_tglakhir.Value = date_tglakhir.Value
+            date_tglawal.Value = SelectedDate1 : date_tglakhir.Value = SelectedDate2
             LoadDataGrid(in_cari.Text, _page, date_tglawal.Value, date_tglakhir.Value)
         Else
             LoadDataGrid(in_cari.Text, _page)
@@ -1764,7 +1761,7 @@ EndSub:
 
         in_cari.Text = SearchParam
         If date_sw Then
-            date_tglawal.Value = SelectedDate1 : date_tglakhir.Value = date_tglakhir.Value
+            date_tglawal.Value = SelectedDate1 : date_tglakhir.Value = SelectedDate2
             LoadDataGrid(in_cari.Text, _page, date_tglawal.Value, date_tglakhir.Value)
         Else
             LoadDataGrid(in_cari.Text, _page)

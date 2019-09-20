@@ -70,7 +70,7 @@ Partial Class main
         'SplitContainer.Panel2
         '
         Me.SplitContainer.Panel2.Controls.Add(Me.tabcontrol)
-        Me.SplitContainer.Size = New System.Drawing.Size(969, 656)
+        Me.SplitContainer.Size = New System.Drawing.Size(1064, 656)
         Me.SplitContainer.SplitterDistance = 60
         Me.SplitContainer.TabIndex = 1
         '
@@ -79,7 +79,7 @@ Partial Class main
         Me.pic_company.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pic_company.BackgroundImage = Global.Inventory.My.Resources.Resources.company_name
         Me.pic_company.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.pic_company.Location = New System.Drawing.Point(742, 3)
+        Me.pic_company.Location = New System.Drawing.Point(837, 3)
         Me.pic_company.Name = "pic_company"
         Me.pic_company.Size = New System.Drawing.Size(224, 54)
         Me.pic_company.TabIndex = 138
@@ -104,7 +104,7 @@ Partial Class main
         Me.tabcontrol.Location = New System.Drawing.Point(0, 0)
         Me.tabcontrol.Name = "tabcontrol"
         Me.tabcontrol.SelectedIndex = 0
-        Me.tabcontrol.Size = New System.Drawing.Size(969, 592)
+        Me.tabcontrol.Size = New System.Drawing.Size(1064, 592)
         Me.tabcontrol.TabIndex = 0
         '
         'TabPage1
@@ -116,7 +116,7 @@ Partial Class main
         Me.TabPage1.Location = New System.Drawing.Point(4, 22)
         Me.TabPage1.Name = "TabPage1"
         Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(961, 566)
+        Me.TabPage1.Size = New System.Drawing.Size(1056, 566)
         Me.TabPage1.TabIndex = 0
         Me.TabPage1.Text = "Menu Utama"
         '
@@ -127,7 +127,7 @@ Partial Class main
         Me.pnl_main.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnl_main.Location = New System.Drawing.Point(3, 3)
         Me.pnl_main.Name = "pnl_main"
-        Me.pnl_main.Size = New System.Drawing.Size(704, 560)
+        Me.pnl_main.Size = New System.Drawing.Size(799, 560)
         Me.pnl_main.TabIndex = 2
         '
         'Panel1
@@ -137,7 +137,7 @@ Partial Class main
         Me.Panel1.Controls.Add(Me.ListView1)
         Me.Panel1.Controls.Add(Me.cal_front)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel1.Location = New System.Drawing.Point(707, 3)
+        Me.Panel1.Location = New System.Drawing.Point(802, 3)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(251, 560)
         Me.Panel1.TabIndex = 1
@@ -150,6 +150,7 @@ Partial Class main
         Me.bt_periode_main.TabIndex = 2
         Me.bt_periode_main.Text = "Set Periode"
         Me.bt_periode_main.UseVisualStyleBackColor = True
+        Me.bt_periode_main.Visible = False
         '
         'ListView1
         '
@@ -175,7 +176,7 @@ Partial Class main
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.strip_user, Me.strip_tgl, Me.strip_host, Me.strip_periode, Me.strip_status})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 656)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(969, 25)
+        Me.StatusStrip1.Size = New System.Drawing.Size(1064, 25)
         Me.StatusStrip1.TabIndex = 1
         Me.StatusStrip1.Text = "StatusStrip1"
         '
@@ -191,7 +192,7 @@ Partial Class main
         '
         Me.strip_tgl.BorderSides = CType((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left Or System.Windows.Forms.ToolStripStatusLabelBorderSides.Right), System.Windows.Forms.ToolStripStatusLabelBorderSides)
         Me.strip_tgl.Name = "strip_tgl"
-        Me.strip_tgl.Size = New System.Drawing.Size(88, 20)
+        Me.strip_tgl.Size = New System.Drawing.Size(95, 20)
         Me.strip_tgl.Text = "00 xxxxxxx 0000"
         '
         'strip_host
@@ -206,25 +207,25 @@ Partial Class main
         '
         Me.strip_periode.Image = Global.Inventory.My.Resources.Resources.toolbar_list_icon1
         Me.strip_periode.Name = "strip_periode"
-        Me.strip_periode.Size = New System.Drawing.Size(85, 20)
+        Me.strip_periode.Size = New System.Drawing.Size(92, 20)
         Me.strip_periode.Text = "xxxxxxx 0000"
         '
         'strip_status
         '
         Me.strip_status.Name = "strip_status"
-        Me.strip_status.Size = New System.Drawing.Size(99, 20)
+        Me.strip_status.Size = New System.Drawing.Size(103, 20)
         Me.strip_status.Text = "Status Input : xxxx"
         '
         'main
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(969, 681)
+        Me.ClientSize = New System.Drawing.Size(1064, 681)
         Me.Controls.Add(Me.SplitContainer)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.MinimumSize = New System.Drawing.Size(600, 480)
+        Me.MinimumSize = New System.Drawing.Size(1080, 720)
         Me.Name = "main"
         Me.Opacity = 0.0R
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen

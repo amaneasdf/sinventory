@@ -64,11 +64,11 @@ Partial Class fr_group_detail
         Me.in_nama_group.BackColor = System.Drawing.Color.White
         Me.in_nama_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_nama_group.ForeColor = System.Drawing.Color.Black
-        Me.in_nama_group.Location = New System.Drawing.Point(12, 109)
+        Me.in_nama_group.Location = New System.Drawing.Point(12, 83)
         Me.in_nama_group.MaxLength = 30
         Me.in_nama_group.Name = "in_nama_group"
         Me.in_nama_group.Size = New System.Drawing.Size(252, 20)
-        Me.in_nama_group.TabIndex = 16
+        Me.in_nama_group.TabIndex = 0
         '
         'in_kode
         '
@@ -79,7 +79,7 @@ Partial Class fr_group_detail
         Me.in_kode.Name = "in_kode"
         Me.in_kode.ReadOnly = True
         Me.in_kode.Size = New System.Drawing.Size(112, 20)
-        Me.in_kode.TabIndex = 19
+        Me.in_kode.TabIndex = 0
         Me.in_kode.TabStop = False
         Me.in_kode.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
@@ -87,7 +87,7 @@ Partial Class fr_group_detail
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(9, 90)
+        Me.Label3.Location = New System.Drawing.Point(9, 64)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(67, 13)
         Me.Label3.TabIndex = 17
@@ -105,29 +105,37 @@ Partial Class fr_group_detail
         '
         'bt_batal_group
         '
-        Me.bt_batal_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batal_group.BackColor = System.Drawing.Color.Tomato
+        Me.bt_batal_group.FlatAppearance.BorderSize = 0
+        Me.bt_batal_group.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_batal_group.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_batal_group.ForeColor = System.Drawing.Color.White
         Me.bt_batal_group.Location = New System.Drawing.Point(497, 460)
         Me.bt_batal_group.Name = "bt_batal_group"
         Me.bt_batal_group.Size = New System.Drawing.Size(96, 30)
-        Me.bt_batal_group.TabIndex = 21
+        Me.bt_batal_group.TabIndex = 12
         Me.bt_batal_group.Text = "Keluar"
-        Me.bt_batal_group.UseVisualStyleBackColor = True
+        Me.bt_batal_group.UseVisualStyleBackColor = False
         '
         'bt_simpan_group
         '
-        Me.bt_simpan_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_simpan_group.Location = New System.Drawing.Point(395, 460)
+        Me.bt_simpan_group.BackColor = System.Drawing.Color.RoyalBlue
+        Me.bt_simpan_group.FlatAppearance.BorderSize = 0
+        Me.bt_simpan_group.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_simpan_group.Font = New System.Drawing.Font("Open Sans", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_simpan_group.ForeColor = System.Drawing.Color.White
+        Me.bt_simpan_group.Location = New System.Drawing.Point(365, 460)
         Me.bt_simpan_group.Name = "bt_simpan_group"
-        Me.bt_simpan_group.Size = New System.Drawing.Size(96, 30)
-        Me.bt_simpan_group.TabIndex = 20
+        Me.bt_simpan_group.Size = New System.Drawing.Size(129, 30)
+        Me.bt_simpan_group.TabIndex = 11
         Me.bt_simpan_group.Text = "Simpan"
-        Me.bt_simpan_group.UseVisualStyleBackColor = True
+        Me.bt_simpan_group.UseVisualStyleBackColor = False
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(9, 134)
+        Me.Label1.Location = New System.Drawing.Point(9, 108)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(62, 13)
         Me.Label1.TabIndex = 17
@@ -138,12 +146,12 @@ Partial Class fr_group_detail
         Me.in_ket_group.BackColor = System.Drawing.Color.White
         Me.in_ket_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_ket_group.ForeColor = System.Drawing.Color.Black
-        Me.in_ket_group.Location = New System.Drawing.Point(12, 153)
+        Me.in_ket_group.Location = New System.Drawing.Point(12, 127)
         Me.in_ket_group.MaxLength = 300
         Me.in_ket_group.Multiline = True
         Me.in_ket_group.Name = "in_ket_group"
         Me.in_ket_group.Size = New System.Drawing.Size(252, 72)
-        Me.in_ket_group.TabIndex = 16
+        Me.in_ket_group.TabIndex = 1
         '
         'Label2
         '
@@ -157,32 +165,35 @@ Partial Class fr_group_detail
         '
         'bt_tv_checkall_group
         '
-        Me.bt_tv_checkall_group.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tv_checkall_group.Location = New System.Drawing.Point(497, 31)
+        Me.bt_tv_checkall_group.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_tv_checkall_group.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_tv_checkall_group.Location = New System.Drawing.Point(497, 27)
         Me.bt_tv_checkall_group.Name = "bt_tv_checkall_group"
-        Me.bt_tv_checkall_group.Size = New System.Drawing.Size(96, 20)
-        Me.bt_tv_checkall_group.TabIndex = 20
-        Me.bt_tv_checkall_group.Text = "Cek Semua"
+        Me.bt_tv_checkall_group.Size = New System.Drawing.Size(96, 24)
+        Me.bt_tv_checkall_group.TabIndex = 9
+        Me.bt_tv_checkall_group.Text = "Pilih Semua"
         Me.bt_tv_checkall_group.UseVisualStyleBackColor = True
         '
         'bt_tv_reset
         '
-        Me.bt_tv_reset.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.bt_tv_reset.Location = New System.Drawing.Point(395, 31)
+        Me.bt_tv_reset.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.bt_tv_reset.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.bt_tv_reset.Location = New System.Drawing.Point(398, 27)
         Me.bt_tv_reset.Name = "bt_tv_reset"
-        Me.bt_tv_reset.Size = New System.Drawing.Size(96, 20)
-        Me.bt_tv_reset.TabIndex = 20
-        Me.bt_tv_reset.Text = "Reset"
+        Me.bt_tv_reset.Size = New System.Drawing.Size(96, 24)
+        Me.bt_tv_reset.TabIndex = 8
+        Me.bt_tv_reset.Text = "Uncheck"
         Me.bt_tv_reset.UseVisualStyleBackColor = True
         '
         'tv_menu
         '
         Me.tv_menu.CheckBoxes = True
+        Me.tv_menu.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.tv_menu.FullRowSelect = True
         Me.tv_menu.Location = New System.Drawing.Point(278, 54)
         Me.tv_menu.Name = "tv_menu"
         Me.tv_menu.Size = New System.Drawing.Size(315, 400)
-        Me.tv_menu.TabIndex = 47
+        Me.tv_menu.TabIndex = 10
         '
         'txtRegAlias
         '
@@ -191,7 +202,7 @@ Partial Class fr_group_detail
         Me.txtRegAlias.Name = "txtRegAlias"
         Me.txtRegAlias.ReadOnly = True
         Me.txtRegAlias.Size = New System.Drawing.Size(146, 20)
-        Me.txtRegAlias.TabIndex = 116
+        Me.txtRegAlias.TabIndex = 4
         Me.txtRegAlias.TabStop = False
         '
         'Label12
@@ -212,7 +223,7 @@ Partial Class fr_group_detail
         Me.txtUpdAlias.Name = "txtUpdAlias"
         Me.txtUpdAlias.ReadOnly = True
         Me.txtUpdAlias.Size = New System.Drawing.Size(146, 20)
-        Me.txtUpdAlias.TabIndex = 122
+        Me.txtUpdAlias.TabIndex = 6
         Me.txtUpdAlias.TabStop = False
         '
         'txtRegdate
@@ -222,7 +233,7 @@ Partial Class fr_group_detail
         Me.txtRegdate.Name = "txtRegdate"
         Me.txtRegdate.ReadOnly = True
         Me.txtRegdate.Size = New System.Drawing.Size(146, 20)
-        Me.txtRegdate.TabIndex = 115
+        Me.txtRegdate.TabIndex = 5
         Me.txtRegdate.TabStop = False
         '
         'Label17
@@ -265,7 +276,7 @@ Partial Class fr_group_detail
         Me.txtUpdDate.Name = "txtUpdDate"
         Me.txtUpdDate.ReadOnly = True
         Me.txtUpdDate.Size = New System.Drawing.Size(146, 20)
-        Me.txtUpdDate.TabIndex = 115
+        Me.txtUpdDate.TabIndex = 7
         Me.txtUpdDate.TabStop = False
         '
         'Panel1
@@ -336,6 +347,7 @@ Partial Class fr_group_detail
         '
         'Panel3
         '
+        Me.Panel3.AutoScroll = True
         Me.Panel3.Controls.Add(Me.Label6)
         Me.Panel3.Controls.Add(Me.in_status)
         Me.Panel3.Controls.Add(Me.txtUpdAlias)
@@ -360,6 +372,7 @@ Partial Class fr_group_detail
         Me.Panel3.Controls.Add(Me.in_ket_group)
         Me.Panel3.Controls.Add(Me.bt_simpan_group)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel3.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel3.Location = New System.Drawing.Point(0, 42)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(600, 496)
@@ -369,7 +382,7 @@ Partial Class fr_group_detail
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(9, 55)
+        Me.Label6.Location = New System.Drawing.Point(12, 341)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(37, 13)
         Me.Label6.TabIndex = 346
@@ -380,11 +393,11 @@ Partial Class fr_group_detail
         Me.in_status.BackColor = System.Drawing.Color.White
         Me.in_status.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.in_status.ForeColor = System.Drawing.Color.Black
-        Me.in_status.Location = New System.Drawing.Point(51, 54)
+        Me.in_status.Location = New System.Drawing.Point(54, 340)
         Me.in_status.MaxLength = 2
         Me.in_status.Name = "in_status"
         Me.in_status.Size = New System.Drawing.Size(112, 20)
-        Me.in_status.TabIndex = 345
+        Me.in_status.TabIndex = 3
         '
         'MenuStrip1
         '

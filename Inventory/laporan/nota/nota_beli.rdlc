@@ -6,13 +6,13 @@
         <TablixBody>
           <TablixColumns>
             <TablixColumn>
-              <Width>2.25cm</Width>
+              <Width>2cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>5cm</Width>
+              <Width>5.21004cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>1.25cm</Width>
+              <Width>1.75cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.25cm</Width>
@@ -33,7 +33,7 @@
               <Width>2.25cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.53483cm</Width>
             </TablixColumn>
           </TablixColumns>
           <TablixRows>
@@ -51,7 +51,8 @@
                             <TextRun>
                               <Value>KD.BARANG</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -89,7 +90,8 @@
                             <TextRun>
                               <Value>NAMA BARANG</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -127,7 +129,8 @@
                             <TextRun>
                               <Value>QTY</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -167,7 +170,8 @@
                             <TextRun>
                               <Value>HRG BELI</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -207,7 +211,8 @@
                             <TextRun>
                               <Value>D1</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -247,7 +252,8 @@
                             <TextRun>
                               <Value>D2</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -287,7 +293,8 @@
                             <TextRun>
                               <Value>D3</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -327,7 +334,8 @@
                             <TextRun>
                               <Value>DISCRP</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -367,7 +375,8 @@
                             <TextRun>
                               <Value>TOT.DISCOUT</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -407,7 +416,8 @@
                             <TextRun>
                               <Value>SUBTOTAL</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <FontWeight>Bold</FontWeight>
                               </Style>
                             </TextRun>
@@ -444,7 +454,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_barang">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -452,7 +461,8 @@
                             <TextRun>
                               <Value>=Fields!beli_barang.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -480,7 +490,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_brg_n">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -488,7 +497,8 @@
                             <TextRun>
                               <Value>=Fields!beli_brg_n.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                               </Style>
                             </TextRun>
                           </TextRuns>
@@ -516,7 +526,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_qty">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -524,7 +533,8 @@
                             <TextRun>
                               <Value>=Fields!beli_qty.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -556,7 +566,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_harga">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -564,7 +573,8 @@
                             <TextRun>
                               <Value>=Fields!beli_harga.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -597,7 +607,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_disc1">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -605,7 +614,8 @@
                             <TextRun>
                               <Value>=Fields!beli_disc1.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -638,7 +648,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_disc2">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -646,7 +655,8 @@
                             <TextRun>
                               <Value>=Fields!beli_disc2.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -679,7 +689,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_disc3">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -687,7 +696,8 @@
                             <TextRun>
                               <Value>=Fields!beli_disc3.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -720,7 +730,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_discrp">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -728,7 +737,8 @@
                             <TextRun>
                               <Value>=Fields!beli_discrp.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -761,7 +771,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_disctot">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -769,7 +778,8 @@
                             <TextRun>
                               <Value>=Fields!beli_disctot.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
                               </Style>
@@ -801,7 +811,6 @@
                 <TablixCell>
                   <CellContents>
                     <Textbox Name="beli_jml">
-                      <CanGrow>true</CanGrow>
                       <KeepTogether>true</KeepTogether>
                       <Paragraphs>
                         <Paragraph>
@@ -809,7 +818,8 @@
                             <TextRun>
                               <Value>=Fields!beli_jml.Value</Value>
                               <Style>
-                                <FontFamily>calibri</FontFamily>
+                                <FontFamily>saxMono</FontFamily>
+                                <FontSize>8pt</FontSize>
                                 <Format>#,0</Format>
                                 <Language>id-ID</Language>
                                 <NumeralLanguage>id-ID</NumeralLanguage>
@@ -1270,9 +1280,8 @@
           </TablixMembers>
         </TablixRowHierarchy>
         <DataSetName>ds_nota_beli</DataSetName>
-        <Left>0.22593cm</Left>
         <Height>1.275cm</Height>
-        <Width>20.05cm</Width>
+        <Width>20.54487cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
@@ -1287,10 +1296,10 @@
       </Border>
     </Style>
   </Body>
-  <Width>8.07131in</Width>
+  <Width>8.08853in</Width>
   <Page>
     <PageHeader>
-      <Height>1.27849in</Height>
+      <Height>1.2785in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -1338,6 +1347,7 @@
                   <Style>
                     <FontFamily>SAXMono</FontFamily>
                     <FontSize>9pt</FontSize>
+                    <Format>dd/MM/yyyy</Format>
                   </Style>
                 </TextRun>
               </TextRuns>
@@ -1673,7 +1683,7 @@
       </Style>
     </PageHeader>
     <PageFooter>
-      <Height>0.93055in</Height>
+      <Height>0.96181in</Height>
       <PrintOnFirstPage>true</PrintOnFirstPage>
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
@@ -1696,7 +1706,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox72</rd:DefaultName>
-          <Top>0cm</Top>
           <Left>0.34648cm</Left>
           <Height>0.6cm</Height>
           <Width>2.94979cm</Width>
@@ -1729,7 +1738,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox72</rd:DefaultName>
-          <Top>1.55965cm</Top>
+          <Top>1.37639cm</Top>
           <Left>0.34648cm</Left>
           <Height>0.6cm</Height>
           <Width>2.94979cm</Width>
@@ -1763,7 +1772,6 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox72</rd:DefaultName>
-          <Top>0cm</Top>
           <Left>5.40512cm</Left>
           <Height>0.6cm</Height>
           <Width>2.94979cm</Width>
@@ -1797,7 +1805,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox72</rd:DefaultName>
-          <Top>1.55965cm</Top>
+          <Top>1.37639cm</Top>
           <Left>5.40512cm</Left>
           <Height>0.6cm</Height>
           <Width>2.94979cm</Width>
@@ -1832,7 +1840,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>Textbox16</rd:DefaultName>
-          <Top>1.68312cm</Top>
+          <Top>1.49986cm</Top>
           <Left>8.72593cm</Left>
           <Height>0.47653cm</Height>
           <Width>6.07598cm</Width>
@@ -1854,7 +1862,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+                  <Value>=Iif(Globals!TotalPages=Globals!PageNumber ,
 	 Sum(Fields!beli_disctot.Value, "ds_nota_beli") + Sum(Fields!beli_jml.Value, "ds_nota_beli"),
 	 "")</Value>
                   <Style>
@@ -1871,8 +1879,7 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
-          <Top>0cm</Top>
-          <Left>17.77593cm</Left>
+          <Left>18.00114cm</Left>
           <Height>0.6cm</Height>
           <Width>2.5cm</Width>
           <ZIndex>5</ZIndex>
@@ -1894,7 +1901,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+                  <Value>=Iif(Globals!TotalPages=Globals!PageNumber ,
 	 Sum(Fields!beli_disctot.Value, "ds_nota_beli"),
 	 "")</Value>
                   <Style>
@@ -1912,7 +1919,7 @@
           </Paragraphs>
           <rd:DefaultName>parDiskon</rd:DefaultName>
           <Top>0.6cm</Top>
-          <Left>17.77593cm</Left>
+          <Left>18.00114cm</Left>
           <Height>0.6cm</Height>
           <Width>2.5cm</Width>
           <ZIndex>6</ZIndex>
@@ -1934,7 +1941,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber ,
+                  <Value>=Iif(Globals!TotalPages=Globals!PageNumber ,
 	 Sum(Fields!beli_jml.Value, "ds_nota_beli"),
 	 "")</Value>
                   <Style>
@@ -1952,8 +1959,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>parPPN</rd:DefaultName>
-          <Top>1.55965cm</Top>
-          <Left>17.77593cm</Left>
+          <Top>1.37639cm</Top>
+          <Left>18.00114cm</Left>
           <Height>0.6cm</Height>
           <Width>2.5cm</Width>
           <ZIndex>7</ZIndex>
@@ -1987,10 +1994,9 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
-          <Top>0cm</Top>
-          <Left>15.05191cm</Left>
+          <Left>13.76004cm</Left>
           <Height>0.6cm</Height>
-          <Width>2.72402cm</Width>
+          <Width>4.2411cm</Width>
           <ZIndex>8</ZIndex>
           <Style>
             <Border>
@@ -2010,7 +2016,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "BERSAMBUNG . . .", "DISCOUNT :")</Value>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "", "DISCOUNT :")</Value>
                   <Style>
                     <FontFamily>calibri</FontFamily>
                   </Style>
@@ -2023,7 +2029,7 @@
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
           <Top>0.6cm</Top>
-          <Left>15.05191cm</Left>
+          <Left>15.27712cm</Left>
           <Height>0.6cm</Height>
           <Width>2.72402cm</Width>
           <ZIndex>9</ZIndex>
@@ -2045,7 +2051,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "BERSAMBUNG . . .", "TOTAL :")</Value>
+                  <Value>=Iif(Globals!TotalPages&lt;&gt;Globals!PageNumber , "", "TOTAL :")</Value>
                   <Style>
                     <FontFamily>calibri</FontFamily>
                     <FontWeight>Bold</FontWeight>
@@ -2058,8 +2064,8 @@
             </Paragraph>
           </Paragraphs>
           <rd:DefaultName>parJml</rd:DefaultName>
-          <Top>1.55965cm</Top>
-          <Left>15.05191cm</Left>
+          <Top>1.37639cm</Top>
+          <Left>15.27712cm</Left>
           <Height>0.6cm</Height>
           <Width>2.72402cm</Width>
           <ZIndex>10</ZIndex>

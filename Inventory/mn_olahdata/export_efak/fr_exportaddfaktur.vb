@@ -1,6 +1,9 @@
 ﻿Public Class fr_exportaddfaktur
     Public ReturnValue As Boolean = False
+
     Private IdExport As String = ""
+    Private _SupplierBased As Boolean = False
+    Private _SupplierCode As String = ""
 
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
@@ -40,11 +43,26 @@
     'LOAD FORM
     Public Sub DoLoadDialog(IdExport As String)
         Me.IdExport = IdExport
+        If String.IsNullOrWhiteSpace(Me.IdExport) Then
+            'SHOW ERROR MSG
+            Exit Sub
+        End If
+
         For Each x As DataGridViewColumn In {add_tglfaktur, view_tanggal}
             x.DefaultCellStyle = dgvstyle_date
         Next
         lbl_list_countfaktur.Text = String.Empty
         Me.ShowDialog(main)
+    End Sub
+
+    Public Sub DoLoadDialog(IdExport As String, SupplierKode As String)
+        _SupplierBased = True
+        _SupplierCode = SupplierKode
+        If String.IsNullOrWhiteSpace(_SupplierCode) Then
+            'SHOW ERROR MSG
+            Exit Sub
+        End If
+        DoLoadDialog(IdExport)
     End Sub
 
     'ADD FAKTUR TO EXPORT TEMPLATE
@@ -74,8 +92,8 @@
 
         If Result Then
             consoleWriteLine(FaktCount)
-            MessageBox.Show("Faktur berhasil ditambahkan.", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
-            ReturnValue = True : Me.Close()
+            MessageBox.Show(FaktCount & " faktur berhasil ditambahkan.", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
+            ReturnValue = True : DoRefreshTab_v2({pgexportEFak}) : Me.Close()
         End If
     End Sub
 
@@ -92,12 +110,14 @@
             If x.ConnectionState = ConnectionState.Open Then
                 Dim i As Integer = 0
                 For Each row As DataRow In DataTableInput.Rows
-                    q = "INSERT INTO data_penjualan_efak_list(e_list_templateid, e_list_kodefaktur, e_list_kodepajak, e_list_tglpajak, e_list_selectstate) " _
-                        & "SELECT {0}, faktur_kode, faktur_pajak_no, faktur_pajak_tanggal, 1 " _
-                        & "FROM data_penjualan_faktur WHERE faktur_kode='{1}' " _
-                        & "ON DUPLICATE KEY UPDATE e_list_selectstate=1, e_list_status=1, e_list_kodepajak=faktur_pajak_no, e_list_tglpajak=faktur_pajak_tanggal"
-                    q = String.Format(q, IdExport, row.ItemArray(0))
-                    i += x.ExecCommand(q)
+                    If _SupplierBased Then
+                        q = "SELECT EFak_AddNewFaktur_BySupplier({0}, '{1}', '{2}', '{3}')"
+                        i += x.ExecScalar(String.Format(q, IdExport, row.ItemArray(0), _SupplierCode, loggeduser.user_id))
+                    Else
+                        q = "SELECT EFak_AddNewFaktur({0}, '{1}', '{2}')"
+                        i += x.ExecScalar(String.Format(q, IdExport, row.ItemArray(0), loggeduser.user_id))
+                    End If
+                    consoleWriteLine(i)
                 Next
                 RowAffected = i
                 If RowAffected = 0 Then
@@ -120,19 +140,17 @@
         End If
 
         Dim _retVal As Boolean = False
-        Dim q As String = "INSERT INTO data_penjualan_efak_list(e_list_templateid, e_list_kodefaktur, e_list_kodepajak, e_list_tglpajak, e_list_selectstate) " _
-                          & "SELECT {0}, faktur_kode, faktur_pajak_no, faktur_pajak_tanggal, 1 " _
-                          & "FROM data_penjualan_faktur " _
-                          & "WHERE faktur_tanggal_trans BETWEEN '{1:yyyy-MM-dd}' AND '{2:yyyy-MM-dd}' AND faktur_status=1 AND faktur_ppn_jenis IN ('1','2') " _
-                          & " AND faktur_kode NOT IN(SELECT e_list_kodefaktur FROM data_penjualan_efak_list " _
-                          & "           LEFT JOIN data_penjualan_faktur ON faktur_kode=e_list_kodefaktur AND faktur_status=1 " _
-                          & "           WHERE faktur_tanggal_trans BETWEEN '{1:yyyy-MM-dd}' AND '{2:yyyy-MM-dd}' AND e_list_status=1 AND e_list_templateid={0})" _
-                          & "ON DUPLICATE KEY UPDATE e_list_selectstate=1, e_list_status=1, e_list_kodepajak=faktur_pajak_no, e_list_tglpajak=faktur_pajak_tanggal"
+        Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                RowAffected = x.ExecCommand(String.Format(q, IdExport, StartDate, EndDate))
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If _SupplierBased Then
+                    q = "SELECT EFak_AddNewFakturByDate_BySupplier({0}, '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}', '{3}', '{4}')"
+                    RowAffected = x.ExecScalar(String.Format(q, IdExport, StartDate, EndDate, _SupplierCode, loggeduser.user_id))
+                Else
+                    q = "SELECT EFak_AddNewFakturByDate({0}, '{1:yyyy-MM-dd}', '{2:yyyy-MM-dd}', '{3}')"
+                    RowAffected = x.ExecScalar(String.Format(q, IdExport, StartDate, EndDate, loggeduser.user_id))
+                End If
                 If RowAffected = 0 Then
                     _retVal = False : MessageBox.Show("Tidak ada faktur yang ditambahkan.", "Export Efaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
@@ -154,14 +172,25 @@
                 Dim _qWhrArr() As String = {"faktur_kode REGEXP '{0}'", "getMasterNama('custo', faktur_customer) REGEXP '{0}'",
                                             "faktur_customer REGEXP '{0}'"}
                 Dim _qWhr As String = ""
-                Dim _qOrder As String = " ORDER BY faktur_kode ASC"
+                Dim _qOrder As String = ""
                 If Not String.IsNullOrWhiteSpace(searchParam) Then
                     searchParam = mysqlQueryFriendlyStringFeed(Trim(searchParam)).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
                     _qWhr = String.Format(" AND (" & String.Join(" OR ", _qWhrArr) & ")", searchParam)
                 End If
-                _q = "SELECT faktur_kode, faktur_tanggal_trans, getMasterNama('custo', faktur_customer) faktur_custo, faktur_pajak_no " _
-                    & "FROM data_penjualan_faktur " _
-                    & "WHERE faktur_tanggal_trans='{0:yyyy-MM-dd}' AND faktur_ppn_jenis IN(1,2)"
+
+                If _SupplierBased Then
+                    _q = "SELECT faktur_kode, faktur_tanggal_trans, getMasterNama('custo', faktur_customer) faktur_custo, faktur_pajak_no " _
+                        & "FROM data_penjualan_faktur " _
+                        & "LEFT JOIN data_penjualan_trans ON faktur_kode=trans_faktur AND trans_status=1 " _
+                        & "LEFT JOIN data_barang_master ON trans_barang=barang_kode " _
+                        & "WHERE faktur_tanggal_trans='{0:yyyy-MM-dd}' AND barang_supplier='{1}'"
+                    _q = " GROUP BY faktur_kode ORDER BY faktur_kode"
+                Else
+                    _q = "SELECT faktur_kode, faktur_tanggal_trans, getMasterNama('custo', faktur_customer) faktur_custo, faktur_pajak_no " _
+                        & "FROM data_penjualan_faktur " _
+                        & "WHERE faktur_tanggal_trans='{0:yyyy-MM-dd}' AND faktur_ppn_jenis IN(1,2)"
+                    _qOrder = " ORDER BY faktur_kode ASC"
+                End If
                 If dgv_listfak.RowCount > 0 Then
                     Dim _selectFk As New List(Of String)
                     For Each rows As DataGridViewRow In dgv_listfak.Rows
@@ -170,7 +199,7 @@
                     Next
                     If _selectFk.Count > 0 Then _qWhr += String.Format(" AND faktur_kode NOT IN({0})", String.Join(",", _selectFk))
                 End If
-                Using dtx = x.GetDataTable(String.Format(_q, searchDate) + _qWhr + _qOrder)
+                Using dtx = x.GetDataTable(String.Format(_q, searchDate, _SupplierCode) + _qWhr + _qOrder)
                     setDoubleBuffered(dgv_cari, True)
                     dgv_cari.AutoGenerateColumns = False
                     dgv_cari.DataSource = dtx

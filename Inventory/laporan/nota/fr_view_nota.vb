@@ -84,10 +84,9 @@ Public Class fr_view_nota
                                 Dim parTerm As New ReportParameter("parTerm", Term)
                                 Dim parSupplier As New ReportParameter("parSupplier", "A.N. " & RecipientName)
                                 Dim parSupplierAl As New ReportParameter("parSupplierAl", RecipientAddress)
-                                Dim parNetto As New ReportParameter("parNetto", Netto)
                                 parUserId = New ReportParameter("parUserId", UserIdInput)
 
-                                _parArr = {parSupplier, parSupplierAl, parTerm, parTglFaktur, parNetto, parUserId}
+                                _parArr = {parSupplier, parSupplierAl, parTerm, parTglFaktur, parUserId}
                                 _repNm = "Inventory.nota_beli.rdlc"
                                 _dt = ds_transaksi.dt_nota_beli
                                 repdatasource.Name = "ds_nota_beli"

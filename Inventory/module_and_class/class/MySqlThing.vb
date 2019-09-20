@@ -150,10 +150,7 @@ Public Class MySqlThing : Implements IDisposable
         Dim _cmd = New MySqlCommand(query, Me.conn)
 
         Me.Open()
-        consoleWriteLine(query)
-        retval = _cmd.ExecuteScalar()
-
-        Return retval
+        Return _cmd.ExecuteScalar()
     End Function
 
     Public Async Function ExecScalarAsync(query As String) As Task(Of Object)

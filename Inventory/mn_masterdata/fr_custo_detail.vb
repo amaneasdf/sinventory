@@ -77,7 +77,9 @@
 
         date_tgl_pkp.Enabled = AllowInput
         bt_simpancusto.Enabled = AllowInput
-        mn_deact.Enabled = AllowInput
+        mn_deact.Enabled = If(formstate = InputState.Insert, False, AllowInput)
+        mn_cetakQr.Enabled = If(formstate = InputState.Insert, False, True)
+        mn_del.Enabled = False
         mn_save.Enabled = AllowInput
     End Sub
 
@@ -99,16 +101,8 @@
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
 
-        Dim q As String = "SELECT customer_nama, customer_status, customer_jenis, customer_area, customer_alamat, customer_alamat_blok, customer_alamat_nomor,  " _
-                          & "customer_alamat_rt,customer_alamat_rw,customer_alamat_kelurahan,customer_kecamatan,customer_kabupaten,customer_pasar,customer_provinsi, " _
-                          & "customer_telpon,customer_fax,customer_cp,customer_nik,customer_npwp,customer_kodepos, " _
-                          & "IF(MONTH(customer_tanggal_pkp)=0,CURDATE(),customer_tanggal_pkp) customer_tanggal_pkp ,customer_pajak_nama,customer_pajak_jabatan, " _
-                          & "customer_pajak_alamat,customer_max_piutang, customer_priority, Customer_kriteria_discount,Customer_kriteria_harga_jual,customer_term, " _
-                          & "IFNULL(customer_keterangan,'') customer_keterangan, " _
-                          & "IFNULL(customer_reg_alias,'') customer_reg_alias, IFNULL(DATE_FORMAT(customer_reg_date,'%d/%m/%Y %H:%i:%S'),'') customer_reg_date, " _
-                          & "IFNULL(customer_upd_alias,'') customer_upd_alias, IFNULL(DATE_FORMAT(customer_upd_date,'%d/%m/%Y %H:%i:%S'),'') customer_upd_date " _
-                          & "FROM data_customer_master WHERE customer_kode='{0}'"
-        On Error Resume Next
+        Dim q As String = "CALL getDataMasterHeader('{0}', 'custo')"
+        'On Error Resume Next
         'FUCK YOU
         Using x = MainConnection
             x.Open()
@@ -120,27 +114,31 @@
                         in_nama_custo.Text = rdx.Item("customer_nama")
                         cstStatus = rdx.Item("customer_status")
                         cb_tipe.SelectedValue = rdx.Item("customer_jenis")
+
+                        'ALAMAT CUSTOMER
                         cb_area.SelectedValue = rdx.Item("customer_area")
                         in_alamat_custo.Text = rdx.Item("customer_alamat")
-                        in_alamat_blok.Text = rdx.Item("customer_alamat_blok")
-                        in_alamat_no.Text = rdx.Item("customer_alamat_nomor")
-                        in_alamat_rt.Text = rdx.Item("customer_alamat_rt")
-                        in_alamat_rw.Text = rdx.Item("customer_alamat_rw")
-                        in_alamat_kelurahan.Text = rdx.Item("customer_alamat_kelurahan")
-                        in_alamat_kecamatan.Text = rdx.Item("customer_kecamatan")
-                        in_alamat_kabupaten.Text = rdx.Item("customer_kabupaten")
-                        in_alamat_pasar.Text = rdx.Item("customer_pasar")
-                        in_alamat_provinsi.Text = rdx.Item("customer_provinsi")
+                        in_alamat_blok.Text = rdx.Item("alamat_blok")
+                        in_alamat_no.Text = rdx.Item("alamat_nomor")
+                        in_alamat_rt.Text = rdx.Item("alamat_rt")
+                        in_alamat_rw.Text = rdx.Item("alamat_rw")
+                        in_alamat_kelurahan.Text = rdx.Item("alamat_kel")
+                        in_alamat_kecamatan.Text = rdx.Item("alamat_kec")
+                        in_alamat_kabupaten.Text = rdx.Item("alamat_kab")
+                        in_alamat_pasar.Text = rdx.Item("alamat_pasar")
+                        in_alamat_provinsi.Text = rdx.Item("alamat_provinsi")
                         in_kodepos.Text = rdx.Item("customer_kodepos")
+
+
                         in_telpcusto.Text = rdx.Item("customer_telpon")
                         in_faxcusto.Text = rdx.Item("customer_fax")
                         in_cpcusto.Text = rdx.Item("customer_cp")
                         in_nik.Text = rdx.Item("customer_nik")
                         in_npwp.Text = rdx.Item("customer_npwp")
                         date_tgl_pkp.Value = rdx.Item("customer_tanggal_pkp")
-                        in_pajak_nama.Text = rdx.Item("customer_pajak_nama")
-                        in_pajak_jabatan.Text = rdx.Item("customer_pajak_jabatan")
-                        in_pajak_alamat.Text = rdx.Item("customer_pajak_alamat")
+                        in_pajak_nama.Text = rdx.Item("pajak_nama")
+                        in_pajak_jabatan.Text = rdx.Item("pajak_jabatan")
+                        in_pajak_alamat.Text = rdx.Item("pajak_alamat")
                         in_piutang.Value = rdx.Item("customer_max_piutang")
                         cb_diskon.SelectedValue = rdx.Item("Customer_kriteria_discount")
                         cb_harga.SelectedValue = rdx.Item("Customer_kriteria_harga_jual")
@@ -220,61 +218,6 @@
     End Sub
 
     'SAVE DATA
-    'Generate Kode
-    Private Function createKode(namakusto As String) As String
-        Dim ret As String = ""
-        Dim acceptedChars() As Char = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ ".ToCharArray
-        Dim chrGet As Boolean = False
-        Dim str As String = ""
-        Dim split As String()
-        Dim q As String = "SELECT RIGHT(customer_kode,2) as ss FROM data_customer_master " _
-                          & "WHERE customer_kode LIKE '{0}%' AND RIGHT(customer_kode,2) REGEXP '^[0-9]+$' " _
-                          & "ORDER BY ss DESC LIMIT 1"
-
-
-        str = (From ch As Char In namakusto Select ch Where acceptedChars.Contains(ch)).ToArray
-        split = str.Split(" ")
-
-        Dim i As Integer = 0
-        acceptedChars = "BCDFGHJKLMNPQRSTVWXYZ"
-        For Each sa As String In split
-            sa = sa.ToUpper
-            'If sa = "PT" Then
-            '    split(i) = "-"
-            'End If
-            If sa.Length >= 3 Then
-                ret = Strings.Left(sa, 3)
-                chrGet = True
-                Exit For
-            End If
-            i += 1
-        Next
-
-        If chrGet = False Then
-            str = Strings.Join(split, "").ToUpper
-            'str = Strings.Replace(str, "-", "")
-            ret = Strings.Left(str, 3)
-        End If
-
-        ret += cb_area.SelectedValue
-
-        Dim kd As Integer = 0
-        op_con()
-        readcommd(String.Format(q, ret))
-        If rd.HasRows Then
-            kd = CInt(rd.Item(0))
-        End If
-        rd.Close()
-
-        kd += 1
-
-        ret += kd.ToString("N2")
-
-        consoleWriteLine(ret)
-        Return ret
-    End Function
-
-    'Save
     Private Sub saveData()
         Dim data1 As String()
         Dim querycheck As Boolean = False
@@ -315,47 +258,55 @@
             "customer_status='" & cstStatus & "'"
             }
 
-        op_con()
-        If bt_simpancusto.Text = "Simpan" Then
-            'GENNERATE CODE
-            If Trim(in_kode.Text) = Nothing Then
-                Dim no As Integer = 1
-                readcommd("SELECT RIGHT(customer_kode,6) as ss FROM data_customer_master WHERE customer_kode LIKE 'CT%' " _
-                          & "AND RIGHT(customer_kode,6) REGEXP '^[0-9]+$' ORDER BY ss DESC LIMIT 1")
-                If rd.HasRows Then
-                    no = CInt(rd.Item(0)) + 1
-                End If
-                rd.Close()
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                If formstate = InputState.Insert Then
+                    If String.IsNullOrWhiteSpace(in_kode.Text) Then
+                        Dim i As Integer = 0 : Dim format As String = "D6"
+                        q = "SELECT IFNULL(MAX(SUBSTRING(customer_kode, 3)), 0) FROM data_customer_master " _
+                            & "WHERE customer_kode LIKE 'CT%' AND SUBSTRING(customer_kode,3) REGEXP '^[0-9]+$'"
+                        Try
+                            i = CInt(x.ExecScalar(q))
+                            format = IIf(i + 1 > 999999, "D" & (i + 1).ToString.Length, "D6")
+                            in_kode.Text = "CT" & (i + 1).ToString(format)
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                    Else
+                        Dim i As Integer = 0
+                        q = "SELECT COUNT(customer_kode) FROM data_customer_master WHERE customer_kode='{0}'"
+                        Try
+                            i = Integer.Parse(x.ExecScalar(String.Format(q, in_kode.Text)))
+                        Catch ex As Exception
+                            MessageBox.Show("Terjadi kesalahan dalam melakukan proses penyimpanan data." & Environment.NewLine & ex.Message,
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            logError(ex, True) : Exit Sub
+                        End Try
+                        If i <> 0 Then
+                            MessageBox.Show("Kode customer " & in_kode.Text & " sudah pernah di inputkan ke database.",
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            in_kode.Focus() : Exit Sub
+                        End If
+                    End If
 
-                in_kode.Text = "CT" & no.ToString("D6")
+                    q = "INSERT INTO data_customer_master SET customer_kode='{0}',{1},customer_reg_date=NOW(),customer_reg_alias='{2}'"
+                Else
+                    q = "UPDATE data_customer_master SET {1}, customer_upd_date=NOW(), customer_upd_alias='{2}' WHERE customer_kode='{0}'"
+                End If
+
+                querycheck = x.TransactCommand(New List(Of String) From {String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id)})
+                If querycheck Then
+                    MessageBox.Show("Data customer tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                    DoRefreshTab_v2({pgcusto}) : Me.Close()
+                Else
+                    MessageBox.Show("Data customer tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
             Else
-                in_kode.Text = Trim(in_kode.Text)
-                If checkdata("data_customer_master", "'" & in_kode.Text & "'", "customer_kode") Then
-                    MessageBox.Show("Customer dg Kode " & in_kode.Text & " sudah ada")
-                    in_kode.Focus()
-                    Exit Sub
-                End If
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If
-
-            q = "INSERT INTO data_customer_master SET customer_kode='{0}',{1},customer_reg_date=NOW(),customer_reg_alias='{2}'"
-        ElseIf bt_simpancusto.Text = "Update" Then
-            q = "UPDATE data_customer_master SET {1}, customer_upd_date=NOW(), customer_upd_alias='{2}' WHERE customer_kode='{0}'"
-        Else
-            Exit Sub
-        End If
-
-        querycheck = commnd(String.Format(q, Trim(in_kode.Text), String.Join(",", data1), loggeduser.user_id))
-
-
-        Me.Cursor = Cursors.Default
-
-        If querycheck = False Then
-            Exit Sub
-        Else
-            MessageBox.Show("Data customer tersimpan")
-            doRefreshTab({pgcusto})
-            Me.Close()
-        End If
+        End Using
     End Sub
 
     'DRAG FORM

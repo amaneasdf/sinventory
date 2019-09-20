@@ -208,6 +208,7 @@
                                         })
                     _qjoin = " LEFT JOIN data_salesman_master FORCE INDEX(sales_idx_kode_nama) ON piutang_sales=salesman_kode"
                     _qwh = IIf(_whrArr.Count > 0, " WHERE " & String.Join(" AND ", _whrArr), "")
+                    _qorder = ""
 
                 ElseIf LCase(tipe) = "p_salesglobal" Then
                     Dim _pajakjual As String = ""
@@ -308,6 +309,7 @@
                                         })
 
                 ElseIf {"p_kartupiutangsales", "p_kartupiutangsalesonly", "p_kartupiutangnota"}.Contains(LCase(tipe)) Then
+                    _qorder = String.Empty
                     Select Case LCase(tipe)
                         Case "p_kartupiutangsales"
                             _grouping = "piutang_custo, piutang_sales"
@@ -338,7 +340,6 @@
                                                  "p_sales pk_sales",
                                                  "salesman_nama pk_sales_n"
                                                 })
-                        Case Else
                     End Select
                     _qjoin = " LEFT JOIN data_salesman_master FORCE INDEX(sales_idx_kode_nama) ON p_sales=salesman_kode" _
                             & " LEFT JOIN ref_jenis ppn ON p_kat=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2'"

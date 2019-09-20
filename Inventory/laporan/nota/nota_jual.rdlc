@@ -1435,7 +1435,7 @@
                   <Value>Kepada Yth.</Value>
                   <Style>
                     <FontFamily>saxMono</FontFamily>
-                    <FontSize>9pt</FontSize>
+                    <FontSize>8pt</FontSize>
                     <FontWeight>Bold</FontWeight>
                   </Style>
                 </TextRun>

@@ -33,6 +33,7 @@ Partial Class fr_urutnofaktur
         Me.Label3 = New System.Windows.Forms.Label()
         Me.bt_cancel = New System.Windows.Forms.Button()
         Me.bt_load = New System.Windows.Forms.Button()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
         CType(Me.in_jmlpajak, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -92,7 +93,7 @@ Partial Class fr_urutnofaktur
         Me.Panel2.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Panel2.Location = New System.Drawing.Point(0, 34)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(384, 133)
+        Me.Panel2.Size = New System.Drawing.Size(384, 123)
         Me.Panel2.TabIndex = 3
         '
         'in_jmlpajak
@@ -154,6 +155,15 @@ Partial Class fr_urutnofaktur
         Me.bt_load.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage
         Me.bt_load.UseVisualStyleBackColor = True
         '
+        'Panel3
+        '
+        Me.Panel3.BackColor = System.Drawing.Color.Orange
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel3.Location = New System.Drawing.Point(0, 157)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(384, 10)
+        Me.Panel3.TabIndex = 6
+        '
         'fr_urutnofaktur
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -161,11 +171,15 @@ Partial Class fr_urutnofaktur
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(384, 167)
         Me.Controls.Add(Me.Panel2)
+        Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
+        Me.MaximizeBox = False
+        Me.MinimizeBox = False
         Me.Name = "fr_urutnofaktur"
+        Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
@@ -185,4 +199,5 @@ Partial Class fr_urutnofaktur
     Friend WithEvents Label4 As System.Windows.Forms.Label
     Friend WithEvents in_nopajak As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents Panel3 As System.Windows.Forms.Panel
 End Class

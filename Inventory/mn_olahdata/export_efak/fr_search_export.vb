@@ -1,5 +1,6 @@
 ﻿Public Class fr_search_export
     Public ReturnId As String = ""
+    Private SupplierBased As Boolean = False
 
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
@@ -29,21 +30,40 @@
         bt_cancel.PerformClick()
     End Sub
 
+    Private Sub fr_piutang_awal_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            bt_cancel.PerformClick()
+        End If
+    End Sub
+
     'LOAD FORM
     Public Sub DoLoadDialog()
         LoadData("")
+        ex_supplier.Visible = SupplierBased
         Me.ShowDialog()
+    End Sub
+
+    Public Sub DoLoadDialog_Supplier()
+        SupplierBased = True
+        DoLoadDialog()
     End Sub
 
     'LOAD DATAGRID
     Private Sub LoadData(Optional param As String = "")
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main db connection setting is empty.")
-        End If
+        If MainConnection.Connection Is Nothing Then Throw New NullReferenceException("Main db connection setting is empty.")
 
-        Dim q As String = "SELECT efak_id, DATE_FORMAT(efak_periode,'%M %Y') efak_periode, efak_tgl, efak_lastexport " _
-                          & "FROM data_penjualan_efak WHERE efak_status<>9 {0}"
-        Dim _Where As String = "AND (DATE_FORMAT(efak_periode,'%M %Y') LIKE '{0}' OR CONVERT(efak_id,CHAR(11)) LIKE '{0}')"
+        Dim q As String = ""
+        Dim _Where As String = ""
+        If SupplierBased Then
+            q = "SELECT efak_id, DATE_FORMAT(efak_periode,'%M %Y') efak_periode, GetMasterNama('supplier', efak_suppliercode) efak_supplier, " _
+                & " efak_tgl, efak_ket, efak_reg_user, efak_lastexport " _
+                & "FROM data_penjualan_efak WHERE efak_status<>9 AND efak_supplierbased=1 {0}"
+            _Where = "AND (DATE_FORMAT(efak_periode,'%M %Y') LIKE '{0}' OR CONVERT(efak_id,CHAR(11)) LIKE '{0}' OR efak_suppliercode LIKE '{0}' OR GetMasterNama('supplier', efak_suppliercode) LIKE '{0}')"
+        Else
+            q = "SELECT efak_id, DATE_FORMAT(efak_periode,'%M %Y') efak_periode, efak_tgl, efak_ket, efak_reg_user, efak_lastexport " _
+                & "FROM data_penjualan_efak WHERE efak_status<>9 AND efak_supplierbased=0 {0}"
+            _Where = "AND (DATE_FORMAT(efak_periode,'%M %Y') LIKE '{0}' OR CONVERT(efak_id,CHAR(11)) LIKE '{0}')"
+        End If
         If Not String.IsNullOrWhiteSpace(param) Then
             param = "%" & param & "%"
             _Where = String.Format(_Where, param)
@@ -53,8 +73,7 @@
         End If
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Using dtx = x.GetDataTable(q)
                     dgv_listexport.DataSource = dtx
                 End Using
@@ -70,7 +89,7 @@
     End Sub
 
     Private Sub bt_load_Click(sender As Object, e As EventArgs) Handles bt_load.Click
-        ReturnId = dgv_listexport.SelectedRows.Item(0).Cells(0).Value
+        ReturnId = dgv_listexport.SelectedRows.Item(0).Cells("ex_id").Value
         Me.Close()
     End Sub
 

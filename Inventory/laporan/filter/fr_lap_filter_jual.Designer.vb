@@ -280,7 +280,7 @@ Partial Class fr_lap_filter_jual
         'popPnl_barang
         '
         Me.popPnl_barang.Controls.Add(Me.dgv_listbarang)
-        Me.popPnl_barang.Location = New System.Drawing.Point(228, 130)
+        Me.popPnl_barang.Location = New System.Drawing.Point(577, 61)
         Me.popPnl_barang.Name = "popPnl_barang"
         Me.popPnl_barang.Size = New System.Drawing.Size(351, 112)
         Me.popPnl_barang.TabIndex = 441

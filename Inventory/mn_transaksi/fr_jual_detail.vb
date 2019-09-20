@@ -338,7 +338,7 @@ CountHarga:
                 retHarga = hargaawal
         End Select
 
-        Return retHarga
+        Return Math.Round(retHarga, 2)
     End Function
 
     'LOAD DATA TO DGV POPUP PANEL
@@ -763,9 +763,6 @@ CountHarga:
                 Dim _ckbarang As Boolean = True
                 Dim _brg As New List(Of String)
                 For Each rows As DataGridViewRow In dgv_barang.Rows
-                    Dim stockkode As String = in_gudang.Text & "-" & rows.Cells(0).Value & "-" & selectperiode.id
-                    Dim _qty As Integer = 0
-                    Dim _qty2 As Integer = 0
                     Dim _hpp As Decimal = 0
                     Dim _kdbrg As String = rows.Cells(0).Value
 
@@ -775,7 +772,7 @@ CountHarga:
 
                     dataBrg = {
                        "trans_barang='" & _kdbrg & "'",
-                       "trans_harga_jual='" & rows.Cells("harga").Value & "'",
+                       "trans_harga_jual='" & Decimal.Parse(rows.Cells("harga").Value).ToString.Replace(",", ".") & "'",
                        "trans_qty='" & rows.Cells("qty").Value & "'",
                        "trans_satuan='" & rows.Cells("sat").Value & "'",
                        "trans_satuan_type='" & rows.Cells("sat_type").Value & "'",

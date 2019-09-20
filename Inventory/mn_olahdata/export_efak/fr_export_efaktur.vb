@@ -13,22 +13,46 @@ Public Class fr_export_efaktur
     Private cacheFaktur As New List(Of DataTable)
     Private SelectedPageData As Integer = 1
     Private MaxPageData As Integer = 1
-
+    Private SearchStr As String = ""
+    Public SupplierBased As Boolean = False
+    Private SupplierCode As String = ""
 
     Public Sub setpage(page As TabPage)
         tabpagename = page
-        consoleWriteLine("pg" & page.Name.ToString)
-        consoleWriteLine("pgset" & tabpagename.Name.ToString)
+        PerformRefresh()
     End Sub
 
-    Public Sub performRefresh()
-        For Each txt As TextBox In {in_id, in_page}
+    Public Sub PerformRefresh()
+        Dim _id = in_id.Text
+        Dim _sw As Boolean = False
+        SearchStr = ""
+        For Each ctr_sup As Control In {lbl_supplier, in_supplier}
+            ctr_sup.Visible = SupplierBased
+        Next
+        For Each txt As TextBox In {in_id, in_page, in_cari, in_fak, in_dpp, in_ppn, in_supplier, in_ket}
             txt.Clear()
         Next
         For Each datepick As DateTimePicker In {date_periode, date_tgl}
             datepick.Value = Today
         Next
-        If Not IsNothing(dgv_faktur.DataSource) Then dgv_faktur.DataSource.Rows.Clear()
+        If Not String.IsNullOrWhiteSpace(_id) Then
+            Me.Cursor = Cursors.WaitCursor
+            LoadHeader(_id) : LoadDataGrid(_id)
+            _sw = True
+            Me.Cursor = Cursors.Default
+        Else
+            dgv_faktur.DataSource = Nothing
+        End If
+        InputControlSwitch(_sw)
+    End Sub
+
+    Private Sub InputControlSwitch(SwEnable As Boolean)
+        date_periode.Enabled = SwEnable
+        in_ket.Enabled = SwEnable
+        in_cari.Enabled = SwEnable
+        For Each bt As Button In {bt_simpanbeli, bt_samamasapajak, bt_urutnopajak, bt_savetemplate, bt_deletetemplate, bt_export, bt_export_other, bt_search}
+            bt.Enabled = SwEnable
+        Next
     End Sub
 
     'LOAD HEADER
@@ -40,50 +64,94 @@ Public Class fr_export_efaktur
         Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                q = "SELECT efak_tgl, efak_periode FROM data_penjualan_efak WHERE efak_id='{0}'"
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                'LOAD HEADER
+                q = "SELECT efak_tgl, efak_periode, efak_supplierbased, IFNULL(efak_suppliercode,''), IFNULL(efak_ket, '') FROM data_penjualan_efak WHERE efak_id='{0}'"
                 Using rdx = x.ReadCommand(String.Format(q, IdExport), CommandBehavior.SingleRow)
                     Dim red = rdx.Read()
                     If red = rdx.HasRows Then
                         in_id.Text = IdExport
                         date_tgl.Value = rdx.Item(0)
                         date_periode.Value = rdx.Item(1)
+                        If rdx.Item(2) = 1 Then SupplierCode = rdx.Item(3)
+                        in_ket.Text = rdx.Item(4)
                     End If
                 End Using
+
+                If SupplierBased Then
+                    'LOAD NAMA SUPPLIER
+                    q = "SELECT GetMasterNama('supplier', '{0}')"
+                    in_supplier.Text = x.ExecScalar(String.Format(q, SupplierCode))
+                End If
+
+                'LOAD JUMLAH FAKTUR
                 q = "SELECT COUNT(e_list_kodefaktur) FROM data_penjualan_efak_list WHERE e_list_status=1 AND e_list_templateid='{0}'"
-                MaxPageData = CInt(Math.Ceiling(CInt(x.ExecScalar(String.Format(q, IdExport))) / 2000))
+                Dim _datacount As Integer = CInt(x.ExecScalar(String.Format(q, IdExport)))
+                MaxPageData = CInt(Math.Ceiling(_datacount / 2000))
+                in_fak.Text = _datacount.ToString("N0")
                 consoleWriteLine(MaxPageData)
+
+                'LOAD TOTAL DPP & PPN
+                q = "SELECT TRUNCATE(SUM(ROUND(e_list_det_jumlah*(CASE e_list_jenispajak WHEN 1 THEN (10/11) ELSE 1 END),2)),0) faktur_dpp, " _
+                    & "TRUNCATE(SUM(ROUND(e_list_det_jumlah*(CASE e_list_jenispajak WHEN 1 THEN (1-(10/11)) WHEN 2 THEN 0.1 ELSE 0 END),2)),0) faktur_ppn " _
+                    & "FROM data_penjualan_efak_list " _
+                    & "LEFT JOIN data_penjualan_efak_list_detail ON e_list_det_idlist= e_list_id AND e_list_det_status=1 " _
+                    & "WHERE e_list_templateid='{0}' AND e_list_status=1"
+                Using rdx = x.ReadCommand(String.Format(q, IdExport))
+                    Dim red = rdx.Read
+                    If red And rdx.HasRows Then
+                        Try
+                            in_dpp.Text = Decimal.Parse(rdx.Item(0)).ToString("N0")
+                            in_ppn.Text = Decimal.Parse(rdx.Item(1)).ToString("N0")
+                        Catch ex As Exception
+                            logError(ex, False)
+                            MessageBox.Show("Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message,
+                                            lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            in_dpp.Text = 0 : in_ppn.Text = 0
+                        End Try
+                    End If
+                End Using
             End If
         End Using
     End Sub
 
     'LOAD DATAGRID
-    Private Sub LoadDataGrid(IdExport As String, Optional PgNumber As Integer = 1)
+    Private Sub LoadDataGrid(IdExport As String, Optional PgNumber As Integer = 1, Optional ParamStr As String = "")
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main db connection setting is empty.")
         End If
 
         Dim q As String = ""
+        Dim _qwh As String = ""
         Dim col = New List(Of String) From {"e_list_selectstate", "e_list_kodefaktur", "faktur_tanggal_trans", "e_list_kodepajak", "e_list_tglpajak",
                                             "GetMasterNama('custo', faktur_customer) faktur_customer", "GetMasterNama('custonpwp', faktur_customer) faktur_npwp",
-                                            "ROUND((CASE faktur_ppn_jenis WHEN 1 THEN faktur_netto*(10/11) ELSE faktur_netto END),2) faktur_dpp",
-                                            "ROUND((CASE faktur_ppn_jenis WHEN 1 THEN faktur_netto*(1-(10/11)) WHEN 2 THEN faktur_netto*0.1 ELSE 0 END),2) faktur_ppn"}
+                                            "ROUND((CASE e_list_jenispajak WHEN 1 THEN SUM(e_list_det_jumlah)*(10/11) ELSE SUM(e_list_det_jumlah) END),2) faktur_dpp",
+                                            "ROUND((CASE e_list_jenispajak WHEN 1 THEN SUM(e_list_det_jumlah)*(1-(10/11)) WHEN 2 THEN SUM(e_list_det_jumlah)*0.1 ELSE 0 END),2) faktur_ppn"}
         Dim _limit As Integer = (PgNumber * 2000) - 2000
 
         SetupDatagridProp()
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 q = "UPDATE data_penjualan_efak_list LEFT JOIN data_penjualan_faktur ON faktur_kode=e_list_kodefaktur " _
                     & "SET e_list_status=IF(faktur_status<>1,9,1) WHERE e_list_templateid='{0}' AND e_list_status=1"
                 x.ExecCommand(String.Format(q, IdExport))
 
-                q = "SELECT {0} FROM data_penjualan_efak_list LEFT JOIN data_penjualan_faktur ON e_list_kodefaktur=faktur_kode " _
-                    & "WHERE e_list_templateid='{1}' AND e_list_status=1 AND faktur_status=1 ORDER BY faktur_tanggal_trans, e_list_kodefaktur " _
-                    & "LIMIT {2},2000"
-                Using dtx = x.GetDataTable(String.Format(q, String.Join(",", col), IdExport, _limit))
+                q = "SELECT {0} FROM data_penjualan_efak_list " _
+                    & "LEFT JOIN data_penjualan_efak_list_detail ON e_list_det_idlist= e_list_id AND e_list_det_status=1 " _
+                    & "LEFT JOIN data_penjualan_faktur ON e_list_kodefaktur=faktur_kode " _
+                    & "WHERE e_list_templateid='{1}' AND e_list_status=1 AND faktur_status=1 {3} GROUP BY e_list_kodefaktur " _
+                    & "ORDER BY e_list_tglpajak, faktur_tanggal_trans, e_list_kodefaktur LIMIT {2},2000"
+                SearchStr = ParamStr
+                If Not String.IsNullOrWhiteSpace(ParamStr) Then
+                    ParamStr = mysqlQueryFriendlyStringFeed(ParamStr)
+                    ParamStr = Trim(ParamStr).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+                    _qwh = String.Join("'" & ParamStr & "'", {" AND(e_list_kodefaktur REGEXP ", " OR GetMasterNama('custo', faktur_customer) REGEXP ",
+                                                              " OR e_list_kodepajak REGEXP ", " OR GetMasterNama('custonpwp', faktur_customer) REGEXP ",
+                                                              ")"})
+                End If
+
+                Using dtx = x.GetDataTable(String.Format(q, String.Join(",", col), IdExport, _limit, _qwh))
                     setDoubleBuffered(dgv_faktur, True)
                     dgv_faktur.AutoGenerateColumns = False
                     dgv_faktur.DataSource = dtx
@@ -115,14 +183,17 @@ Public Class fr_export_efaktur
 
         Me.Cursor = Cursors.WaitCursor
 
-        q = "UPDATE data_penjualan_efak_list SET e_list_tglpajak = GetEFakDateByPeriode(e_list_kodefaktur, {1}, {2}) " _
-            & "WHERE e_list_templateid='{0}' AND e_list_selectstate=1 AND DATE_FORMAT(e_list_tglpajak,'%m%Y')!='{3}' AND e_list_status=1"
-
         Using x = MainConnection
             x.Open()
             If x.ConnectionState = ConnectionState.Open Then
                 Try
+                    q = "UPDATE data_penjualan_efak SET efak_periode='{1:yyyy-MM-01}' WHERE efak_id={0}"
+                    x.ExecCommand(String.Format(q, IdExport, periode))
+
+                    q = "UPDATE data_penjualan_efak_list SET e_list_tglpajak = GetEFakDateByPeriode(e_list_kodefaktur, {1}, {2}) " _
+                        & "WHERE e_list_templateid='{0}' AND e_list_selectstate=1 AND DATE_FORMAT(e_list_tglpajak,'%m%Y')!='{3}' AND e_list_status=1"
                     Dim i = x.ExecCommand(String.Format(q, IdExport, periode.Month, periode.Year, periode.ToString("MMyyyy")))
+
                     MessageBox.Show("Tanggal pajak " & i & " faktur telah disesuaikan.", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     LoadDataGrid(IdExport, in_page.Text)
                 Catch ex As Exception
@@ -185,7 +256,9 @@ Public Class fr_export_efaktur
 
             If _FakturList.Count > 0 Then
                 If FileType = "xlsx" Then
-                    Return exportXlsx(Filename, IdExport, _FakturList)
+                    Return exportXlsx("efak", Filename, IdExport, _FakturList)
+                ElseIf FileType = "xls" Then
+                    Return exportFakeXLS(Filename, IdExport, _FakturList)
                 ElseIf FileType = "csv" Then
                     Return exportCSV(Filename, IdExport, _FakturList)
                 Else
@@ -199,9 +272,9 @@ Public Class fr_export_efaktur
 
     End Function
 
+    'CREATE MYSQL QUERY FOR EXPORTING DATA
     Private Function createQuery(type As String, FakturKode As String, IdExport As String) As String
         Dim q As String = ""
-        Dim col As New List(Of String)
 
         Select Case type
             Case "exportFK"
@@ -211,9 +284,7 @@ Public Class fr_export_efaktur
                 q = String.Empty
 
             Case "exportOF"
-                If FakturKode <> Nothing Then
-                    q = "CALL EFak_GetDataOF('{0}')" : q = String.Format(q, FakturKode)
-                End If
+                If Not String.IsNullOrWhiteSpace(FakturKode) Then q = "CALL EFak_GetDataOF_v2('{1}', '{0}')" : q = String.Format(q, FakturKode, IdExport)
         End Select
         Return q
     End Function
@@ -249,17 +320,62 @@ Public Class fr_export_efaktur
         End Try
     End Function
 
+    'EXPORT XLS A.K.A CSV FILE WITH XLS FILE TYPE
+    Private Function exportFakeXLS(fileLoc As String, IdExport As String, kode_faktur As List(Of String), Optional fielddelimiter As String = ";",
+                           Optional rowdelimiter As String = ControlChars.NewLine) As Boolean
+        Dim _retsuc As Boolean = False
+        Dim contain As New List(Of String)
+
+        Try
+            contain.Add(String.Join(fielddelimiter, colheadr_FK))
+            contain.Add(String.Join(fielddelimiter, colheadr_LT))
+            contain.Add(String.Join(fielddelimiter, colheadr_OF))
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    For Each kode As String In kode_faktur
+                        contain.Add(x.GetDataTable(createQuery("exportFK", kode, IdExport)).ToCsv(False, vbCrLf, fielddelimiter))
+                        contain.Add(x.GetDataTable(createQuery("exportOF", kode, IdExport)).ToCsv(False, vbCrLf, fielddelimiter))
+                    Next
+                Else
+                    MessageBox.Show("Tidak dapat terhubung ke database.", "Export E Faktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False : Exit Function
+                End If
+            End Using
+
+            System.IO.File.WriteAllText(fileLoc, String.Join(rowdelimiter, contain))
+            Return System.IO.File.Exists(fileLoc)
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("ERROR. Terjadi kesalahan saat melakukan export" & vbCrLf & ex.Message, "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+    End Function
+
+
     'EXPORT XLSX
-    Private Function exportXlsx(fileloc As String, IdExport As String, kode_faktur As List(Of String), Optional filename As String = Nothing) As Boolean
+    Private Function exportXlsx(ExportType As String, fileloc As String, IdExport As String, kode_faktur As List(Of String),
+                                Optional filename As String = Nothing) As Boolean
         Dim _retsuc As Boolean = False
         Dim contain As New List(Of String)
         Dim dt_fk As New DataTable
         Dim dt_of As New DataTable
+        ExportType = LCase(ExportType)
+        If Not {"efak", "jualefak", "jualmaster"}.Contains(ExportType) Then
+            MessageBox.Show("Tipe Export tidak sesuai.", "Export EFaktur XLXS", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End If
 
         If filename = Nothing Then
             filename = Strings.Replace(Strings.Replace(fileloc, System.IO.Path.GetDirectoryName(fileloc), ""), ".xlsx", "")
             If filename = "" Then
-                filename = "Export EFaktur " & Today.ToShortDateString
+                If ExportType = "efak" Then
+                    filename = "Export EFaktur "
+                ElseIf ExportType = "jualefak" Then
+                    filename = "Export Data Penjualan - Efaktur "
+                ElseIf ExportType = "jualmaster" Then
+                    filename = "Export Data Master Penjualan - Efaktur "
+                End If
+                filename += date_periode.Value.ToString("MMMM yyyy")
             End If
         End If
         fileloc = System.IO.Path.GetDirectoryName(fileloc)
@@ -280,12 +396,16 @@ Public Class fr_export_efaktur
                 Using x = MainConnection
                     x.Open() : If x.ConnectionState = ConnectionState.Open Then
                         For Each kode As String In kode_faktur
-                            dt_fk = x.GetDataTable(createQuery("exportFK", kode, IdExport))
-                            dt_of = x.GetDataTable(createQuery("exportOF", kode, IdExport))
-                            For i = 0 To dt_fk.Columns.Count - 1
-                                wrksht.Cells(rows, i + 1).Value = dt_fk.Rows(0).ItemArray(i)
-                            Next
-                            rows += 1
+                            If ExportType = "efak" Then
+                                dt_fk = x.GetDataTable(createQuery("exportFK", kode, IdExport))
+                                dt_of = x.GetDataTable(createQuery("exportOF", kode, IdExport))
+                                For i = 0 To dt_fk.Columns.Count - 1
+                                    wrksht.Cells(rows, i + 1).Value = dt_fk.Rows(0).ItemArray(i)
+                                Next
+                                rows += 1
+                            Else
+                                dt_of = x.GetDataTable(createQuery(IIf(ExportType = "jualefak", "exportJualEfak", "exportJualMaster"), kode, IdExport))
+                            End If
                             For Each objkrows As DataRow In dt_of.Rows
                                 For i = 0 To dt_of.Columns.Count - 1
                                     wrksht.Cells(rows, i + 1).Value = objkrows.ItemArray(i)
@@ -309,6 +429,44 @@ Public Class fr_export_efaktur
         End Try
     End Function
 
+    Private Function exportDataPenjualan(Filename As String, ExportType As String, IdExport As String, Periode As Date, ByRef _OutputDir As String) As Boolean
+        Try
+            Dim q As String = ""
+            Dim _ColHeader As New List(Of String)
+            Dim _Title As New List(Of String)
+
+            ExportType = LCase(ExportType)
+
+            If Not {"efak", "master"}.Contains(ExportType) Then Throw New Exception("Kode jenis export tidak sesuai.")
+
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    q = "CALL EFak_GetDataJual('{0}', {1})"
+                    q = String.Format(q, ExportType, IdExport)
+
+                    _ColHeader.AddRange({"KodeFaktur", "Tgl", "JenisPajak", "Tgl.Pajak", "NomorPajak",
+                                             "KodeSalesman", "Salesman", "KodeCustomer", "NamaCustomer", "KodeGudang", "NamaGudang",
+                                             "KodeBarang", "NamaBarang", "Qty", "SatuanJual", "Hargajual", "Subtotal", "JumlahDiskon", "JumlahJual",
+                                             "DPP", "PPN", "Status"})
+                    If ExportType = "efak" Then
+                        _Title.AddRange({"DATA PENJUALAN EXPORT EFAKTUR ", "PERIODE " & UCase(Periode.ToString("MMMM yyyy"))})
+                    Else
+                        _Title.AddRange({"DATA MASTER PENJUALAN EXPORT EFAKTUR ", "PERIODE " & UCase(Periode.ToString("MMMM yyyy"))})
+                    End If
+
+                    Return ExportExcel(_ColHeader, New List(Of DataTable) From {x.GetDataTable(q)}, _Title, Filename, "xlsx", _OutputDir)
+                Else
+                    MessageBox.Show("Tidak dapat terhubung ke database.", "Export Efaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False
+                End If
+            End Using
+        Catch ex As Exception
+            logError(ex, True)
+            MessageBox.Show("ERROR. Terjadi kesalahan saat melakukan export" & vbCrLf & ex.Message, "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Error)
+            Return False
+        End Try
+    End Function
+
     'UPDATE EXPORT DATE/BY
     Private Sub ExportUpdLastExport(IdExport As String)
         If MainConnection.Connection Is Nothing Then
@@ -324,17 +482,10 @@ Public Class fr_export_efaktur
         End Using
     End Sub
 
-    'CLOSE
-    Private Sub bt_close_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
-    End Sub
-
-    Private Sub bt_close_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
-    End Sub
-
+    'UI : CLOSE
     Private Sub bt_close_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        Me.performRefresh()
+        in_id.Clear()
+        Me.PerformRefresh()
         main.tabcontrol.TabPages.Remove(tabpagename)
     End Sub
 
@@ -342,12 +493,17 @@ Public Class fr_export_efaktur
     Private Sub bt_loadtemplate_Click(sender As Object, e As EventArgs) Handles bt_loadtemplate.Click
         Using x As New fr_search_export
             Dim _ret As String = ""
-            x.DoLoadDialog()
+            If SupplierBased Then
+                x.DoLoadDialog_Supplier()
+            Else
+                x.DoLoadDialog()
+            End If
             _ret = x.ReturnId
 
             Me.Cursor = Cursors.WaitCursor
             If Not String.IsNullOrWhiteSpace(_ret) Then
                 LoadHeader(_ret) : LoadDataGrid(_ret)
+                InputControlSwitch(True)
             End If
             Me.Cursor = Cursors.Default
         End Using
@@ -356,19 +512,23 @@ Public Class fr_export_efaktur
     Private Sub bt_createtemplate_Click(sender As Object, e As EventArgs) Handles bt_createtemplate.Click
         Using x As New fr_newexport
             Dim _ret As String = ""
-            x.DoLoadDialog()
+            If SupplierBased Then
+                x.DoLoadDialog_supplier()
+            Else
+                x.DoLoadDialog()
+            End If
             _ret = x.ReturnId
             Me.Cursor = Cursors.WaitCursor
             If Not String.IsNullOrWhiteSpace(_ret) Then
-                LoadHeader(_ret)
-                LoadDataGrid(_ret)
+                LoadHeader(_ret) : LoadDataGrid(_ret)
+                InputControlSwitch(True)
             End If
             Me.Cursor = Cursors.Default
         End Using
     End Sub
 
     Private Sub bt_refresh_Click(sender As Object, e As EventArgs) Handles bt_refresh.Click
-        Me.performRefresh()
+        Me.PerformRefresh()
     End Sub
 
     Private Sub bt_savetemplate_Click(sender As Object, e As EventArgs) Handles bt_savetemplate.Click
@@ -379,10 +539,10 @@ Public Class fr_export_efaktur
         Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                q = "UPDATE data_penjualan_efak SET efak_tgl='{1}', efak_periode='{2}' WHERE efak_id='{0}'"
-                q = String.Format(q, in_id.Text, date_tgl.Value.ToString("yyyy-MM-dd"), date_periode.Value.ToString("yyyy-MM-01"))
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                q = "UPDATE data_penjualan_efak SET efak_tgl='{1}', efak_periode='{2}', efak_ket='{3}' WHERE efak_id='{0}'"
+                q = String.Format(q, in_id.Text, date_tgl.Value.ToString("yyyy-MM-dd"), date_periode.Value.ToString("yyyy-MM-01"),
+                                  mysqlQueryFriendlyStringFeed(in_ket.Text))
                 If x.TransactCommand(New List(Of String) From {q}) Then
                     MessageBox.Show("Data Export tersimpan.", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Else
@@ -400,12 +560,16 @@ Public Class fr_export_efaktur
         End If
 
         Dim q As String = ""
+        Dim _resMsg As DialogResult = DialogResult.No
+
+        If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
+        _resMsg = MessageBox.Show("Hapus data export efaktur?", lbl_judul.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If _resMsg = DialogResult.No Then Exit Sub
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                q = "UPDATE data_penjualan_efak SET efak_status=9 WHERE efak_id='{0}'"
-                If x.TransactCommand(New List(Of String) From {String.Format(q, in_id.Text)}) Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                q = "UPDATE data_penjualan_efak SET efak_status=9, efak_removed=NOW(), efak_removed_by='{1}' WHERE efak_id='{0}'"
+                If x.TransactCommand(New List(Of String) From {String.Format(q, in_id.Text, loggeduser.user_id)}) Then
                     MessageBox.Show("Data Export telah dihapus.", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
                     performRefresh()
                 Else
@@ -421,7 +585,11 @@ Public Class fr_export_efaktur
         If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
 
         Using x = New fr_exportaddfaktur
-            x.DoLoadDialog(in_id.Text)
+            If SupplierBased Then
+                x.DoLoadDialog(in_id.Text, SupplierCode)
+            Else
+                x.DoLoadDialog(in_id.Text)
+            End If
             If x.ReturnValue Then LoadDataGrid(in_id.Text)
         End Using
     End Sub
@@ -470,14 +638,20 @@ Public Class fr_export_efaktur
         Dim _svdialog As New SaveFileDialog
         Dim _seltype As String = "csv"
 
-        _svdialog.Filter = "CSV files (*.csv)|*.csv|Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.Filter = "CSV files (*.csv)|*.csv|Excel files (*.xlsx)|*.xlsx|Excel 97-2003 files (*.xls)|*.xls|All files (*.*)|*.*"
         _svdialog.FilterIndex = 1
+        _svdialog.AddExtension = True
         _svdialog.RestoreDirectory = True
         _svdialog.DefaultExt = ".csv"
-        _svdialog.FileName = _svdialog.FileName & "EXPORT EFAKTUR"
+        _svdialog.FileName = _svdialog.FileName & "EXPORT EFAKTUR " & UCase(date_periode.Value.ToString("MMMM yyyy"))
         If _svdialog.ShowDialog = DialogResult.OK Then
             If _svdialog.FileName <> Nothing Then
-                _seltype = IIf(_svdialog.FilterIndex = 2, "xlsx", "csv")
+                Select Case _svdialog.FilterIndex
+                    Case 1 : _seltype = "csv"
+                    Case 2 : _seltype = "xlsx"
+                    Case 3 : _seltype = "xls"
+                    Case Else : _seltype = "csv"
+                End Select
             Else
                 Exit Sub
             End If
@@ -493,7 +667,8 @@ Public Class fr_export_efaktur
                 Catch ex As Exception
                     logError(ex, True)
                 End Try
-                MessageBox.Show("Export berhasil!")
+                MessageBox.Show(String.Format("Export berhasil EFaktur {0} berhasil!", UCase(date_periode.Value.ToString("MMMM yyyy"))),
+                                              "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Information)
                 Process.Start(_svdialog.FileName)
             Else
                 MessageBox.Show("File export tidak dapat ditemukan", "Export EFaktur", MessageBoxButtons.OK, MessageBoxIcon.Warning)
@@ -504,16 +679,33 @@ Public Class fr_export_efaktur
         Me.Cursor = Cursors.Default
     End Sub
 
+    Private Sub bt_export_other_Click(sender As Object, e As EventArgs) Handles bt_export_other.Click
+        Dim _x As Integer = bt_export_other.Location.X - (ctxMn_export.Width - sender.Width)
+        Dim _y As Integer = bt_export_other.Location.Y + bt_export_other.Height
+        consoleWriteLine(_x & ":" & _y)
+        ctxMn_export.Show(pnl_container, _x, _y)
+    End Sub
+
+    Private Sub bt_search_Click(sender As Object, e As EventArgs) Handles bt_search.Click
+        If Not String.IsNullOrWhiteSpace(in_id.Text) Then
+            Me.Cursor = Cursors.WaitCursor
+            SearchStr = in_cari.Text
+            LoadDataGrid(in_id.Text, 1, SearchStr)
+            Me.Cursor = Cursors.Default
+        End If
+    End Sub
+
     Private Sub bt_page_prev_Click(sender As Object, e As EventArgs) Handles bt_page_prev.Click, bt_page_first.Click
         If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
 
         Me.Cursor = Cursors.WaitCursor
+        in_cari.Text = SearchStr
         If SelectedPageData = 1 Then
             in_page.Text = SelectedPageData
         ElseIf SelectedPageData > 1 And sender.Name = "bt_page_prev" Then
-            LoadDataGrid(in_id.Text, SelectedPageData - 1)
+            LoadDataGrid(in_id.Text, SelectedPageData - 1, SearchStr)
         Else
-            LoadDataGrid(in_id.Text, 1)
+            LoadDataGrid(in_id.Text, 1, SearchStr)
         End If
         Me.Cursor = Cursors.Default
     End Sub
@@ -522,12 +714,13 @@ Public Class fr_export_efaktur
         If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
 
         Me.Cursor = Cursors.WaitCursor
+        in_cari.Text = SearchStr
         If SelectedPageData = MaxPageData Then
             in_page.Text = SelectedPageData
         ElseIf SelectedPageData < MaxPageData And sender.Name = "bt_page_next" Then
-            LoadDataGrid(in_id.Text, SelectedPageData + 1)
+            LoadDataGrid(in_id.Text, SelectedPageData + 1, SearchStr)
         Else
-            LoadDataGrid(in_id.Text, MaxPageData)
+            LoadDataGrid(in_id.Text, MaxPageData, SearchStr)
         End If
         Me.Cursor = Cursors.Default
     End Sub
@@ -559,10 +752,10 @@ Public Class fr_export_efaktur
 
     Private Sub dgv_faktur_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgv_faktur.CellDoubleClick
         If e.RowIndex <> -1 Then
-            Dim _kode As String = dgv_faktur.Rows(e.RowIndex).Cells(1).Value
-            Dim _view As New fr_jual_detail
+            Dim _kode As String = dgv_faktur.SelectedRows.Item(0).Cells(1).Value
+            Dim _det As New fr_efak_detail
             Me.Cursor = Cursors.WaitCursor
-            _view.doLoadView(_kode)
+            _det.doLoadView(_kode, in_id.Text)
             Me.Cursor = Cursors.Default
         End If
     End Sub
@@ -577,13 +770,27 @@ Public Class fr_export_efaktur
         End If
     End Sub
 
+    Private Sub dgv_faktur_Scroll(sender As Object, e As ScrollEventArgs) Handles dgv_faktur.Scroll
+        ctxMn_dgv.Close()
+    End Sub
+
     'UI : CONTEXT MENU
     Private Sub mn_viewdetail_Click(sender As Object, e As EventArgs) Handles mn_viewdetail.Click
         If dgv_faktur.SelectedRows.Count > 0 Then
             Dim _kode As String = dgv_faktur.SelectedRows.Item(0).Cells(1).Value
-            Dim _view As New fr_jual_detail
+            Dim _det As New fr_efak_detail
             Me.Cursor = Cursors.WaitCursor
-            _view.doLoadView(_kode)
+            _det.doLoadView(_kode, in_id.Text)
+            Me.Cursor = Cursors.Default
+        End If
+    End Sub
+
+    Private Sub mn_editdetail_Click(sender As Object, e As EventArgs) Handles mn_editdetail.Click
+        If dgv_faktur.SelectedRows.Count > 0 Then
+            Dim _kode As String = dgv_faktur.SelectedRows.Item(0).Cells(1).Value
+            Dim _det As New fr_efak_detail
+            Me.Cursor = Cursors.WaitCursor
+            _det.doLoadEdit(_kode, in_id.Text, loggeduser.admin_pc)
             Me.Cursor = Cursors.Default
         End If
     End Sub
@@ -618,5 +825,55 @@ Public Class fr_export_efaktur
                 End Try
             End If
         End Using
+    End Sub
+
+    Private Sub mn_export_efak_Click(sender As Object, e As EventArgs) Handles mn_export_efak.Click
+        If Not String.IsNullOrWhiteSpace(in_id.Text) Then bt_export.PerformClick()
+    End Sub
+
+    Private Sub mn_export_jual_Click(sender As Object, e As EventArgs) Handles mn_export_jual.Click, mn_exportjual_master.Click
+        If String.IsNullOrWhiteSpace(in_id.Text) Then Exit Sub
+
+        Dim _svdialog As New SaveFileDialog
+        Dim _OutputDir As String = ""
+        Dim _ExportType As String = ""
+
+        _svdialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*"
+        _svdialog.FilterIndex = 1
+        _svdialog.AddExtension = True
+        _svdialog.RestoreDirectory = True
+        _svdialog.DefaultExt = ".xlsx"
+        If sender.Name = "mn_export_jual" Then
+            _ExportType = "efak"
+            _svdialog.FileName = _svdialog.FileName & "EXPORT DATA PENJUALAN - EFAKTUR " & UCase(date_periode.Value.ToString("MMMM yyyy"))
+        Else
+            _ExportType = "master"
+            _svdialog.FileName = _svdialog.FileName & "EXPORT DATA MASTER PENJUALAN - EFAKTUR " & UCase(date_periode.Value.ToString("MMMM yyyy"))
+        End If
+        If _svdialog.ShowDialog = DialogResult.OK Then
+            If _svdialog.FileName <> Nothing Then
+                Me.Cursor = Cursors.WaitCursor
+                If exportDataPenjualan(_svdialog.FileName, _ExportType, in_id.Text, date_periode.Value, _OutputDir) Then
+                    If System.IO.File.Exists(_OutputDir) = True Then
+                        MessageBox.Show("Export Data Sukses", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        Process.Start(_OutputDir)
+                    Else
+                        MessageBox.Show("File tidak dapat ditemukan", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                Else
+                    MessageBox.Show("Export data gagal.", "Export Data", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                End If
+                Me.Cursor = Cursors.Default
+            End If
+        End If
+    End Sub
+
+    'UI : TEXTBOX
+    Private Sub in_cari_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cari.KeyDown
+        If Not String.IsNullOrWhiteSpace(in_id.Text) Then
+            If e.KeyCode = Keys.Enter Then
+                e.SuppressKeyPress = True : bt_search.PerformClick()
+            End If
+        End If
     End Sub
 End Class

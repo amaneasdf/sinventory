@@ -126,7 +126,7 @@
 
                 list_id.Width = 100
                 list_sales.Width = 130
-                list_tot_item.Width = 75
+                list_tot_item.Width = IIf(DgvType = "rekap_list", 75, 100)
                 list_gudang.Width = list_sales.Width
                 list_tot_nota.Width = list_tot_item.Width
 

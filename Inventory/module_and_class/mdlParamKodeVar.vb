@@ -429,6 +429,7 @@
     Public pgtutupbuku = New TabPage() With {.Name = "pgtutupbuku"}
     Public pglap = New TabPage() With {.Name = "pglap"}
     Public pgexportEFak = New TabPage() With {.Name = "pgexportEFak", .AutoScroll = True}
+    Public pgexportEFak_sup = New TabPage() With {.Name = "pgexportEFak_sup", .AutoScroll = True}
     Public pguser = New TabPage() With {.Name = "pguser"}
     Public pggroup = New TabPage() With {.Name = "pggroup"}
     Public pgref = New TabPage() With {.Name = "pgref"}
@@ -468,7 +469,8 @@
     Public frmkartustok As New fr_urut_kartustok With {.Dock = DockStyle.Fill}
     Public frmadjstock As New fr_list With {.Dock = DockStyle.Fill}
     Public frmtutupbuku As New fr_list With {.Dock = DockStyle.Fill}
-    Public frmexportEfak As New fr_export_efaktur With {.Dock = DockStyle.Fill}
+    Public frmexportEfak As New fr_export_efaktur With {.Dock = DockStyle.Fill, .SupplierBased = False}
+    Public frmexportEfak_sup As New fr_export_efaktur With {.Dock = DockStyle.Fill, .SupplierBased = True}
     Public frmuser As New fr_list With {.Dock = DockStyle.Fill}
     Public frmgroup As New fr_list With {.Dock = DockStyle.Fill}
     Public frmref As New fr_data_referensi With {.Dock = DockStyle.Fill}

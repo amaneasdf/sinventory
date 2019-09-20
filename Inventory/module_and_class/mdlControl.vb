@@ -1,215 +1,6 @@
 ﻿Imports System.Reflection
 
 Module mdlControl
-    '----------gudang_list dgv col----------
-    Private gudang_kode = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "kode",
-        .HeaderText = "Kode Gudang",
-        .Name = "kode",
-        .ReadOnly = True
-    }
-    Private gudang_status = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "status",
-        .HeaderText = "Status",
-        .Name = "status",
-        .ReadOnly = True
-    }
-
-    '----------retur_beli_list dgv col-------------------
-    Private retur_beli_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "gudang",
-        .HeaderText = "Gudang",
-        .Name = "gudang",
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-    Private retur_beli_jml = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "jumlah",
-        .HeaderText = "Jumlah",
-        .Name = "jumlah",
-        .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-
-    '----------jual_list dgv col------------------- 
-    Private jual_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "tanggal",
-        .HeaderText = "Tanggal",
-        .Name = "tanggal",
-        .ReadOnly = True
-    }
-
-    '----------retur_jual_list dgv col-------------------
-    Private retur_jual_bukti = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "bukti",
-        .HeaderText = "No. Bukti",
-        .Name = "bukti",
-        .ReadOnly = True
-    }
-    Private retur_jual_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "tanggal",
-        .HeaderText = "Tanggal",
-        .Name = "tanggal",
-        .ReadOnly = True
-    }
-    Private retur_jual_faktur = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-       .DataPropertyName = "faktur",
-       .HeaderText = "No. Faktur",
-       .Name = "faktur",
-       .ReadOnly = True
-    }
-    Private retur_jual_sales = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "sales",
-        .HeaderText = "Salesman",
-        .Name = "sales",
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-    Private retur_jual_custo = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "custo",
-        .HeaderText = "Customer",
-        .Name = "custo",
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-    Private retur_jual_jml = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "jumlah",
-        .HeaderText = "Jumlah",
-        .Name = "jumlah",
-        .DefaultCellStyle = dgvstyle_currency,
-        .MinimumWidth = 200,
-        .ReadOnly = True
-    }
-
-    '----------stok_list dgv col-------------------
-    Private stok_id = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "kode",
-        .HeaderText = "ID",
-        .Name = "kode",
-        .Width = 40,
-        .Visible = False,
-        .ReadOnly = True
-    }
-    Private stok_tgl = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_tanggal",
-        .HeaderText = "Tanggal",
-        .Name = "tanggal",
-        .ReadOnly = True,
-        .Width = 75
-    }
-    Private stok_gudang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "gudang_nama",
-        .HeaderText = "Gudang",
-        .Name = "gudang",
-        .Width = 200,
-        .ReadOnly = True
-    }
-    Private stok_barang = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "barang_nama",
-        .HeaderText = "Barang",
-        .Name = "barang",
-        .Width = 200,
-        .ReadOnly = True
-    }
-    Private stok_hpp = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_hpp",
-        .HeaderText = "HPP",
-        .Name = "hpp",
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_awal = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_awal",
-        .HeaderText = "Stok Awal",
-        .Name = "awal",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_beli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_beli",
-        .HeaderText = "Beli",
-        .Name = "beli",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_jual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_jual",
-        .HeaderText = "Jual",
-        .Name = "jual",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_rbeli = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_rbeli",
-        .HeaderText = "Retur Beli",
-        .Name = "rjual",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_rjual = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_rjual",
-        .HeaderText = "Retur Jual",
-        .Name = "jual",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_in = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_min",
-        .HeaderText = "Masuk",
-        .Name = "in",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-    Private stok_out = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-            .DataPropertyName = "stock_mout",
-            .HeaderText = "Keluar",
-            .Name = "out",
-            .Width = 75,
-            .ReadOnly = True,
-            .DefaultCellStyle = dgvstyle_commathousand
-        }
-    Private stok_total = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-            .DataPropertyName = "stock_sisa",
-            .HeaderText = "Sisa",
-            .Name = "total",
-            .Width = 75,
-            .ReadOnly = True,
-            .DefaultCellStyle = dgvstyle_commathousand
-        }
-    Private stok_opname = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "stock_stockop",
-        .HeaderText = "Opname Fisik",
-        .Name = "op",
-        .Width = 75,
-        .ReadOnly = True,
-        .DefaultCellStyle = dgvstyle_commathousand
-    }
-
-    '----------hutang_bayar dgv col-------------------
-    Private hutang_jenis = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "jenisbayar",
-        .HeaderText = "Jenis Bayar",
-        .Name = "jenisbayar",
-        .Width = 75,
-        .ReadOnly = True
-    }
-
-    '----------user_list dgv col------------------------------
-    Private user_id = New System.Windows.Forms.DataGridViewTextBoxColumn() With {
-        .DataPropertyName = "userid",
-        .HeaderText = "UserID",
-        .Name = "userid",
-        .ReadOnly = True,
-        .Width = 100
-    }
-
     Public Sub setList(type As String)
         Select Case type
             Case "barang"
@@ -275,6 +66,7 @@ Module mdlControl
             Case "tutupbuku"
                 setListcode(pgtutupbuku, type, frmtutupbuku, "Daftar Closing Periode")
             Case "exportEfak" : frmexportEfak.setpage(pgexportEFak)
+            Case "exportEfakSupplier" : frmexportEfak_sup.setpage(pgexportEFak_sup)
             Case "ref"
                 frmref.PerformRefresh() : frmref.SetPage(pgref)
             Case "setbarangsales"
@@ -283,10 +75,6 @@ Module mdlControl
                 setListcode(pggroup, type, frmgroup, "Daftar Group User Level")
             Case "user"
                 setListcode(pguser, type, frmuser, "Daftar User")
-                'Case "jenisbarang"
-                '    setListcodetemp(pgjenisbarang, type, frmjenisbarang, "Referensi/Daftar Jenis Barang")
-                'Case "satuanbarang"
-                '    setListcodetemp(pgsatuanbarang, type, frmsatuanbarang, "Referensi/Daftar Satuan Barang")
         End Select
     End Sub
 
@@ -792,107 +580,107 @@ Module mdlControl
                     .dgv_list.Columns.AddRange(x)
                 End With
 
+                'DATA LIST TRANSAKSI RETUR PENJUALAN
             Case "returjual"
                 With frmreturjual
-                    Dim retur_jual_gudang = New DataGridViewColumn
-                    Dim retur_jual_user = New DataGridViewColumn
-                    Dim retur_jual_jml = New DataGridViewColumn
-                    Dim retur_jnsbyr = New DataGridViewColumn
-                    Dim retur_status = New DataGridViewColumn
-                    Dim retur_jenpajak = New DataGridViewColumn
-                    Dim retur_it = New DataGridViewColumn
-                    Dim retur_et = New DataGridViewColumn
-                    retur_jual_gudang = retur_beli_gudang.Clone()
-                    retur_jual_user = user_id.Clone()
-                    retur_jual_jml = retur_beli_jml.Clone()
-                    retur_jnsbyr = hutang_jenis.Clone()
-                    retur_status = gudang_status.Clone()
-                    retur_jenpajak = gudang_status.Clone()
-                    retur_it = jual_tgl.Clone()
-                    retur_et = jual_tgl.Clone()
+                    Dim retur_faktur = New DataGridViewColumn : retur_faktur = dgvcol_templ_status.Clone()
+                    Dim retur_tgl = New DataGridViewColumn : retur_tgl = dgvcol_templ_status.Clone()
+                    Dim retur_status = New DataGridViewColumn : retur_status = dgvcol_templ_status.Clone()
+                    Dim retur_kat = New DataGridViewColumn : retur_kat = dgvcol_templ_id.Clone()
+                    Dim retur_sales = New DataGridViewColumn : retur_sales = dgvcol_templ_status.Clone()
+                    Dim retur_custo = New DataGridViewColumn : retur_custo = dgvcol_templ_status.Clone()
+                    Dim retur_gudang = New DataGridViewColumn : retur_gudang = dgvcol_templ_status.Clone()
+                    Dim retur_jnsbayar = New DataGridViewColumn : retur_jnsbayar = dgvcol_templ_status.Clone()
+                    Dim retur_nota = New DataGridViewColumn : retur_nota = dgvcol_templ_status.Clone()
+                    Dim retur_netto = New DataGridViewColumn : retur_netto = dgvcol_templ_status.Clone()
+                    Dim retur_user = New DataGridViewColumn : retur_user = dgvcol_templ_status.Clone()
+                    Dim retur_it = New DataGridViewColumn : retur_it = dgvcol_templ_status.Clone()
+                    Dim retur_et = New DataGridViewColumn : retur_et = dgvcol_templ_status.Clone()
 
-                    retur_jenpajak.Width = 50
-                    retur_jenpajak.Name = "jenpajak"
-                    retur_jenpajak.HeaderText = "Kat."
-                    retur_jenpajak.DataPropertyName = "jenispajak"
-                    retur_it.HeaderText = "InputDate"
-                    retur_et.HeaderText = "LastEditDate"
-                    retur_it.Name = "retur_it"
-                    retur_et.Name = "retur_et"
-                    retur_it.DataPropertyName = "regdate"
-                    retur_et.DataPropertyName = "upddate"
+                    retur_faktur.Name = "retur_faktur" : retur_faktur.DataPropertyName = "bukti" : retur_faktur.HeaderText = "No.Faktur"
+                    retur_tgl.Name = "retur_tgl" : retur_tgl.DataPropertyName = "tanggal" : retur_tgl.HeaderText = "Tanggal"
+                    retur_kat.Name = "retur_kat" : retur_kat.DataPropertyName = "jenispajak" : retur_kat.HeaderText = "Kat."
+                    retur_status.Name = "retur_status" : retur_status.DataPropertyName = "status" : retur_status.HeaderText = "Status"
+                    retur_sales.Name = "retur_sales" : retur_sales.DataPropertyName = "sales" : retur_sales.HeaderText = "Salesman"
+                    retur_custo.Name = "retur_custo" : retur_custo.DataPropertyName = "custo" : retur_custo.HeaderText = "Customer"
+                    retur_jnsbayar.Name = "retur_jnsbayar" : retur_jnsbayar.DataPropertyName = "jenisbayar" : retur_jnsbayar.HeaderText = "Jenis Bayar"
+                    retur_nota.Name = "retur_nota" : retur_nota.DataPropertyName = "faktur" : retur_nota.HeaderText = "Faktur Penjualan"
+                    retur_gudang.Name = "retur_gudang" : retur_gudang.DataPropertyName = "gudang" : retur_gudang.HeaderText = "Gudang"
+                    retur_netto.Name = "retur_netto" : retur_netto.DataPropertyName = "jumlah" : retur_netto.HeaderText = "Jumlah"
+                    retur_user.Name = "retur_user" : retur_user.DataPropertyName = "userid" : retur_user.HeaderText = "UserID"
+                    retur_it.Name = "retur_it" : retur_it.DataPropertyName = "regdate" : retur_it.HeaderText = "InputDate"
+                    retur_et.Name = "retur_et" : retur_et.DataPropertyName = "upddate" : retur_et.HeaderText = "LastUpdate"
 
-                    Dim x As DataGridViewColumn() = {retur_jual_bukti, retur_jnsbyr, retur_jenpajak, retur_jual_faktur, retur_status, retur_jual_tgl, retur_jual_sales,
-                                                     retur_jual_custo, retur_jual_gudang, retur_jual_jml, retur_it, retur_et, retur_jual_user}
-                    For i = 0 To x.Count - 1
-                        x(i).DisplayIndex = i
+                    retur_faktur.Width = 150 : retur_nota.Width = 150
+                    For Each col As DataGridViewColumn In {retur_sales, retur_custo, retur_gudang}
+                        col.Width = 175
+                    Next
+                    retur_tgl.DefaultCellStyle = dgvstyle_date : retur_tgl.Width = 100
+                    retur_netto.Width = 120 : retur_netto.DefaultCellStyle = dgvstyle_currency
+                    For Each col As DataGridViewColumn In {retur_it, retur_et}
+                        col.Width = 100 : col.DefaultCellStyle = dgvstyle_datetime
                     Next
 
+                    Dim x As DataGridViewColumn() = {retur_faktur, retur_tgl, retur_kat, retur_status, retur_custo, retur_sales, retur_gudang, retur_jnsbayar,
+                                                     retur_nota, retur_netto, retur_user, retur_it, retur_et}
+                    For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
                     .dgv_list.AutoGenerateColumns = False
                     .dgv_list.Columns.AddRange(x)
                 End With
 
             Case "stok"
                 With frmstok
-                    Dim stok_status = New DataGridViewColumn
-                    Dim stok_sisaop = New DataGridViewColumn
-                    Dim stok_kode = New DataGridViewColumn
-                    stok_status = gudang_status.Clone()
-                    stok_kode = gudang_kode.Clone()
-                    stok_sisaop = stok_total.Clone()
-                    stok_status.DataPropertyName = "stock_status"
-                    stok_sisaop.DataPropertyName = "stock_sisastockop"
-                    stok_sisaop.Name = "sisaop"
-                    stok_status.Width = 50
+                    Dim stok_kode = New DataGridViewColumn : stok_kode = dgvcol_templ_id.Clone()
+                    Dim stok_tgl = New DataGridViewColumn : stok_tgl = dgvcol_templ_status.Clone()
+                    Dim stok_gudang = New DataGridViewColumn : stok_gudang = dgvcol_templ_status.Clone()
+                    Dim stok_barang = New DataGridViewColumn : stok_barang = dgvcol_templ_status.Clone()
+                    Dim stok_hpp = New DataGridViewColumn : stok_hpp = dgvcol_templ_status.Clone()
+                    Dim stok_awal = New DataGridViewColumn : stok_awal = dgvcol_templ_status.Clone()
+                    Dim stok_beli = New DataGridViewColumn : stok_beli = dgvcol_templ_status.Clone()
+                    Dim stok_jual = New DataGridViewColumn : stok_jual = dgvcol_templ_status.Clone()
+                    Dim stok_rbeli = New DataGridViewColumn : stok_rbeli = dgvcol_templ_status.Clone()
+                    Dim stok_rjual = New DataGridViewColumn : stok_rjual = dgvcol_templ_status.Clone()
+                    Dim stok_in = New DataGridViewColumn : stok_in = dgvcol_templ_status.Clone()
+                    Dim stok_out = New DataGridViewColumn : stok_out = dgvcol_templ_status.Clone()
+                    Dim stok_total = New DataGridViewColumn : stok_total = dgvcol_templ_status.Clone()
+                    Dim stok_opname = New DataGridViewColumn : stok_opname = dgvcol_templ_status.Clone()
+                    Dim stok_sisaop = New DataGridViewColumn : stok_sisaop = dgvcol_templ_status.Clone()
+                    Dim stok_status = New DataGridViewColumn : stok_status = dgvcol_templ_status.Clone()
 
+                    stok_kode.Name = "stok_kode" : stok_kode.DataPropertyName = "stock_kode" : stok_kode.HeaderText = "KodeStock"
+                    stok_tgl.Name = "stok_tgl" : stok_tgl.DataPropertyName = "stock_tanggal" : stok_tgl.HeaderText = "Tanggal"
+                    stok_gudang.Name = "stok_gudang" : stok_gudang.DataPropertyName = "gudang_nama" : stok_gudang.HeaderText = "Gudang"
+                    stok_barang.Name = "stok_barang" : stok_barang.DataPropertyName = "barang_nama" : stok_barang.HeaderText = "Barang"
+                    stok_hpp.Name = "stok_hpp" : stok_hpp.DataPropertyName = "stock_hpp" : stok_hpp.HeaderText = "HPP"
+                    stok_awal.Name = "stok_awal" : stok_awal.DataPropertyName = "stock_awal" : stok_awal.HeaderText = "Stok Awal"
+                    stok_beli.Name = "stok_beli" : stok_beli.DataPropertyName = "stock_beli" : stok_beli.HeaderText = "Beli"
+                    stok_jual.Name = "stok_jual" : stok_jual.DataPropertyName = "stock_jual" : stok_jual.HeaderText = "Jual"
+                    stok_rbeli.Name = "stok_rbeli" : stok_rbeli.DataPropertyName = "stock_rbeli" : stok_rbeli.HeaderText = "Retur Beli"
+                    stok_rjual.Name = "stok_rjual" : stok_rjual.DataPropertyName = "stock_rjual" : stok_rjual.HeaderText = "Retur Jual"
+                    stok_in.Name = "stok_in" : stok_in.DataPropertyName = "stock_min" : stok_in.HeaderText = "Masuk"
+                    stok_out.Name = "stok_out" : stok_out.DataPropertyName = "stock_mout" : stok_out.HeaderText = "Keluar"
+                    stok_total.Name = "stok_total" : stok_total.DataPropertyName = "stock_sisa" : stok_total.HeaderText = "Sisa"
+                    stok_opname.Name = "stok_opname" : stok_opname.DataPropertyName = "stock_stockop" : stok_opname.HeaderText = "Opname"
+                    stok_sisaop.Name = "stok_sisaop" : stok_sisaop.DataPropertyName = "stock_sisastockop" : stok_sisaop.HeaderText = "Setelah Opname"
+                    stok_status.Name = "stok_status" : stok_status.DataPropertyName = "stock_status" : stok_status.HeaderText = "Status"
+
+                    For Each col As DataGridViewColumn In {stok_gudang, stok_barang}
+                        col.Width = 150
+                    Next
+                    For Each col As DataGridViewColumn In {stok_awal, stok_beli, stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total,
+                                                           stok_opname, stok_sisaop}
+                        col.Width = 75 : col.DefaultCellStyle = dgvstyle_commathousand
+                    Next
+                    stok_hpp.DefaultCellStyle = dgvstyle_currency
                     stok_kode.Visible = False
-                    stok_kode.DataPropertyName = "stock_kode"
 
-                    With .dgv_list()
-                        Dim x As DataGridViewColumn() = {stok_kode, stok_tgl, stok_status, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli,
-                                                         stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname, stok_sisaop}
-                        For i = 0 To x.Count - 1
-                            x(i).DisplayIndex = i
-                        Next
 
-                        .AutoGenerateColumns = False
-                        .Columns.AddRange(x)
-                    End With
+                    Dim x As DataGridViewColumn() = {stok_kode, stok_tgl, stok_status, stok_gudang, stok_barang, stok_hpp, stok_awal, stok_beli,
+                                                     stok_jual, stok_rbeli, stok_rjual, stok_in, stok_out, stok_total, stok_opname, stok_sisaop, x_filler}
+                    For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
+                    .dgv_list.AutoGenerateColumns = False
+                    .dgv_list.Columns.AddRange(x)
                 End With
-
-                'Case "mutasigudang"
-                '    With frmmutasigudang
-                '        With .dgv_list
-                '           dim whatever
-                '            Dim x As DataGridViewColumn() = {}
-                '            For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
-                '            .AutoGenerateColumns = False
-                '            .Columns.AddRange(x)
-                '        End With
-                '    End With
-
-                'Case "mutasistok"
-                '    With frmmutasistok
-                '        With .dgv_list
-                '           dim whatever
-                '            Dim x As DataGridViewColumn() = {}
-                '            For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
-                '            .AutoGenerateColumns = False
-                '            .Columns.AddRange(x)
-                '        End With
-                '    End With
-
-                'Case "stockop"
-                '    With frmstockop
-                '        With .dgv_list
-                '           dim whatever
-
-                '            Dim x As DataGridViewColumn() = {}
-                '            For i = 0 To x.Count - 1 : x(i).DisplayIndex = i : Next
-                '            .AutoGenerateColumns = False
-                '            .Columns.AddRange(x)
-                '        End With
-                '    End With
 
                 'TAB LIST HUTANG
             Case "hutangawal"
@@ -1461,8 +1249,10 @@ Module mdlControl
         Dim q As String = ""
 
         TypeData = LCase(TypeData)
-        ParamValue = mysqlQueryFriendlyStringFeed(ParamValue)
-        If Not String.IsNullOrWhiteSpace(ParamValue) Then ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+        If Not String.IsNullOrWhiteSpace(ParamValue) Then
+            ParamValue = mysqlQueryFriendlyStringFeed(ParamValue)
+            ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+        End If
 
         Select Case TypeData
             Case "supplier", "barang", "sales", "gudang", "custo", "group", "user", "salessetting", "closing"
@@ -1495,7 +1285,6 @@ Module mdlControl
 
         Using x As New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                consoleWriteLine(q)
                 _retval = Await Task.Run(Function() x.GetDataTable(q))
                 _retBool = True
             Else
@@ -1526,8 +1315,10 @@ Module mdlControl
         Dim _enddate As Date = IIf(EndDate = #12:00:00 AM#, selectperiode.tglakhir, EndDate)
 
         TypeData = LCase(TypeData)
-        ParamValue = mysqlQueryFriendlyStringFeed(ParamValue)
-        If Not String.IsNullOrWhiteSpace(ParamValue) Then ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+        If Not String.IsNullOrWhiteSpace(ParamValue) Then
+            ParamValue = mysqlQueryFriendlyStringFeed(ParamValue)
+            ParamValue = Trim(ParamValue).Replace(" ", ".+").Replace("(", "[(]").Replace(")", "[)]")
+        End If
 
         Select Case TypeData
             Case "barang", "gudang", "supplier", "sales", "custo", "group", "user", "salessetting", "closing"

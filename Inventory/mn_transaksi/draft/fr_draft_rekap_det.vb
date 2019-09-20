@@ -41,7 +41,8 @@
     Private Sub ControlSwitch(AllowEdit As Boolean)
         date_tgl_trans.Enabled = AllowEdit
         mn_save.Enabled = AllowEdit
-        mn_cancelorder.Enabled = AllowEdit
+        mn_cancelorder.Enabled = If(formstate = InputState.Insert, False, AllowEdit)
+        mn_print.Enabled = If(formstate = InputState.Insert, False, True)
         For Each bt As Button In {bt_addsales, bt_remsales, bt_faktur_all, bt_faktur_clear, bt_addfaktur, bt_remfaktur, bt_simpanreturbeli}
             bt.Enabled = AllowEdit
         Next
@@ -362,9 +363,9 @@ EndSub:
 
     'UI : CLOSE
     Private Sub bt_batalbeli_Click(sender As Object, e As EventArgs) Handles bt_batalreturbeli.Click
-        If MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            Me.Close()
-        End If
+        'If MessageBox.Show("Tutup Form?", Me.Text, MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+        Me.Close()
+        'End If
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click

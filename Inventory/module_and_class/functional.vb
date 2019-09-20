@@ -1,6 +1,7 @@
 ﻿Imports MadMilkman.Ini
 Imports System.IO
 Imports OfficeOpenXml
+Imports System.Management
 Imports System.Security.Cryptography
 Imports ZXing
 Imports ZXing.Common
@@ -8,7 +9,7 @@ Imports ZXing.QrCode
 
 Module functional
 
-    '---------get network data-------------
+    'GET NETWORK AND HARDWARE DATA
     Declare Function SendARP Lib "iphlpapi.dll" Alias "SendARP" (ByVal DestIP As Int32, ByVal SrcIP As Int32, ByVal pMacAddr() As Byte, ByRef PhyAddrLen As Int32) As Int32
 
     Function GetIPv4Address() As String
@@ -36,6 +37,68 @@ Module functional
             Debug.Write(ex.Message)
         End Try
         Return macAddress
+    End Function
+
+    Public Function GetHWID() As String
+        Dim _HWID As String = ""
+        Dim mboardstr As String = "" : Dim cpuID As String = ""
+        Dim query As String = ""
+
+        'GET MAINBOARD SERIALNUMBER
+        query = "Select SerialNumber From Win32_BaseBoard"
+        Using mbs = New ManagementObjectSearcher(query)
+            For Each mo As ManagementObject In mbs.Get
+                For Each pd As PropertyData In mo.Properties
+                    ' should be only one
+                    If LCase(pd.Name) = "serialnumber" Then
+                        ' value is object, test for Nothing
+                        If pd.Value IsNot Nothing Then mboardstr = pd.Value.ToString
+                        Exit For
+                    End If
+                Next
+            Next
+        End Using
+
+        'GET PROCESSOR ID
+        query = "Select ProcessorID From Win32_Processor"
+        Using mbs = New ManagementObjectSearcher(query)
+            For Each mo As ManagementObject In mbs.Get
+                For Each pd As PropertyData In mo.Properties
+                    ' should be only one
+                    If LCase(pd.Name) = "processorid" Then
+                        ' value is object, test for Nothing
+                        If pd.Value IsNot Nothing Then cpuID = pd.Value.ToString
+                        Exit For
+                    End If
+                Next
+            Next
+        End Using
+
+        Return mboardstr & ":" & cpuID
+    End Function
+
+    'LOAD MYSQL CONNECTION SETTING
+    Public Function loadCon(con_type As String, Optional showErrMsg As Boolean = True) As cnction
+        Dim options As New IniOptions()
+        Dim inifile As New IniFile(options)
+        Dim x As New cnction
+
+        Try
+            inifile.Load(getConfigFile)
+
+            With inifile.Sections(con_type)
+                x.host = .Keys("Host").Value
+                x.uid = .Keys("UID").Value
+                x.pass = .Keys("Pass").Value
+                x.db = .Keys("DB").Value
+            End With
+        Catch ex As Exception
+            logError(ex, IIf(showErrMsg = True, False, True))
+            consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
+            'Application.Exit()
+        End Try
+
+        Return x
     End Function
 
     '----form & control manipulation----------
@@ -84,6 +147,7 @@ Module functional
     End Sub
 
     'POPUPSEARCH
+    'KEY PRESS HANDLE (WHEN USER START TYPING WHILE DGV STILL IN FOCUS)
     Public Sub PopUpSearchKeyPress(e As KeyPressEventArgs, x As TextBox)
         If Char.IsLetterOrDigit(e.KeyChar) Then
             x.Text += e.KeyChar
@@ -97,6 +161,7 @@ Module functional
         x.Select(x.TextLength, x.TextLength)
     End Sub
 
+    'KEY UP HANDLE (WHEN USER PRESSING KEYBOARD KEY WHILE DGV STILL IN FOCUS)
     Public Function PopUpSearchInputHandle_inputKeyup(e As KeyEventArgs, sender As TextBox, IdTextbox As TextBox, PopUpPanel As Panel, PopUpDgv As DataGridView) As List(Of String)
         Dim _respond As New List(Of String)
         If e.KeyCode = Keys.Down Then
@@ -120,6 +185,51 @@ Module functional
 
         Return _respond
     End Function
+
+    'TREE VIEW
+    'TICK/UNTICK ALL NODES INSIDE TREENODE
+    Public Sub CheckAllNodes(Tree As TreeNode, state As Boolean)
+        For Each item As TreeNode In Tree.Nodes
+            item.Checked = state
+            If item.Nodes.Count > 0 Then CheckAllNodes(item, state)
+        Next
+    End Sub
+
+    'TICK ALL CHILDNODES INSIDE TREENODE
+    Public Sub CheckAllChildNodes(ByVal parentNode As TreeNode)
+        For Each childNode As TreeNode In parentNode.Nodes
+            childNode.Checked = parentNode.Checked
+            CheckAllChildNodes(childNode)
+        Next
+    End Sub
+
+    Public Sub IsEveryChildChecked(ByVal parentNode As TreeNode, ByRef checkValue As Boolean)
+        For Each node As TreeNode In parentNode.Nodes
+            IsEveryChildChecked(node, checkValue)
+            If Not node.Checked Then checkValue = False
+        Next
+    End Sub
+
+    Public Sub IsSomeChildChecked(ByVal parentNode As TreeNode, ByRef checkValue As Boolean)
+        For Each node As TreeNode In parentNode.Nodes
+            If node.Checked Then
+                checkValue = True : Exit For
+            Else
+                IsSomeChildChecked(node, checkValue)
+            End If
+        Next
+    End Sub
+
+    'Public Sub ShouldParentsBeChecked(ByVal startNode As TreeNode)
+    '    If startNode.Parent Is Nothing = False Then
+    '        Dim allChecked As Boolean = True
+    '        IsEveryChildChecked(startNode.Parent, allChecked)
+    '        If allChecked Then
+    '            startNode.Parent.Checked = True
+    '            ShouldParentsBeChecked(startNode.Parent)
+    '        End If
+    '    End If
+    'End Sub
 
     '----string manipulation----------
     'split string into two string and the nth string
@@ -218,6 +328,44 @@ Module functional
     ''' </returns>
     Public Function mysqlQueryFriendlyStringFeed(text As String) As String
         Return text.Replace("\", "\\").Replace("'", "\'").Replace("%", "\%").Replace("_", "\_")
+    End Function
+
+    'COUNT PRICE
+    Public Function CountItemPrice(OldUnitType As String, NewUnitType As String, InitialPrice As Decimal, VolumeL As Integer, VolumeM As Integer) As Decimal
+        Dim _RetPrice As Decimal = 0
+        OldUnitType = LCase(OldUnitType)
+        NewUnitType = LCase(NewUnitType)
+
+        Select Case OldUnitType
+            Case "besar"
+                If NewUnitType = "tengah" Then
+                    _RetPrice = InitialPrice / VolumeL
+                ElseIf NewUnitType = "kecil" Then
+                    _RetPrice = InitialPrice / (VolumeL * VolumeM)
+                Else
+                    _RetPrice = InitialPrice
+                End If
+            Case "tengah"
+                If NewUnitType = "besar" Then
+                    _RetPrice = InitialPrice * VolumeL
+                ElseIf NewUnitType = "kecil" Then
+                    _RetPrice = InitialPrice / VolumeM
+                Else
+                    _RetPrice = InitialPrice
+                End If
+            Case "kecil"
+                If NewUnitType = "besar" Then
+                    _RetPrice = InitialPrice * VolumeM * VolumeL
+                ElseIf NewUnitType = "tengah" Then
+                    _RetPrice = InitialPrice * VolumeM
+                Else
+                    _RetPrice = InitialPrice
+                End If
+            Case Else
+                _RetPrice = InitialPrice
+        End Select
+
+        Return Math.Round(_RetPrice, 2)
     End Function
 
     '-----------BARCODE ENCODER DECODER-------------
@@ -456,7 +604,11 @@ Module functional
                 Case "pgjurnalumum" : userCon = frmjurnalumum
                 Case "pgtutupbuku" : userCon = frmtutupbuku
                 Case "pgref" : userCon = frmref
+                Case "pgexportEFak" : userCon = frmexportEfak
+                Case "pgexportEFak_sup" : userCon = frmexportEfak_sup
                 Case "pgsalesbarang" : userCon = frmsalesbarang
+                Case "pggroup" : userCon = frmgroup
+                Case "pguser" : userCon = frmuser
                 Case Else : retMsg = "TabPage tidak sesuai." : GoTo NextTab
             End Select
 
@@ -484,7 +636,7 @@ NextTab:
         End If
 
         Dim _dir As String = IO.Path.GetDirectoryName(FileDir)
-        Dim _filename As String = FileDir.Replace(_dir & "\", "")
+        Dim _filename As String = FileDir.Replace(_dir, "").Replace("\", "")
         Dim _filenameSplit = Strings.Split(_filename, ".")
         If _filenameSplit(_filenameSplit.Length - 1) <> LCase(FileExt) Then
             _filename += If(String.IsNullOrWhiteSpace(FileExt) = False, ".", "") & FileExt
@@ -761,30 +913,6 @@ NextTab:
 
         iniFile.Save(FileLoc)
     End Sub
-
-    'load connection
-    Public Function loadCon(con_type As String, Optional showErrMsg As Boolean = True) As cnction
-        Dim options As New IniOptions()
-        Dim inifile As New IniFile(options)
-        Dim x As New cnction
-
-        Try
-            inifile.Load(getConfigFile)
-
-            With inifile.Sections(con_type)
-                x.host = .Keys("Host").Value
-                x.uid = .Keys("UID").Value
-                x.pass = .Keys("Pass").Value
-                x.db = .Keys("DB").Value
-            End With
-        Catch ex As Exception
-            logError(ex, IIf(showErrMsg = True, False, True))
-            consoleWriteLine("ERR:" & Date.Now.ToString("yyyyMMdd-hhmmss") & ":" & ex.Message & ":" & ex.StackTrace & ":" & ex.TargetSite.ToString)
-            'Application.Exit()
-        End Try
-
-        Return x
-    End Function
 
     '--------------------Stream IMG-----------------------
     Public Function streamImgUrl(imgurl As String) As Bitmap

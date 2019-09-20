@@ -3,7 +3,7 @@
     Private ParentMenu, ChildMenu, ChildMenu2 As ToolStripMenuItem
     Private MenuKode, MenuLabel, MenuText As String
     Public listkodemenu As New List(Of String)
-    Private mainConn As New cnction
+    'Private mainConn As New cnction
     Public isForcedClose As Boolean = False
 
     Public Sub openTab(type As String)
@@ -86,6 +86,8 @@
                 End If
             Case "exportEfak"
                 createTabPage(pgexportEFak, type, frmexportEfak, "Export E-Faktur")
+            Case "exportEfakSupplier"
+                createTabPage(pgexportEFak_sup, type, frmexportEfak_sup, "Export E-Faktur Supplier")
             Case "tutupbuku"
                 createTabPage(pgtutupbuku, type, frmtutupbuku, "Closing Periode")
             Case "group"
@@ -315,6 +317,7 @@
                 'Case "mn0813" : openTab("kartustok")
             Case "mn0822" : Dim x As New fr_importjual : x.Show()
             Case "mn0831" : openTab("exportEfak")
+            Case "mn0832" : openTab("exportEfakSupplier")
 
                 'SETTING
             Case "mn0901" : Using x As New fr_user_password : x.ShowDialog() : End Using
@@ -374,19 +377,19 @@
     'SETUP CONECTION
     Private Function setConnection() As Boolean
         Dim _retval As Boolean = False
-        mainConn = loadCon("CatraDev", False)
-        'mainConn = loadCon("network", False)
+        MainConnData = loadCon("CatraDev", False)
+        'MainConnData = loadCon("network", False)
 
-        If mainConn.db = Nothing Or mainConn.host = Nothing Then
+        If MainConnData.db = Nothing Or MainConnData.host = Nothing Then
             MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
                             MessageBoxButtons.OK, MessageBoxIcon.Error)
             isForcedClose = True
             _retval = False
             Application.Exit()
         Else
-            MainConnection = New MySqlThing(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
-            MainConnData = mainConn
-            setConn(mainConn.host, mainConn.db, decryptString(mainConn.uid), decryptString(mainConn.pass))
+            'MainConnData = mainConn
+            MainConnection = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+            setConn(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             MainConnection.Open()
             If MainConnection.ConnectionState <> ConnectionState.Open Then
                 MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _

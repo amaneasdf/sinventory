@@ -384,41 +384,6 @@
         End Using
     End Sub
 
-    'DEL DATA
-    Private Sub delData()
-        op_con()
-        Dim q As String = "UPDATE data_barang_master SET barang_status=9 WHERE barang_kode='{0}'"
-        Dim _ckQuery As Boolean = False
-        Dim _ck As Boolean = False
-
-        q = "SELECT COUNT(stock_kode) FROM data_stok_awal WHERE stock_status<>9 AND stock_barang='{0}'"
-        readcommd(String.Format(q, in_kode.Text))
-        If rd.HasRows Then
-            If rd.Item(0) > 0 Then
-                _ck = True
-            Else
-                _ck = False
-            End If
-        End If
-        rd.Close()
-
-        If _ck = True Then
-            q = "UPDATE data_barang_master SET barang_status=9, barang_upd_alias='{1}', barang_upd_date=NOW() WHERE barang_kode='{0}'"
-            _ckQuery = commnd(String.Format(q, in_kode.Text, loggeduser.user_id))
-
-            If _ckQuery = True Then
-                MessageBox.Show("Data barang terhapus", "Data Barang", MessageBoxButtons.OK)
-                'DO LOG CHANGE MASTER
-                Me.Close()
-                doRefreshTab({pgbarang})
-            Else
-                MessageBox.Show("Tidak dapat menghapus data barang. Terjadi kesalahan saat menghapus data.", "Data Barang", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End If
-        Else
-            MessageBox.Show("Barang tidak dapat dihapus", "Data Barang", MessageBoxButtons.OK, MessageBoxIcon.Information)
-        End If
-    End Sub
-
     'DRAG FORM
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -566,10 +531,11 @@
         If formstate <> InputState.Insert Then _resMsg = MessageBox.Show("Simpan perubahan data barang?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
         If _resMsg = Windows.Forms.DialogResult.Yes Then
             If formstate = InputState.Edit Then
-                If Not MasterConfirmValid("") Then Exit Sub
+                If Not MasterConfirmValid("") Then GoTo endsub
             End If
             saveData()
         End If
+endsub:
         Me.Cursor = Cursors.Default
     End Sub
 
