@@ -2,7 +2,10 @@
     Private fak_date As Date = Today
 
     Public Sub DoLoadView(KodePiutang As String)
-        If loadData(KodePiutang) Then : Me.Show(main)
+        If loadData(KodePiutang) Then
+            Me.Show(main)
+            dgv_hutang.ClearSelection()
+            'If TransStartDate > Today Then bt_bayar.Enabled = False
         Else : Me.Dispose()
         End If
     End Sub
@@ -24,7 +27,7 @@
                         & "LEFT JOIN data_supplier_master ON supplier_kode=hutang_supplier " _
                         & "LEFT JOIN ref_jenis ppn ON hutang_pajak=ppn.ref_kode AND ppn.ref_status=1 AND ppn.ref_type='ppn_trans2' " _
                         & "WHERE hutang_faktur='{0}'"
-                    Using rdx = x.ReadCommand(String.Format(q, kode, selectperiode.tglawal, selectperiode.tglakhir))
+                    Using rdx = x.ReadCommand(String.Format(q, kode, DataListStartDate, DataListEndDate))
                         Dim red = rdx.Read
                         If red And rdx.HasRows Then
                             Dim _date As Date = rdx.Item("hutang_tgl")
@@ -53,7 +56,8 @@
                     End Using
 
                     'LOAD TABLE
-                    q = String.Format("CALL GetDataList_HutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    'q = String.Format("CALL GetDataList_HutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    q = String.Format("CALL GetDataList_HutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, DataListStartDate, DataListEndDate)
                     With dgv_hutang
                         .AutoGenerateColumns = False
                         .DataSource = x.GetDataTable(q)
@@ -61,13 +65,14 @@
                         .Columns("hutang").DefaultCellStyle = dgvstyle_currency
                     End With
 
-                    'LOAD NILAI PIUTANG
+                    'LOAD NILAI GIRO
                     q = "SELECT GetHutangSaldoAwal('giro', '{0}', ADDDATE('{1:yyyy-MM-dd}',1)) "
-                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    'Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(DataListEndDate > Today, Today, DataListEndDate))))
                     in_giro.Text = commaThousand(_nilaigiro)
                     countTotal()
 
-                    If selectperiode.closed Then bt_bayar.Enabled = False
+                    'If selectperiode.closed Then bt_bayar.Enabled = False
                     Return True
                 Catch ex As Exception
                     logError(ex, True)

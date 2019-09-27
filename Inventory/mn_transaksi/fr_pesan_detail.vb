@@ -26,13 +26,17 @@
     'SETUP FORM
     Private Sub SetUpForm(NoFaktur As String, FormSet As InputState, AllowEdit As Boolean)
         Const _tempTitle As String = "Form Order Penjualan : pp20190810902"
-
         formstate = FormSet
 
+        'For Each x As DateTimePicker In {date_tgl_beli}
+        '    x.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        '    x.MaxDate = selectperiode.tglakhir
+        '    x.MinDate = selectperiode.tglawal
+        'Next
         For Each x As DateTimePicker In {date_tgl_beli}
-            x.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            x.MaxDate = selectperiode.tglakhir
-            x.MinDate = selectperiode.tglawal
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
         Next
 
         With cb_term
@@ -49,14 +53,11 @@
         End With
 
         With cb_ppn
-            .DataSource = jenisPPN()
+            .DataSource = jenis("jenis_ppn")
             .ValueMember = "Value"
             .DisplayMember = "Text"
+            .SelectedValue = 1
         End With
-
-        For Each x As DataGridViewColumn In {harga, discrp, jml, subtotal, disc1, disc2, disc3, disc4, disc5, discrp}
-            x.DefaultCellStyle = dgvstyle_currency
-        Next
 
         If formstate <> InputState.Insert Then
             Me.Text += NoFaktur
@@ -66,10 +67,9 @@
             End If
 
             loadDataFaktur(NoFaktur)
-            bt_simpanjual.Text = "Update"
-
             If tjlStatus <> 0 Then AllowEdit = False
-            If formstate = InputState.Valid And (tjlStatus <> 0 Or loggeduser.validasi_trans = False) Then formstate = InputState.View
+            If formstate = InputState.Valid And (tjlStatus <> 0 Or Not loggeduser.validasi_trans) Then formstate = InputState.View
+            If date_tgl_beli.Value < TransStartDate Then formstate = InputState.View
             If formstate = InputState.View Then AllowEdit = False
         End If
 
@@ -103,15 +103,15 @@
             _dgv_input = False
         Else
             For Each txt As TextBox In {in_custo_n, in_ket}
-                txt.ReadOnly = IIf(AllowInput = False, True, False)
+                txt.ReadOnly = IIf(AllowInput, False, True)
             Next
             For Each cb As ComboBox In {cb_term}
                 cb.Enabled = AllowInput
             Next
             date_tgl_beli.Enabled = AllowInput
 
-            in_gudang_n.ReadOnly = If(dgv_barang.RowCount > 0, True, IIf(AllowInput = False, True, False))
-            in_sales_n.ReadOnly = If(dgv_barang.RowCount > 0, True, IIf(AllowInput = False, True, False))
+            in_gudang_n.ReadOnly = If(dgv_barang.RowCount > 0, True, IIf(AllowInput, False, True))
+            in_sales_n.ReadOnly = If(dgv_barang.RowCount > 0, True, IIf(AllowInput, False, True))
             cb_ppn.Enabled = If(dgv_barang.RowCount > 0, False, AllowInput)
 
             kode.Visible = True
@@ -129,14 +129,18 @@
             mn_validasi.Enabled = IIf(AllowInput And FormSet = InputState.Edit, loggeduser.validasi_trans, False)
             mn_cancel.Visible = False
             mn_cancel.Enabled = AllowInput
-            mn_createjual.Enabled = IIf(String.IsNullOrWhiteSpace(in_ref_faktur.Text) And tjlStatus = 1, IIf(selectperiode.closed, False, True), False)
+            mn_createjual.Enabled = IIf(String.IsNullOrWhiteSpace(in_ref_faktur.Text) And tjlStatus = 1, True, False)
         End If
 
+        bt_simpanjual.Text = If(formstate = InputState.Insert, "Simpan", "Update")
         lbl_ref_faktur.Visible = IIf(formstate = InputState.Insert, False, IIf(tjlStatus = 1, True, False))
         in_ref_faktur.Visible = IIf(formstate = InputState.Insert, False, IIf(tjlStatus = 1, True, False))
         For Each x As Object In {in_barang, in_barang_nm, in_qty, cb_sat, in_harga_beli, in_disc1, in_disc2, in_disc3, in_disc4, in_disc5,
                                  in_discrp, in_subtotal, bt_tbbarang}
             x.Visible = _dgv_input
+        Next
+        For Each x As DataGridViewColumn In {harga, discrp, jml, subtotal, disc1, disc2, disc3, disc4, disc5, discrp}
+            x.DefaultCellStyle = dgvstyle_currency
         Next
         If _dgv_input Then
             dgv_barang.Location = New Point(12, 148) : dgv_barang.Height = 186
@@ -148,7 +152,7 @@
 
         lbl_piutang.Visible = _custo_info
         in_piutang.Visible = _custo_info
-        If _custo_info And String.IsNullOrWhiteSpace(in_custo_n.Text) = False Then
+        If _custo_info And Not String.IsNullOrWhiteSpace(in_custo_n.Text) Then
             loadDataCusto(in_custo.Text)
         End If
     End Sub
@@ -822,6 +826,44 @@ CountHarga:
         End Using
     End Function
 
+    'CANCEL/DELETE TRANSACTION
+    Private Sub CancelDeleteTrans(KodeOrder As String, NewStatus As Integer, ByRef Msg As String)
+        Dim _OldStatus As Integer = tjlStatus
+        Dim q As String = "" : Dim queryArr As New List(Of String)
+
+        If formstate = InputState.Insert Then Exit Sub
+        If String.IsNullOrWhiteSpace(KodeOrder) Then Exit Sub
+        If _OldStatus = 1 And Not String.IsNullOrWhiteSpace(in_ref_faktur.Text) Then Exit Sub
+
+        If {0, 1}.Contains(_OldStatus) Then
+            'FOR ACTIVE TRANSACTION
+            If Not {2, 9}.Contains(NewStatus) Then Exit Sub
+            'CHECKING SELL TRANS REF 
+            If Not String.IsNullOrWhiteSpace(in_ref_faktur.Text) Then Exit Sub
+
+            q = "UPDATE data_penjualan_order_faktur SET j_order_status={2}, j_order_upd_date=NOW(), j_order_upd_alias='{1}' WHERE j_order_kode='{0}'"
+            queryArr.Add(String.Format(q, KodeOrder, loggeduser.user_id, NewStatus))
+
+            If NewStatus = 9 Then
+                'FOR DELETING
+                q = "UPDATE data_penjualan_order_trans SET j_order_trans_status=9 WHERE j_order_trans_faktur='{0}' AND j_order_trans_status=1"
+                queryArr.Add(String.Format(q, KodeOrder))
+            End If
+
+        ElseIf _OldStatus = 2 And NewStatus = 1 Then
+            'FOR REACTIVATE TRANSACTION
+
+        Else
+            Exit Sub
+        End If
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+
+            End If
+        End Using
+    End Sub
+
     'CREATE PENJUALAN
     Private Sub validOrder(ValidStatus As String)
         Dim dataHead As String()
@@ -909,6 +951,12 @@ CountHarga:
 
                 With newJual
                     .doLoadNew()
+                    'DATE
+                    .date_tgl_beli.Value = If(date_tgl_beli.Value < TransStartDate,
+                                              If(Today < TransStartDate, TransStartDate, Today),
+                                              date_tgl_beli.Value
+                                              )
+                    .date_tgl_pajak.Value = .date_tgl_beli.Value
                     'REF
                     .in_ket.Text = "Ref. Order #" & in_faktur.Text
                     .refOrderJual = in_faktur.Text
@@ -1040,14 +1088,30 @@ CountHarga:
 
     'SAVE
     Private Sub bt_simpanjual_Click(sender As Object, e As EventArgs) Handles bt_simpanjual.Click
-        If in_custo.Text = Nothing Then
-            MessageBox.Show("Customer belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            in_custo_n.Focus() : Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_beli.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak boleh kurang dari periode aktif." & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
-        If in_sales.Text = Nothing Then
-            MessageBox.Show("Sales belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            in_sales_n.Focus() : Exit Sub
-        End If
+
+        'CHECK INPUT DATA
+        For Each x As TextBox In {in_custo, in_sales}
+            Dim Msg As String = "{0} belum diinput"
+            Dim _input As TextBox
+            Select Case x.Name
+                Case in_custo.Name : Msg = String.Format(Msg, "Customer") : _input = in_custo_n
+                Case in_sales.Name : Msg = String.Format(Msg, "Salesman") : _input = in_sales_n
+                Case Else : Exit Sub
+            End Select
+
+            If String.IsNullOrWhiteSpace(x.Text) Then
+                MessageBox.Show(Msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                _input.Focus() : Exit Sub
+            End If
+        Next
+
+        'CHECK GUDANG
         If in_gudang.Text = Nothing Then
             MessageBox.Show("Gudang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_gudang_n.Focus() : Exit Sub
@@ -1058,6 +1122,8 @@ CountHarga:
                 in_gudang_n.Focus() : Exit Sub
             End If
         End If
+
+        'CHECK BARANG
         If dgv_barang.RowCount = 0 Then
             MessageBox.Show("Barang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_barang.Focus() : Exit Sub
@@ -1067,10 +1133,6 @@ CountHarga:
                 MessageBox.Show(_msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_barang.Focus() : Exit Sub
             End If
-        End If
-        If date_tgl_beli.Value < selectperiode.tglawal Then
-            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            date_tgl_beli.Focus() : Exit Sub
         End If
         If Not CheckKatBrg() Then Exit Sub
 

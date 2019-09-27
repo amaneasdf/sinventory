@@ -1,10 +1,13 @@
 ﻿Public Class fr_beli_detail
     Private indexrow As Integer = 0
     Private popupstate As String = "barang"
+
+    'VARIABLE FAKTUR
     Private tblStatus As String = "1"
     Private selectSupplier As String = ""
-    Public add_sw As Boolean = True
-    Public edit_sw As Boolean = True
+    Private _HutangLunas As Boolean = False
+
+    'VARIABLE BARANG
     Private isibesar As Integer = 0
     Private isitengah As Integer = 0
     Private _satuanstate As String = "kecil"
@@ -24,24 +27,22 @@
         formstate = FormSet
 
         With cb_ppn
-            .DataSource = jenisPPN()
+            .DataSource = jenis("jenis_ppn")
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = 0
+            .SelectedValue = 1
         End With
 
-        With date_tgl_beli
-            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
-        date_tgl_pajak.Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
-
-        For Each x As DataGridViewColumn In {harga, discrp, jml, subtot, disc1, disc2, disc3}
-            x.DefaultCellStyle = dgvstyle_currency
-        Next
-        For Each x As DataGridViewColumn In {qty}
-            x.DefaultCellStyle = dgvstyle_commathousand
+        'With date_tgl_beli
+        '    .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        'date_tgl_pajak.Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+        For Each x As DateTimePicker In {date_tgl_beli, date_tgl_pajak}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
         Next
 
         If Not FormSet = InputState.Insert Then
@@ -52,13 +53,10 @@
             End If
 
             loadDataFaktur(NoFaktur)
-            If Not {0, 1}.Contains(tblStatus) Then
-                AllowEdit = False : formstate = InputState.View
-            End If
-            mn_print.Enabled = IIf(tblStatus = 1, True, False)
-            bt_simpanbeli.Text = "Update"
+            If Not {0, 1}.Contains(tblStatus) Or date_tgl_beli.Value < TransStartDate Then formstate = InputState.View
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         ControlSwitch(AllowEdit)
     End Sub
 
@@ -75,13 +73,31 @@
         For Each numx As NumericUpDown In {in_term, in_klaim}
             numx.Enabled = AllowInput
         Next
+        For Each x As DataGridViewColumn In {harga, discrp, jml, subtot, disc1, disc2, disc3}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+        For Each x As DataGridViewColumn In {qty}
+            x.DefaultCellStyle = dgvstyle_commathousand
+        Next
 
         bt_simpanbeli.Enabled = AllowInput
+        bt_simpanbeli.Text = If(formstate = InputState.Edit, "Update", "Simpan")
         mn_cancelorder.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
+        'mn_cancelbatal.Enabled = IIf(formstate = InputState.Insert,
+        '                             False,
+        '                             IIf(formstate = InputState.View And selectperiode.closed = False,
+        '                                        loggeduser.allowedit_transact,
+        '                                        AllowInput
+        '                                        ))
         mn_cancelbatal.Enabled = IIf(formstate = InputState.Insert,
-                                     False, IIf(formstate = InputState.View And selectperiode.closed = False,
-                                                loggeduser.allowedit_transact, AllowInput))
+                             False,
+                             IIf(formstate = InputState.View And date_tgl_beli.Value >= TransStartDate,
+                                        loggeduser.allowedit_transact,
+                                        AllowInput
+                                        ))
+
         mn_save.Enabled = AllowInput
+        mn_print.Enabled = IIf(formstate = InputState.Insert, False, IIf(tblStatus = 1, True, False))
         mn_new_barang.Enabled = IIf(main.listkodemenu.Contains("mn0101"), AllowInput, False)
         mn_new_supplier.Enabled = IIf(main.listkodemenu.Contains("mn0102"), AllowInput, False)
         mn_new_gudang.Enabled = IIf(main.listkodemenu.Contains("mn0103"), AllowInput, False)
@@ -202,44 +218,6 @@
         End Using
     End Sub
 
-    'COUNT PRICE
-    Private Function countHarga(state As String, hargaawal As Decimal, convState As String) As Decimal
-        Dim retHarga As Decimal = 0
-        Dim isi As Integer = 0
-        Dim opertr As String = "bagi"
-
-        Select Case state
-            Case "besar"
-                If convState = "tengah" Then
-                    retHarga = hargaawal / isibesar
-                ElseIf convState = "kecil" Then
-                    retHarga = hargaawal / (isibesar * isitengah)
-                Else
-                    retHarga = hargaawal
-                End If
-            Case "tengah"
-                If convState = "besar" Then
-                    retHarga = hargaawal * isibesar
-                ElseIf convState = "kecil" Then
-                    retHarga = hargaawal / isitengah
-                Else
-                    retHarga = hargaawal
-                End If
-            Case "kecil"
-                If convState = "besar" Then
-                    retHarga = hargaawal * isitengah * isibesar
-                ElseIf convState = "tengah" Then
-                    retHarga = hargaawal * isitengah
-                Else
-                    retHarga = hargaawal
-                End If
-            Case Else
-                retHarga = hargaawal
-        End Select
-
-        Return Math.Round(retHarga, 2)
-    End Function
-
     'SET SATUAN BARANG
     Private Sub loadSatuanBrg(kode As String)
         Dim dt As DataTable = GetSatuanForCombo(kode, isitengah, isibesar)
@@ -343,25 +321,28 @@
         Dim kode As String = in_barang.Text
         Dim q As String = ""
 
-        If Trim(in_barang.Text) = Nothing Then
-            in_barang_nm.Focus()
-            Exit Sub
+        If String.IsNullOrWhiteSpace(Trim(in_barang.Text)) Then
+            MessageBox.Show("Masukkan barang terlebih dahulu.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
         End If
         If in_qty.Value = 0 Then
-            in_qty.Focus()
-            Exit Sub
+            MessageBox.Show("Masukkan jumlah quantitas terlebih dahulu.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_qty.Focus() : Exit Sub
         End If
 
         'GET DATA BARANG
         q = "SELECT barang_supplier, barang_pajak FROM data_barang_master WHERE barang_kode='{0}'"
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Using rdx = x.ReadCommand(String.Format(q, kode), CommandBehavior.SingleRow)
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
                         _supplier = rdx.Item(0)
                         _pajak = rdx.Item(1)
+                    Else
+                        MessageBox.Show("Terjadi kesalahan saat melakukan penambahan item." & Environment.NewLine & "Data barang tidak dapat ditemukan",
+                                        Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Exit Sub
                     End If
                 End Using
             End If
@@ -648,47 +629,98 @@
     End Sub
 
     Private Function CheckHutang() As Boolean
+        'DATA YANG DIBUTUHKAN : NILAI HUTANG TERSIMPAN SEBELUM UPDATE, NILAI YG SUDAH TERBAYAR, STATUS LUNAS, TANGGAL PEMBAYARAN HUTANG PALING AWAL
         If Not formstate = InputState.Insert Then
-            Using x = MainConnection
-                x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                    Dim _q As String = ""
-                    Dim _oldhutang As Decimal = 0 : Dim _sisahutang As Decimal = 0
-                    'CHECK STATUS LUNAS, SALDO PIUTANG, SISA PIUTANG
-                    _q = "SELECT hutang_awal, GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE(CURDATE(), 1)) " _
-                        & "FROM data_hutang_awal WHERE hutang_faktur='{0}'"
-                    Using rdx = x.ReadCommand(String.Format(_q, in_faktur.Text))
-                        Dim red = rdx.Read
-                        If red And rdx.HasRows Then
-                            Try
-                                _oldhutang = CDec(rdx.Item(0))
-                                _sisahutang = CDec(rdx.Item(1))
-                            Catch ex As Exception
-                                logError(ex, True)
-                                MessageBox.Show("Terjadi kesalahan dalam melakukan pengecekan faktur." & Environment.NewLine & ex.Message,
-                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                                Return False : Exit Function
-                            End Try
-                        Else
-                            MessageBox.Show("Terjadi kesalahan dalam melakukan pengecekan faktur." & Environment.NewLine & "Data tidak dapat ditemukan.",
-                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                            Return False : Exit Function
-                        End If
-                    End Using
+            Try
+                Using x = MainConnection
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        Dim _q As String = ""
+                        _q = "SELECT COUNT(hutang_id) FROM data_hutang_awal WHERE hutang_faktur='{0}' AND hutang_status<9"
 
-                    If _oldhutang > _sisahutang Then
-                        Dim _newhutang = removeCommaThousand(in_total_netto.Text)
-                        If _newhutang < _oldhutang And _sisahutang - _newhutang < 0 Then
-                            MessageBox.Show("Nilai hutang penjualan yang akan diinputkan lebih kecil dari pembayaran yang telah diinputkan." & _
-                                            Environment.NewLine & "Harap cek kembali nilai pembayaran yang diinput.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                            Return False : Exit Function
+                        Dim _count = Integer.Parse(x.ExecScalar(String.Format(_q, in_faktur.Text)))
+                        If _count = 1 Then
+                            'IF EXIST
+                            Dim _oldhutang As Decimal = 0 : Dim _sisahutang As Decimal = 0
+
+                            'CHECK STATUS LUNAS, SALDO PIUTANG, SISA PIUTANG
+                            _q = "SELECT hutang_awal, GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE(CURDATE(), 1)) " _
+                                & "FROM data_hutang_awal WHERE hutang_faktur='{0}' AND hutang_status<9"
+                            Using rdx = x.ReadCommand(String.Format(_q, in_faktur.Text))
+                                Dim red = rdx.Read
+                                If red And rdx.HasRows Then
+                                    _oldhutang = Decimal.Parse(rdx.Item(0))
+                                    _sisahutang = Decimal.Parse(rdx.Item(1))
+                                Else
+                                    MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data." & Environment.NewLine & "Data hutang tidak dapat ditemukan",
+                                                    Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                    Return False
+                                End If
+                            End Using
+
+                            If _oldhutang <> _sisahutang Then
+                                Dim _minDate As Date = date_tgl_beli.Value
+                                _q = "SELECT COUNT(h_trans_id), MIN(h_trans_tgl) FROM data_hutang_trans " _
+                                    & "WHERE h_trans_kode_hutang='{0}' AND h_trans_jenis='bayar' AND h_trans_status=1"
+
+                                Using rdx = x.ReadCommand(String.Format(_q, in_faktur.Text))
+                                    Dim red = rdx.Read
+                                    If red And rdx.HasRows Then
+                                        _count = rdx.Item(0)
+                                        If _count > 0 Then _minDate = rdx.Item(1)
+                                    Else
+                                        MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data." & Environment.NewLine & "Data hutang tidak dapat ditemukan",
+                                                        Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                        Return False
+                                    End If
+                                End Using
+
+                                If _count > 0 And date_tgl_beli.Value > _minDate Then
+                                    MessageBox.Show("Pembayaran hutang untuk faktur pembelian sudah diinput untuk tanggal " & _minDate.ToString("dd MMMM yyyy.") & _
+                                                    Environment.NewLine & "Tanggal pembelian tidak dapat lebih besar dari tanggal pembayaran, silahkan cek kembali.",
+                                                    Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                    date_tgl_beli.Focus() : Return False
+                                End If
+                            End If
+
+                            Dim _newHutang = removeCommaThousand(in_total_netto.Text)
+                            If _newHutang > _oldhutang Then
+                                Return True
+                            Else
+                                If _sisahutang < _newHutang Then
+                                    MessageBox.Show("Nilai hutang pembelian yang akan diinputkan lebih kecil dari pembayaran yang telah diinputkan." & _
+                                                    Environment.NewLine & "Harap cek kembali nilai pembayaran yang telah diinput.", Me.Text,
+                                                    MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                                    Return False
+                                Else
+                                    Return True
+                                End If
+                            End If
+
+                        ElseIf _count = 0 Then
+                            'IF NEW
+                            Return True
+
+                        Else
+                            'IF DUPLICATE
+                            MessageBox.Show("Terjadi kesalahan saat pelakukan pengecekan data pembelian." & Environment.NewLine & _
+                                            "Terdapat duplikasi kode pada database, kode faktur tidak dapat digunakan.",
+                                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            errLog(New List(Of String) From {"Error : Duplicate faktur kode pada table hutang awal.",
+                                                             "Duplicated Code : " & in_faktur.Text
+                                                            })
+                            Return False
                         End If
+                    Else
+                        MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                        Return False
                     End If
-                    Return True
-                Else
-                    MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-                    Return False
-                End If
-            End Using
+                End Using
+            Catch ex As Exception
+                MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data pembelian." & Environment.NewLine & ex.Message,
+                                Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                logError(ex, True)
+                Return False
+            End Try
         Else
             Return True
         End If
@@ -836,25 +868,33 @@
 
     'SAVE
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        If in_supplier.Text = "" Then
-            MessageBox.Show("Supplier belum di input")
-            in_supplier_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_beli.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
-        If in_gudang.Text = "" Then
-            MessageBox.Show("Gudang belum di input")
-            in_gudang_n.Focus()
-            Exit Sub
-        End If
+
+        'CHECK INPUT DATA
+        For Each x As TextBox In {in_supplier, in_gudang}
+            Dim Msg As String = "{0} belum diinput"
+            Dim _input As TextBox
+            Select Case x.Name
+                Case in_supplier.Name : Msg = String.Format(Msg, "Supplier") : _input = in_supplier_n
+                Case in_gudang.Name : Msg = String.Format(Msg, "Gudang") : _input = in_gudang_n
+                Case Else : Exit Sub
+            End Select
+
+            If String.IsNullOrWhiteSpace(x.Text) Then
+                MessageBox.Show(Msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                _input.Focus() : Exit Sub
+            End If
+        Next
+
+        'CHECK BARANG
         If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum di input")
-            in_barang.Focus()
-            Exit Sub
-        End If
-        If date_tgl_beli.Value < selectperiode.tglawal Then
-            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih")
-            date_tgl_beli.Focus()
-            Exit Sub
+            MessageBox.Show("Barang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
         End If
         If CheckHutang() = False Then Exit Sub
 
@@ -1026,7 +1066,7 @@
     End Sub
 
     Private Sub cb_sat_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cb_sat.SelectionChangeCommitted
-        in_harga_beli.Value = countHarga(_satuanstate, in_harga_beli.Value, cb_sat.SelectedValue)
+        in_harga_beli.Value = CountItemPrice(_satuanstate, cb_sat.SelectedValue, in_harga_beli.Value, isibesar, isitengah)
         _satuanstate = cb_sat.SelectedValue
     End Sub
 

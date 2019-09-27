@@ -399,9 +399,15 @@
             cb_tipe.Focus() : Exit Sub
         End If
 
-        If cb_area.SelectedValue = Nothing Or Trim(in_alamat_kabupaten.Text) = Nothing Then
-            MessageBox.Show("Area/Kabupaten belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            cb_tipe.Focus() : Exit Sub
+        'If cb_area.SelectedValue = Nothing Or Trim(in_alamat_kabupaten.Text) = Nothing Then
+        '    MessageBox.Show("Area/Kabupaten belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+        '    cb_tipe.Focus() : Exit Sub
+        'End If
+        If Not String.IsNullOrWhiteSpace(in_npwp.Text) Then
+            If Not in_npwp.Text Like "##.###.###.#-###.###" Then
+                MessageBox.Show("Format NPWP yang diinput tidak sesuai.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                in_npwp.Focus() : Exit Sub
+            End If
         End If
 
         Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes

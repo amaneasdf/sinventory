@@ -1,5 +1,4 @@
 ﻿Module mdl_login
-    Public loggeduser As New UserData
     Private salahlogin As Integer = 3
 
     Private Enum ckUserRes

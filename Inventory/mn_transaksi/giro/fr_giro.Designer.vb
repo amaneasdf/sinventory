@@ -64,12 +64,13 @@ Partial Class fr_giro
         Me.in_tgl_penarikan = New System.Windows.Forms.TextBox()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.pnl_content = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.Label29 = New System.Windows.Forms.Label()
         Me.pnl_footer = New System.Windows.Forms.Panel()
         Me.bt_simpanbeli = New System.Windows.Forms.Button()
         Me.bt_batalbeli = New System.Windows.Forms.Button()
-        Me.Label29 = New System.Windows.Forms.Label()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
+        Me.mn_cancel = New System.Windows.Forms.ToolStripMenuItem()
         Me.Panel1.SuspendLayout()
         Me.MenuStrip1.SuspendLayout()
         Me.pnl_content.SuspendLayout()
@@ -385,7 +386,7 @@ Partial Class fr_giro
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cair, Me.mn_tolak})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_save, Me.mn_cair, Me.mn_tolak, Me.mn_cancel})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(470, 24)
@@ -404,13 +405,13 @@ Partial Class fr_giro
         'mn_cair
         '
         Me.mn_cair.Name = "mn_cair"
-        Me.mn_cair.Size = New System.Drawing.Size(136, 20)
+        Me.mn_cair.Size = New System.Drawing.Size(135, 20)
         Me.mn_cair.Text = "Tambahkan Pencairan"
         '
         'mn_tolak
         '
         Me.mn_tolak.Name = "mn_tolak"
-        Me.mn_tolak.Size = New System.Drawing.Size(72, 20)
+        Me.mn_tolak.Size = New System.Drawing.Size(71, 20)
         Me.mn_tolak.Text = "Tolak Giro"
         '
         'Label10
@@ -560,6 +561,38 @@ Partial Class fr_giro
         Me.pnl_content.Size = New System.Drawing.Size(487, 374)
         Me.pnl_content.TabIndex = 0
         '
+        'Label8
+        '
+        Me.Label8.AutoSize = True
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label8.ForeColor = System.Drawing.Color.Black
+        Me.Label8.Location = New System.Drawing.Point(408, 418)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(0, 13)
+        Me.Label8.TabIndex = 451
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.Black
+        Me.Label12.Location = New System.Drawing.Point(228, 406)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(19, 13)
+        Me.Label12.TabIndex = 434
+        Me.Label12.Text = "By"
+        '
+        'Label29
+        '
+        Me.Label29.AutoSize = True
+        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label29.ForeColor = System.Drawing.Color.Black
+        Me.Label29.Location = New System.Drawing.Point(16, 383)
+        Me.Label29.Name = "Label29"
+        Me.Label29.Size = New System.Drawing.Size(43, 13)
+        Me.Label29.TabIndex = 433
+        Me.Label29.Text = "Inputed"
+        '
         'pnl_footer
         '
         Me.pnl_footer.AutoScroll = True
@@ -601,37 +634,12 @@ Partial Class fr_giro
         Me.bt_batalbeli.Text = "Batal"
         Me.bt_batalbeli.UseVisualStyleBackColor = False
         '
-        'Label29
+        'mn_cancel
         '
-        Me.Label29.AutoSize = True
-        Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label29.ForeColor = System.Drawing.Color.Black
-        Me.Label29.Location = New System.Drawing.Point(16, 383)
-        Me.Label29.Name = "Label29"
-        Me.Label29.Size = New System.Drawing.Size(43, 13)
-        Me.Label29.TabIndex = 433
-        Me.Label29.Text = "Inputed"
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label8.ForeColor = System.Drawing.Color.Black
-        Me.Label8.Location = New System.Drawing.Point(408, 418)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(0, 13)
-        Me.Label8.TabIndex = 451
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label12.ForeColor = System.Drawing.Color.Black
-        Me.Label12.Location = New System.Drawing.Point(228, 406)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(19, 13)
-        Me.Label12.TabIndex = 434
-        Me.Label12.Text = "By"
+        Me.mn_cancel.Name = "mn_cancel"
+        Me.mn_cancel.Size = New System.Drawing.Size(58, 20)
+        Me.mn_cancel.Text = "Cancel "
+        Me.mn_cancel.Visible = False
         '
         'fr_giro
         '
@@ -706,4 +714,5 @@ Partial Class fr_giro
     Friend WithEvents bt_simpanbeli As System.Windows.Forms.Button
     Friend WithEvents bt_batalbeli As System.Windows.Forms.Button
     Friend WithEvents Label12 As System.Windows.Forms.Label
+    Friend WithEvents mn_cancel As System.Windows.Forms.ToolStripMenuItem
 End Class

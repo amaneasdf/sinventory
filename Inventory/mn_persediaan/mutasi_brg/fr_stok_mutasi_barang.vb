@@ -13,24 +13,27 @@
     'SETUP FORM
     Private Sub SetUpForm(NoFaktur As String, FormSet As InputState, AllowEdit As Boolean)
         Const _tempTitle As String = "Mutasi Barang : rj20190810902"
-
         formstate = FormSet
-
         With cb_pajak
             .DataSource = jenis("bayar_pajak")
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
 
-        With date_tgl_beli
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-            If selectperiode.tglakhir >= Today Then
-                .Value = Today
-            Else
-                .Value = selectperiode.tglakhir
-            End If
-        End With
+        'With date_tgl_beli
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        '    If selectperiode.tglakhir >= Today Then
+        '        .Value = Today
+        '    Else
+        '        .Value = selectperiode.tglakhir
+        '    End If
+        'End With
+        For Each x As DateTimePicker In {date_tgl_beli}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
+        Next
 
         If formstate = InputState.Edit Or formstate = InputState.View Then
             Me.Text += NoFaktur
@@ -40,13 +43,11 @@
             End If
 
             loadData(NoFaktur)
-            in_kode.ReadOnly = True
-            If Not {0, 1}.Contains(_status) Then AllowEdit = False
-            If formstate = InputState.View Then AllowEdit = False
-
-            bt_simpanbeli.Text = "Update"
+            If Not {0, 1}.Contains(_status) Or date_tgl_beli.Value < TransStartDate Then formstate = InputState.View
+            If formstate = InputState.Edit Then date_tgl_beli.MinDate = TransStartDate
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         FormSwitch(AllowEdit)
     End Sub
 
@@ -56,9 +57,9 @@
         date_tgl_beli.Enabled = AllowEdit
 
         bt_simpanbeli.Enabled = AllowEdit
-
-        mn_save.Enabled = AllowEdit
-        mn_cancel.Enabled = IIf({0, 1}.Contains(_status), AllowEdit, False)
+        bt_simpanbeli.Text = If(formstate = InputState.Edit, "Update", "Simpan")
+        mn_save.Enabled = bt_simpanbeli.Enabled
+        mn_cancel.Enabled = If(formstate = InputState.Insert, False, IIf({0, 1}.Contains(_status), AllowEdit, False))
         mn_print.Enabled = False
 
         For Each x As Control In {in_barang, in_barang_nm, in_qty1, in_qty2, in_sat1, in_sat2, in_hpp, bt_tbbarang}
@@ -97,8 +98,7 @@
         End If
         Dim q As String = ""
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 q = "SELECT faktur_kode, faktur_pajak, faktur_tanggal, faktur_gudang, gudang_nama, faktur_ket, faktur_reg_alias, " _
                     & "faktur_reg_date, IFNULL(faktur_upd_alias,'') faktur_upd_alias, " _
                     & "IFNULL(CAST(DATE_FORMAT(faktur_upd_date,'%d/%m/%Y %H:%i:%s') AS CHAR),'') faktur_upd_date, " _
@@ -248,8 +248,7 @@
         Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 q = "SELECT getHppAvg_v2('{0}','{1}')"
                 q = String.Format(q, KodeBrg, date_tgl_beli.Value.ToString("yyyy-MM-dd"))
                 retval = x.ExecScalar(q)
@@ -434,7 +433,7 @@
                     Dim _qtyA As Integer = rows.Cells("qty_a").Value
                     Dim _brgB As String = rows.Cells("kode_b").Value
                     Dim _qtyB As Integer = rows.Cells("qty_b").Value
-                    Dim _hppA As Decimal = rows.Cells("hpp").Value
+                    Dim _hppA As Decimal = getHpp(_brgA)
                     Dim _hppB As Decimal = rows.Cells("hpp_b").Value
 
                     dataBrg = {
@@ -626,16 +625,21 @@
 
     'UI : SAVE
     Private Sub bt_simpanreturbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        If in_gudang.Text = Nothing Then
-            MessageBox.Show("Gudang asal belum dimasukkan")
-            in_gudang_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_beli.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
 
+        'CHECK INPUT
+        If in_gudang.Text = Nothing Then
+            MessageBox.Show("Gudang asal belum dimasukkan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_gudang_n.Focus() : Exit Sub
+        End If
         If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum dimasukkan")
-            in_barang.Focus()
-            Exit Sub
+            MessageBox.Show("Barang belum dimasukkan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
         End If
 
         Dim _resMsg As DialogResult = Windows.Forms.DialogResult.Yes

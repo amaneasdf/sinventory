@@ -40,15 +40,16 @@
             .DisplayMember = "Text"
         End With
 
-        With date_tgl_trans
-            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
-        date_bg_tgl.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-
-        For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisapiutang, bayar_totalpiutang}
-            x.DefaultCellStyle = dgvstyle_currency
+        'With date_tgl_trans
+        '    .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        'date_bg_tgl.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        For Each x As DateTimePicker In {date_tgl_trans, date_bg_tgl}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = DataListStartDate
+            x.MaxDate = DataListEndDate
         Next
 
         If Not FormSet = InputState.Insert Then
@@ -59,25 +60,23 @@
             End If
 
             loadData(NoFaktur)
-            If Not {0, 1}.Contains(_status) Then AllowEdit = False
-            If cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text <> "" Then AllowEdit = False
-            in_no_bukti.ReadOnly = True
-            'mn_print.Enabled = IIf(_status = 1, True, False)
-            mn_proses.Enabled = IIf(_status = 0, loggeduser.validasi_trans, False)
-            bt_simpancusto.Text = "Update"
+            If Not {0, 1}.Contains(_status) Or date_tgl_trans.Value < TransStartDate Then formstate = InputState.View
+            If cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text <> "" Then formstate = InputState.View
         Else
             mn_proses.Enabled = False
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         ControlSwitch(AllowEdit)
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
+        Dim _ReadOnly As Boolean = If(AllowInput, False, True)
         For Each cbx As ComboBox In {cb_akun, cb_bayar}
             cbx.Enabled = AllowInput
         Next
         For Each txt As TextBox In {in_ket, in_bg_no, in_bank}
-            txt.ReadOnly = IIf(AllowInput, False, True)
+            txt.ReadOnly = _ReadOnly
         Next
         For Each ctr As Control In {in_faktur, in_kredit}
             ctr.Visible = AllowInput
@@ -85,11 +84,27 @@
         For Each dtpick As DateTimePicker In {date_bg_tgl, date_tgl_trans}
             dtpick.Enabled = AllowInput
         Next
+        For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisapiutang, bayar_totalpiutang}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+
         bt_simpancusto.Enabled = AllowInput
+        bt_simpancusto.Text = If(formstate = InputState.Edit, "Update", "Simpan")
+        in_no_bukti.ReadOnly = If(formstate = InputState.Insert, _ReadOnly, True)
+        If formstate = InputState.Edit Then
+            Dim _rowcount As Integer = dgv_bayar.RowCount
+            mn_proses.Enabled = IIf(_status = 0 And Not date_tgl_trans.Value < TransStartDate, loggeduser.validasi_trans, False)
+            in_custo_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, _ReadOnly)
+            in_sales_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, _ReadOnly)
+            cb_pajak.Enabled = IIf(_rowcount > 0, False, True)
+        Else
+            mn_proses.Enabled = False
+            in_custo_n.ReadOnly = _ReadOnly
+            in_sales_n.ReadOnly = _ReadOnly
+            cb_pajak.Enabled = AllowInput
+        End If
+
         bt_proses.Visible = mn_proses.Enabled
-        in_custo_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, IIf(AllowInput, False, True))
-        in_sales_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, IIf(AllowInput, False, True))
-        cb_pajak.Enabled = IIf(dgv_bayar.RowCount > 0, False, AllowInput)
         mn_delete.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
         mn_save.Enabled = AllowInput
         mn_print.Visible = False
@@ -790,22 +805,29 @@
     End Sub
 
     Private Sub mn_proses_Click(sender As Object, e As EventArgs) Handles mn_proses.Click
-        If in_no_bukti.Text <> Nothing And _status = 0 Then
-            If in_sales.Text = "" Then
-                MessageBox.Show("Sales belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                in_sales_n.Focus()
-                Exit Sub
-            End If
-            If in_custo_n.Text = "" Then
-                MessageBox.Show("Customer belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                in_sales_n.Focus()
-                Exit Sub
-            End If
+        If formstate <> InputState.Edit Then Exit Sub
+        If String.IsNullOrWhiteSpace(in_no_bukti.Text) And _status = 0 And date_tgl_trans.Value >= TransStartDate Then
+            'CHECK INPUT DATA
+            For Each x As TextBox In {in_sales, in_custo}
+                Dim Msg As String = "{0} belum diinput"
+                Dim _input As TextBox
+                Select Case x.Name
+                    Case in_sales.Name : Msg = String.Format(Msg, "Salesman") : _input = in_sales_n
+                    Case in_custo.Name : Msg = String.Format(Msg, "Customer") : _input = in_custo_n
+                    Case Else : Exit Sub
+                End Select
+
+                If String.IsNullOrWhiteSpace(x.Text) Then
+                    MessageBox.Show(Msg, "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    _input.Focus() : Exit Sub
+                End If
+            Next
             If dgv_bayar.RowCount = 0 Then
                 MessageBox.Show("Pembayaran belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                in_custo_n.Focus()
-                Exit Sub
+                in_custo_n.Focus() : Exit Sub
             End If
+
+            'CHECK PEMBAYARAN
             If cb_bayar.SelectedValue = "BG" And Trim(in_bg_no.Text) = Nothing Then
                 MessageBox.Show("Nomor Giro belum di input.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
                 in_bg_no.Focus()
@@ -817,8 +839,7 @@
             End If
             If cb_akun.SelectedValue = Nothing Then
                 MessageBox.Show("Pilih akun pembayaran terlebih dahulu.", "Proses Pembayaran", MessageBoxButtons.OK, MessageBoxIcon.Stop)
-                cb_akun.Focus()
-                Exit Sub
+                cb_akun.Focus() : Exit Sub
             End If
 
             If MessageBox.Show("Proses pembayaran?", "Pembayaran Piutang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
@@ -842,29 +863,45 @@
 
     'UI : BUTTON
     Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
-        If in_sales.Text = "" Then
-            MessageBox.Show("Sales belum di input") : in_sales_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_trans.Value < TransStartDate Then
+            MessageBox.Show("Tanggal pembayaran tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_trans.Focus() : Exit Sub
         End If
-        If in_custo_n.Text = "" Then
-            MessageBox.Show("Customer belum di input") : in_custo_n.Focus()
-            Exit Sub
-        End If
+
+        'CHECK INPUT DATA
+        For Each x As TextBox In {in_sales, in_custo}
+            Dim Msg As String = "{0} belum diinput"
+            Dim _input As TextBox
+            Select Case x.Name
+                Case in_sales.Name : Msg = String.Format(Msg, "Salesman") : _input = in_sales_n
+                Case in_custo.Name : Msg = String.Format(Msg, "Customer") : _input = in_custo_n
+                Case Else : Exit Sub
+            End Select
+
+            If String.IsNullOrWhiteSpace(x.Text) Then
+                MessageBox.Show(Msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                _input.Focus() : Exit Sub
+            End If
+        Next
         If dgv_bayar.RowCount = 0 Then
-            MessageBox.Show("Pembayaran belum di input") : in_faktur.Focus()
-            Exit Sub
+            MessageBox.Show("Pembayaran belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_faktur.Focus() : Exit Sub
         End If
         If Not CheckKatPiutang() Then Exit Sub
-        If cb_bayar.SelectedValue = "BG" And Trim(in_bg_no.Text) = Nothing Then
-            MessageBox.Show("Nomor Giro belum di input") : in_bg_no.Focus()
-            Exit Sub
+
+        'CHECK PEMBAYARAN
+        If cb_bayar.SelectedValue = "BG" And String.IsNullOrWhiteSpace(in_bg_no.Text) Then
+            MessageBox.Show("Nomor Giro belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_bg_no.Focus() : Exit Sub
         ElseIf cb_bayar.SelectedValue = "PIUTSUPL" And removeCommaThousand(in_total.Text) > removeCommaThousand(in_saldotitipan.Text) Then
-            MessageBox.Show("Saldo titipan customer lebih kecil daripada total pembayaran.") : dgv_bayar.Focus()
-            Exit Sub
+            MessageBox.Show("Saldo titipan customer lebih kecil daripada total pembayaran.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            dgv_bayar.Focus() : Exit Sub
         End If
         If cb_akun.SelectedValue = Nothing Then
-            MessageBox.Show("Pilih akun pembayaran terlebih dahulu") : cb_akun.Focus()
-            Exit Sub
+            MessageBox.Show("Pilih akun pembayaran terlebih dahulu", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_akun.Focus() : Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor
@@ -1071,10 +1108,6 @@
     End Sub
 
     Private Sub dgv_bayar_CellDoubleClick(sender As Object, e As DataGridViewCellEventArgs)
-        If loggeduser.allowedit_transact = True And selectperiode.closed = False And _status <> 2 Then
-            If e.RowIndex > -1 Then
-                dgvToText()
-            End If
-        End If
+        If e.RowIndex > -1 Then dgvToText()
     End Sub
 End Class

@@ -16,7 +16,7 @@
         formstate = FormSet
 
         With cb_jenis
-            .DataSource = jenisBarang()
+            .DataSource = jenis("jenis_barang")
             .DisplayMember = "Text"
             .ValueMember = "Value"
             .SelectedIndex = 0

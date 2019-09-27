@@ -63,8 +63,8 @@
     Private Sub setDatePicker()
         RemoveHandler date_tglawal.ValueChanged, AddressOf date_tglawal_ValueChanged
         RemoveHandler date_tglakhir.ValueChanged, AddressOf date_tglakhir_ValueChanged
-        date_tglawal.MaxDate = selectperiode.tglakhir
-        date_tglakhir.MinDate = selectperiode.tglawal
+        'date_tglawal.MaxDate = selectperiode.tglakhir
+        'date_tglakhir.MinDate = selectperiode.tglawal
         If selectperiode.tglakhir < Today Then
             date_tglawal.Value = DateSerial(selectperiode.tglakhir.Year, selectperiode.tglakhir.Month, 1)
             date_tglakhir.Value = DateSerial(selectperiode.tglakhir.Year, selectperiode.tglakhir.Month + 1, 0)
@@ -74,8 +74,11 @@
         End If
         AddHandler date_tglawal.ValueChanged, AddressOf date_tglawal_ValueChanged
         AddHandler date_tglakhir.ValueChanged, AddressOf date_tglakhir_ValueChanged
-        date_tglawal.MinDate = selectperiode.tglawal
-        date_tglakhir.MaxDate = selectperiode.tglakhir
+        'date_tglawal.MinDate = selectperiode.tglawal
+        'date_tglakhir.MaxDate = selectperiode.tglakhir
+        date_tglawal.MinDate = DataListStartDate
+        date_tglakhir.MaxDate = DataListEndDate
+        date_tglawal.MaxDate = date_tglakhir.Value : date_tglakhir.MinDate = date_tglawal.Value
         SelectedDate1 = date_tglawal.Value : SelectedDate2 = date_tglakhir.Value
     End Sub
 
@@ -366,51 +369,51 @@
 
                     Case "pgpembelian"
                         Dim detail As New fr_beli_detail
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pgreturbeli"
                         Dim detail As New fr_beli_retur_detail
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pgpesanjual"
                         Dim detail As New fr_pesan_detail
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pgpenjualan"
                         Dim detail As New fr_jual_detail
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pgreturjual"
                         Dim detail As New fr_jual_retur_detail
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pgstok"
-                        Dim detail As New fr_stok_awal
-                        If selectperiode.closed Then
-                            detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
-                        Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
-                        End If
+                        'Dim detail As New fr_stok_awal
+                        'If selectperiode.closed Then
+                        '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
+                        'Else
+                        '    detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        'End If
 
                     Case "pghutangawal"
                         Dim detail As New fr_hutang_awal
@@ -678,6 +681,7 @@
         End If
     End Sub
 
+    'EXPORT DATA TO EXCEL FILE
     Private Sub exportItem(ParamString As String)
         If export_sw = True Then
             Dim _q As String = ""
@@ -1323,8 +1327,8 @@
                 _newSt = 0
             Case "pgkas"
                 kode = dgv_list.SelectedRows.Item(0).Cells(1).Value
-                _Qmsg = "Cancel pembatalan pembayaran piutang?"
-                _Fmsg = "Cancel pembatalan pembayaran piutang tidak dapat dilakukan."
+                _Qmsg = "Cancel pembatalan pembayaran kas?"
+                _Fmsg = "Cancel pembatalan pembayaran kas tidak dapat dilakukan."
                 _oldstatus = getTransStatus(kode, "kas", _resMsg)
                 _newSt = 1
 
@@ -1537,7 +1541,7 @@
             If Not _allowdelete Then Exit Sub
             Dim _idValid As Integer = 0 : Dim ValidUid As String = ""
             If Not AkunConfirmValid(ValidUid) Then Exit Sub
-            LogValidTrans(ValidUid, loggeduser.user_id, "JU.ENTRY", "DELETE", IdJurnal, _idValid)
+            LogValidTrans(ValidUid, loggeduser, "JU.ENTRY", "DELETE", IdJurnal, _idValid)
 
             'UPDATE STATUS ENTRY
             If _allowdelete Then

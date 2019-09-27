@@ -47,8 +47,8 @@
     Private Sub setDatePicker()
         RemoveHandler date_tglawal.ValueChanged, AddressOf date_tglawal_ValueChanged
         RemoveHandler date_tglakhir.ValueChanged, AddressOf date_tglakhir_ValueChanged
-        date_tglawal.MaxDate = selectperiode.tglakhir
-        date_tglakhir.MinDate = selectperiode.tglawal
+        'date_tglawal.MaxDate = selectperiode.tglakhir
+        'date_tglakhir.MinDate = selectperiode.tglawal
         If selectperiode.tglakhir < Today Then
             date_tglawal.Value = DateSerial(selectperiode.tglakhir.Year, selectperiode.tglakhir.Month, 1)
             date_tglakhir.Value = DateSerial(selectperiode.tglakhir.Year, selectperiode.tglakhir.Month + 1, 0)
@@ -58,8 +58,11 @@
         End If
         AddHandler date_tglawal.ValueChanged, AddressOf date_tglawal_ValueChanged
         AddHandler date_tglakhir.ValueChanged, AddressOf date_tglakhir_ValueChanged
-        date_tglawal.MinDate = selectperiode.tglawal
-        date_tglakhir.MaxDate = selectperiode.tglakhir
+        'date_tglawal.MinDate = selectperiode.tglawal
+        'date_tglakhir.MaxDate = selectperiode.tglakhir
+        date_tglawal.MinDate = DataListStartDate
+        date_tglakhir.MaxDate = DataListEndDate
+        date_tglawal.MaxDate = date_tglakhir.Value : date_tglakhir.MinDate = date_tglawal.Value
         SelectedDate1 = date_tglawal.Value : SelectedDate2 = date_tglakhir.Value
     End Sub
 
@@ -428,48 +431,68 @@
         Select Case DataTypeSelector()
             Case "stok"
                 Dim detail As New fr_stok_mutasi_barang
-                If selectperiode.closed Then
-                    detail.doLoadView(IdTrans)
-                Else
-                    detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
-                End If
+                'If selectperiode.closed Then
+                '    detail.doLoadView(IdTrans)
+                'Else
+                detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
+                'End If
             Case "gudang"
                 Dim detail As New fr_stok_mutasi
-                If selectperiode.closed Then
-                    detail.doLoadView(IdTrans)
-                Else
-                    detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
-                End If
+                'If selectperiode.closed Then
+                '    detail.doLoadView(IdTrans)
+                'Else
+                detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
+                'End If
             Case "opname"
                 Dim detail As New fr_stock_op
-                If selectperiode.closed Then
-                    detail.doLoadView(IdTrans)
-                Else
-                    detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
-                End If
+                'If selectperiode.closed Then
+                '    detail.doLoadView(IdTrans)
+                'Else
+                detail.doLoadEdit(IdTrans, loggeduser.allowedit_transact)
+                'End If
         End Select
     End Sub
 
     Private Sub CancelData(IdTrans As String)
+        If Not loggeduser.validasi_trans Then Exit Sub
         Me.Cursor = Cursors.WaitCursor
-        If selectperiode.closed Or Not loggeduser.validasi_trans Then Exit Sub
 
         Dim q As String = ""
         Dim _status As Integer = 0
+        Dim _date As Date = Today
         Using x = MainConnection
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Select Case DataTypeSelector()
                         Case "stok"
-                            q = "SELECT faktur_status FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_status<9"
+                            q = "SELECT faktur_status, faktur_tanggal FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_status<9"
                         Case "gudang"
-                            q = "SELECT faktur_status FROM data_barang_stok_mutasi WHERE faktur_kode='{0}' AND faktur_status<9"
+                            q = "SELECT faktur_status, faktur_tanggal FROM data_barang_stok_mutasi WHERE faktur_kode='{0}' AND faktur_status<9"
                         Case "opname"
-                            q = "SELECT faktur_status FROM data_stok_opname WHERE faktur_bukti='{0}' AND faktur_status<9"
+                            q = "SELECT faktur_status, faktur_tanggal FROM data_stok_opname WHERE faktur_bukti='{0}' AND faktur_status<9"
                         Case Else
                             GoTo EndSub
                     End Select
-                    _status = CInt(x.ExecScalar(String.Format(q, IdTrans)))
+
+                    Using rdx = x.ReadCommand(String.Format(q, IdTrans))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _status = Integer.Parse(rdx.Item(0))
+                            _date = Date.Parse(rdx.Item(1))
+                        Else
+                            MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data. " & Environment.NewLine & "Data transaksi tidak dapat ditemukan.",
+                                            lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            GoTo EndSub
+                        End If
+                    End Using
+
+                    If Not {0, 1}.Contains(_status) Then GoTo EndSub
+                    If _date < TransStartDate Then
+                        MessageBox.Show("Transaksi tidak dapat dibatalkan." & Environment.NewLine & "Periode transaksi untuk transaksi yang dipilih telah diclosing.",
+                                        lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        GoTo EndSub
+                    End If
+                    ChangeDataState(IdTrans, 2)
 
                 Catch ex As Exception
                     logError(ex, True)
@@ -482,33 +505,51 @@
                 GoTo EndSub
             End If
         End Using
-
-        If Not {0, 1}.Contains(_status) Then GoTo EndSub
-
-        ChangeDataState(IdTrans, 2)
 
 EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub UnCancelData(IdTrans As String)
+        If Not loggeduser.validasi_trans Then Exit Sub
         Me.Cursor = Cursors.WaitCursor
-        If selectperiode.closed Or Not loggeduser.validasi_trans Then Exit Sub
 
         Dim q As String = ""
         Dim _status As Integer = 0
+        Dim _date As Date = Today
         Using x = MainConnection
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Select Case DataTypeSelector()
                         Case "stok"
-                            q = "SELECT faktur_status FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                            q = "SELECT faktur_status, faktur_tanggal FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
                         Case "gudang"
-                            q = "SELECT faktur_status FROM data_barang_stok_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                            q = "SELECT faktur_status, faktur_tanggal FROM data_barang_stok_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
                         Case "opname"
-                            q = "SELECT faktur_bukti FROM data_stok_opname WHERE faktur_bukti='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                            q = "SELECT faktur_bukti, faktur_tanggal FROM data_stok_opname WHERE faktur_bukti='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
                     End Select
-                    _status = CInt(x.ExecScalar(String.Format(q, IdTrans)))
+
+                    Using rdx = x.ReadCommand(String.Format(q, IdTrans))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _status = Integer.Parse(rdx.Item(0))
+                            _date = Date.Parse(rdx.Item(1))
+                        Else
+                            MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data. " & Environment.NewLine & "Data transaksi tidak dapat ditemukan.",
+                                            lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                            GoTo EndSub
+                        End If
+                    End Using
+
+                    If Not _status = 2 Then GoTo EndSub
+                    If _date < TransStartDate Then
+                        MessageBox.Show("Cancel pembatalan transaksi tidak dapat dilakukan." & Environment.NewLine & _
+                                        "Periode transaksi untuk transaksi yang dipilih telah diclosing.",
+                                        lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        GoTo EndSub
+                    End If
+                    ChangeDataState(IdTrans, IIf(DataTypeSelector() = "opname", 0, 1))
+
                 Catch ex As Exception
                     logError(ex, True)
                     MessageBox.Show("Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message,
@@ -521,16 +562,53 @@ EndSub:
             End If
         End Using
 
-        If Not _status = 2 Then GoTo EndSub
-        ChangeDataState(IdTrans, IIf(DataTypeSelector() = "opname", 0, 1))
-
 EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub DeleteData(IdTrans As String)
+        If Not loggeduser.validasi_akun Then Exit Sub
+
+        Dim q As String = ""
+        Dim _date As Date = Today
+
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Select Case DataTypeSelector()
+                        Case "stok"
+                            q = "SELECT faktur_tanggal FROM data_barang_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                        Case "gudang"
+                            q = "SELECT faktur_tanggal FROM data_barang_stok_mutasi WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                        Case "opname"
+                            q = "SELECT faktur_tanggal FROM data_stok_opname WHERE faktur_bukti='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+                    End Select
+
+                    _date = Date.Parse(x.ExecScalar(String.Format(q, IdTrans)))
+
+                    If _date < TransStartDate Then
+                        MessageBox.Show("Penghapusan transaksi tidak dapat dilakukan." & Environment.NewLine & _
+                                        "Periode transaksi untuk transaksi yang dipilih telah diclosing.",
+                                        lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        GoTo EndSub
+                    End If
+                    ChangeDataState(IdTrans, 9)
+
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show("Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message,
+                                    lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    GoTo EndSub
+                End Try
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", lbl_title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                GoTo EndSub
+            End If
+        End Using
         If selectperiode.closed Or Not loggeduser.validasi_trans Then Exit Sub
-        ChangeDataState(IdTrans, 9)
+
+EndSub:
+        Me.Cursor = Cursors.Default
     End Sub
 
     Private Sub ChangeDataState(IdTrans As String, DataState As Integer)

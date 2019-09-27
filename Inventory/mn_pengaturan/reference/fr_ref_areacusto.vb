@@ -299,7 +299,7 @@ NEENENENE:
         Using x As New fr_akun_confirmdialog
             x.doLoadConfirm(loggeduser.user_id)
             Dim _retID As Integer = 0
-            If x.returnval.Key Then LogValidTrans(x.returnval.Value, loggeduser.user_id, "REF." & _RefType, InputType, in_id.Text, _retID)
+            If x.returnval.Key Then LogValidTrans(x.returnval.Value, loggeduser, "REF." & _RefType, InputType, in_id.Text, _retID)
             Return x.returnval.Key
         End Using
     End Function

@@ -40,15 +40,16 @@
             .DisplayMember = "Text"
         End With
 
-        With date_tgl_trans
-            .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
-        date_bg_tgl.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-
-        For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisahutang, bayar_saldoawal}
-            x.DefaultCellStyle = dgvstyle_currency
+        'With date_tgl_trans
+        '    .Value = IIf(selectperiode.tglakhir >= Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        'date_bg_tgl.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        For Each x As DateTimePicker In {date_tgl_trans, date_bg_tgl}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = DataListStartDate
+            x.MaxDate = DataListEndDate
         Next
 
         If Not FormSet = InputState.Insert Then
@@ -59,14 +60,12 @@
             End If
 
             loadData(NoFaktur)
-            If Not {0, 1}.Contains(_status) Then AllowEdit = False
-            If cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text <> "" Then AllowEdit = False
-            in_no_bukti.ReadOnly = True
-            'mn_print.Enabled = IIf(_status = 1, True, False)
-            bt_simpanperkiraan.Text = "Update"
+            If Not {0, 1}.Contains(_status) Or date_tgl_trans.Value < TransStartDate Then formstate = InputState.View
+            If cb_bayar.SelectedValue = "BG" And in_tglpencairan.Text <> "" Then formstate = InputState.View
             dgv_bayar.ClearSelection()
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         ControlSwitch(AllowEdit)
     End Sub
 
@@ -83,10 +82,23 @@
         For Each dtpick As DateTimePicker In {date_bg_tgl, date_tgl_trans}
             dtpick.Enabled = AllowInput
         Next
+        For Each x As DataGridViewColumn In {bayar_kredit, bayar_sisahutang, bayar_saldoawal}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+
         mn_cancel.Enabled = AllowInput
         bt_simpanperkiraan.Enabled = AllowInput
-        in_supplier_n.ReadOnly = IIf(dgv_bayar.RowCount > 0, True, IIf(AllowInput, False, True))
-        cb_pajak.Enabled = IIf(dgv_bayar.RowCount > 0, False, AllowInput)
+        bt_simpanperkiraan.Text = If(formstate = InputState.Edit, "Update", "Simpan")
+
+        If Not formstate = InputState.Insert Then
+            Dim _rowcount As Integer = dgv_bayar.RowCount
+            in_no_bukti.ReadOnly = True
+            in_supplier_n.ReadOnly = IIf(_rowcount > 0, True, False)
+            cb_pajak.Enabled = IIf(_rowcount > 0, False, True)
+        Else
+            in_supplier_n.ReadOnly = IIf(AllowInput, False, True)
+            cb_pajak.Enabled = AllowInput
+        End If
 
         If AllowInput Then
             dgv_bayar.Location = New Point(12, 168) : dgv_bayar.Height = 158
@@ -200,7 +212,7 @@
                 Case "supplier"
                     q = "SELECT supplier_kode as Kode, supplier_nama as Nama, GetHutangSaldoAwal('titipan', supplier_kode, ADDDATE(CURDATE(),1)) sisaTitip " _
                         & "FROM data_supplier_master WHERE (supplier_nama LIKE '%{0}%' OR supplier_kode LIKE '%{0}%') AND supplier_status=1 LIMIT 250"
-                    q = String.Format(q, param, selectperiode.id)
+                    q = String.Format(q, param)
                 Case "faktur"
                     q = "SELECT hutang_faktur Faktur, GetHutangSaldoAwal('hutang', hutang_faktur, ADDDATE('{0:yyyy-MM-dd}',1)) Sisa, " _
                         & "hutang_awal, hutang_tgl_jt as TglJatuhTempo " _
@@ -786,7 +798,15 @@
 
     '------------ save
     Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpanperkiraan.Click
-        If in_supplier.Text = Nothing Then
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_trans.Value < TransStartDate Then
+            MessageBox.Show("Tanggal pembayaran tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_trans.Focus() : Exit Sub
+        End If
+
+        'CHECK INPUT
+        If String.IsNullOrWhiteSpace(in_supplier.Text) Then
             MessageBox.Show("Supplier belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_supplier.Focus() : Exit Sub
         End If
@@ -794,16 +814,14 @@
             MessageBox.Show("Pembayaran belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_faktur.Focus() : Exit Sub
         End If
-        If cb_bayar.SelectedValue = "BG" And Trim(in_no_bg.Text) = Nothing Then
+
+        'CHECK INPUT GIRO
+        If cb_bayar.SelectedValue = "BG" And String.IsNullOrWhiteSpace(in_no_bg.Text) Then
             MessageBox.Show("Nomor Giro belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             in_no_bg.Focus() : Exit Sub
         End If
-        If date_tgl_trans.Value < selectperiode.tglawal Then
-            MessageBox.Show("Tanggal transaksi lebih kecil daripada Jangka waktu periode terpilih.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
-            date_tgl_trans.Focus() : Exit Sub
-        End If
         If date_bg_tgl.Value < date_tgl_trans.Value Then
-            MessageBox.Show("Tanggal jatuhtempo/efektif BG lebih kecil daripada tanggal transaksi.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            MessageBox.Show("Tanggal jatuhtempo/efektif giro lebih kecil daripada tanggal transaksi.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             date_bg_tgl.Focus() : Exit Sub
         End If
 

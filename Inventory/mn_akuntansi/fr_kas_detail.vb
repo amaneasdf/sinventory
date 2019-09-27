@@ -24,11 +24,17 @@
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
-        With date_tgl_trans
-            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
+        'With date_tgl_trans
+        '    .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        For Each x As DateTimePicker In {date_tgl_trans}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
+        Next
+
         For Each x As DataGridViewColumn In {kas_debet, kas_kredit}
             x.DefaultCellStyle = dgvstyle_currency
         Next
@@ -41,13 +47,10 @@
             End If
 
             loadData(NoFaktur)
-            If Not {0, 1}.Contains(tjlstatus) Then AllowEdit = False
-            in_no_bukti.ReadOnly = True
-            mn_print.Enabled = IIf(tjlstatus = 1, True, False)
-            mn_cancel.Enabled = IIf({0, 1}.Contains(tjlstatus), True, False)
-            bt_simpanperkiraan.Text = "Update"
+            If Not {0, 1}.Contains(tjlstatus) Or date_tgl_trans.Value < TransStartDate Then formstate = InputState.View
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         ControlSwitch(AllowEdit)
     End Sub
 
@@ -66,7 +69,17 @@
         Next
 
         bt_simpanperkiraan.Enabled = AllowInput
+        bt_simpanperkiraan.Text = If(formstate = InputState.Edit, "Update", "Simpan")
+        in_no_bukti.ReadOnly = If(formstate = InputState.Edit, True, False)
+
+        mn_cancel.Enabled = If(formstate = InputState.Insert,
+                               False,
+                               If({0, 1}.Contains(tjlstatus) And date_tgl_trans.Value >= TransStartDate,
+                                  AllowInput,
+                                  False
+                            ))
         mn_save.Enabled = AllowInput
+        mn_print.Enabled = False
 
         If AllowInput Then
             dgv_kas.Location = New Point(10, 221) : dgv_kas.Height = 146
@@ -277,11 +290,16 @@
                 For Each x As TextBox In {in_bank, in_bank_n, in_bg, in_sales, in_sales_n, in_no_bukti, txtRegAlias, txtRegdate, txtUpdAlias, txtUpdDate}
                     x.Clear()
                 Next
-                With date_tgl_trans
-                    .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-                    .MaxDate = selectperiode.tglakhir
-                    .MinDate = selectperiode.tglawal
-                End With
+                'With date_tgl_trans
+                '    .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+                '    .MaxDate = selectperiode.tglakhir
+                '    .MinDate = selectperiode.tglawal
+                'End With
+                For Each x As DateTimePicker In {date_tgl_trans}
+                    x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+                    x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+                    x.MaxDate = DataListEndDate
+                Next
             Case "dgv"
                 dgv_kas.Rows.Clear()
                 For Each x As TextBox In {in_debet_tot, in_kredit_tot}
@@ -580,20 +598,25 @@
 
     '------------- save
     Private Sub bt_simpanperkiraan_Click(sender As Object, e As EventArgs) Handles bt_simpanperkiraan.Click
-        If Trim(in_bank.Text) = Nothing Then
-            MessageBox.Show("Bank belum di input")
-            in_bank_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_trans.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak boleh kurang dari periode aktif." & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_trans.Focus() : Exit Sub
+        End If
+
+        'CHECK INPUT DATA
+        If String.IsNullOrWhiteSpace(in_bank.Text) Then
+            MessageBox.Show("Bank belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_bank_n.Focus() : Exit Sub
         End If
         If cb_jenis.SelectedValue = Nothing Then
-            MessageBox.Show("Jenis belum di input")
-            cb_jenis.Focus()
-            Exit Sub
+            MessageBox.Show("Jenis belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_jenis.Focus() : Exit Sub
         End If
         If dgv_kas.Rows.Count = 0 Then
-            MessageBox.Show("Data kas belum di input")
-            in_rek_n.Focus()
-            Exit Sub
+            MessageBox.Show("Data kas belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_rek_n.Focus() : Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor

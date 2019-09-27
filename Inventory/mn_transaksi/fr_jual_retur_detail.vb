@@ -30,21 +30,22 @@
             .SelectedIndex = 0
         End With
         With cb_ppn
-            .DataSource = jenisPPN()
+            .DataSource = jenis("jenis_ppn")
             .DisplayMember = "Text"
             .ValueMember = "Value"
-            .SelectedIndex = 0
+            .SelectedValue = 1
         End With
 
-        With date_tgl_trans
-            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
-        date_tgl_pajak.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-
-        For Each x As DataGridViewColumn In {qty, harga, jml, subtotal, diskon}
-            x.DefaultCellStyle = dgvstyle_currency
+        'With date_tgl_trans
+        '    .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        'date_tgl_pajak.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        For Each x As DateTimePicker In {date_tgl_pajak, date_tgl_trans}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
         Next
 
         If Not FormSet = InputState.Insert Then
@@ -55,10 +56,14 @@
             End If
 
             loadData(NoFaktur)
-            If Not {0, 1}.Contains(rtjstatus) Then AllowEdit = False
-            in_no_bukti.ReadOnly = IIf(formstate = InputState.Insert, False, True)
-            mn_print.Enabled = IIf(rtjstatus = 1, True, False)
-            bt_simpanreturbeli.Text = "Update"
+            If Not {0, 1}.Contains(rtjstatus) Then
+                mn_cancelorder.Text = "Cancel Pembatalan"
+                AllowEdit = False
+            End If
+            If date_tgl_trans.Value < TransStartDate Then
+                formstate = InputState.View
+                AllowEdit = False
+            End If
             dgv_barang.ClearSelection()
         End If
 
@@ -78,8 +83,21 @@
         For Each dtpick As DateTimePicker In {date_tgl_pajak, date_tgl_trans}
             dtpick.Enabled = AllowInput
         Next
-        mn_cancelorder.Enabled = If(formstate = InputState.Insert, False, AllowInput)
+        For Each x As DataGridViewColumn In {harga, jml, subtotal, diskon}
+            x.DefaultCellStyle = dgvstyle_currency
+        Next
+        qty.DefaultCellStyle = dgvstyle_commathousand
+
+        in_no_bukti.ReadOnly = IIf(formstate = InputState.Insert, False, True)
         bt_simpanreturbeli.Enabled = AllowInput
+        bt_simpanreturbeli.Text = If(formstate = InputState.Edit, "Update", "Simpan")
+        mn_print.Enabled = IIf(formstate = InputState.Insert, False, IIf(rtjstatus = 1, True, False))
+        mn_cancelorder.Enabled = IIf(formstate = InputState.Insert,
+                                     False,
+                                     IIf(rtjstatus = 2 And date_tgl_trans.Value >= TransStartDate,
+                                         loggeduser.allowedit_transact,
+                                         AllowInput
+                                    ))
 
         If Not formstate = InputState.Insert Then
             Dim rowcount = dgv_barang.RowCount
@@ -710,6 +728,40 @@ CountHarga:
         End Using
     End Sub
 
+    Private Function CheckFakturPenjualan(KodeFaktur As String) As Boolean
+        If String.IsNullOrWhiteSpace(KodeFaktur) Then Return False
+
+        Try
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim q As String = ""
+                    'CHECK AVALIABLITY
+                    q = "SELECT COUNT(piutang_id) FROM data_piutang_awal WHERE piutang_faktur='{0}' AND piutang_status<9"
+                    Dim _count As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
+
+                    If _count = 1 Then
+                        'IF EXIST
+                        'q = "SELECT "
+
+                        Return True
+                    Else
+                        'IF NOT EXIST
+                        MessageBox.Show("Nomor faktur penjualan tidak dapat ditemukan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Return False
+                    End If
+                Else
+                    MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    Return False
+                End If
+            End Using
+        Catch ex As Exception
+            MessageBox.Show("Terjadi kesalahan saat melakukan pengecekan data retur penjualan." & Environment.NewLine & ex.Message,
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            logError(ex, True)
+            Return False
+        End Try
+    End Function
+
     '------------drag form
     Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
@@ -771,11 +823,25 @@ CountHarga:
     End Sub
 
     Private Sub mn_cancelorder_Click(sender As Object, e As EventArgs) Handles mn_cancelorder.Click
-        If MessageBox.Show("Batalkan transaksi retur?", "Retur Penjualan", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-            rtjstatus = 2
-            in_status.Text = "Batal"
-            ControlSwitch(False)
-            saveData()
+        If {0, 1}.Contains(rtjstatus) Then
+            If MessageBox.Show("Batalkan transaksi retur?", "Retur Penjualan", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
+                Dim chkdt As Boolean = False
+                Dim kodefaktur As String = in_no_bukti.Text
+
+                'Dim _msg As String = ""
+                'chkdt = CheckCancelRetur("jual", kodefaktur, _msg)
+                'If chkdt Then
+                '    changeTransactState(2)
+                'Else
+                '    MessageBox.Show("Transaksi tidak dapat dibatalkan." & Environment.NewLine & _msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                'End If
+                rtjstatus = 2
+                in_status.Text = "Batal"
+                ControlSwitch(False)
+                saveData()
+            End If
+        ElseIf rtjstatus = 2 Then
+
         End If
     End Sub
 
@@ -786,36 +852,43 @@ CountHarga:
 
     'SAVE
     Private Sub bt_simpanreturbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanreturbeli.Click
-        If in_custo.Text = "" Then
-            MessageBox.Show("Customer belum di input")
-            in_custo_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_trans.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak boleh kurang dari periode aktif." & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_trans.Focus() : Exit Sub
         End If
-        If in_gudang.Text = "" Then
-            MessageBox.Show("Gudang belum di input")
-            in_gudang_n.Focus()
-            Exit Sub
-        End If
-        If in_sales.Text = "" Then
-            MessageBox.Show("Salesman belum di input")
-            in_sales_n.Focus()
-            Exit Sub
-        End If
-        If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum di input")
-            in_barang.Focus()
-            Exit Sub
-        End If
-        If cb_bayar_jenis.SelectedValue = 1 And in_no_faktur.Text = Nothing Then
-            MessageBox.Show("Faktur belum di input")
-            in_no_faktur.Focus()
-            Exit Sub
-        ElseIf cb_bayar_jenis.SelectedValue = 1 And in_no_faktur.Text <> Nothing Then
-            If jumlahpiutang < removeCommaThousand(in_netto.Text) Then
-                MessageBox.Show("Nilai retur lebih besar dari sisa hutang dg nomor nota " & in_no_faktur.Text & ".")
-                in_no_faktur.Focus()
-                Exit Sub
+
+        'CHECK INPUT DATA
+        For Each x As TextBox In {in_custo, in_gudang, in_sales}
+            Dim Msg As String = "{0} belum diinput"
+            Dim _input As TextBox
+            Select Case x.Name
+                Case in_custo.Name : Msg = String.Format(Msg, "Customer") : _input = in_custo_n
+                Case in_gudang.Name : Msg = String.Format(Msg, "Gudang") : _input = in_gudang_n
+                Case in_sales.Name : Msg = String.Format(Msg, "Salesman") : _input = in_sales_n
+                Case Else : Exit Sub
+            End Select
+
+            If String.IsNullOrWhiteSpace(x.Text) Then
+                MessageBox.Show(Msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                _input.Focus() : Exit Sub
             End If
+        Next
+
+        'CHECK BARANG
+        If dgv_barang.RowCount = 0 Then
+            MessageBox.Show("Barang yang akan di retur belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
+        End If
+
+        'CHECK JENIS PEMBAYARAN
+        If cb_bayar_jenis.SelectedValue = 1 And String.IsNullOrWhiteSpace(in_no_faktur.Text) Then
+            MessageBox.Show("Nomor faktur penjualan untuk pemotongan nota belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_no_faktur.Focus() : Exit Sub
+        ElseIf cb_bayar_jenis.SelectedValue = 1 And in_no_faktur.Text <> Nothing Then
+            'CHECK FAKTUR PIUTANG
+            If Not CheckFakturPenjualan(in_no_faktur.Text) Then Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor

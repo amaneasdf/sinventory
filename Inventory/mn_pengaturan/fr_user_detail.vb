@@ -556,6 +556,14 @@
         keyshortenter(in_sales_n, e)
     End Sub
 
+    Private Sub ck_admin_pc_CheckedChanged(sender As Object, e As EventArgs) Handles ck_admin_pc.CheckedChanged
+        Dim _check As Boolean = sender.Checked
+        For Each ck As CheckBox In {ck_edit_master, ck_edit_trans, ck_edit_akun, ck_valid_master, ck_valid_trans, ck_valid_akun}
+            ck.Enabled = If(_check, False, True)
+            If _check Then ck.Checked = True
+        Next
+    End Sub
+
     'Sales
     Private Sub ck_sales_CheckStateChanged(sender As Object, e As EventArgs) Handles ck_sales.CheckStateChanged, ck_adminandro.CheckStateChanged
         If sender.CheckState = CheckState.Checked Then

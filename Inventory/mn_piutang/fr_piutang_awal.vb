@@ -3,11 +3,14 @@
 
     'TAMBAH KETERANGAN LUNAS, JUMLAH GIRO BELUM CAIR, DKK
     'ADD MORE DETAIL ON TRANS DETAIL TABLE
-    'REFURBISH THE UI
+    'REFURBISH THE UI [done?]
     'OPTIONAL : ADD CETAK KARTU PIUTANG(?)
 
     Public Sub DoLoadView(KodePiutang As String)
-        If loadData(KodePiutang) Then : Me.Show(main)
+        If loadData(KodePiutang) Then
+            Me.Show(main)
+            dgv_hutang.ClearSelection()
+            'If TransStartDate > Today Then bt_bayar.Enabled = False
         Else : Me.Dispose()
         End If
     End Sub
@@ -58,7 +61,8 @@
                     End Using
 
                     'LOAD TABLE
-                    q = String.Format("GetDataList_PiutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    'q = String.Format("GetDataList_PiutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, selectperiode.tglawal, selectperiode.tglakhir)
+                    q = String.Format("GetDataList_PiutangHist('{0}','{1:yyyy-MM-dd}','{2:yyyy-MM-dd}')", kode, DataListStartDate, DataListEndDate)
                     With dgv_hutang
                         .AutoGenerateColumns = False
                         .DataSource = x.GetDataTable(q)
@@ -68,11 +72,12 @@
 
                     'LOAD NILAI PIUTANG
                     q = "SELECT GetPiutangSaldoAwal('giro', '{0}', ADDDATE('{1:yyyy-MM-dd}',1)) "
-                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    'Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir))))
+                    Dim _nilaigiro = CDec(x.ExecScalar(String.Format(q, kode, IIf(DataListEndDate > Today, Today, DataListEndDate))))
                     in_giro.Text = commaThousand(_nilaigiro)
                     countTotal()
 
-                    If selectperiode.closed Then bt_bayar.Enabled = False
+                    'If selectperiode.closed Then bt_bayar.Enabled = False
                     Return True
                 Catch ex As Exception
                     logError(ex, True)

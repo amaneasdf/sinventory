@@ -210,7 +210,8 @@
         Return valid
     End Function
 
-    'CANCEL PESANAN
+    'CHECK TRANSACTION DATA BEFORE CANCELING OR DELETING TRANSACTION
+    'ORDER PENJUALAN
     Public Function CheckCancelPesanan(KodeFaktur As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
@@ -228,6 +229,14 @@
                         _next = False
                     End If
                 End Using
+
+                'CHECK TRANSACTION DATE
+                q = "SELECT j_order_tanggal_trans FROM data_penjualan_order_faktur WHERE j_order_kode={0}"
+                If Date.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) < TransStartDate Then
+                    Msg = "Periode transaksi untuk order penjualan tersebut sudah diclosing."
+                    Return False
+                End If
+
                 If _next Then
                     If {0, 1}.Contains(_status) Then
                         If _status = 1 And String.IsNullOrWhiteSpace(_kode) = False Then
@@ -251,7 +260,7 @@
         Return retval
     End Function
 
-    'CANCEL PENJUALAN/PIUTANG AWAL
+    'PENJUALAN
     Public Function CheckCancelPenjualan(KodeFaktur As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
@@ -261,25 +270,39 @@
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Try
                     Dim q As String = ""
+                    'CHECK AVALIABILITY
                     q = "SELECT COUNT(faktur_id) FROM data_penjualan_faktur WHERE faktur_kode='{0}'"
                     If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) > 0 Then
-                        q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
+                        'IF EXIST
+                        'CHECK STATUS TRANSAKSI
+                        q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
                         Dim _sts As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
                         If {0, 1}.Contains(_sts) Then
-                            q = "SELECT COUNT(p_trans_id) FROM data_piutang_trans WHERE p_trans_kode_piutang='{0}' AND p_trans_status=1"
-                            Dim _ct As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
-                            If _ct = 0 Then
+                            'IF TRANSACTION STATUS IS ACTIVE OR PENDING
+                            'COMPARE TRANSACTION DATE AND TRANSACTION STARTING DATE
+                            q = "SELECT faktur_tanggal_trans FROM data_penjualan_faktur WHERE faktur_kode = '{0}' AND faktur_status<9"
+                            If Date.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) < TransStartDate Then
+                                Msg = "Periode transaksi untuk faktur tersebut sudah diclosing." : Return False
+                            End If
+
+                            'CHECK PEMBAYARAN PIUTANG
+                            q = "SELECT COUNT(p_trans_id) FROM data_piutang_trans WHERE p_trans_kode_piutang='{0}' AND p_trans_jenis<>'jual' AND p_trans_status=1"
+                            If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) = 0 Then
                                 Return True
                             Else
                                 Msg = "Transaksi penjualan/piutang sudah dilakukan pembayaran." : Return False
                             End If
+
                         ElseIf _sts = 2 Then
+                            'IF TRANSACTION STATUS IS CANCELED
                             Msg = "Transaksi sudah di batalkan." : Return False
+
                         Else
                             Msg = "Kode status transaksi tidak sesuai." : Return False
                         End If
                     Else
-                        Msg = "Data penjualan " & KodeFaktur & " tidak dapat ditemukan." : Return False
+                        'IF DATA NOT FOUND
+                        Msg = "Data faktur penjualan " & KodeFaktur & " tidak dapat ditemukan." : Return False
                     End If
                 Catch ex As Exception
                     logError(ex, True)
@@ -292,70 +315,63 @@
         End Using
     End Function
 
-    'CANCEL PEMBELIAN/HUTANG AWAL
+    'PEMBELIAN
     Public Function CheckCancelPembelian(KodeFaktur As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
-        Dim retval As Boolean = False
-        Dim q As String = "SELECT faktur_kode, IFNULL(faktur_status,0) status, IFNULL(hutang_awal,0) hutang, getHutangSisa(hutang_faktur) sisa, COUNT(h_bayar_bukti) bayar " _
-                          & "FROM data_hutang_awal " _
-                          & "RIGHT JOIN data_pembelian_faktur ON faktur_kode=hutang_faktur " _
-                          & "LEFT JOIN data_hutang_bayar_trans ON h_trans_faktur=faktur_kode AND h_trans_status=1 " _
-                          & "LEFT JOIN data_hutang_bayar ON h_bayar_bukti=h_trans_bukti AND h_bayar_status IN (0,1) " _
-                          & "WHERE hutang_faktur='{0}'"
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Dim _status As Integer = 0
-                Dim _piutang As Decimal = 0
-                Dim _sisa As Decimal = 0
-                Dim _bayar As Integer = 0
-                Dim _next As Boolean = False
-                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur), CommandBehavior.SingleRow)
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        _status = rdx.Item("status")
-                        _piutang = rdx.Item("hutang")
-                        _sisa = rdx.Item("sisa")
-                        _bayar = rdx.Item("bayar")
-                        _next = True
-                    Else
-                        _next = False
-                    End If
-                End Using
 
-                If _next Then
-                    If {0, 1}.Contains(_status) Then
-                        If _piutang = _sisa Then
-                            If _bayar = 0 Then
-                                retval = True
-                            Else
-                                retval = False
-                                Msg = "Transaksi pembayaran utk faktur/piutang tsb telah dilakukan"
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Try
+                    Dim q As String = ""
+                    'CHECK AVALIABILITY
+                    q = "SELECT COUNT(faktur_id) FROM data_pembelian_faktur WHERE faktur_kode='{0}'"
+                    If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) > 0 Then
+                        'IF EXIST
+                        'CHECK STATUS TRANSAKSI
+                        q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}' AND faktur_status<9 ORDER BY faktur_id DESC LIMIT 1"
+
+                        Dim _sts As Integer = Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur)))
+                        If {0, 1}.Contains(_sts) Then
+                            'IF TRANSACTION STATUS IS ACTIVE OR PENDING
+                            'COMPARE TRANSACTION DATE AND TRANSACTION STARTING DATE
+                            q = "SELECT faktur_tanggal_trans FROM data_pembelian_faktur WHERE faktur_kode = '{0}' AND faktur_status<9"
+                            If Date.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) < TransStartDate Then
+                                Msg = "Periode transaksi untuk faktur tersebut sudah diclosing." : Return False
                             End If
+
+                            'CHECK PEMBAYARAN HUTANG
+                            q = "SELECT COUNT(h_trans_id) FROM data_hutang_trans WHERE h_trans_kode_hutang='{0}' AND h_trans_jenis<>'beli' AND h_trans_status=1"
+                            If Integer.Parse(x.ExecScalar(String.Format(q, KodeFaktur))) = 0 Then
+                                Return True
+                            Else
+                                Msg = "Transaksi pembelian/hutang sudah dilakukan pembayaran." : Return False
+                            End If
+
+                        ElseIf _sts = 2 Then
+                            'IF TRANSACTION STATUS IS CANCELED
+                            Msg = "Transaksi sudah di batalkan." : Return False
+
                         Else
-                            retval = False
-                            Msg = "Transaksi pembayaran utk faktur/piutang tsb telah dilakukan"
+                            Msg = "Kode status transaksi tidak sesuai." : Return False
                         End If
                     Else
-                        retval = False
-                        Msg = ""
+                        'IF DATA NOT FOUND
+                        Msg = "Data faktur pembelian " & KodeFaktur & " tidak dapat ditemukan." : Return False
                     End If
-                Else
-                    retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
-                End If
+                Catch ex As Exception
+                    logError(ex, True)
+                    Msg = "Terjadi kesalahan saat melakukan pengecekan transaksi." & Environment.NewLine & ex.Message
+                    Return False
+                End Try
             Else
-                Msg = "Tidak dapat terhubung ke database"
-                retval = False
+                Msg = "Tidak dapat terhubung ke database." : Return False
             End If
         End Using
-
-        Return retval
     End Function
 
-    'CANCEL RETUR
+    'RETUR
     Public Function CheckCancelRetur(KodeFaktur As String, JenisRetur As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
@@ -365,83 +381,91 @@
 
         Select Case LCase(JenisRetur)
             Case "beli"
-                q = "SELECT faktur_kode_bukti, faktur_status status FROM data_pembelian_retur_faktur WHERE faktur_kode_bukti='{0}'"
+                q = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_status status FROM data_pembelian_retur_faktur " _
+                    & "WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
             Case "jual"
-                q = "SELECT faktur_kode_bukti, faktur_status status FROM data_penjualan_retur_faktur WHERE faktur_kode_bukti='{0}'"
+                q = "SELECT faktur_kode_bukti, faktur_tanggal_trans, faktur_status status FROM data_penjualan_retur_faktur " _
+                    & "WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
             Case Else
-                retval = False
-                Throw New Exception("Jenis Retur tidak sesuai")
+                Return False
         End Select
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Dim _next As Boolean = False
-                Dim _state As Integer = 0
+                Dim _state As Integer = 0 : Dim _date As Date = Today
+
                 Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
                     Dim red = rdx.Read
                     If red And rdx.HasRows Then
-                        _state = rdx.Item("status") : _next = True
+                        _state = rdx.Item("status")
+                        _date = rdx.Item(1)
                     Else
-                        _next = False
+                        Msg = "Terjadi kesalahan saat melakukan pengecekan data. Data retur tidak dapat ditemukan"
+                        Return False
                     End If
                 End Using
-                If _next Then
-                    If {0, 1}.Contains(_state) Then
-                        retval = True
-                    Else
-                        retval = False : Msg = ""
-                    End If
+
+                If _date < TransStartDate Then
+                    Msg = "Periode transaksi untuk faktur tersebut sudah diclosing."
+                    Return False
+                End If
+
+                If {0, 1}.Contains(_state) Then
+                    Return True
                 Else
-                    retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data. Data retur tidak dapat ditemukan"
+                    Return False
                 End If
             Else
                 Msg = "Tidak dapat terhubung ke database."
-                retval = False
+                Return False
             End If
         End Using
-
-        Return retval
     End Function
 
-    'CANCEL KAS
+    'KAS
     Public Function CheckCancelKas(KodeFaktur As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
         End If
 
-        Dim retval As Boolean = False
-        Dim q As String = "SELECT kas_kode, kas_status status FROM data_kas_faktur WHERE kas_kode='{0}'"
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Dim _next As Boolean = False
-                Dim _state As Integer = 0
-                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        _state = rdx.Item("status")
-                        _next = True
-                    Else
-                        _next = False
+        Try
+            Dim retval As Boolean = False
+            Dim q As String = "SELECT kas_tgl, kas_status status FROM data_kas_faktur WHERE kas_kode='{0}' AND kas_status<9"
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim _state As Integer = 0 : Dim _date As Date = Today
+                    Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _state = rdx.Item("status")
+                            _date = rdx.Item(0)
+                        Else
+                            Msg = "Terjadi kesalahan saat melakukan pengecekan data. Data kas tidak dapat ditemukan."
+                            Return False
+                        End If
+                    End Using
+
+                    If _date < TransStartDate Then
+                        Msg = "Periode transaksi untuk transaksi kas tersebut sudah diclosing."
+                        Return False
                     End If
-                End Using
-                If _next Then
-                    If {0, 1}.Contains(_state) Then : retval = True : Else : retval = False : Msg = "" : End If
+
+                    If Not {0, 1}.Contains(_state) Then Return False
+
+                    Return True
                 Else
-                    retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
+                    Msg = "Tidak dapat terhubung ke database" : Return False
                 End If
-            Else
-                Msg = "Tidak dapat terhubung ke database"
-                retval = False
-            End If
-        End Using
-        Return retval
+            End Using
+        Catch ex As Exception
+            logError(ex, True)
+            Msg = "Terjadi kesalahan saat melakukan pengecekan transaksi." & Environment.NewLine & ex.Message
+            Return False
+        End Try
     End Function
 
-    'CANCEL PEMBAYARAN HUTANG/PIUTANG
+    'PEMBAYARAN HUTANG/PIUTANG
     Public Function CheckCancelBayar(KodeFaktur As String, JenisBayar As String, ByRef Msg As String) As Boolean
         If MainConnection.Connection Is Nothing Then
             Throw New NullReferenceException("Main DB Connection is empty")
@@ -451,55 +475,63 @@
 
         Select Case LCase(JenisBayar)
             Case "hutang"
-                q = "SELECT h_bayar_bukti kode, h_bayar_status status, IFNULL(giro_status_pencairan,0) statusgiro " _
-                    & "FROM data_hutang_bayar LEFT JOIN data_giro ON giro_ref= h_bayar_bukti AND giro_type='OUT' AND giro_status =1 WHERE h_bayar_bukti='{0}'"
+                q = "SELECT h_bayar_tgl_bayar, h_bayar_status status, IFNULL(giro_status_pencairan,0) statusgiro FROM data_hutang_bayar " _
+                    & "LEFT JOIN data_giro ON giro_ref= h_bayar_bukti AND giro_type='OUT' AND giro_status =1 " _
+                    & "WHERE h_bayar_bukti='{0}' AND h_bayar_status<9"
             Case "piutang"
-                q = "SELECT p_bayar_bukti kode, p_bayar_status status, IFNULL(giro_status_pencairan,0) statusgiro " _
-                    & "FROM data_piutang_bayar LEFT JOIN data_giro ON giro_ref= p_bayar_bukti AND giro_type='IN' AND giro_status =1 WHERE p_bayar_bukti='{0}'"
+                q = "SELECT p_bayar_tanggal_bayar, p_bayar_status status, IFNULL(giro_status_pencairan,0) statusgiro FROM data_piutang_bayar " _
+                    & "LEFT JOIN data_giro ON giro_ref= p_bayar_bukti AND giro_type='IN' AND giro_status =1 " _
+                    & "WHERE p_bayar_bukti='{0}' AND p_bayar_status<9"
             Case Else
-                retval = False
-                Throw New Exception("Jenis bayar tidak sesuai")
+                Msg = "Wrong transaction type."
+                Return False
         End Select
 
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Dim _next As Boolean = False
-                Dim _state As Integer = 0
-                Dim _girostate As Integer = 0
-                Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        _state = rdx.Item("status")
-                        _girostate = rdx.Item("statusgiro")
-                        _next = True
-                    Else
-                        _next = False
-                    End If
-                End Using
-                If _next Then
-                    If {0, 1}.Contains(_state) Then
-                        If _girostate = 0 Then
-                            retval = True
+        Try
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim _state As Integer = 0 : Dim _date As Date = Today
+                    Dim _girostate As Integer = 0
+                    Using rdx = x.ReadCommand(String.Format(q, KodeFaktur))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            _state = rdx.Item("status")
+                            _girostate = rdx.Item("statusgiro")
+                            _date = rdx.Item(0)
                         Else
-                            retval = False
-                            Msg = "Pembayaran melalui bilyet giro telah dicairkan"
+                            Msg = "Terjadi kesalahan saat melakukan pengecekan data. Data pembayaran tidak dapat ditemukan."
+                            Return False
                         End If
+                    End Using
+
+                    'CHECK TRANSACTION DATE
+                    If _date < TransStartDate Then
+                        Msg = "Periode transaksi untuk pembayaran tersebut telah di closing."
+                        Return False
+                    End If
+
+                    'CHECK STATUS
+                    If {0, 1}.Contains(_state) Then
+                        'CHECK STATUS GIRO
+                        If Not _girostate = 0 Then
+                            Msg = "Pembayaran melalui bilyet giro telah diproses"
+                            Return False
+                        End If
+
+                        Return True
                     Else
-                        retval = False
-                        Msg = ""
+                        Return False
                     End If
                 Else
-                    retval = _next
-                    Msg = "Terjadi kesalahan saat melakukan pengecekan data"
+                    Msg = "Tidak dapat terhubung ke database."
+                    Return False
                 End If
-            Else
-                Msg = "Tidak dapat terhubung ke database"
-                retval = False
-            End If
-        End Using
-
-        Return retval
+            End Using
+        Catch ex As Exception
+            logError(ex, True)
+            Msg = "Terjadi kesalahan saat melakukan pengecekan transaksi." & Environment.NewLine & ex.Message
+            Return False
+        End Try
     End Function
 
     'GET TRANS STATUS
@@ -518,7 +550,7 @@
             Case "penjualan"
                 q = "SELECT faktur_status FROM data_penjualan_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
             Case "returjual"
-                q = "SELECT faktur_status FROM data_pejualan_retur_faktur WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
+                q = "SELECT faktur_status FROM data_penjualan_retur_faktur WHERE faktur_kode_bukti='{0}' AND faktur_status<9"
             Case "pembelian"
                 q = "SELECT faktur_status FROM data_pembelian_faktur WHERE faktur_kode='{0}' AND faktur_status<9"
             Case "returbeli"
@@ -555,5 +587,60 @@
         End Using
 
         Return _retval
+    End Function
+
+    'GET STATUS DATA HUTANG
+
+
+    'GET STATUS DATA PIUTANG
+
+
+
+    'GET PERIODE STATUS FROM TRANSACTION DATE
+    Public Function GetPeriodeStatus(TransDate As Date, Optional ByRef Respond As String = "", Optional ByRef RetMsg As String = "") As Boolean
+        Dim q As String = ""
+        Dim _retBool As Boolean = False
+        Dim _retResp As String = ""
+        Dim _retMsg As String = ""
+        Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                q = "SELECT tutupbk_id, tutupbk_closed FROM data_tutup_buku " _
+                    & "WHERE '{0:yyyy-MM-dd}' BETWEEN tutupbk_periode_tglawal AND tutupbk_periode_tglakhir AND tutupbk_status=1 " _
+                    & "ORDER BY tutupbk_id DESC LIMIT 1"
+                Try
+                    Using rdx = x.ReadCommand(String.Format(q, TransDate))
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            If rdx.Item(1) = 0 Then
+                                _retBool = True : _retResp = "open" : _retMsg = rdx.Item(0)
+                            Else
+                                _retBool = False : _retResp = "closed"
+                                _retMsg = "Periode keuangan transaksi telah diclosing."
+                            End If
+                        Else
+                            _retBool = False : _retResp = "error"
+                            _retMsg = "Data not found."
+                        End If
+                    End Using
+                Catch ex As Exception
+                    logError(ex, True)
+                    _retBool = False : _retResp = "error" : _retMsg = ex.Message
+                End Try
+            Else
+                _retBool = False : _retResp = "error"
+                _retMsg = "Tidak dapat terhubung ke database."
+            End If
+        End Using
+
+        Respond = _retResp : RetMsg = _retMsg
+        Return _retBool
+    End Function
+
+    Public Function GetPeriodeDate(PeriodeID As String, ByRef StartDate As Date, ByRef EndDate As Date) As Boolean
+        Dim q As String = ""
+        Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+
+        End Using
+        Return False
     End Function
 End Module

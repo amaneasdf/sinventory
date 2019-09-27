@@ -19,11 +19,16 @@
             .DisplayMember = "Text"
         End With
 
-        With date_tglentry
-            .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-        End With
+        'With date_tglentry
+        '    .Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        'End With
+        For Each x As DateTimePicker In {date_tglentry}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
+        Next
 
         If FormSet <> InputState.Insert Then
             loadData(IdJurnal)
@@ -34,22 +39,26 @@
                 Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
             End If
 
-            If selectperiode.closed Then AllowInput = False
-            in_kode.ReadOnly = True
-            bt_simpanjual.Text = "Update"
+            If date_tglentry.Value < TransStartDate Then formstate = InputState.View
         End If
 
+        If formstate = InputState.View Then AllowInput = False
         ControlSwitch(AllowInput)
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
-        in_ket.ReadOnly = IIf(AllowInput, False, True)
+        Dim _ReadOnly As Boolean = IIf(AllowInput, False, True)
+        in_kode.ReadOnly = _ReadOnly
+        in_ket.ReadOnly = _ReadOnly
         date_tglentry.Enabled = AllowInput
         cb_ppn.Enabled = AllowInput
+
         bt_simpanjual.Visible = AllowInput
+        bt_simpanjual.Text = If(formstate = InputState.Edit, "Update", "Simpan")
         mn_save.Enabled = AllowInput
-        mn_delete.Enabled = AllowInput
-        mn_duplicate.Enabled = AllowInput
+        mn_delete.Enabled = If(formstate = InputState.Insert, False, AllowInput)
+        mn_duplicate.Enabled = If(formstate = InputState.Insert, False, AllowInput)
+
         If Not AllowInput Then bt_bataljual.Text = "OK"
         For Each x As DataGridViewColumn In {kas_debet, kas_kredit}
             x.DefaultCellStyle = dgvstyle_currency
@@ -353,7 +362,7 @@
         Else
             Using x As New fr_akun_confirmdialog
                 x.do_loaddialog()
-                If x.RetVal.Key = True Then LogValidTrans(x.RetVal.Value, loggeduser.user_id, "JU.ENTRY", InputType, Me.ID)
+                If x.RetVal.Key = True Then LogValidTrans(x.RetVal.Value, loggeduser, "JU.ENTRY", InputType, Me.ID)
                 Return x.RetVal.Key
             End Using
         End If
@@ -443,13 +452,21 @@
 
     'UI : BUTTON
     Private Sub bt_simpanjual_Click(sender As Object, e As EventArgs) Handles bt_simpanjual.Click
+        'CHECK TANGGAL TRANSAKSI
+        If date_tglentry.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tglentry.Focus() : Exit Sub
+        End If
+
+        'CHECK INPUT DATA
         If removeCommaThousand(in_selisih.Text) <> 0 Then
             MessageBox.Show("Nilai yang dimasukan tidak seimbang, silahkan cek kembali.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
             Exit Sub
         End If
         If dgv_kas.RowCount = 0 Then
             MessageBox.Show("Entry jurnal masih kosong, harap isi terlebih dahulu.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Exit Sub
+            in_rek.Focus() : Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor

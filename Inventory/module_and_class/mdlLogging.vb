@@ -1,9 +1,7 @@
 ﻿Module mdlLogging
     'CONSOLE WRITING
     Public Sub consoleWriteLine(text As String)
-        If log_switch.log_c_w = True Then
-            Console.WriteLine(text)
-        End If
+        If log_switch.log_c_w Then Console.WriteLine(text)
     End Sub
 
     'LOG LOGIN
@@ -42,17 +40,28 @@
     End Function
 
     'LOG VALIDASI
-    Public Sub LogValidTrans(UserValid As String, LoggedUser As String, TransType As String, InputType As String, IDTrans As String, Optional ByRef ReturnID As Integer = 0)
+    Public Sub LogValidTrans(UserValid As String, LoggedUser As UserData, TransType As String, InputType As String, IDTrans As String, Optional ByRef ReturnID As Integer = 0)
         Dim q As String = ""
-        'If log_switch.log_valid = False Then Exit Function
-        Using x = MainConnection
-            x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                q = "INSERT INTO system_valid_log() VALUE()"
+        'If log_switch.log_valid = False Then Exit Sub
+        Try
+            Using x = MainConnection
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim _val() = {LoggedUser.user_id, LoggedUser.user_session, UserValid, TransType, InputType, IDTrans}
+                    For i = 0 To _val.Length - 1
+                        _val(i) = "'" & _val(i) & "'"
+                    Next
 
-            Else
+                    q = "SELECT Log_Validasi({0})" : q = String.Format(q, String.Join(",", _val))
 
-            End If
-        End Using
+                    'ReturnID = Integer.Parse(x.ExecScalar(q))
+                Else
+                    Throw New Exception("Cannot connect to database.")
+                End If
+            End Using
+        Catch ex As Exception
+            ReturnID = -1
+            logError(ex, True)
+        End Try
     End Sub
 
     'LOG ERROR

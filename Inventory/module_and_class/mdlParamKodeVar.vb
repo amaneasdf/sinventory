@@ -1,5 +1,8 @@
 ﻿Module mdlParamKodeVar
     Private _LimitPerPage As Integer = 2000
+    Private _ListStartDate As Date = Today
+    Private _ListEndDate As Date = Today
+    Private _TransStartPeriode As Date = Today
     Private _LastPrinter As String = String.Empty
 
     Public Structure cnction
@@ -7,6 +10,18 @@
         Dim uid As String
         Dim pass As String
         Dim db As String
+
+        Public ReadOnly Property IsEmpty As Boolean
+            Get
+                Dim _isEmpty As Boolean = False
+                For Each _str As String In {host, db, uid}
+                    If String.IsNullOrWhiteSpace(_str) Then
+                        _isEmpty = True : Exit For
+                    End If
+                Next
+                Return _isEmpty
+            End Get
+        End Property
     End Structure
 
     Public Structure periode
@@ -14,49 +29,7 @@
         Dim tglawal As Date
         Dim tglakhir As Date
         Dim closed As Boolean
-
-        'Public Function SetPeriode() As Task
-        '    Return SetPeriode(Now())
-        'End Function
-
-        'Public Async Function SetPeriode(SelectedDate As Date) As Task
-        '    Dim q As String = ""
-        '    Dim periode As KeyValuePair(Of String, Boolean) = Await GetPeriode(SelectedDate)
-        '    If IsNothing(periode.Key) And IsNothing(periode.Value) Then
-        '        Throw New Exception("Periode data not available")
-        '    End If
-        '    id = periode.Value : closed = periode.Key
-        '    Using x = MainConnection
-        '        Await x.OpenAsync() : If x.Connection.State = ConnectionState.Open Then
-        '            Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, id), CommandBehavior.SingleRow)
-        '                Dim red = Await rdx.ReadAsync : If red And rdx.HasRows Then : tglawal = rdx.Item(0) : tglakhir = rdx.Item(1) : End If
-        '            End Using
-        '        End If
-        '    End Using
-        'End Function
-
-        'Public Async Function GetPeriode(DateSelected As Date) As Task(Of KeyValuePair(Of String, Boolean))
-        '    Dim q As String = ""
-        '    Dim retval As New KeyValuePair(Of String, Boolean)
-        '    Using x As MySqlThing = MainConnection
-        '        If Not IsNothing(x) Then
-        '            Try
-        '                Await x.OpenAsync
-        '                If x.Connection.State = ConnectionState.Open Then
-        '                    Using rdx As MySql.Data.MySqlClient.MySqlDataReader = Await x.ReadCommandAsync(String.Format(q, DateSelected.ToString("yyyy-MM-dd")))
-        '                        Dim red = Await rdx.ReadAsync
-        '                        If red And rdx.HasRows Then
-
-        '                        End If
-        '                    End Using
-        '                End If
-        '            Catch ex As Exception
-
-        '            End Try
-        '        End If
-        '    End Using
-        '    Return retval
-        'End Function
+       
     End Structure
 
     Public Structure dblogwrite
@@ -65,6 +38,11 @@
         Dim log_c_w As Boolean
     End Structure
 
+    'MYSQL CONNECTION SETTING
+    Public MainConnection As New MySqlThing
+    Public MainConnData As New cnction
+
+    'DATA LIST PROPERTY
     Public ReadOnly Property LimitDataPerPage As Integer
         Get
             Try
@@ -73,6 +51,58 @@
             Catch ex As Exception
                 logError(ex, True)
                 Return 1000
+            End Try
+        End Get
+    End Property
+    Public ReadOnly Property DataListStartDate As Date
+        Get
+            Try
+                If MainConnData.IsEmpty Then Throw New Exception("Main database connection setting hasnt been set.")
+                Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        Dim q As String = "SELECT IFNULL(MIN(tutupbk_periode_tglawal), CURDATE()) FROM data_tutup_buku WHERE tutupbk_status = 1"
+                        _ListStartDate = Date.Parse(x.ExecScalar(q))
+                    End If
+                End Using
+                Return _ListStartDate
+            Catch ex As Exception
+                logError(ex, True)
+                Return _ListStartDate
+            End Try
+        End Get
+    End Property
+    Public ReadOnly Property DataListEndDate As Date
+        Get
+            Try
+                If MainConnData.IsEmpty Then Throw New Exception("Main database connection setting hasnt been set.")
+                Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        Dim q As String = "SELECT IFNULL(MAX(tutupbk_periode_tglakhir), CURDATE()) FROM data_tutup_buku WHERE tutupbk_status = 1"
+                        _ListEndDate = Date.Parse(x.ExecScalar(q))
+                    End If
+                End Using
+                Return _ListEndDate
+            Catch ex As Exception
+                logError(ex, True)
+                Return _ListEndDate
+            End Try
+        End Get
+    End Property
+    Public ReadOnly Property TransStartDate As Date
+        Get
+            Try
+                If MainConnData.IsEmpty Then Throw New Exception("Main database connection setting hasnt been set.")
+                Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                    x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                        Dim q As String = "SELECT IFNULL(MIN(tutupbk_periode_tglawal), CURDATE()) FROM data_tutup_buku " _
+                                          & "WHERE tutupbk_status = 1 AND tutupbk_closed=0"
+                        _TransStartPeriode = Date.Parse(x.ExecScalar(q))
+                    End If
+                End Using
+                Return _TransStartPeriode
+            Catch ex As Exception
+                logError(ex, True)
+                Return _TransStartPeriode
             End Try
         End Get
     End Property
@@ -102,11 +132,10 @@
         End Get
     End Property
 
+    'USER DATA
+    Public loggeduser As New UserData
     Public usernull As New UserData
     'Public userdev As New userdata With {.user_id = "dev", .user_ip = "0.0.0.0"}
-
-    Public MainConnection As New MySqlThing
-    Public MainConnData As New cnction
 
     Public selectperiode As New periode
     Public currentperiode As New periode
@@ -116,19 +145,6 @@
     'pajak increment
     Public Const ppn As Double = 0.1
     Public Const ppnbm As Double = 0.2
-
-    'jenisreferensi
-    Public Function jenisRef() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Kategori Barang", "katbarang")
-        dt.Rows.Add("Jenis Barang", "jenisbarang")
-        dt.Rows.Add("Satuan", "satuan")
-        dt.Rows.Add("Jenis Customer", "custo")
-        Return dt
-    End Function
 
     'JENISIMPORT
     Public Function jenisImport() As DataTable
@@ -146,148 +162,121 @@
         Return dt
     End Function
 
-    'jenisbarang
-    Public Function jenisBarang() As DataTable
-        Dim dt As New DataTable
-        dt = getDataTablefromDB("SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis WHERE jenis_status=1")
-        'dt.Columns.Add("Text", GetType(String))
-        'dt.Columns.Add("Value", GetType(String))
-        'dt.Rows.Add("Stok", "STOK")
-        'dt.Rows.Add("Non Stok", "NONSTOK")
-        'dt.Rows.Add("Bonus", "BONUS")
-        Return dt
-    End Function
-
-    'jenissatuan
+    'DATATABLE FOR COMBOBOX
     Public Function jenis(tipe As String) As DataTable
         Dim dt As New DataTable : Dim q As String = ""
-        Select Case tipe
-            Case "satuan"
-                dt = getDataTablefromDB("SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1 ORDER BY satuan_kode")
-            Case "satuan_plus"
-                dt = getDataTablefromDB("SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan " _
-                                        & "WHERE satuan_status=1 ORDER BY satuan_nama")
-            Case "kat_barang"
-                Using x = MainConnection
-                    x.Open() : dt = x.GetDataTable("SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori " _
-                                                    & "WHERE kategori_status=1 ORDER BY kategori_kode")
-                End Using
+        Dim _getTable() As String = {"satuan", "satuan_plus", "jenis_barang", "kat_barang", "jenis_custo", "hargajual_custo", "areacustokab", "areacusto",
+                                     "bayar_pajak", "bayar_pajak2", "jenis_ppn", "periode", "jenis_sales"}
+        Dim _setTable() As String = {"pajak_barang", "priority_custo", "term", "transbeli", "transjual", "trans_pajak", "trans_pajak2",
+                                     "bayarhutang", "bayarpiutang", "validasi"}
 
-            Case "pajak_barang"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Pajak (PPn)", "1")
-                dt.Rows.Add("Non-Pajak", "0")
+        tipe = LCase(tipe)
 
-            Case "jenis_custo"
-                dt = getDataTablefromDB("SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) Text, jenis_kode `Value` " _
-                                        & "FROM data_customer_jenis WHERE jenis_status=1")
-            Case "priority_custo"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("One Bill", "0")
-                dt.Rows.Add("Priority", "1")
-            Case "hargajual_custo"
-                Using x = MainConnection
-                    x.Open() : dt = x.GetDataTable("SELECT hargajual_nama Text, hargajual_kode Value FROM data_customer_hargajual WHERE hargajual_status=1")
-                End Using
+        If _getTable.Contains(tipe) Then
+            Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Select Case tipe
+                        'DATA BARANG
+                        Case "satuan"
+                            q = "SELECT satuan_nama as Text, satuan_kode as Value FROM ref_satuan where satuan_status=1 ORDER BY satuan_kode"
+                        Case "satuan_plus"
+                            q = "SELECT satuan_kode Value, CONCAT(satuan_nama,' (',satuan_kode,')') Text FROM ref_satuan WHERE satuan_status=1 ORDER BY satuan_nama"
+                        Case "jenis_barang"
+                            q = "SELECT jenis_nama as Text, jenis_kode as Value FROM data_barang_jenis WHERE jenis_status=1"
+                        Case "kat_barang"
+                            q = "SELECT kategori_kode Value, kategori_nama Text FROM ref_barang_kategori WHERE kategori_status=1 ORDER BY kategori_kode"
 
-            Case "bayar_pajak"
-                q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
-                dt = getDataTablefromDB(q)
+                            'DATA CUSTOMER
+                        Case "jenis_custo"
+                            q = "SELECT CONCAT(UCASE(LEFT(jenis_nama,1)),SUBSTRING(jenis_nama,2)) Text, jenis_kode Value FROM data_customer_jenis WHERE jenis_status=1"
+                        Case "hargajual_custo"
+                            q = "SELECT hargajual_nama Text, hargajual_kode Value FROM data_customer_hargajual WHERE hargajual_status=1"
+                        Case "areacustokab"
+                            q = "SELECT ref_kab_id as 'Value', ref_kab_nama as 'Text' FROM ref_area_kabupaten WHERE ref_kab_status=1"
+                        Case "areacusto"
+                            q = "SELECT c_area_id as 'Value',c_area_nama as 'Text' FROM data_customer_area WHERE c_area_status=1"
 
-            Case "bayar_pajak2"
-                q = "SELECT CONCAT('Kateg. ', ref_text) Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
-                dt = getDataTablefromDB(q)
+                            'DATA SALES
+                        Case "jenis_sales"
+                            q = "SELECT CONCAT('Sales ', ref_text) Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='sales_jenis'"
 
-            Case "term"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Cash", "0")
-                dt.Rows.Add("Tempo", "1")
+                            'DATA PAJAK
+                        Case "bayar_pajak"
+                            q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
+                        Case "bayar_pajak2"
+                            q = "SELECT CONCAT('Kateg. ', ref_text) Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans2'"
+                        Case "jenis_ppn"
+                            q = "SELECT ref_text Text, ref_kode Value FROM ref_jenis WHERE ref_status=1 AND ref_type='ppn_trans3'"
 
-            Case "transbeli"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Pembelian", "'BELI'")
-                dt.Rows.Add("Retur Pembelian", "'RETUR'")
-                dt.Rows.Add("Beli & Retur Beli", "'BELI','RETUR'")
+                            'DATA TRANSAKSI & LAPORAN
+                        Case "periode"
+                            q = "SELECT tutupbk_id as 'Value', " _
+                                & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
+                                & "FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id<>0"
 
-            Case "transjual"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Penjualan", "'JUAL'")
-                dt.Rows.Add("Retur Penjualan", "'RETUR'")
-                dt.Rows.Add("Jual & Retur Jual", "'JUAL','RETUR'")
+                    End Select
 
-            Case "trans_pajak"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Kategori A", "0")
-                dt.Rows.Add("Kategori B", "1,2")
-                dt.Rows.Add("Kategori C", "0,1,2")
-            Case "trans_pajak2"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Kategori A", "0")
-                dt.Rows.Add("Kategori B", "1")
-                dt.Rows.Add("Kategori C", "0,1")
+                    dt = x.GetDataTable(q)
+                Else
 
-            Case "periode"
-                dt = getDataTablefromDB("SELECT tutupbk_id as 'Value', " _
-                                        & "CONCAT(DATE_FORMAT(tutupbk_periode_tglawal,'%d-%m-%Y'),' s.d. ',DATE_FORMAT(tutupbk_periode_tglakhir,'%d-%m-%Y')) as 'Text' " _
-                                        & "FROM data_tutup_buku WHERE tutupbk_status=1 AND tutupbk_id<>0")
+                End If
+            End Using
+        ElseIf _setTable.Contains(tipe) Then
+            dt.Columns.Add("Text", GetType(String))
+            dt.Columns.Add("Value", GetType(String))
 
-            Case "bayarhutang" 'LAPORAN PEMBAYARAN HUTANG
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Semua", "ALL")
-                dt.Rows.Add("Tunai", "TUNAI")
-                dt.Rows.Add("Giro", "BG")
-                dt.Rows.Add("TransferBank", "TRANSFER")
-                dt.Rows.Add("ReturPembelian", "RETUR")
-                dt.Rows.Add("PiutangSupplier", "PIUTSUPL")
+            Select Case tipe
+                'DATA BARANG
+                Case "pajak_barang"
+                    dt.Rows.Add("Pajak (PPn)", "1")
+                    dt.Rows.Add("Non-Pajak", "0")
 
-            Case "bayarpiutang" 'LAPORAN PEMBAYARAN PIUTANG
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Semua", "ALL")
-                dt.Rows.Add("Tunai", "TUNAI")
-                dt.Rows.Add("Giro", "BG")
-                dt.Rows.Add("TransferBank", "TRANSFER")
-                dt.Rows.Add("ReturPenjualan", "RETUR")
-                dt.Rows.Add("Titipan", "PIUTSUPL")
-                dt.Rows.Add("BG Ditolak", "BGTOLAK")
+                    'DATA CUSTOMER
+                Case "priority_custo"
+                    dt.Rows.Add("One Bill", "0")
+                    dt.Rows.Add("Priority", "1")
 
-            Case "validasi"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
-                dt.Rows.Add("Pending", "0")
-                dt.Rows.Add("Approve", "1")
-                dt.Rows.Add("Tolak", "2")
-
-            Case "areacustokab"
-                q = "SELECT ref_kab_id as 'Value', ref_kab_nama as 'Text' FROM ref_area_kabupaten WHERE ref_kab_status=1"
-                dt = getDataTablefromDB(q)
-
-            Case "areacusto"
-                q = "SELECT c_area_id as 'Value',c_area_nama as 'Text' FROM data_customer_area WHERE c_area_status=1"
-                dt = getDataTablefromDB(q)
-
-            Case Else
-                dt = Nothing
-        End Select
-        Return dt
-    End Function
-
-    'jenis sales
-    Public Function jenisSales() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Sales TO", "1")
-        dt.Rows.Add("Sales Kanvas", "2")
+                    'DATA TRANSAKSI & LAPORAN
+                Case "term"
+                    dt.Rows.Add("Cash", "0")
+                    dt.Rows.Add("Tempo", "1")
+                Case "transbeli"
+                    dt.Rows.Add("Pembelian", "'BELI'")
+                    dt.Rows.Add("Retur Pembelian", "'RETUR'")
+                    dt.Rows.Add("Beli & Retur Beli", "'BELI','RETUR'")
+                Case "transjual"
+                    dt.Rows.Add("Penjualan", "'JUAL'")
+                    dt.Rows.Add("Retur Penjualan", "'RETUR'")
+                    dt.Rows.Add("Jual & Retur Jual", "'JUAL','RETUR'")
+                Case "trans_pajak"
+                    dt.Rows.Add("Kategori A", "0")
+                    dt.Rows.Add("Kategori B", "1,2")
+                    dt.Rows.Add("Kategori C", "0,1,2")
+                Case "trans_pajak2"
+                    dt.Rows.Add("Kategori A", "0")
+                    dt.Rows.Add("Kategori B", "1")
+                    dt.Rows.Add("Kategori C", "0,1")
+                Case "bayarhutang"
+                    dt.Rows.Add("Semua", "ALL")
+                    dt.Rows.Add("Tunai", "TUNAI")
+                    dt.Rows.Add("Giro", "BG")
+                    dt.Rows.Add("TransferBank", "TRANSFER")
+                    dt.Rows.Add("ReturPembelian", "RETUR")
+                    dt.Rows.Add("PiutangSupplier", "PIUTSUPL")
+                Case "bayarpiutang"
+                    dt.Rows.Add("Semua", "ALL")
+                    dt.Rows.Add("Tunai", "TUNAI")
+                    dt.Rows.Add("Giro", "BG")
+                    dt.Rows.Add("TransferBank", "TRANSFER")
+                    dt.Rows.Add("ReturPenjualan", "RETUR")
+                    dt.Rows.Add("Titipan", "PIUTSUPL")
+                    dt.Rows.Add("BG Ditolak", "BGTOLAK")
+                Case "validasi"
+                    dt.Rows.Add("Pending", "0")
+                    dt.Rows.Add("Approve", "1")
+                    dt.Rows.Add("Tolak", "2")
+            End Select
+        End If
 
         Return dt
     End Function
@@ -314,27 +303,49 @@
     'jenisperkiraan
     Public Function jenisPerkiraan(tipe As String, Optional kodegol As String = "00") As DataTable
         Dim dt As New DataTable
+        Dim _getTable() As String = {"gol", "akun"}
+        Dim _setTable() As String = {"jenis"}
 
-        Select Case tipe
-            Case "jenis"
-                dt.Columns.Add("Text", GetType(String))
-                dt.Columns.Add("Value", GetType(String))
+        tipe = LCase(tipe)
 
-                dt.Rows.Add("Aktiva Lancar", "11")
-                dt.Rows.Add("Aktiva Tetap", "12")
-                dt.Rows.Add("Aktiva Lain-lain", "13")
-                dt.Rows.Add("Pasiva Lancar", "21")
-                dt.Rows.Add("Modal", "22")
-                dt.Rows.Add("Pendapatan", "31")
-                dt.Rows.Add("Pendapatan Lain-Lain", "32")
-                dt.Rows.Add("Biaya Penjualan", "41")
-                dt.Rows.Add("Biaya Operasional", "42")
-                dt.Rows.Add("Biaya Lain-Lain", "43")
-                dt.Rows.Add("Biaya Klaim", "44")
-            Case "gol"
-                dt = getDataTablefromDB("SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' " _
-                                        & "FROM data_perkiraan_gol WHERE perk_gol_kodejen='" & kodegol & "' AND perk_gol_status=1 ORDER by perk_gol_nama")
-        End Select
+        If _getTable.Contains(tipe) Then
+            Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim q As String = ""
+                    Select Case tipe
+                        Case "gol"
+                            q = "SELECT perk_gol_kode as 'Value', perk_gol_nama as 'Text' FROM data_perkiraan_gol " _
+                                & "WHERE perk_gol_kodejen='{0}' AND perk_gol_status=1 ORDER by perk_gol_nama"
+                            q = String.Format(q, kodegol)
+                        Case "akun"
+                            q = "SELECT perk_kode as 'Value',perk_nama_akun as 'Text' FROM data_perkiraan WHERE perk_status=1 AND perk_parent='{0}'"
+                            q = String.Format(q, kodegol)
+                    End Select
+
+                    dt = x.GetDataTable(q)
+                Else
+
+                End If
+            End Using
+        ElseIf _setTable.Contains(tipe) Then
+            dt.Columns.Add("Text", GetType(String))
+            dt.Columns.Add("Value", GetType(String))
+
+            Select Case tipe
+                Case "jenis"
+                    dt.Rows.Add("Aktiva Lancar", "11")
+                    dt.Rows.Add("Aktiva Tetap", "12")
+                    dt.Rows.Add("Aktiva Lain-lain", "13")
+                    dt.Rows.Add("Pasiva Lancar", "21")
+                    dt.Rows.Add("Modal", "22")
+                    dt.Rows.Add("Pendapatan", "31")
+                    dt.Rows.Add("Pendapatan Lain-Lain", "32")
+                    dt.Rows.Add("Biaya Penjualan", "41")
+                    dt.Rows.Add("Biaya Operasional", "42")
+                    dt.Rows.Add("Biaya Lain-Lain", "43")
+                    dt.Rows.Add("Biaya Klaim", "44")
+            End Select
+        End If
 
         Return dt
     End Function
@@ -347,19 +358,6 @@
         dt.Columns.Add("Value", GetType(String))
         dt.Rows.Add("Debet", "D")
         dt.Rows.Add("Kredit", "K")
-
-        Return dt
-    End Function
-
-    'jenisPPn
-    Public Function jenisPPN() As DataTable
-        Dim dt As New DataTable
-
-        dt.Columns.Add("Text", GetType(String))
-        dt.Columns.Add("Value", GetType(String))
-        dt.Rows.Add("Include", "1")
-        dt.Rows.Add("Excluded", "2")
-        dt.Rows.Add("Non-PPn", "0")
 
         Return dt
     End Function

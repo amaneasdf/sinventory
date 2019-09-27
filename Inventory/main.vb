@@ -377,8 +377,15 @@
     'SETUP CONECTION
     Private Function setConnection() As Boolean
         Dim _retval As Boolean = False
-        MainConnData = loadCon("CatraDev", False)
-        'MainConnData = loadCon("network", False)
+        Dim _ConnCfgName As String = ""
+#If DEBUG Then
+        _ConnCfgName = "CatraDev"
+#Else
+        _ConnCfgName = "network"
+#End If
+        MainConnData = loadCon(_ConnCfgName, False)
+        consoleWriteLine("Connecting to " & _ConnCfgName)
+        consoleWriteLine(DataListStartDate & ":" & DataListEndDate & ":" & TransStartDate)
 
         If MainConnData.db = Nothing Or MainConnData.host = Nothing Then
             MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
@@ -387,7 +394,6 @@
             _retval = False
             Application.Exit()
         Else
-            'MainConnData = mainConn
             MainConnection = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             setConn(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
             MainConnection.Open()

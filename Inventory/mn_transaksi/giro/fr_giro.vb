@@ -21,7 +21,7 @@
     Public Sub do_load(tipe As String, kode As String)
         tipegiro = tipe
 
-        If currentperiode.id <> selectperiode.id Then _allowedit = False
+        'If currentperiode.id <> selectperiode.id Then _allowedit = False
 
         loadData(kode, tipe)
         formSW(tipe)
@@ -122,7 +122,7 @@
                 in_akuncair_n.Visible = True
         End Select
 
-        If selectperiode.closed = True Or loggeduser.allowedit_transact = False Then
+        If loggeduser.allowedit_transact = False Then
             mn_cair.Enabled = False
             mn_tolak.Enabled = False
         Else
@@ -202,14 +202,7 @@
 
         Using x As New fr_giro_dialog
             With x
-                .do_load(tipegiro)
-                With .date_tgl_cair
-                    .Value = CDate(IIf(in_tglcair.Text = Nothing, in_tgl_bg.Text, in_tglcair.Text))
-                    .MinDate = CDate(in_tgl_bg.Text)
-                End With
-                If bankpencairan <> Nothing Then
-                    .cb_akun.SelectedValue = bankpencairan
-                End If
+                .doLoadCair(in_nobg.Text, tipegiro, in_tgl_bg.Text, bankpencairan)
                 .ShowDialog(Me)
                 If .returnval Then
                     in_statusgiro.Text = "DICAIRKAN"
@@ -237,9 +230,7 @@
 
         Using x As New fr_giro_dialog
             With x
-                .do_load(tipegiro)
-                .lbl_cair.Visible = False
-                .cb_akun.Visible = False
+                .doLoadTolak(in_nobg.Text, tipegiro, in_tgl_penarikan.Text)
                 .ShowDialog(Me)
                 If .returnval Then
                     in_statusgiro.Text = "DITOLAK"
@@ -335,8 +326,8 @@
                 If chkquery And datecairchange Then
                     If loggeduser.allowedit_transact And Not selectperiode.closed Then
                         If UCase(in_statusgiro.Text) = "DICAIRKAN" Then
-                            Dim question As String = "Simpan data pencairan giro?{0}*Perubahan terhadap transaksi pembayaran yang berhubungan{0}atau penolakan giro tidak dapat dilakukan " _
-                                                     & "setelah pencairan."
+                            Dim question As String = "Simpan data pencairan giro?{0}*Perubahan terhadap transaksi pembayaran yang berhubungan{0}atau " _
+                                                     & "penolakan giro tidak dapat dilakukan setelah pencairan."
 
                             If MessageBox.Show(String.Format(question, Environment.NewLine), "Detail Giro",
                                                MessageBoxButtons.YesNo, MessageBoxIcon.Question

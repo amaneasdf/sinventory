@@ -1,29 +1,12 @@
 ﻿Public Class fr_giro_dialog
     Private tipe As String = "IN"
+    Private dialogtipe As String = "CAIR"
+    Private GiroID As String = ""
     Public returnval As Boolean = False
+    Public ValidID As String = ""
 
-    Private Sub loadCBAkun(kode As String)
-        Dim q As String = "SELECT perk_kode as 'Value',perk_nama_akun as 'Text' FROM data_perkiraan WHERE perk_status=1 AND perk_parent='{0}'"
-        Dim kodeparent As String = "1101"
-        With cb_akun
-            .DataSource = Nothing
-            Select Case kode
-                Case "TUNAI"
-                    kodeparent = "1101"
-                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
-                Case "BG", "TRANSFER"
-                    kodeparent = "1102"
-                    .DataSource = getDataTablefromDB(String.Format(q, kodeparent))
-                Case Else
-                    Exit Sub
-            End Select
-            .ValueMember = "Value"
-            .DisplayMember = "Text"
-        End With
-    End Sub
-
-    Public Sub do_load(tipegiro As String)
-        tipe = UCase(tipegiro)
+    Private Sub do_load(GiroID As String, tipegiro As String, GiroDate As Date)
+        tipe = UCase(tipegiro) : Me.GiroID = GiroID
 
         If tipe = "IN" Then
             lbl_cair.Visible = True
@@ -33,7 +16,30 @@
             cb_akun.Visible = False
         End If
 
-        loadCBAkun("BG")
+        RemoveHandler date_tgl_cair.ValueChanged, AddressOf date_tgl_cair_ValueChanged
+        With date_tgl_cair
+            .MinDate = If(GiroDate < TransStartDate, TransStartDate, GiroDate)
+            .Value = If(TransStartDate > Today, TransStartDate, Today)
+        End With
+        AddHandler date_tgl_cair.ValueChanged, AddressOf date_tgl_cair_ValueChanged
+
+        With cb_akun
+            .DataSource = jenisPerkiraan("akun", "1102")
+            .ValueMember = "Value"
+            .DisplayMember = "Text"
+            .SelectedIndex = -1
+        End With
+    End Sub
+
+    Public Sub doLoadCair(GiroID As String, GiroType As String, GiroDate As Date, AccID As String)
+        do_load(GiroID, GiroType, GiroDate)
+        If String.IsNullOrWhiteSpace(AccID) Then cb_akun.SelectedValue = AccID
+    End Sub
+
+    Public Sub doLoadTolak(GiroID As String, GiroType As String, GiroDate As Date)
+        do_load(GiroID, GiroType, GiroDate)
+        cb_akun.Visible = False
+        lbl_cair.Visible = False
     End Sub
 
     '------------drag form
@@ -79,17 +85,21 @@
     'BUTTON
     Private Sub bt_simpanbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
         If in_tgl_cair.Text = "" Then
-            MessageBox.Show("Tanggal belum di input")
-            date_tgl_cair.Focus()
-            Exit Sub
+            MessageBox.Show("Tanggal belum di input.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_cair.Focus() : Exit Sub
         End If
-        If cb_akun.SelectedValue = Nothing And tipe = "IN" Then
-            MessageBox.Show("Akun pencairan belum di input")
-            cb_akun.Focus()
-            Exit Sub
+        If cb_akun.Visible And cb_akun.SelectedIndex = -1 Then
+            MessageBox.Show("Akun pencairan. belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            cb_akun.Focus() : Exit Sub
         End If
 
-        returnval = True
-        Me.Close()
+        Dim _ok As Boolean = False
+        Using _Valid As New fr_jualconfirm_dialog
+            _Valid.doLoadValid()
+            _ok = _Valid.returnval.Key
+            If _ok Then LogValidTrans(_Valid.returnval.Value, loggeduser, "GIRO" & tipe, dialogtipe, GiroID, ValidID)
+        End Using
+        returnval = _ok
+        If _ok Then Me.Close()
     End Sub
 End Class

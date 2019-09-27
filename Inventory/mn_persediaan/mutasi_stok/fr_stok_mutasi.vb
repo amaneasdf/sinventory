@@ -17,24 +17,28 @@
         Const _tempTitle As String = "Mutasi Stok : rj20190810902"
 
         formstate = FormSet
-
         With cb_pajak
             .DataSource = jenis("bayar_pajak")
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
 
-        With date_tgl_beli
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-            If selectperiode.tglakhir >= Today Then : .Value = Today
-            Else : .Value = selectperiode.tglakhir
-            End If
-        End With
+        'With date_tgl_beli
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        '    If selectperiode.tglakhir >= Today Then : .Value = Today
+        '    Else : .Value = selectperiode.tglakhir
+        '    End If
+        'End With
+        For Each x As DateTimePicker In {date_tgl_beli}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
+        Next
 
         setDoubleBuffered(dgv_barang, True)
 
-        If formstate = InputState.Edit Or formstate = InputState.View Then
+        If Not formstate = InputState.Insert Then
             Me.Text += " : " & NoFaktur
             Me.lbl_title.Text += " : " & NoFaktur
             If Me.lbl_title.Text.Length > _tempTitle.Length Then
@@ -42,26 +46,24 @@
             End If
 
             loadData(NoFaktur)
-            in_kode.ReadOnly = True
-            If Not {0, 1}.Contains(_status) Then AllowEdit = False
-            If formstate = InputState.View Then AllowEdit = False
-
-            bt_simpanbeli.Text = "Update"
+            If Not {0, 1}.Contains(_status) Or date_tgl_beli.Value < TransStartDate Then formstate = InputState.View
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         FormSwitch(AllowEdit)
     End Sub
 
     Private Sub FormSwitch(AllowEdit As Boolean)
+        Dim _ReadOnly As Boolean = IIf(AllowEdit, False, True)
         cb_pajak.Enabled = IIf(dgv_barang.RowCount > 0, False, AllowEdit)
-        in_gudang_n.ReadOnly = IIf(dgv_barang.RowCount > 0, True, IIf(AllowEdit, False, True))
-        in_gudang2_n.ReadOnly = IIf(AllowEdit, False, True)
+        in_gudang_n.ReadOnly = IIf(dgv_barang.RowCount > 0, True, _ReadOnly)
+        in_gudang2_n.ReadOnly = _ReadOnly
         date_tgl_beli.Enabled = AllowEdit
 
         bt_simpanbeli.Enabled = AllowEdit
-
+        bt_simpanbeli.Text = If(formstate = InputState.Edit, "Update", "Simpan")
         mn_save.Enabled = AllowEdit
-        mn_cancel.Enabled = IIf({0, 1}.Contains(_status), AllowEdit, False)
+        mn_cancel.Enabled = If(formstate = InputState.Insert, False, IIf({0, 1}.Contains(_status), AllowEdit, False))
         mn_print.Enabled = False
 
         For Each x As Control In {in_barang, in_barang_nm, in_qty1, in_qty2, in_qty3, in_sat1, in_sat2, in_sat3, in_hpp, bt_tbbarang}
@@ -101,8 +103,7 @@
         End If
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 q = "SELECT faktur_kode, faktur_tanggal, faktur_pajak, faktur_gudang_asal, a.gudang_nama as gudang_asal, " _
                     & "faktur_gudang_tujuan, b.gudang_nama as gudang_tujuan, faktur_ket, faktur_status, " _
                     & "IFNULL(faktur_reg_alias,'') faktur_reg_alias, DATE_FORMAT(faktur_reg_date,'%d/%m/%Y %H:%i:%S') faktur_reg_date, " _
@@ -117,18 +118,22 @@
                         in_kode.Text = rdx.Item("faktur_kode")
                         date_tgl_beli.Value = rdx.Item("faktur_tanggal")
                         cb_pajak.SelectedValue = rdx.Item("faktur_pajak")
+
                         in_gudang.Text = rdx.Item("faktur_gudang_asal")
                         in_gudang_n.Text = rdx.Item("gudang_asal")
                         in_gudang2.Text = rdx.Item("faktur_gudang_tujuan")
                         in_gudang2_n.Text = rdx.Item("gudang_tujuan")
+
                         in_ket.Text = rdx.Item("faktur_ket")
                         _status = rdx.Item("faktur_status")
+
                         txtRegAlias.Text = rdx.Item("faktur_reg_alias")
                         txtRegdate.Text = rdx.Item("faktur_reg_date")
                         txtUpdDate.Text = rdx.Item("faktur_upd_date")
                         txtUpdAlias.Text = rdx.Item("faktur_upd_alias")
                     End If
                 End Using
+
                 q = "SELECT trans_barang, barang_nama, trans_qty_besar, barang_satuan_besar, trans_qty_tengah, " _
                     & "barang_satuan_tengah, trans_qty_kecil, barang_satuan_kecil, trans_qty_tot,trans_hpp " _
                     & "FROM data_barang_stok_mutasi_trans LEFT JOIN data_barang_master ON barang_kode=trans_barang " _
@@ -384,8 +389,7 @@
         Dim q As String = ""
 
         Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Dim _tgltrans As String = date_tgl_beli.Value.ToString("yyyy-MM-dd")
                 Dim _kode As String = ""
 
@@ -441,7 +445,7 @@
 
                 For Each rows As DataGridViewRow In dgv_barang.Rows
                     Dim _qtytot As Integer = rows.Cells("qty_tot").Value
-                    Dim _hpp As Decimal = rows.Cells("hpp_brg").Value
+                    Dim _hpp As Decimal = getHpp(rows.Cells(0).Value)
                     dataBrg = {
                         "trans_barang='" & rows.Cells(0).Value & "'",
                         "trans_qty_besar=" & rows.Cells("qty_b").Value,
@@ -616,7 +620,7 @@
     End Sub
 
     Private Sub mn_cancel_Click(sender As Object, e As EventArgs) Handles mn_cancel.Click
-        If {0, 1}.Contains(_status) And formstate <> InputState.Insert Then
+        If {0, 1}.Contains(_status) And formstate = InputState.Edit Then
             If MessageBox.Show("Batalkan mutasi stok?", Me.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) = Windows.Forms.DialogResult.Yes Then
                 CancelData()
             End If
@@ -625,30 +629,36 @@
 
     'UI : SAVE
     Private Sub bt_simpanreturbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        If in_gudang.Text = Nothing Then
-            MessageBox.Show("Gudang asal belum dimasukkan")
-            in_gudang_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_beli.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
-        If in_gudang2.Text = Nothing Then
-            MessageBox.Show("Gudang tujuan belum dimasukkan")
-            in_gudang2_n.Focus()
-            Exit Sub
-        End If
-        If in_gudang.Text = in_gudang2.Text Then
-            If in_gudang.Text = Nothing Then
-                MessageBox.Show("Gudang belum dimasukkan")
-            Else
-                MessageBox.Show("Gudang asal dan tujuan sama")
+
+        'CHECK INPUT DATA
+        For Each x As TextBox In {in_gudang, in_gudang2}
+            Dim Msg As String = "{0} belum diinput"
+            Dim _input As TextBox
+            Select Case x.Name
+                Case in_gudang2.Name : Msg = String.Format(Msg, "Gudang Tujuan") : _input = in_gudang2_n
+                Case in_gudang.Name : Msg = String.Format(Msg, "Gudang Asal") : _input = in_gudang_n
+                Case Else : Exit Sub
+            End Select
+
+            If String.IsNullOrWhiteSpace(x.Text) Then
+                MessageBox.Show(Msg, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                _input.Focus() : Exit Sub
             End If
-            in_gudang.Focus()
-            Exit Sub
+        Next
+        If in_gudang.Text = in_gudang2.Text Then
+            MessageBox.Show("Gudang asal dan tujuan sama", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_gudang.Focus() : Exit Sub
         End If
 
         If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum dimasukkan")
-            in_barang.Focus()
-            Exit Sub
+            MessageBox.Show("Barang belum dimasukkan", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
         End If
 
         Dim _retMsg As DialogResult = Windows.Forms.DialogResult.Yes

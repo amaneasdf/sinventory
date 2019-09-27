@@ -17,10 +17,11 @@
 
         date_tglawal.Value = selectperiode.tglawal
         date_tglakhir.Value = IIf(selectperiode.tglakhir > Today, Today, selectperiode.tglakhir)
-        date_tglawal.MinDate = selectperiode.tglawal
-        date_tglakhir.MaxDate = selectperiode.tglakhir
+        'date_tglawal.MinDate = selectperiode.tglawal
+        'date_tglakhir.MaxDate = selectperiode.tglakhir
 
         lbl_periodedata.Text = main.strip_periode.Text
+        lbl_periodedata.Visible = False
         formSW(tipeLap)
 
         Me.ShowDialog(main)

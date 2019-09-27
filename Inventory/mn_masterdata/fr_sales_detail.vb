@@ -30,7 +30,7 @@
         formstate = FormSet
 
         With cb_jenis
-            .DataSource = jenisSales()
+            .DataSource = jenis("jenis_sales")
             .DisplayMember = "Text"
             .ValueMember = "Value"
             .SelectedIndex = 0

@@ -17,24 +17,28 @@
         Const _tempTitle As String = "Stok Opname : op20190810902"
 
         formstate = FormSet
-
         With cb_pajak
             .DataSource = jenis("bayar_pajak")
             .ValueMember = "Value"
             .DisplayMember = "Text"
         End With
 
-        With date_tgl_beli
-            .MaxDate = selectperiode.tglakhir
-            .MinDate = selectperiode.tglawal
-            If selectperiode.tglakhir >= Today Then
-                .Value = Today
-            Else
-                .Value = selectperiode.tglakhir
-            End If
-        End With
+        'With date_tgl_beli
+        '    .MaxDate = selectperiode.tglakhir
+        '    .MinDate = selectperiode.tglawal
+        '    If selectperiode.tglakhir >= Today Then
+        '        .Value = Today
+        '    Else
+        '        .Value = selectperiode.tglakhir
+        '    End If
+        'End With
+        For Each x As DateTimePicker In {date_tgl_beli}
+            x.Value = IIf(DataListEndDate > Today, Today, DataListEndDate)
+            x.MinDate = If(formstate = InputState.Insert, TransStartDate, DataListStartDate)
+            x.MaxDate = DataListEndDate
+        Next
 
-        If formstate = InputState.Edit Or formstate = InputState.View Then
+        If Not formstate = InputState.Insert Then
             Me.Text += NoFaktur
             Me.lbl_title.Text += " : " & NoFaktur
             If Me.lbl_title.Text.Length > _tempTitle.Length Then
@@ -42,23 +46,23 @@
             End If
 
             loadData(NoFaktur)
-            in_kode.ReadOnly = True
-            If Not {0, 1}.Contains(_status) Then AllowEdit = False
-            If formstate = InputState.View Then AllowEdit = False
+            If Not {0, 1}.Contains(_status) Or date_tgl_beli.Value < TransStartDate Then formstate = InputState.View
             _prevstatus = _status
-            bt_simpanbeli.Text = "Update"
         End If
 
+        If formstate = InputState.View Then AllowEdit = False
         FormSwitch(AllowEdit)
     End Sub
 
     Private Sub FormSwitch(AllowEdit As Boolean)
+        Dim _readOnly As Boolean = IIf(AllowEdit, False, True)
         cb_pajak.Enabled = IIf(dgv_barang.RowCount > 0, False, AllowEdit)
-        in_gudang_n.ReadOnly = IIf(dgv_barang.RowCount > 0, True, IIf(AllowEdit, False, True))
+        in_gudang_n.ReadOnly = IIf(dgv_barang.RowCount > 0, True, _readOnly)
         date_tgl_beli.Enabled = AllowEdit
-        in_ket.ReadOnly = IIf(AllowEdit, False, True)
+        in_ket.ReadOnly = _readOnly
 
         bt_simpanbeli.Enabled = AllowEdit
+        bt_simpanbeli.Text = If(formstate = InputState.Edit, "Update", "Simpan")
 
         mn_save.Enabled = AllowEdit
         mn_cancel.Enabled = IIf(formstate = InputState.Insert, False, IIf({0, 1}.Contains(_status), AllowEdit, False))
@@ -672,16 +676,21 @@ EndSub:
 
     'UI : SAVE
     Private Sub bt_simpanreturbeli_Click(sender As Object, e As EventArgs) Handles bt_simpanbeli.Click
-        If in_gudang.Text = Nothing Then
-            MessageBox.Show("Gudang asal belum dimasukkan")
-            in_gudang_n.Focus()
-            Exit Sub
+        'CHECK TANGGAL TRANSAKSI
+        If date_tgl_beli.Value < TransStartDate Then
+            MessageBox.Show("Tanggal transaksi tidak bisa kurang dari periode aktif. " & TransStartDate.ToString("(MMMM yyyy)"),
+                            Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            date_tgl_beli.Focus() : Exit Sub
         End If
 
+        'CHECK INPUT DATA
+        If String.IsNullOrWhiteSpace(in_gudang.Text) Then
+            MessageBox.Show("Gudang asal belum dimasukkan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_gudang_n.Focus() : Exit Sub
+        End If
         If dgv_barang.RowCount = 0 Then
-            MessageBox.Show("Barang belum dimasukkan")
-            in_barang.Focus()
-            Exit Sub
+            MessageBox.Show("Barang belum dimasukkan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_barang.Focus() : Exit Sub
         End If
 
         Dim _msgRes As DialogResult = Windows.Forms.DialogResult.Yes

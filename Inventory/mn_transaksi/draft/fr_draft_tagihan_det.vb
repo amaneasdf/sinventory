@@ -29,8 +29,10 @@
         lbl_count_faktur.Text = "0 Faktur"
 
         For Each dt As DateTimePicker In {date_faktur_akhir, date_faktur_awal, date_tgl_trans}
-            dt.MinDate = selectperiode.tglawal
-            dt.MaxDate = selectperiode.tglakhir
+            'dt.MinDate = selectperiode.tglawal
+            'dt.MaxDate = selectperiode.tglakhir
+            dt.MinDate = DataListStartDate
+            dt.MaxDate = DataListEndDate
         Next
 
         If Not FormState = InputState.Insert Then

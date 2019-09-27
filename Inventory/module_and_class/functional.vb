@@ -991,7 +991,7 @@ NextTab:
     Public Function decryptString(ByVal cypherText As String) As String
         Dim _retString As String = ""
 
-        If Not String.IsNullOrEmpty(cypherText) Then
+        If Not String.IsNullOrWhiteSpace(cypherText) Then
             Dim cypherTextBytes As Byte() = Convert.FromBase64String(cypherText)
             Dim memoryStream As MemoryStream = New MemoryStream(cypherTextBytes)
             Dim cryptoStream As CryptoStream = New CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read)
