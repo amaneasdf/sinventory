@@ -342,10 +342,10 @@
     <Compile Include="mn_masterdata\fr_custo_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fr_login\fr_login.Designer.vb">
+    <Compile Include="app_set\fr_login.Designer.vb">
       <DependentUpon>fr_login.vb</DependentUpon>
     </Compile>
-    <Compile Include="fr_login\fr_login.vb">
+    <Compile Include="app_set\fr_login.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="mn_masterdata\fr_gudang_detail.Designer.vb">
@@ -535,7 +535,7 @@
     <Compile Include="mn_transaksi\fr_changecode.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="module_and_class\mdl_importdata.vb" />
+    <Compile Include="module_and_class\modul\mdl_importdata.vb" />
     <Compile Include="mn_persediaan\fr_stockopconfirm_dialog.Designer.vb">
       <DependentUpon>fr_stockopconfirm_dialog.vb</DependentUpon>
     </Compile>
@@ -668,19 +668,18 @@
     <Compile Include="mn_transaksi\fr_jual_retur_detail.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="module_and_class\appbootup.vb" />
     <Compile Include="module_and_class\class\MySqlThing.vb" />
     <Compile Include="module_and_class\class\UserData.vb" />
-    <Compile Include="module_and_class\connection.vb" />
+    <Compile Include="module_and_class\modul\connection.vb" />
     <Compile Include="module_and_class\exte\DataRowExtensions.vb" />
     <Compile Include="module_and_class\exte\DataTableExtensions.vb" />
-    <Compile Include="module_and_class\dbChecking.vb" />
-    <Compile Include="module_and_class\functional.vb" />
-    <Compile Include="module_and_class\mdlAccount.vb" />
-    <Compile Include="module_and_class\mdlControl.vb" />
-    <Compile Include="module_and_class\mdlLogging.vb" />
-    <Compile Include="module_and_class\mdlParamKodeVar.vb" />
-    <Compile Include="module_and_class\mdl_login.vb" />
+    <Compile Include="module_and_class\modul\dbChecking.vb" />
+    <Compile Include="module_and_class\modul\functional.vb" />
+    <Compile Include="module_and_class\modul\mdlAccount.vb" />
+    <Compile Include="module_and_class\modul\mdlControl.vb" />
+    <Compile Include="module_and_class\modul\mdlLogging.vb" />
+    <Compile Include="module_and_class\modul\mdlParamKodeVar.vb" />
+    <Compile Include="module_and_class\modul\mdl_login.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -850,7 +849,7 @@
     <EmbeddedResource Include="mn_masterdata\fr_custo_detail.resx">
       <DependentUpon>fr_custo_detail.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="fr_login\fr_login.resx">
+    <EmbeddedResource Include="app_set\fr_login.resx">
       <DependentUpon>fr_login.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="mn_masterdata\fr_gudang_detail.resx">
@@ -1181,6 +1180,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
+    <None Include="Resources\minimize_wh_thin_16x16.png" />
+    <None Include="Resources\menu_wh_thin_16x16.png" />
+    <None Include="Resources\close_wh_thin_16x16.png" />
     <None Include="Resources\downarrow_white16x16.png" />
     <None Include="Resources\downarrow_white.png" />
     <None Include="Resources\1492932873_Delete.png" />
@@ -1195,7 +1197,8 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="module_and_class\modul\" />
+    <Folder Include="app_set\Usercontrol\" />
+    <Folder Include="app_set\winform\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

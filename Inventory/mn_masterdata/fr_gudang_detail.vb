@@ -7,37 +7,76 @@
         Edit
     End Enum
 
+    'STYLE
+    Private m_aeroEnabled As Boolean = False
+    Private Const CS_DROPSHADOW As Int32 = &H20000
+    Private Const WM_NCPAINT As Int32 = 133
+    Private Const WM_ACTIVATEAPP As Int32 = 28
+
+    Private Const WM_NCHITTEST As Int32 = &H84
+    Private Const HTCLIENT As Int32 = &H1
+    Private Const HTCAPTION As Int32 = &H2
+
+    'DROP SHADOW
+    Protected Overrides ReadOnly Property CreateParams As CreateParams
+        Get
+            m_aeroEnabled = CheckAeroEnabled()
+
+            Dim parameters As CreateParams = MyBase.CreateParams
+            If Not m_aeroEnabled Then parameters.ClassStyle += CS_DROPSHADOW
+            Return parameters
+        End Get
+    End Property
+
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        Select Case m.Msg
+            Case WM_NCPAINT
+                If m_aeroEnabled Then
+                    Dim v = 2
+                    DwmSetWindowAttribute(Me.Handle, 2, v, 4)
+                    Dim margins As New Margins With {
+                        .bottomHeight = 1,
+                        .leftWidth = 0,
+                        .rightWidth = 0,
+                        .topHeight = 0
+                        }
+                    DwmExtendFrameIntoClientArea(Me.Handle, margins)
+                End If
+        End Select
+        MyBase.WndProc(m)
+        If (m.Msg = WM_NCHITTEST AndAlso m.Result.ToInt32 = HTCLIENT) Then m.Result = HTCAPTION
+    End Sub
+
     'SETUP FORM
     Private Sub SetUpForm(KodeGudang As String, FormSet As InputState, AllowEdit As Boolean)
-        Const _tempTitle As String = "Data Gudang : rb201908"
-
-        formstate = FormSet
+        Me.Opacity = 0 : formstate = FormSet
 
         If Not FormSet = InputState.Insert Then
-            Me.Text += KodeGudang
-            Me.lbl_title.Text += " : " & KodeGudang
-            If Me.lbl_title.Text.Length > _tempTitle.Length Then
-                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            Dim _resp = loadDataGudang(KodeGudang)
+            If Not _resp.Key Then
+                MessageBox.Show(_resp.Value, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Me.Close()
             End If
-
-            loadDataGudang(KodeGudang)
-            If Not {0, 1}.Contains(gdgStatus) Then AllowEdit = False
-            in_kode.ReadOnly = IIf(formstate = InputState.Insert, False, True)
-            bt_simpancusto.Text = "Update"
         End If
 
         ControlSwitch(AllowEdit)
     End Sub
 
     Private Sub ControlSwitch(AllowInput As Boolean)
+        If formstate = InputState.Edit Or Not AllowInput Then
+            in_kode.ReadOnly = True : in_kode.BackColor = Color.Gainsboro
+            If formstate = InputState.Edit Then bt_simpancusto.Text = "Update"
+        Else
+            in_kode.ReadOnly = False
+        End If
+
         For Each txt As TextBox In {in_namagudang, in_alamatgudang, in_ket}
             txt.ReadOnly = IIf(AllowInput, False, True)
         Next
 
         bt_simpancusto.Enabled = AllowInput
-        mn_deact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
-        mn_del.Enabled = IIf(formstate = InputState.Insert, False, False)
-        mn_save.Enabled = AllowInput
+        tstrip_simpan.Enabled = AllowInput
+        tstrip_status.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)
@@ -50,53 +89,52 @@
         Me.Show()
     End Sub
 
+    Private Sub fr_login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Opacity = 100
+    End Sub
+
     'LOAD DATA
-    Private Sub loadDataGudang(kode As String)
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main db connection setting is empty.")
-        End If
+    Private Function loadDataGudang(kode As String) As KeyValuePair(Of Boolean, String)
+        Dim q As String = ""
+        If MainConnData.IsEmpty Then Return New KeyValuePair(Of Boolean, String)(False, "Main DBConfig is empty.")
 
-        Dim q As String = "SELECT gudang_nama,gudang_alamat,gudang_ket, gudang_status, IFNULL(gudang_reg_alias,'') gudang_reg_alias, " _
-                          & "DATE_FORMAT(IFNULL(gudang_reg_date,'00/00/0000 00:00:00'),'%d/%m/%Y %H:%i:%S') gudang_reg_date, IFNULL(gudang_upd_alias,'') gudang_upd_alias, " _
-                          & "DATE_FORMAT(IFNULL(gudang_upd_date,'00/00/0000 00:00:00'),'%d/%m/%Y %H:%i:%S') gudang_upd_date " _
-                          & "FROM data_barang_gudang WHERE gudang_kode='{0}'"
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                Using rdx = x.ReadCommand(String.Format(q, kode), CommandBehavior.SingleRow)
-                    Dim red = rdx.Read
-                    If red And rdx.HasRows Then
-                        in_kode.Text = kode
-                        in_namagudang.Text = rdx.Item("gudang_nama")
-                        in_alamatgudang.Text = rdx.Item("gudang_alamat")
-                        gdgStatus = rdx.Item("gudang_status")
-                        in_ket.Text = rdx.Item("gudang_ket")
-                        txtRegdate.Text = rdx.Item("gudang_reg_date")
-                        txtRegAlias.Text = rdx.Item("gudang_reg_alias")
-                        txtUpdDate.Text = rdx.Item("gudang_upd_date")
-                        txtUpdAlias.Text = rdx.Item("gudang_upd_alias")
-                    End If
-                End Using
-                setStatus()
-            End If
-        End Using
-    End Sub
+        Try
+            Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    q = "CALL getDataMasterHeader('{0}','GUDANG')"
+                    Using rdx = x.ReadCommand(String.Format(q, kode), CommandBehavior.SingleRow)
+                        Dim red = rdx.Read
+                        If red And rdx.HasRows Then
+                            in_kode.Text = kode
+                            in_namagudang.Text = rdx.Item("gudang_nama")
+                            in_alamatgudang.Text = rdx.Item("gudang_alamat")
+                            in_ket.Text = rdx.Item("gudang_ket")
+                            gdgStatus = rdx.Item("gudang_status")
 
-    Private Sub setStatus()
-        Select Case gdgStatus
-            Case 0
-                mn_deact.Text = "Activate"
-                in_status.Text = "Non-Aktif"
-            Case 1
-                mn_deact.Text = "Deactivate"
-                in_status.Text = "Aktif"
-            Case 9
-                mn_deact.Enabled = False
-                in_status.Text = "Delete"
-            Case Else
-                Exit Sub
-        End Select
-    End Sub
+                            txtRegdate.Text = rdx.Item("gudang_reg_date")
+                            txtRegAlias.Text = rdx.Item("gudang_reg_alias")
+                            txtUpdDate.Text = rdx.Item("gudang_upd_date")
+                            txtUpdAlias.Text = rdx.Item("gudang_upd_alias")
+                        End If
+                    End Using
+                    Select Case gdgStatus
+                        Case 0 : in_status.Text = "Non-Aktif"
+                        Case 1 : in_status.Text = "Aktif"
+                        Case 9 : in_status.Text = "Delete"
+                        Case Else
+                            Return New KeyValuePair(Of Boolean, String)(False, "Status data ")
+                    End Select
+
+                    Return New KeyValuePair(Of Boolean, String)(True, "OK")
+                Else
+                    Return New KeyValuePair(Of Boolean, String)(False, "Tidak dapat terhubung ke database.")
+                End If
+            End Using
+        Catch ex As Exception
+            LogError(ex)
+            Return New KeyValuePair(Of Boolean, String)(False, "Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message)
+        End Try
+    End Function
 
     'SAVE DATA
     Private Sub saveData()
@@ -166,77 +204,52 @@ EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
-    'DRAG FORM
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
+    'UI : FORM/DRAG FORM
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseDown, lbl_title.MouseDown
         startdrag(Me, e)
     End Sub
 
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseMove, lbl_title.MouseMove
         dragging(Me)
     End Sub
 
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseUp, lbl_title.MouseUp
         stopdrag(Me)
     End Sub
 
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles pnl_header.DoubleClick, lbl_title.DoubleClick
         CenterToScreen()
     End Sub
 
-    'CLOSE
+    'UI : FORM
+    Private Sub fr_supplier_detail_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            bt_batalcusto.PerformClick()
+            e.SuppressKeyPress = True
+        ElseIf e.Control AndAlso e.KeyCode = Keys.S Then
+            bt_simpancusto.PerformClick()
+        End If
+    End Sub
+
+    'UI : BUTTON
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        'If MessageBox.Show("Tutup Form?", "Gudang", MessageBoxButtons.YesNo) = Windows.Forms.DialogResult.Yes Then
-        Me.Close()
-        'End If
+        bt_cl.PerformClick()
     End Sub
 
     Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalcusto.PerformClick()
+        Me.Close()
     End Sub
 
-    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_menu.Click
+        Dim _x As Integer = sender.Location.X
+        Dim _y As Integer = sender.Location.Y + sender.Height
+        ctx_main.Show(pnl_header, _x, _y)
     End Sub
 
-    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
-    End Sub
-
-    Private Sub fr_gudang_detail_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
-        If e.KeyCode = Keys.Escape Then
-            bt_batalcusto.PerformClick()
-        End If
-    End Sub
-
-    'MENU
-    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpancusto.PerformClick()
-    End Sub
-
-    Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        Dim ckdata = MasterConfirmValid(in_ket.Text)
-        If Not ckdata Then Exit Sub
-
-        If mn_deact.Text = "Deactivate" Then
-            gdgStatus = "0"
-        ElseIf mn_deact.Text = "Activate" Then
-            gdgStatus = "1"
-        End If
-        setStatus() : bt_simpancusto.PerformClick()
-    End Sub
-
-    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-        'brgStatus = 9
-        'UPDATE STATUS TO 9
-        'setStatus()
-    End Sub
-
-    'SAVE
     Private Sub bt_simpangudang_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
         If in_namagudang.Text = Nothing Then
-            MessageBox.Show("Nama gudang belum di input")
-            in_namagudang.Focus()
-            Exit Sub
+            MessageBox.Show("Nama gudang belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_namagudang.Focus() : Exit Sub
         End If
 
         Me.Cursor = Cursors.WaitCursor
@@ -246,12 +259,31 @@ EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
-    'UI
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(in_namagudang, e)
+    'UI : CONTEXT MENU
+    Private Sub tstrip_simpan_Click(sender As Object, e As EventArgs) Handles tstrip_simpan.Click
+        bt_simpancusto.PerformClick()
     End Sub
 
-    Private Sub in_namagudang_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namagudang.KeyDown
-        keyshortenter(in_alamatgudang, e)
+    Private Sub tsrtip_close_Click(sender As Object, e As EventArgs) Handles tsrtip_close.Click
+        bt_cl.PerformClick()
+    End Sub
+
+    Private Sub tstrip_activate_Click(sender As Object, e As EventArgs) Handles tstrip_activate.Click
+        If gdgStatus = 1 Then
+            MessageBox.Show("Status data gudang sudah aktif.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+    End Sub
+
+    Private Sub tstrip_inactivate_Click(sender As Object, e As EventArgs) Handles tstrip_inactivate.Click
+        If gdgStatus = 0 Then
+            MessageBox.Show("Status data gudang sudah nonaktif.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
+    End Sub
+
+    Private Sub tstrip_delete_Click(sender As Object, e As EventArgs) Handles tstrip_delete.Click
+
     End Sub
 End Class

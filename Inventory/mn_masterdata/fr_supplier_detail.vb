@@ -8,21 +8,58 @@
         Edit
     End Enum
 
+    'STYLE
+    Private m_aeroEnabled As Boolean = False
+    Private Const CS_DROPSHADOW As Int32 = &H20000
+    Private Const WM_NCPAINT As Int32 = 133
+    Private Const WM_ACTIVATEAPP As Int32 = 28
+
+    Private Const WM_NCHITTEST As Int32 = &H84
+    Private Const HTCLIENT As Int32 = &H1
+    Private Const HTCAPTION As Int32 = &H2
+
+    'DROP SHADOW
+    Protected Overrides ReadOnly Property CreateParams As CreateParams
+        Get
+            m_aeroEnabled = CheckAeroEnabled()
+
+            Dim parameters As CreateParams = MyBase.CreateParams
+            If Not m_aeroEnabled Then parameters.ClassStyle += CS_DROPSHADOW
+            Return parameters
+        End Get
+    End Property
+
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        Select Case m.Msg
+            Case WM_NCPAINT
+                If m_aeroEnabled Then
+                    Dim v = 2
+                    DwmSetWindowAttribute(Me.Handle, 2, v, 4)
+                    Dim margins As New Margins With {
+                        .bottomHeight = 1,
+                        .leftWidth = 0,
+                        .rightWidth = 0,
+                        .topHeight = 0
+                        }
+                    DwmExtendFrameIntoClientArea(Me.Handle, margins)
+                End If
+        End Select
+        MyBase.WndProc(m)
+        If (m.Msg = WM_NCHITTEST AndAlso m.Result.ToInt32 = HTCLIENT) Then m.Result = HTCAPTION
+    End Sub
+
     'SETUP FORM
     Private Sub SetUpForm(KodeBarang As String, FormSet As InputState, AllowEdit As Boolean)
-        Const _tempTitle As String = "Detail Barang : xxxxxxxxx"
-
+        Me.Opacity = 0
         formstate = FormSet
 
         If Not FormSet = InputState.Insert Then
-            Me.Text += KodeBarang
-            Me.lbl_title.Text += " : " & KodeBarang
-            If Me.lbl_title.Text.Length > _tempTitle.Length Then
-                Me.lbl_title.Text = Strings.Left(Me.lbl_title.Text, _tempTitle.Length - 3) & "..."
+            Dim _resp = loadDataSupplier(KodeBarang)
+            If Not _resp.Key Then
+                MessageBox.Show(_resp.Value, Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                Me.Close()
             End If
-
-            loadDataSupplier(KodeBarang)
-            in_kode.ReadOnly = True
+            in_kode.ReadOnly = True : in_kode.BackColor = Color.Gainsboro
             bt_simpancusto.Text = "Update"
         End If
 
@@ -39,9 +76,8 @@
         Next
 
         bt_simpancusto.Enabled = AllowInput
-        mn_deact.Enabled = IIf(formstate = InputState.Insert, False, AllowInput)
-        mn_del.Enabled = IIf(formstate = InputState.Insert, False, False)
-        mn_save.Enabled = AllowInput
+        tstrip_activate.Enabled = AllowInput
+        tstrip_status.Visible = IIf(formstate = InputState.Insert, False, AllowInput)
     End Sub
 
     Public Sub doLoadNew(Optional AllowInput As Boolean = True)
@@ -56,117 +92,60 @@
         in_namasupplier.Focus()
     End Sub
 
+    Private Sub fr_login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Opacity = 100
+    End Sub
+
     'LOAD DATA
-    Private Sub loadDataSupplier(kode As String)
+    Private Function loadDataSupplier(kode As String) As KeyValuePair(Of Boolean, String)
         Dim q As String = ""
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main db connection setting is empty.")
-        End If
+        If MainConnData.IsEmpty Then Return New KeyValuePair(Of Boolean, String)(False, "Main DBConfig is empty.")
 
-        Using x = MainConnection
-            x.Open()
-            If x.ConnectionState = ConnectionState.Open Then
-                q = "CALL getDataMasterHeader('{0}','SUPPLIER')"
-                Using rdx = x.ReadCommand(String.Format(q, kode))
-                    Dim red = rdx.Read
-                    in_kode.Text = kode
-                    in_namasupplier.Text = rdx.Item("supplier_nama")
-                    in_alamatsupplier.Text = rdx.Item("supplier_alamat")
-                    in_telp1supplier.Text = rdx.Item("supplier_telpon1")
-                    in_telp2supplier.Text = rdx.Item("supplier_telpon2")
-                    in_faxsupplier.Text = rdx.Item("supplier_fax")
-                    in_cp.Text = rdx.Item("supplier_cp")
-                    in_emailsupplier.Text = rdx.Item("supplier_email")
-                    in_npwpsupplier.Text = rdx.Item("supplier_npwp")
-                    in_rek_bank.Text = rdx.Item("supplier_rek_bank")
-                    in_rek_giro.Text = rdx.Item("supplier_rek_bg")
-                    in_ket.Text = rdx.Item("supplier_keterangan")
-                    in_term.Text = rdx.Item("supplier_term")
-                    supStatus = rdx.Item("supplier_status")
-                    txtRegAlias.Text = rdx.Item("supplier_reg_alias")
-                    txtRegdate.Text = rdx.Item("supplier_reg_date")
-                    txtUpdDate.Text = rdx.Item("supplier_upd_date")
-                    txtUpdAlias.Text = rdx.Item("supplier_upd_alias")
-                End Using
-            Else
-                MessageBox.Show("Tidak dapat terhubung ke database.", "Detail Barang", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Me.Close()
-            End If
-        End Using
-        setStatus()
+        Try
+            Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    q = "CALL getDataMasterHeader('{0}','SUPPLIER')"
+                    Using rdx = x.ReadCommand(String.Format(q, kode))
+                        Dim red = rdx.Read
+                        in_kode.Text = kode
+                        in_namasupplier.Text = rdx.Item("supplier_nama")
+                        in_alamatsupplier.Text = rdx.Item("supplier_alamat")
+                        in_telp1supplier.Text = rdx.Item("supplier_telpon1")
+                        in_telp2supplier.Text = rdx.Item("supplier_telpon2")
+                        in_faxsupplier.Text = rdx.Item("supplier_fax")
+                        in_cp.Text = rdx.Item("supplier_cp")
+                        in_emailsupplier.Text = rdx.Item("supplier_email")
 
-        'Dim _data As New List(Of String)
-        'Try
-        '    readcommd("SELECT supplier_nama,supplier_alamat,supplier_telpon1,supplier_telpon2,supplier_fax,supplier_cp,supplier_email,supplier_npwp,supplier_rek_bank, " _
-        '          & "supplier_rek_bg,supplier_keterangan,supplier_term,supplier_status,IFNULL(supplier_reg_alias,'') supplier_reg_alias, " _
-        '          & "IFNULL(supplier_reg_date,'00/00/0000 00:00:00') supplier_reg_date,IFNULL(supplier_upd_alias,'') supplier_upd_alias, " _
-        '          & "IFNULL(supplier_upd_date,'00/00/0000 00:00:00') supplier_upd_date FROM data_supplier_master WHERE supplier_kode='" & kode & "'")
-        '    If rd.HasRows Then
-        '        in_kode.Text = kode
-        '        in_namasupplier.Text = rd.Item("supplier_nama")
-        '        in_alamatsupplier.Text = rd.Item("supplier_alamat")
-        '        in_telp1supplier.Text = rd.Item("supplier_telpon1")
-        '        in_telp2supplier.Text = rd.Item("supplier_telpon2")
-        '        in_faxsupplier.Text = rd.Item("supplier_fax")
-        '        in_cp.Text = rd.Item("supplier_cp")
-        '        in_emailsupplier.Text = rd.Item("supplier_email")
-        '        in_npwpsupplier.Text = rd.Item("supplier_npwp")
-        '        in_rek_bank.Text = rd.Item("supplier_rek_bank")
-        '        in_rek_giro.Text = rd.Item("supplier_rek_bg")
-        '        in_ket.Text = rd.Item("supplier_keterangan")
-        '        in_term.Text = rd.Item("supplier_term")
-        '        supStatus = rd.Item("supplier_status")
-        '        txtRegAlias.Text = rd.Item("supplier_reg_alias")
-        '        txtRegdate.Text = rd.Item("supplier_reg_date")
-        '        txtUpdDate.Text = rd.Item("supplier_upd_date")
-        '        txtUpdAlias.Text = rd.Item("supplier_upd_alias")
-        '    End If
-        '    For i = 0 To rd.FieldCount - 1
-        '        _data.Add(rd.Item(i))
-        '    Next
-        '    olddata = String.Join(";", _data)
-        '    rd.Close()
-        '    setStatus()
+                        in_npwpsupplier.Text = rdx.Item("supplier_npwp")
+                        in_rek_bank.Text = rdx.Item("supplier_rek_bank")
+                        in_rek_giro.Text = rdx.Item("supplier_rek_bg")
+                        in_ket.Text = rdx.Item("supplier_keterangan")
+                        in_term.Text = rdx.Item("supplier_term")
+                        supStatus = rdx.Item("supplier_status")
 
-        '    If loggeduser.allowedit_master = False Then
-        '        bt_simpansupplier.Visible = False
-        '        bt_batalsupplier.Text = "OK"
-        '        mn_deact.Enabled = False
-        '        mn_save.Enabled = False
-        '        mn_del.Enabled = False
-        '    End If
-        'Catch ex As Exception
-        '    logError(ex, True)
-        '    MessageBox.Show("Terjadi kesalahan saat pengambilan data.", "Detail Supplier", MessageBoxButtons.OK, MessageBoxIcon.Error)
-        '    Me.Close()
-        'Finally
-        '    Try
-        '        If rd.IsClosed = False Then
-        '            rd.Close()
-        '        End If
-        '    Catch ex As Exception
-        '        logError(ex, True)
-        '    End Try
-        'End Try
-    End Sub
+                        txtRegAlias.Text = rdx.Item("supplier_reg_alias")
+                        txtRegdate.Text = rdx.Item("supplier_reg_date")
+                        txtUpdDate.Text = rdx.Item("supplier_upd_date")
+                        txtUpdAlias.Text = rdx.Item("supplier_upd_alias")
+                    End Using
+                Else
+                    Return New KeyValuePair(Of Boolean, String)(False, "Tidak dapat terhubung ke database.")
+                End If
+            End Using
+            Select Case supStatus
+                Case 0 : in_status.Text = "Non-Aktif"
+                Case 1 : in_status.Text = "Aktif"
+                Case 9 : in_status.Text = "Delete"
+                Case Else
+                    Return New KeyValuePair(Of Boolean, String)(False, "Status data ")
+            End Select
 
-    Private Sub setStatus()
-        Select Case supStatus
-            Case 0
-                mn_deact.Text = "Activate"
-                in_status.Text = "Non-Aktif"
-            Case 1
-                mn_deact.Text = "Deactivate"
-                in_status.Text = "Aktif"
-            Case 9
-                mn_deact.Enabled = False
-                in_status.Text = "Delete"
-            Case Else
-                Exit Sub
-        End Select
-
-
-    End Sub
+            Return New KeyValuePair(Of Boolean, String)(True, "OK")
+        Catch ex As Exception
+            LogError(ex)
+            Return New KeyValuePair(Of Boolean, String)(False, "Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message)
+        End Try
+    End Function
 
     'SAVE DATA
     Private Sub SaveData()
@@ -244,12 +223,54 @@ EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
-    '-------------- save
+    'CHANGE DATA STATUS
+    'Private Function ChangeDataStatus() As KeyValuePair(Of String, String)
+
+    'End Function
+
+    'UI : FORM / DRAG
+    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseDown, lbl_title.MouseDown
+        startdrag(Me, e)
+    End Sub
+
+    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseMove, lbl_title.MouseMove
+        dragging(Me)
+    End Sub
+
+    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles pnl_header.MouseUp, lbl_title.MouseUp
+        stopdrag(Me)
+    End Sub
+
+    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles pnl_header.DoubleClick, lbl_title.DoubleClick
+        CenterToScreen()
+    End Sub
+
+    'UI : FORM
+    Private Sub fr_supplier_detail_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyDown
+        If e.KeyCode = Keys.Escape Then
+            bt_batalcusto.PerformClick()
+            e.SuppressKeyPress = True
+        ElseIf e.Control AndAlso e.KeyCode = Keys.S Then
+            bt_simpancusto.PerformClick()
+        End If
+    End Sub
+
+    'UI : BUTTON
+    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
+        Me.Close()
+    End Sub
+
     Private Sub bt_simpansupplier_Click(sender As Object, e As EventArgs) Handles bt_simpancusto.Click
+        'CHECK INPUT
         If in_namasupplier.Text = Nothing Then
-            MessageBox.Show("Nama supplier belum di input")
-            in_namasupplier.Focus()
-            Exit Sub
+            MessageBox.Show("Nama supplier belum di input", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            in_namasupplier.Focus() : Exit Sub
+        End If
+        If Not String.IsNullOrWhiteSpace(in_emailsupplier.Text) Then
+            If Not IsValidEmail(in_emailsupplier.Text) Then
+                MessageBox.Show("Format alamat email yang dimasukan tidak sesuai.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                in_emailsupplier.Focus() : Exit Sub
+            End If
         End If
 
         Me.Cursor = Cursors.WaitCursor
@@ -259,70 +280,17 @@ EndSub:
         Me.Cursor = Cursors.Default
     End Sub
 
-    '------------drag form
-    Private Sub Panel1_MouseDown(sender As Object, e As MouseEventArgs) Handles Panel1.MouseDown, lbl_title.MouseDown
-        startdrag(Me, e)
-    End Sub
-
-    Private Sub Panel1_MouseMove(sender As Object, e As MouseEventArgs) Handles Panel1.MouseMove, lbl_title.MouseMove
-        dragging(Me)
-    End Sub
-
-    Private Sub Panel1_MouseUp(sender As Object, e As MouseEventArgs) Handles Panel1.MouseUp, lbl_title.MouseUp
-        stopdrag(Me)
-    End Sub
-
-    Private Sub Panel1_DoubleClick(sender As Object, e As EventArgs) Handles Panel1.DoubleClick, lbl_title.DoubleClick
-        CenterToScreen()
-    End Sub
-
-    '-------------close
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles bt_batalcusto.Click
-        Me.Close()
+        bt_cl.PerformClick()
     End Sub
 
-    Private Sub bt_cl_Click(sender As Object, e As EventArgs) Handles bt_cl.Click
-        bt_batalcusto.PerformClick()
+    Private Sub Button1_Click_1(sender As Object, e As EventArgs) Handles bt_menu.Click
+        Dim _x As Integer = sender.Location.X
+        Dim _y As Integer = sender.Location.Y + sender.Height
+        ctx_main.Show(pnl_header, _x, _y)
     End Sub
 
-    Private Sub bt_cl_MouseEnter(sender As Object, e As EventArgs) Handles bt_cl.MouseEnter
-        lbl_close.Visible = True
-    End Sub
-
-    Private Sub bt_cl_MouseLeave(sender As Object, e As EventArgs) Handles bt_cl.MouseLeave
-        lbl_close.Visible = False
-    End Sub
-
-    Private Sub fr_supplier_detail_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
-        If e.KeyCode = Keys.Escape Then
-            bt_batalcusto.PerformClick()
-        End If
-    End Sub
-
-    '------------------ menu
-    Private Sub mn_save_Click(sender As Object, e As EventArgs) Handles mn_save.Click
-        bt_simpancusto.PerformClick()
-    End Sub
-
-    Private Sub mn_deact_Click(sender As Object, e As EventArgs) Handles mn_deact.Click
-        Dim ckdata = MasterConfirmValid(in_ket.Text)
-        If Not ckdata Then Exit Sub
-        If mn_deact.Text = "Deactivate" Then
-            supStatus = "0"
-        ElseIf mn_deact.Text = "Activate" Then
-            supStatus = "1"
-        End If
-        setStatus()
-        bt_simpancusto.PerformClick()
-    End Sub
-
-    Private Sub mn_del_Click(sender As Object, e As EventArgs) Handles mn_del.Click
-        'supStatus = 9
-        'UPDATE STATUS TO 9
-        'setStatus()
-    End Sub
-
-    '---------------- numeric
+    'UI : NUMERIC INPUT
     Private Sub in_term_Enter(sender As Object, e As EventArgs) Handles in_term.Enter
         numericGotFocus(sender)
     End Sub
@@ -331,52 +299,31 @@ EndSub:
         numericLostFocus(sender)
     End Sub
 
-    '--------------- textbox numeric
-    Private Sub in_npwpsupplier_KeyPress(sender As Object, e As KeyPressEventArgs) Handles in_telp2supplier.KeyPress, in_telp1supplier.KeyPress, in_npwpsupplier.KeyPress, in_faxsupplier.KeyPress
-        e.Handled = Not Char.IsControl(e.KeyChar) AndAlso Not Char.IsDigit(e.KeyChar) AndAlso e.KeyChar <> "-"
+    'UI : CONTEXT MENU
+    Private Sub tstrip_simpan_Click(sender As Object, e As EventArgs) Handles tstrip_simpan.Click
+        bt_simpancusto.PerformClick()
     End Sub
 
-    Private Sub in_namasupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_namasupplier.KeyDown
-        keyshortenter(in_alamatsupplier, e)
+    Private Sub tsrtip_close_Click(sender As Object, e As EventArgs) Handles tsrtip_close.Click
+        bt_cl.PerformClick()
     End Sub
 
-    Private Sub in_telp1supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telp1supplier.KeyDown
-        keyshortenter(in_telp2supplier, e)
+    Private Sub tstrip_activate_Click(sender As Object, e As EventArgs) Handles tstrip_activate.Click
+        If supStatus = 1 Then
+            MessageBox.Show("Status data supplier sudah aktif.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
     End Sub
 
-    Private Sub in_telp2supplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_telp2supplier.KeyDown
-        keyshortenter(in_faxsupplier, e)
+    Private Sub tstrip_inactivate_Click(sender As Object, e As EventArgs) Handles tstrip_inactivate.Click
+        If supStatus = 0 Then
+            MessageBox.Show("Status data supplier sudah nonaktif.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+            Exit Sub
+        End If
+
     End Sub
 
-    Private Sub in_faxsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_faxsupplier.KeyDown
-        keyshortenter(in_cp, e)
-    End Sub
+    Private Sub tstrip_delete_Click(sender As Object, e As EventArgs) Handles tstrip_delete.Click
 
-    Private Sub in_cp_KeyDown(sender As Object, e As KeyEventArgs) Handles in_cp.KeyDown
-        keyshortenter(in_emailsupplier, e)
-    End Sub
-
-    Private Sub in_emailsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_emailsupplier.KeyDown
-        keyshortenter(in_term, e)
-    End Sub
-
-    Private Sub in_term_KeyDown(sender As Object, e As KeyEventArgs) Handles in_term.KeyDown
-        keyshortenter(in_npwpsupplier, e)
-    End Sub
-
-    Private Sub in_npwpsupplier_KeyDown(sender As Object, e As KeyEventArgs) Handles in_npwpsupplier.KeyDown
-        keyshortenter(in_rek_bank, e)
-    End Sub
-
-    Private Sub in_rek_bank_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_bank.KeyDown
-        keyshortenter(in_rek_giro, e)
-    End Sub
-
-    Private Sub in_rek_giro_KeyDown(sender As Object, e As KeyEventArgs) Handles in_rek_giro.KeyDown
-        keyshortenter(bt_simpancusto, e)
-    End Sub
-
-    Private Sub in_kode_KeyDown(sender As Object, e As KeyEventArgs) Handles in_kode.KeyDown
-        keyshortenter(in_namasupplier, e)
     End Sub
 End Class

@@ -255,8 +255,10 @@
         consoleWriteLine(giro)
 
         '==========================================================================================================================
-        q = "UPDATE data_giro SET giro_status_pencairan=1, giro_tgl_tolakcair='{1}',giro_akun_pencairan='{2}',giro_user_tolakcair='{3}' WHERE giro_no='{0}'"
-        queryArr.Add(String.Format(q, giro, tanggalcair, in_akuncair.Text, loggeduser.user_id))
+        q = "UPDATE data_giro SET giro_status_pencairan=1, giro_tgl_tolakcair='{1}', giro_akun_pencairan='{2}', " _
+            & "giro_user_tolakcair='{4}', giro_upd_date=NOW(), giro_upd_alias='{4}' " _
+            & "WHERE giro_no='{0}' AND giro_type='{3}' AND giro_status<9"
+        queryArr.Add(String.Format(q, giro, tanggalcair, in_akuncair.Text, UCase(tipegiro), loggeduser.user_id))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -289,8 +291,10 @@
         consoleWriteLine(giro)
 
         '==========================================================================================================================
-        q = "UPDATE data_giro SET giro_status_pencairan=2, giro_tgl_tolakcair='{1}',giro_user_tolakcair='{2}' WHERE giro_no='{0}'"
-        queryArr.Add(String.Format(q, giro, tgltolak, loggeduser.user_id))
+        q = "UPDATE data_giro SET giro_status_pencairan=2, giro_tgl_tolakcair='{1}', " _
+            & "giro_user_tolakcair='{3}', giro_upd_date=NOW(), giro_upd_alias='{3}' " _
+            & "WHERE giro_no='{0}' AND giro_type='{2}' AND giro_status<9"
+        queryArr.Add(String.Format(q, giro, tgltolak, UCase(tipegiro), loggeduser.user_id))
         '==========================================================================================================================
 
         '==========================================================================================================================
@@ -324,7 +328,7 @@
                 chkquery = x.TransactCommand(queryArr)
 
                 If chkquery And datecairchange Then
-                    If loggeduser.allowedit_transact And Not selectperiode.closed Then
+                    If loggeduser.allowedit_transact And Date.Parse(in_tglcair.Text) >= TransStartDate Then
                         If UCase(in_statusgiro.Text) = "DICAIRKAN" Then
                             Dim question As String = "Simpan data pencairan giro?{0}*Perubahan terhadap transaksi pembayaran yang berhubungan{0}atau " _
                                                      & "penolakan giro tidak dapat dilakukan setelah pencairan."
@@ -352,6 +356,58 @@
                 Else
                     MessageBox.Show("Data giro tidak dapat tersimpan.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
                 End If
+            Else
+                MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+            End If
+        End Using
+    End Sub
+
+    Private Sub CancelCairTolak(NoGiro As String)
+        Using x = MainConnection
+            x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                Dim q As String = ""
+                Dim qArr As New List(Of String)
+                Dim qCheck As Boolean = False
+                Dim _msgf As String = ""
+
+                Select Case UCase(in_statusgiro.Text)
+                    Case "DICAIRKAN" : _msgf = "pencairan"
+                    Case "DITOLAK" : _msgf = "penolakan"
+                    Case Else : Exit Sub
+                End Select
+
+                Try
+                    'CHECK TANGGAL PENCAIRAN/PENOLAKAN
+                    Dim _TransDate As Date = Date.Parse(in_tglcair.Text)
+                    If _TransDate < TransStartDate Then
+                        MessageBox.Show(String.Format("Tidak dapat melakukan pembatalan.\nPeriode transaksi untuk tanggal {0} giro telah diclosing.", _msgf),
+                                        Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                        Exit Sub
+                    End If
+
+                    q = "UPDATE data_giro SET giro_status_pencairan=0, giro_tgl_tolakcair=NULL, giro_akun_pencairan=NULL, " _
+                        & "giro_user_tolakcair=NULL, giro_upd_date=NOW(), giro_upd_alias='{2}' " _
+                        & "WHERE giro_no='{0}' AND giro_type='{1}' AND giro_status<9"
+                    qArr.Add(String.Format(q, NoGiro, UCase(tipegiro), loggeduser.user_id))
+
+                    q = "CALL transGiroFin('{0}','{1}')"
+                    qArr.Add(String.Format(q, NoGiro, loggeduser.user_id))
+
+                    qCheck = x.TransactCommand(qArr)
+
+                    If qCheck Then
+                        Dim _v As New fr_giro
+                        MessageBox.Show(String.Format("Pembatalan {0} giro berhasil.", _msgf), Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Information)
+                        _v.do_load(tipegiro, NoGiro) : Me.Close()
+                    Else
+                        MessageBox.Show(String.Format("Pembatalan {0} giro tidak dapat dilakukan.", _msgf), Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
+                    End If
+                Catch ex As Exception
+                    logError(ex, True)
+                    MessageBox.Show(String.Format("Pembatalan {0} giro tidak dapat dilakukan.\n{1}", _msgf, ex.Message),
+                                    Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning)
+                    Exit Sub
+                End Try
             Else
                 MessageBox.Show("Tidak dapat terhubung ke database.", Me.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
             End If

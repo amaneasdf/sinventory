@@ -117,7 +117,7 @@
                 valid_sw = IIf(Not selectperiode.closed, loggeduser.validasi_trans, False)
                 delete_sw = IIf(Not selectperiode.closed, loggeduser.validasi_trans, False)
             End If
-            mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+            'mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
         ElseIf _datahpawal.Contains(tabpagename.Name) Then
             Dim _kdMn As String = ""
@@ -134,7 +134,7 @@
 
         ElseIf _datagiro.Contains(tabpagename.Name) Then
             add_sw = False
-            mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+            'mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
         ElseIf tabpagename.Name = "pgperkiraan" Then
             add_sw = False : edit_sw = False ': export_sw = True
@@ -148,7 +148,7 @@
         ElseIf tabpagename.Name = "pgkas" Then
             add_sw = IIf(selectperiode.closed = True, False, True)
             cancel_sw = IIf(selectperiode.closed = True, False, loggeduser.validasi_akun)
-            mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
+            'mn_edit.Text = IIf(selectperiode.closed = True, "Tampilkan Detail", "Edit Data")
 
         ElseIf _datajurnal.Contains(tabpagename.Name) Then
             add_sw = False : entry_sw = True
@@ -217,7 +217,7 @@
     Private Async Sub LoadDataGrid(Param As String, Page As Integer, Optional StartDate As Date = Nothing, Optional EndDate As Date = Nothing)
         Dim dt As New DataTable
         Dim _typedata As String = ""
-        Dim _limitdata As Integer = 2000
+        Dim _limitdata As Integer = LimitDataPerPage
         Dim DataCount As Integer = 0
         Dim PageInfo As String = "{0}-{1} dari {2} data."
         Dim _startdate As Date = IIf(StartDate = #12:00:00 AM#, selectperiode.tglawal, StartDate)
@@ -372,7 +372,7 @@
                         'If selectperiode.closed Then
                         '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         'Else
-                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         'End If
 
                     Case "pgreturbeli"
@@ -380,7 +380,7 @@
                         'If selectperiode.closed Then
                         '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         'Else
-                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         'End If
 
                     Case "pgpesanjual"
@@ -388,7 +388,7 @@
                         'If selectperiode.closed Then
                         '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         'Else
-                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         'End If
 
                     Case "pgpenjualan"
@@ -396,7 +396,7 @@
                         'If selectperiode.closed Then
                         '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         'Else
-                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         'End If
 
                     Case "pgreturjual"
@@ -404,7 +404,7 @@
                         'If selectperiode.closed Then
                         '    detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         'Else
-                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                        detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         'End If
 
                     Case "pgstok"
@@ -424,7 +424,7 @@
                         If selectperiode.closed Then
                             detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         End If
 
                     Case "pghutangbgo"
@@ -443,7 +443,7 @@
                         If selectperiode.closed Then
                             detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(0).Value)
                         Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.allowedit_transact)
+                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(0).Value, loggeduser.AllowEdit_Transaction)
                         End If
 
                     Case "pgpiutangbgcair"
@@ -458,7 +458,7 @@
                         If selectperiode.closed Then
                             detail.doLoadView(dgv_list.SelectedRows.Item(0).Cells(1).Value)
                         Else
-                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(1).Value, loggeduser.allowedit_transact)
+                            detail.doLoadEdit(dgv_list.SelectedRows.Item(0).Cells(1).Value, loggeduser.AllowEdit_Transaction)
                         End If
 
                     Case "pgjurnalumum"

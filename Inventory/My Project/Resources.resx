@@ -124,6 +124,9 @@
   <data name="toolbar_save_icon_s" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\toolbar_save_icon_s.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="menu_wh_thin_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\menu_wh_thin_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="UpArrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\UpArrow.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -153,6 +156,12 @@
   </data>
   <data name="Delete_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\1492932873_Delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="close_wh_thin_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\close_wh_thin_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="downarrow_white16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\downarrow_white16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="logo5" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\logo5.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -187,7 +196,7 @@
   <data name="toolbar_add_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\toolbar_add_icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="downarrow_white16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\downarrow_white16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="minimize_wh_thin_16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\minimize_wh_thin_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

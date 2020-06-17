@@ -1,223 +1,159 @@
 ﻿Public Class UserData
-    Public Enum UserStatus
-        Setup
-        Active
-        Block
-        Unknown
-    End Enum
-
-    Public Enum UserPriviledge
-        MasterAdd
-        MasterEdit
-        MasterValid
-        TransAdd
-        TransEdit
-        TransValid
-        AccountAdd
-        AccountEdit
-        AccountValid
-        ADMIN
-    End Enum
-
-    'Private WithEvents tmer As New Timer
-
     'PROTECTED PROPERTIES
-    Private _User_ID As String
-    Private _User_Level As String
+    Private _User_Alias As String
+    Private _User_Group As String
+    Private _User_Salescode As String
+
     Private _Add_Master As Boolean
     Private _Add_Transaksi As Boolean
-    Private _Add_akuntansi As Boolean
+    Private _Add_Akuntansi As Boolean
     Private _Edit_Master As Boolean
     Private _Edit_Transaksi As Boolean
+    Private _Edit_Stock As Boolean
     Private _Edit_Akuntansi As Boolean
     Private _Valid_Master As Boolean
     Private _Valid_Transaksi As Boolean
+    Private _Valid_Stock As Boolean
     Private _Valid_Akuntansi As Boolean
-    Private _Admin As Boolean 'Allow user to edit/manage app and system configuration, other normal user could access some app config (In Future)
+    Private _SysAdmin As Boolean 'Allow user to edit/manage app and system configuration, other normal user could access some app config (In Future)
+    Private _IsDev As Boolean
 
-    'general info
-    Public Property user_id As String
+    'GENERAL INFO
+    Public Property User_Alias As String
         Get
-            Return _User_ID
+            Return _User_Alias
         End Get
         Set(value As String)
-            _User_ID = value
-            consoleWriteLine("User ID Changed : " & value & " : " & Now)
+            _User_Alias = value
+            consoleWriteLine("User Alias Changed : " & value & " : " & Now)
         End Set
     End Property
-    Public user_nama As String
+    Public User_Session As String
+    Public User_Nama As String
     Public saleskode As String
-    Public user_status As UserStatus
-    Public user_session As String
-    Public ReadOnly user_ver As String = Application.ProductVersion
+    Public ReadOnly Property User_Version As String
+        Get
+            Return Application.ProductVersion
+        End Get
+    End Property
 
-    'Public Sub New()
-
-    'End Sub
-
-    'Public Sub New(ByVal AutoRefresh As Boolean, Optional ByVal RefreshInterval As Integer = 10000)
-    '    If AutoRefresh = True Then
-    '        tmer.Interval = RefreshInterval
-    '        tmer.Start()
-    '    End If
-    'End Sub
-
-    'computer info
-    Public ReadOnly Property user_ip() As String
+    'COMPUTER VERSION
+    Public ReadOnly Property User_IP() As String
         Get
             Return GetIPv4Address()
         End Get
     End Property
-    Public ReadOnly Property user_mac() As String
+    Public ReadOnly Property User_MAC() As String
         Get
-            Return GetMac(user_ip)
+            Return GetMac(User_IP)
         End Get
     End Property
-    Public ReadOnly Property user_host() As String
+    Public ReadOnly Property User_Host() As String
         Get
             Return System.Net.Dns.GetHostName()
         End Get
     End Property
-    Public ReadOnly Property user_hwid() As String
+    Public ReadOnly Property User_HWID() As String
         Get
             Return GetHWID()
         End Get
     End Property
 
-    'level and access info
-    Public Property user_lev() As String
+    'USER GROUP AND ACCESS PRIVILEDGE
+    Public ReadOnly Property User_Group() As String
         Get
-            Return _User_Level
+            GetGroup() : Return _User_Group
         End Get
-        Set(value As String)
-            _User_Level = value
-        End Set
     End Property
-    Public Property allowedit_master As Boolean
+    Public ReadOnly Property AllowEdit_Master As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.MasterEdit)
-            _Edit_Master = IIf(x = TriState.UseDefault, _Edit_Master, x)
+            _Edit_Master = If(GetUserDataValue("user_allowedit_master").ToString = "1", True, False)
             Return _Edit_Master
         End Get
-        Set(value As Boolean)
-            _Edit_Master = value
-        End Set
     End Property
-    Public Property allowedit_transact As Boolean
+    Public ReadOnly Property AllowEdit_Transaction As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.TransEdit)
-            _Edit_Transaksi = IIf(x = TriState.UseDefault, _Edit_Transaksi, x)
+            _Edit_Transaksi = If(GetUserDataValue("user_allowedit_trans").ToString = "1", True, False)
             Return _Edit_Transaksi
         End Get
-        Set(value As Boolean)
-            _Edit_Transaksi = value
-        End Set
     End Property
-    Public Property allowedit_akun As Boolean
+    Public ReadOnly Property AllowEdit_Accounting As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.AccountEdit)
-            _Edit_Akuntansi = IIf(x = TriState.UseDefault, _Edit_Akuntansi, x)
+            _Edit_Akuntansi = If(GetUserDataValue("user_allowedit_akun").ToString = "1", True, False)
             Return _Edit_Akuntansi
         End Get
-        Set(value As Boolean)
-            _Edit_Akuntansi = value
-        End Set
     End Property
-    Public Property validasi_master As Boolean
+    Public ReadOnly Property Validasi_Master As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.MasterValid)
-            _Valid_Master = IIf(x = TriState.UseDefault, _Valid_Master, x)
+            _Valid_Master = If(GetUserDataValue("user_validasi_master").ToString = "1", True, False)
             Return _Valid_Master
         End Get
-        Set(value As Boolean)
-            _Valid_Master = value
-        End Set
     End Property
-    Public Property validasi_trans As Boolean
+    Public ReadOnly Property Validasi_Transaction As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.TransValid)
-            _Valid_Transaksi = IIf(x = TriState.UseDefault, _Valid_Transaksi, x)
+            _Valid_Transaksi = If(GetUserDataValue("user_validasi_trans").ToString = "1", True, False)
             Return _Valid_Transaksi
         End Get
-        Set(value As Boolean)
-            _Valid_Transaksi = value
-        End Set
     End Property
-    Public Property validasi_akun As Boolean
+    Public ReadOnly Property Validasi_Accounting As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.AccountValid)
-            _Valid_Akuntansi = IIf(x = TriState.UseDefault, _Valid_Akuntansi, x)
+            _Valid_Akuntansi = If(GetUserDataValue("user_validasi_akun").ToString = "1", True, False)
             Return _Valid_Akuntansi
         End Get
-        Set(value As Boolean)
-            _Valid_Akuntansi = value
-        End Set
     End Property
-    Public Property admin_pc As Boolean
+    Public ReadOnly Property PC_SysAdmin As Boolean
         Get
-            Dim x = GetPriviledgeStatus(UserPriviledge.ADMIN)
-            _Admin = IIf(x = TriState.UseDefault, _Admin, x) : Return _Admin
+            _SysAdmin = If(GetUserDataValue("user_admin_pc").ToString = "1", True, False)
+            Return _SysAdmin
         End Get
-        Set(value As Boolean)
-            _Admin = value
-        End Set
     End Property
 
-    Private Function GetPriviledgeStatus(type As UserPriviledge) As TriState
-        If MainConnection.Connection Is Nothing Then
-            Throw New NullReferenceException("Main DB Config is empty")
-        End If
-        If IsNothing(type) Then
-            Throw New ArgumentNullException("Type cannot be empty")
-        End If
-        Dim retval As TriState = TriState.UseDefault
-        Dim q As String = "SELECT {0} FROM data_pengguna_alias WHERE user_alias='{1}'"
-        Dim _col As String = ""
-        Select Case type
-            Case UserPriviledge.MasterEdit : _col = "user_allowedit_master"
-            Case UserPriviledge.MasterValid : _col = "user_validasi_master"
-            Case UserPriviledge.TransEdit : _col = "user_allowedit_trans"
-            Case UserPriviledge.TransValid : _col = "user_validasi_trans"
-            Case UserPriviledge.AccountEdit : _col = "user_allowedit_akun"
-            Case UserPriviledge.AccountValid : _col = "user_validasi_akun"
-            Case UserPriviledge.ADMIN : _col = "user_admin_pc"
-            Case Else
-                Return Nothing
-                Exit Function
-        End Select
+    'OTHER
+    Public ReadOnly Property IsEmpty As Boolean
+        Get
+            Return String.IsNullOrWhiteSpace(User_Alias)
+        End Get
+    End Property
 
-        q = String.Format(q, _col, user_id)
-        Using x As New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
-            x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                Try
-                    Using rdx = x.ReadCommand(q, CommandBehavior.SingleResult)
-                        Dim red = rdx.Read
-                        If red And rdx.HasRows Then
-                            retval = IIf(rdx.Item(0) = 1, TriState.True, TriState.False)
-                        Else
-                            retval = TriState.UseDefault
-                        End If
-                    End Using
-                Catch ex As Exception
-                    logError(ex, True)
-                    retval = TriState.UseDefault
-                End Try
-            Else
-                retval = TriState.UseDefault
-            End If
-        End Using
-        Return retval
+    'CHANGE / REMOVE
+    Public User_ID As String = User_Alias
+    Public ReadOnly AllowEdit_Transact = AllowEdit_Transaction
+    Public ReadOnly AllowEdit_Akun = AllowEdit_Accounting
+    Public ReadOnly Validasi_Trans = Validasi_Transaction
+    Public ReadOnly Validasi_Akun = Validasi_Accounting
+    Public ReadOnly Admin_PC = PC_SysAdmin
+
+    'FUNCTION
+    Public Function GetNama() As String
+        Dim _nama As String = GetUserDataValue("user_nama").ToString
+        If Not String.IsNullOrWhiteSpace(_nama) Then User_Nama = _nama
+        Return _nama
     End Function
 
-    'Private Async Sub RefreshUserData(sender As Object, e As EventHandler) Handles tmer.Tick
-    '    Dim _forcestop As Boolean = False
-    '    If MainConnection.Connection Is Nothing Then
-    '        _forcestop = True
-    '    End If
+    Public Function GetGroup() As String
+        Dim _nama As String = GetUserDataValue("user_group").ToString
+        If Not String.IsNullOrWhiteSpace(_nama) Then _User_Group = _nama
+        Return _nama
+    End Function
 
-    '    If _forcestop Then
-    '        tmer.Stop()
-    '    End If
-    'End Sub
+    Private Function GetUserDataValue(ColumnName As String) As Object
+        If Me.IsEmpty Then Return String.Empty
+        If MainConnData.IsEmpty Then Return String.Empty
 
+        Try
+            Using x = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+                x.Open() : If x.ConnectionState = ConnectionState.Open Then
+                    Dim q As String = "SELECT {1} FROM data_pengguna_alias WHERE user_alias='{0}'"
+                    Dim _nama = x.ExecScalar(String.Format(q, User_Alias, ColumnName))
+                    User_Nama = _nama
+                    Return _nama
+                Else
+                    Return String.Empty
+                End If
+            End Using
+        Catch ex As Exception
+            LogError(ex) : consoleWriteLine(ex.Message)
+            Return String.Empty
+        End Try
+    End Function
 End Class

@@ -74,13 +74,13 @@ Partial Class fr_export_efaktur
         Me.in_ppn = New System.Windows.Forms.TextBox()
         Me.in_fak = New System.Windows.Forms.TextBox()
         Me.in_dpp = New System.Windows.Forms.TextBox()
+        Me.in_ket = New System.Windows.Forms.TextBox()
+        Me.in_supplier = New System.Windows.Forms.TextBox()
+        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lbl_supplier = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
-        Me.lbl_supplier = New System.Windows.Forms.Label()
-        Me.in_supplier = New System.Windows.Forms.TextBox()
-        Me.Label7 = New System.Windows.Forms.Label()
-        Me.in_ket = New System.Windows.Forms.TextBox()
         Me.Panel1.SuspendLayout()
         Me.pnl_container.SuspendLayout()
         CType(Me.dgv_faktur, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -569,7 +569,7 @@ Partial Class fr_export_efaktur
         '
         Me.ctxMn_export.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.mn_export_efak, Me.mn_export_jual, Me.mn_exportjual_master})
         Me.ctxMn_export.Name = "ctxMn_export"
-        Me.ctxMn_export.Size = New System.Drawing.Size(238, 70)
+        Me.ctxMn_export.Size = New System.Drawing.Size(238, 92)
         '
         'mn_export_efak
         '
@@ -662,6 +662,45 @@ Partial Class fr_export_efaktur
         Me.in_dpp.TabStop = False
         Me.in_dpp.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         '
+        'in_ket
+        '
+        Me.in_ket.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_ket.Location = New System.Drawing.Point(67, 91)
+        Me.in_ket.Multiline = True
+        Me.in_ket.Name = "in_ket"
+        Me.in_ket.Size = New System.Drawing.Size(153, 81)
+        Me.in_ket.TabIndex = 3
+        '
+        'in_supplier
+        '
+        Me.in_supplier.BackColor = System.Drawing.Color.White
+        Me.in_supplier.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.in_supplier.Location = New System.Drawing.Point(67, 66)
+        Me.in_supplier.Name = "in_supplier"
+        Me.in_supplier.ReadOnly = True
+        Me.in_supplier.Size = New System.Drawing.Size(153, 22)
+        Me.in_supplier.TabIndex = 3
+        '
+        'Label7
+        '
+        Me.Label7.AutoSize = True
+        Me.Label7.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label7.Location = New System.Drawing.Point(6, 94)
+        Me.Label7.Name = "Label7"
+        Me.Label7.Size = New System.Drawing.Size(27, 15)
+        Me.Label7.TabIndex = 41
+        Me.Label7.Text = "Ket."
+        '
+        'lbl_supplier
+        '
+        Me.lbl_supplier.AutoSize = True
+        Me.lbl_supplier.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lbl_supplier.Location = New System.Drawing.Point(6, 69)
+        Me.lbl_supplier.Name = "lbl_supplier"
+        Me.lbl_supplier.Size = New System.Drawing.Size(50, 15)
+        Me.lbl_supplier.TabIndex = 41
+        Me.lbl_supplier.Text = "Supplier"
+        '
         'Label3
         '
         Me.Label3.AutoSize = True
@@ -691,45 +730,6 @@ Partial Class fr_export_efaktur
         Me.Label1.Size = New System.Drawing.Size(58, 15)
         Me.Label1.TabIndex = 41
         Me.Label1.Text = "Total DPP"
-        '
-        'lbl_supplier
-        '
-        Me.lbl_supplier.AutoSize = True
-        Me.lbl_supplier.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lbl_supplier.Location = New System.Drawing.Point(6, 69)
-        Me.lbl_supplier.Name = "lbl_supplier"
-        Me.lbl_supplier.Size = New System.Drawing.Size(50, 15)
-        Me.lbl_supplier.TabIndex = 41
-        Me.lbl_supplier.Text = "Supplier"
-        '
-        'in_supplier
-        '
-        Me.in_supplier.BackColor = System.Drawing.Color.White
-        Me.in_supplier.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_supplier.Location = New System.Drawing.Point(67, 66)
-        Me.in_supplier.Name = "in_supplier"
-        Me.in_supplier.ReadOnly = True
-        Me.in_supplier.Size = New System.Drawing.Size(153, 22)
-        Me.in_supplier.TabIndex = 3
-        '
-        'Label7
-        '
-        Me.Label7.AutoSize = True
-        Me.Label7.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label7.Location = New System.Drawing.Point(6, 94)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(27, 15)
-        Me.Label7.TabIndex = 41
-        Me.Label7.Text = "Ket."
-        '
-        'in_ket
-        '
-        Me.in_ket.Font = New System.Drawing.Font("Open Sans", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.in_ket.Location = New System.Drawing.Point(67, 91)
-        Me.in_ket.Multiline = True
-        Me.in_ket.Name = "in_ket"
-        Me.in_ket.Size = New System.Drawing.Size(153, 81)
-        Me.in_ket.TabIndex = 3
         '
         'fr_export_efaktur
         '

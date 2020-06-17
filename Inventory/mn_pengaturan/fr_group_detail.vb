@@ -99,27 +99,26 @@
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
                 Dim q As String = "SELECT menu_kode FROM kode_menu WHERE menu_status=1 AND menu_group='{0}' ORDER BY menu_kode ASC"
                 Using rdx = x.ReadCommand(String.Format(q, in_kode.Text))
+                    Dim _start = Now
                     Do While rdx.Read
-                        fd = False
                         MenuKode = rdx.Item("menu_kode").ToString
+                        'CheckMenuKode(MenuKode, tv_menu.Nodes)
                         For Each item As TreeNode In tv_menu.Nodes
                             If treeCK(item, MenuKode) = True Then Exit For
                             If MenuKode.Length > 4 Then
                                 For Each ChildNode As TreeNode In item.Nodes
-                                    fd = treeCK(ChildNode, MenuKode)
-                                    If fd Then Exit For
+                                    If treeCK(ChildNode, MenuKode) Then GoTo NextMenuCode
                                     If MenuKode.Length > 6 Then
                                         For Each Child2 As TreeNode In ChildNode.Nodes
-                                            fd = treeCK(Child2, MenuKode)
-                                            If fd Then Exit For
+                                            If treeCK(Child2, MenuKode) Then GoTo NextMenuCode
                                         Next
                                     End If
-                                    If fd Then Exit For
                                 Next
                             End If
-                            If fd Then Exit For
                         Next
+NextMenuCode:
                     Loop
+                    consoleWriteLine(DateDiff(DateInterval.Second, _start, Now))
                 End Using
             End If
         End Using
@@ -164,15 +163,24 @@
         End Using
     End Sub
 
+    Private Function CheckMenuKode(MenuKode As String, Nodes As TreeNodeCollection, Optional KodeLength As Integer = 4) As Boolean
+        For Each item As TreeNode In Nodes
+            consoleWriteLine("mn" & SplitText(item.Text, ".", 0) & ":" & MenuKode)
+            If treeCK(item, MenuKode) Then Return True
+            If MenuKode.Length > KodeLength Then
+                If CheckMenuKode(MenuKode, item.Nodes, KodeLength + 2) Then Return True
+            End If
+        Next
+        Return False
+    End Function
+
     Private Function treeCK(nodes As TreeNode, menukode As String) As Boolean
-        Dim fd As Boolean = False
         Dim NodesName As String = "mn" & SplitText(nodes.Text, ".", 0)
         If NodesName = menukode Then
-            nodes.Checked = True
-            fd = True
+            nodes.Checked = True : Return True
+        Else
+            Return False
         End If
-
-        Return fd
     End Function
 
     Private Sub setStatus()

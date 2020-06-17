@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("Inventory")> 
-<Assembly: AssemblyDescription("")> 
+<Assembly: AssemblyDescription("CV. Catra Upaya")> 
 <Assembly: AssemblyCompany("")> 
 <Assembly: AssemblyProduct("Inventory")> 
 <Assembly: AssemblyCopyright("Copyright ©  2019")> 

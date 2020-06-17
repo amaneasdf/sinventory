@@ -1,10 +1,123 @@
 ﻿Public Class main
     Public MainMenu As New MenuStrip
-    Private ParentMenu, ChildMenu, ChildMenu2 As ToolStripMenuItem
-    Private MenuKode, MenuLabel, MenuText As String
     Public listkodemenu As New List(Of String)
-    'Private mainConn As New cnction
     Public isForcedClose As Boolean = False
+
+    'SCREENLOCK
+    Private _LS As Object
+    Private _InactivityTimer As New Timer
+    Private _InactiveMinutes As Integer = 0
+    Public _ScreenLocked As Boolean = False
+
+    'FIRST LOAD
+    Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Dim _login As New fr_login
+        lbl_app.Text = Application.ProductName
+        Me.Text = Application.ProductName & " : v." & Application.ProductVersion
+        Me.Visible = False
+
+        Me.Cursor = Cursors.AppStarting
+        If SetConnection() = True Then _login.do_load()
+        Me.Cursor = Cursors.Default
+    End Sub
+
+    'SETUP CONECTION
+    Private Function SetConnection() As Boolean
+        Dim _retval As Boolean = False
+        Dim _ConnCfgName As String = ""
+#If DEBUG Then
+        _ConnCfgName = "CatraDev"
+#Else
+        _ConnCfgName = "network"
+#End If
+        MainConnData = LoadDataConnection(_ConnCfgName, "")
+        consoleWriteLine("Connecting to " & _ConnCfgName)
+
+        If MainConnData.IsEmpty Then
+            MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi. Konfigurasi koneksi database kosong." & _
+                            Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error)
+            isForcedClose = True : _retval = False
+            Application.Exit()
+        Else
+            MainConnection = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+            setConn(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
+            MainConnection.Open()
+            If MainConnection.ConnectionState <> ConnectionState.Open Then
+                MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
+                                Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                isForcedClose = True : _retval = False
+                Application.Exit()
+            Else
+                strip_host.Text = "Server/Host : " & MainConnection.Host
+                _retval = True
+            End If
+        End If
+
+        Return _retval
+    End Function
+
+    'CONTROL LOAD / AFTER LOGIN
+    Public Sub Do_LoadControl()
+        'INFO STRIP
+        strip_user.Text = "User : " & loggeduser.User_Alias
+        'strip_nama.Text = LoggedUser.GetNama()
+
+
+        loadInfoPanel()
+
+        'TIMER FOR INACTIVITY
+        'Application.AddMessageFilter(Me)
+        'AddHandler _InactivityTimer.Tick, AddressOf InactivityTimer_Tick
+        '_InactivityTimer.Interval = ScreenLockTimer 'Per Minute(s)
+        '_InactivityTimer.Start()
+
+        MenuAkses()
+    End Sub
+
+    'CLOSING APPLICATION
+    Private Sub main_closing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        If isForcedClose = False Then
+            Dim msg = MessageBox.Show("Tutup Aplikasi?", Application.ProductName, MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If msg = Windows.Forms.DialogResult.No Then
+                e.Cancel = True
+            Else
+                Try
+                    If Not loggeduser.IsEmpty Then logOut(False)
+                Catch ex As Exception
+                    LogError(ex, False)
+                End Try
+            End If
+        End If
+    End Sub
+
+    'LOGOUT
+    Public Sub LogOut(Optional showLoginForm As Boolean = True)
+        'UPDATE LOGIN DATA
+        Using x = MainConnection
+            x.Open() : If x.Connection.State = ConnectionState.Open Then
+                Dim q = "UPDATE system_login_log SET log_status=1, log_end=NOW() WHERE log_session='{0}'"
+                x.ExecCommand(String.Format(q, loggeduser.User_Session))
+
+                q = "UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='{0}'"
+                x.ExecCommand(String.Format(q, loggeduser.User_Alias))
+            End If
+        End Using
+        loggeduser = New UserData
+
+        If showLoginForm = True Then
+            Dim _login As New fr_login
+            Me.Opacity = 0 : Me.Visible = False
+
+            'CLEAR/RESET ALL CONTROL
+            MainMenu.Items.Clear()
+            tabcontrol.TabPages.Clear() : tabcontrol.TabPages.Add(TabPage1)
+            If Me.Controls.Contains(MainMenu) Then Me.Controls.Remove(MainMenu)
+            pnl_main.Controls.Clear()
+
+            _login.do_load()
+        End If
+    End Sub
 
     Public Sub openTab(type As String)
         Select Case type
@@ -112,46 +225,46 @@
         End If
     End Sub
 
-    Sub MenuAkses()
+    Private Sub MenuAkses()
+        Dim ParentMenu As New ToolStripMenuItem
+        Dim MenuLabel, MenuKode As String
         Dim q As String = "SELECT data_menu_master.menu_kode, data_menu_master.menu_label " _
                           & "FROM kode_menu INNER JOIN data_menu_master ON data_menu_master.menu_kode= kode_menu.menu_kode AND kode_menu.menu_status=1 " _
                           & "WHERE menu_group='{0}' AND data_menu_master.menu_status<>9 ORDER BY data_menu_master.menu_kode ASC;"
 
         Using x = MainConnection
             x.Open() : If x.ConnectionState = ConnectionState.Open Then
-                Using rdx = x.ReadCommand(String.Format(q, loggeduser.user_lev))
-                    Do While rdx.Read
-                        listkodemenu.Add(MenuKode)
-                        MenuKode = rdx.Item("menu_kode")
-                        MenuLabel = rdx.Item("menu_label").ToString
-                        MenuText = MenuLabel
+                Using rdx = x.ReadCommand(String.Format(q, loggeduser.GetGroup))
+                    Dim PrevMenuLvl As Integer = 0
+                    Dim PrevMenu, PrevParentMenu As New ToolStripMenuItem
 
-                        If Len(MenuKode) = 4 Then
-                            Dim MenuItem As New ToolStripMenuItem(MenuLabel)
-                            ParentMenu = MenuItem
-                        End If
-                        If Len(MenuKode) = 6 Then
+                    Do While rdx.Read
+                        MenuKode = rdx.Item("menu_kode")
+                        MenuLabel = rdx.Item("menu_label")
+                        'KodeMenu.Add(MenuName)
+
+                        Dim MenuLevel = MenuKode.Length - (2 + MenuKode.Length / 2)
+
+                        Dim MenuItem As New ToolStripMenuItem(MenuLabel) With {.Name = MenuKode}
+                        If MenuLevel = 0 Then
+                            MainMenu.Items.Add(MenuItem)
+                        Else
+                            If PrevMenuLvl < MenuLevel Then
+                                PrevParentMenu = ParentMenu
+                                ParentMenu = PrevMenu
+                            ElseIf PrevMenuLvl > MenuLevel Then
+                                ParentMenu = PrevParentMenu
+                            End If
                             If MenuLabel <> "-" Then
-                                Dim MenuItem As New ToolStripMenuItem(MenuText)
-                                ChildMenu = MenuItem : ChildMenu.Name = MenuKode
-                                ParentMenu.DropDownItems.Add(ChildMenu)
-                                AddHandler ChildMenu.Click, AddressOf MenuItemClicked
+                                ParentMenu.DropDownItems.Add(MenuItem)
+                                AddHandler MenuItem.Click, AddressOf MenuItemClicked
                             Else
                                 ParentMenu.DropDownItems.Add(New ToolStripSeparator)
                             End If
                         End If
-                        If Len(MenuKode) = 8 Then
-                            If MenuLabel <> "-" Then
-                                Dim MenuItem As New ToolStripMenuItem(MenuText)
-                                ChildMenu2 = MenuItem : ChildMenu2.Name = MenuKode
-                                ChildMenu.DropDownItems.Add(ChildMenu2)
-                                AddHandler ChildMenu2.Click, AddressOf MenuItemClicked
-                            Else
-                                ChildMenu.DropDownItems.Add(New ToolStripSeparator)
-                            End If
-                        End If
-                        MainMenu.Items.Add(ParentMenu)
-                        MainMenu.BackColor = Color.Orange
+
+                        PrevMenu = MenuItem
+                        PrevMenuLvl = MenuLevel
                     Loop
                 End Using
 
@@ -162,32 +275,7 @@
         End Using
     End Sub
 
-    Public Async Function logOut(Optional showLoginForm As Boolean = True) As Task
-        Dim i As Integer = 0
-        Using x As MySqlThing = MainConnection
-            x.Open() : If x.Connection.State = ConnectionState.Open Then
-                i = Await x.ExecCommandAsync("UPDATE data_pengguna_alias SET user_login_status = 0 where user_alias='" & loggeduser.user_id & "'; " _
-                                    & "UPDATE system_login_log SET log_status=1, log_end=NOW() WHERE log_id=" & loggeduser.user_session)
-            End If
-        End Using
-
-        loggeduser = New UserData
-
-        If showLoginForm = True Then
-            Dim _login As New fr_login
-
-            MainMenu.Items.Clear()
-            tabcontrol.TabPages.Clear()
-            tabcontrol.TabPages.Add(TabPage1)
-            Controls.Remove(MainMenu)
-            pnl_main.Controls.Clear()
-            Visible = False
-
-            _login.Show()
-        End If
-    End Function
-
-    Private Async Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub MenuItemClicked(ByVal sender As System.Object, ByVal e As System.EventArgs)
         Dim mnName As String = DirectCast(sender, ToolStripItem).Name
         Dim mnLabel As String = DirectCast(sender, ToolStripItem).Text
         Dim mnChld As Boolean = DirectCast(sender, ToolStripMenuItem).HasDropDownItems
@@ -324,7 +412,7 @@
             Case "mn0911" : Dim x As New fr_setup_menu : x.Show()
             Case "mn0921" : openTab("user")
             Case "mn0922" : openTab("group")
-            Case "mn0923" : resetPassUser(loggeduser.user_id)
+            Case "mn0923" : resetPassUser(loggeduser.User_Alias)
 
                 'SETTING REFERENSI
             Case "mn0932" : openTab("ref")
@@ -332,15 +420,7 @@
                 'Case "mn0935" : openTab("setpromobrg")
 
                 'LOGOUT/EXIT
-            Case "mn0941"
-                Try
-                    Dim x As Task = logOut() : Await x
-                    If x.IsFaulted Then Throw New Exception("Terjadi error saat melakukan proses LogOut", x.Exception)
-                Catch ex As Exception
-                    logError(ex, False)
-                    isForcedClose = True
-                    Application.Exit()
-                End Try
+            Case "mn0941" : logOut(True)
             Case "mn0942" : Application.Exit()
             Case Else
                 If mnChld = False Then
@@ -374,72 +454,6 @@
         pnl_main.Controls.Add(infpnl)
     End Sub
 
-    'SETUP CONECTION
-    Private Function setConnection() As Boolean
-        Dim _retval As Boolean = False
-        Dim _ConnCfgName As String = ""
-#If DEBUG Then
-        _ConnCfgName = "CatraDev"
-#Else
-        _ConnCfgName = "network"
-#End If
-        MainConnData = loadCon(_ConnCfgName, False)
-        consoleWriteLine("Connecting to " & _ConnCfgName)
-        consoleWriteLine(DataListStartDate & ":" & DataListEndDate & ":" & TransStartDate)
-
-        If MainConnData.db = Nothing Or MainConnData.host = Nothing Then
-            MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi." & Environment.NewLine & "Aplikasi akan ditutup", "Error Config",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error)
-            isForcedClose = True
-            _retval = False
-            Application.Exit()
-        Else
-            MainConnection = New MySqlThing(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
-            setConn(MainConnData.host, MainConnData.db, decryptString(MainConnData.uid), decryptString(MainConnData.pass))
-            MainConnection.Open()
-            If MainConnection.ConnectionState <> ConnectionState.Open Then
-                MessageBox.Show("Terjadi kesalahan saat melakukan konfigurasi koneksi, aplikasi tidak dapat terhubung ke server." & _
-                                Environment.NewLine & "Aplikasi akan ditutup", "Error Config", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                isForcedClose = True : _retval = False : Application.Exit()
-            Else
-                _retval = True
-            End If
-        End If
-
-        Return _retval
-    End Function
-
-    Private Sub main_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim _login As New fr_login
-        lbl_app.Text = Application.ProductName
-        Me.Visible = False
-
-        Me.Cursor = Cursors.AppStarting
-        If setConnection() = True Then
-            _login.Show()
-#If DEBUG Then
-            strip_host.Text = MainConnection.Host & ":" & MainConnection.Database
-#Else
-            strip_host.Text = MainConnection.Host
-#End If
-        End If
-        Me.Cursor = Cursors.Default
-    End Sub
-
-    Private Async Sub main_closing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        If isForcedClose = False Then
-            Dim msg = MessageBox.Show("Apakah yakin akan menutup program ini?", Application.ProductName, MessageBoxButtons.YesNo)
-            If msg = Windows.Forms.DialogResult.No Then
-                e.Cancel = True
-            Else
-                Try
-                    Await logOut(False)
-                Catch ex As Exception
-                    logError(ex, False)
-                End Try
-            End If
-        End If
-    End Sub
 
     'VVV DOESNT MATTER VVV
     Private Sub main_KeyDown(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp

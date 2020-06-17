@@ -1,6 +1,9 @@
 ﻿Public Class fr_lap_filter_beli
     Private popupstate As String = "supplier"
     Private lapwintext As String = ""
+    Private _parentPanel As Panel
+    Private _parentForm As Form
+
     Public laptype As String
     Public jenis_sw As Boolean = True
     Public supplier_sw As Boolean = True

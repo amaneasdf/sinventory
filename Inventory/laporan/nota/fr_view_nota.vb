@@ -270,12 +270,10 @@ Public Class fr_view_nota
     End Sub
 
     Private Function CreateStream(ByVal name As String, ByVal fileNameExtension As String, ByVal encoding As System.Text.Encoding, ByVal mimeType As String, ByVal willSeek As Boolean) As IO.Stream
-        Dim _appSysDir As String = System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & Application.ProductName & "\temp\"
+        Dim _appTempDir As String = AppDir_Temporary
         Dim rc As IO.Stream
-        If Not IO.Directory.Exists(_appSysDir) Then
-            IO.Directory.CreateDirectory(_appSysDir)
-        End If
-        rc = New IO.FileStream(_appSysDir + name + "." + fileNameExtension, IO.FileMode.Create)
+        If Not IO.Directory.Exists(_appTempDir) Then IO.Directory.CreateDirectory(_appTempDir)
+        rc = New IO.FileStream(_appTempDir + "\" + name + "." + fileNameExtension, IO.FileMode.Create)
         m_streams.Add(rc)
         Return rc
     End Function

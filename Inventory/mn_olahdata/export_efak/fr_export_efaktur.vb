@@ -104,7 +104,7 @@ Public Class fr_export_efaktur
                             in_dpp.Text = Decimal.Parse(rdx.Item(0)).ToString("N0")
                             in_ppn.Text = Decimal.Parse(rdx.Item(1)).ToString("N0")
                         Catch ex As Exception
-                            logError(ex, False)
+                            logError(ex, True)
                             MessageBox.Show("Terjadi kesalahan saat melakukan pengambilan data." & Environment.NewLine & ex.Message,
                                             lbl_judul.Text, MessageBoxButtons.OK, MessageBoxIcon.Error)
                             in_dpp.Text = 0 : in_ppn.Text = 0
@@ -682,7 +682,6 @@ Public Class fr_export_efaktur
     Private Sub bt_export_other_Click(sender As Object, e As EventArgs) Handles bt_export_other.Click
         Dim _x As Integer = bt_export_other.Location.X - (ctxMn_export.Width - sender.Width)
         Dim _y As Integer = bt_export_other.Location.Y + bt_export_other.Height
-        consoleWriteLine(_x & ":" & _y)
         ctxMn_export.Show(pnl_container, _x, _y)
     End Sub
 
